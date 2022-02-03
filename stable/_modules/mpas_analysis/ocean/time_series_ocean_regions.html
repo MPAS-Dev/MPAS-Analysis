@@ -397,7 +397,7 @@
             <span class="n">config_zmax</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+        <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                             <span class="n">dsRestart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
         <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
         <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsRestart</span><span class="p">:</span>

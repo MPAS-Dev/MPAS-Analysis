@@ -138,169 +138,169 @@ potential density, etc. averaged over regions.</p>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[hovmollerOceanRegions]</span>
-<span class="c1">## options related to plotting Hovmoller diagrams (depth vs. time plots) of</span>
-<span class="c1">## regional means of 3D MPAS fields</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[hovmollerOceanRegions]</span><span class="w"></span>
+<span class="c1">## options related to plotting Hovmoller diagrams (depth vs. time plots) of</span><span class="w"></span>
+<span class="c1">## regional means of 3D MPAS fields</span><span class="w"></span>
 
-<span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Ocean Basins&#39;]</span>
-
-
-<span class="k">[hovmollerOceanBasins]</span>
-<span class="c1">## options related to plotting Hovmoller diagrams of ocean basins</span>
-
-<span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span>
-<span class="c1"># prefix (used for file names, task names and sections) as well as the MPAS</span>
-<span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
-<span class="c1"># in figure titles and captions.</span>
-<span class="na">fields</span> <span class="o">=</span>
-    <span class="na">[{&#39;prefix&#39;: &#39;potentialTemperature&#39;,</span>
-      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
-      <span class="na">&#39;units&#39;: r&#39;$\degree$C&#39;,</span>
-      <span class="na">&#39;titleName&#39;: &#39;Potential Temperature&#39;},</span>
-     <span class="na">{&#39;prefix&#39;: &#39;salinity&#39;,</span>
-      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
-      <span class="na">&#39;units&#39;: r&#39;PSU&#39;,</span>
-      <span class="na">&#39;titleName&#39;: &#39;Salinity&#39;},</span>
-     <span class="na">{&#39;prefix&#39;: &#39;potentialDensity&#39;,</span>
-      <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;,</span>
-      <span class="na">&#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span>
-      <span class="na">&#39;titleName&#39;: &#39;Potential Density&#39;}]</span>
-
-<span class="c1"># a list of region names from the region masks file to plot</span>
-<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
-               <span class="na">&quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
-               <span class="na">&quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
-               <span class="na">&quot;Global Ocean 15S to 15N&quot;]</span>
-
-<span class="c1"># whether to compute an anomaly with respect to the start of the time series</span>
-<span class="na">computeAnomaly</span> <span class="o">=</span> <span class="s">False</span>
-
-<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span>
-<span class="c1"># output, movingAverageMonths=12 corresponds to a 12-month moving average</span>
-<span class="c1"># window)</span>
-<span class="na">movingAverageMonths</span> <span class="o">=</span> <span class="s">12</span>
+<span class="c1"># the names of region groups to plot, each with its own section below</span><span class="w"></span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;]</span><span class="w"></span>
 
 
-<span class="k">[hovmollerOceanRegionsPotentialTemperature]</span>
-<span class="c1">## options related to plotting time series of temperature vs. depth in ocean</span>
-<span class="c1">## regions</span>
+<span class="k">[hovmollerOceanBasins]</span><span class="w"></span>
+<span class="c1">## options related to plotting Hovmoller diagrams of ocean basins</span><span class="w"></span>
 
-<span class="c1"># colormap</span>
-<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">RdYlBu_r</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -2., &#39;vmax&#39;: 30.}</span>
+<span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span><span class="w"></span>
+<span class="c1"># prefix (used for file names, task names and sections) as well as the MPAS</span><span class="w"></span>
+<span class="c1"># name of the field, units for colorbars and a the name as it should appear</span><span class="w"></span>
+<span class="c1"># in figure titles and captions.</span><span class="w"></span>
+<span class="na">fields</span><span class="w"> </span><span class="o">=</span><span class="w"></span>
+<span class="w">    </span><span class="na">[{&#39;prefix&#39;: &#39;potentialTemperature&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;units&#39;: r&#39;$\degree$C&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;: &#39;Potential Temperature&#39;},</span><span class="w"></span>
+<span class="w">     </span><span class="na">{&#39;prefix&#39;: &#39;salinity&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;units&#39;: r&#39;PSU&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;: &#39;Salinity&#39;},</span><span class="w"></span>
+<span class="w">     </span><span class="na">{&#39;prefix&#39;: &#39;potentialDensity&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;units&#39;: r&#39;kg m$^{-3}$&#39;,</span><span class="w"></span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;: &#39;Potential Density&#39;}]</span><span class="w"></span>
 
-<span class="c1"># colormap for differences</span>
-<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -5., &#39;vmax&#39;: 5.}</span>
+<span class="c1"># a list of region names from the region masks file to plot</span><span class="w"></span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span><span class="w"></span>
+<span class="w">               </span><span class="na">&quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span><span class="w"></span>
+<span class="w">               </span><span class="na">&quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span><span class="w"></span>
+<span class="w">               </span><span class="na">&quot;Global Ocean 15S to 15N&quot;]</span><span class="w"></span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+<span class="c1"># whether to compute an anomaly with respect to the start of the time series</span><span class="w"></span>
+<span class="na">computeAnomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
 
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
-
-<span class="c1"># firstYearXTicks = 1</span>
-
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
-
-<span class="c1"># yearStrideXTicks = 1</span>
-
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
+<span class="c1"># Number of points over which to compute moving average(e.g., for monthly</span><span class="w"></span>
+<span class="c1"># output, movingAverageMonths=12 corresponds to a 12-month moving average</span><span class="w"></span>
+<span class="c1"># window)</span><span class="w"></span>
+<span class="na">movingAverageMonths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">12</span><span class="w"></span>
 
 
-<span class="k">[hovmollerOceanRegionsSalinity]</span>
-<span class="c1">## options related to plotting time series of salinity vs. depth in ocean</span>
-<span class="c1">## regions</span>
+<span class="k">[hovmollerOceanRegionsPotentialTemperature]</span><span class="w"></span>
+<span class="c1">## options related to plotting time series of temperature vs. depth in ocean</span><span class="w"></span>
+<span class="c1">## regions</span><span class="w"></span>
 
-<span class="c1"># colormap</span>
-<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">haline</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: 30, &#39;vmax&#39;: 39.0}</span>
+<span class="c1"># colormap</span><span class="w"></span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">RdYlBu_r</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -2., &#39;vmax&#39;: 30.}</span><span class="w"></span>
 
-<span class="c1"># colormap for differences</span>
-<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -0.5, &#39;vmax&#39;: 0.5}</span>
+<span class="c1"># colormap for differences</span><span class="w"></span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -5., &#39;vmax&#39;: 5.}</span><span class="w"></span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span><span class="w"></span>
+<span class="c1"># contour lines)</span><span class="w"></span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span><span class="w"></span>
 
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span><span class="w"></span>
+<span class="c1"># to start at the beginning of the time series.</span><span class="w"></span>
 
-<span class="c1"># firstYearXTicks = 1</span>
+<span class="c1"># firstYearXTicks = 1</span><span class="w"></span>
 
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span><span class="w"></span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span><span class="w"></span>
 
-<span class="c1"># yearStrideXTicks = 1</span>
+<span class="c1"># yearStrideXTicks = 1</span><span class="w"></span>
 
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
-
-
-<span class="k">[hovmollerOceanRegionsPotentialDensity]</span>
-<span class="c1">## options related to plotting time series of potential density vs. depth in</span>
-<span class="c1">## ocean regions</span>
-
-<span class="c1"># colormap</span>
-<span class="na">colormapNameResult</span> <span class="o">=</span> <span class="s">Spectral_r</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeResult</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeResult</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: 1026.5, &#39;vmax&#39;: 1028.}</span>
+<span class="c1"># limits on depth, the full range by default</span><span class="w"></span>
+<span class="c1"># yLim = [-6000., 0.]</span><span class="w"></span>
 
 
-<span class="c1"># colormap for differences</span>
-<span class="na">colormapNameDifference</span> <span class="o">=</span> <span class="s">balance</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="na">colormapTypeDifference</span> <span class="o">=</span> <span class="s">continuous</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="na">normTypeDifference</span> <span class="o">=</span> <span class="s">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span> <span class="o">=</span> <span class="s">{&#39;vmin&#39;: -0.3, &#39;vmax&#39;: 0.3}</span>
+<span class="k">[hovmollerOceanRegionsSalinity]</span><span class="w"></span>
+<span class="c1">## options related to plotting time series of salinity vs. depth in ocean</span><span class="w"></span>
+<span class="c1">## regions</span><span class="w"></span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
-<span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span> <span class="o">=</span> <span class="s">&#39;none&#39;</span>
+<span class="c1"># colormap</span><span class="w"></span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">haline</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: 30, &#39;vmax&#39;: 39.0}</span><span class="w"></span>
 
-<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
-<span class="c1"># to start at the beginning of the time series.</span>
+<span class="c1"># colormap for differences</span><span class="w"></span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -0.5, &#39;vmax&#39;: 0.5}</span><span class="w"></span>
 
-<span class="c1"># firstYearXTicks = 1</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span><span class="w"></span>
+<span class="c1"># contour lines)</span><span class="w"></span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span><span class="w"></span>
 
-<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
-<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span><span class="w"></span>
+<span class="c1"># to start at the beginning of the time series.</span><span class="w"></span>
 
-<span class="c1"># yearStrideXTicks = 1</span>
+<span class="c1"># firstYearXTicks = 1</span><span class="w"></span>
 
-<span class="c1"># limits on depth, the full range by default</span>
-<span class="c1"># yLim = [-6000., 0.]</span>
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span><span class="w"></span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span><span class="w"></span>
+
+<span class="c1"># yearStrideXTicks = 1</span><span class="w"></span>
+
+<span class="c1"># limits on depth, the full range by default</span><span class="w"></span>
+<span class="c1"># yLim = [-6000., 0.]</span><span class="w"></span>
+
+
+<span class="k">[hovmollerOceanRegionsPotentialDensity]</span><span class="w"></span>
+<span class="c1">## options related to plotting time series of potential density vs. depth in</span><span class="w"></span>
+<span class="c1">## ocean regions</span><span class="w"></span>
+
+<span class="c1"># colormap</span><span class="w"></span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Spectral_r</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: 1026.5, &#39;vmax&#39;: 1028.}</span><span class="w"></span>
+
+
+<span class="c1"># colormap for differences</span><span class="w"></span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -0.3, &#39;vmax&#39;: 0.3}</span><span class="w"></span>
+
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span><span class="w"></span>
+<span class="c1"># contour lines)</span><span class="w"></span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span><span class="w"></span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span><span class="w"></span>
+<span class="c1"># to start at the beginning of the time series.</span><span class="w"></span>
+
+<span class="c1"># firstYearXTicks = 1</span><span class="w"></span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span><span class="w"></span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span><span class="w"></span>
+
+<span class="c1"># yearStrideXTicks = 1</span><span class="w"></span>
+
+<span class="c1"># limits on depth, the full range by default</span><span class="w"></span>
+<span class="c1"># yLim = [-6000., 0.]</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[hovmollerOceanRegions]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,

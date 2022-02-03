@@ -58,7 +58,6 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Support Parallel Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
 </ul>
 </li>
 </ul>
@@ -366,11 +365,11 @@ Contributors: Xylar Asay-Davis
 Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4><p>There is a configuration option, <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code>, which defaults to 1, meaning tasks run in serial:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
-<span class="c1">## options related to executing parallel tasks</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
+<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
 
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
-<span class="na">parallelTaskCount</span> <span class="o">=</span> <span class="s">8</span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
 </pre></div>
 </div>
 <h4> Implementation: Lock files written by multiple tasks <br>
@@ -395,15 +394,15 @@ Contributors: Xylar Asay-Davis
 </h4><p>I have included a config option <code class="docutils literal notranslate"><span class="pre">commandPrefix</span></code> that <em>should</em> be able to be used to
 run the analysis on compute nodes.  If the command prefix is empty, the code should run
 as normal on the compute nodes.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
-<span class="c1">## options related to executing parallel tasks</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
+<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
 
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
-<span class="na">parallelTaskCount</span> <span class="o">=</span> <span class="s">1</span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
 
-<span class="c1"># Prefix on the commnd line before a parallel task (e.g. &#39;srun -n 1 python&#39;)</span>
-<span class="c1"># Default is no prefix (run_analysis.py is executed directly)</span>
-<span class="na">commandPrefix</span> <span class="o">=</span> <span class="s">srun -n 1</span>
+<span class="c1"># Prefix on the commnd line before a parallel task (e.g. &#39;srun -n 1 python&#39;)</span><span class="w"></span>
+<span class="c1"># Default is no prefix (run_analysis.py is executed directly)</span><span class="w"></span>
+<span class="na">commandPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun -n 1</span><span class="w"></span>
 </pre></div>
 </div>
 <h4> Implementation: There may need to be a way to limit the memory used by a task <br>

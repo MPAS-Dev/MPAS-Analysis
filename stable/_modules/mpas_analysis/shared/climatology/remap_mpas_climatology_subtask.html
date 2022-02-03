@@ -621,7 +621,7 @@
 
             <span class="c1"># add valid mask as a variable, useful for remapping later</span>
             <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;validMask&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">climatology</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]),</span>
+                <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">climatology</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]),</span>
                              <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
             <span class="c1"># mask the data set</span>
             <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>

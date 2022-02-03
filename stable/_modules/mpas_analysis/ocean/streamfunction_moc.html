@@ -839,38 +839,28 @@
             <span class="n">maxLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
                                           <span class="s1">&#39;latBinMax&#39;</span><span class="p">)</span>
             <span class="n">indLat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">minLat</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxLat</span><span class="p">)</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">indLat</span><span class="p">]</span>
-            <span class="n">regionMOC</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="p">[:,</span> <span class="n">indLat</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">indLat</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">regionMOC</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">indLat</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">refRegionMOC</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">diff</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># the coords of the ref MOC won&#39;t necessarily match this MOC</span>
                 <span class="c1"># so we need to interpolate</span>
-                <span class="n">nz</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">shape</span>
-                <span class="n">refNz</span><span class="p">,</span> <span class="n">refNx</span> <span class="o">=</span> <span class="n">refMOC</span><span class="p">[</span><span class="n">region</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-                <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">refNz</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
-                <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">refNz</span><span class="p">):</span>
-                    <span class="n">temp</span><span class="p">[</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
-                        <span class="n">x</span><span class="p">,</span> <span class="n">refLat</span><span class="p">[</span><span class="n">region</span><span class="p">],</span> <span class="n">refMOC</span><span class="p">[</span><span class="n">region</span><span class="p">][</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:],</span>
-                        <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-                <span class="n">refRegionMOC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nz</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
-                <span class="k">for</span> <span class="n">xIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
-                    <span class="n">refRegionMOC</span><span class="p">[:,</span> <span class="n">xIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
-                        <span class="n">depth</span><span class="p">,</span> <span class="n">refDepth</span><span class="p">,</span> <span class="n">temp</span><span class="p">[:,</span> <span class="n">xIndex</span><span class="p">],</span>
-                        <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                <span class="n">refRegionMOC</span> <span class="o">=</span> <span class="n">_interp_moc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refLat</span><span class="p">[</span><span class="n">region</span><span class="p">],</span>
+                                           <span class="n">refDepth</span><span class="p">,</span> <span class="n">refMOC</span><span class="p">[</span><span class="n">region</span><span class="p">])</span>
 
                 <span class="n">diff</span> <span class="o">=</span> <span class="n">regionMOC</span> <span class="o">-</span> <span class="n">refRegionMOC</span>
 
             <span class="n">plot_vertical_section_comparison</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refRegionMOC</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refRegionMOC</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="n">xCoords</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">zCoord</span><span class="o">=</span><span class="n">z</span><span class="p">,</span>
                 <span class="n">colorMapSectionName</span><span class="o">=</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
                 <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
                 <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
                 <span class="n">modelTitle</span><span class="o">=</span><span class="n">mainRunName</span><span class="p">,</span>
                 <span class="n">refTitle</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span>
                 <span class="n">diffTitle</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
-                <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
+                <span class="n">xlabels</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
                 <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
                 <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePointsClimatological</span><span class="p">,</span>
                 <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">)</span>
@@ -904,15 +894,13 @@
             <span class="n">endYear</span><span class="p">)</span>
 
         <span class="c1"># Read from file</span>
-        <span class="n">ncFile</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-        <span class="n">depth</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">][:]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inputFileName</span><span class="p">)</span>
+        <span class="n">depth</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span>
         <span class="n">lat</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">moc</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">:</span>
-            <span class="n">lat</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lat</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">)][:]</span>
-            <span class="n">moc</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;moc</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">)][:,</span> <span class="p">:]</span>
-        <span class="n">ncFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">lat</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;lat</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">)]</span>
+            <span class="n">moc</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;moc</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">)]</span>
         <span class="k">return</span> <span class="n">depth</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">moc</span>  <span class="c1"># }}}</span>
 
     <span class="c1"># }}}</span>
@@ -1689,6 +1677,31 @@
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span> <span class="o">*</span> <span class="n">m3ps_to_Sv</span>
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span><span class="o">.</span><span class="n">T</span>
     <span class="k">return</span> <span class="n">mocTop</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">_interp_moc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refX</span><span class="p">,</span> <span class="n">refZ</span><span class="p">,</span> <span class="n">refMOC</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">dims</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">dims</span>
+    <span class="n">regionMOC</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">refX</span> <span class="o">=</span> <span class="n">refX</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">refZ</span> <span class="o">=</span> <span class="n">refZ</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">refMOC</span> <span class="o">=</span> <span class="n">refMOC</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">nz</span><span class="p">,</span> <span class="n">nx</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">refNz</span><span class="p">,</span> <span class="n">refNx</span> <span class="o">=</span> <span class="n">refMOC</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">refNz</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">refNz</span><span class="p">):</span>
+        <span class="n">temp</span><span class="p">[</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">refX</span><span class="p">,</span> <span class="n">refMOC</span><span class="p">[</span><span class="n">zIndex</span><span class="p">,</span> <span class="p">:],</span>
+            <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="n">refRegionMOC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nz</span><span class="p">,</span> <span class="n">nx</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">xIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nx</span><span class="p">):</span>
+        <span class="n">refRegionMOC</span><span class="p">[:,</span> <span class="n">xIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span>
+            <span class="n">z</span><span class="p">,</span> <span class="n">refZ</span><span class="p">,</span> <span class="n">temp</span><span class="p">[:,</span> <span class="n">xIndex</span><span class="p">],</span>
+            <span class="n">left</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="n">dims</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">refRegionMOC</span><span class="p">)</span>
 
 <span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>

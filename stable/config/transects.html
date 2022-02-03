@@ -112,44 +112,58 @@
 the comparison grid for each transect:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
 <span class="c1"># longitude between observation points will be subsampled at this interval.</span>
-<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
-<span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">obs</span>
+<span class="c1"># Use &#39;obs&#39; to indicate no subsampling. Use &#39;mpas&#39; to indicate plotting of</span>
+<span class="c1"># model data on the native grid, in which case comparison with observations</span>
+<span class="c1"># will take place on the observation grid.</span>
+<span class="c1">#horizontalResolution = mpas</span>
+<span class="c1">#horizontalResolution = obs</span>
+<span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
 <span class="c1"># MPAS vertical grid, &#39;obs&#39; to use the locations of observations or</span>
-<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;</span>
-<span class="c1"># verticalComparisonGridName = obs</span>
-<span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
+<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;.</span>
+<span class="c1"># If horizontalResolution is &#39;mpas&#39;, model data (both main and control) will be</span>
+<span class="c1"># plotted on the MPAS vertical grid, regardless of the comparison grid.</span>
 <span class="c1">#verticalComparisonGridName = mpas</span>
+<span class="c1">#verticalComparisonGridName = obs</span>
+<span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
 
 <span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39; or</span>
 <span class="c1"># &#39;obs&#39;.  This should be numpy array of (typically negative) elevations (in m).</span>
 <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># A range for the y axis (if any)</span>
+<span class="n">verticalBounds</span> <span class="o">=</span> <span class="p">[]</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">horizontalResolution</span></code> of all transects can be either <code class="docutils literal notranslate"><span class="pre">obs</span></code> or a number
-of kilometers.  If <code class="docutils literal notranslate"><span class="pre">obs</span></code>, model data are sampled at latitute and longitude
-points corresponding to WOCE stations.  It a number of kilometers is given,
-linear interpolation between observation points is performed with approximately
-the requested resolution.  The distance between stations is always divided into
-an integer number of segments of equal length so the resolution may be slightly
+<p>The <code class="docutils literal notranslate"><span class="pre">horizontalResolution</span></code> of all transects can be <code class="docutils literal notranslate"><span class="pre">obs</span></code>, <code class="docutils literal notranslate"><span class="pre">mpas</span></code> or a
+number of kilometers.  If <code class="docutils literal notranslate"><span class="pre">obs</span></code>, model data are sampled at latitude and
+longitude points corresponding to the observations.  If the horizontal grid
+is <code class="docutils literal notranslate"><span class="pre">mpas</span></code>, then the native MPAS-Ocean mesh is used for both the horizontal and
+vertical grids.  If a number of kilometers is given, linear interpolation
+between observation points is performed with approximately the requested
+resolution.  The distance between observation points is always divided into an
+integer number of segments of equal length so the resolution may be slightly
 above or below <code class="docutils literal notranslate"><span class="pre">horizontalResolution</span></code>.</p>
 <p>The vertical grid is determined by two parameters,
 <code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span></code> and <code class="docutils literal notranslate"><span class="pre">verticalComparisonGrid</span></code>.  If
-<code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span> <span class="pre">=</span> <span class="pre">mpas</span></code>, the MPAS-Ocean vertical coordinate will
-be interpolated horitontally from grid cell centers to the latitude and
-longitude of each point along the transect, and the observations will be
-interpolated vertically to the resulting grid.  If
-<code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span> <span class="pre">=</span> <span class="pre">obs</span></code>, the vertical grid of the observations
-is used instead.  If <code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span></code> is anything else, it is
-taken to be the name of a user-defined vertical grid (best to make it
-descriptive and unique, e.g. <code class="docutils literal notranslate"><span class="pre">uniform_0_to_4000m_at_10m</span></code>) and
+<code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span> <span class="pre">=</span> <span class="pre">mpas</span></code>, but <code class="docutils literal notranslate"><span class="pre">horizontalResoltuion</span></code> is not
+<code class="docutils literal notranslate"><span class="pre">mpas</span></code>, the MPAS-Ocean vertical coordinate will be interpolated horizontally
+from grid cell centers to the latitude and longitude of each point along the
+transect, and the observations will be interpolated vertically to the resulting
+grid.  If <code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span> <span class="pre">=</span> <span class="pre">obs</span></code>, the vertical grid of the
+observations is used instead.  If <code class="docutils literal notranslate"><span class="pre">verticalComparisonGridName</span></code> is anything
+else, it is taken to be the name of a user-defined vertical grid (best to make
+it descriptive and unique, e.g. <code class="docutils literal notranslate"><span class="pre">uniform_0_to_4000m_at_10m</span></code>) and
 <code class="docutils literal notranslate"><span class="pre">verticalComparisonGrid</span></code> should be assigned a valid array of positive-up
 depth values (in the form of a python list or numpy array), e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>produces points between 0 and -4000 m sampled every 10 m.</p>
+<p><code class="docutils literal notranslate"><span class="pre">verticalBounds</span></code> is a list of minimum and maximum limits for the vertical axis
+of the transect.  The default is an empty list, which means <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>
+selects the axis limits to encompass the full range of the vertical grid.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Some types of transects (e.g. those produce with geojson files) do not have

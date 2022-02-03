@@ -144,47 +144,47 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <div class="section" id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span>
-<span class="c1">## options related to plotting time series of groups of ocean regions</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span><span class="w"></span>
+<span class="c1">## options related to plotting time series of groups of ocean regions</span><span class="w"></span>
 
-<span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="na">regionGroups</span> <span class="o">=</span> <span class="s">[&#39;Antarctic Regions&#39;]</span>
+<span class="c1"># the names of region groups to plot, each with its own section below</span><span class="w"></span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Antarctic Regions&#39;]</span><span class="w"></span>
 
 
-<span class="k">[timeSeriesAntarcticRegions]</span>
-<span class="c1">## options related to plotting time series of Antarctic regions</span>
+<span class="k">[timeSeriesAntarcticRegions]</span><span class="w"></span>
+<span class="c1">## options related to plotting time series of Antarctic regions</span><span class="w"></span>
 
-<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
-<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
-<span class="c1"># regionMaskSubdirectory for details.</span>
-<span class="na">regionNames</span> <span class="o">=</span> <span class="s">[]</span>
+<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span><span class="w"></span>
+<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span><span class="w"></span>
+<span class="c1"># regionMaskSubdirectory for details.</span><span class="w"></span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
 
-<span class="c1"># a list of variables to plot</span>
-<span class="na">variables</span> <span class="o">=</span> <span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span>
-              <span class="na">&#39;title&#39;: &#39;Temperature&#39;,</span>
-              <span class="na">&#39;units&#39;: r&#39;$^\circ$C&#39;,</span>
-              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span>
-             <span class="na">{&#39;name&#39;: &#39;salinity&#39;,</span>
-              <span class="na">&#39;title&#39;: &#39;Salinity&#39;,</span>
-              <span class="na">&#39;units&#39;: &#39;PSU&#39;,</span>
-              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span>
-             <span class="na">{&#39;name&#39;: &#39;potentialDensity&#39;,</span>
-              <span class="na">&#39;title&#39;: &#39;Potential Density&#39;,</span>
-              <span class="na">&#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span>
-              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span>
-             <span class="na">{&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span>
-              <span class="na">&#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span>
-              <span class="na">&#39;units&#39;: &#39;m&#39;,</span>
-              <span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span>
+<span class="c1"># a list of variables to plot</span><span class="w"></span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Temperature&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;units&#39;: r&#39;$^\circ$C&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span><span class="w"></span>
+<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;salinity&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Salinity&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;units&#39;: &#39;PSU&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span><span class="w"></span>
+<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;potentialDensity&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Potential Density&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span><span class="w"></span>
+<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;units&#39;: &#39;m&#39;,</span><span class="w"></span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span><span class="w"></span>
 
-<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
-<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
-<span class="c1"># Add these to a custom config file to override the defaults.</span>
-<span class="c1"># zmin = -1000</span>
-<span class="c1"># zmax = -400</span>
+<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span><span class="w"></span>
+<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span><span class="w"></span>
+<span class="c1"># Add these to a custom config file to override the defaults.</span><span class="w"></span>
+<span class="c1"># zmin = -1000</span><span class="w"></span>
+<span class="c1"># zmax = -400</span><span class="w"></span>
 
-<span class="c1"># Observational data sets to compare against</span>
-<span class="na">obs</span> <span class="o">=</span> <span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span>
+<span class="c1"># Observational data sets to compare against</span><span class="w"></span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span><span class="w"></span>
 </pre></div>
 </div>
 </div>
@@ -202,13 +202,13 @@ task is <code class="docutils literal notranslate"><span class="pre">'Antarctic<
 <h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
 region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
- <span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
- <span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
- <span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
- <span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
- <span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
- <span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span><span class="w"></span>
 </pre></div>
 </div>
 </div>

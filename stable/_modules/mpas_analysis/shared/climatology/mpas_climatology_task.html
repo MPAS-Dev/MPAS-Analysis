@@ -103,6 +103,7 @@
 <span class="kn">import</span> <span class="nn">dask</span>
 <span class="kn">import</span> <span class="nn">multiprocessing</span>
 <span class="kn">from</span> <span class="nn">multiprocessing.pool</span> <span class="kn">import</span> <span class="n">ThreadPool</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
@@ -585,20 +586,24 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">seasons</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">]</span>
 
+        <span class="n">workDir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">inDirectory</span><span class="p">)</span>
+
+        <span class="n">inFiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="si">}</span><span class="s1">*&#39;</span><span class="p">))</span>
+
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncclimo&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;--no_stdin&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-4&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;--clm_md=mth&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;sdd&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="p">,</span>
+                <span class="s1">&#39;-P&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="p">,</span>
                 <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">parallelMode</span><span class="p">,</span>
                 <span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span><span class="p">),</span>
                 <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variableList</span><span class="p">),</span>
                 <span class="s1">&#39;--seasons=</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seasons</span><span class="p">)),</span>
                 <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">),</span>
                 <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">),</span>
-                <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">inDirectory</span><span class="p">,</span>
-                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">outDirectory</span><span class="p">]</span>
+                <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">outDirectory</span><span class="p">]</span> <span class="o">+</span> <span class="n">inFiles</span>
 
         <span class="k">if</span> <span class="n">remapper</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="n">remapper</span><span class="o">.</span><span class="n">mappingFileName</span><span class="p">])</span>
@@ -629,7 +634,9 @@
 
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
-                                                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
+                                                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">workDir</span><span class="p">)</span></div>
 
         <span class="c1"># }}}</span>
     <span class="c1"># }}}</span>

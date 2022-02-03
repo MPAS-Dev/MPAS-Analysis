@@ -248,16 +248,16 @@ $ <span class="nb">cd</span> ..
 <div class="section" id="configuring-mpas-analysis">
 <h2>4 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Permalink to this headline">¶</a></h2>
 <p>Configuration is with Python <code class="docutils literal notranslate"><span class="pre">cfg</span></code> (also called <code class="docutils literal notranslate"><span class="pre">ini</span></code>) files:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
-<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
-<span class="na">mainRunName</span> <span class="o">=</span> <span class="s">runName</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span><span class="w"></span>
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span><span class="w"></span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">runName</span><span class="w"></span>
 
-<span class="k">[execute]</span>
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
-<span class="na">parallelTaskCount</span> <span class="o">=</span> <span class="s">1</span>
-<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot; or &quot;bck&quot;)</span>
-<span class="na">ncclimoParallelMode</span> <span class="o">=</span> <span class="s">serial</span>
-<span class="na">...</span>
+<span class="k">[execute]</span><span class="w"></span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot; or &quot;bck&quot;)</span><span class="w"></span>
+<span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">serial</span><span class="w"></span>
+<span class="na">...</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg">default config file</a> contains over 1,000 config options, which gives a lot
@@ -294,12 +294,12 @@ Section 3.</p>
 <h3>4.1 [run]<a class="headerlink" href="#run" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">[run]</span></code> section contains options related to which E3SM simulation(s) are
 being analyzed:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
-<span class="c1">## options related to the run to be analyzed and control runs to be</span>
-<span class="c1">## compared against</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span><span class="w"></span>
+<span class="c1">## options related to the run to be analyzed and control runs to be</span><span class="w"></span>
+<span class="c1">## compared against</span><span class="w"></span>
 
-<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
-<span class="na">mainRunName</span> <span class="o">=</span> <span class="s">A_WCYCL1850.ne4_oQU480.anvil</span>
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span><span class="w"></span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">A_WCYCL1850.ne4_oQU480.anvil</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">mainRunName</span></code> can be any useful name that will appear at the top of each
@@ -312,18 +312,18 @@ but leave off the date of the simulation to keep it a little shorter.</p>
 <h3>4.2 [execute]<a class="headerlink" href="#execute" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section contains options related to serial or parallel
 execution of the individual “tasks” that make up an MPAS-Analysis run.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
-<span class="c1">## options related to executing parallel tasks</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
+<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
 
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
-<span class="na">parallelTaskCount</span> <span class="o">=</span> <span class="s">4</span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span><span class="w"></span>
 
-<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot;, &quot;bck&quot; or &quot;mpi&quot;)</span>
-<span class="c1"># Set this to &quot;bck&quot; (background parallelism) if running on a machine that can</span>
-<span class="c1"># handle 12 simultaneous processes, one for each monthly climatology.</span>
-<span class="c1"># Set to &quot;mpi&quot; to run one MPI task on each node and however many threads per</span>
-<span class="c1"># node to reach 12 total threads.</span>
-<span class="na">ncclimoParallelMode</span> <span class="o">=</span> <span class="s">bck</span>
+<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot;, &quot;bck&quot; or &quot;mpi&quot;)</span><span class="w"></span>
+<span class="c1"># Set this to &quot;bck&quot; (background parallelism) if running on a machine that can</span><span class="w"></span>
+<span class="c1"># handle 12 simultaneous processes, one for each monthly climatology.</span><span class="w"></span>
+<span class="c1"># Set to &quot;mpi&quot; to run one MPI task on each node and however many threads per</span><span class="w"></span>
+<span class="c1"># node to reach 12 total threads.</span><span class="w"></span>
+<span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bck</span><span class="w"></span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code> should typically be equal to the number of cores on a
@@ -347,16 +347,16 @@ of memory, it is worth exploring <code class="docutils literal notranslate"><spa
 <h3>4.3 [diagnostics]<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> section is used to supply the directory where you downloaded
 observations in Section 2.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[diagnostics]</span>
-<span class="c1">## config options related to observations, mapping files and region files used</span>
-<span class="c1">## by MPAS-Analysis in diagnostics computations.</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[diagnostics]</span><span class="w"></span>
+<span class="c1">## config options related to observations, mapping files and region files used</span><span class="w"></span>
+<span class="c1">## by MPAS-Analysis in diagnostics computations.</span><span class="w"></span>
 
-<span class="c1"># The base path to the diagnostics directory.  Typically, this will be a shared</span>
-<span class="c1"># directory on each E3SM supported machine (see the example config files for</span>
-<span class="c1"># its location).  For other machines, this would be the directory pointed to</span>
-<span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span>
-<span class="c1"># mapping files and region files.</span>
-<span class="na">base_path</span> <span class="o">=</span> <span class="s">/path/to/diagnostics</span>
+<span class="c1"># The base path to the diagnostics directory.  Typically, this will be a shared</span><span class="w"></span>
+<span class="c1"># directory on each E3SM supported machine (see the example config files for</span><span class="w"></span>
+<span class="c1"># its location).  For other machines, this would be the directory pointed to</span><span class="w"></span>
+<span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span><span class="w"></span>
+<span class="c1"># mapping files and region files.</span><span class="w"></span>
+<span class="na">base_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/diagnostics</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For <code class="docutils literal notranslate"><span class="pre">base_path</span></code>, supply the path where you downloaded the data
@@ -366,33 +366,33 @@ observations in Section 2.</p>
 <h3>4.4 [input]<a class="headerlink" href="#input" title="Permalink to this headline">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section provides paths to the E3SM simulation data and the name
 of the MPAS-Ocean and MPAS-Seaice mesh.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span>
-<span class="c1">## options related to reading in the results to be analyzed</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span><span class="w"></span>
+<span class="c1">## options related to reading in the results to be analyzed</span><span class="w"></span>
 
-<span class="c1"># directory containing model results</span>
-<span class="na">baseDirectory</span> <span class="o">=</span> <span class="s">/dir/for/model/output</span>
+<span class="c1"># directory containing model results</span><span class="w"></span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/dir/for/model/output</span><span class="w"></span>
 
-<span class="c1"># Note: an absolute path can be supplied for any of these subdirectories.</span>
-<span class="c1"># A relative path is assumed to be relative to baseDirectory.</span>
-<span class="c1"># In this example, results are assumed to be in &lt;baseDirecory&gt;/run</span>
+<span class="c1"># Note: an absolute path can be supplied for any of these subdirectories.</span><span class="w"></span>
+<span class="c1"># A relative path is assumed to be relative to baseDirectory.</span><span class="w"></span>
+<span class="c1"># In this example, results are assumed to be in &lt;baseDirecory&gt;/run</span><span class="w"></span>
 
-<span class="c1"># subdirectory containing restart files</span>
-<span class="na">runSubdirectory</span> <span class="o">=</span> <span class="s">run</span>
-<span class="c1"># subdirectory for ocean history files</span>
-<span class="na">oceanHistorySubdirectory</span> <span class="o">=</span> <span class="s">archive/ocn/hist</span>
-<span class="c1"># subdirectory for sea ice history files</span>
-<span class="na">seaIceHistorySubdirectory</span> <span class="o">=</span> <span class="s">archive/ice/hist</span>
+<span class="c1"># subdirectory containing restart files</span><span class="w"></span>
+<span class="na">runSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run</span><span class="w"></span>
+<span class="c1"># subdirectory for ocean history files</span><span class="w"></span>
+<span class="na">oceanHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ocn/hist</span><span class="w"></span>
+<span class="c1"># subdirectory for sea ice history files</span><span class="w"></span>
+<span class="na">seaIceHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ice/hist</span><span class="w"></span>
 
-<span class="c1"># names of namelist and streams files, either a path relative to baseDirectory</span>
-<span class="c1"># or an absolute path.</span>
-<span class="na">oceanNamelistFileName</span> <span class="o">=</span> <span class="s">run/mpaso_in</span>
-<span class="na">oceanStreamsFileName</span> <span class="o">=</span> <span class="s">run/streams.ocean</span>
-<span class="na">seaIceNamelistFileName</span> <span class="o">=</span> <span class="s">run/mpassi_in</span>
-<span class="na">seaIceStreamsFileName</span> <span class="o">=</span> <span class="s">run/streams.seaice</span>
+<span class="c1"># names of namelist and streams files, either a path relative to baseDirectory</span><span class="w"></span>
+<span class="c1"># or an absolute path.</span><span class="w"></span>
+<span class="na">oceanNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpaso_in</span><span class="w"></span>
+<span class="na">oceanStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.ocean</span><span class="w"></span>
+<span class="na">seaIceNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpassi_in</span><span class="w"></span>
+<span class="na">seaIceStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.seaice</span><span class="w"></span>
 
-<span class="c1"># name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,</span>
-<span class="c1"># ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)</span>
-<span class="na">mpasMeshName</span> <span class="o">=</span> <span class="s">oQU480</span>
+<span class="c1"># name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,</span><span class="w"></span>
+<span class="c1"># ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)</span><span class="w"></span>
+<span class="na">mpasMeshName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">oQU480</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the path where you untarred the example run.</p>
@@ -427,44 +427,44 @@ they are in the code block above.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">[output]</span></code> section provides a path where the output from the analysis run
 will be written, the option to output the results web pages to another
 location, and a list of analysis to be generated (or explicitly skipped).</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[output]</span>
-<span class="c1">## options related to writing out plots, intermediate cached data sets, logs,</span>
-<span class="c1">## etc.</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[output]</span><span class="w"></span>
+<span class="c1">## options related to writing out plots, intermediate cached data sets, logs,</span><span class="w"></span>
+<span class="c1">## etc.</span><span class="w"></span>
 
-<span class="c1"># directory where analysis should be written</span>
-<span class="c1"># NOTE: This directory path must be specific to each test case.</span>
-<span class="na">baseDirectory</span> <span class="o">=</span> <span class="s">/dir/for/analysis/output</span>
+<span class="c1"># directory where analysis should be written</span><span class="w"></span>
+<span class="c1"># NOTE: This directory path must be specific to each test case.</span><span class="w"></span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/dir/for/analysis/output</span><span class="w"></span>
 
-<span class="c1"># provide an absolute path to put HTML in an alternative location (e.g. a web</span>
-<span class="c1"># portal)</span>
-<span class="na">htmlSubdirectory</span> <span class="o">=</span> <span class="s">html</span>
+<span class="c1"># provide an absolute path to put HTML in an alternative location (e.g. a web</span><span class="w"></span>
+<span class="c1"># portal)</span><span class="w"></span>
+<span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">html</span><span class="w"></span>
 
-<span class="c1"># a list of analyses to generate.  Valid names can be seen by running:</span>
-<span class="c1">#   mpas_analysis --list</span>
-<span class="c1"># This command also lists tags for each analysis.</span>
-<span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
-<span class="c1"># These include:</span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
-<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span>
-<span class="c1">#                      public server (the default)</span>
-<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
-<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
-<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
-<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
-<span class="c1">#                                       with this tag will be run, and all</span>
-<span class="c1">#                                       analysis for other components or</span>
-<span class="c1">#                                       without the tag will be skipped</span>
-<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
-<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
-<span class="c1">#                                   tasks from the given component or with</span>
-<span class="c1">#                                   the given tag.  Do</span>
-<span class="c1">#                                      mpas_analysis --list</span>
-<span class="c1">#                                   to list all task names and their tags</span>
-<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
-<span class="c1"># option:</span>
-<span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
-<span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
-<span class="na">generate</span> <span class="o">=</span> <span class="s">[&#39;all_publicObs&#39;]</span>
+<span class="c1"># a list of analyses to generate.  Valid names can be seen by running:</span><span class="w"></span>
+<span class="c1">#   mpas_analysis --list</span><span class="w"></span>
+<span class="c1"># This command also lists tags for each analysis.</span><span class="w"></span>
+<span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span><span class="w"></span>
+<span class="c1"># These include:</span><span class="w"></span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span><span class="w"></span>
+<span class="c1">#                      public server (the default)</span><span class="w"></span>
+<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span><span class="w"></span>
+<span class="c1">#                        or &#39;seaIce&#39;) will be run</span><span class="w"></span>
+<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span><span class="w"></span>
+<span class="c1">#                                       with this tag will be run, and all</span><span class="w"></span>
+<span class="c1">#                                       analysis for other components or</span><span class="w"></span>
+<span class="c1">#                                       without the tag will be skipped</span><span class="w"></span>
+<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span><span class="w"></span>
+<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span><span class="w"></span>
+<span class="c1">#                                   tasks from the given component or with</span><span class="w"></span>
+<span class="c1">#                                   the given tag.  Do</span><span class="w"></span>
+<span class="c1">#                                      mpas_analysis --list</span><span class="w"></span>
+<span class="c1">#                                   to list all task names and their tags</span><span class="w"></span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span><span class="w"></span>
+<span class="c1"># option:</span><span class="w"></span>
+<span class="c1">#    mpas_analysis analysis.cfg --generate \</span><span class="w"></span>
+<span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span><span class="w"></span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all_publicObs&#39;]</span><span class="w"></span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is any convenient location for the output.</p>
@@ -482,39 +482,39 @@ were downloaded in Section 2 (or analysis that does not require observations).</
 <p>These options determine the start and end years of climatologies (time averages
 over a particular month, season or the full year), time series or the El Niño
 climate index.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatology]</span>
-<span class="c1">## options related to producing climatologies, typically to compare against</span>
-<span class="c1">## observations and previous runs</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatology]</span><span class="w"></span>
+<span class="c1">## options related to producing climatologies, typically to compare against</span><span class="w"></span>
+<span class="c1">## observations and previous runs</span><span class="w"></span>
 
-<span class="c1"># the first year over which to average climatalogies</span>
-<span class="na">startYear</span> <span class="o">=</span> <span class="s">3</span>
-<span class="c1"># the last year over which to average climatalogies</span>
-<span class="na">endYear</span> <span class="o">=</span> <span class="s">5</span>
+<span class="c1"># the first year over which to average climatalogies</span><span class="w"></span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
+<span class="c1"># the last year over which to average climatalogies</span><span class="w"></span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
 
-<span class="k">[timeSeries]</span>
-<span class="c1">## options related to producing time series plots, often to compare against</span>
-<span class="c1">## observations and previous runs</span>
+<span class="k">[timeSeries]</span><span class="w"></span>
+<span class="c1">## options related to producing time series plots, often to compare against</span><span class="w"></span>
+<span class="c1">## observations and previous runs</span><span class="w"></span>
 
-<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
-<span class="na">startYear</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">endYear</span> <span class="o">=</span> <span class="s">5</span>
+<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span><span class="w"></span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span><span class="w"></span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span><span class="w"></span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span><span class="w"></span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span><span class="w"></span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span><span class="w"></span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
 
-<span class="k">[index]</span>
-<span class="c1">## options related to producing nino index.</span>
+<span class="k">[index]</span><span class="w"></span>
+<span class="c1">## options related to producing nino index.</span><span class="w"></span>
 
-<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
-<span class="na">startYear</span> <span class="o">=</span> <span class="s">1</span>
-<span class="na">endYear</span> <span class="o">=</span> <span class="s">5</span>
+<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span><span class="w"></span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span><span class="w"></span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span><span class="w"></span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span><span class="w"></span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span><span class="w"></span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span><span class="w"></span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
 </pre></div>
 </div>
 <p>For each of these, options a full year of data must exist for that year to

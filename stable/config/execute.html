@@ -204,12 +204,12 @@ E3SM-Unified on a compute node, on many systems (see below), ESMF has been
 built with the system version of MPI and you must run mapping-file generation
 with <code class="docutils literal notranslate"><span class="pre">srun</span></code>.  If you are running with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, the mapping
 files will be generated in parallel.</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">mapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Similarly, some systems (Anvil and Chrysalis) require a parallel executable
 for calls to <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> from E3SM-Unified on compute nodes:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">ncremapParallelExec</span> <span class="o">=</span> <span class="s">srun</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">ncremapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span><span class="w"></span>
 </pre></div>
 </div>
 <p>E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:</p>

@@ -191,6 +191,7 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_polar_comparison.html">mpas_analysis.shared.plot.plot_polar_comparison</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_global_comparison.html">mpas_analysis.shared.plot.plot_global_comparison</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_1D.html">mpas_analysis.shared.plot.plot_1D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html">mpas_analysis.shared.plot.plot_vertical_section_comparison</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section.html">mpas_analysis.shared.plot.plot_vertical_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
@@ -764,16 +765,19 @@ the documentation.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_1D.html#mpas_analysis.shared.plot.plot_1D" title="mpas_analysis.shared.plot.plot_1D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1D</span></code></a>(config, xArrays, fieldArrays, errArrays)</p></td>
 <td><p>Plots a 1D line plot with error bars if available.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section" title="mpas_analysis.shared.plot.plot_vertical_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vertical_section</span></code></a>(config, xArray, ...[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison" title="mpas_analysis.shared.plot.plot_vertical_section_comparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vertical_section_comparison</span></code></a>(config, ...)</p></td>
+<td><p>Plots vertical section plots in a three-panel format, comparing model data (in modelArray) to some reference dataset (in refArray), which can be either observations or an alternative model, and also presenting the difference plot of the two.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section" title="mpas_analysis.shared.plot.plot_vertical_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vertical_section</span></code></a>(config, field, ...[, ...])</p></td>
 <td><p>Plots a data set as a x distance (latitude, longitude, or spherical distance) vs depth map (vertical section).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap" title="mpas_analysis.shared.plot.colormap.setup_colormap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colormap.setup_colormap</span></code></a>(config, ...[, suffix])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap" title="mpas_analysis.shared.plot.colormap.setup_colormap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colormap.setup_colormap</span></code></a>(config, ...[, suffix])</p></td>
 <td><p>Set up a colormap from the registry</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html#mpas_analysis.shared.plot.ticks.plot_xtick_format" title="mpas_analysis.shared.plot.ticks.plot_xtick_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ticks.plot_xtick_format</span></code></a>(calendar, minDays, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html#mpas_analysis.shared.plot.ticks.plot_xtick_format" title="mpas_analysis.shared.plot.ticks.plot_xtick_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ticks.plot_xtick_format</span></code></a>(calendar, minDays, ...)</p></td>
 <td><p>Formats tick labels and positions along the x-axis for time series / index plots</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html#mpas_analysis.shared.plot.add_inset" title="mpas_analysis.shared.plot.add_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inset</span></code></a>(fig, fc[, latlonbuffer, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html#mpas_analysis.shared.plot.add_inset" title="mpas_analysis.shared.plot.add_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inset</span></code></a>(fig, fc[, latlonbuffer, ...])</p></td>
 <td><p>Plots an inset map showing the location of a transect or polygon.</p></td>
 </tr>
 </tbody>

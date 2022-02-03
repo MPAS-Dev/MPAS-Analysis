@@ -58,7 +58,6 @@
 <li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
 </ul>
 </li>
 </ul>
@@ -126,26 +125,26 @@ Date last modified: 2017/02/02 <br>
 Contributors: Xylar Asay-Davis
 </h3><p>Implementation of the <code class="docutils literal notranslate"><span class="pre">config.template</span></code> file can be found <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">here</a>.</p>
 <p>The following comment describes the planned implementation in the config file.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># a list of analyses to generate.  Valid names are:</span>
-<span class="c1">#   &#39;timeSeriesOHC&#39;, &#39;timeSeriesSST&#39;, &#39;regriddedSST&#39;,</span>
-<span class="c1">#   &#39;regriddedSSS&#39;, &#39;regriddedMLD&#39;, &#39;timeSeriesSeaIceAreaVol&#39;,</span>
-<span class="c1">#   &#39;regriddedSeaIceConcThick&#39;</span>
-<span class="c1"># the following shortcuts exist:</span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
-<span class="c1">#   &#39;all_timeSeries&#39; -- all time-series analyses will be run</span>
-<span class="c1">#   &#39;all_regriddedHorizontal&#39; -- all analyses involving regridded horizontal</span>
-    <span class="c1">#                                fields will be run</span>
-<span class="c1">#   &#39;all_ocean&#39; -- all ocean analyses will be run</span>
-<span class="c1">#   &#39;all_seaIce&#39; -- all sea-ice analyses will be run</span>
-<span class="c1">#   &#39;no_timeSeriesOHC&#39; -- skip &#39;timeSeriesOHC&#39; (and similarly with the</span>
-<span class="c1">#                             other analyses).</span>
-<span class="c1">#   &#39;no_ocean&#39;, &#39;no_timeSeries&#39;, etc. -- in analogy to &#39;all_*&#39;, skip the</span>
-<span class="c1">#                                            given category of analysis</span>
-<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
-<span class="c1"># option:</span>
-<span class="c1">#    ./run_analysis.py config.analysis --generate \</span>
-<span class="c1">#         all,no_ocean,all_timeSeries</span>
-<span class="na">generate</span> <span class="o">=</span> <span class="s">[&#39;all&#39;]</span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># a list of analyses to generate.  Valid names are:</span><span class="w"></span>
+<span class="c1">#   &#39;timeSeriesOHC&#39;, &#39;timeSeriesSST&#39;, &#39;regriddedSST&#39;,</span><span class="w"></span>
+<span class="c1">#   &#39;regriddedSSS&#39;, &#39;regriddedMLD&#39;, &#39;timeSeriesSeaIceAreaVol&#39;,</span><span class="w"></span>
+<span class="c1">#   &#39;regriddedSeaIceConcThick&#39;</span><span class="w"></span>
+<span class="c1"># the following shortcuts exist:</span><span class="w"></span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_timeSeries&#39; -- all time-series analyses will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_regriddedHorizontal&#39; -- all analyses involving regridded horizontal</span><span class="w"></span>
+<span class="w">    </span><span class="c1">#                                fields will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_ocean&#39; -- all ocean analyses will be run</span><span class="w"></span>
+<span class="c1">#   &#39;all_seaIce&#39; -- all sea-ice analyses will be run</span><span class="w"></span>
+<span class="c1">#   &#39;no_timeSeriesOHC&#39; -- skip &#39;timeSeriesOHC&#39; (and similarly with the</span><span class="w"></span>
+<span class="c1">#                             other analyses).</span><span class="w"></span>
+<span class="c1">#   &#39;no_ocean&#39;, &#39;no_timeSeries&#39;, etc. -- in analogy to &#39;all_*&#39;, skip the</span><span class="w"></span>
+<span class="c1">#                                            given category of analysis</span><span class="w"></span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span><span class="w"></span>
+<span class="c1"># option:</span><span class="w"></span>
+<span class="c1">#    ./run_analysis.py config.analysis --generate \</span><span class="w"></span>
+<span class="c1">#         all,no_ocean,all_timeSeries</span><span class="w"></span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;]</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Where there are conflicts between items in the <code class="docutils literal notranslate"><span class="pre">generate</span></code> list, successive items will override earlier items.  For example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_timeSeriesOHC']</span></code> will generate all analyses except <code class="docutils literal notranslate"><span class="pre">timeSeriesOHC</span></code>.  As another example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_ocean',</span> <span class="pre">'all_timeSeries']</span></code> would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all_seaIce',</span> <span class="pre">'all_timeSeries']</span></code>.)</p>
