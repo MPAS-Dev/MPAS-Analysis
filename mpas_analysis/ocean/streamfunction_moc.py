@@ -755,38 +755,28 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             maxLat = config.getExpression('streamfunctionMOC{}'.format(region),
                                           'latBinMax')
             indLat = np.logical_and(x >= minLat, x <= maxLat)
-            x = x[indLat]
-            regionMOC = regionMOC[:, indLat]
+            x = x.where(indLat, drop=True)
+            regionMOC = regionMOC.where(indLat, drop=True)
             if self.controlConfig is None:
                 refRegionMOC = None
                 diff = None
             else:
                 # the coords of the ref MOC won't necessarily match this MOC
                 # so we need to interpolate
-                nz, nx = regionMOC.shape
-                refNz, refNx = refMOC[region].shape
-                temp = np.zeros((refNz, nx))
-                for zIndex in range(refNz):
-                    temp[zIndex, :] = np.interp(
-                        x, refLat[region], refMOC[region][zIndex, :],
-                        left=np.nan, right=np.nan)
-                refRegionMOC = np.zeros((nz, nx))
-                for xIndex in range(nx):
-                    refRegionMOC[:, xIndex] = np.interp(
-                        depth, refDepth, temp[:, xIndex],
-                        left=np.nan, right=np.nan)
+                refRegionMOC = _interp_moc(x, z, regionMOC, refLat[region],
+                                           refDepth, refMOC[region])
 
                 diff = regionMOC - refRegionMOC
 
             plot_vertical_section_comparison(
-                config, x, z, regionMOC, refRegionMOC, diff,
+                config, regionMOC, refRegionMOC, diff, xCoords=x, zCoord=z,
                 colorMapSectionName='streamfunctionMOC{}'.format(region),
                 colorbarLabel=colorbarLabel,
                 title=title,
                 modelTitle=mainRunName,
                 refTitle=refTitle,
                 diffTitle=diffTitle,
-                xlabel=xLabel,
+                xlabels=xLabel,
                 ylabel=yLabel,
                 movingAveragePoints=movingAveragePointsClimatological,
                 maxTitleLength=70)
@@ -820,15 +810,13 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             endYear)
 
         # Read from file
-        ncFile = netCDF4.Dataset(inputFileName, mode='r')
-        depth = ncFile.variables['depth'][:]
+        ds = xr.open_dataset(inputFileName)
+        depth = ds['depth']
         lat = {}
         moc = {}
         for region in self.regionNames:
-            lat[region] = ncFile.variables['lat{}'.format(region)][:]
-            moc[region] = \
-                ncFile.variables['moc{}'.format(region)][:, :]
-        ncFile.close()
+            lat[region] = ds['lat{}'.format(region)]
+            moc[region] = ds['moc{}'.format(region)]
         return depth, lat, moc  # }}}
 
     # }}}
@@ -1605,5 +1593,30 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
     mocTop = mocTop * m3ps_to_Sv
     mocTop = mocTop.T
     return mocTop  # }}}
+
+
+def _interp_moc(x, z, regionMOC, refX, refZ, refMOC):
+    x = x.values
+    z = z.values
+    dims = regionMOC.dims
+    regionMOC = regionMOC.values
+    refX = refX.values
+    refZ = refZ.values
+    refMOC = refMOC.values
+
+    nz, nx = regionMOC.shape
+    refNz, refNx = refMOC.shape
+    temp = np.zeros((refNz, nx))
+    for zIndex in range(refNz):
+        temp[zIndex, :] = np.interp(
+            x, refX, refMOC[zIndex, :],
+            left=np.nan, right=np.nan)
+    refRegionMOC = np.zeros((nz, nx))
+    for xIndex in range(nx):
+        refRegionMOC[:, xIndex] = np.interp(
+            z, refZ, temp[:, xIndex],
+            left=np.nan, right=np.nan)
+
+    return xr.DataArray(dims=dims, data=refRegionMOC)
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

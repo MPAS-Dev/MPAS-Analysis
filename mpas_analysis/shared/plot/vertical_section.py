@@ -21,8 +21,8 @@ from __future__ import absolute_import, division, print_function, \
 
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.tri import Triangulation
 import xarray as xr
-import pandas as pd
 import numpy as np
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days
@@ -34,14 +34,21 @@ from mpas_analysis.shared.plot.title import limit_title
 
 def plot_vertical_section_comparison(
         config,
-        xArray,
-        depthArray,
         modelArray,
         refArray,
         diffArray,
         colorMapSectionName,
+        xCoords=None,
+        zCoord=None,
+        triangulation_args=None,
+        xOutlineModel=None,
+        zOutlineModel=None,
+        xOutlineRef=None,
+        zOutlineRef=None,
+        xOutlineDiff=None,
+        zOutlineDiff=None,
         colorbarLabel=None,
-        xlabel=None,
+        xlabels=None,
         ylabel=None,
         title=None,
         modelTitle='Model',
@@ -57,16 +64,14 @@ def plot_vertical_section_comparison(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
+        invalidColor='white',
+        outlineValid=True,
         xLim=None,
         yLim=None,
-        secondXAxisData=None,
-        secondXAxisLabel=None,
-        thirdXAxisData=None,
-        thirdXAxisLabel=None,
         numUpperTicks=None,
         upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
-        xArrayIsTime=False,
+        xCoordIsTime=False,
         movingAveragePoints=None,
         firstYearXTicks=None,
         yearStrideXTicks=None,
@@ -96,18 +101,44 @@ def plot_vertical_section_comparison(
         the configuration, containing a [plot] section with options that
         control plotting
 
-    xArray : float array
-        x array (latitude, longitude, spherical distance, or distance along
-        a transect;  or, time for Hovmoller plots)
-
-    depthArray : float array
-        depth array [m]
-
-    modelArray, refArray : float arrays
+    modelArray, refArray : xarray.DataArray
         model and observational or control run data sets
 
     diffArray : float array
         difference between modelArray and refArray
+
+    xCoords : xarray.DataArray or list of xarray.DataArray, optional
+       The x coordinate(s) for the model, ref and diff arrays.  Optional second
+       and third entries will be used for a second and third x axis above the
+       plot.  The typical use for the second and third axis is for transects,
+       for which the primary x axis represents distance along a transect, and
+       the second and third x axes are used to display the corresponding
+       latitudes and longitudes.
+
+    zCoord : xarray.DataArray, optional
+        The z coordinates for the model, ref and diff arrays
+
+    triangulation_args : dict, optional
+        A dict of arguments to create a matplotlib.tri.Triangulation of the
+        transect that does not rely on it being on a logically rectangular grid.
+        The arguments rather than the triangulation itself are passed because
+        multiple triangulations with different masks are needed internally and
+        there is not an obvious mechanism for copying an existing triangulation.
+        If this option is provided, ``xCoords`` is only used for tick marks if
+        more than one x axis is requested, and ``zCoord`` will be ignored.
+
+    xOutlineModel, zOutlineModel : numpy.ndarray, optional
+        pairs of points defining line segments that are used to outline the
+        valid region of the mesh for the model panel if ``outlineValid = True``
+        and ``triangulation_args`` is not ``None``
+
+    xOutlineRef, zOutlineRef : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference
+        panel
+
+    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional
+        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference
+        panel
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -121,8 +152,11 @@ def plot_vertical_section_comparison(
         parenthetically appended to the legend entries of the contour
         comparison plot.
 
-    xlabel, ylabel : str, optional
-        label of x- and y-axis
+    xlabels : str or list of str, optional
+        labels of x-axes.  Labels correspond to entries in ``xCoords``.
+
+    ylabel : str, optional
+        label of y-axis
 
     title : str, optional
         the subtitle of the plot
@@ -173,36 +207,22 @@ def plot_vertical_section_comparison(
         contourComparisonLineColor argument).
 
     backgroundColor : str, optional
-        the background color for the plot (NaNs and masked areas will be
+        the background color for the plot outside the limits of ``xCoord`` and
+        ``zCoord``.
+
+    invalidColor : str, optional
+        the color for invalid values (NaNs and masked areas will be
         shown in this color)
+
+    outlineValid : bool, optional
+        whether to outline the boundary between the valid an invalid regions
+        with a black contour
 
     xLim : float array, optional
         x range of plot
 
     yLim : float array, optional
         y range of plot
-
-    secondXAxisData : the data to use to display a second x axis (which will be
-        placed above the plot).  This array must have the same number of values
-        as xArray, and it is assumed that the values in this array define
-        locations along the x axis that are the same as those defined by the
-        corresponding values in xArray, but in some different unit system.
-
-    secondXAxisLabel : the label for the second x axis, if requested
-
-    thirdXAxisData : the data to use to display a third x axis (which will be
-        placed above the plot and above the second x axis, which must be
-        specified if a third x axis is to be specified).  This array must have
-        the same number of values as xArray, and it is assumed that the values
-        in this array define locations along the x axis that are the same as
-        those defined by the corresponding values in xArray, but in some
-        different unit system (which is presumably also different from the unit
-        system used for the values in the secondXAxisData array).  The typical
-        use for this third axis is for transects, for which the primary x axis
-        represents distance along a transect, and the second and third x axes
-        are used to display the corresponding latitudes and longitudes.
-
-    thirdXAxisLabel : the label for the third x axis, if requested
 
     numUpperTicks : the approximate number of ticks to use on the upper x axis
         or axes (these are the second and third x axes, which are placed above
@@ -217,13 +237,13 @@ def plot_vertical_section_comparison(
     invertYAxis : logical, optional
         if True, invert Y axis
 
-    xArrayIsTime : logical, optional
+    xCoordIsTime : logical, optional
         if True, format the x axis for time (this applies only to the primary
         x axis, not to the optional second or third x axes)
 
     movingAveragePoints : int, optional
         the number of points over which to perform a moving average
-        NOTE: this option is mostly intended for use when xArrayIsTime is True,
+        NOTE: this option is mostly intended for use when xCoordIsTime is True,
         although it will work with other data as well.  Also, the moving
         average calculation is based on number of points, not actual x axis
         values, so for best results, the values in the xArray should be equally
@@ -240,11 +260,11 @@ def plot_vertical_section_comparison(
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the primary
         x axis.  This may need to be adjusted depending on the figure size and
-        aspect ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+        aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True
 
     calendar : str, optional
         the calendar to use for formatting the time axis
-        NOTE:  calendar is only used if xArrayIsTime is True
+        NOTE:  calendar is only used if xCoordIsTime is True
 
     compareAsContours : bool, optional
        if compareAsContours is True, instead of creating a three panel plot
@@ -298,6 +318,11 @@ def plot_vertical_section_comparison(
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
     matplotlib.rc('font', size=defaultFontSize)
+    if not isinstance(xCoords, list):
+        xCoords = [xCoords]
+
+    if not isinstance(xlabels, list):
+        xlabels = [xlabels]
 
     if refArray is None or compareAsContours:
         singlePanel = True
@@ -312,13 +337,13 @@ def plot_vertical_section_comparison(
         # depending on how many x axes are to be displayed on the plots
         if singlePanel:
             if compareAsContours and refArray is not None:
-                if thirdXAxisData is not None:
+                if len(xCoords) == 3:
                     figsize = (8, 8)
                 else:
                     figsize = (8, 7)
             else:
                 figsize = (8, 5)
-        elif thirdXAxisData is not None:
+        elif len(xCoords) == 3:
             figsize = (8, 17)
         else:
             figsize = (8, 13)
@@ -339,12 +364,12 @@ def plot_vertical_section_comparison(
     if plotTitleFontSize is None:
         plotTitleFontSize = config.get('plot', 'threePanelPlotTitleFontSize')
 
-    if thirdXAxisData is not None:
+    if len(xCoords) == 3:
         if singlePanel:
             titleY = 1.64
         else:
             titleY = 1.34
-    elif secondXAxisData is not None:
+    elif len(xCoords) >= 2:
         titleY = 1.20
     else:
         titleY = 1.06
@@ -357,12 +382,12 @@ def plot_vertical_section_comparison(
 
     if not compareAsContours or refArray is None:
         title = modelTitle
-        contourComparisonFieldArray = None
+        contourComparisonField = None
         comparisonFieldName = None
         originalFieldName = None
     else:
         title = None
-        contourComparisonFieldArray = refArray
+        contourComparisonField = refArray
         comparisonFieldName = refTitle
         originalFieldName = modelTitle
 
@@ -370,14 +395,17 @@ def plot_vertical_section_comparison(
 
     _, ax = plot_vertical_section(
         config,
-        xArray,
-        depthArray,
         modelArray,
         colorMapSectionName,
+        xCoords=xCoords,
+        zCoord=zCoord,
+        triangulation_args=triangulation_args,
+        xOutline=xOutlineModel,
+        zOutline=zOutlineModel,
         suffix=resultSuffix,
         colorbarLabel=colorbarLabel,
         title=title,
-        xlabel=xlabel,
+        xlabels=xlabels,
         ylabel=ylabel,
         figsize=None,
         titleFontSize=plotTitleFontSize,
@@ -389,21 +417,19 @@ def plot_vertical_section_comparison(
         lineWidth=lineWidth,
         lineStyle=lineStyle,
         lineColor=lineColor,
-        secondXAxisData=secondXAxisData,
-        secondXAxisLabel=secondXAxisLabel,
-        thirdXAxisData=thirdXAxisData,
-        thirdXAxisLabel=thirdXAxisLabel,
         numUpperTicks=numUpperTicks,
         upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
         invertYAxis=invertYAxis,
-        xArrayIsTime=xArrayIsTime,
+        xCoordIsTime=xCoordIsTime,
         movingAveragePoints=movingAveragePoints,
         firstYearXTicks=firstYearXTicks,
         yearStrideXTicks=yearStrideXTicks,
         maxXTicks=maxXTicks, calendar=calendar,
         backgroundColor=backgroundColor,
+        invalidColor=invalidColor,
+        outlineValid=outlineValid,
         plotAsContours=compareAsContours,
-        contourComparisonFieldArray=contourComparisonFieldArray,
+        contourComparisonField=contourComparisonField,
         comparisonFieldName=comparisonFieldName,
         originalFieldName=originalFieldName,
         comparisonContourLineStyle=comparisonContourLineStyle,
@@ -418,14 +444,17 @@ def plot_vertical_section_comparison(
         plt.subplot(3, 1, 2)
         _, ax = plot_vertical_section(
             config,
-            xArray,
-            depthArray,
             refArray,
             colorMapSectionName,
+            xCoords=xCoords,
+            zCoord=zCoord,
+            triangulation_args=triangulation_args,
+            xOutline=xOutlineRef,
+            zOutline=zOutlineRef,
             suffix=resultSuffix,
             colorbarLabel=colorbarLabel,
             title=refTitle,
-            xlabel=xlabel,
+            xlabels=xlabels,
             ylabel=ylabel,
             figsize=None,
             titleFontSize=plotTitleFontSize,
@@ -437,20 +466,18 @@ def plot_vertical_section_comparison(
             lineWidth=lineWidth,
             lineStyle=lineStyle,
             lineColor=lineColor,
-            secondXAxisData=secondXAxisData,
-            secondXAxisLabel=secondXAxisLabel,
-            thirdXAxisData=thirdXAxisData,
-            thirdXAxisLabel=thirdXAxisLabel,
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
-            xArrayIsTime=xArrayIsTime,
+            xCoordIsTime=xCoordIsTime,
             movingAveragePoints=movingAveragePoints,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            invalidColor=invalidColor,
+            outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             maxTitleLength=maxTitleLength)
@@ -460,14 +487,17 @@ def plot_vertical_section_comparison(
         plt.subplot(3, 1, 3)
         _, ax = plot_vertical_section(
             config,
-            xArray,
-            depthArray,
             diffArray,
             colorMapSectionName,
+            xCoords=xCoords,
+            zCoord=zCoord,
+            triangulation_args=triangulation_args,
+            xOutline=xOutlineDiff,
+            zOutline=zOutlineDiff,
             suffix=diffSuffix,
             colorbarLabel=colorbarLabel,
             title=diffTitle,
-            xlabel=xlabel,
+            xlabels=xlabels,
             ylabel=ylabel,
             figsize=None,
             titleFontSize=plotTitleFontSize,
@@ -479,20 +509,18 @@ def plot_vertical_section_comparison(
             lineWidth=lineWidth,
             lineStyle=lineStyle,
             lineColor=lineColor,
-            secondXAxisData=secondXAxisData,
-            secondXAxisLabel=secondXAxisLabel,
-            thirdXAxisData=thirdXAxisData,
-            thirdXAxisLabel=thirdXAxisLabel,
             upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
             numUpperTicks=numUpperTicks,
             invertYAxis=invertYAxis,
-            xArrayIsTime=xArrayIsTime,
+            xCoordIsTime=xCoordIsTime,
             movingAveragePoints=movingAveragePoints,
             firstYearXTicks=firstYearXTicks,
             yearStrideXTicks=yearStrideXTicks,
             maxXTicks=maxXTicks,
             calendar=calendar,
             backgroundColor=backgroundColor,
+            invalidColor=invalidColor,
+            outlineValid=outlineValid,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             maxTitleLength=maxTitleLength)
@@ -500,7 +528,7 @@ def plot_vertical_section_comparison(
         axes.append(ax)
 
     if singlePanel:
-        if thirdXAxisData is not None and refArray is None:
+        if len(xCoords) == 3 and refArray is None:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.98])
         else:
             plt.tight_layout(pad=0.0, h_pad=2.0, rect=[0.0, 0.0, 1.0, 0.95])
@@ -512,14 +540,17 @@ def plot_vertical_section_comparison(
 
 def plot_vertical_section(
         config,
-        xArray,
-        depthArray,
-        fieldArray,
+        field,
         colorMapSectionName,
+        xCoords=None,
+        zCoord=None,
+        triangulation_args=None,
+        xOutline=None,
+        zOutline=None,
         suffix='',
         colorbarLabel=None,
         title=None,
-        xlabel=None,
+        xlabels=None,
         ylabel=None,
         figsize=(10, 4),
         dpi=None,
@@ -533,21 +564,19 @@ def plot_vertical_section(
         lineStyle='solid',
         lineColor='black',
         backgroundColor='grey',
-        secondXAxisData=None,
-        secondXAxisLabel=None,
-        thirdXAxisData=None,
-        thirdXAxisLabel=None,
+        invalidColor='white',
+        outlineValid=True,
         numUpperTicks=None,
         upperXAxisTickLabelPrecision=None,
         invertYAxis=True,
-        xArrayIsTime=False,
+        xCoordIsTime=False,
         movingAveragePoints=None,
         firstYearXTicks=None,
         yearStrideXTicks=None,
         maxXTicks=20,
         calendar='gregorian',
         plotAsContours=False,
-        contourComparisonFieldArray=None,
+        contourComparisonField=None,
         comparisonFieldName=None,
         originalFieldName=None,
         comparisonContourLineStyle=None,
@@ -559,12 +588,12 @@ def plot_vertical_section(
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
 
-    Or, if xArrayIsTime is True, plots data set on a vertical
+    Or, if xCoordIsTime is True, plots data set on a vertical
     Hovmoller plot (depth vs. time).
 
-    Typically, the fieldArray data are plotted using a heatmap, but if
-    contourComparisonFieldArray is not None, then contours of both
-    fieldArray and contourComparisonFieldArray are plotted instead.
+    Typically, the ``field`` data are plotted using a heatmap, but if
+    ``contourComparisonField`` is not None, then contours of both
+    ``field`` and ``contourComparisonField`` are plotted instead.
 
     Parameters
     ----------
@@ -572,18 +601,44 @@ def plot_vertical_section(
         the configuration, containing a [plot] section with options that
         control plotting
 
-    xArray : float array
-        x array (latitude, longitude, or spherical distance; or, time for a
-        Hovmoller plot)
-
-    depthArray : float array
-        depth array [m]
-
-    fieldArray : float array
-        field array to plot
+    field : xarray.DataArray
+        field array to plot.  For contour plots, ``xCoords`` and ``zCoords``
+        should broadcast to the same shape as ``field``.  For heatmap plots,
+        ``xCoords`` and ``zCoords`` are the corners of the plot.  If they
+        broadcast to the same shape as ``field``, ``field`` will be bilinearly
+        interpolated to center values for each plot cell.  If the coordinates
+        have one extra element in each direction than ``field``, ``field`` is
+        assumed to contain cell values and no interpolation is performed.
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
+
+    xCoords : xarray.DataArray or list of xarray.DataArray, optional
+       The x coordinate(s) for the ``field``.  Optional second
+       and third entries will be used for a second and third x axis above the
+       plot.  The typical use for the second and third axis is for transects,
+       for which the primary x axis represents distance along a transect, and
+       the second and third x axes are used to display the corresponding
+       latitudes and longitudes.
+
+    zCoord : xarray.DataArray, optional
+        The z coordinates for the ``field``
+
+    triangulation_args : dict, optional
+        A dict of arguments to create a matplotlib.tri.Triangulation of the
+        transect that does not rely on it being on a logically rectangular grid.
+        The arguments rather than the triangulation itself are passed because
+        multiple triangulations with different masks are needed internally and
+        there is not an obvious mechanism for copying an existing triangulation.
+        If this option is provided, ``xCoords`` is only used for tick marks if
+        more than one x axis is requested, and ``zCoord`` will be ignored.
+
+    xOutline, zOutline : numpy.ndarray, optional
+        pairs of points defining line segments that are used to outline the
+        valid region of the mesh if ``outlineValid = True`` and
+        ``triangulation_args`` is not ``None``
+
+
 
     suffix : str, optional
         the suffix used for colorbar config options
@@ -592,16 +647,19 @@ def plot_vertical_section(
         the label for the colorbar.  If plotAsContours and labelContours are
         both True, colorbarLabel is used as follows (typically in order to
         indicate the units that are associated with the contour labels):
-        if contourComparisonFieldArray is None, the colorbarLabel string is
+        if ``contourComparisonField`` is None, the ``colorbarLabel`` string is
         parenthetically appended to the plot title;  if
-        contourComparisonFieldArray is not None, it is parenthetically appended
+        ``contourComparisonField`` is not None, it is parenthetically appended
         to the legend entries of the contour comparison plot.
 
     title : str, optional
         title of plot
 
-    xlabel, ylabel : str, optional
-        label of x- and y-axis
+    xlabels : str or list of str, optional
+        labels of x-axes.  Labels correspond to entries in ``xCoords``.
+
+    ylabel : str, optional
+        label of y-axis
 
     figsize : tuple of float, optional
         size of the figure in inches, or None if the current figure should
@@ -635,45 +693,34 @@ def plot_vertical_section(
     lineStyle : str, optional
         the line style of contour lines (if specified); this applies to the
         style of contour lines of fieldArray (the style of the contour lines
-        of contourComparisonFieldArray is set using
+        of contourComparisonField is set using
         contourComparisonLineStyle).
 
     lineColor : str, optional
         the color of contour lines (if specified); this applies to the
         contour lines of fieldArray (the color of the contour lines of
-        contourComparisonFieldArray is set using contourComparisonLineColor
+        contourComparisonField is set using contourComparisonLineColor
 
     backgroundColor : str, optional
-        the background color for the plot (NaNs will be shown in this color)
+        the background color for the plot outside the limits of ``xCoord`` and
+        ``zCoord``.
 
-    secondXAxisData : the data to use to display a second x axis (which will be
-        placed above the plot).  This array must have the same number of values
-        as xArray, and it is assumed that the values in this array define
-        locations along the x axis that are the same as those defined by the
-        corresponding values in xArray, but in some different unit system.
+    invalidColor : str, optional
+        the color for invalid values (NaNs and masked areas will be
+        shown in this color)
 
-    secondXAxisLabel : the label for the second x axis, if requested
+    outlineValid : bool, optional
+        whether to outline the boundary between the valid an invalid regions
+        with a black contour
 
-    thirdXAxisData : the data to use to display a third x axis (which will be
-        placed above the plot and above the second x axis, which must be
-        specified if a third x axis is to be specified).  This array must have
-        the same number of values as xArray, and it is assumed that the values
-        in this array define locations along the x axis that are the same as
-        those defined by the corresponding values in xArray, but in some
-        different unit system (which is presumably also different from the unit
-        system used for the values in the secondXAxisData array).  The typical
-        use for this third axis is for transects, for which the primary x axis
-        represents distance along a transect, and the second and third x axes
-        are used to display the corresponding latitudes and longitudes.
-
-    thirdXAxisLabel : the label for the third x axis, if requested
-
-    numUpperTicks : the approximate number of ticks to use on the upper x axis
+    numUpperTicks :  int, optional
+        the approximate number of ticks to use on the upper x axis
         or axes (these are the second and third x axes, which are placed above
         the plot if they have been requested by specifying the secondXAxisData
         or thirdXAxisData arrays above)
 
-    upperXAxisTickLabelPrecision : the number of decimal places (to the right
+    upperXAxisTickLabelPrecision : int, optional
+        the number of decimal places (to the right
         of the decimal point) to use for values at upper axis ticks.  This
         value can be adjusted (in concert with numUpperTicks) to avoid problems
         with overlapping numbers along the upper axis.
@@ -681,17 +728,17 @@ def plot_vertical_section(
     invertYAxis : logical, optional
         if True, invert Y axis
 
-    xArrayIsTime : logical, optional
+    xCoordIsTime : logical, optional
         if True, format the x axis for time (this applies only to the primary
         x axis, not to the optional second or third x axes)
 
     movingAveragePoints : int, optional
         the number of points over which to perform a moving average
-        NOTE: this option is mostly intended for use when xArrayIsTime is True,
-        although it will work with other data as well.  Also, the moving
+        NOTE: this option is mostly intended for use when ``xCoordIsTime`` is
+        True, although it will work with other data as well.  Also, the moving
         average calculation is based on number of points, not actual x axis
-        values, so for best results, the values in the xArray should be equally
-        spaced.
+        values, so for best results, the values in the first entry in
+        ``xCoords`` should be equally spaced.
 
     firstYearXTicks : int, optional
         The year of the first tick on the x axis.  By default, the first time
@@ -704,38 +751,36 @@ def plot_vertical_section(
     maxXTicks : int, optional
         the maximum number of tick marks that will be allowed along the primary
         x axis.  This may need to be adjusted depending on the figure size and
-        aspect ratio.  NOTE:  maxXTicks is only used if xArrayIsTime is True
+        aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True
 
     calendar : str, optional
         the calendar to use for formatting the time axis
-        NOTE:  calendar is only used if xArrayIsTime is True
+        NOTE:  calendar is only used if xCoordIsTime is True
 
     plotAsContours : bool, optional
-        if plotAsContours is True, instead of plotting fieldArray as a
-        heatmap, the function will plot only the contours of fieldArray.  In
-        addition, if contourComparisonFieldArray is not None, the contours
+        if plotAsContours is True, instead of plotting ``field`` as a
+        heatmap, the function will plot only the contours of ``field``.  In
+        addition, if contourComparisonField is not None, the contours
         of this field will be plotted on the same plot.  The selection of
         contour levels is still determined as for the contours on the heatmap
-        plots, via the 'contours' entry in colorMapSectionName.
+        plots, via the 'contours' entry in ``colorMapSectionName``.
 
-    contourComparisonFieldArray : float array, optional
-        a comparison field array (typically observational data or results from
-        another simulation run), assumed to be of the same shape as fieldArray,
-        and related to xArray and depthArray in the same way fieldArray is.
-        If contourComparisonFieldArray is None, then fieldArray will be plotted
-        as a heatmap.  However, if countourComparisonFieldArray is not None,
-        then contours of both fieldArray and contourComparisonFieldArray will
-        be plotted in order to enable a comparison of the two fields on the
-        same plot.  If plotAsContours is False, this parameter is ignored.
+    contourComparisonField : float array, optional
+        a comparison ``field`` array (typically observational data or results
+        from another simulation run), assumed to be of the same shape as
+        ``field``. If ``plotAsContours`` is ``True`` and
+        ``countourComparisonFieldArray`` is not ``None``, then contours of both
+        ``field`` and ``contourComparisonField`` will be plotted in order to
+        enable a comparison of the two fields on the same plot.
 
     comparisonFieldName : str, optional
-       the name for the comparison field.  If contourComparisonFieldArray is
-       None, this parameter is ignored.
+        the name for the comparison field.  If contourComparisonField is
+        None, this parameter is ignored.
 
     originalFieldName : str, optional
-       the name for the fieldArray field (for the purposes of labeling the
-       contours on a contour comparison plot).  If contourComparisonFieldArray
-       is None, this parameter is ignored.
+        the name for the ``field`` field (for the purposes of labeling the
+        contours on a contour comparison plot).  If contourComparisonField
+        is None, this parameter is ignored.
 
     comparisonContourLineStyle : str, optional
         the line style of contour lines of the comparisonFieldName field on
@@ -771,143 +816,61 @@ def plot_vertical_section(
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
     matplotlib.rc('font', size=defaultFontSize)
+    if xCoords is not None:
+        if not isinstance(xCoords, list):
+            xCoords = [xCoords]
 
-    # compute moving averages with respect to the x dimension
-    if movingAveragePoints is not None and movingAveragePoints != 1:
-        N = movingAveragePoints
-        movingAverageDepthSlices = []
-        for nVertLevel in range(len(depthArray)):
-            depthSlice = fieldArray[[nVertLevel]][0]
-            # in case it's not an xarray already
-            depthSlice = xr.DataArray(depthSlice)
-            mean = pd.Series.rolling(depthSlice.to_series(), N,
-                                     center=True).mean()
-            mean = xr.DataArray.from_series(mean)
-            mean = mean[int(N / 2.0):-int(round(N / 2.0) - 1)]
-            movingAverageDepthSlices.append(mean)
-        xArray = xArray[int(N / 2.0):-int(round(N / 2.0) - 1)]
-        fieldArray = xr.DataArray(movingAverageDepthSlices)
+        if not isinstance(xlabels, list):
+            xlabels = [xlabels]
 
-    dimX = xArray.shape
-    dimZ = depthArray.shape
-    dimF = fieldArray.shape
-    if contourComparisonFieldArray is not None:
-        dimC = contourComparisonFieldArray.shape
+        if len(xCoords) != len(xlabels):
+            raise ValueError('Expected the same number of xCoords and xlabels')
 
-    if len(dimX) != 1 and len(dimX) != 2:
-        raise ValueError('xArray must have either one or two dimensions '
-                         '(has %d)' % dimX)
+    if triangulation_args is None:
 
-    if len(dimZ) != 1 and len(dimZ) != 2:
-        raise ValueError('depthArray must have either one or two dimensions '
-                         '(has %d)' % dimZ)
+        x, y = xr.broadcast(xCoords[0], zCoord)
+        dims_in_field = all([dim in field.dims for dim in x.dims])
 
-    if len(dimF) != 2:
-        raise ValueError('fieldArray must have two dimensions (has %d)' % dimF)
+        if dims_in_field:
+            x = x.transpose(*field.dims)
+            y = y.transpose(*field.dims)
+        else:
+            xsize = list(x.sizes.values())
+            fieldsize = list(field.sizes.values())
+            if xsize[0] == fieldsize[0] + 1 and xsize[1] == fieldsize[1] + 1:
+                pass
+            elif xsize[0] == fieldsize[1] + 1 and xsize[1] == fieldsize[0] + 1:
+                x = x.transpose(x.dims[1], x.dims[0])
+                y = y.transpose(y.dims[1], y.dims[0])
+            else:
+                raise ValueError('Sizes of coords {}x{} and field {}x{} not '
+                                 'compatible.'.format(xsize[0], xsize[1],
+                                                      fieldsize[0],
+                                                      fieldsize[1]))
 
-    if contourComparisonFieldArray is not None:
-        if len(dimC) != 2:
-            raise ValueError('contourComparisonFieldArray must have two '
-                             'dimensions (has %d)' % dimC)
-        elif (fieldArray.shape[0] != contourComparisonFieldArray.shape[0]) or \
-             (fieldArray.shape[1] != contourComparisonFieldArray.shape[1]):
-            raise ValueError('size mismatch between fieldArray (%d x %d) and '
-                             'contourComparisonFieldArray (%d x %d)' %
-                             (fieldArray.shape[0], fieldArray.shape[1],
-                              contourComparisonFieldArray.shape[0],
-                              contourComparisonFieldArray.shape[1]))
+        # compute moving averages with respect to the x dimension
+        if movingAveragePoints is not None and movingAveragePoints != 1:
 
-    # verify that the dimensions of fieldArray are consistent with those of
-    # xArray and depthArray
-    if len(dimX) == 1 and len(dimZ) == 1:
-        num_x = dimX[0]
-        num_z = dimZ[0]
-        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0]:
-            raise ValueError('size mismatch between xArray (%d), '
-                             'depthArray (%d), and fieldArray (%d x %d)' %
-                             (num_x, num_z, fieldArray.shape[0],
-                              fieldArray.shape[1]))
-    elif len(dimX) == 1:
-        num_x = dimX[0]
-        num_x_Z = dimZ[1]
-        num_z = dimZ[0]
-        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
-                num_x != num_x_Z:
-            raise ValueError('size mismatch between xArray (%d), '
-                             'depthArray (%d x %d), and fieldArray (%d x %d)' %
-                             (num_x, num_z, num_x_Z,
-                              fieldArray.shape[0],
-                              fieldArray.shape[1]))
-    elif len(dimZ) == 1:
-        num_x = dimX[1]
-        num_z_X = dimX[0]
-        num_z = dimZ[0]
-        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] or \
-                num_z != num_z_X:
-            raise ValueError('size mismatch between xArray (%d x %d), '
-                             'depthArray (%d), and fieldArray (%d x %d)' %
-                             (num_z_X, num_x, num_z,
-                              fieldArray.shape[0],
-                              fieldArray.shape[1]))
+            dim = field.dims[0]
+            field = field.rolling(dim={dim: movingAveragePoints},
+                                  center=True).mean().dropna(dim)
+            x = x.rolling(dim={dim: movingAveragePoints},
+                          center=True).mean().dropna(dim)
+            y = y.rolling(dim={dim: movingAveragePoints},
+                          center=True).mean().dropna(dim)
+
+        mask = field.notnull()
+        maskedTriangulation, unmaskedTriangulation = _get_triangulation(
+            x, y, mask)
     else:
-        num_x = dimX[1]
-        num_z_X = dimX[0]
-        num_x_Z = dimZ[1]
-        num_z = dimZ[0]
-        if num_x != fieldArray.shape[1] or num_z != fieldArray.shape[0] \
-                or num_x != num_x_Z or num_z != num_z_X:
-            raise ValueError('size mismatch between xArray (%d x %d), '
-                             'depthArray (%d x %d), and fieldArray (%d x %d)' %
-                             (num_z_X, num_x, num_z, num_x_Z,
-                              fieldArray.shape[0],
-                              fieldArray.shape[1]))
-
-    # Verify that the upper x-axis parameters are consistent with each other
-    # and with xArray
-    if secondXAxisData is None and thirdXAxisData is not None:
-        raise ValueError('secondXAxisData cannot be None if thirdXAxisData '
-                         'is not None')
-    if secondXAxisData is not None:
-        arrayShape = secondXAxisData.shape
-        if len(arrayShape) == 1 and arrayShape[0] != num_x:
-            raise ValueError('secondXAxisData has %d x values, '
-                             'but should have num_x = %d x values' %
-                             (arrayShape[0], num_x))
-        elif len(arrayShape) == 2 and arrayShape[1] != num_x:
-            raise ValueError('secondXAxisData has %d x values, '
-                             'but should have num_x = %d x values' %
-                             (arrayShape[1], num_x))
-        elif len(arrayShape) > 2:
-            raise ValueError('secondXAxisData must be a 1D or 2D array, '
-                             'but is of dimension %d' %
-                             (len(arrayShape)))
-    if thirdXAxisData is not None:
-        arrayShape = thirdXAxisData.shape
-        if len(arrayShape) == 1 and arrayShape[0] != num_x:
-            raise ValueError('thirdXAxisData has %d x values, '
-                             'but should have num_x = %d x values' %
-                             (arrayShape[0], num_x))
-        elif len(arrayShape) == 2 and arrayShape[1] != num_x:
-            raise ValueError('thirdXAxisData has %d x values, '
-                             'but should have num_x = %d x values' %
-                             (arrayShape[1], num_x))
-        elif len(arrayShape) > 2:
-            raise ValueError('thirdXAxisData must be a 1D or 2D array, '
-                             'but is of dimension %d' %
-                             (len(arrayShape)))
-
-    # define x and y as the appropriate 2D arrays for plotting
-    if len(dimX) == 1 and len(dimZ) == 1:
-        x, y = np.meshgrid(xArray, depthArray)
-    elif len(dimX) == 1:
-        x, y = np.meshgrid(xArray, np.zeros(num_z))
-        y = depthArray
-    elif len(dimZ) == 1:
-        x, y = np.meshgrid(np.zeros(num_x), depthArray)
-        x = xArray
-    else:
-        x = xArray
-        y = depthArray
+        mask = field.notnull()
+        triMask = np.logical_not(mask.values)
+        # if any node of a triangle is masked, the triangle is masked
+        triMask = np.amax(triMask, axis=1)
+        unmaskedTriangulation = Triangulation(**triangulation_args)
+        mask_args = dict(triangulation_args)
+        mask_args['mask'] = triMask
+        maskedTriangulation = Triangulation(**mask_args)
 
     # set up figure
     if dpi is None:
@@ -917,77 +880,90 @@ def plot_vertical_section(
     else:
         fig = plt.gcf()
 
-    colormapDict = setup_colormap(config, colorMapSectionName, suffix=suffix)
+    colormapDict = setup_colormap(config, colorMapSectionName,
+                                  suffix=suffix)
 
-    if not plotAsContours:    # display a heatmap of fieldArray
+    # fill the unmasked region with the invalid color so it will show through
+    # any masked regions
+    zeroArray = xr.zeros_like(field)
+    plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
+                    colors=invalidColor)
+
+    if not plotAsContours:
+        # display a heatmap of fieldArray
+        fieldMasked = field.where(mask, 0.0).values.ravel()
 
         if colormapDict['levels'] is None:
-            # interpFieldArray contains the values at centers of grid cells,
-            # for pcolormesh plots (using bilinear interpolation)
-            interpFieldArray = \
-                0.5 * (0.5 * (fieldArray[1:, 1:] + fieldArray[0:-1, 1:]) +
-                       0.5 * (fieldArray[1:, 0:-1] + fieldArray[0:-1, 0:-1]))
 
-            plotHandle = plt.pcolormesh(x, y, interpFieldArray,
-                                        cmap=colormapDict['colormap'],
-                                        norm=colormapDict['norm'],
-                                        rasterized=True)
+            plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
+                                       cmap=colormapDict['colormap'],
+                                       norm=colormapDict['norm'],
+                                       rasterized=True, shading='gouraud')
         else:
-            plotHandle = plt.contourf(x, y, fieldArray,
-                                      cmap=colormapDict['colormap'],
-                                      norm=colormapDict['norm'],
-                                      levels=colormapDict['levels'],
-                                      extend='both')
+            plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
+                                         cmap=colormapDict['colormap'],
+                                         norm=colormapDict['norm'],
+                                         levels=colormapDict['levels'],
+                                         extend='both')
 
         cbar = plt.colorbar(plotHandle,
                             orientation='vertical',
                             spacing='uniform',
                             aspect=9,
-                            ticks=colormapDict['ticks'],
-                            boundaries=colormapDict['ticks'])
+                            ticks=colormapDict['ticks'])
 
         if colorbarLabel is not None:
             cbar.set_label(colorbarLabel)
 
-    else:     # display a white heatmap to get a white background for non-land
-        zeroArray = np.ma.where(fieldArray != np.nan, 0.0, fieldArray)
-        plt.contourf(x, y, zeroArray, colors='white')
+    else:
+        # display a white heatmap to get a white background for non-land
+        zeroArray = xr.zeros_like(field)
+        plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(),
+                        colors='white')
 
-    # set the color for NaN or masked regions, and draw a black
-    # outline around them; technically, the contour level used should
-    # be 1.0, but the contours don't show up when using 1.0, so 0.999
-    # is used instead
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
-    landArray = np.ma.where(fieldArray != np.nan, 1.0, fieldArray)
-    landArray = np.ma.masked_where(landArray == np.nan, landArray, copy=True)
-    landArray = landArray.filled(0.0)
-    plt.contour(x, y, landArray, levels=[0.999], colors='black', linewidths=1)
+    if outlineValid:
+        if xOutline is not None and zOutline is not None:
+            # also outline the domain if provided
+            plt.plot(xOutline, zOutline, color='black', linewidth=1)
+        else:
+            # do a contour to outline the boundary between valid and invalid
+            # values
+            landMask = np.isnan(field.values).ravel()
+            plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
+                           colors='black', linewidths=1)
+
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
+    fmt_string = None
+    cs1 = None
+    cs2 = None
+
     if contourLevels is not None:
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        cs1 = plt.contour(x, y, fieldArray,
-                          levels=contourLevels,
-                          colors=lineColor,
-                          linestyles=lineStyle,
-                          linewidths=lineWidth)
+        cs1 = plt.tricontour(maskedTriangulation, field.values.ravel(),
+                             levels=contourLevels,
+                             colors=lineColor,
+                             linestyles=lineStyle,
+                             linewidths=lineWidth)
         if labelContours:
             fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
-        if plotAsContours and contourComparisonFieldArray is not None:
-            cs2 = plt.contour(x, y, contourComparisonFieldArray,
-                              levels=contourLevels,
-                              colors=comparisonContourLineColor,
-                              linestyles=comparisonContourLineStyle,
-                              linewidths=lineWidth)
+        if plotAsContours and contourComparisonField is not None:
+            cs2 = plt.tricontour(maskedTriangulation,
+                                 contourComparisonField.values.ravel(),
+                                 levels=contourLevels,
+                                 colors=comparisonContourLineColor,
+                                 linestyles=comparisonContourLineStyle,
+                                 linewidths=lineWidth)
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
-    if plotAsContours and contourComparisonFieldArray is not None:
+    if plotAsContours and contourComparisonField is not None:
         h1, _ = cs1.legend_elements()
         h2, _ = cs2.legend_elements()
         if labelContours:
@@ -999,7 +975,7 @@ def plot_vertical_section(
 
     if title is not None:
         if plotAsContours and labelContours \
-           and contourComparisonFieldArray is None:
+                and contourComparisonField is None:
             title = limit_title(title, maxTitleLength-(3+len(colorbarLabel)))
             title = title + " (" + colorbarLabel + ")"
         else:
@@ -1014,13 +990,12 @@ def plot_vertical_section(
         else:
             plt.title(title, **title_font)
 
-    if (xlabel is not None) or (ylabel is not None):
-        if axisFontSize is None:
-            axisFontSize = config.get('plot', 'axisFontSize')
-        axis_font = {'size': axisFontSize}
+    if axisFontSize is None:
+        axisFontSize = config.get('plot', 'axisFontSize')
+    axis_font = {'size': axisFontSize}
 
-    if xlabel is not None:
-        plt.xlabel(xlabel, **axis_font)
+    if xlabels is not None:
+        plt.xlabel(xlabels[0], **axis_font)
     if ylabel is not None:
         plt.ylabel(ylabel, **axis_font)
 
@@ -1032,44 +1007,89 @@ def plot_vertical_section(
     if yLim:
         ax.set_ylim(yLim)
 
-    if xArrayIsTime:
+    if xCoords is not None and xCoordIsTime:
         if firstYearXTicks is None:
-            minDays = [xArray[0]]
+            minDays = xCoords[0][0].values
         else:
             minDays = date_to_days(year=firstYearXTicks, calendar=calendar)
-        maxDays = [xArray[-1]]
+        maxDays = xCoords[0][-1].values
 
         plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
                           yearStride=yearStrideXTicks)
 
     # add a second x-axis scale, if it was requested
-    if secondXAxisData is not None:
+    if xCoords is not None and len(xCoords) >= 2:
         ax2 = ax.twiny()
         ax2.set_facecolor(backgroundColor)
-        ax2.set_xlabel(secondXAxisLabel, **axis_font)
+        if xlabels[1] is not None:
+            ax2.set_xlabel(xlabels[1], **axis_font)
         xlimits = ax.get_xlim()
         ax2.set_xlim(xlimits)
-        xticks = np.linspace(xlimits[0], xlimits[1], numUpperTicks)
-        tickValues = np.interp(xticks, x.flatten()[:num_x], secondXAxisData)
-        ax2.set_xticks(xticks)
-        formatString = "{{0:.{:d}f}}{}".format(
-            upperXAxisTickLabelPrecision, r'$\degree$')
-        ax2.set_xticklabels([formatString.format(member)
-                             for member in tickValues])
+        formatString = None
+        xticks = None
+        if numUpperTicks is not None:
+            xticks = np.linspace(xlimits[0], xlimits[1], numUpperTicks)
+            tickValues = np.interp(xticks, xCoords[0].values, xCoords[1].values)
+            ax2.set_xticks(xticks)
+            formatString = "{{0:.{:d}f}}{}".format(
+                upperXAxisTickLabelPrecision, r'$\degree$')
+            ax2.set_xticklabels([formatString.format(member)
+                                 for member in tickValues])
 
         # add a third x-axis scale, if it was requested
-        if thirdXAxisData is not None:
+        if len(xCoords) == 3:
             ax3 = ax.twiny()
             ax3.set_facecolor(backgroundColor)
-            ax3.set_xlabel(thirdXAxisLabel, **axis_font)
+            ax3.set_xlabel(xlabels[2], **axis_font)
             ax3.set_xlim(xlimits)
             ax3.set_xticks(xticks)
-            tickValues = np.interp(xticks, x.flatten()[:num_x], thirdXAxisData)
-            ax3.set_xticklabels([formatString.format(member)
-                                 for member in tickValues])
-            ax3.spines['top'].set_position(('outward', 36))
+            if numUpperTicks is not None:
+                tickValues = np.interp(xticks, xCoords[0].values,
+                                       xCoords[2].values)
+                ax3.set_xticklabels([formatString.format(member)
+                                     for member in tickValues])
+                ax3.spines['top'].set_position(('outward', 36))
 
     return fig, ax  # }}}
 
+
+def _get_triangulation(x, y, mask):
+    """divide each quad in the x/y mesh into 2 triangles"""
+
+    nx = x.sizes[x.dims[0]] - 1
+    ny = x.sizes[x.dims[1]] - 1
+    nTriangles = 2*nx*ny
+
+    mask = mask.values
+    mask = np.logical_and(np.logical_and(mask[0:-1, 0:-1], mask[1:, 0:-1]),
+                          np.logical_and(mask[0:-1, 1:], mask[1:, 1:]))
+    triMask = np.zeros((nx, ny, 2), bool)
+    triMask[:, :, 0] = np.logical_not(mask)
+    triMask[:, :, 1] = triMask[:, :, 0]
+
+    triMask = triMask.ravel()
+
+    xIndices, yIndices = np.meshgrid(np.arange(nx), np.arange(ny),
+                                     indexing='ij')
+
+    tris = np.zeros((nx, ny, 2, 3), int)
+    # upper triangles:
+    tris[:, :, 0, 0] = (ny+1)*xIndices + yIndices
+    tris[:, :, 0, 1] = (ny+1)*(xIndices + 1) + yIndices
+    tris[:, :, 0, 2] = (ny+1)*xIndices + yIndices + 1
+    # lower triangle
+    tris[:, :, 1, 0] = (ny+1)*xIndices + yIndices + 1
+    tris[:, :, 1, 1] = (ny+1)*(xIndices + 1) + yIndices
+    tris[:, :, 1, 2] = (ny+1)*(xIndices + 1) + yIndices + 1
+
+    tris = tris.reshape((nTriangles, 3))
+
+    x = x.values.ravel()
+    y = y.values.ravel()
+
+    maskedTriangulation = Triangulation(x=x, y=y, triangles=tris, mask=triMask)
+    unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
+
+    return maskedTriangulation, unmaskedTriangulation
 
 # vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

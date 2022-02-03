@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.5.0" %}
+{% set version = "1.6.0" %}
 
 package:
   name: {{ name|lower }}
@@ -18,10 +18,10 @@ build:
 
 requirements:
   host:
-    - python >=3.7,<3.10
+    - python >=3.7
     - pip
   run:
-    - python >=3.7,<3.10
+    - python >=3.7
     - bottleneck
     - cartopy >=0.18.0
     - cartopy_offlinedata

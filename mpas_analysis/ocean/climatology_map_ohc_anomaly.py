@@ -71,7 +71,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         super(ClimatologyMapOHCAnomaly, self).__init__(
             config=config, taskName='climatologyMapOHCAnomaly',
             componentName='ocean',
-            tags=['climatology', 'horizontalMap', fieldName, 'publicObs'])
+            tags=['climatology', 'horizontalMap', fieldName, 'publicObs',
+                  'anomaly'])
 
         sectionName = self.taskName
 
@@ -349,7 +350,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         nVertLevels = dsRestart.sizes['nVertLevels']
 
-        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
+        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell-1,
                             dsRestart.layerThickness)
 
         vertIndex = xarray.DataArray.from_dict(

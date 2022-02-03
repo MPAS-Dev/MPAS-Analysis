@@ -130,6 +130,7 @@ def main():
         out_subdir = os.path.join(machine, args.branch, f'main_py{args.python}')
     else:
         out_subdir = os.path.join(machine, args.branch, args.run)
+    out_common_dir = os.path.join(machine, args.branch)
 
     if machine == 'cori-haswell':
         execute_options = \
@@ -185,7 +186,7 @@ def main():
             sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
             parallel_exec=parallel_exec, html_base=html_base,
-            out_subdir=out_subdir)
+            out_subdir=out_subdir, out_common_dir=out_common_dir)
         with open(job, 'w') as job_file:
             job_file.write(job_text)
 

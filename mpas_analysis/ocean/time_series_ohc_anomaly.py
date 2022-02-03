@@ -63,7 +63,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             config=config,
             taskName='timeSeriesOHCAnomaly',
             componentName='ocean',
-            tags=['timeSeries', 'ohc', 'publicObs'])
+            tags=['timeSeries', 'ohc', 'publicObs', 'anomaly'])
 
         sectionName = 'timeSeriesOHCAnomaly'
         regionNames = config.getExpression(sectionName, 'regions')

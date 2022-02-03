@@ -313,7 +313,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
             config_zmax = None
 
         dsRestart = xarray.open_dataset(restartFileName).isel(Time=0)
-        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell,
+        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell-1,
                             dsRestart.layerThickness)
         areaCell = dsRestart.areaCell
         if 'landIceMask' in dsRestart:

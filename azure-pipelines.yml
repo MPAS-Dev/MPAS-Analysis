@@ -21,12 +21,12 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python37:
-        python.version: '3.7'
       Python38:
         python.version: '3.8'
       Python39:
         python.version: '3.9'
+      Python310:
+        python.version: '3.10'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -62,8 +62,8 @@ jobs:
       conda activate build
       conda create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
-          tabulate m2r
-    condition: eq(variables['python.version'], '3.8')
+          tabulate m2r2 "mistune<2"
+    condition: eq(variables['python.version'], '3.9')
     displayName: Create Anaconda docs environment
 
   - bash: |
@@ -128,7 +128,7 @@ jobs:
         fi
         popd || exit 1
       fi
-    condition: eq(variables['python.version'], '3.8')
+    condition: eq(variables['python.version'], '3.9')
     displayName: build and deploy docs
 
 - job:
@@ -137,8 +137,8 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python38:
-        python.version: '3.8'
+      Python39:
+        python.version: '3.9'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -178,12 +178,12 @@ jobs:
     vmImage: 'macOS-latest'
   strategy:
     matrix:
-      Python37:
-        python.version: '3.7'
       Python38:
         python.version: '3.8'
       Python39:
         python.version: '3.9'
+      Python310:
+        python.version: '3.10'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
