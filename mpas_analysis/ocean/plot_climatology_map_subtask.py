@@ -21,12 +21,11 @@ from __future__ import absolute_import, division, print_function, \
 
 import xarray as xr
 import numpy as np
-from pyremap.descriptor import interp_extrap_corner
 
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import plot_global_comparison, \
-    plot_polar_projection_comparison
+    plot_projection_comparison
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -38,7 +37,7 @@ from mpas_analysis.shared.climatology.comparison_descriptors import \
 from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
 
-class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
+class PlotClimatologyMapSubtask(AnalysisTask):
     """
     An analysis task for plotting 2D model fields against observations.
 
@@ -79,12 +78,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     mpasFieldName : str
         The name of the variable in the MPAS timeSeriesStatsMonthly output
 
-    obsFieldName : str
-        The name of the variable to use from the observations file
-
-    observationTitleLabel : str
-        the title of the observations subplot
-
     diffTitleLabel : str, optional
         the title of the difference subplot
 
@@ -122,7 +115,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  secondRemapMpasClimatologySubtask=None, controlConfig=None,
-                 depth=None, removeMean=False, subtaskName=None):  # {{{
+                 depth=None, removeMean=False, subtaskName=None):
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -165,7 +158,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             useful for data sets where the desire is to compare the spatial
             pattern but the mean offset is not meaningful (e.g. SSH)
 
-        subtaskName : str, optinal
+        subtaskName : str, optional
             The name of the subtask.  If not specified, it is
             ``plot<season>_<comparisonGridName>`` with a suffix indicating the
             depth being sliced (if any)
@@ -210,14 +203,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             self.run_after(remapObsClimatologySubtask)
         if secondRemapMpasClimatologySubtask is not None:
             self.run_after(secondRemapMpasClimatologySubtask)
-        # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
                       configSectionName=None):
-        # {{{
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -305,9 +296,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             self.fieldNameInTitle = '{} at z={} m'.format(fieldNameInTitle,
                                                           depth)
             self.thumbnailDescription = '{} z={} m'.format(season, depth)
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -345,9 +335,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                     self.filePrefix))
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD
         observations or a control run
@@ -453,14 +442,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
 
         if self.comparisonGridName == 'latlon':
             self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
-        elif self.comparisonGridName == 'antarctic' or \
-                self.comparisonGridName == 'arctic':
-            self._plot_polar(remappedModelClimatology,
-                             remappedRefClimatology)
-        # }}}
+        else:
+            self._plot_projection(remappedModelClimatology,
+                                  remappedRefClimatology)
 
     def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
-        # {{{
         """ plotting a global lat-lon data set """
 
         season = self.season
@@ -532,10 +518,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-        # }}}
-
-    def _plot_polar(self, remappedModelClimatology,
-                    remappedRefClimatology):  # {{{
+    def _plot_projection(self, remappedModelClimatology,
+                         remappedRefClimatology):
         """ plotting an Arctic or Antarctic data set """
 
         season = self.season
@@ -567,17 +551,17 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         x = comparisonDescriptor.xCorner
         y = comparisonDescriptor.yCorner
 
+        aspectRatio = (x[-1] - x[0])/(y[-1] - y[0])
+
+        # if the plots are even a bit wider than they are tall, make them
+        # vertical
+        vertical = aspectRatio > 1.2
+
         filePrefix = self.filePrefix
         outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
         title = '{} ({}, years {:04d}-{:04d})'.format(
                 self.fieldNameInTitle, season, self.startYear,
                 self.endYear)
-
-        if self.comparisonGridName == 'antarctic':
-            hemisphere = 'south'
-        else:
-            # arctic
-            hemisphere = 'north'
 
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
@@ -596,7 +580,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         else:
             cartopyGridFontSize = None
 
-        plot_polar_projection_comparison(
+        plot_projection_comparison(
             config,
             x,
             y,
@@ -606,17 +590,18 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             bias,
             fileout=outFileName,
             colorMapSectionName=configSectionName,
+            projectionName=comparisonGridName,
             title=title,
             modelTitle='{}'.format(mainRunName),
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
-            hemisphere=hemisphere,
             titleFontSize=titleFontSize,
             cartopyGridFontSize=cartopyGridFontSize,
-            defaultFontSize=defaultFontSize)
+            defaultFontSize=defaultFontSize,
+            vertical=vertical)
 
-        upperGridName = comparisonGridName[0].upper() + comparisonGridName[1:]
+        upperGridName = comparisonGridName.replace('_', ' ').capitalize()
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
             config,
@@ -631,9 +616,3 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
-
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
