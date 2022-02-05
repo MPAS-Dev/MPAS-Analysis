@@ -20,8 +20,8 @@ import xarray as xr
 
 from pyremap import ProjectionGridDescriptor
 
-from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
-    get_antarctic_stereographic_projection
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
+from mpas_analysis.shared.projection import get_pyproj_projection
 
 
 class RemapSoseClimatology(RemapObservedClimatologySubtask):
@@ -113,7 +113,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
-        projection = get_antarctic_stereographic_projection()
+        projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
         return obsDescriptor  # }}}
