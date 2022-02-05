@@ -62,14 +62,14 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config : instance of ConfigParser
+    config : mpas_analysis.configuration.MpasAnalysisConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
-    Lons, Lats : float arrays
+    Lons, Lats : numpy.ndarray
         longitude and latitude arrays
 
-    modelArray, refArray : float arrays
+    modelArray, refArray : numpy.ndarray
         model and observational or control run data sets
 
     diffArray : float array
@@ -84,7 +84,7 @@ def plot_polar_comparison(
     title : str, optional
         the subtitle of the plot
 
-    plotProjection : 'npstere' or 'spstere', optional
+    plotProjection : {'npstere', 'spstere'}, optional
         projection for the plot (north or south pole)
 
     modelTitle : str, optional
@@ -273,14 +273,14 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config : instance of ConfigParser
+    config : mpas_analysis.configuration.MpasAnalysisConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
-    Lons, Lats : float arrays
+    Lons, Lats : numpy.ndarray
         longitude and latitude arrays
 
-    modelArray, refArray : float arrays
+    modelArray, refArray : numpy.ndarray
         model and observational or control run data sets
 
     diffArray : float array
@@ -459,21 +459,21 @@ def plot_polar_projection_comparison(
         hemisphere='north',
         maxTitleLength=55):
     """
-    Plots a data set as a longitude/latitude map.
+    Plots a data set as a projection map.
 
     Parameters
     ----------
-    config : instance of ConfigParser
+    config : mpas_analysis.configuration.MpasAnalysisConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
-    x, y : numpy ndarrays
+    x, y : numpy.ndarrays
         1D x and y arrays defining the projection grid
 
-    landMask : numpy ndarrays
+    landMask : numpy.ndarrays
         model and observational or control run data sets
 
-    modelArray, refArray : numpy ndarrays
+    modelArray, refArray : numpy.ndarrays
         model and observational or control run data sets
 
     diffArray : float array
