@@ -108,7 +108,7 @@ def get_projection(comparison_grid_name):  # {{{
 
 def get_antarctic_stereographic_projection():  # {{{
     """
-    Get a projection for an Antarctic steregraphic comparison grid
+    Get a projection for an Antarctic stereographic comparison grid
 
     Returns
     -------

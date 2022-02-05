@@ -48,7 +48,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         A season (key in ``shared.constants.monthDictionary``) to be
         plotted.
 
-    comparisonGridName : {'latlon', 'antarctic', 'arctic'}
+    comparisonGridName : str
         The name of the comparison grid to plot.
 
     remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
@@ -136,7 +136,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             A season (key in ``shared.constants.monthDictionary``) to be
             plotted.
 
-        comparisonGridName : {'latlon', 'antarctic', 'arctic'}
+        comparisonGridName : str
             The name of the comparison grid to plot.
 
         remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
