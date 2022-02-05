@@ -19,18 +19,15 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import numpy
-import pyproj
 
 from mpas_analysis.shared.constants import constants
+from mpas_analysis.shared.projection import known_comparison_grids, \
+    get_pyproj_projection
 
 from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor
 
 
-known_comparison_grids = ['latlon', 'antarctic', 'arctic', 'north_atlantic',
-                          'north_pacific']
-
-
-def get_comparison_descriptor(config, comparison_grid_name):  # {{{
+def get_comparison_descriptor(config, comparison_grid_name):
     """
     Get the comparison grid descriptor from the comparison_grid_name.
 
@@ -63,130 +60,10 @@ def get_comparison_descriptor(config, comparison_grid_name):  # {{{
         comparison_descriptor = \
             _get_projection_comparison_descriptor(config, comparison_grid_name)
 
-    return comparison_descriptor  # }}}
+    return comparison_descriptor
 
 
-def get_projection(comparison_grid_name):  # {{{
-    """
-    Get the projection from the comparison_grid_name.
-
-    Parameters
-    ----------
-    comparison_grid_name : {'antarctic', 'arctic', 'north_atlantic',
-                            'north_pacific'}
-        The name of the comparison grid to use for remapping.
-
-    Raises
-    ------
-    ValueError
-        If comparison_grid_name does not describe a known comparison grid
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-
-    if comparison_grid_name not in known_comparison_grids:
-        raise ValueError(
-            f'Unknown comparison grid type {comparison_grid_name}')
-
-    if comparison_grid_name == 'latlon':
-        raise ValueError('latlon is not a projection grid.')
-    elif comparison_grid_name == 'antarctic':
-        projection = get_antarctic_stereographic_projection()
-    elif comparison_grid_name == 'arctic':
-        projection = get_arctic_stereographic_projection()
-    elif comparison_grid_name == 'north_atlantic':
-        projection = get_north_atlantic_projection()
-    elif comparison_grid_name == 'north_atlantic':
-        projection = get_north_atlantic_projection()
-    else:
-        raise ValueError(f'We missed one of the known comparison grids: '
-                         f'{comparison_grid_name}')
-
-    return projection  # }}}
-
-
-def get_antarctic_stereographic_projection():  # {{{
-    """
-    Get a projection for an Antarctic stereographic comparison grid
-
-    Returns
-    -------
-    projection : pyproj.Proj
-        The projection
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-
-    projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
-                             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
-
-    return projection  # }}}
-
-
-def get_arctic_stereographic_projection():  # {{{
-    """
-    Get a projection for an Arctic stereographic comparison grid
-
-    Returns
-    -------
-    projection : pyproj.Proj
-        The projection
-    """
-    # Authors
-    # -------
-    # Milena Veneziani
-
-    projection = pyproj.Proj('+proj=stere +lat_ts=75.0 +lat_0=90 +lon_0=0.0 '
-                             '+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
-
-    return projection  # }}}
-
-
-def get_north_atlantic_projection():  # {{{
-    """
-    Get a projection for a North Atlantic Lambert Conformal Conic (LCC)
-    comparison grid
-
-    Returns
-    -------
-    projection : pyproj.Proj
-        The projection
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-    # Yohei Takano
-
-    projection = pyproj.Proj('+proj=lcc +lon_0=-45 +lat_1=20 +lat_2=75 '
-                             '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
-
-    return projection  # }}}
-
-
-def get_north_pacific_projection():  # {{{
-    """
-    Get a projection for a North Pacific Lambert Conformal Conic (LCC)
-    comparison grid
-
-    Returns
-    -------
-    projection : pyproj.Proj
-        The projection
-    """
-    # Authors
-    # -------
-    # Xylar Asay-Davis
-    # Yohei Takano
-
-    projection = pyproj.Proj('+proj=lcc +lon_0=180 +lat_1=20 +lat_2=60 '
-                             '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
-
-    return projection  # }}}
-
-
-def _get_lat_lon_comparison_descriptor(config):  # {{{
+def _get_lat_lon_comparison_descriptor(config):
     """
     Get a descriptor of the lat/lon comparison grid, used for remapping and
     determining the grid name
@@ -219,10 +96,10 @@ def _get_lat_lon_comparison_descriptor(config):  # {{{
 
     descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
 
-    return descriptor  # }}}
+    return descriptor
 
 
-def _get_projection_comparison_descriptor(config, comparison_grid_name):  # {{{
+def _get_projection_comparison_descriptor(config, comparison_grid_name):
     """
     Get a descriptor of any comparison grid base on a projection, used for
     remapping and determining the grid name
@@ -260,7 +137,7 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):  # {{{
         raise ValueError(f'{comparison_grid_name} is not one of the supported '
                          f'projection grids')
 
-    projection = get_projection(comparison_grid_name)
+    projection = get_pyproj_projection(comparison_grid_name)
 
     option_suffix = option_suffixes[comparison_grid_name]
     grid_suffix = grid_suffixes[comparison_grid_name]
@@ -285,4 +162,4 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):  # {{{
     mesh_name = f'{width}x{height}km_{res}km_{grid_suffix}'
     descriptor = ProjectionGridDescriptor.create(projection, x, y, mesh_name)
 
-    return descriptor  # }}}
+    return descriptor
