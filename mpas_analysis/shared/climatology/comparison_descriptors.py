@@ -26,40 +26,84 @@ from mpas_analysis.shared.constants import constants
 from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor
 
 
-def get_comparison_descriptor(config, comparisonGridName):  # {{{
+known_comparison_grids = ['latlon', 'antarctic', 'arctic', 'north_atlantic',
+                          'north_pacific']
+
+
+def get_comparison_descriptor(config, comparison_grid_name):  # {{{
     """
-    Get the comparison grid descriptor from the comparisonGridName.
+    Get the comparison grid descriptor from the comparison_grid_name.
 
     Parameters
     ----------
-    config :  MpasAnalysisConfigParser object
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
         Contains configuration options
 
-    comparisonGridName : {'latlon', 'antarctic', 'arctic'}
+    comparison_grid_name : {'latlon', 'antarctic', 'arctic', 'north_atlantic',
+                            'north_pacific'}
         The name of the comparison grid to use for remapping.
 
     Raises
     ------
     ValueError
-        If comparisonGridName does not describe a known comparions grid
+        If comparison_grid_name does not describe a known comparison grid
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
-    if comparisonGridName == 'latlon':
-        comparisonDescriptor = \
+    if comparison_grid_name not in known_comparison_grids:
+        raise ValueError(
+            f'Unknown comparison grid type {comparison_grid_name}')
+
+    if comparison_grid_name == 'latlon':
+        comparison_descriptor = \
             _get_lat_lon_comparison_descriptor(config)
-    elif comparisonGridName == 'antarctic':
-        comparisonDescriptor = \
-            _get_antarctic_stereographic_comparison_descriptor(config)
-    elif comparisonGridName == 'arctic':
-        comparisonDescriptor = \
-            _get_arctic_stereographic_comparison_descriptor(config)
     else:
-        raise ValueError('Unknown comaprison grid type {}'.format(
-            comparisonGridName))
-    return comparisonDescriptor  # }}}
+        comparison_descriptor = \
+            _get_projection_comparison_descriptor(config, comparison_grid_name)
+
+    return comparison_descriptor  # }}}
+
+
+def get_projection(comparison_grid_name):  # {{{
+    """
+    Get the projection from the comparison_grid_name.
+
+    Parameters
+    ----------
+    comparison_grid_name : {'antarctic', 'arctic', 'north_atlantic',
+                            'north_pacific'}
+        The name of the comparison grid to use for remapping.
+
+    Raises
+    ------
+    ValueError
+        If comparison_grid_name does not describe a known comparison grid
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    if comparison_grid_name not in known_comparison_grids:
+        raise ValueError(
+            f'Unknown comparison grid type {comparison_grid_name}')
+
+    if comparison_grid_name == 'latlon':
+        raise ValueError('latlon is not a projection grid.')
+    elif comparison_grid_name == 'antarctic':
+        projection = get_antarctic_stereographic_projection()
+    elif comparison_grid_name == 'arctic':
+        projection = get_arctic_stereographic_projection()
+    elif comparison_grid_name == 'north_atlantic':
+        projection = get_north_atlantic_projection()
+    elif comparison_grid_name == 'north_atlantic':
+        projection = get_north_atlantic_projection()
+    else:
+        raise ValueError(f'We missed one of the known comparison grids: '
+                         f'{comparison_grid_name}')
+
+    return projection  # }}}
 
 
 def get_antarctic_stereographic_projection():  # {{{
@@ -68,7 +112,7 @@ def get_antarctic_stereographic_projection():  # {{{
 
     Returns
     -------
-    projection : ``pyproj.Proj`` object
+    projection : pyproj.Proj
         The projection
     """
     # Authors
@@ -87,7 +131,7 @@ def get_arctic_stereographic_projection():  # {{{
 
     Returns
     -------
-    projection : ``pyproj.Proj`` object
+    projection : pyproj.Proj
         The projection
     """
     # Authors
@@ -100,6 +144,48 @@ def get_arctic_stereographic_projection():  # {{{
     return projection  # }}}
 
 
+def get_north_atlantic_projection():  # {{{
+    """
+    Get a projection for a North Atlantic Lambert Conformal Conic (LCC)
+    comparison grid
+
+    Returns
+    -------
+    projection : pyproj.Proj
+        The projection
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+    # Yohei Takano
+
+    projection = pyproj.Proj('+proj=lcc +lon_0=-45 +lat_1=20 +lat_2=75 '
+                             '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
+
+    return projection  # }}}
+
+
+def get_north_pacific_projection():  # {{{
+    """
+    Get a projection for a North Pacific Lambert Conformal Conic (LCC)
+    comparison grid
+
+    Returns
+    -------
+    projection : pyproj.Proj
+        The projection
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+    # Yohei Takano
+
+    projection = pyproj.Proj('+proj=lcc +lon_0=180 +lat_1=20 +lat_2=60 '
+                             '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
+
+    return projection  # }}}
+
+
 def _get_lat_lon_comparison_descriptor(config):  # {{{
     """
     Get a descriptor of the lat/lon comparison grid, used for remapping and
@@ -107,112 +193,96 @@ def _get_lat_lon_comparison_descriptor(config):  # {{{
 
     Parameters
     ----------
-    config :  instance of ``MpasAnalysisConfigParser``
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
         Contains configuration options
 
     Returns
     -------
-    descriptor : ``LatLonGridDescriptor`` object
+    descriptor : LatLonGridDescriptor
         A descriptor of the lat/lon grid
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    climSection = 'climatology'
+    section = 'climatology'
 
-    comparisonLatRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLatitude)
-    comparisonLonRes = config.getWithDefault(climSection,
-                                             'comparisonLatResolution',
-                                             constants.dLongitude)
+    lat_res = config.getWithDefault(section, 'comparisonLatResolution',
+                                    constants.dLatitude)
+    lon_res = config.getWithDefault(section, 'comparisonLatResolution',
+                                    constants.dLongitude)
 
-    nLat = int((constants.latmax - constants.latmin) / comparisonLatRes) + 1
-    nLon = int((constants.lonmax - constants.lonmin) / comparisonLonRes) + 1
-    lat = numpy.linspace(constants.latmin, constants.latmax, nLat)
-    lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
+    nlat = int((constants.latmax - constants.latmin) / lat_res) + 1
+    nlon = int((constants.lonmax - constants.lonmin) / lon_res) + 1
+    lat = numpy.linspace(constants.latmin, constants.latmax, nlat)
+    lon = numpy.linspace(constants.lonmin, constants.lonmax, nlon)
 
     descriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
 
     return descriptor  # }}}
 
 
-def _get_antarctic_stereographic_comparison_descriptor(config):  # {{{
+def _get_projection_comparison_descriptor(config, comparison_grid_name):  # {{{
     """
-    Get a descriptor of an Antarctic stereographic comparison grid, used for
+    Get a descriptor of any comparison grid base on a projection, used for
     remapping and determining the grid name
 
     Parameters
     ----------
-    config :  instance of ``MpasAnalysisConfigParser``
+    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
         Contains configuration options
+
+    comparison_grid_name : str
+        One of the projections
 
     Returns
     -------
-    descriptor : ``ProjectionGridDescriptor`` object
-        A descriptor of the Antarctic comparison grid
+    descriptor : pyremap.ProjectionGridDescriptor
+        A descriptor of the Arctic comparison grid
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    climSection = 'climatology'
+    section = 'climatology'
 
-    comparisonStereoWidth = config.getfloat(climSection,
-                                            'comparisonAntarcticStereoWidth')
-    comparisonStereoResolution = config.getfloat(
-        climSection, 'comparisonAntarcticStereoResolution')
+    option_suffixes = {'antarctic': 'AntarcticStereo',
+                       'arctic': 'ArcticStereo',
+                       'north_atlantic': 'NorthAtlantic',
+                       'north_pacific': 'NorthPacific'}
 
-    projection = get_antarctic_stereographic_projection()
+    grid_suffixes = {'antarctic': 'Antarctic_stereo',
+                     'arctic': 'Arctic_stereo',
+                     'north_atlantic': 'North_Atlantic',
+                     'north_pacific': 'North_Pacific'}
 
-    xMax = 0.5 * comparisonStereoWidth * 1e3
-    nx = int(comparisonStereoWidth / comparisonStereoResolution) + 1
-    x = numpy.linspace(-xMax, xMax, nx)
+    if comparison_grid_name not in option_suffixes:
+        raise ValueError(f'{comparison_grid_name} is not one of the supported '
+                         f'projection grids')
 
-    meshName = '{}x{}km_{}km_Antarctic_stereo'.format(
-        comparisonStereoWidth, comparisonStereoWidth,
-        comparisonStereoResolution)
-    descriptor = ProjectionGridDescriptor.create(projection, x, x, meshName)
+    projection = get_projection(comparison_grid_name)
 
-    return descriptor  # }}}
+    option_suffix = option_suffixes[comparison_grid_name]
+    grid_suffix = grid_suffixes[comparison_grid_name]
+    width = config.getfloat(
+        section, f'comparison{option_suffix}Width')
+    option = f'comparison{option_suffix}Height'
+    if config.has_option(section, option):
+        height = config.getfloat(section, option)
+    else:
+        height = width
+    res = config.getfloat(
+        section, f'comparison{option_suffix}Resolution')
 
+    xmax = 0.5 * width * 1e3
+    nx = int(width / res) + 1
+    x = numpy.linspace(-xmax, xmax, nx)
 
-def _get_arctic_stereographic_comparison_descriptor(config):  # {{{
-    """
-    Get a descriptor of an Arctic stereographic comparison grid, used for
-    remapping and determining the grid name
+    ymax = 0.5 * height * 1e3
+    ny = int(height / res) + 1
+    y = numpy.linspace(-ymax, ymax, ny)
 
-    Parameters
-    ----------
-    config :  instance of ``MpasAnalysisConfigParser``
-        Contains configuration options
-
-    Returns
-    -------
-    descriptor : ``ProjectionGridDescriptor`` object
-        A descriptor of the Arctic comparison grid
-    """
-    # Authors
-    # -------
-    # Milena Veneziani
-
-    climSection = 'climatology'
-
-    comparisonStereoWidth = config.getfloat(climSection,
-                                            'comparisonArcticStereoWidth')
-    comparisonStereoResolution = config.getfloat(
-        climSection, 'comparisonArcticStereoResolution')
-
-    projection = get_arctic_stereographic_projection()
-
-    xMax = 0.5 * comparisonStereoWidth * 1e3
-    nx = int(comparisonStereoWidth / comparisonStereoResolution) + 1
-    x = numpy.linspace(-xMax, xMax, nx)
-
-    meshName = '{}x{}km_{}km_Arctic_stereo'.format(
-        comparisonStereoWidth, comparisonStereoWidth,
-        comparisonStereoResolution)
-    descriptor = ProjectionGridDescriptor.create(projection, x, x, meshName)
+    mesh_name = f'{width}x{height}km_{res}km_{grid_suffix}'
+    descriptor = ProjectionGridDescriptor.create(projection, x, y, mesh_name)
 
     return descriptor  # }}}
