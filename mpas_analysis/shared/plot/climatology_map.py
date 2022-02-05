@@ -32,6 +32,7 @@ from cartopy.util import add_cyclic_point
 from mpas_analysis.shared.plot.colormap import setup_colormap
 from mpas_analysis.shared.plot.title import limit_title
 from mpas_analysis.shared.plot.save import savefig
+from mpas_analysis.shared.projection import get_cartopy_projection
 
 
 def plot_polar_comparison(
@@ -433,7 +434,7 @@ def plot_global_comparison(
     plt.close()
 
 
-def plot_polar_projection_comparison(
+def plot_projection_comparison(
         config,
         x,
         y,
@@ -443,6 +444,7 @@ def plot_polar_projection_comparison(
         diffArray,
         fileout,
         colorMapSectionName,
+        projectionName,
         title=None,
         modelTitle='Model',
         refTitle='Observations',
@@ -451,12 +453,7 @@ def plot_polar_projection_comparison(
         titleFontSize=None,
         cartopyGridFontSize=None,
         defaultFontSize=None,
-        figsize=None,
-        dpi=None,
-        lineWidth=0.5,
-        lineColor='black',
         vertical=False,
-        hemisphere='north',
         maxTitleLength=55):
     """
     Plots a data set as a projection map.
@@ -468,7 +465,7 @@ def plot_polar_projection_comparison(
         control plotting
 
     x, y : numpy.ndarrays
-        1D x and y arrays defining the projection grid
+        1D x and y arrays of the corners of grid cells on the projection grid
 
     landMask : numpy.ndarrays
         model and observational or control run data sets
@@ -509,26 +506,14 @@ def plot_polar_projection_comparison(
     defaultFontSize : int, optional
         the size of text other than the title
 
-    figsize : tuple of float, optional
-        the size of the figure in inches.  If ``None``, the figure size is
-        ``(8, 22)`` if ``vertical == True`` and ``(22, 8)`` otherwise.
-
-    dpi : int, optional
-        the number of dots per inch of the figure, taken from section ``plot``
-        option ``dpi`` in the config file by default
-
-    lineWidth : int, optional
-        the line width of contour lines (if specified)
-
-    lineColor : str, optional
-        the color of contour lines (if specified)
-
     vertical : bool, optional
         whether the subplots should be stacked vertically rather than
         horizontally
 
-    hemisphere : {'north', 'south'}, optional
-        the hemisphere to plot
+    projectionName : str, optional
+        the name of projection that the data is on, one of the projections
+        available via
+        :py:func:`mpas_analysis.shared.projection.get_cartopy_projection()`.
 
     maxTitleLength : int, optional
         the maximum number of characters in the title, beyond which it is
@@ -548,11 +533,11 @@ def plot_polar_projection_comparison(
 
         gl = ax.gridlines(crs=cartopy.crs.PlateCarree(), color='k',
                           linestyle=':', zorder=5, draw_labels=True)
-        gl.xlocator = mticker.FixedLocator(np.arange(-180., 181., 30.))
-        gl.ylocator = mticker.FixedLocator(np.arange(-80., 81., 10.))
+        gl.xlocator = mticker.FixedLocator(lonLines)
+        gl.ylocator = mticker.FixedLocator(latLines)
         gl.n_steps = 100
         gl.right_labels = False
-        gl.left_labels = False
+        gl.left_labels = left_labels
         gl.xformatter = cartopy.mpl.gridliner.LONGITUDE_FORMATTER
         gl.yformatter = cartopy.mpl.gridliner.LATITUDE_FORMATTER
         gl.xlabel_style['size'] = cartopyGridFontSize
@@ -598,24 +583,27 @@ def plot_polar_projection_comparison(
     if cartopyGridFontSize is None:
         cartopyGridFontSize = config.getint('plot', 'cartopyGridFontSize')
 
-    useCartopyCoastline = config.getboolean('polarProjection',
-                                            'useCartopyCoastline')
     # set up figure
-    if dpi is None:
-        dpi = config.getint('plot', 'dpi')
+    dpi = config.getint('plot', 'dpi')
+
+    section = f'plot_{projectionName}'
+    useCartopyCoastline = config.getboolean(section, 'useCartopyCoastline')
 
     if refArray is None:
-        if figsize is None:
-            figsize = (8, 7.5)
+        figsize = config.getExpression(section, 'onePanelFigSize')
         subplots = [111]
     elif vertical:
-        if figsize is None:
-            figsize = (8, 22)
+        figsize = config.getExpression(section, 'threePanelVertFigSize')
         subplots = [311, 312, 313]
     else:
-        if figsize is None:
-            figsize = (22, 7.5)
+        figsize = config.getExpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
+
+    latLines = config.getExpression(section, 'latLines', usenumpyfunc=True)
+    lonLines = config.getExpression(section, 'lonLines', usenumpyfunc=True)
+
+    # put latitude labels on the left unless we're in a polar projection
+    left_labels = projectionName not in ['arctic', 'antarctic']
 
     dictModelRef = setup_colormap(config, colorMapSectionName, suffix='Result')
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
@@ -642,17 +630,8 @@ def plot_polar_projection_comparison(
     xCenter = 0.5 * (x[1:] + x[0:-1])
     yCenter = 0.5 * (y[1:] + y[0:-1])
 
-    if hemisphere == 'north':
-        projection = cartopy.crs.Stereographic(
-            central_latitude=90., central_longitude=0.0,
-            true_scale_latitude=75.0)
-    elif hemisphere == 'south':
-        projection = cartopy.crs.Stereographic(
-            central_latitude=-90., central_longitude=0.0,
-            true_scale_latitude=-71.0)
-    else:
-        raise ValueError('Unexpected hemisphere {}'.format(
-                hemisphere))
+    projection = get_cartopy_projection(projectionName)
+
     extent = [x[0], x[-1], y[0], y[-1]]
 
     ax = plt.subplot(subplots[0], projection=projection)
