@@ -555,7 +555,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     comparisonGridName : str
         The name of the comparison grid to use for remapping.  If it is one
         of the known comparison grid names, the full grid name is looked up via
-        :py:fun:`mpas_analysis.shared.climatology.get_comparison_descriptor()`
+        :py:func:`mpas_analysis.shared.climatology.get_comparison_descriptor()`
 
     op : {'avg', 'min', 'max'}
          operator for monthly stats
