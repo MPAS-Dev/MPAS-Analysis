@@ -561,8 +561,10 @@ def plot_projection_comparison(
 
         if contours is not None:
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
-            ax.contour(x, y, array, levels=contours, colors=lineColor,
-                       linewidths=lineWidth)
+            x_center = 0.5*(x[0:-1] + x[1:])
+            y_center = 0.5*(y[0:-1] + y[1:])
+            ax.contour(x_center, y_center, array, levels=contours,
+                       colors=lineColor, linewidths=lineWidth)
 
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
