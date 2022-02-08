@@ -151,7 +151,7 @@
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
-<span class="sd">    Lons, Lats : numpy.ndarray</span>
+<span class="sd">    lon, lat : float arrays</span>
 <span class="sd">        longitude and latitude arrays</span>
 
 <span class="sd">    modelArray, refArray : numpy.ndarray</span>
@@ -747,6 +747,13 @@
         <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">):</span>
+            <span class="c1"># make sure we&#39;re using the MPAS land mask for all 3 sets of stats</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">modelArray</span><span class="o">.</span><span class="n">mask</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">refArray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">MaskedArray</span><span class="p">):</span>
+                <span class="c1"># mask invalid where either model or ref array is invalid</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">refArray</span><span class="o">.</span><span class="n">mask</span><span class="p">)</span>
+            <span class="n">refArray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">refArray</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
         <span class="n">modelAnom</span> <span class="o">=</span> <span class="n">modelArray</span> <span class="o">-</span> <span class="n">modelMean</span>
         <span class="n">modelVar</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">modelAnom</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
         <span class="n">refMean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">refArray</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
