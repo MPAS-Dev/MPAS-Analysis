@@ -67,7 +67,7 @@ def plot_polar_comparison(
         the configuration, containing a [plot] section with options that
         control plotting
 
-    Lons, Lats : numpy.ndarray
+    lon, lat : float arrays
         longitude and latitude arrays
 
     modelArray, refArray : numpy.ndarray
@@ -663,6 +663,13 @@ def _add_stats(modelArray, refArray, diffArray, Lats, axes):
         ax=axes[0], loc='upper')
 
     if refArray is not None:
+        if isinstance(modelArray, np.ma.MaskedArray):
+            # make sure we're using the MPAS land mask for all 3 sets of stats
+            mask = modelArray.mask
+            if isinstance(refArray, np.ma.MaskedArray):
+                # mask invalid where either model or ref array is invalid
+                mask = np.logical_or(mask, refArray.mask)
+            refArray = np.ma.array(refArray, mask=mask)
         modelAnom = modelArray - modelMean
         modelVar = np.average(modelAnom ** 2, weights=weights)
         refMean = np.average(refArray, weights=weights)
