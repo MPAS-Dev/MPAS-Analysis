@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess &mdash; MPAS-Analysis 1.6.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html" />
+    <link rel="prev" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.6.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.io.open_mpas_dataset.html">mpas_analysis.shared.io.open_mpas_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html">mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#climatology">Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#time-series">Time Series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../api.html">API reference</a> &raquo;</li>
+      <li>mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess">
+<h1>mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess<a class="headerlink" href="#mpas-analysis-shared-mpas-xarray-mpas-xarray-preprocess" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.mpas_xarray.mpas_xarray.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationStartTime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selValues</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iselValues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Builds correct time specification for MPAS, allowing a date offset
+because the time must be between 1678 and 2262 based on the xarray
+library.  Also, if slicing information (<cite>selValues</cite> and/or
+<cite>iselValues</cite>) was provided in <cite>openMultifileDataSet</cite>, this
+function performs the appropriate slicing on the data set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – The data set containing an MPAS time variable to be used to build
+an xarray time coordinate.</p></li>
+<li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>}) – The name of one of the calendars supported by MPAS cores</p></li>
+<li><p><strong>simulationStartTime</strong> (<em>string</em><em>, </em><em>optinal</em>) – <p>The start date of the simulation, used to convert from time
+variables expressed as days since the start of the simulation to
+days since the reference date. <code class="docutils literal notranslate"><span class="pre">simulationStartTime</span></code> takes one
+of the following forms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
+<span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">simulationStartTime</span></code> is only required if the MPAS time variable
+(identified by <code class="docutils literal notranslate"><span class="pre">timeVariableName</span></code>) is a number of days since the
+start of the simulation.</p>
+</p></li>
+<li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> or <code class="docutils literal notranslate"><span class="pre">'Time'</span></code>).</p></li>
+<li><p><strong>variableList</strong> (<em>list of strings</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>selectCorrdValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>A dictionary of coordinate names (keys) and values or arrays of
+values used to slice the variales in the data set.  See
+<code class="docutils literal notranslate"><span class="pre">xarray.DataSet.sel()</span></code> for details on how this dictonary is used.
+An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">selectCorrdValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;cellLon&#39;</span><span class="p">:</span> <span class="mf">180.0</span><span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – <p>A dictionary of coordinate names (keys) and indices, slices or
+arrays of indices used to slice the variales in the data set.  See
+<code class="docutils literal notranslate"><span class="pre">xarray.DataSet.isel()</span></code> for details on how this dictonary is used.
+An example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">:</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+              <span class="s1">&#39;nCells&#39;</span><span class="p">:</span> <span class="n">cellIDs</span><span class="p">}</span>
+</pre></div>
+</div>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>ds</strong> (<code class="docutils literal notranslate"><span class="pre">xarray.DataSet</span></code> object) – A copy of the data set with the time coordinate set and which
+has been sliced.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

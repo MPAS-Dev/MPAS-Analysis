@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Remapper for “online” remapping of data sets &mdash; MPAS-Analysis 1.6.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Prerequisite Tasks and Subtasks" href="prerequisite_tasks.html" />
+    <link rel="prev" title="Support Parallel Tasks" href="parallel_tasks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.6.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../design_docs.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
+      <li>Remapper for “online” remapping of data sets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/design_docs/remapper.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="remapper-for-online-remapping-of-data-sets">
+<h1>Remapper for “online” remapping of data sets<a class="headerlink" href="#remapper-for-online-remapping-of-data-sets" title="Permalink to this headline">¶</a></h1>
+<p><span class="raw-html-m2r"><h2>
+Xylar Asay-Davis <br>
+date: 2017/04/15 <br>
+</h2></span></p>
+<h3> Summary </h3><p>This document describes the design and implementation of a <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> class
+for performing either “online” (in memory) or “offline” (through files
+via <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>) remapping of horizontal data sets.  The <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> is needed in
+order to support remapping to and from grids grids not currently supported by
+<code class="docutils literal notranslate"><span class="pre">ncremap</span></code> such as polar stereographic grids commonly used for polar data sets.</p>
+<h3> Requirements </h3><h3> Requirement: Support for remapping to and from stereographic grids <br>
+Date last modified: 2017/04/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>There should exist a method for interpolating from stereographic grids to
+the comparison grid used in MPAS-Analysis.  This is needed to support
+observations that are stored on stereographic grids.</p>
+<p>It would often be more efficient (in terms of the size of data sets) and more
+practical to perform analysis of polar data sets on a stereographic grid
+centered at that pole.  Support for mapping to stereographic grids should be
+included, if feasible.</p>
+<h3> Algorithmic Formulations</h3><h3> Design solution: Support for remapping to and from stereographic grids <br>
+Date last modified: 2017/04/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The design solution is somewhat complex and will be described in multiple
+sections.</p>
+<h4> MeshDescriptor classes </h4><p>To support mapping to and from MPAS meshes, lat/lon grid and stereographic
+grids (as well as future grids we might want to support), I propose defining a
+“mesh descriptor” that defines the mesh either by reading it from a file or by
+creating it from simple numpy ndarrays.  Each <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> class defines
+enough information (such as the locations of cell centers and corners) about
+the mesh or grid to allow remapping between meshes.</p>
+<p>An <code class="docutils literal notranslate"><span class="pre">MpasMeshDescriptor</span></code> class will define MPAS meshes read from a file.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">LatLonGridDescriptor</span></code> class will define global lat/lon grids such as the
+existing comparison grid.</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">ProjectionGridDescriptor</span></code> class will define any grid that can be described
+by a logically rectangular grid with <code class="docutils literal notranslate"><span class="pre">pyproj</span></code> projection.  In particular, such
+a projection grid could be used to support both polar stereographic grids and
+regional lat/lon grids.</p>
+<h4> Remapper class </h4><p>Remapping between meshes described by <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> classes will be performed
+by a <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> class.  This class will support both “online” mapping in memory
+and “offline” mapping with <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>.  Only “online” mapping will be supported
+for grids defined with the <code class="docutils literal notranslate"><span class="pre">ProjectionGridDescriptor</span></code>, as these are not
+supported by <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>.  A <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> object will be created by giving it source
+and destintion <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> objects and an optional mapping file name.
+(If the mapping file name is not given, it is assumed that the source and
+destination grids are the same, and no remapping is needed.)</p>
+<p>If remapping is performed “online”, it supports renormalization of masked
+arrays.  If a data sets includes <code class="docutils literal notranslate"><span class="pre">NaN</span></code>s in a given data array, both the data
+array and a mask are remapped, and renormalization is performed anywhere the
+remapped mask exceeds a given threshold.</p>
+<h3> Design and Implementation </h3><h3> Implementation: Support for remapping to and from stereographic grids <br>
+Date last modified: 2017/04/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The implementation is on the branch <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/add_polar_stereographic_interp">xylar/MPAS-Analysis/add_polar_stereographic_interp</a></p>
+<h4> MeshDescriptor classes </h4><p>Each <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass includes the following member variables or
+methods:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">meshName</span></code><span class="classifier">a name of the mesh or grid, used for naming mapping files and</span></dt><dd><p>climatologies</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">regional</span></code>: whether the mesh is regional or global</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">coords</span></code> and <code class="docutils literal notranslate"><span class="pre">dims</span></code><span class="classifier">dictionaries defining the coordinates and dimensions</span></dt><dd><p>of this mesh, used to update a data set following remapping</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">to_scrip</span></code> method: used to write out a SCRIP file defining the mesh.</p></li>
+</ul>
+<h4> Remapper class </h4><p>Below is a skeleton of the <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> public API.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Remapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">destinationDescriptor</span><span class="p">,</span>
+                 <span class="n">mappingFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Create the remapper and read weights and indices from the given file</span>
+<span class="sd">        for later used in remapping fields.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+                           <span class="n">additionalArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
+<span class="sd">        a destination file or set of arrays defining a lat-lon grid, constructs</span>
+<span class="sd">        a mapping file used for interpolation between the source and</span>
+<span class="sd">        destination grids.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">remap_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+                   <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
+<span class="sd">        a destination file or set of arrays defining a lat-lon grid, constructs</span>
+<span class="sd">        a mapping file used for interpolation between the source and</span>
+<span class="sd">        destination grids.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+    <span class="k">def</span> <span class="nf">remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a source data set, returns a remapped version of the data set,</span>
+<span class="sd">        possibly masked and renormalized.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+</pre></div>
+</div>
+<h3> Testing and Validation: Support for remapping to and from stereographic
+grids <br>
+Date last modified: 2017/04/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>On the branch <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/add_polar_stereographic_interp">xylar/MPAS-Analysis/add_polar_stereographic_interp</a>,
+climatologies have ben updated to use <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> objects.  Analysis has been
+run on both <code class="docutils literal notranslate"><span class="pre">QU240</span></code> and <code class="docutils literal notranslate"><span class="pre">EC60to30</span></code> beta0 ACME results, and results have been
+compared by eye.  Results from <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> are identical, as expected.  Because of
+renormalization, results with “online” remapping differ from those from
+<code class="docutils literal notranslate"><span class="pre">ncremap</span></code>, typically with less severe masking of missing data.</p>
+<p>Continuous integration unit tests for climatology and interpolation have both
+been updated to make use of the <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> class.  New tests have been added to
+perform remapping with stereographic grids.</p>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="parallel_tasks.html" class="btn btn-neutral float-left" title="Support Parallel Tasks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="prerequisite_tasks.html" class="btn btn-neutral float-right" title="Prerequisite Tasks and Subtasks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
