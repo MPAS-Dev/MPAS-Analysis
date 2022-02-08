@@ -72,6 +72,7 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
@@ -153,10 +154,10 @@ multiple triangulations with different masks are needed internally and
 there is not an obvious mechanism for copying an existing triangulation.
 If this option is provided, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> is only used for tick marks if
 more than one x axis is requested, and <code class="docutils literal notranslate"><span class="pre">zCoord</span></code> will be ignored.</p></li>
-<li><p><strong>xOutline</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
+<li><p><strong>xOutline</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
 valid region of the mesh if <code class="docutils literal notranslate"><span class="pre">outlineValid</span> <span class="pre">=</span> <span class="pre">True</span></code> and
 <code class="docutils literal notranslate"><span class="pre">triangulation_args</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p><strong>zOutline</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
+<li><p><strong>zOutline</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – pairs of points defining line segments that are used to outline the
 valid region of the mesh if <code class="docutils literal notranslate"><span class="pre">outlineValid</span> <span class="pre">=</span> <span class="pre">True</span></code> and
 <code class="docutils literal notranslate"><span class="pre">triangulation_args</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 </ul>

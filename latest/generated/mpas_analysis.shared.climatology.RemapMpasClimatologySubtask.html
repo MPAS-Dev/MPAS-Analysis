@@ -57,7 +57,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#climatology">Climatology</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_comparison_descriptor.html">mpas_analysis.shared.climatology.get_comparison_descriptor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_antarctic_stereographic_projection.html">mpas_analysis.shared.climatology.get_antarctic_stereographic_projection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_remapper.html">mpas_analysis.shared.climatology.get_remapper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.compute_monthly_climatology.html">mpas_analysis.shared.climatology.compute_monthly_climatology</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.compute_climatology.html">mpas_analysis.shared.climatology.compute_climatology</a></li>
@@ -82,6 +81,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
@@ -174,7 +174,7 @@ included in the climatologies</p></li>
 <li><p><strong>seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 to be computed or [‘none’] (not <code class="docutils literal notranslate"><span class="pre">None</span></code>) if only monthly
 climatologies are needed.</p></li>
-<li><p><strong>comparisonGridNames</strong> (<em>list of {'latlon'</em><em>, </em><em>'antarctic'</em><em>, </em><em>'arctic'}</em><em>,</em>) – optional
+<li><p><strong>comparisonGridNames</strong> (<em>list of str</em>) – optional
 The name(s) of the comparison grid to use for remapping.  If none
 is supplied, <cite>add_comparison_descriptor()</cite> must be called to add
 one or more comparison grids.</p></li>
@@ -203,7 +203,7 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <td><p>Construct the analysis task and adds it as a subtask of the <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_comparison_grid_descriptor</span></code>(...)</p></td>
-<td><p>Add a custom grid descriptor (something other than 'latlon' or 'antarctic' or 'arctic').</p></td>
+<td><p>Add a custom grid descriptor (something other than 'latlon', 'antarctic', 'arctic', 'north_atlantic', or 'north_pacific').</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
 <td><p>Add a subtask to this tasks.</p></td>

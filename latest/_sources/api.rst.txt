@@ -184,7 +184,6 @@ Climatology
    :toctree: generated/
 
    get_comparison_descriptor
-   get_antarctic_stereographic_projection
    get_remapper
    compute_monthly_climatology
    compute_climatology
@@ -273,6 +272,17 @@ Plotting
    colormap.setup_colormap
    ticks.plot_xtick_format
    add_inset
+
+
+Projection
+----------
+.. currentmodule:: mpas_analysis.shared.projection
+
+.. autosummary::
+   :toctree: generated/
+
+   get_pyproj_projection
+   get_cartopy_projection
 
 
 Regions

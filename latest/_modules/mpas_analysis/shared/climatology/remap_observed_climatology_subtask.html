@@ -131,7 +131,7 @@
 <span class="sd">        The prefix in front of output files and mapping files, typically the</span>
 <span class="sd">        name of the field being remapped</span>
 
-<span class="sd">    comparisonGridNames : list of {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">    comparisonGridNames : list of str</span>
 <span class="sd">        The name(s) of the comparison grid to use for remapping.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
@@ -162,7 +162,7 @@
 <span class="sd">            The prefix in front of output files and mapping files, typically</span>
 <span class="sd">            the name of the field being remapped</span>
 
-<span class="sd">        comparisonGridNames : list of {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;},</span>
+<span class="sd">        comparisonGridNames : list of str</span>
 <span class="sd">            optional</span>
 <span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
 
@@ -338,7 +338,7 @@
 <span class="sd">        season : str, optional</span>
 <span class="sd">            One of the seasons in ``constants.monthDictionary``</span>
 
-<span class="sd">        comparisonGridName : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}, optional</span>
+<span class="sd">        comparisonGridName : str, optional</span>
 <span class="sd">            The name of the comparison grid to use for remapping.</span>
 
 <span class="sd">        Returns</span>
@@ -421,7 +421,7 @@
         <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridNames</span><span class="p">:</span>
 
             <span class="n">comparisonDescriptor</span> <span class="o">=</span> <span class="n">get_comparison_descriptor</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_remapper</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>

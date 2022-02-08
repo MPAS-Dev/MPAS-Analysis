@@ -1,0 +1,6 @@
+﻿mpas\_analysis.shared.projection.get\_pyproj\_projection
+========================================================
+
+.. currentmodule:: mpas_analysis.shared.projection
+
+.. autofunction:: get_pyproj_projection

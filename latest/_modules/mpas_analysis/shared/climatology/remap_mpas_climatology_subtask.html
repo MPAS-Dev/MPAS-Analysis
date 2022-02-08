@@ -197,7 +197,7 @@
 <span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
 <span class="sd">            climatologies are needed.</span>
 
-<span class="sd">        comparisonGridNames : list of {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;},</span>
+<span class="sd">        comparisonGridNames : list of str</span>
 <span class="sd">            optional</span>
 <span class="sd">            The name(s) of the comparison grid to use for remapping.  If none</span>
 <span class="sd">            is supplied, `add_comparison_descriptor()` must be called to add</span>
@@ -352,8 +352,8 @@
     <span class="k">def</span> <span class="nf">add_comparison_grid_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
                                        <span class="n">comparisonDescriptor</span><span class="p">):</span>  <span class="c1"># {{{</span>
         <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">        Add a custom grid descriptor (something other than &#39;latlon&#39; or</span>
-<span class="sd">        &#39;antarctic&#39; or &#39;arctic&#39;).</span>
+<span class="sd">        Add a custom grid descriptor (something other than &#39;latlon&#39;,</span>
+<span class="sd">        &#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;, or &#39;north_pacific&#39;).</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -407,7 +407,7 @@
 <span class="sd">        season : str</span>
 <span class="sd">            One of the seasons in ``constants.monthDictionary``</span>
 
-<span class="sd">        comparisonGridName : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">        comparisonGridName : str</span>
 <span class="sd">            The name of the comparison grid to use for remapping.</span>
 
 <span class="sd">        Returns</span>
@@ -461,7 +461,7 @@
 <span class="sd">        climatology : ``xarray.Dataset```</span>
 <span class="sd">            The MPAS climatology data set that has been remapped</span>
 
-<span class="sd">        comparisonGridNames : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">        comparisonGridNames : str</span>
 <span class="sd">            The name of the comparison grid to use for remapping.</span>
 
 <span class="sd">        season : str</span>
@@ -655,7 +655,7 @@
 <span class="sd">            A remapper that can be used to remap files or data sets to a</span>
 <span class="sd">            comparison grid.</span>
 
-<span class="sd">        comparisonGridNames : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">        comparisonGridNames : str</span>
 <span class="sd">            The name of the comparison grid to use for remapping.</span>
 
 <span class="sd">        season : str</span>
