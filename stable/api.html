@@ -133,7 +133,6 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#climatology">Climatology</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_comparison_descriptor.html">mpas_analysis.shared.climatology.get_comparison_descriptor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_antarctic_stereographic_projection.html">mpas_analysis.shared.climatology.get_antarctic_stereographic_projection</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapper.html">mpas_analysis.shared.climatology.get_remapper</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html">mpas_analysis.shared.climatology.compute_monthly_climatology</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_climatology.html">mpas_analysis.shared.climatology.compute_climatology</a></li>
@@ -196,6 +195,11 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#projection">Projection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_pyproj_projection.html">mpas_analysis.shared.projection.get_pyproj_projection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_cartopy_projection.html">mpas_analysis.shared.projection.get_cartopy_projection</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#regions">Regions</a><ul>
@@ -581,63 +585,60 @@ the documentation.</p>
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_comparison_descriptor.html#mpas_analysis.shared.climatology.get_comparison_descriptor" title="mpas_analysis.shared.climatology.get_comparison_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_comparison_descriptor</span></code></a>(config, ...)</p></td>
-<td><p>Get the comparison grid descriptor from the comparisonGridName.</p></td>
+<td><p>Get the comparison grid descriptor from the comparison_grid_name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_antarctic_stereographic_projection.html#mpas_analysis.shared.climatology.get_antarctic_stereographic_projection" title="mpas_analysis.shared.climatology.get_antarctic_stereographic_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_antarctic_stereographic_projection</span></code></a>()</p></td>
-<td><p>Get a projection for an Antarctic steregraphic comparison grid</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper" title="mpas_analysis.shared.climatology.get_remapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapper</span></code></a>(config, sourceDescriptor, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper" title="mpas_analysis.shared.climatology.get_remapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapper</span></code></a>(config, sourceDescriptor, ...)</p></td>
 <td><p>Given config options and descriptions of the source and comparison grids, returns a <code class="docutils literal notranslate"><span class="pre">pyremap.Remapper</span></code> object that can be used to remap from source files or data sets to corresponding data sets on the comparison grid.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology" title="mpas_analysis.shared.climatology.compute_monthly_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_monthly_climatology</span></code></a>(ds[, calendar, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology" title="mpas_analysis.shared.climatology.compute_monthly_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_monthly_climatology</span></code></a>(ds[, calendar, ...])</p></td>
 <td><p>Compute monthly climatologies from a data set.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology" title="mpas_analysis.shared.climatology.compute_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_climatology</span></code></a>(ds, monthValues[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology" title="mpas_analysis.shared.climatology.compute_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_climatology</span></code></a>(ds, monthValues[, ...])</p></td>
 <td><p>Compute a monthly, seasonal or annual climatology data set from a data set.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month" title="mpas_analysis.shared.climatology.add_years_months_days_in_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_years_months_days_in_month</span></code></a>(ds[, calendar])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month" title="mpas_analysis.shared.climatology.add_years_months_days_in_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_years_months_days_in_month</span></code></a>(ds[, calendar])</p></td>
 <td><p>Add <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code> and <code class="docutils literal notranslate"><span class="pre">daysInMonth</span></code> as data arrays in <code class="docutils literal notranslate"><span class="pre">ds</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_directory</span></code></a>(config)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_directory</span></code></a>(config)</p></td>
 <td><p>Get the directory for an unmasked MPAS climatology produced by ncclimo, making the directory if it doesn't already exist</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_file_name</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_file_name</span></code></a>(...)</p></td>
 <td><p>Get the file name for an unmasked MPAS climatology produced by ncclimo</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masked_mpas_climatology_file_name</span></code></a>(...[, op])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masked_mpas_climatology_file_name</span></code></a>(...[, op])</p></td>
 <td><p>Get the file name for a masked MPAS climatology</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_mpas_climatology_file_name</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_mpas_climatology_file_name</span></code></a>(...)</p></td>
 <td><p>Get the file name for a masked MPAS climatology</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code></a>(config, componentName[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code></a>(config, componentName[, ...])</p></td>
 <td><p>An analysis tasks for computing climatologies from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly*</span></code> analysis members.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables" title="mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.add_variables</span></code></a>(variableList)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables" title="mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.add_variables</span></code></a>(variableList)</p></td>
 <td><p>Add one or more variables and optionally one or more seasons for which to compute climatologies.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name" title="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.get_file_name</span></code></a>(season)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name" title="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.get_file_name</span></code></a>(season)</p></td>
 <td><p>Returns the full path for MPAS climatology file produced by ncclimo.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>(...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>(...[, ...])</p></td>
 <td><p>An analysis tasks for computing climatologies from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_masked_file_name</span></code></a>(season)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_masked_file_name</span></code></a>(season)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_remapped_file_name</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_remapped_file_name</span></code></a>(...)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask</span></code></a>(parentTask, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask</span></code></a>(parentTask, ...)</p></td>
 <td><p>An analysis task for comparison of 2D model fields against observations.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_observation_descriptor</span></code></a>(...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_observation_descriptor</span></code></a>(...)</p></td>
 <td><p>get a MeshDescriptor for the observation grid.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.build_observational_dataset</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.build_observational_dataset</span></code></a>(...)</p></td>
 <td><p>read in the data sets for observations, and possibly rename some variables and dimensions.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_file_name</span></code></a>(stage)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_file_name</span></code></a>(stage)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
 </tbody>
@@ -779,6 +780,23 @@ the documentation.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html#mpas_analysis.shared.plot.add_inset" title="mpas_analysis.shared.plot.add_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inset</span></code></a>(fig, fc[, latlonbuffer, ...])</p></td>
 <td><p>Plots an inset map showing the location of a transect or polygon.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="projection">
+<h3>Projection<a class="headerlink" href="#projection" title="Permalink to this headline">¶</a></h3>
+<table class="longtable docutils align-default">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection" title="mpas_analysis.shared.projection.get_pyproj_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pyproj_projection</span></code></a>(comparison_grid_name)</p></td>
+<td><p>Get the projection from the comparison_grid_name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_cartopy_projection.html#mpas_analysis.shared.projection.get_cartopy_projection" title="mpas_analysis.shared.projection.get_cartopy_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cartopy_projection</span></code></a>(comparison_grid_name)</p></td>
+<td><p>Get the projection from the comparison_grid_name.</p></td>
 </tr>
 </tbody>
 </table>

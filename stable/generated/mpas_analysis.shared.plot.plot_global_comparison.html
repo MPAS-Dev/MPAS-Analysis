@@ -72,6 +72,7 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
@@ -123,12 +124,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
+<li><p><strong>config</strong> (<em>mpas_analysis.configuration.MpasAnalysisConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>Lons</strong> (<em>float arrays</em>) – longitude and latitude arrays</p></li>
-<li><p><strong>Lats</strong> (<em>float arrays</em>) – longitude and latitude arrays</p></li>
-<li><p><strong>modelArray</strong> (<em>float arrays</em>) – model and observational or control run data sets</p></li>
-<li><p><strong>refArray</strong> (<em>float arrays</em>) – model and observational or control run data sets</p></li>
+<li><p><strong>Lons</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – longitude and latitude arrays</p></li>
+<li><p><strong>Lats</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – longitude and latitude arrays</p></li>
+<li><p><strong>modelArray</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – model and observational or control run data sets</p></li>
+<li><p><strong>refArray</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.22)"><em>numpy.ndarray</em></a>) – model and observational or control run data sets</p></li>
 <li><p><strong>diffArray</strong> (<em>float array</em>) – difference between modelArray and refArray</p></li>
 <li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
 <li><p><strong>fileout</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the file name to be written</p></li>

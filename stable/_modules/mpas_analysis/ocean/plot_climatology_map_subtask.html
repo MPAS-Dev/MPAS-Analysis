@@ -105,12 +105,11 @@
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pyremap.descriptor</span> <span class="kn">import</span> <span class="n">interp_extrap_corner</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_global_comparison</span><span class="p">,</span> \
-    <span class="n">plot_polar_projection_comparison</span>
+    <span class="n">plot_projection_comparison</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
@@ -122,7 +121,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">nans_to_numpy_mask</span>
 
 
-<div class="viewcode-block" id="PlotClimatologyMapSubtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask">[docs]</a><span class="k">class</span> <span class="nc">PlotClimatologyMapSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="PlotClimatologyMapSubtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask">[docs]</a><span class="k">class</span> <span class="nc">PlotClimatologyMapSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for plotting 2D model fields against observations.</span>
 
@@ -132,7 +131,7 @@
 <span class="sd">        A season (key in ``shared.constants.monthDictionary``) to be</span>
 <span class="sd">        plotted.</span>
 
-<span class="sd">    comparisonGridName : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">    comparisonGridName : str</span>
 <span class="sd">        The name of the comparison grid to plot.</span>
 
 <span class="sd">    remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``</span>
@@ -162,12 +161,6 @@
 
 <span class="sd">    mpasFieldName : str</span>
 <span class="sd">        The name of the variable in the MPAS timeSeriesStatsMonthly output</span>
-
-<span class="sd">    obsFieldName : str</span>
-<span class="sd">        The name of the variable to use from the observations file</span>
-
-<span class="sd">    observationTitleLabel : str</span>
-<span class="sd">        the title of the observations subplot</span>
 
 <span class="sd">    diffTitleLabel : str, optional</span>
 <span class="sd">        the title of the difference subplot</span>
@@ -206,7 +199,7 @@
 <div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
                  <span class="n">remapMpasClimatologySubtask</span><span class="p">,</span> <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">secondRemapMpasClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">removeMean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">removeMean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Construct one analysis subtask for each plot (i.e. each season and</span>
 <span class="sd">        comparison grid) and a subtask for computing climatologies.</span>
@@ -220,7 +213,7 @@
 <span class="sd">            A season (key in ``shared.constants.monthDictionary``) to be</span>
 <span class="sd">            plotted.</span>
 
-<span class="sd">        comparisonGridName : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;}</span>
+<span class="sd">        comparisonGridName : str</span>
 <span class="sd">            The name of the comparison grid to plot.</span>
 
 <span class="sd">        remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``</span>
@@ -249,7 +242,7 @@
 <span class="sd">            useful for data sets where the desire is to compare the spatial</span>
 <span class="sd">            pattern but the mean offset is not meaningful (e.g. SSH)</span>
 
-<span class="sd">        subtaskName : str, optinal</span>
+<span class="sd">        subtaskName : str, optional</span>
 <span class="sd">            The name of the subtask.  If not specified, it is</span>
 <span class="sd">            ``plot&lt;season&gt;_&lt;comparisonGridName&gt;`` with a suffix indicating the</span>
 <span class="sd">            depth being sliced (if any)</span>
@@ -294,14 +287,12 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">remapObsClimatologySubtask</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">secondRemapMpasClimatologySubtask</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">secondRemapMpasClimatologySubtask</span><span class="p">)</span></div>
-        <span class="c1"># }}}</span>
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask.set_plot_info"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info">[docs]</a>    <span class="k">def</span> <span class="nf">set_plot_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span> <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span>
                       <span class="n">refFieldName</span><span class="p">,</span> <span class="n">refTitleLabel</span><span class="p">,</span> <span class="n">unitsLabel</span><span class="p">,</span>
                       <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span> <span class="n">groupLink</span><span class="p">,</span>
                       <span class="n">galleryName</span><span class="p">,</span> <span class="n">diffTitleLabel</span><span class="o">=</span><span class="s1">&#39;Model - Observations&#39;</span><span class="p">,</span>
                       <span class="n">configSectionName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store attributes related to plots, plot file names and HTML output.</span>
 
@@ -389,9 +380,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> at z=</span><span class="si">{}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
                                                           <span class="n">depth</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailDescription</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> z=</span><span class="si">{}</span><span class="s1"> m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span></div>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -429,9 +419,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                     <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">))</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD</span>
 <span class="sd">        observations or a control run</span>
@@ -537,14 +526,11 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_plot_latlon</span><span class="p">(</span><span class="n">remappedModelClimatology</span><span class="p">,</span> <span class="n">remappedRefClimatology</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">==</span> <span class="s1">&#39;antarctic&#39;</span> <span class="ow">or</span> \
-                <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">==</span> <span class="s1">&#39;arctic&#39;</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_polar</span><span class="p">(</span><span class="n">remappedModelClimatology</span><span class="p">,</span>
-                             <span class="n">remappedRefClimatology</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_plot_projection</span><span class="p">(</span><span class="n">remappedModelClimatology</span><span class="p">,</span>
+                                  <span class="n">remappedRefClimatology</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_plot_latlon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span> <span class="n">remappedRefClimatology</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
         <span class="sd">&quot;&quot;&quot; plotting a global lat-lon data set &quot;&quot;&quot;</span>
 
         <span class="n">season</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span>
@@ -616,10 +602,8 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">_plot_polar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span>
-                    <span class="n">remappedRefClimatology</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_plot_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span>
+                         <span class="n">remappedRefClimatology</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; plotting an Arctic or Antarctic data set &quot;&quot;&quot;</span>
 
         <span class="n">season</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span>
@@ -651,17 +635,17 @@
         <span class="n">x</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">xCorner</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">yCorner</span>
 
+        <span class="n">aspectRatio</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># if the plots are even a bit wider than they are tall, make them</span>
+        <span class="c1"># vertical</span>
+        <span class="n">vertical</span> <span class="o">=</span> <span class="n">aspectRatio</span> <span class="o">&gt;</span> <span class="mf">1.2</span>
+
         <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span>
         <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">==</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">:</span>
-            <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;south&#39;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># arctic</span>
-            <span class="n">hemisphere</span> <span class="o">=</span> <span class="s1">&#39;north&#39;</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
             <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
@@ -680,7 +664,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">cartopyGridFontSize</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">plot_polar_projection_comparison</span><span class="p">(</span>
+        <span class="n">plot_projection_comparison</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
             <span class="n">x</span><span class="p">,</span>
             <span class="n">y</span><span class="p">,</span>
@@ -690,17 +674,18 @@
             <span class="n">bias</span><span class="p">,</span>
             <span class="n">fileout</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
             <span class="n">colorMapSectionName</span><span class="o">=</span><span class="n">configSectionName</span><span class="p">,</span>
+            <span class="n">projectionName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
             <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
             <span class="n">modelTitle</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">),</span>
             <span class="n">refTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span><span class="p">,</span>
             <span class="n">diffTitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span><span class="p">,</span>
             <span class="n">cbarlabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span>
-            <span class="n">hemisphere</span><span class="o">=</span><span class="n">hemisphere</span><span class="p">,</span>
             <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
             <span class="n">cartopyGridFontSize</span><span class="o">=</span><span class="n">cartopyGridFontSize</span><span class="p">,</span>
-            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
+            <span class="n">vertical</span><span class="o">=</span><span class="n">vertical</span><span class="p">)</span>
 
-        <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">comparisonGridName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">comparisonGridName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
@@ -715,12 +700,6 @@
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">thumbnailDescription</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span></div>
-
-        <span class="c1"># }}}</span>
-    <span class="c1"># }}}</span>
-
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
