@@ -28,8 +28,8 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
-from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask, \
-    get_antarctic_stereographic_projection
+from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
+from mpas_analysis.shared.projection import get_pyproj_projection
 
 
 class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
@@ -262,7 +262,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
 
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
-        projection = get_antarctic_stereographic_projection()
+        projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
         return obsDescriptor  # }}}

@@ -88,7 +88,7 @@ class TestClimatology(TestCase):
         mpasMeshFileName = '{}/mpasMesh.nc'.format(self.datadir)
 
         comparisonDescriptor = \
-            get_comparison_descriptor(config, comparisonGridName='latlon')
+            get_comparison_descriptor(config, comparison_grid_name='latlon')
 
         mpasDescriptor = MpasMeshDescriptor(
             mpasMeshFileName, meshName=config.get('input', 'mpasMeshName'))
@@ -105,7 +105,7 @@ class TestClimatology(TestCase):
         gridFileName = '{}/obsGrid.nc'.format(self.datadir)
 
         comparisonDescriptor = \
-            get_comparison_descriptor(config, comparisonGridName='latlon')
+            get_comparison_descriptor(config, comparison_grid_name='latlon')
 
         obsDescriptor = LatLonGridDescriptor.read(fileName=gridFileName,
                                                   latVarName='lat',

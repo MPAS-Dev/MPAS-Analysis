@@ -34,7 +34,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology.comparison_descriptors import \
-    get_comparison_descriptor
+    get_comparison_descriptor, known_comparison_grids
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
@@ -554,9 +554,8 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     comparisonGridName : str
         The name of the comparison grid to use for remapping.  If it is one
-        of the default comparison grid names ``{'latlon', 'antarctic',
-        'arctic'}``, the full grid name is looked up via
-        get_comparison_descriptor
+        of the known comparison grid names, the full grid name is looked up via
+        :py:func:`mpas_analysis.shared.climatology.get_comparison_descriptor()`
 
     op : {'avg', 'min', 'max'}
          operator for monthly stats
@@ -580,7 +579,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     climatologyOpDirectory = get_climatology_op_directory(config, op)
 
-    if comparisonGridName in ['latlon', 'antarctic', 'arctic']:
+    if comparisonGridName in known_comparison_grids:
         comparisonDescriptor = get_comparison_descriptor(config,
                                                          comparisonGridName)
         comparisonFullMeshName = comparisonDescriptor.meshName

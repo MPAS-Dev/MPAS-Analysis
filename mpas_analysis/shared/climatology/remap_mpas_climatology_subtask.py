@@ -113,7 +113,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             to be computed or ['none'] (not ``None``) if only monthly
             climatologies are needed.
 
-        comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'},
+        comparisonGridNames : list of str
             optional
             The name(s) of the comparison grid to use for remapping.  If none
             is supplied, `add_comparison_descriptor()` must be called to add
@@ -268,8 +268,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
     def add_comparison_grid_descriptor(self, comparisonGridName,
                                        comparisonDescriptor):  # {{{
         '''
-        Add a custom grid descriptor (something other than 'latlon' or
-        'antarctic' or 'arctic').
+        Add a custom grid descriptor (something other than 'latlon',
+        'antarctic', 'arctic', 'north_atlantic', or 'north_pacific').
 
         Parameters
         ----------
@@ -323,7 +323,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         season : str
             One of the seasons in ``constants.monthDictionary``
 
-        comparisonGridName : {'latlon', 'antarctic', 'arctic'}
+        comparisonGridName : str
             The name of the comparison grid to use for remapping.
 
         Returns
@@ -377,7 +377,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
         climatology : ``xarray.Dataset```
             The MPAS climatology data set that has been remapped
 
-        comparisonGridNames : {'latlon', 'antarctic', 'arctic'}
+        comparisonGridNames : str
             The name of the comparison grid to use for remapping.
 
         season : str
@@ -571,7 +571,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):  # {{{
             A remapper that can be used to remap files or data sets to a
             comparison grid.
 
-        comparisonGridNames : {'latlon', 'antarctic', 'arctic'}
+        comparisonGridNames : str
             The name of the comparison grid to use for remapping.
 
         season : str
