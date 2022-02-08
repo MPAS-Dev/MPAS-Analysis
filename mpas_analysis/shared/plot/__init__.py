@@ -2,7 +2,7 @@ from mpas_analysis.shared.plot.time_series import timeseries_analysis_plot, \
     timeseries_analysis_plot_polar
 
 from mpas_analysis.shared.plot.climatology_map import plot_polar_comparison, \
-    plot_global_comparison, plot_polar_projection_comparison
+    plot_global_comparison, plot_projection_comparison
 
 from mpas_analysis.shared.plot.vertical_section import \
     plot_vertical_section_comparison, plot_vertical_section

@@ -25,7 +25,8 @@ from mpas_analysis.shared.io.utility import build_obs_path, decode_strings, \
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
-    RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
+    RemapObservedClimatologySubtask
+from mpas_analysis.shared.projection import get_pyproj_projection
 from mpas_analysis.shared.climatology.climatology import \
     get_masked_mpas_climatology_file_name
 
@@ -294,7 +295,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
-        projection = get_antarctic_stereographic_projection()
+        projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
         return obsDescriptor  # }}}
