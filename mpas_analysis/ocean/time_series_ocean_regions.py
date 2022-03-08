@@ -17,6 +17,7 @@ import numpy
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -529,8 +530,17 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
 
         variables = config.getExpression(sectionName, 'variables')
 
-        variableList = [var['mpas'] for var in variables] + \
-            ['timeMonthly_avg_layerThickness']
+        variableList = {'timeMonthly_avg_layerThickness'}
+
+        for var in variables:
+            mpas_var = var['mpas']
+            if mpas_var == 'none':
+                continue
+            if isinstance(mpas_var, (list, tuple)):
+                for v in mpas_var:
+                    variableList.add(v)
+            else:
+                variableList.add(mpas_var)
 
         outputExists = os.path.exists(outFileName)
         outputValid = outputExists
@@ -601,10 +611,17 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 for var in variables:
                     outName = var['name']
                     self.logger.info('      {}'.format(outName))
-                    mpasVarName = var['mpas']
-                    timeSeries = dsIn[mpasVarName].where(cellMask, drop=True)
-                    units = timeSeries.units
-                    description = timeSeries.long_name
+                    if outName == 'thermalForcing':
+                        timeSeries = self._add_thermal_forcing(dsIn, cellMask)
+                        units = 'degrees Celsius'
+                        description = 'potential temperature minus the ' \
+                                      'potential freezing temperature'
+                    else:
+                        mpasVarName = var['mpas']
+                        timeSeries = \
+                            dsIn[mpasVarName].where(cellMask, drop=True)
+                        units = timeSeries.units
+                        description = timeSeries.long_name
 
                     is3d = 'nVertLevels' in timeSeries.dims
                     if is3d:
@@ -640,6 +657,38 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         dsOut['month'].attrs['units'] = 'months'
 
         write_netcdf(dsOut, outFileName)  # }}}
+
+    def _add_thermal_forcing(self, dsIn, cellMask):
+        """ compute the thermal forcing """
+
+        c0 = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_0')
+        cs = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_S')
+        cp = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_p')
+        cps = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_pS')
+
+        vars = ['timeMonthly_avg_activeTracers_temperature',
+                'timeMonthly_avg_activeTracers_salinity',
+                'timeMonthly_avg_density',
+                'timeMonthly_avg_layerThickness']
+        ds = dsIn[vars].where(cellMask, drop=True)
+
+        temp = ds.timeMonthly_avg_activeTracers_temperature
+        salin = ds.timeMonthly_avg_activeTracers_salinity
+        dens = ds.timeMonthly_avg_density
+        thick = ds.timeMonthly_avg_layerThickness
+
+        dp = cime_constants['SHR_CONST_G']*dens*thick
+        press = dp.cumsum(dim='nVertLevels') - 0.5*dp
+
+        tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
+
+        timeSeries = temp - tempFreeze
+
+        return timeSeries
     # }}}
 
 
