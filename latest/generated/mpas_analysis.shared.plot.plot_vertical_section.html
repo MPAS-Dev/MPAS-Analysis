@@ -132,7 +132,7 @@ Hovmoller plot (depth vs. time).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>instance of ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>field</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a>) – field array to plot.  For contour plots, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code>
+<li><p><strong>field</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2022.3.1.dev0)"><em>xarray.DataArray</em></a>) – field array to plot.  For contour plots, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code>
 should broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>.  For heatmap plots,
 <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code> are the corners of the plot.  If they
 broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> will be bilinearly
@@ -140,13 +140,13 @@ interpolated to center values for each plot cell.  If the coordinates
 have one extra element in each direction than <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> is
 assumed to contain cell values and no interpolation is performed.</p></li>
 <li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
-<li><p><strong>xCoords</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a><em> or </em><em>list of xarray.DataArray</em><em>, </em><em>optional</em>) – The x coordinate(s) for the <code class="docutils literal notranslate"><span class="pre">field</span></code>.  Optional second
+<li><p><strong>xCoords</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2022.3.1.dev0)"><em>xarray.DataArray</em></a><em> or </em><em>list of xarray.DataArray</em><em>, </em><em>optional</em>) – The x coordinate(s) for the <code class="docutils literal notranslate"><span class="pre">field</span></code>.  Optional second
 and third entries will be used for a second and third x axis above the
 plot.  The typical use for the second and third axis is for transects,
 for which the primary x axis represents distance along a transect, and
 the second and third x axes are used to display the corresponding
 latitudes and longitudes.</p></li>
-<li><p><strong>zCoord</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v0.21.2.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the <code class="docutils literal notranslate"><span class="pre">field</span></code></p></li>
+<li><p><strong>zCoord</strong> (<a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2022.3.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the <code class="docutils literal notranslate"><span class="pre">field</span></code></p></li>
 <li><p><strong>triangulation_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a><em>, </em><em>optional</em>) – A dict of arguments to create a matplotlib.tri.Triangulation of the
 transect that does not rely on it being on a logically rectangular grid.
 The arguments rather than the triangulation itself are passed because

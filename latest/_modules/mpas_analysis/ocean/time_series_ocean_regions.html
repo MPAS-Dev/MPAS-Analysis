@@ -101,6 +101,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -613,8 +614,17 @@
 
         <span class="n">variables</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">]</span> <span class="o">+</span> \
-            <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
+            <span class="n">mpas_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">mpas_var</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpas_var</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mpas_var</span><span class="p">:</span>
+                    <span class="n">variableList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">variableList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mpas_var</span><span class="p">)</span>
 
         <span class="n">outputExists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
         <span class="n">outputValid</span> <span class="o">=</span> <span class="n">outputExists</span>
@@ -685,10 +695,17 @@
                 <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
                     <span class="n">outName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;      </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outName</span><span class="p">))</span>
-                    <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
-                    <span class="n">timeSeries</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasVarName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                    <span class="n">units</span> <span class="o">=</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">units</span>
-                    <span class="n">description</span> <span class="o">=</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">long_name</span>
+                    <span class="k">if</span> <span class="n">outName</span> <span class="o">==</span> <span class="s1">&#39;thermalForcing&#39;</span><span class="p">:</span>
+                        <span class="n">timeSeries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_thermal_forcing</span><span class="p">(</span><span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">)</span>
+                        <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;degrees Celsius&#39;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;potential temperature minus the &#39;</span> \
+                                      <span class="s1">&#39;potential freezing temperature&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                        <span class="n">timeSeries</span> <span class="o">=</span> \
+                            <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasVarName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">units</span> <span class="o">=</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">units</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">long_name</span>
 
                     <span class="n">is3d</span> <span class="o">=</span> <span class="s1">&#39;nVertLevels&#39;</span> <span class="ow">in</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">dims</span>
                     <span class="k">if</span> <span class="n">is3d</span><span class="p">:</span>
@@ -724,6 +741,38 @@
         <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;months&#39;</span>
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>  <span class="c1"># }}}</span>
+
+    <span class="k">def</span> <span class="nf">_add_thermal_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; compute the thermal forcing &quot;&quot;&quot;</span>
+
+        <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;config_land_ice_cavity_freezing_temperature_coeff_0&#39;</span><span class="p">)</span>
+        <span class="n">cs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;config_land_ice_cavity_freezing_temperature_coeff_S&#39;</span><span class="p">)</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;config_land_ice_cavity_freezing_temperature_coeff_p&#39;</span><span class="p">)</span>
+        <span class="n">cps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;config_land_ice_cavity_freezing_temperature_coeff_pS&#39;</span><span class="p">)</span>
+
+        <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;timeMonthly_avg_density&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_activeTracers_temperature</span>
+        <span class="n">salin</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_activeTracers_salinity</span>
+        <span class="n">dens</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_density</span>
+        <span class="n">thick</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
+
+        <span class="n">dp</span> <span class="o">=</span> <span class="n">cime_constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_G&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">dens</span><span class="o">*</span><span class="n">thick</span>
+        <span class="n">press</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">dp</span>
+
+        <span class="n">tempFreeze</span> <span class="o">=</span> <span class="n">c0</span> <span class="o">+</span> <span class="n">cs</span><span class="o">*</span><span class="n">salin</span> <span class="o">+</span> <span class="n">cp</span><span class="o">*</span><span class="n">press</span> <span class="o">+</span> <span class="n">cps</span><span class="o">*</span><span class="n">press</span><span class="o">*</span><span class="n">salin</span>
+
+        <span class="n">timeSeries</span> <span class="o">=</span> <span class="n">temp</span> <span class="o">-</span> <span class="n">tempFreeze</span>
+
+        <span class="k">return</span> <span class="n">timeSeries</span>
     <span class="c1"># }}}</span>
 
 
