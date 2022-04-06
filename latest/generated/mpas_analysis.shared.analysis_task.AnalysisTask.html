@@ -116,30 +116,30 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>~AnalysisTask.config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Contains configuration options</p></li>
-<li><p><strong>~AnalysisTask.taskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the task, typically the same as the class name except
+<li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Contains configuration options</p></li>
+<li><p><strong>taskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the task, typically the same as the class name except
 starting with lowercase (e.g. ‘myTask’ for class ‘MyTask’)</p></li>
-<li><p><strong>~AnalysisTask.componentName</strong> (<em>{'ocean'</em><em>, </em><em>'seaIce'}</em>) – The name of the component (same as the folder where the task
+<li><p><strong>componentName</strong> (<em>{'ocean'</em><em>, </em><em>'seaIce'}</em>) – The name of the component (same as the folder where the task
 resides)</p></li>
-<li><p><strong>~AnalysisTask.tags</strong> (<em>list of str</em>) – Tags used to describe the task (e.g. ‘timeSeries’, ‘climatology’,
+<li><p><strong>tags</strong> (<em>list of str</em>) – Tags used to describe the task (e.g. ‘timeSeries’, ‘climatology’,
 horizontalMap’, ‘index’, ‘transect’).  These are used to determine
 which tasks are generated (e.g. ‘all_transect’ or ‘no_climatology’
 in the ‘generate’ flags)</p></li>
-<li><p><strong>~AnalysisTask.runDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base input directory for namelists, streams files and restart files</p></li>
-<li><p><strong>~AnalysisTask.historyDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base input directory for history files</p></li>
-<li><p><strong>~AnalysisTask.plotsDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory for writing plots (which is also created if it doesn’t
+<li><p><strong>runDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base input directory for namelists, streams files and restart files</p></li>
+<li><p><strong>historyDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The base input directory for history files</p></li>
+<li><p><strong>plotsDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The directory for writing plots (which is also created if it doesn’t
 exist)</p></li>
-<li><p><strong>~AnalysisTask.namelist</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.NameList</span></code>) – the namelist reader</p></li>
-<li><p><strong>~AnalysisTask.runStreams</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.StreamsFile</span></code>) – the streams file reader for streams in the run directory (e.g. restart
+<li><p><strong>namelist</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.NameList</span></code>) – the namelist reader</p></li>
+<li><p><strong>runStreams</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.StreamsFile</span></code>) – the streams file reader for streams in the run directory (e.g. restart
 files)</p></li>
-<li><p><strong>~AnalysisTask.historyStreams</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.StreamsFile</span></code>) – the streams file reader for streams in the history directory (most
+<li><p><strong>historyStreams</strong> (<code class="docutils literal notranslate"><span class="pre">shared.io.StreamsFile</span></code>) – the streams file reader for streams in the history directory (most
 streams other than restart files)</p></li>
-<li><p><strong>~AnalysisTask.calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregoraian_noleap'}</em>) – The calendar used in the MPAS run</p></li>
-<li><p><strong>~AnalysisTask.runAfterTasks</strong> (list of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – tasks that must be complete before this task can run</p></li>
-<li><p><strong>~AnalysisTask.subtasks</strong> (<code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – Subtasks of this task, with subtask names as keys</p></li>
-<li><p><strong>~AnalysisTask.xmlFileNames</strong> (<em>list of strings</em>) – The XML file associated with each plot produced by this analysis, empty
+<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregoraian_noleap'}</em>) – The calendar used in the MPAS run</p></li>
+<li><p><strong>runAfterTasks</strong> (list of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – tasks that must be complete before this task can run</p></li>
+<li><p><strong>subtasks</strong> (<code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – Subtasks of this task, with subtask names as keys</p></li>
+<li><p><strong>xmlFileNames</strong> (<em>list of strings</em>) – The XML file associated with each plot produced by this analysis, empty
 if no plots were produced</p></li>
-<li><p><strong>~AnalysisTask.logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>) – A logger for output during the run phase of an analysis task</p></li>
+<li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>) – A logger for output during the run phase of an analysis task</p></li>
 </ul>
 </dd>
 </dl>
@@ -169,7 +169,7 @@ in the ‘generate’ flags)</p></li>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -223,7 +223,7 @@ in the ‘generate’ flags)</p></li>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
