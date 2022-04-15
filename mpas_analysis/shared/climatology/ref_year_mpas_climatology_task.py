@@ -14,7 +14,7 @@ from __future__ import absolute_import, division, print_function, \
 
 from six import StringIO
 
-from mpas_analysis.configuration import MpasAnalysisConfigParser
+from mpas_tools.config import MpasConfigParser
 
 from mpas_analysis.shared.climatology import MpasClimatologyTask
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
@@ -63,12 +63,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
         # make a deep copy of the config so we can change the start and end
         # years and dates without causing trouble for other tasks
 
-        config_string = StringIO()
-        config.write(config_string)
-        # We must reset the buffer to make it ready for reading.
-        config_string.seek(0)
-        new_config = MpasAnalysisConfigParser()
-        new_config.read_file(config_string)
+        new_config = config.copy()
 
         # call the constructor from the base class (AnalysisTask)
         super(RefYearMpasClimatologyTask, self).__init__(
