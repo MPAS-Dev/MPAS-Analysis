@@ -26,7 +26,6 @@ import mpas_analysis
 import argparse
 import traceback
 import sys
-from importlib.resources import path
 import shutil
 import os
 from collections import OrderedDict
@@ -34,13 +33,12 @@ import progressbar
 import logging
 import xarray
 import time
-import configparser
 
 from mache import discover_machine, MachineInfo
 
-from mpas_analysis.shared.analysis_task import AnalysisFormatter
+from mpas_tools.config import MpasConfigParser
 
-from mpas_analysis.configuration import MpasAnalysisConfigParser
+from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, copyfile
@@ -693,10 +691,10 @@ def purge_output(config):
                         shutil.rmtree(directory)
 
 
-def symlink_main_run(config, defaultConfig):
+def symlink_main_run(config):
     '''
     Create symlinks to the climatology and time-series directories for the
-    main run that has aleady been computed so we don't have to recompute
+    main run that has already been computed so we don't have to recompute
     the analysis.
     '''
 
@@ -722,11 +720,9 @@ def symlink_main_run(config, defaultConfig):
     if not os.path.exists(mainConfigFile):
         raise OSError('A main config file {} was specified but the '
                       'file does not exist'.format(mainConfigFile))
-    mainConfigFiles = [mainConfigFile]
-    if defaultConfig is not None:
-        mainConfigFiles = [defaultConfig] + mainConfigFiles
-    mainConfig = MpasAnalysisConfigParser()
-    mainConfig.read(mainConfigFiles)
+    mainConfig = MpasConfigParser()
+    mainConfig.add_from_package('mpas_analysis', 'default.cfg')
+    mainConfig.add_user_config(mainConfigFile)
 
     for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask',
                          'profiles']:
@@ -768,8 +764,8 @@ def main():
     parser.add_argument("-p", "--purge", dest="purge", action='store_true',
                         help="Purge the analysis by deleting the output"
                         "directory before running")
-    parser.add_argument('config_files', metavar='CONFIG',
-                        type=str, nargs='*', help='config file')
+    parser.add_argument("config_file", metavar="CONFIG", type=str, nargs='*',
+                        help="config file")
     parser.add_argument("--plot_colormaps", dest="plot_colormaps",
                         action='store_true',
                         help="Make a plot displaying all available colormaps")
@@ -789,16 +785,11 @@ def main():
         parser.print_help()
         sys.exit(0)
 
-    for config_file in args.config_files:
-        if not os.path.exists(config_file):
-            raise OSError(f'Config file {config_file} not found.')
-
-    shared_configs = list()
+    config = MpasConfigParser()
 
     # add default.cfg to cover default not included in the config files
     # provided on the command line
-    with path('mpas_analysis', 'default.cfg') as default_config:
-        shared_configs.append(str(default_config))
+    config.add_from_package('mpas_analysis', 'default.cfg')
 
     # Add config options for E3SM supported machines from the mache package
     machine = args.machine
@@ -811,12 +802,10 @@ def main():
 
     if machine is not None:
         print(f'Detected E3SM supported machine: {machine}')
-        with path('mache.machines', f'{machine}.cfg') as machine_config:
-            shared_configs.append(str(machine_config))
+        config.add_from_package('mache.machines', f'{machine}.cfg')
         try:
-            with path('mpas_analysis.configuration', f'{machine}.cfg') \
-                    as machine_config:
-                shared_configs.append(str(machine_config))
+            config.add_from_package('mpas_analysis.configuration',
+                                    f'{machine}.cfg')
         except FileNotFoundError:
             # we don't have a config file for this machine, so we'll just
             # skip it.
@@ -825,24 +814,29 @@ def main():
             pass
 
     if args.polar_regions:
-        with path('mpas_analysis', 'polar_regions.cfg') as polar_config:
-            shared_configs.append(str(polar_config))
+        config.add_from_package('mpas_analysis', 'polar_regions.cfg')
 
-    main_configs = shared_configs + args.config_files
-    print('Using the following config files:')
-    for config_file in main_configs:
-        if not os.path.exists(config_file):
-            raise OSError('Config file {config_file} not found.')
-        print(f'   {config_file}')
-
-    config = MpasAnalysisConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
     if machine is not None:
         # set the username so we can use it in the htmlSubdirectory
         machine_info = MachineInfo(machine=machine)
-        config.add_section('web_portal')
         config.set('web_portal', 'username', machine_info.username)
-    config.read(main_configs)
+
+    shared_configs = config.list_files()
+
+    if len(args.config_file) > 0:
+        if len(args.config_file) > 1:
+            raise ValueError('Only one user config file is supported')
+
+        user_config = args.config_file[0]
+        print(user_config)
+        if not os.path.exists(user_config):
+            raise OSError(f'Config file {user_config} not found.')
+
+        config.add_user_config(user_config)
+
+    print('Using the following config files:')
+    for config_file in config.list_files():
+        print(f'   {config_file}')
 
     if args.list:
         # set this config option so we don't have issues
@@ -864,11 +858,11 @@ def main():
         if not os.path.exists(control_config_file):
             raise OSError('A control config file {} was specified but the '
                           'file does not exist'.format(control_config_file))
-        control_configs = shared_configs + [control_config_file]
 
-        control_config = MpasAnalysisConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
-        control_config.read(control_configs)
+        control_config = MpasConfigParser()
+        for config_file in shared_configs:
+            control_config.add_from_file(config_file)
+        control_config.add_user_config(control_config_file)
 
         # replace the log directory so log files get written to this run's
         # log directory, not the control run's
@@ -887,7 +881,7 @@ def main():
         purge_output(config)
 
     if config.has_option('runs', 'mainRunConfigFile'):
-        symlink_main_run(config, default_config)
+        symlink_main_run(config)
 
     if args.generate:
         update_generate(config, args.generate)
@@ -915,7 +909,7 @@ def main():
     html_base_directory = build_config_full_path(config, 'output',
                                                  'htmlSubdirectory')
     make_directories(html_base_directory)
-    for config_filename in args.config_files:
+    for config_filename in args.config_file:
         config_filename = os.path.abspath(config_filename)
         print(f'copying {config_filename} to HTML dir.')
         basename = os.path.basename(config_filename)
@@ -937,7 +931,7 @@ def main():
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, control_config, args.config_files)
+        generate_html(config, analyses, control_config, args.config_file)
 
 
 if __name__ == "__main__":
