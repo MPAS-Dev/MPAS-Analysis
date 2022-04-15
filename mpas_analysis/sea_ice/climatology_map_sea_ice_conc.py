@@ -85,13 +85,13 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
             hemisphereLong = 'Southern'
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -127,7 +127,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
         obsFieldName = 'seaIceConc'
         sectionName = self.taskName
 
-        observationPrefixes = config.getExpression(sectionName,
+        observationPrefixes = config.getexpression(sectionName,
                                                    'observationPrefixes')
         for prefix in observationPrefixes:
             for season in seasons:

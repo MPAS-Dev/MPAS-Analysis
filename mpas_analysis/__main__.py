@@ -472,8 +472,7 @@ def run_analysis(config, analyses):  # {{{
     config.write(configFile)
     configFile.close()
 
-    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
-                                              default=1)
+    parallelTaskCount = config.getint('execute', 'parallelTaskCount')
 
     isParallel = parallelTaskCount > 1 and len(analyses) > 1
 

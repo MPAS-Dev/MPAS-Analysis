@@ -149,9 +149,7 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
         meshName = config.get('input', 'mpasMeshName')
         regionGroup = 'MOC Basins'
 
-        subprocessCount = config.getWithDefault('execute',
-                                                'parallelTaskCount',
-                                                default=1)
+        subprocessCount = config.getint('execute', 'parallelTaskCount')
 
         # call the constructor from the base class (ComputeRegionMasksSubtask)
         super().__init__(
@@ -299,7 +297,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        self.usePostprocessing = config.getExpression(
+        self.usePostprocessing = config.getexpression(
             self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
@@ -364,7 +362,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         if os.path.exists(outputFileName):
             return
 
-        regionNames = config.getExpression(self.sectionName, 'regionNames')
+        regionNames = config.getexpression(self.sectionName, 'regionNames')
         regionNames.append('Global')
 
         # Read in depth and bin latitudes
@@ -498,7 +496,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
-        regionNames = config.getExpression(self.sectionName, 'regionNames')
+        regionNames = config.getexpression(self.sectionName, 'regionNames')
 
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
@@ -692,7 +690,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        self.regionNames = ['Global'] + config.getExpression(self.sectionName,
+        self.regionNames = ['Global'] + config.getexpression(self.sectionName,
                                                              'regionNames')
 
         for region in self.regionNames:
@@ -750,9 +748,9 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             z = depth
             regionMOC = moc[region]
             # Subset lat range
-            minLat = config.getExpression('streamfunctionMOC{}'.format(region),
+            minLat = config.getexpression('streamfunctionMOC{}'.format(region),
                                           'latBinMin')
-            maxLat = config.getExpression('streamfunctionMOC{}'.format(region),
+            maxLat = config.getexpression('streamfunctionMOC{}'.format(region),
                                           'latBinMax')
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x.where(indLat, drop=True)
@@ -898,7 +896,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        self.usePostprocessing = config.getExpression(
+        self.usePostprocessing = config.getexpression(
             self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:

@@ -300,7 +300,7 @@ class MyTask(AnalysisTask):  # {{{
         # plotParameters is a list of parameters, a stand-ins for whatever
         # you might want to include in each plot name, for example, seasons or
         # types of observation.
-        self.plotParameters = self.config.getExpression(self.taskName,
+        self.plotParameters = self.config.getexpression(self.taskName,
                                                         'plotParameters')
 
         mainRunName = self.config.get('runs', 'mainRunName')

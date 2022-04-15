@@ -81,7 +81,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         else:
             endYear = int(endYear)
 
-        regionGroups = config.getExpression(self.taskName, 'regionGroups')
+        regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
         obsDicts = {
             'SOSE': {
@@ -124,7 +124,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
-            regionNames = config.getExpression(sectionName, 'regionNames')
+            regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
                 # no regions in this group were requested
                 continue
@@ -136,7 +136,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             years = list(range(startYear, endYear + 1))
 
-            obsList = config.getExpression(sectionName, 'obs')
+            obsList = config.getexpression(sectionName, 'obs')
             groupObsDicts = {}
 
             for obsName in obsList:
@@ -528,7 +528,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = config.getExpression(sectionName, 'variables')
+        variables = config.getexpression(sectionName, 'variables')
 
         variableList = {'timeMonthly_avg_layerThickness'}
 
@@ -1114,7 +1114,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTimeSeriesSubtask, self).setup_and_check()
 
-        self.variables = self.config.getExpression(self.sectionName,
+        self.variables = self.config.getexpression(self.sectionName,
                                                    'variables')
 
         self.xmlFileNames = []

@@ -97,9 +97,9 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
 
-        regionGroups = config.getExpression(self.taskName, 'regionGroups')
+        regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
-        self.seasons = config.getExpression(self.taskName, 'seasons')
+        self.seasons = config.getexpression(self.taskName, 'seasons')
 
         obsDicts = {
             'SOSE': {
@@ -146,7 +146,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
-            obsList = config.getExpression(sectionName, 'obs')
+            obsList = config.getexpression(sectionName, 'obs')
             allObsUsed = allObsUsed + obsList
         allObsUsed = set(allObsUsed)
 
@@ -166,7 +166,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
 
-            regionNames = config.getExpression(sectionName, 'regionNames')
+            regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
                 continue
 
@@ -175,7 +175,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
             regionNames = mpasMasksSubtask.expand_region_names(regionNames)
 
-            obsList = config.getExpression(sectionName, 'obs')
+            obsList = config.getexpression(sectionName, 'obs')
             groupObsDicts = {}
 
             for obsName in obsList:
@@ -1024,8 +1024,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
-        Tbins = config.getExpression(sectionName, 'Tbins', usenumpyfunc=True)
-        Sbins = config.getExpression(sectionName, 'Sbins', usenumpyfunc=True)
+        Tbins = config.getexpression(sectionName, 'Tbins', use_numpyfunc=True)
+        Sbins = config.getexpression(sectionName, 'Sbins', use_numpyfunc=True)
 
         normType = config.get(sectionName, 'normType')
 
@@ -1222,10 +1222,10 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         config = self.config
         sectionName = self.sectionName
         cmap = config.get(sectionName, 'colorMap')
-        Tbins = config.getExpression(sectionName, 'Tbins',
-                                     usenumpyfunc=True)
-        Sbins = config.getExpression(sectionName, 'Sbins',
-                                     usenumpyfunc=True)
+        Tbins = config.getexpression(sectionName, 'Tbins',
+                                     use_numpyfunc=True)
+        Sbins = config.getexpression(sectionName, 'Sbins',
+                                     use_numpyfunc=True)
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
                                        weights=volume, cmap=cmap, zorder=1,

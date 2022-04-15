@@ -82,13 +82,13 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         makeTables = config.getboolean(sectionName, 'makeTables')
@@ -395,7 +395,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         config = self.config
 
         sectionName = self.taskName
-        iceShelvesInTable = config.getExpression(sectionName,
+        iceShelvesInTable = config.getexpression(sectionName,
                                                  'iceShelvesInTable')
         if len(iceShelvesInTable) == 0:
             return

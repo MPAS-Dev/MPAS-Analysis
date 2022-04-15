@@ -73,7 +73,7 @@ class SoseTransects(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         horizontalResolution = config.get(sectionName, 'horizontalResolution')
 
@@ -83,13 +83,13 @@ class SoseTransects(AnalysisTask):  # {{{
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getExpression(
-                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+            verticalComparisonGrid = config.getexpression(
+                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+        verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        longitudes = sorted(config.getExpression(sectionName, 'longitudes',
-                                                 usenumpyfunc=True))
+        longitudes = sorted(config.getexpression(sectionName, 'longitudes',
+                                                 use_numpyfunc=True))
 
         fields = \
             [{'prefix': 'temperature',
@@ -129,7 +129,7 @@ class SoseTransects(AnalysisTask):  # {{{
               'obsFilePrefix': None,
               'obsFieldName': 'velMag'}]
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
         variableList = [field['mpas'] for field in fields
@@ -297,8 +297,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         config = self.config
 
-        longitudes = sorted(config.getExpression('soseTransects', 'longitudes',
-                                                 usenumpyfunc=True))
+        longitudes = sorted(config.getexpression('soseTransects', 'longitudes',
+                                                 use_numpyfunc=True))
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'soseSubdirectory')

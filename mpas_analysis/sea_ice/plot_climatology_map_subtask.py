@@ -374,7 +374,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # for log plots, make sure the data is all positive to avoid masking
         if config.has_option(sectionName, 'normTypeResult'):
             normType = config.get(sectionName, 'normTypeResult')
-            normArgs = config.getExpression(sectionName, 'normArgsResult')
+            normArgs = config.getexpression(sectionName, 'normArgsResult')
             if normType == 'log':
                 epsilon = 1e-2 * normArgs['vmin']
                 modelOutput = np.maximum(modelOutput, epsilon)

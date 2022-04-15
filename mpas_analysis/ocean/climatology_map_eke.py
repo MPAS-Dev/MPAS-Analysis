@@ -67,7 +67,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         sectionName = self.taskName
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         # EKE observations are annual climatology so only accept annual
         # climatology **should move this to setup_and_check()
@@ -76,7 +76,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                              'of seasons. For EKE, may only request annual '
                              'climatology'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:

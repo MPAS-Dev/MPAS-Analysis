@@ -79,7 +79,7 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         years = [year for year in range(startYear, endYear + 1)]
 
-        transectsToPlot = config.getExpression('timeSeriesTransport',
+        transectsToPlot = config.getexpression('timeSeriesTransport',
                                                'transectsToPlot')
         if len(transectsToPlot) == 0:
             return

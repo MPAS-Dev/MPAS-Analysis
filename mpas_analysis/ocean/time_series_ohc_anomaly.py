@@ -66,7 +66,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             tags=['timeSeries', 'ohc', 'publicObs', 'anomaly'])
 
         sectionName = 'timeSeriesOHCAnomaly'
-        regionNames = config.getExpression(sectionName, 'regions')
+        regionNames = config.getexpression(sectionName, 'regions')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         self.variableDict = {}
@@ -139,7 +139,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         Compute the OHC time series.
         '''
 
-        # regionNames = self.config.getExpression('regions', 'regions')
+        # regionNames = self.config.getexpression('regions', 'regions')
         # ds['regionNames'] = ('nOceanRegionsTmp', regionNames)
 
         # for convenience, rename the variables to simpler, shorter names

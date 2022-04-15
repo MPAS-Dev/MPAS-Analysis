@@ -64,11 +64,11 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        geojsonFiles = config.getExpression(sectionName, 'geojsonFiles')
+        geojsonFiles = config.getexpression(sectionName, 'geojsonFiles')
         if len(geojsonFiles) == 0:
             return
 
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         horizontalResolution = config.get(sectionName, 'horizontalResolution')
 
@@ -78,12 +78,12 @@ class GeojsonTransects(AnalysisTask):  # {{{
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getExpression(
-                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+            verticalComparisonGrid = config.getexpression(
+                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+        verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        fields = config.getExpression(sectionName, 'fields')
+        fields = config.getexpression(sectionName, 'fields')
 
         obsFileNames = OrderedDict()
         for fileName in geojsonFiles:

@@ -79,13 +79,13 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         mpasFieldName = 'deltaOHC'
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -95,9 +95,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         variableList = ['timeMonthly_avg_activeTracers_temperature',
                         'timeMonthly_avg_layerThickness']
 
-        depthRanges = config.getExpression('climatologyMapOHCAnomaly',
+        depthRanges = config.getexpression('climatologyMapOHCAnomaly',
                                            'depthRanges',
-                                           usenumpyfunc=True)
+                                           use_numpyfunc=True)
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.refYearClimatolgyTask = refYearClimatolgyTask

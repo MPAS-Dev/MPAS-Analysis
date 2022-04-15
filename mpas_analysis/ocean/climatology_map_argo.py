@@ -76,20 +76,20 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        depths = config.getexpression(sectionName, 'depths')
 
         if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '
@@ -217,20 +217,20 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        depths = config.getexpression(sectionName, 'depths')
 
         if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '

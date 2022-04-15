@@ -74,18 +74,18 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
-        regionGroups = config.getExpression('oceanRegionalProfiles',
+        regionGroups = config.getexpression('oceanRegionalProfiles',
                                             'regionGroups')
 
         for regionGroup in regionGroups:
             regionGroupSection = 'profiles{}'.format(
                 regionGroup.replace(' ', ''))
 
-            fields = config.getExpression(regionGroupSection, 'fields')
+            fields = config.getexpression(regionGroupSection, 'fields')
 
-            seasons = config.getExpression(regionGroupSection, 'seasons')
+            seasons = config.getexpression(regionGroupSection, 'seasons')
 
-            regionNames = config.getExpression(regionGroupSection,
+            regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
             if len(regionNames) == 0:
                 return
@@ -799,7 +799,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             fieldArrays.append(dsControl[meanFieldName].values)
             errArrays.append(dsControl[stdFieldName].values)
 
-        depthRange = config.getExpression(regionGroupSection, 'depthRange')
+        depthRange = config.getexpression(regionGroupSection, 'depthRange')
         if len(depthRange) == 0:
             depthRange = None
 

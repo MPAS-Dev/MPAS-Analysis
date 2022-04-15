@@ -110,13 +110,13 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(self.taskName, 'seasons')
+        seasons = config.getexpression(self.taskName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(self.taskName))
 
-        comparisonGridNames = config.getExpression(self.taskName,
+        comparisonGridNames = config.getexpression(self.taskName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:

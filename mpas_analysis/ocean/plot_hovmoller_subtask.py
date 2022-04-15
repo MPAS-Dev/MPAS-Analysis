@@ -264,8 +264,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             regionNameInTitle = self.regionName.replace('_', ' ')
             regionDim = ds.regionNames.dims[0]
         else:
-            plotTitles = config.getExpression('regions', 'plotTitles')
-            allRegionNames = config.getExpression('regions', 'regions')
+            plotTitles = config.getexpression('regions', 'plotTitles')
+            allRegionNames = config.getexpression('regions', 'regions')
             regionIndex = allRegionNames.index(self.regionName)
             regionNameInTitle = plotTitles[regionIndex]
             regionDim = 'nOceanRegionsTmp'
@@ -316,11 +316,11 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        movingAverageMonths = config.getWithDefault(
-            sectionName, 'movingAverageMonths', 1)
+        movingAverageMonths = config.getint(
+            sectionName, 'movingAverageMonths')
 
         if config.has_option(sectionName, 'yLim'):
-            yLim = config.getExpression(sectionName, 'yLim')
+            yLim = config.getexpression(sectionName, 'yLim')
         else:
             yLim = None
 
@@ -339,9 +339,9 @@ class PlotHovmollerSubtask(AnalysisTask):
                 regionNameInTitle = self.regionName.replace('_', ' ')
                 regionDim = dsRef.regionNames.dims[0]
             else:
-                plotTitles = controlConfig.getExpression('regions',
+                plotTitles = controlConfig.getexpression('regions',
                                                          'plotTitles')
-                allRegionNames = controlConfig.getExpression('regions',
+                allRegionNames = controlConfig.getexpression('regions',
                                                              'regions')
                 regionIndex = allRegionNames.index(self.regionName)
                 regionNameInTitle = plotTitles[regionIndex]

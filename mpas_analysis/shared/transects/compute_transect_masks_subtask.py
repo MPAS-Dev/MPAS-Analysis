@@ -124,8 +124,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             tags=[])
 
         if subprocessCount is None:
-            self.subprocessCount = self.config.getWithDefault(
-                'execute', 'parallelTaskCount', default=1)
+            self.subprocessCount = self.config.getint(
+                'execute', 'parallelTaskCount')
         else:
             self.subprocessCount = subprocessCount
 

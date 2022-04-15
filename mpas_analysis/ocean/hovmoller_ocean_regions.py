@@ -80,13 +80,13 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
         else:
             endYear = int(endYear)
 
-        regionGroups = config.getExpression('hovmollerOceanRegions',
+        regionGroups = config.getexpression('hovmollerOceanRegions',
                                             'regionGroups')
 
         for regionGroup in regionGroups:
             suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
             regionGroupSection = 'hovmoller{}'.format(suffix)
-            regionNames = config.getExpression(regionGroupSection,
+            regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
             if len(regionNames) == 0:
                 return
@@ -94,7 +94,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
             computeAnomaly = config.getboolean(regionGroupSection,
                                                'computeAnomaly')
 
-            fields = config.getExpression(regionGroupSection, 'fields')
+            fields = config.getexpression(regionGroupSection, 'fields')
 
             masksSubtask = regionMasksTask.add_mask_subtask(regionGroup)
             masksFile = masksSubtask.geojsonFileName

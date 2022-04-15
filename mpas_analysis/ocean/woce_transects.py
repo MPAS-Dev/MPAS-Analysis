@@ -64,7 +64,7 @@ class WoceTransects(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         horizontalResolution = config.get(sectionName, 'horizontalResolution')
 
@@ -74,12 +74,12 @@ class WoceTransects(AnalysisTask):  # {{{
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getExpression(
-                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+            verticalComparisonGrid = config.getexpression(
+                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+        verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        horizontalBounds = config.getExpression(
+        horizontalBounds = config.getexpression(
             sectionName, 'horizontalBounds')
 
         observationsDirectory = build_obs_path(

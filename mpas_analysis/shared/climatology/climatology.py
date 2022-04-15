@@ -120,7 +120,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
 
-    mpiTasks = config.getWithDefault('execute', 'mapMpiTasks', 1)
+    mpiTasks = config.getint('execute', 'mapMpiTasks')
     esmf_parallel_exec = config.get('execute', 'mapParallelExec')
     if esmf_parallel_exec == 'None':
         esmf_parallel_exec = None

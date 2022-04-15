@@ -92,9 +92,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         if key not in self.regionMaskSubtasks:
 
-            subprocessCount = config.getWithDefault('execute',
-                                                    'parallelTaskCount',
-                                                    default=1)
+            subprocessCount = config.getint('execute', 'parallelTaskCount')
 
             if obsFileName is not None:
                 useMpasMaskCreator = False

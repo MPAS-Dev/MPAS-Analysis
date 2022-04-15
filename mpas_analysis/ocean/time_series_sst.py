@@ -114,7 +114,7 @@ class TimeSeriesSST(AnalysisTask):
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = config.get('runs', 'mainRunName')
-        regions = config.getExpression('timeSeriesSST', 'regions')
+        regions = config.getexpression('timeSeriesSST', 'regions')
 
         self.xmlFileNames = []
         self.filePrefixes = {}
@@ -152,9 +152,9 @@ class TimeSeriesSST(AnalysisTask):
         movingAveragePoints = config.getint('timeSeriesSST',
                                             'movingAveragePoints')
 
-        regions = config.getExpression('regions', 'regions')
-        plotTitles = config.getExpression('regions', 'plotTitles')
-        regionsToPlot = config.getExpression('timeSeriesSST', 'regions')
+        regions = config.getexpression('regions', 'regions')
+        plotTitles = config.getexpression('regions', 'plotTitles')
+        regionsToPlot = config.getexpression('timeSeriesSST', 'regions')
 
         regionIndicesToPlot = [regions.index(region) for region in
                                regionsToPlot]

@@ -268,8 +268,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        plotTitles = config.getExpression('regions', 'plotTitles')
-        allRegionNames = config.getExpression('regions', 'regions')
+        plotTitles = config.getexpression('regions', 'plotTitles')
+        allRegionNames = config.getexpression('regions', 'regions')
         regionIndex = allRegionNames.index(self.regionName)
         regionNameInTitle = plotTitles[regionIndex]
 
@@ -288,7 +288,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         depths = ds.depth.values
 
-        divisionDepths = config.getExpression(self.sectionName, 'depths')
+        divisionDepths = config.getexpression(self.sectionName, 'depths')
 
         # for each depth interval to plot, determine the top and bottom depth
         topDepths = [0, 0] + divisionDepths

@@ -133,17 +133,17 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if fileSuffix.endswith('.nc'):
             fileSuffix = fileSuffix.strip('.nc')
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid '
                              'list of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -154,7 +154,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if not numpy.any([field['3D'] for field in fields]):
             depths = None
         else:
-            depths = config.getExpression(sectionName, 'depths')
+            depths = config.getexpression(sectionName, 'depths')
 
             if len(depths) == 0:
                 raise ValueError('config section {} does not contain valid '

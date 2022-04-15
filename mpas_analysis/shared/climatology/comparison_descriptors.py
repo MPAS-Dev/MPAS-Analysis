@@ -84,10 +84,8 @@ def _get_lat_lon_comparison_descriptor(config):
 
     section = 'climatology'
 
-    lat_res = config.getWithDefault(section, 'comparisonLatResolution',
-                                    constants.dLatitude)
-    lon_res = config.getWithDefault(section, 'comparisonLatResolution',
-                                    constants.dLongitude)
+    lat_res = config.getfloat(section, 'comparisonLatResolution')
+    lon_res = config.getfloat(section, 'comparisonLatResolution')
 
     nlat = int((constants.latmax - constants.latmin) / lat_res) + 1
     nlon = int((constants.lonmax - constants.lonmin) / lon_res) + 1

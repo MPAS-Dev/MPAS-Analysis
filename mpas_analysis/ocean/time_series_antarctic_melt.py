@@ -75,7 +75,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
         regionGroup = 'Ice Shelves'
-        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
+        iceShelvesToPlot = config.getexpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
         if len(iceShelvesToPlot) == 0:
             # nothing else to do

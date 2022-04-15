@@ -199,7 +199,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # regionIndex should correspond to NINO34 in surface weighted Average
         # AM
-        regions = config.getExpression('regions', 'regions')
+        regions = config.getexpression('regions', 'regions')
         regionToPlot = config.get('indexNino34', 'region')
         regionIndex = regions.index(regionToPlot)
 

@@ -164,9 +164,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        depthLimGlobal = config.getExpression(self.sectionName,
+        depthLimGlobal = config.getexpression(self.sectionName,
                                               'depthLimGlobal')
-        xLimGlobal = config.getExpression(self.sectionName, 'xLimGlobal')
+        xLimGlobal = config.getexpression(self.sectionName, 'xLimGlobal')
         movingAveragePoints = config.getint('meridionalHeatTransport',
                                             'movingAveragePoints')
 
