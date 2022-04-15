@@ -26,10 +26,11 @@ import numpy
 import xarray
 from pyremap import MpasMeshDescriptor, LatLonGridDescriptor
 
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import \
     get_comparison_descriptor, get_remapper, \
     add_years_months_days_in_month, compute_climatology, \
@@ -49,26 +50,22 @@ class TestClimatology(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasAnalysisConfigParser()
+        config = MpasConfigParser()
 
-        config.add_section('execute')
         config.set('execute', 'mapParallelExec', 'None')
+        config.set('execute', 'mapMpiTasks', '1')
 
-        config.add_section('diagnostics')
         config.set('diagnostics', 'base_path', self.test_dir)
         config.set('diagnostics', 'customDirectory', 'none')
         config.set('diagnostics', 'mappingSubdirectory', 'maps')
 
-        config.add_section('input')
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         config.set('input', 'mpasMeshName', 'QU240')
 
-        config.add_section('output')
         config.set('output', 'baseDirectory', self.test_dir)
         config.set('output', 'mappingSubdirectory', '.')
         config.set('output', 'mpasClimatologySubdirectory', 'clim/mpas')
 
-        config.add_section('climatology')
         config.set('climatology', 'startYear', '2')
         config.set('climatology', 'endYear', '2')
         config.set('climatology', 'comparisonLatResolution', '0.5')
@@ -76,7 +73,6 @@ class TestClimatology(TestCase):
 
         config.set('climatology', 'mpasInterpolationMethod', 'bilinear')
 
-        config.add_section('oceanObservations')
         config.set('oceanObservations', 'interpolationMethod', 'bilinear')
         config.set('oceanObservations', 'climatologySubdirectory', 'clim/obs')
         config.set('oceanObservations', 'remappedClimSubdirectory',

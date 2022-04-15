@@ -24,8 +24,9 @@ import os
 import xarray
 from pyremap import LatLonGridDescriptor
 
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
@@ -107,8 +108,8 @@ class TestRemapObsClimSubtask(TestCase):
 
     def setup_config(self):
         configPath = self.datadir.join('remap_obs.cfg')
-        config = MpasAnalysisConfigParser()
-        config.read(str(configPath))
+        config = MpasConfigParser()
+        config.add_from_file(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
         config.set('diagnostics', 'base_path', str(self.datadir))
         config.set('oceanObservations', 'obsSubdirectory', '.')

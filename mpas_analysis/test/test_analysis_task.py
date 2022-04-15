@@ -18,9 +18,11 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import pytest
+
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 class TestAnalysisTask(TestCase):
@@ -28,8 +30,7 @@ class TestAnalysisTask(TestCase):
     def test_checkGenerate(self):
 
         def doTest(generate, expectedResults):
-            config = MpasAnalysisConfigParser()
-            config.add_section('output')
+            config = MpasConfigParser()
             config.set('output', 'generate', generate)
             for taskName in expectedResults:
                 genericTask = AnalysisTask(config=config,
