@@ -35,7 +35,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``

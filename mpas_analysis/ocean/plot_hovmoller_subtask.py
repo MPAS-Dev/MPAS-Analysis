@@ -37,7 +37,7 @@ class PlotHovmollerSubtask(AnalysisTask):
     Attributes
     ----------
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
 
     regionName : str
@@ -151,7 +151,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         regionMaskFile : str, optional

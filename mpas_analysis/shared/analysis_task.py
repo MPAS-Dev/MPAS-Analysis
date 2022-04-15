@@ -35,7 +35,7 @@ class AnalysisTask(Process):  # {{{
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     taskName : str
@@ -112,7 +112,7 @@ class AnalysisTask(Process):  # {{{
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         taskName :  str

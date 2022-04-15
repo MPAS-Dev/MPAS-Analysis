@@ -585,7 +585,7 @@ class TransectsObservations(object):  # {{{
     Attributes
     ----------
 
-    config :  ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Configuration options
 
     obsFileNames : OrderedDict
@@ -615,7 +615,7 @@ class TransectsObservations(object):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         obsFileNames : OrderedDict

@@ -51,10 +51,10 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -477,7 +477,7 @@ class PlotTransportSubtask(AnalysisTask):
     transectIndex : int
         The index into the dimension ``nTransects`` of the transect to plot
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -503,7 +503,7 @@ class PlotTransportSubtask(AnalysisTask):
         transectIndex : int
             The index into the dimension ``nTransects`` of the transect to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors

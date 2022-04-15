@@ -35,14 +35,14 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTasks : dict of ``MpasClimatologyTask``
             The tasks that produced the climatology of monthly min and max to
             be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors

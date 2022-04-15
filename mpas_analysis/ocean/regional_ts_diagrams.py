@@ -71,7 +71,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -80,7 +80,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -476,7 +476,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     mpasClimatologyTask : ``MpasClimatologyTask``
@@ -515,7 +515,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
         regionName : str
             Name of the region to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -808,7 +808,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     mpasClimatologyTask : ``MpasClimatologyTask``
@@ -847,7 +847,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         regionName : str
             Name of the region to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         sectionName : str

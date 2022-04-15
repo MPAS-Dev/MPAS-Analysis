@@ -85,7 +85,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
     """
     # Authors
@@ -151,7 +151,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotTimeSeries<RegionName>`` by default)
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             The configuration options for the control run (if any)
         """
         # Authors

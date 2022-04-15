@@ -69,7 +69,7 @@ def update_time_bounds_in_config(config):  # {{{
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     """
@@ -88,10 +88,10 @@ def build_analysis_list(config, controlConfig):  # {{{
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
-    controlConfig : ``MpasAnalysisConfigParser`` object
+    controlConfig : mpas_tools.config.MpasConfigParser
         contains config options for a control run, or ``None`` if no config
         file for a control run was specified
 
@@ -418,7 +418,7 @@ def update_generate(config, generate):  # {{{
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     generate : str
@@ -445,7 +445,7 @@ def run_analysis(config, analyses):  # {{{
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     analyses : OrderedDict of ``AnalysisTask`` objects

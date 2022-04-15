@@ -59,7 +59,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     plotObs : bool, optional
         Whether to plot against observations.
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any), ignored if
         ``plotObs == True``
 
@@ -136,7 +136,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         plotObs : bool, optional
             Whether to plot against observations.
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any), ignored if
             ``plotObs == True``
 

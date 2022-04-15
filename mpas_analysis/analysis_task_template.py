@@ -86,8 +86,8 @@ class MyTask(AnalysisTask):  # {{{
     #    python class start with the argument self, which is not included in
     #    the list of arguments when you call a method of an object (because it
     #    is always included automatically).
-    # config is an MpasAnalysisConfigParser object that can be used to get
-    #    configuration options stored in default.cfg or a custom config
+    # config is an mpas_tools.config.MpasConfigParser object that can be used
+    #    to get configuration options stored in default.cfg or a custom config
     #    file specific to a given simulation.  See examples below or in
     #    existing analysis tasks.
     # myArg should either be modified or removed. An example might be if you
@@ -105,7 +105,7 @@ class MyTask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         prerequsiteTask : ``AnotherTaskClass``

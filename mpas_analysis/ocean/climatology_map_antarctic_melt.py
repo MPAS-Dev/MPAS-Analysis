@@ -52,7 +52,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -61,7 +61,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``
+        controlconfig : mpas_tools.config.MpasConfigParser
             Configuration options for a control run
         """
         # Authors
@@ -342,7 +342,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``
+        controlconfig : mpas_tools.config.MpasConfigParser
             Configuration options for a control run (if any)
 
         regionMasksTask : ``ComputeRegionMasks``

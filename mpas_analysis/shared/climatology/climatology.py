@@ -49,7 +49,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
     Parameters
     ----------
-    config :  instance of ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     sourceDescriptor : ``MeshDescriptor`` subclass object
@@ -320,7 +320,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     Parameters
     ----------
-    config :  instance of ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     climatologyDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object
@@ -391,7 +391,7 @@ def get_unmasked_mpas_climatology_directory(config, op='avg'):  # {{{
 
     Parameters
     ----------
-    config :  ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         configuration options
 
     op : {'avg', 'min', 'max'}
@@ -420,7 +420,7 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config :  ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         configuration options
 
     season : str
@@ -472,7 +472,7 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config :  ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Configuration options
 
     season : str
@@ -539,7 +539,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config :  ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Configuration options
 
     season : str

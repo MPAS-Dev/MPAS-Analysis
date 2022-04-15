@@ -63,7 +63,7 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -274,7 +274,7 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -460,7 +460,7 @@ def plot_projection_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 

@@ -48,7 +48,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
@@ -57,7 +57,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
         oceanRegionalProfilesTask : mpas_analysis.ocean.OceanRegionalProfiles
             A task for computing ocean regional profiles
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors

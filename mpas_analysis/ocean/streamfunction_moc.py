@@ -61,13 +61,13 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -640,7 +640,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1262,7 +1262,7 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1336,7 +1336,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors

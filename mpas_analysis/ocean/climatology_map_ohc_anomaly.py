@@ -49,7 +49,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -59,7 +59,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors

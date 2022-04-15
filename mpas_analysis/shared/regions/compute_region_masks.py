@@ -31,7 +31,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         conponentName : str

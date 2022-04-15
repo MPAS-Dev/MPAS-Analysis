@@ -52,13 +52,13 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1023,7 +1023,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -1053,7 +1053,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the region to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         sectionName : str
