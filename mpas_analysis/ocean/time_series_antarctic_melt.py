@@ -599,8 +599,8 @@ class PlotMeltSubtask(AnalysisTask):
         # If areas from obs file used need to be converted from sq km to sq m
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
-                                            'movingAverageMonths')
+        movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
+                                            'movingAveragePoints')
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
@@ -684,7 +684,7 @@ class PlotMeltSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
@@ -752,7 +752,7 @@ class PlotMeltSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,

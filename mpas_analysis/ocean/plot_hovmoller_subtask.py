@@ -316,8 +316,8 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        movingAverageMonths = config.getint(
-            sectionName, 'movingAverageMonths')
+        movingAveragePoints = config.getint(
+            sectionName, 'movingAveragePoints')
 
         if config.has_option(sectionName, 'yLim'):
             yLim = config.getexpression(sectionName, 'yLim')
@@ -379,7 +379,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             zCoord=z, colorbarLabel=self.unitsLabel, title=title,
             modelTitle=mainRunName, refTitle=refTitle, diffTitle=diffTitle,
             xlabels=xLabel, ylabel=yLabel, lineWidth=1, xCoordIsTime=True,
-            movingAveragePoints=movingAverageMonths, calendar=self.calendar,
+            movingAveragePoints=movingAveragePoints, calendar=self.calendar,
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
             yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
             axisFontSize=axisFontSize, defaultFontSize=defaultFontSize)

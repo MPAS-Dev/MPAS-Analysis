@@ -1181,7 +1181,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             zboundsRef = dsRef.zbounds.values
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = 1
+        movingAveragePoints = 1
 
         self.logger.info('  Make plots...')
 
@@ -1265,7 +1265,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             fig = timeseries_analysis_plot(
                 config, fields, calendar=calendar, title=title, xlabel=xLabel,
-                ylabel=yLabel, movingAveragePoints=movingAverageMonths,
+                ylabel=yLabel, movingAveragePoints=movingAveragePoints,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, titleFontSize=titleFontSize,
                 defaultFontSize=defaultFontSize)

@@ -602,8 +602,8 @@ class PlotTransportSubtask(AnalysisTask):
         plotControl = self.controlConfig is not None
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = config.getint('timeSeriesTransport',
-                                            'movingAverageMonths')
+        movingAveragePoints = config.getint('timeSeriesTransport',
+                                            'movingAveragePoints')
 
         self.logger.info('  Plotting...')
 
@@ -651,7 +651,7 @@ class PlotTransportSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
