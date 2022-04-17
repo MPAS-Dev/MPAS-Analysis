@@ -822,12 +822,7 @@ def main():
 
     shared_configs = config.list_files()
 
-    if len(args.config_file) > 0:
-        if len(args.config_file) > 1:
-            raise ValueError('Only one user config file is supported')
-
-        user_config = args.config_file[0]
-        print(user_config)
+    for user_config in args.config_file:
         if not os.path.exists(user_config):
             raise OSError(f'Config file {user_config} not found.')
 
