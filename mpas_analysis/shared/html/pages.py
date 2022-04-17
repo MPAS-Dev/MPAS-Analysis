@@ -253,7 +253,7 @@ class MainPage(object):
             configsText = configsText + \
                 _replace_tempate_text(self.configTemplate, replacements)
 
-        replacements = {'@configName': 'config.complete.{}'.format(runName),
+        replacements = {'@configName': 'complete.{}.cfg'.format(runName),
                         '@configDesc': 'Complete Configuration File'}
 
         configsText = configsText + \
