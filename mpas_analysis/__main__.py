@@ -855,6 +855,9 @@ def main():
 
         control_config = MpasConfigParser()
         for config_file in shared_configs:
+            if config_file.endswith('.py'):
+                # we'll skip config options set in python files
+                continue
             control_config.add_from_file(config_file)
         control_config.add_user_config(control_config_file)
 
