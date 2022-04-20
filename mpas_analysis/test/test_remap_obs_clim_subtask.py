@@ -169,6 +169,6 @@ class TestRemapObsClimSubtask(TestCase):
 
         fileName = remapSubtask.get_file_name(stage=stage, season='JFM',
                                               comparisonGridName='antarctic')
-        assert (fileName == '{}/clim/obs/remapped/mld_4.0x4.0degree_to_'
-                            '6000.0x6000.0km_10.0km_Antarctic_stereo_JFM.nc'.format(
-            str(self.test_dir)))
+        assert (fileName == f'{str(self.test_dir)}/clim/obs/remapped/'
+                            f'mld_4.0x4.0degree_to_6000.0x6000.0km_10.0km_'
+                            f'Antarctic_stereo_JFM.nc')

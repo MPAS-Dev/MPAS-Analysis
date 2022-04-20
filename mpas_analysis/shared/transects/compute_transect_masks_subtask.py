@@ -87,7 +87,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, transectGroup, subprocessCount=None):
-    
+
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.

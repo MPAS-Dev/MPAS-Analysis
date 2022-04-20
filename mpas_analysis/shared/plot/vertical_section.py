@@ -963,15 +963,16 @@ def plot_vertical_section(
         h2, _ = cs2.legend_elements()
         if labelContours:
             originalFieldName = originalFieldName + " (" + colorbarLabel + ")"
-            comparisonFieldName = comparisonFieldName + " (" + \
-                                  colorbarLabel + ")"
+            comparisonFieldName = (comparisonFieldName + " (" +
+                                   colorbarLabel + ")")
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
                   loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
 
     if title is not None:
         if plotAsContours and labelContours \
                 and contourComparisonField is None:
-            title = limit_title(title, maxTitleLength - (3 + len(colorbarLabel)))
+            title = limit_title(title,
+                                maxTitleLength - (3 + len(colorbarLabel)))
             title = title + " (" + colorbarLabel + ")"
         else:
             title = limit_title(title, maxTitleLength)

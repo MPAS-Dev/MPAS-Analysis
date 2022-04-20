@@ -604,12 +604,12 @@ class PlotTransportSubtask(AnalysisTask):
         fields = [transport]
         lineColors = [config.get('timeSeries', 'mainColor')]
         lineWidths = [2.5]
-        meanString = 'mean={:.2f} $\pm$ {:.2f}'.format(trans_mean, trans_std)
+        meanString = 'mean={:.2f} $\\pm$ {:.2f}'.format(trans_mean, trans_std)
         if plotControl:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
             ref_transport, ref_mean, ref_std = \
                 self._load_transport(self.controlConfig)
-            refMeanString = 'mean={:.2f} $\pm$ {:.2f}'.format(ref_mean, ref_std)
+            refMeanString = f'mean={ref_mean:.2f} $\\pm$ {ref_std:.2f}'
             fields.append(ref_transport)
             lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)

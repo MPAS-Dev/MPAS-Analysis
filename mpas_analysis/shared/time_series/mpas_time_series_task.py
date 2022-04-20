@@ -179,11 +179,10 @@ class MpasTimeSeriesTask(AnalysisTask):
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, startDate, endDate))
 
-        self.runMessage = '\nComputing MPAS time series from first year ' \
-                          'plus files:\n' \
-                          '    {} through\n    {}'.format(
-            os.path.basename(self.inputFiles[0]),
-            os.path.basename(self.inputFiles[-1]))
+        self.runMessage = \
+            f'\nComputing MPAS time series from first year plus files:\n' \
+            f'    {os.path.basename(self.inputFiles[0])} through\n' \
+            f'    {os.path.basename(self.inputFiles[-1])}'
 
         # Make sure first year of data is included for computing anomalies
         if config.has_option('timeSeries', 'anomalyRefYear'):

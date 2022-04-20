@@ -831,8 +831,8 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
             done = True
 
         elif climatology is not None:
-            monthsIfDone = (
-                                   endYearClimo - startYearClimo + 1) * len(monthValues)
+            monthsIfDone = ((endYearClimo - startYearClimo + 1)
+                            * len(monthValues))
             if climatology.attrs['totalMonths'] == monthsIfDone:
                 # also complete, so we can move on
                 done = True

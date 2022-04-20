@@ -225,8 +225,9 @@ class MainPage(object):
 
             # substitute entries in the template and add the component to
             # the text describing all components
-            componentsText = componentsText + \
-                             _replace_tempate_text(self.componentTemplate, replacements)
+            componentsText = \
+                componentsText + \
+                _replace_tempate_text(self.componentTemplate, replacements)
 
         githash = _get_git_hash()
         if githash is None:
@@ -245,14 +246,16 @@ class MainPage(object):
             replacements = {'@configName': os.path.basename(configFileName),
                             '@configDesc': shortName}
 
-            configsText = configsText + \
-                          _replace_tempate_text(self.configTemplate, replacements)
+            configsText = \
+                configsText + \
+                _replace_tempate_text(self.configTemplate, replacements)
 
         replacements = {'@configName': 'complete.{}.cfg'.format(runName),
                         '@configDesc': 'Complete Configuration File'}
 
-        configsText = configsText + \
-                      _replace_tempate_text(self.configTemplate, replacements)
+        configsText = \
+            configsText + \
+            _replace_tempate_text(self.configTemplate, replacements)
 
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
@@ -494,11 +497,13 @@ class ComponentPage(object):
         quickLinkText = ''
         galleriesText = ''
         for groupName, groupDict in self.groups.items():
-            quickLinkText = quickLinkText + \
-                            self._generate_quick_link_text(groupName, groupDict)
+            quickLinkText = \
+                quickLinkText + \
+                self._generate_quick_link_text(groupName, groupDict)
 
-            galleriesText = galleriesText + \
-                            self._generate_group_text(groupName, groupDict)
+            galleriesText = \
+                galleriesText + \
+                self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
@@ -592,8 +597,9 @@ class ComponentPage(object):
         """
         galleriesText = ''
         for galleryName, galleryDict in groupDict['galleries'].items():
-            galleriesText = galleriesText + \
-                            self._generate_gallery_text(galleryName, galleryDict['images'])
+            galleriesText = \
+                galleriesText + \
+                self._generate_gallery_text(galleryName, galleryDict['images'])
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],

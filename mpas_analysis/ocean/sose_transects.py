@@ -327,9 +327,8 @@ class SoseTransectsObservations(TransectsObservations):
                 continue
             print('  {}'.format(field['prefix']))
 
-            fileName = '{}/SOSE_2005-2010_monthly_{}_SouthernOcean' \
-                       '_0.167x0.167degree_20180710.nc'.format(
-                observationsDirectory, prefix)
+            fileName = f'{observationsDirectory}/SOSE_2005-2010_monthly_' \
+                       f'{prefix}_SouthernOcean_0.167x0.167degree_20180710.nc'
 
             dsLocal = xr.open_dataset(fileName)
 

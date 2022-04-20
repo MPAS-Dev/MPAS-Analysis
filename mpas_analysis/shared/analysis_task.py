@@ -451,12 +451,12 @@ class AnalysisTask(Process):
         except ValueError:
             enabled = default
             if default:
-                print('Warning: namelist option {} not found.\n'
-                      'This likely indicates that the simulation you '
-                      'are analyzing was run with an\n'
-                      'older version of MPAS-O that did not support '
-                      'this flag.  Assuming enabled.'.format(
-                    analysisOptionName))
+                print(f'Warning: namelist option {analysisOptionName} not '
+                      f'found.\n'
+                      f'This likely indicates that the simulation you '
+                      f'are analyzing was run with an\n'
+                      f'older version of MPAS-O that did not support '
+                      f'this flag.  Assuming enabled.')
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'

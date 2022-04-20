@@ -306,10 +306,10 @@ class MpasClimatologyTask(AnalysisTask):
             # subtasks will take care of it, so nothing to do
             return
 
-        self.logger.info('\nComputing MPAS climatologies from files:\n'
-                         '    {} through\n    {}'.format(
-            os.path.basename(self.inputFiles[0]),
-            os.path.basename(self.inputFiles[-1])))
+        self.logger.info(
+            f'\nComputing MPAS climatologies from files:\n'
+            f'    {os.path.basename(self.inputFiles[0])} through\n'
+            f'    {os.path.basename(self.inputFiles[-1])}')
 
         seasonsToCheck = list(constants.abrevMonthNames)
 
@@ -419,9 +419,9 @@ class MpasClimatologyTask(AnalysisTask):
         make_directories(symlinkDirectory)
 
         for inFileName, year, month in zip(fileNames, years, months):
-            outFileName = '{}/{}.hist.am.timeSeriesStatsMonthly.{:04d}-' \
-                          '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
-                                                year, month)
+            outFileName = \
+                f'{symlinkDirectory}/{self.ncclimoModel}.hist.am.' \
+                f'timeSeriesStatsMonthly.{year:04d}-{month:02d}-01.nc'
 
             try:
                 os.symlink(inFileName, outFileName)
@@ -621,10 +621,10 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
             # nothing to do
             return
 
-        self.logger.info('\nComputing MPAS climatology from files:\n'
-                         '    {} through\n    {}'.format(
-            os.path.basename(parentTask.inputFiles[0]),
-            os.path.basename(parentTask.inputFiles[-1])))
+        self.logger.info(
+            f'\nComputing MPAS climatologies from files:\n'
+            f'    {os.path.basename(parentTask.inputFiles[0])} through\n'
+            f'    {os.path.basename(parentTask.inputFiles[-1])}')
 
         climatologyFileName = parentTask.get_file_name(season)
         climatologyDirectory = get_unmasked_mpas_climatology_directory(
