@@ -8,9 +8,9 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Defines the base class for analysis tasks.
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -27,7 +27,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 
 
 class AnalysisTask(Process):
-    '''
+    """
     The base class for analysis tasks.
 
     Attributes
@@ -85,7 +85,7 @@ class AnalysisTask(Process):
 
     logger : ``logging.Logger``
         A logger for output during the run phase of an analysis task
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -100,7 +100,7 @@ class AnalysisTask(Process):
 
     def __init__(self, config, taskName, componentName, tags=[],
                  subtaskName=None):
-        '''
+        """
         Construct the analysis task.
 
         Individual tasks (children classes of this base class) should first
@@ -128,7 +128,7 @@ class AnalysisTask(Process):
 
         subtaskName : str, optional
             If this is a subtask of ``taskName``, the name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -169,7 +169,7 @@ class AnalysisTask(Process):
         self.runDirectly = False
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
 
@@ -184,7 +184,7 @@ class AnalysisTask(Process):
         analysis-specific setup.  For example, this function could check if
         necessary observations and other data files are found, then, determine
         the list of files to be read when the analysis is run.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -232,10 +232,10 @@ class AnalysisTask(Process):
                                                self.fullTaskName)
 
     def run_task(self):
-        '''
+        """
         Run the analysis.  Each task should override this function to do the
         work of computing and/or plotting analysis
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -243,7 +243,7 @@ class AnalysisTask(Process):
         return
 
     def run_after(self, task):
-        '''
+        """
         Only run this task after the given task has completed.  This allows a
         task to be constructed of multiple subtasks, some of which may block
         later tasks, while allowing some subtasks to run in parallel.  It also
@@ -254,7 +254,7 @@ class AnalysisTask(Process):
         ----------
         task : ``AnalysisTask``
             The task that should finish before this one begins
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -263,7 +263,7 @@ class AnalysisTask(Process):
             self.runAfterTasks.append(task)
 
     def add_subtask(self, subtask):
-        '''
+        """
         Add a subtask to this tasks.  This task always runs after the subtask
         has finished.  However, this task gets set up *before* the subtask,
         so the setup of the subtask can depend on fields defined during the
@@ -273,7 +273,7 @@ class AnalysisTask(Process):
         ----------
         subtask : ``AnalysisTask``
             The subtask to run as part of this task
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -282,7 +282,7 @@ class AnalysisTask(Process):
             self.subtasks.append(subtask)
 
     def run(self, writeLogFile=True):
-        '''
+        """
         Sets up logging and then runs the analysis task.
 
         Parameters
@@ -292,7 +292,7 @@ class AnalysisTask(Process):
             Otherwise, the internal logger ``self.logger`` points to stdout
             and no log file is created.  The intention is for logging to take
             place in parallel mode but not in serial mode.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -346,7 +346,7 @@ class AnalysisTask(Process):
 
     def check_generate(self):
 
-        '''
+        """
         Determines if this analysis should be generated, based on the
         ``generate`` config option and ``taskName``, ``componentName`` and
         ``tags``.
@@ -363,7 +363,7 @@ class AnalysisTask(Process):
         ------
         ValueError : If one of ``self.taskName``, ``self.componentName``
             or ``self.tags`` has not been set.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -412,7 +412,7 @@ class AnalysisTask(Process):
 
     def check_analysis_enabled(self, analysisOptionName, default=False,
                                raiseException=True):
-        '''
+        """
         Check to make sure a given analysis is turned on, issuing a warning or
         raising an exception if not.
 
@@ -440,7 +440,7 @@ class AnalysisTask(Process):
             If the given analysis option is not found and ``default`` is not
             ``True`` or if the analysis option is found and is ``False``.  The
             exception is only raised if ``raiseException = True``.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -466,7 +466,7 @@ class AnalysisTask(Process):
         return enabled
 
     def set_start_end_date(self, section):
-        '''
+        """
         Set the start and end dates in the ``config`` correspond to the start
         and end years in a given category of analysis
 
@@ -476,7 +476,7 @@ class AnalysisTask(Process):
             The name of a section in the config file containing ``startYear``
             and ``endYear`` options. ``section`` is typically one of
             ``climatology``, ``timeSeries`` or ``index``
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

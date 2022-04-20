@@ -29,7 +29,7 @@ class WoceTransects(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -44,7 +44,7 @@ class WoceTransects(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

@@ -158,14 +158,14 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
                     self.add_subtask(subtask)
 
     def setup_and_check(self):
-        '''
+        """
         Checks whether analysis is being performed only on the reference year,
         in which case the analysis will not be meaningful.
 
         Raises
         ------
         ValueError: if attempting to analyze only the reference year
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -204,7 +204,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
                  climatologyName, variableList, seasons, comparisonGridNames,
                  minDepth, maxDepth):
 
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -241,7 +241,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         minDepth, maxDepth : float
             The minimum and maximum depths for integration
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -261,7 +261,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         self.maxDepth = maxDepth
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -270,7 +270,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

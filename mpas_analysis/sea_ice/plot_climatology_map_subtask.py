@@ -98,7 +98,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  controlConfig=None, subtaskSuffix=None):
 
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -131,7 +131,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
             observations being plotted)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

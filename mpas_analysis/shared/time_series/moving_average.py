@@ -13,7 +13,7 @@
 
 
 def compute_moving_avg(ds, movingAveragePoints=12):
-    '''
+    """
     Compute the rolling mean of a data set
 
     Parameters
@@ -29,7 +29,7 @@ def compute_moving_avg(ds, movingAveragePoints=12):
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis

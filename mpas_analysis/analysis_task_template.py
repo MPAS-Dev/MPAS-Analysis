@@ -8,7 +8,7 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 This is an example analysis task to be used as a template for new tasks.
 It should be copied into one of the component folders (`ocean`, `sea_ice`,
 `land_ice`, etc.) and modified as needed.
@@ -38,7 +38,7 @@ Instructions for creating a new analysis task:
    to be generated and is set up properly.
 
 Don't forget to remove this docstring. (It's not needed.)
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -64,10 +64,10 @@ from mpas_analysis.shared.climatology import \
 # can be helpful in initializing, checking whether to perform analysis and
 # performing the analysis.  See AnalysisTask in shared/analysis_task.py
 class MyTask(AnalysisTask):
-    '''
+    """
     <Briefly describe the analysis task here.  Just a 1-2 sentence description
     of what the task does should be sufficient.>
-    '''
+    """
 
     # Authors
     # -------
@@ -97,7 +97,7 @@ class MyTask(AnalysisTask):
     #    and yu would then make a new task something like this:
     #        myTask = MyTask(config, fieldName='seaIceArea')
     def __init__(self, config, prerequsiteTask, myArg='myDefaultValue'):
-        '''
+        """
         Construct the analysis task.
         <Add any additional description of what happens during construction>
 
@@ -114,7 +114,7 @@ class MyTask(AnalysisTask):
         myArg : str, optional
             <Describe the arg, or just remove remove it>
 
-        '''
+        """
         # Authors
         # -------
         # <List of authors>
@@ -192,13 +192,13 @@ class MyTask(AnalysisTask):
     # output files exist, etc.  If there is a problem, an exception should be
     # raised (see the example below) so the task will not be run.
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
         ------
         ValueError: <if myArg has an invalid value; modify as needed>
-        '''
+        """
         # Authors
         # -------
         # <List of authors>
@@ -309,9 +309,9 @@ class MyTask(AnalysisTask):
             self.filePrefixes[plotParameter] = filePrefix
 
     def run_task(self):
-        '''
+        """
         The main method of the task that performs the analysis task.
-        '''
+        """
         # Authors
         # -------
         # <List of authors>
@@ -336,7 +336,7 @@ class MyTask(AnalysisTask):
     # 'save' arguments as member variables of `self` and then get them back
     # (like `self.myArg` here).
     def _make_plot(self, plotParameter, optionalArgument=None):
-        '''
+        """
         Make a simple plot
 
         Parameters
@@ -348,7 +348,7 @@ class MyTask(AnalysisTask):
             An optional argument
 
         <Performs my favorite subtask>
-        '''
+        """
 
         # perform the task
         # self.myArg is a copy of the argument we passed in to __init__ when we

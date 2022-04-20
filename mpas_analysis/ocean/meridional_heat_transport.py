@@ -25,7 +25,7 @@ from mpas_analysis.shared.climatology.climatology import \
 
 
 class MeridionalHeatTransport(AnalysisTask):
-    '''
+    """
     Plot meridional heat transport from the analysis member output.
 
     Attributes
@@ -36,14 +36,14 @@ class MeridionalHeatTransport(AnalysisTask):
 
     controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
-    '''
+    """
 
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -56,7 +56,7 @@ class MeridionalHeatTransport(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -74,9 +74,9 @@ class MeridionalHeatTransport(AnalysisTask):
         self.controlConfig = controlConfig
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Mark Petersen, Milena Veneziani, Xylar Asay-Davis

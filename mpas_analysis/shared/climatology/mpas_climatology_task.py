@@ -34,7 +34,7 @@ from mpas_analysis.shared.constants import constants
 
 
 class MpasClimatologyTask(AnalysisTask):
-    '''
+    """
     An analysis tasks for computing climatologies from output from the
     ``timeSeriesStatsMonthly*`` analysis members.
 
@@ -74,14 +74,14 @@ class MpasClimatologyTask(AnalysisTask):
         ``timeSeriesStatsMonthlyOutput``,
         ``timeSeriesStatsMonthlyMinOutput``,
         ``timeSeriesStatsMonthlyMaxOutput``
-    '''
+    """
 
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None, op='avg'):
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -99,7 +99,7 @@ class MpasClimatologyTask(AnalysisTask):
         taskName : str, optional
             the name of the task, defaults to
             mpasClimatology<ComponentName><Op>
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -177,7 +177,7 @@ class MpasClimatologyTask(AnalysisTask):
                         self.seasonSubtasks[monthName])
 
     def add_variables(self, variableList, seasons=None):
-        '''
+        """
         Add one or more variables and optionally one or more seasons for which
         to compute climatologies.
 
@@ -198,7 +198,7 @@ class MpasClimatologyTask(AnalysisTask):
             if this funciton is called before this task has been set up (so
             the list of available variables has not yet been set) or if one
             or more of the requested variables is not available in the stream.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -235,7 +235,7 @@ class MpasClimatologyTask(AnalysisTask):
                 self.add_variables(variableList, seasons=monthNames)
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -244,7 +244,7 @@ class MpasClimatologyTask(AnalysisTask):
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -291,9 +291,9 @@ class MpasClimatologyTask(AnalysisTask):
             self.allVariables = list(ds.data_vars.keys())
 
     def run_task(self):
-        '''
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -433,7 +433,7 @@ class MpasClimatologyTask(AnalysisTask):
     def _compute_climatologies_with_ncclimo(self, inDirectory, outDirectory,
                                             remapper=None,
                                             remappedDirectory=None):
-        '''
+        """
         Uses ncclimo to compute monthly, seasonal and/or annual climatologies.
 
         Parameters
@@ -458,7 +458,7 @@ class MpasClimatologyTask(AnalysisTask):
         ------
         OSError
             If ``ncclimo`` is not in the system path.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -539,7 +539,7 @@ class MpasClimatologyTask(AnalysisTask):
 
 
 class MpasClimatologySeasonSubtask(AnalysisTask):
-    '''
+    """
     An analysis subtasks for computing climatologies from output from the
     ``timeSeriesStatsMonthly`` analysis member for a single month or season.
 
@@ -551,14 +551,14 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
 
     parentTask : ``MpasClimatologyTask``
         The task that this subtask belongs to.
-    '''
+    """
 
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, season, subtaskName=None):
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -573,7 +573,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
         subtaskName : str, optional
             the name of the subtask, defaults to season
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -602,9 +602,9 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
             self.config.getint('climatology', 'daskThreads'))
 
     def run_task(self):
-        '''
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -649,7 +649,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
 
     def _compute_climatologies_with_xarray(self, inDirectory, outDirectory):
 
-        '''
+        """
         Uses xarray to compute seasonal and/or annual climatologies.
 
         Parameters
@@ -659,7 +659,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
 
         outDirectory : str
             The output directory where climatologies will be written
-        '''
+        """
 
         # Authors
         # -------

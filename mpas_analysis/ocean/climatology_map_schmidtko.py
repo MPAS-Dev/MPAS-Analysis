@@ -8,10 +8,10 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Analysis tasks for comparing climatology maps of Antarctic seafloor fields
 against observations from Schmidtko et al. (2014, DOI: 10.1126/science.1256117)
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -197,7 +197,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
                  fieldName, comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
 
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -225,7 +225,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -239,7 +239,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
             comparisonGridNames, subtaskName)
 
     def get_observation_descriptor(self, fileName):
-        '''
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -251,7 +251,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -264,7 +264,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -277,7 +277,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

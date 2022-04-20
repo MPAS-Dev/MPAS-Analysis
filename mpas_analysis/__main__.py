@@ -684,11 +684,11 @@ def purge_output(config):
 
 
 def symlink_main_run(config):
-    '''
+    """
     Create symlinks to the climatology and time-series directories for the
     main run that has already been computed so we don't have to recompute
     the analysis.
-    '''
+    """
 
     def link_dir(section, option):
         destDirectory = build_config_full_path(config=config, section='output',

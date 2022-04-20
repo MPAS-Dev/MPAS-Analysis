@@ -29,7 +29,7 @@ class GeojsonTransects(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -44,7 +44,7 @@ class GeojsonTransects(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -181,7 +181,7 @@ class GeojsonTransectsObservations(TransectsObservations):
     # Xylar Asay-Davis
 
     def build_observational_dataset(self, fileName, transectName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -197,7 +197,7 @@ class GeojsonTransectsObservations(TransectsObservations):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

@@ -14,10 +14,10 @@ import xarray
 
 
 def add_periodic_lon(ds, lonDim, degrees=True):
-    '''
+    """
     Add a single grid point that is a periodic image to the end of the data set
     in the lon dimension
-    '''
+    """
 
     lonRange = ds.lon[-1].values - ds.lon[0].values
     if degrees:

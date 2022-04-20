@@ -39,7 +39,7 @@ from mpas_analysis.shared.html import write_image_xml
 
 
 class IndexNino34(AnalysisTask):
-    '''
+    """
     A task for computing and plotting time series and spectra of the El Nino
     3.4 climate index
 
@@ -51,14 +51,14 @@ class IndexNino34(AnalysisTask):
 
     controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
-    '''
+    """
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
 
-        '''
+        """
         Construct the analysis task.
 
         Parameters
@@ -71,7 +71,7 @@ class IndexNino34(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -89,9 +89,9 @@ class IndexNino34(AnalysisTask):
         self.run_after(mpasTimeSeriesTask)
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -140,10 +140,10 @@ class IndexNino34(AnalysisTask):
                                                         filePrefix))
 
     def run_task(self):
-        '''
+        """
         Computes NINO34 index and plots the time series and power spectrum with
         95 and 99% confidence bounds
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
@@ -683,7 +683,7 @@ class IndexNino34(AnalysisTask):
     def _plot_nino_timeseries(self, ninoIndex, time, xlabel, ylabel,
                               panelTitle, title_font, axis_font,
                               lineWidth):
-        '''
+        """
         Plot the nino time series on a subplot
 
         Parameters
@@ -705,7 +705,7 @@ class IndexNino34(AnalysisTask):
 
         lineWidth : list of str
             control line width
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
@@ -745,7 +745,7 @@ class IndexNino34(AnalysisTask):
             imageCaption=caption)
 
     def _plot_size_y_axis(self, x, ys, xmin, xmax):
-        '''
+        """
         Get the maximum y value over the given range of x values
 
         Parameters
@@ -761,7 +761,7 @@ class IndexNino34(AnalysisTask):
 
         xmax : float, optional
             The maximum x values
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis

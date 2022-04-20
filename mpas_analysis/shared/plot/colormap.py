@@ -26,7 +26,7 @@ import pkg_resources
 
 
 def setup_colormap(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -61,7 +61,7 @@ def setup_colormap(config, configSectionName, suffix=''):
         'lineWidth' is the width of contour lines or ``None`` if not specified
 
         'lineColor' is the color of contour lines or ``None`` if not specified
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
@@ -303,7 +303,7 @@ def register_custom_colormaps():
 
 
 def _setup_colormap_and_norm(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -328,7 +328,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -364,7 +364,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
 
 def _setup_indexed_colormap(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -391,7 +391,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
@@ -441,7 +441,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
 
 def _read_xml_colormap(xmlFile, map_name):
-    '''Read in an XML colormap'''
+    """Read in an XML colormap"""
 
     xml = ET.parse(xmlFile)
 
@@ -469,7 +469,7 @@ def _register_colormap_and_reverse(map_name, cmap):
 
 
 def _plot_color_gradients():
-    '''from https://matplotlib.org/tutorials/colors/colormaps.html'''
+    """from https://matplotlib.org/tutorials/colors/colormaps.html"""
 
     cmap_list = [m for m in plt.colormaps() if not m.endswith("_r")]
 

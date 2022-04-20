@@ -113,7 +113,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  secondRemapMpasClimatologySubtask=None, controlConfig=None,
                  depth=None, removeMean=False, subtaskName=None):
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -159,7 +159,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             The name of the subtask.  If not specified, it is
             ``plot<season>_<comparisonGridName>`` with a suffix indicating the
             depth being sliced (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

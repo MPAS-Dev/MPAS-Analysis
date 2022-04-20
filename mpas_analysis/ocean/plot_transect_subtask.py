@@ -107,7 +107,7 @@ class PlotTransectSubtask(AnalysisTask):
                  computeTransectsSubtask, plotObs=True,
                  controlConfig=None, horizontalBounds=None):
 
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -140,7 +140,7 @@ class PlotTransectSubtask(AnalysisTask):
         horizontalBounds : [float, float], optional
             The distance in km of the left- and right-hand edges of the plot,
             chosen automatically by default or if the list is empty
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -177,7 +177,7 @@ class PlotTransectSubtask(AnalysisTask):
                       galleryName, configSectionName, verticalBounds,
                       diffTitleLabel='Model - Observations'):
 
-        '''
+        """
         Store attributes related to plots, plot file names and HTML output.
 
         Parameters
@@ -228,7 +228,7 @@ class PlotTransectSubtask(AnalysisTask):
         diffTitleLabel : str, optional
             the title of the difference subplot
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

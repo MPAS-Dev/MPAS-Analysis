@@ -22,7 +22,7 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime, \
 
 
 def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
-    '''
+    """
     Formats tick labels and positions along the x-axis for time series
     / index plots
 
@@ -43,7 +43,7 @@ def plot_xtick_format(calendar, minDays, maxDays, maxXTicks, yearStride=None):
 
     yearStride : int, optional
         the number of years to skip over between ticks
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis

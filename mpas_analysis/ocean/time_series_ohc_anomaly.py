@@ -130,9 +130,9 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             self.add_subtask(plotTask)
 
     def _compute_ohc(self, ds):
-        '''
+        """
         Compute the OHC time series.
-        '''
+        """
 
         # regionNames = self.config.getexpression('regions', 'regions')
         # ds['regionNames'] = ('nOceanRegionsTmp', regionNames)

@@ -41,7 +41,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
                  iselValues=None):
 
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -78,7 +78,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

@@ -40,7 +40,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
     # Xylar Asay-Davis
 
     def get_observation_descriptor(self, fileName):
-        '''
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -52,7 +52,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -65,7 +65,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -78,7 +78,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

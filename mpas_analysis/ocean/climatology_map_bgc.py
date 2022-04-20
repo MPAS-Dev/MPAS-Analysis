@@ -207,9 +207,9 @@ class ClimatologyMapBGC(AnalysisTask):
                     self.add_subtask(subtask)
 
     def setup_and_check(self):
-        '''
+        """
         Check if preindustrial flag is turned on or off.
-        '''
+        """
         # Authors
         # -------
         # Riley X. Brady
@@ -326,7 +326,7 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
     # Riley X. Brady
 
     def get_observation_descriptor(self, fileName):
-        '''
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -338,7 +338,7 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Riley X. Brady, Xylar Asay-Davis
@@ -352,7 +352,7 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -365,7 +365,7 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
         ------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Riley X. Brady, Xylar Asay-Davis

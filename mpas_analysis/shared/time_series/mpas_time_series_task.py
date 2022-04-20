@@ -23,7 +23,7 @@ from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
 class MpasTimeSeriesTask(AnalysisTask):
-    '''
+    """
     An analysis tasks for computing time series from output from the
     ``timeSeriesStatsMonthly`` analysis member.
 
@@ -46,7 +46,7 @@ class MpasTimeSeriesTask(AnalysisTask):
 
     startYear, endYear : int
         The start and end years of the time series
-    '''
+    """
 
     # Authors
     # -------
@@ -54,7 +54,7 @@ class MpasTimeSeriesTask(AnalysisTask):
 
     def __init__(self, config, componentName, taskName=None,
                  subtaskName=None, section='timeSeries'):
-        '''
+        """
         Construct the analysis task for extracting time series.
 
         Parameters
@@ -76,7 +76,7 @@ class MpasTimeSeriesTask(AnalysisTask):
         section : str, optional
             The section of the config file from which to read the start and
             end times for the time series, also added as a tag
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -101,7 +101,7 @@ class MpasTimeSeriesTask(AnalysisTask):
             tags=tags)
 
     def add_variables(self, variableList):
-        '''
+        """
         Add one or more variables to extract as a time series.
 
         Parameters
@@ -117,7 +117,7 @@ class MpasTimeSeriesTask(AnalysisTask):
             the list of available variables has not yet been set) or if one
             or more of the requested variables is not available in the
             ``timeSeriesStatsMonthly`` output.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -139,9 +139,9 @@ class MpasTimeSeriesTask(AnalysisTask):
                 self.variableList.append(variable)
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -208,9 +208,9 @@ class MpasTimeSeriesTask(AnalysisTask):
             self.allVariables = list(ds.data_vars.keys())
 
     def run_task(self):
-        '''
+        """
         Compute the requested time series
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -225,7 +225,7 @@ class MpasTimeSeriesTask(AnalysisTask):
 
     def _compute_time_series_with_ncrcat(self):
 
-        '''
+        """
         Uses ncrcat to extact time series from timeSeriesMonthlyOutput files
 
         Raises
@@ -236,7 +236,7 @@ class MpasTimeSeriesTask(AnalysisTask):
         Author
         ------
         Xylar Asay-Davis
-        '''
+        """
 
         if find_executable('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '

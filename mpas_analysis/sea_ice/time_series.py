@@ -582,10 +582,10 @@ class TimeSeriesSeaIce(AnalysisTask):
         return dsShift
 
     def _compute_area_vol(self):
-        '''
+        """
         Compute part of the time series of sea ice volume and area, given time
         indices to process.
-        '''
+        """
 
         outFileNames = {}
         for hemisphere in ['NH', 'SH']:

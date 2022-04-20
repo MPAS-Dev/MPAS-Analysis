@@ -71,9 +71,9 @@ class ClimatologyMapMLDMinMax(AnalysisTask):
                         sectionPrefix='climatologyMapBLD')
 
     def setup_and_check(self):
-        '''
+        """
         Check if MLD capability was turned on in the run.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -98,9 +98,9 @@ class ClimatologyMapMLDMinMax(AnalysisTask):
 
     def _add_tasks(self, config, mpasClimatologyTasks, controlConfig,
                    title, mpasVariableSuffix, filePrefix, sectionPrefix):
-        '''
+        """
         Add tasks for a given variable
-        '''
+        """
         iselValues = None
 
         # read in what seasons we want to plot

@@ -39,7 +39,7 @@ class SoseTransects(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -54,7 +54,7 @@ class SoseTransects(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -225,7 +225,7 @@ class SoseTransectsObservations(TransectsObservations):
     def __init__(self, config, horizontalResolution,
                  transectCollectionName, fields):
 
-        '''
+        """
         Construct the object, setting the observations dictionary to None.
 
         Parameters
@@ -244,7 +244,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         fields : list of dict
             dictionaries defining the fields with associated SOSE data
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -260,14 +260,14 @@ class SoseTransectsObservations(TransectsObservations):
         self.fields = fields
 
     def get_observations(self):
-        '''
+        """
         Read in and set up the observations.
 
         Returns
         -------
         obsDatasets : OrderedDict
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -280,9 +280,9 @@ class SoseTransectsObservations(TransectsObservations):
         return super(SoseTransectsObservations, self).get_observations()
 
     def combine_observations(self):
-        '''
+        """
         Combine SOSE oservations into a single file
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -383,7 +383,7 @@ class SoseTransectsObservations(TransectsObservations):
         print('  Done.')
 
     def build_observational_dataset(self, fileName, transectName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -399,7 +399,7 @@ class SoseTransectsObservations(TransectsObservations):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

@@ -56,7 +56,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
 
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -82,7 +82,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -187,7 +187,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
                             logger=self.logger)
 
     def get_observation_descriptor(self, fileName):
-        '''
+        """
         get a MeshDescriptor for the observation grid.  A subclass derived from
         this class must override this method to create the appropriate
         descriptor
@@ -201,7 +201,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -209,7 +209,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         return None
 
     def build_observational_dataset(self, fileName):
-        '''
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions.  A subclass derived from this class must
         override this method to create the appropriate data set
@@ -223,7 +223,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

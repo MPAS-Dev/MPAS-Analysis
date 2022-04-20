@@ -31,7 +31,7 @@ from mpas_analysis.shared.climatology.comparison_descriptors import \
 
 
 class RemapMpasClimatologySubtask(AnalysisTask):
-    '''
+    """
     An analysis tasks for computing climatologies from output from the
     ``timeSeriesStatsMonthly`` analysis member.
 
@@ -72,7 +72,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
     op : {'avg', 'min', 'max'}
          operator for monthly stats
 
-    '''
+    """
 
     # Authors
     # -------
@@ -83,7 +83,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                  iselValues=None, subtaskName='remapMpasClimatology',
                  useNcremap=None):
 
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -130,7 +130,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             if it is not explicitly given.  If a comparison grid other than
             ``latlon`` is given, ncremap is not supported so this flag is set
             to ``False``.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -175,7 +175,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             self.useNcremap = useNcremap
 
     def setup_and_check(self):
-        '''
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -184,7 +184,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -218,9 +218,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         make_directories(mappingSubdirectory)
 
     def run_task(self):
-        '''
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -259,7 +259,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
 
     def add_comparison_grid_descriptor(self, comparisonGridName,
                                        comparisonDescriptor):
-        '''
+        """
         Add a custom grid descriptor (something other than 'latlon',
         'antarctic', 'arctic', 'north_atlantic', or 'north_pacific').
 
@@ -272,7 +272,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             A descriptor of the comparison grid to use for
             remapping
 
-        '''
+        """
         self.comparisonDescriptors[comparisonGridName] = \
             comparisonDescriptor
 
@@ -488,7 +488,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             self._outputFiles[key] = fileName
 
     def _mask_climatologies(self, season, dsMask):
-        '''
+        """
         For each season, creates a masked version of the climatology
 
         Parameters
@@ -503,7 +503,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         Author
         ------
         Xylar Asay-Davis
-        '''
+        """
 
         climatologyFileName = self.mpasClimatologyTask.get_file_name(season)
 

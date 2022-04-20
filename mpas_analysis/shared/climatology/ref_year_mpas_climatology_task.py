@@ -18,7 +18,7 @@ from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
 class RefYearMpasClimatologyTask(MpasClimatologyTask):
-    '''
+    """
     An analysis tasks for computing a reference-year climatology for computing
     climatology anomalies from the``timeSeriesStatsMonthly`` analysis member.
 
@@ -27,13 +27,13 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):
 
     anomalyRefYear : int
         The reference year over which to compute the climatology
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None):
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -48,7 +48,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):
 
         taskName : str, optional
             the name of the task, defaults to mpasClimatology<ComponentName>
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

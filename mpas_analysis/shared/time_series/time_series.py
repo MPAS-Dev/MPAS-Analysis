@@ -27,7 +27,7 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 def combine_time_series_with_ncrcat(inFileNames, outFileName,
                                     variableList=None, logger=None):
-    '''
+    """
     Uses ncrcat to extact time series from a series of files
 
     inFileNames : str or list of str
@@ -51,7 +51,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
     Author
     ------
     Xylar Asay-Davis
-    '''
+    """
 
     if find_executable('ncrcat') is None:
         raise OSError('ncrcat not found. Make sure the latest nco '
@@ -110,7 +110,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
                       calendar, yearsPerCacheUpdate=1,
                       logger=None):
-    '''
+    """
     Create or update a NetCDF file ``cacheFileName`` containing the given time
     series, calculated with ``timeSeriesCalcFunction`` over the given times,
     start and end year, and time frequency with which results are cached.
@@ -154,7 +154,7 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis

@@ -239,7 +239,7 @@ def compute_climatology(ds, monthValues, calendar=None,
 
 
 def add_years_months_days_in_month(ds, calendar=None):
-    '''
+    """
     Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
     The number of days in each month of ``ds`` is computed either using the
     ``startTime`` and ``endTime`` if available or assuming ``gregorian_noleap``
@@ -261,7 +261,7 @@ def add_years_months_days_in_month(ds, calendar=None):
     ds : object of same type as ``ds``
         The data set with ``year``, ``month`` and ``daysInMonth`` data arrays
         added (if not already present)
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -606,10 +606,10 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
 
 def get_climatology_op_directory(config, op='avg'):
-    '''
+    """
     Get the output directory for MPAS climatologies from output with the given
     monthly operator: avg, min or max
-    '''
+    """
     climatologyBaseDirectory = build_config_full_path(
         config, 'output', 'mpasClimatologySubdirectory')
 
@@ -617,11 +617,11 @@ def get_climatology_op_directory(config, op='avg'):
 
 
 def _compute_masked_mean(ds, maskVaries):
-    '''
+    """
     Compute the time average of data set, masked out where the variables in ds
     are NaN and, if ``maskVaries == True``, weighting by the number of days
     used to compute each monthly mean time in ds.
-    '''
+    """
 
     # Authors
     # -------
@@ -661,9 +661,9 @@ def _compute_masked_mean(ds, maskVaries):
 
 
 def _matches_comparison(obsDescriptor, comparisonDescriptor):
-    '''
+    """
     Determine if the two meshes are the same
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -700,10 +700,10 @@ def _matches_comparison(obsDescriptor, comparisonDescriptor):
 def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
                                yearsPerCacheFile, cachePrefix,
                                monthValues):
-    '''
+    """
     Determine which cache files already exist, which are incomplete and which
     years are present in each cache file (whether existing or to be created).
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -764,9 +764,9 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 def _cache_individual_climatologies(ds, cacheInfo, printProgress,
                                     yearsPerCacheFile, monthValues,
                                     calendar):
-    '''
+    """
     Cache individual climatologies for later aggregation.
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -798,9 +798,9 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
 def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                                   printProgress, monthValues,
                                   cacheInfo):
-    '''
+    """
     Cache aggregated climatology from individual climatologies.
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
