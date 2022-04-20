@@ -72,7 +72,7 @@ cd ..
 
 cd main_vs_ctrl
 echo main_vs_ctrl
-sbatch --dependency=afterok:${RES##* } job_script.bash
+sbatch --dependency=afterok:${RES##* } job_script.bash --kill-on-invalid-dep=yes
 cd ..
 
 for run in main_py${alt_py} wc_defaults no_ncclimo no_polar_regions \
