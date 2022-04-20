@@ -16,7 +16,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 
-class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
+class ClimatologyMapMLDMinMax(AnalysisTask):
     """
     An analysis task for comparison of mixed layer depth (mld) against
     observations
@@ -26,7 +26,7 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTasks, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -69,9 +69,8 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                         mpasVariableSuffix='boundaryLayerDepth',
                         filePrefix='bld',
                         sectionPrefix='climatologyMapBLD')
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Check if MLD capability was turned on in the run.
         '''
@@ -96,8 +95,6 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
         self.check_analysis_enabled(
             analysisOptionName='config_AM_timeSeriesStatsMonthlyMax_enable',
             raiseException=True)
-
-        # }}}
 
     def _add_tasks(self, config, mpasClimatologyTasks, controlConfig,
                    title, mpasVariableSuffix, filePrefix, sectionPrefix):
@@ -220,7 +217,3 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                             configSectionName=sectionName)
 
                         self.add_subtask(subtask)
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

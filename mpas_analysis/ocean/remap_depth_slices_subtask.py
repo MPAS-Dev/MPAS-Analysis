@@ -16,7 +16,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 from mpas_analysis.ocean.utility import compute_zmid
 
 
-class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
+class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
     """
     A task for creating and remapping climatologies of MPAS fields sliced
     at a given set of depths
@@ -40,7 +40,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
                  iselValues=None):
-        # {{{
+
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -91,7 +91,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
             mpasClimatologyTask, parentTask, climatologyName, variableList,
             seasons, comparisonGridNames, iselValues)
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute climatologies of T or S  from ACME/MPAS output
 
@@ -168,7 +168,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # which will perform the main function of the task
         super(RemapDepthSlicesSubtask, self).run_task()
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Uses ``verticalIndex`` to slice the 3D climatology field at each
         requested depth.  The resulting field has the depth appended to
@@ -220,9 +220,4 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
         climatology = climatology.transpose('depthSlice', 'nCells')
 
-        return climatology  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return climatology

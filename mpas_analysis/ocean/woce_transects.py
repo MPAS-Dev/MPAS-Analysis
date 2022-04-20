@@ -19,7 +19,7 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from collections import OrderedDict
 
 
-class WoceTransects(AnalysisTask):  # {{{
+class WoceTransects(AnalysisTask):
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
@@ -29,8 +29,6 @@ class WoceTransects(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-
-        # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -190,9 +188,3 @@ class WoceTransects(AnalysisTask):  # {{{
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

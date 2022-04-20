@@ -36,7 +36,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -129,9 +129,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)
 
-        # }}}
-
-    def _compute_ohc(self, ds):  # {{{
+    def _compute_ohc(self, ds):
         '''
         Compute the OHC time series.
         '''
@@ -170,9 +168,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             ds.coords['depth'] = (('nVertLevels',),
                                   dsRestart.refBottomDepth.values)
 
-        return ds  # }}}
-
-    # }}}
+        return ds
 
 
 class PlotOHCAnomaly(PlotDepthIntegratedTimeSeriesSubtask):
@@ -213,6 +209,3 @@ class PlotOHCAnomaly(PlotDepthIntegratedTimeSeriesSubtask):
         for ytick in yticks:
             plt.plot(xlim, [0, watts_m2_to_joules(ytick)], color=color,
                      linewidth=0.5)
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

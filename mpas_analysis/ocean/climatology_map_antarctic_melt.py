@@ -33,7 +33,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.shared.constants import constants
 
 
-class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
+class ClimatologyMapAntarcticMelt(AnalysisTask):
     """
     An analysis task for comparison of Antarctic melt rates against
     observations
@@ -43,7 +43,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, regionMasksTask,
-                 controlConfig):  # {{{
+                 controlConfig):
         """
         Construct the analysis task.
 
@@ -167,9 +167,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                     galleryName=galleryName)
 
                 self.add_subtask(subtask)
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -188,11 +187,9 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):  # {{{
                              '    to be standalone or coupled.  Otherwise, no '
                              'melt rates are available \n'
                              '    for plotting.')
-        # }}}
-    # }}}
 
 
-class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):
     """
     A subtask for remapping climatologies of Antarctic melt rates and adding
 
@@ -206,7 +203,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute climatologies of melt rates from E3SM/MPAS output
 
@@ -228,9 +225,7 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
         # which will perform the main function of the task
         super(RemapMpasAntarcticMeltClimatology, self).run_task()
 
-        # }}}
-
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
@@ -258,13 +253,11 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):  # {{{
             constants.sec_per_year / constants.rho_fw * \
             climatology[fieldName].where(self.landIceMask)
 
-        return climatology  # }}}
-
-    # }}}
+        return climatology
 
 
 class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
-    # {{{
+
     """
     A subtask for reading and remapping Antarctic melt-rate observations
     """
@@ -272,7 +265,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
     # -------
     # Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         """
         get a MeshDescriptor for the observation grid
 
@@ -295,9 +288,9 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -319,14 +312,12 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         # Load MLD observational data
         dsObs = xr.open_dataset(fileName)
 
-        return dsObs  # }}}
-
-    # }}}
+        return dsObs
 
 
 class AntarcticMeltTableSubtask(AnalysisTask):
     def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
-                 regionMasksTask, season, subtaskName=None):  # {{{
+                 regionMasksTask, season, subtaskName=None):
         """
         Construct the analysis task.
 
@@ -378,9 +369,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
         self.run_after(self.masksSubtask)
         self.run_after(mpasClimatologyTask)
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Computes and plots table of Antarctic sub-ice-shelf melt rates.
         """
@@ -534,9 +524,3 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                     row[controlRunName] = \
                         '{}'.format(dsControl.totalMeltFlux[index].values)
                 writer.writerow(row)
-
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

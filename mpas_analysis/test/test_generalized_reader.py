@@ -130,5 +130,3 @@ class TestGeneralizedReader(TestCase):
                 startDate='0005-02-01',
                 endDate='0005-03-01')
             self.assertEqual(len(ds.Time), 1)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

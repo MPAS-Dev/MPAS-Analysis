@@ -43,7 +43,7 @@ class TimeSeriesSST(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -74,9 +74,7 @@ class TimeSeriesSST(AnalysisTask):
 
         self.run_after(mpasTimeSeriesTask)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -122,9 +120,9 @@ class TimeSeriesSST(AnalysisTask):
                                                         filePrefix))
             self.filePrefixes[region] = filePrefix
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of the time-series output of sea-surface temperature
         (SST).
@@ -294,8 +292,5 @@ class TimeSeriesSST(AnalysisTask):
                 imageDescription=caption,
                 imageCaption=caption)
 
-        # }}}
 
 # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

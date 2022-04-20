@@ -34,7 +34,7 @@ def open_multifile_dataset(fileNames, calendar,
                            simulationStartTime=None,
                            timeVariableName='xtime',
                            variableList=None, selValues=None,
-                           iselValues=None):  # {{{
+                           iselValues=None):
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -117,10 +117,10 @@ def open_multifile_dataset(fileNames, calendar,
 
     ds = remove_repeated_time_index(ds)
 
-    return ds  # }}}
+    return ds
 
 
-def subset_variables(ds, variableList):  # {{{
+def subset_variables(ds, variableList):
     """
     Given a data set and a list of variable names, returns a new data set that
     contains only variables with those names.
@@ -163,11 +163,11 @@ def subset_variables(ds, variableList):  # {{{
             'are not found within the dataset '
             'variables: {}.'.format(variableList, allvars))
 
-    return ds  # }}}
+    return ds
 
 
 def preprocess(ds, calendar, simulationStartTime, timeVariableName,
-               variableList, selValues, iselValues):  # {{{
+               variableList, selValues, iselValues):
     """
     Builds correct time specification for MPAS, allowing a date offset
     because the time must be between 1678 and 2262 based on the xarray
@@ -257,10 +257,10 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
     if iselValues is not None:
         ds = ds.isel(**iselValues)
 
-    return ds  # }}}
+    return ds
 
 
-def remove_repeated_time_index(ds):  # {{{
+def remove_repeated_time_index(ds):
     """
     Remove repeated times from xarray dataset.
 
@@ -297,10 +297,10 @@ def remove_repeated_time_index(ds):  # {{{
     # remove repeated indices
     ds = ds.isel(Time=indices)
 
-    return ds  # }}}
+    return ds
 
 
-def _assert_valid_selections(ds, selvals, iselvals):  # {{{
+def _assert_valid_selections(ds, selvals, iselvals):
     """
     Ensure that dataset selections are compatable.
 
@@ -332,10 +332,10 @@ def _assert_valid_selections(ds, selvals, iselvals):  # {{{
     test_vals_in_ds(selvals, ds.dims)
     test_vals_in_ds(iselvals, ds.dims)
 
-    return  # }}}
+    return
 
 
-def _ensure_list(alist):  # {{{
+def _ensure_list(alist):
     """
     Ensure that variables used as a list are actually lists.
     """
@@ -347,12 +347,12 @@ def _ensure_list(alist):  # {{{
         # print 'Warning, converting %s to a list'%(alist)
         alist = [alist]
 
-    return alist  # }}}
+    return alist
 
 
 def _parse_dataset_time(ds, inTimeVariableName, calendar,
                         simulationStartTime, outTimeVariableName,
-                        referenceDate):  # {{{
+                        referenceDate):
     """
     A helper function for computing a time coordinate from an MPAS time
     variable.  Given a data set and a time variable name (or tuple of 2
@@ -508,10 +508,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         dsOut = ds.copy()
         dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
 
-    return dsOut  # }}}
+    return dsOut
 
 
-def process_chunking(ds, chunking):  # {{{
+def process_chunking(ds, chunking):
     """
     Computes chunking for a dataset.
 
@@ -559,6 +559,6 @@ def process_chunking(ds, chunking):  # {{{
             'Chunking parameter choice is not understood '
             'for {} of type {}\n'.format(chunking, type(chunking)))
 
-    return ds  # }}}
+    return ds
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

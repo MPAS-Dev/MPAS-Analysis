@@ -493,5 +493,3 @@ def _plot_color_gradients():
         ax.set_axis_off()
 
     plt.savefig('colormaps.png', dpi=100)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

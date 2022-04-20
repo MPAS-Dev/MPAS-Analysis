@@ -93,7 +93,7 @@ class PlotHovmollerSubtask(AnalysisTask):
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
                  groupLink, galleryName, subtaskName=None,
-                 controlConfig=None, regionMaskFile=None):  # {{{
+                 controlConfig=None, regionMaskFile=None):
         """
         Construct the analysis task.
 
@@ -190,9 +190,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.groupLink = groupLink
         self.galleryName = galleryName
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -234,9 +232,9 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.xmlFileNames = ['{}/{}.xml'.format(
             self.plotsDirectory, self.filePrefix)]
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Make the Hovmoller plot from the time series.
         """
@@ -416,9 +414,3 @@ class PlotHovmollerSubtask(AnalysisTask):
                 regionNameInTitle, self.thumbnailSuffix),
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -12,7 +12,7 @@
 #
 
 
-def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
+def compute_moving_avg(ds, movingAveragePoints=12):
     '''
     Compute the rolling mean of a data set
 
@@ -39,6 +39,3 @@ def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
 
     return ds
 
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

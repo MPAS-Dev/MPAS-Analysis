@@ -22,7 +22,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
-class MpasTimeSeriesTask(AnalysisTask):  # {{{
+class MpasTimeSeriesTask(AnalysisTask):
     '''
     An analysis tasks for computing time series from output from the
     ``timeSeriesStatsMonthly`` analysis member.
@@ -47,12 +47,13 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
     startYear, endYear : int
         The start and end years of the time series
     '''
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None,
-                 subtaskName=None, section='timeSeries'):  # {{{
+                 subtaskName=None, section='timeSeries'):
         '''
         Construct the analysis task for extracting time series.
 
@@ -88,7 +89,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         if taskName is None:
             suffix = section[0].upper() + section[1:] + \
-                componentName[0].upper() + componentName[1:]
+                     componentName[0].upper() + componentName[1:]
             taskName = 'mpas{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
@@ -99,9 +100,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             componentName=componentName,
             tags=tags)
 
-        # }}}
-
-    def add_variables(self, variableList):  # {{{
+    def add_variables(self, variableList):
         '''
         Add one or more variables to extract as a time series.
 
@@ -139,9 +138,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Perform steps to set up the analysis and check for errors in the setup.
         '''
@@ -185,8 +182,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         self.runMessage = '\nComputing MPAS time series from first year ' \
                           'plus files:\n' \
                           '    {} through\n    {}'.format(
-                              os.path.basename(self.inputFiles[0]),
-                              os.path.basename(self.inputFiles[-1]))
+            os.path.basename(self.inputFiles[0]),
+            os.path.basename(self.inputFiles[-1]))
 
         # Make sure first year of data is included for computing anomalies
         if config.has_option('timeSeries', 'anomalyRefYear'):
@@ -210,9 +207,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         with xr.open_dataset(self.inputFiles[0]) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         '''
         Compute the requested time series
         '''
@@ -228,10 +223,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         self._compute_time_series_with_ncrcat()
 
-        # }}}
-
     def _compute_time_series_with_ncrcat(self):
-        # {{{
+
         '''
         Uses ncrcat to extact time series from timeSeriesMonthlyOutput files
 
@@ -340,9 +333,3 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         if process.returncode != 0:
             raise subprocess.CalledProcessError(process.returncode,
                                                 ' '.join(args))
-
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

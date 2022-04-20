@@ -28,18 +28,17 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 
-class SoseTransects(AnalysisTask):  # {{{
+class SoseTransects(AnalysisTask):
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-
-        # {{{
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -206,12 +205,9 @@ class SoseTransects(AnalysisTask):  # {{{
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class SoseTransectsObservations(TransectsObservations):  # {{{
+class SoseTransectsObservations(TransectsObservations):
     """
     A class for loading and manipulating SOSE transect data
 
@@ -221,13 +217,14 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
     fields : list of dict
         dictionaries defining the fields with associated SOSE data
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, horizontalResolution,
                  transectCollectionName, fields):
-        # {{{
+
         '''
         Construct the object, setting the observations dictionary to None.
 
@@ -262,9 +259,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         self.fields = fields
 
-        # }}}
-
-    def get_observations(self):  # {{{
+    def get_observations(self):
         '''
         Read in and set up the observations.
 
@@ -282,9 +277,9 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             self.combine_observations()
 
         # then, call the method from the parent class
-        return super(SoseTransectsObservations, self).get_observations()  # }}}
+        return super(SoseTransectsObservations, self).get_observations()
 
-    def combine_observations(self):  # {{{
+    def combine_observations(self):
         '''
         Combine SOSE oservations into a single file
         '''
@@ -334,7 +329,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
             fileName = '{}/SOSE_2005-2010_monthly_{}_SouthernOcean' \
                        '_0.167x0.167degree_20180710.nc'.format(
-                           observationsDirectory, prefix)
+                observationsDirectory, prefix)
 
             dsLocal = xr.open_dataset(fileName)
 
@@ -374,7 +369,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
                           'from 2005-2010 average of the Southern Ocean ' \
                           'State Estimate (SOSE)'
             dsObs['velMag'] = numpy.sqrt(
-                dsObs.zonalVel**2 + dsObs.meridVel**2)
+                dsObs.zonalVel ** 2 + dsObs.meridVel ** 2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description
 
@@ -387,9 +382,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         print('  Done.')
 
-        # }}}
-
-    def build_observational_dataset(self, fileName, transectName):  # {{{
+    def build_observational_dataset(self, fileName, transectName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -426,9 +419,4 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs['lon'] = ('nPoints', lon * numpy.ones(dsObs.sizes['nPoints']))
         dsObs = dsObs.drop_vars(['nPoints', 'nz'])
 
-        return dsObs  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

@@ -24,7 +24,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.shared.constants import constants
 
 
-class ClimatologyMapSSH(AnalysisTask):  # {{{
+class ClimatologyMapSSH(AnalysisTask):
     """
     An analysis task for comparison of sea surface height (ssh) against
     observations
@@ -34,7 +34,7 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -146,11 +146,9 @@ class ClimatologyMapSSH(AnalysisTask):  # {{{
                     galleryName=galleryName)
 
                 self.add_subtask(subtask)
-        # }}}
-    # }}}
 
 
-class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapSSHClimatology(RemapMpasClimatologySubtask):
     """
     Change units from m to cm
     """
@@ -158,7 +156,7 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
@@ -185,12 +183,10 @@ class RemapSSHClimatology(RemapMpasClimatologySubtask):  # {{{
         # scale the field to cm from m
         climatology[fieldName] = constants.cm_per_m * climatology[fieldName]
 
-        return climatology  # }}}
-
-    # }}}
+        return climatology
 
 
-class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping SSH observations
     """
@@ -198,7 +194,7 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -221,9 +217,9 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='lat',
                                                   lonVarName='lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -251,8 +247,4 @@ class RemapObservedSSHClimatology(RemapObservedClimatologySubtask):  # {{{
         # scale the field to cm from m
         dsObs['zos'] = constants.cm_per_m * dsObs['zos']
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

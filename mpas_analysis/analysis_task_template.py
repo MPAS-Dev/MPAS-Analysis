@@ -63,11 +63,12 @@ from mpas_analysis.shared.climatology import \
 # parent, "inhereting" several variables and methods (functions) from it that
 # can be helpful in initializing, checking whether to perform analysis and
 # performing the analysis.  See AnalysisTask in shared/analysis_task.py
-class MyTask(AnalysisTask):  # {{{
+class MyTask(AnalysisTask):
     '''
     <Briefly describe the analysis task here.  Just a 1-2 sentence description
     of what the task does should be sufficient.>
     '''
+
     # Authors
     # -------
     # <List of authors>
@@ -95,7 +96,7 @@ class MyTask(AnalysisTask):  # {{{
     #        def __init__(self, config, fieldName):...
     #    and yu would then make a new task something like this:
     #        myTask = MyTask(config, fieldName='seaIceArea')
-    def __init__(self, config, prerequsiteTask, myArg='myDefaultValue'):  # {{{
+    def __init__(self, config, prerequsiteTask, myArg='myDefaultValue'):
         '''
         Construct the analysis task.
         <Add any additional description of what happens during construction>
@@ -185,14 +186,12 @@ class MyTask(AnalysisTask):  # {{{
         # MyPlotObservationsSubtask but they would be qualitatively similar
         # to MySubtask below.
 
-        # }}}
-
     # this function will be called to figure out if the analysis task should
     # run.  It should check if the input arguments to the task are supported,
     # if appropriate analysis member(s) (AMs) were turned on, if the necessary
     # output files exist, etc.  If there is a problem, an exception should be
     # raised (see the example below) so the task will not be run.
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -309,9 +308,7 @@ class MyTask(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[plotParameter] = filePrefix
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         '''
         The main method of the task that performs the analysis task.
         '''
@@ -329,7 +326,6 @@ class MyTask(AnalysisTask):  # {{{
         # one for each of our plotParameters (e.g. seasons)
         for plotParameter in self.plotParameters:
             self._make_plot(plotParameter)
-        # }}}
 
     # here is where you add helper methods that are meant to be non-public
     # (they start with an underscore), meaning you don't expect anyone to
@@ -339,7 +335,7 @@ class MyTask(AnalysisTask):  # {{{
     # you can either pass arguments (with or without defaults) or you can
     # 'save' arguments as member variables of `self` and then get them back
     # (like `self.myArg` here).
-    def _make_plot(self, plotParameter, optionalArgument=None):  # {{{
+    def _make_plot(self, plotParameter, optionalArgument=None):
         '''
         Make a simple plot
 
@@ -369,7 +365,7 @@ class MyTask(AnalysisTask):  # {{{
 
         # make the plot
         x = numpy.linspace(0, 1, 1000)
-        plt.plot(x, x**2)
+        plt.plot(x, x ** 2)
         # save the plot to the output file
         plt.savefig(outFileName)
 
@@ -396,8 +392,6 @@ class MyTask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-        # }}}
-
 
 class MySubtask(AnalysisTask):
     def __init__(self, parentTask, season):
@@ -414,8 +408,8 @@ class MySubtask(AnalysisTask):
         # do whatever setup is needed for the subtask.  You don't have
         # to redundantly do setup that happened in parentTask because
         # you can access its fields if needed
-        assert(self.parentTask.streamName ==
-               'timeSeriesStatsMonthlyOutput')
+        assert (self.parentTask.streamName ==
+                'timeSeriesStatsMonthlyOutput')
 
     def run_analsysis(self):
         # do the main action of the subplot.  Note: you can't access any
@@ -426,5 +420,3 @@ class MySubtask(AnalysisTask):
         pass
 
 # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

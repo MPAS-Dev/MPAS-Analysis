@@ -158,5 +158,3 @@ class MpasRelativeDelta(relativedelta):
         outList.append("calendar='{}'".format(self.calendar))
         return "{classname}({attrs})".format(classname=self.__class__.__name__,
                                              attrs=", ".join(outList))
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

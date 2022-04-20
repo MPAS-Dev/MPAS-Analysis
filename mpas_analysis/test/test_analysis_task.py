@@ -165,5 +165,3 @@ class TestAnalysisTask(TestCase):
         expectedResults['timeSeriesOHC'] = False
         doTest("['all', 'no_timeSeriesOHC']", expectedResults)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -24,7 +24,7 @@ from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 
 
-class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
+class PlotClimatologyMapSubtask(AnalysisTask):
     """
     An analysis task for plotting 2D model fields against observations or a
     control run.
@@ -97,7 +97,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  controlConfig=None, subtaskSuffix=None):
-        # {{{
+
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -161,13 +161,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.run_after(remapMpasClimatologySubtask)
         if remapObsClimatologySubtask is not None:
             self.run_after(remapObsClimatologySubtask)
-        # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, diffTitleLabel, unitsLabel,
                       imageDescription, imageCaption, galleryGroup,
                       groupSubtitle, groupLink, galleryName, maskValue=None):
-        # {{{
+
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -238,9 +237,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.galleryName = galleryName
 
         self.maskValue = maskValue
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -268,9 +266,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                     self.filePrefix))
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of sea-ice properties by comparing with
         previous model results and/or observations.
@@ -415,7 +411,3 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             thumbnailDescription=season,
             imageDescription=self.imageDescription,
             imageCaption=self.imageCaption)
-        # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

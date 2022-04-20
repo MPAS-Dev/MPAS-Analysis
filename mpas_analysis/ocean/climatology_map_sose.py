@@ -31,7 +31,7 @@ from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSose(AnalysisTask):  # {{{
+class ClimatologyMapSose(AnalysisTask):
     """
     An analysis task for comparison of antarctic field against the Southern
     Ocean State Estimate
@@ -41,7 +41,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -298,12 +298,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
+class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):
     """
     A subtask for computing climatologies of velocity magnitude from zonal
     and meridional components
@@ -312,7 +309,7 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Construct velocity magnitude as part of the climatology
 
@@ -347,8 +344,4 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
             climatology.velMag.attrs['units'] = 'm s$^{-1}$'
             climatology.velMag.attrs['description'] = 'velocity magnitude'
 
-        return climatology  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return climatology

@@ -69,6 +69,7 @@ class NameList:
     Class for fortran manipulation of namelist files, provides
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -260,14 +261,13 @@ class NameList:
         raise ValueError('None of the possible options {} found in namelist '
                          'file {}.'.format(possibleOptions, self.fname))
 
-    # }}}
-
 
 class StreamsFile:
     """
     Class to read in streams configuration file, provdies
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -534,5 +534,3 @@ class StreamsFile:
 
         raise ValueError('None of the possible streams {} found in streams '
                          'file {}.'.format(possibleStreams, self.fname))
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

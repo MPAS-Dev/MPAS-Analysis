@@ -30,15 +30,16 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
 
 
-class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping MLD observations
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -61,9 +62,9 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='lat',
                                                   lonVarName='lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -88,9 +89,7 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.coords['month'] = dsObs['month']
         dsObs.coords['year'] = dsObs['year']
 
-        return dsObs  # }}}
-
-    # }}}
+        return dsObs
 
 
 @pytest.mark.usefixtures("loaddatadir")
@@ -143,7 +142,7 @@ class TestRemapObsClimSubtask(TestCase):
                     fileName = remapSubtask.get_file_name(
                         season=season, stage=stage,
                         comparisonGridName=comparisonGridName)
-                    assert(os.path.exists(fileName))
+                    assert (os.path.exists(fileName))
 
     def test_subtask_get_file_name(self):
         remapSubtask = self.setup_subtask()
@@ -151,7 +150,7 @@ class TestRemapObsClimSubtask(TestCase):
         for comparisonGridName in ['latlon', 'antarctic', None]:
             fileName = remapSubtask.get_file_name(
                 stage='original', comparisonGridName=comparisonGridName)
-            assert(fileName == '{}/clim/obs/mld_4.0x4.0degree.nc'.format(
+            assert (fileName == '{}/clim/obs/mld_4.0x4.0degree.nc'.format(
                 str(self.test_dir)))
 
         stage = 'climatology'
@@ -159,17 +158,17 @@ class TestRemapObsClimSubtask(TestCase):
             fileName = remapSubtask.get_file_name(stage=stage,
                                                   season='JFM',
                                                   comparisonGridName='latlon')
-            assert(fileName == '{}/clim/obs/mld_4.0x4.0degree_JFM.nc'.format(
+            assert (fileName == '{}/clim/obs/mld_4.0x4.0degree_JFM.nc'.format(
                 str(self.test_dir)))
 
         stage = 'remapped'
         fileName = remapSubtask.get_file_name(stage=stage, season='JFM',
                                               comparisonGridName='latlon')
-        assert(fileName == '{}/clim/obs/remapped/mld_4.0x4.0degree_to_'
-               '0.5x0.5degree_JFM.nc'.format(str(self.test_dir)))
+        assert (fileName == '{}/clim/obs/remapped/mld_4.0x4.0degree_to_'
+                            '0.5x0.5degree_JFM.nc'.format(str(self.test_dir)))
 
         fileName = remapSubtask.get_file_name(stage=stage, season='JFM',
                                               comparisonGridName='antarctic')
-        assert(fileName == '{}/clim/obs/remapped/mld_4.0x4.0degree_to_'
-               '6000.0x6000.0km_10.0km_Antarctic_stereo_JFM.nc'.format(
-                   str(self.test_dir)))
+        assert (fileName == '{}/clim/obs/remapped/mld_4.0x4.0degree_to_'
+                            '6000.0x6000.0km_10.0km_Antarctic_stereo_JFM.nc'.format(
+            str(self.test_dir)))

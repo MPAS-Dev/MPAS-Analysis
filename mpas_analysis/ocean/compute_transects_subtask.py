@@ -36,7 +36,7 @@ from mpas_analysis.ocean.utility import compute_zmid
 from mpas_analysis.shared.interpolation import interp_1d
 
 
-class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
+class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
     """
     A subtask for remapping climatologies to transect points
 
@@ -86,7 +86,6 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                  verticalComparisonGridName='obs', verticalComparisonGrid=None,
                  subtaskName='remapTransects'):
 
-        # {{{
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -165,9 +164,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             raise ValueError('If the horizontal comparison grid is "mpas", the '
                              'vertical grid must also be "mpas".')
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Creates a PointCollectionDescriptor describing all the points in the
         transects to remap to.  Keeps track of which transects index each point
@@ -223,7 +220,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         # (RemapMpasClimatologySubtask)
         super().setup_and_check()
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute climatologies of melt rates from E3SM/MPAS output
 
@@ -286,9 +283,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         dsMesh.close()
 
-        # }}}
-
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Add zMid to the climatologies
 
@@ -324,10 +319,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         climatology = climatology.transpose('nVertLevels', 'nCells')
 
-        return climatology  # }}}
+        return climatology
 
     def customize_remapped_climatology(self, climatology, comparisonGridNames,
-                                       season):  # {{{
+                                       season):
         """
         Add the transect index to the data set
 
@@ -364,7 +359,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             dims.append('nv')
         climatology = climatology.transpose(*dims)
 
-        return climatology  # }}}
+        return climatology
 
     def _vertical_interp(self, ds, transectIndex, dsObs, outFileName,
                          outObsFileName):
@@ -427,9 +422,9 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
             write_netcdf(dsObs, outObsFileName)
 
         ds = ds.drop_vars(['validMask', 'transectNumber'])
-        write_netcdf(ds, outFileName)  # }}}
+        write_netcdf(ds, outFileName)
 
-    def get_mpas_transect_file_name(self, transectName):  # {{{
+    def get_mpas_transect_file_name(self, transectName):
         """Get the file name for a masked MPAS transect info"""
         # Authors
         # -------
@@ -452,9 +447,9 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
 
         fileName = '{}/mpas_transect_info.nc'.format(directory)
 
-        return fileName  # }}}
+        return fileName
 
-    def _compute_mpas_transects(self, dsMesh):  # {{{
+    def _compute_mpas_transects(self, dsMesh):
 
         # see if all transects have already been computed
         allExist = True
@@ -557,9 +552,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
                         season, comparisonGridName=transectName)
                     dsOnMpas.to_netcdf(outFileName)
 
-        # }}}
-
-    def _interp_obs_to_mpas(self, da, dsMpasTransect, threshold=0.1):  # {{{
+    def _interp_obs_to_mpas(self, da, dsMpasTransect, threshold=0.1):
         """
         Interpolate observations to the native MPAS transect with masking
         """
@@ -570,12 +563,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):  # {{{
         daMask = interp_transect_grid_to_transect_triangle_nodes(
             dsMpasTransect, daMask)
         da = (da / daMask).where(daMask > threshold)
-        return da  # }}}
-
-    # }}}
+        return da
 
 
-class TransectsObservations(object):  # {{{
+class TransectsObservations(object):
     """
     A class for loading and manipulating transect observations
 
@@ -606,7 +597,7 @@ class TransectsObservations(object):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, obsFileNames, horizontalResolution,
-                 transectCollectionName):  # {{{
+                 transectCollectionName):
         """
         Construct the object, setting the observations dictionary to None.
 
@@ -641,7 +632,7 @@ class TransectsObservations(object):  # {{{
         self.transectCollectionName = transectCollectionName
 
     def get_observations(self):
-        # {{{
+
         """
         Read in and set up the observations.
 
@@ -678,9 +669,9 @@ class TransectsObservations(object):  # {{{
                 write_netcdf(dsObs, outFileName)
             obsDatasets[name] = dsObs
 
-        return obsDatasets  # }}}
+        return obsDatasets
 
-    def build_observational_dataset(self, fileName, transectName):  # {{{
+    def build_observational_dataset(self, fileName, transectName):
         """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -709,10 +700,10 @@ class TransectsObservations(object):  # {{{
         # and vertical coordinate z.  Override this function if these need to
         # be renamed from the observations file.
 
-        return dsObs  # }}}
+        return dsObs
 
     def get_out_file_name(self, transectName,
-                          verticalComparisonGridName='obs'):  # {{{
+                          verticalComparisonGridName='obs'):
         """
         Given config options, the name of a field and a string identifying the
         months in a seasonal climatology, returns the full path for MPAS
@@ -758,9 +749,9 @@ class TransectsObservations(object):  # {{{
             fileName = '{}/{}_{}_{}.nc'.format(
                 remappedDirectory, self.transectCollectionName, transectSuffix,
                 verticalComparisonGridName)
-        return fileName  # }}}
+        return fileName
 
-    def _add_distance(self, dsObs):  # {{{
+    def _add_distance(self, dsObs):
         """
         Add a distance coordinate for the transect.  If a horizontal resolution
         for subdivision is provided, subdivide each segment of the transect so
@@ -795,8 +786,4 @@ class TransectsObservations(object):  # {{{
             dsObs = dsObs.drop_vars(['xIn'])
             dsObs = dsObs.rename({'nPointsOut': 'nPoints', 'xOut': 'x'})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

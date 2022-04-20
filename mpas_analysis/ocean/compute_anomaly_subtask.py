@@ -63,7 +63,7 @@ class ComputeAnomalySubtask(AnalysisTask):
 
     def __init__(self, parentTask, mpasTimeSeriesTask, outFileName,
                  variableList, movingAveragePoints,
-                 subtaskName='computeAnomaly', alter_dataset=None):  # {{{
+                 subtaskName='computeAnomaly', alter_dataset=None):
         """
         Construct the analysis task.
 
@@ -118,9 +118,7 @@ class ComputeAnomalySubtask(AnalysisTask):
 
         self.alter_dataset = alter_dataset
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -152,9 +150,7 @@ class ComputeAnomalySubtask(AnalysisTask):
 
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
         """
@@ -196,8 +192,4 @@ class ComputeAnomalySubtask(AnalysisTask):
             outFileName = '{}/{}'.format(baseDirectory,
                                          outFileName)
 
-        write_netcdf(ds, outFileName)  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        write_netcdf(ds, outFileName)

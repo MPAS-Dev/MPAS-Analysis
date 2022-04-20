@@ -26,7 +26,7 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):
         """
         Construct the analysis task.
 
@@ -87,9 +87,3 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
 
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -114,5 +114,3 @@ class TestNamelist(TestCase):
                                  calendar='gregorian_noleap')
         expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
         self.assertEqual(files, expectedFiles)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

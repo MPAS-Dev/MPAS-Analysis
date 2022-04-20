@@ -189,5 +189,3 @@ class TestMpasXarray(TestCase):
         # There would be 3 time indices if repeat indices had not been removed.
         # Make sure there are 2.
         self.assertEqual(len(ds.Time.values), 2)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

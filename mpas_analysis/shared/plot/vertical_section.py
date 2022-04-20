@@ -580,7 +580,7 @@ def plot_vertical_section(
         comparisonContourLineColor=None,
         labelContours=False,
         contourLabelPrecision=1,
-        maxTitleLength=70):  # {{{
+        maxTitleLength=70):
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
@@ -847,7 +847,6 @@ def plot_vertical_section(
 
         # compute moving averages with respect to the x dimension
         if movingAveragePoints is not None and movingAveragePoints != 1:
-
             dim = field.dims[0]
             field = field.rolling(dim={dim: movingAveragePoints},
                                   center=True).mean().dropna(dim)
@@ -931,7 +930,6 @@ def plot_vertical_section(
             plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
                            colors='black', linewidths=1)
 
-
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
     fmt_string = None
@@ -966,14 +964,14 @@ def plot_vertical_section(
         if labelContours:
             originalFieldName = originalFieldName + " (" + colorbarLabel + ")"
             comparisonFieldName = comparisonFieldName + " (" + \
-                colorbarLabel + ")"
+                                  colorbarLabel + ")"
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
                   loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
 
     if title is not None:
         if plotAsContours and labelContours \
                 and contourComparisonField is None:
-            title = limit_title(title, maxTitleLength-(3+len(colorbarLabel)))
+            title = limit_title(title, maxTitleLength - (3 + len(colorbarLabel)))
             title = title + " (" + colorbarLabel + ")"
         else:
             title = limit_title(title, maxTitleLength)
@@ -1047,7 +1045,7 @@ def plot_vertical_section(
                                      for member in tickValues])
                 ax3.spines['top'].set_position(('outward', 36))
 
-    return fig, ax  # }}}
+    return fig, ax
 
 
 def _get_triangulation(x, y, mask):
@@ -1055,7 +1053,7 @@ def _get_triangulation(x, y, mask):
 
     nx = x.sizes[x.dims[0]] - 1
     ny = x.sizes[x.dims[1]] - 1
-    nTriangles = 2*nx*ny
+    nTriangles = 2 * nx * ny
 
     mask = mask.values
     mask = np.logical_and(np.logical_and(mask[0:-1, 0:-1], mask[1:, 0:-1]),
@@ -1071,13 +1069,13 @@ def _get_triangulation(x, y, mask):
 
     tris = np.zeros((nx, ny, 2, 3), int)
     # upper triangles:
-    tris[:, :, 0, 0] = (ny+1)*xIndices + yIndices
-    tris[:, :, 0, 1] = (ny+1)*(xIndices + 1) + yIndices
-    tris[:, :, 0, 2] = (ny+1)*xIndices + yIndices + 1
+    tris[:, :, 0, 0] = (ny + 1) * xIndices + yIndices
+    tris[:, :, 0, 1] = (ny + 1) * (xIndices + 1) + yIndices
+    tris[:, :, 0, 2] = (ny + 1) * xIndices + yIndices + 1
     # lower triangle
-    tris[:, :, 1, 0] = (ny+1)*xIndices + yIndices + 1
-    tris[:, :, 1, 1] = (ny+1)*(xIndices + 1) + yIndices
-    tris[:, :, 1, 2] = (ny+1)*(xIndices + 1) + yIndices + 1
+    tris[:, :, 1, 0] = (ny + 1) * xIndices + yIndices + 1
+    tris[:, :, 1, 1] = (ny + 1) * (xIndices + 1) + yIndices
+    tris[:, :, 1, 2] = (ny + 1) * (xIndices + 1) + yIndices + 1
 
     tris = tris.reshape((nTriangles, 3))
 
@@ -1088,5 +1086,3 @@ def _get_triangulation(x, y, mask):
     unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
 
     return maskedTriangulation, unmaskedTriangulation
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

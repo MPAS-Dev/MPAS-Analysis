@@ -37,7 +37,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             maxTitleLength=80,
             titleFontSize=None,
             axisFontSize=None,
-            defaultFontSize=None):  # {{{
+            defaultFontSize=None):
     """
     Plots a 1D line plot with error bars if available.
 
@@ -185,7 +185,5 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     if fileout is not None:
         savefig(fileout, config)
 
-    plt.close()  # }}}
+    plt.close()
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

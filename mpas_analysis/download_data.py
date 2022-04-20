@@ -57,5 +57,3 @@ def download_analysis_data():
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
     download_files(analysisFileList, urlBase, args.outDir, verify=True)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -14,7 +14,7 @@ from mpas_analysis.ocean.compute_transects_subtask import \
     ComputeTransectsSubtask
 
 
-class ComputeTransectsWithVelMag(ComputeTransectsSubtask):  # {{{
+class ComputeTransectsWithVelMag(ComputeTransectsSubtask):
     """
     Add velocity magnitude from zonal and meridional components to observations
     """
@@ -22,7 +22,7 @@ class ComputeTransectsWithVelMag(ComputeTransectsSubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Construct velocity magnitude as part of the climatology
 
@@ -57,9 +57,4 @@ class ComputeTransectsWithVelMag(ComputeTransectsSubtask):  # {{{
             climatology.velMag.attrs['units'] = 'm s$^{-1}$'
             climatology.velMag.attrs['description'] = 'velocity magnitude'
 
-        return climatology  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return climatology

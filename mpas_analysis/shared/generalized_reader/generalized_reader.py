@@ -37,7 +37,7 @@ def open_multifile_dataset(fileNames, calendar, config,
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
                            startDate=None, endDate=None,
-                           chunking=None):  # {{{
+                           chunking=None):
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -169,12 +169,12 @@ def open_multifile_dataset(fileNames, calendar, config,
 
     ds = mpas_xarray.process_chunking(ds, chunking)
 
-    return ds  # }}}
+    return ds
 
 
 def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                 variableList, selValues, iselValues, variableMap,
-                startDate, endDate):  # {{{
+                startDate, endDate):
     """
     Performs variable remapping, then calls mpas_xarray.preprocess, to
     perform the remainder of preprocessing.
@@ -277,10 +277,10 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                                 selValues=selValues,
                                 iselValues=iselValues)
 
-    return ds  # }}}
+    return ds
 
 
-def _map_variable_name(variableName, ds, variableMap):  # {{{
+def _map_variable_name(variableName, ds, variableMap):
     """
     Given a `variableName` in a `variableMap` and an xarray `ds`,
     return the name of the the first variable in `variableMap[variableName]`
@@ -339,10 +339,9 @@ def _map_variable_name(variableName, ds, variableMap):  # {{{
                      'variables in {}.'.format(
                          variableName, possibleVariables,
                          ds.data_vars.keys()))
-    # }}}
 
 
-def _rename_variables(ds, variableMap):  # {{{
+def _rename_variables(ds, variableMap):
     """
     Given an `xarray.DataSet` object `ds` and a dictionary mapping
     variable names `variableMap`, returns a new data set in which variables
@@ -376,7 +375,7 @@ def _rename_variables(ds, variableMap):  # {{{
                 renameDict[datasetVariable] = mapVariable
                 break
 
-    return ds.rename(renameDict)  # }}}
+    return ds.rename(renameDict)
 
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

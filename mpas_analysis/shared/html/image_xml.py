@@ -148,7 +148,7 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
     tree.write(xmlFileName, xml_declaration=True, pretty_print=True)
 
 
-def _provenance_command(root, history):  # {{{
+def _provenance_command(root, history):
     """
     Utility funciton for provenance of xml file associated with a plot.
     """
@@ -183,7 +183,7 @@ def _provenance_command(root, history):  # {{{
     except (IOError, OSError):
         githash = 'git hash unavailable'
 
-    etree.SubElement(root, 'githash').text = githash  # }}}
+    etree.SubElement(root, 'githash').text = githash
 
 
 def _generate_thumbnails(imageFileName, directory):
@@ -237,5 +237,3 @@ def _generate_thumbnails(imageFileName, directory):
 
     return imageSize, thumbnailSize, orientation
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -27,7 +27,6 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 def combine_time_series_with_ncrcat(inFileNames, outFileName,
                                     variableList=None, logger=None):
-    # {{{
     '''
     Uses ncrcat to extact time series from a series of files
 
@@ -107,12 +106,10 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
         raise subprocess.CalledProcessError(process.returncode,
                                             ' '.join(args))
 
-    # }}}
-
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
                       calendar, yearsPerCacheUpdate=1,
-                      logger=None):  # {{{
+                      logger=None):
     '''
     Create or update a NetCDF file ``cacheFileName`` containing the given time
     series, calculated with ``timeSeriesCalcFunction`` over the given times,
@@ -235,7 +232,3 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         dsCache.to_netcdf(cacheFileName)
 
     return dsCache.sel(Time=slice(timesInDataSet[0], timesInDataSet[-1]))
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

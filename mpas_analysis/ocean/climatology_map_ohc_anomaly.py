@@ -21,7 +21,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.ocean.utility import compute_zmid
 
 
-class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
+class ClimatologyMapOHCAnomaly(AnalysisTask):
     """
     An analysis task for comparison of the anomaly from a reference year
     (typically the start of the simulation) of ocean heat content (OHC)
@@ -40,7 +40,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refYearClimatolgyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -156,9 +156,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                         galleryName=None)
 
                     self.add_subtask(subtask)
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Checks whether analysis is being performed only on the reference year,
         in which case the analysis will not be meaningful.
@@ -186,11 +185,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             raise ValueError('OHC Anomaly is not meaningful and will not work '
                              'when climatology and ref year are the same.')
 
-        # }}}
-    # }}}
 
-
-class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
     """
     A subtask for computing climatologies of ocean heat content from
     climatologies of temperature
@@ -207,7 +203,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
     def __init__(self, mpasClimatologyTask, refYearClimatolgyTask, parentTask,
                  climatologyName, variableList, seasons, comparisonGridNames,
                  minDepth, maxDepth):
-        # {{{
+
         '''
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -263,9 +259,8 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         self.run_after(refYearClimatolgyTask)
         self.minDepth = minDepth
         self.maxDepth = maxDepth
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -290,9 +285,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         self.refYearClimatolgyTask.add_variables(self.variableList,
                                                  self.seasons)
 
-        # }}}
-
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
@@ -328,9 +321,9 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         climatology = climatology.drop_vars(self.variableList)
 
-        return climatology  # }}}
+        return climatology
 
-    def _compute_ohc(self, climatology):  # {{{
+    def _compute_ohc(self, climatology):
         """
         Compute the OHC from the temperature and layer thicknesses in a given
         climatology data sets.
@@ -365,9 +358,4 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         ohc = unitsScalefactor * rho * cp * layerThickness * temperature
         ohc = ohc.sum(dim='nVertLevels')
-        return ohc  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return ohc

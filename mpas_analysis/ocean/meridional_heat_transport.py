@@ -15,7 +15,6 @@ import os
 
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
-
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf
 
@@ -25,7 +24,7 @@ from mpas_analysis.shared.climatology.climatology import \
     get_climatology_op_directory
 
 
-class MeridionalHeatTransport(AnalysisTask):  # {{{
+class MeridionalHeatTransport(AnalysisTask):
     '''
     Plot meridional heat transport from the analysis member output.
 
@@ -38,11 +37,12 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
     '''
+
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         '''
         Construct the analysis task.
 
@@ -73,9 +73,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         self.controlConfig = controlConfig
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Perform steps to set up the analysis and check for errors in the setup.
         '''
@@ -142,9 +140,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[prefix] = filePrefix
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Process MHT analysis member data if available.
         Plots MHT as:
@@ -307,7 +303,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
 
         if self.controlConfig is not None:
-
             controlStartYear = self.controlConfig.getint('climatology',
                                                          'startYear')
             controlEndYear = self.controlConfig.getint('climatology',
@@ -366,9 +361,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             self._write_xml(filePrefix)
 
-        # }}}
-
-    def _write_xml(self, filePrefix):  # {{{
+    def _write_xml(self, filePrefix):
         caption = 'Meridional Heat Transport'
         write_image_xml(
             config=self.config,
@@ -378,8 +371,4 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             galleryGroup='Meridional Heat Transport',
             groupLink='mht',
             imageDescription=caption,
-            imageCaption=caption)  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+            imageCaption=caption)

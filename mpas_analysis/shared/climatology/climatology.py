@@ -35,7 +35,7 @@ from mpas_analysis.shared.climatology.comparison_descriptors import \
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFilePrefix, method, logger=None):  # {{{
+                 mappingFilePrefix, method, logger=None):
     """
     Given config options and descriptions of the source and comparison grids,
     returns a ``pyremap.Remapper`` object that can be used to remap from source
@@ -93,7 +93,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                 baseDirectoryOption='customDirectory')
 
             mappingFileName = '{}/{}'.format(mappingSubdirectory,
-                                         mappingBaseName)
+                                             mappingBaseName)
         if not tryCustom or not os.path.exists(mappingFileName):
             # second see if mapping files are in the base directory
 
@@ -131,10 +131,10 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                                     mpiTasks=mpiTasks, tempdir=tempdir,
                                     esmf_parallel_exec=esmf_parallel_exec)
 
-    return remapper  # }}}
+    return remapper
 
 
-def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
+def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
     """
     Compute monthly climatologies from a data set.  The mean is weighted but
     the number of days in each month of the data set, ignoring values masked
@@ -166,6 +166,7 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
         of ds over all months in monthValues, weighted by the number of days
         in each month.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -179,11 +180,11 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):  # {{{
     monthlyClimatology = \
         ds.groupby('month').map(compute_one_month_climatology)
 
-    return monthlyClimatology  # }}}
+    return monthlyClimatology
 
 
 def compute_climatology(ds, monthValues, calendar=None,
-                        maskVaries=True):  # {{{
+                        maskVaries=True):
     """
     Compute a monthly, seasonal or annual climatology data set from a data
     set.  The mean is weighted but the number of days in each month of
@@ -234,10 +235,10 @@ def compute_climatology(ds, monthValues, calendar=None,
 
     climatology = _compute_masked_mean(climatologyMonths, maskVaries)
 
-    return climatology  # }}}
+    return climatology
 
 
-def add_years_months_days_in_month(ds, calendar=None):  # {{{
+def add_years_months_days_in_month(ds, calendar=None):
     '''
     Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
     The number of days in each month of ``ds`` is computed either using the
@@ -299,12 +300,12 @@ def add_years_months_days_in_month(ds, calendar=None):  # {{{
                  month in ds.month.values], float)
             ds.coords['daysInMonth'] = ('Time', daysInMonth)
 
-    return ds  # }}}
+    return ds
 
 
 def remap_and_write_climatology(config, climatologyDataSet,
                                 climatologyFileName, remappedFileName,
-                                remapper, logger=None):  # {{{
+                                remapper, logger=None):
     """
     Given a field in a climatology data set, use the ``remapper`` to remap
     horizontal dimensions of all fields, write the results to an output file,
@@ -378,10 +379,10 @@ def remap_and_write_climatology(config, climatologyDataSet,
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
             write_netcdf(remappedClimatology, remappedFileName)
-    return remappedClimatology  # }}}
+    return remappedClimatology
 
 
-def get_unmasked_mpas_climatology_directory(config, op='avg'):  # {{{
+def get_unmasked_mpas_climatology_directory(config, op='avg'):
     """
     Get the directory for an unmasked MPAS climatology produced by ncclimo,
     making the directory if it doesn't already exist
@@ -406,12 +407,11 @@ def get_unmasked_mpas_climatology_directory(config, op='avg'):  # {{{
                                         mpasMeshName)
 
     make_directories(directory)
-    return directory  # }}}
+    return directory
 
 
 def get_unmasked_mpas_climatology_file_name(config, season, componentName,
                                             op='avg'):
-    # {{{
     """
     Get the file name for an unmasked MPAS climatology produced by ncclimo
 
@@ -459,11 +459,11 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName,
         season = '{:02d}'.format(monthValues[0])
     fileName = '{}/{}_{}_{}.nc'.format(directory, ncclimoModel,
                                        season, suffix)
-    return fileName  # }}}
+    return fileName
 
 
 def get_masked_mpas_climatology_file_name(config, season, componentName,
-                                          climatologyName, op='avg'):  # {{{
+                                          climatologyName, op='avg'):
     """
     Get the file name for a masked MPAS climatology
 
@@ -524,13 +524,13 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
     fileName = '{}/{}_{}_{}.nc'.format(
         directory, ncclimoModel, season, suffix)
 
-    return fileName  # }}}
+    return fileName
 
 
 def get_remapped_mpas_climatology_file_name(config, season, componentName,
                                             climatologyName,
                                             comparisonGridName,
-                                            op='avg'):  # {{{
+                                            op='avg'):
     """
     Get the file name for a masked MPAS climatology
 
@@ -602,7 +602,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     fileName = '{}/{}_{}_{}.nc'.format(
         directory, ncclimoModel, season, suffix)
 
-    return fileName  # }}}
+    return fileName
 
 
 def get_climatology_op_directory(config, op='avg'):
@@ -616,12 +616,13 @@ def get_climatology_op_directory(config, op='avg'):
     return '{}/{}'.format(climatologyBaseDirectory, op)
 
 
-def _compute_masked_mean(ds, maskVaries):  # {{{
+def _compute_masked_mean(ds, maskVaries):
     '''
     Compute the time average of data set, masked out where the variables in ds
     are NaN and, if ``maskVaries == True``, weighting by the number of days
     used to compute each monthly mean time in ds.
     '''
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -656,10 +657,10 @@ def _compute_masked_mean(ds, maskVaries):  # {{{
 
         timeMean = dsWeightedSum / days.where(days > 0.)
 
-    return timeMean  # }}}
+    return timeMean
 
 
-def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
+def _matches_comparison(obsDescriptor, comparisonDescriptor):
     '''
     Determine if the two meshes are the same
     '''
@@ -672,12 +673,12 @@ def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
         # pretty hard to determine if projections are the same, so we'll rely
         # on the grid names
         match = obsDescriptor.meshName == comparisonDescriptor.meshName and \
-            len(obsDescriptor.x) == len(comparisonDescriptor.x) and \
-            len(obsDescriptor.y) == len(comparisonDescriptor.y) and \
-            numpy.all(numpy.isclose(obsDescriptor.x,
-                                    comparisonDescriptor.x)) and \
-            numpy.all(numpy.isclose(obsDescriptor.y,
-                                    comparisonDescriptor.y))
+                len(obsDescriptor.x) == len(comparisonDescriptor.x) and \
+                len(obsDescriptor.y) == len(comparisonDescriptor.y) and \
+                numpy.all(numpy.isclose(obsDescriptor.x,
+                                        comparisonDescriptor.x)) and \
+                numpy.all(numpy.isclose(obsDescriptor.y,
+                                        comparisonDescriptor.y))
     elif isinstance(obsDescriptor, LatLonGridDescriptor) and \
             isinstance(comparisonDescriptor, LatLonGridDescriptor):
         match = ((('degree' in obsDescriptor.units and
@@ -693,12 +694,12 @@ def _matches_comparison(obsDescriptor, comparisonDescriptor):  # {{{
     else:
         match = False
 
-    return match  # }}}
+    return match
 
 
 def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
                                yearsPerCacheFile, cachePrefix,
-                               monthValues):  # {{{
+                               monthValues):
     '''
     Determine which cache files already exist, which are incomplete and which
     years are present in each cache file (whether existing or to be created).
@@ -757,12 +758,12 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
     ds = ds.copy()
     ds.coords['cacheIndices'] = ('Time', cacheIndices)
 
-    return cacheInfo, cacheIndices  # }}}
+    return cacheInfo, cacheIndices
 
 
 def _cache_individual_climatologies(ds, cacheInfo, printProgress,
                                     yearsPerCacheFile, monthValues,
-                                    calendar):  # {{{
+                                    calendar):
     '''
     Cache individual climatologies for later aggregation.
     '''
@@ -793,12 +794,10 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         write_netcdf(climatology, outputFileClimo)
         climatology.close()
 
-    # }}}
-
 
 def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
                                   printProgress, monthValues,
-                                  cacheInfo):  # {{{
+                                  cacheInfo):
     '''
     Cache aggregated climatology from individual climatologies.
     '''
@@ -833,7 +832,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
         elif climatology is not None:
             monthsIfDone = (
-                endYearClimo - startYearClimo + 1) * len(monthValues)
+                                   endYearClimo - startYearClimo + 1) * len(monthValues)
             if climatology.attrs['totalMonths'] == monthsIfDone:
                 # also complete, so we can move on
                 done = True
@@ -870,7 +869,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
 
         write_netcdf(climatology, outputFileClimo)
 
-    return climatology  # }}}
+    return climatology
 
 
 def _get_year_string(startYear, endYear):
@@ -882,6 +881,3 @@ def _get_year_string(startYear, endYear):
         fileSuffix = 'years{}'.format(yearString)
 
     return yearString, fileSuffix
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

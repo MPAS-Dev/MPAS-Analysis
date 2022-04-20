@@ -25,7 +25,7 @@ from mpas_analysis.shared.timekeeping.utility import \
 def open_mpas_dataset(fileName, calendar,
                       timeVariableNames=['xtime_startMonthly',
                                          'xtime_endMonthly'],
-                      variableList=None, startDate=None, endDate=None):  # {{{
+                      variableList=None, startDate=None, endDate=None):
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -92,12 +92,12 @@ def open_mpas_dataset(fileName, calendar,
     if variableList is not None:
         ds = ds[variableList]
 
-    return ds  # }}}
+    return ds
 
 
 def _parse_dataset_time(ds, inTimeVariableName, calendar,
                         outTimeVariableName='Time',
-                        referenceDate='0001-01-01'):  # {{{
+                        referenceDate='0001-01-01'):
     """
     A helper function for computing a time coordinate from an MPAS time
     variable.  Given a data set and a time variable name (or list of 2
@@ -201,7 +201,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         dsOut = ds.copy()
         dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
 
-    return dsOut  # }}}
+    return dsOut
 
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

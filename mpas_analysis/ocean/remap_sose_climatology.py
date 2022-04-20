@@ -25,7 +25,7 @@ from mpas_analysis.shared.projection import get_pyproj_projection
 
 
 class RemapSoseClimatology(RemapObservedClimatologySubtask):
-    # {{{
+
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
     """
@@ -37,7 +37,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
                  fieldName, botFieldName=None, depths=None,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
+
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -91,9 +91,8 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         super(RemapSoseClimatology, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -116,9 +115,9 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -166,8 +165,4 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
             dsObs = xr.Dataset(data_vars={self.fieldName: field},
                                coords={'depthSlice': depthNames})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

@@ -29,5 +29,3 @@ class TestPaths(TestCase):
                          ['0.txt', '1.txt', '2.txt', 'a.txt', 'b.txt',
                           'c.txt'])
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

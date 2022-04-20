@@ -26,7 +26,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
 
 
-class AnalysisTask(Process):  # {{{
+class AnalysisTask(Process):
     '''
     The base class for analysis tasks.
 
@@ -99,7 +99,7 @@ class AnalysisTask(Process):  # {{{
     FAIL = 5
 
     def __init__(self, config, taskName, componentName, tags=[],
-                 subtaskName=None):  # {{{
+                 subtaskName=None):
         '''
         Construct the analysis task.
 
@@ -167,9 +167,8 @@ class AnalysisTask(Process):  # {{{
         # run the task directly as opposed to launching it as a new process
         # even in parallel because it has subprocesses such as Pools
         self.runDirectly = False
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
@@ -232,9 +231,7 @@ class AnalysisTask(Process):  # {{{
         self._logFileName = '{}/{}.log'.format(logsDirectory,
                                                self.fullTaskName)
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         '''
         Run the analysis.  Each task should override this function to do the
         work of computing and/or plotting analysis
@@ -243,9 +240,9 @@ class AnalysisTask(Process):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        return  # }}}
+        return
 
-    def run_after(self, task):  # {{{
+    def run_after(self, task):
         '''
         Only run this task after the given task has completed.  This allows a
         task to be constructed of multiple subtasks, some of which may block
@@ -264,9 +261,8 @@ class AnalysisTask(Process):  # {{{
 
         if task not in self.runAfterTasks:
             self.runAfterTasks.append(task)
-        # }}}
 
-    def add_subtask(self, subtask):  # {{{
+    def add_subtask(self, subtask):
         '''
         Add a subtask to this tasks.  This task always runs after the subtask
         has finished.  However, this task gets set up *before* the subtask,
@@ -284,9 +280,8 @@ class AnalysisTask(Process):  # {{{
 
         if subtask not in self.subtasks:
             self.subtasks.append(subtask)
-        # }}}
 
-    def run(self, writeLogFile=True):  # {{{
+    def run(self, writeLogFile=True):
         '''
         Sets up logging and then runs the analysis task.
 
@@ -349,10 +344,8 @@ class AnalysisTask(Process):  # {{{
         # writeLogFile==False)
         self.logger.handlers = []
 
-        # }}}
-
     def check_generate(self):
-        # {{{
+
         '''
         Determines if this analysis should be generated, based on the
         ``generate`` config option and ``taskName``, ``componentName`` and
@@ -415,7 +408,7 @@ class AnalysisTask(Process):  # {{{
             elif element == self.taskName:
                 generate = True
 
-        return generate  # }}}
+        return generate
 
     def check_analysis_enabled(self, analysisOptionName, default=False,
                                raiseException=True):
@@ -463,7 +456,7 @@ class AnalysisTask(Process):  # {{{
                       'are analyzing was run with an\n'
                       'older version of MPAS-O that did not support '
                       'this flag.  Assuming enabled.'.format(
-                          analysisOptionName))
+                    analysisOptionName))
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'
@@ -472,7 +465,7 @@ class AnalysisTask(Process):  # {{{
 
         return enabled
 
-    def set_start_end_date(self, section):  # {{{
+    def set_start_end_date(self, section):
         '''
         Set the start and end dates in the ``config`` correspond to the start
         and end years in a given category of analysis
@@ -495,12 +488,13 @@ class AnalysisTask(Process):  # {{{
         if not self.config.has_option(section, 'endDate'):
             endDate = '{:04d}-12-31_23:59:59'.format(
                 self.config.getint(section, 'endYear'))
-            self.config.set(section, 'endDate', endDate)  # }}}
+            self.config.set(section, 'endDate', endDate)
+
 
 # }}}
 
 
-class AnalysisFormatter(logging.Formatter):  # {{{
+class AnalysisFormatter(logging.Formatter):
     """
     A custom formatter for logging
 
@@ -543,10 +537,12 @@ class AnalysisFormatter(logging.Formatter):  # {{{
         self._fmt = format_orig
 
         return result
+
+
 # }}}
 
 
-class StreamToLogger(object):  # {{{
+class StreamToLogger(object):
     """
     Modified based on code by:
     https://www.electricmonk.nl/log/2011/08/14/redirect-stdout-and-stderr-to-a-logger-in-python/
@@ -571,10 +567,8 @@ class StreamToLogger(object):  # {{{
     def flush(self):
         pass
 
-    # }}}
 
-
-def update_time_bounds_from_file_names(config, section, componentName):  # {{{
+def update_time_bounds_from_file_names(config, section, componentName):
     """
     Update the start and end years and dates for time series, climatologies or
     climate indices based on the years actually available in the list of files.
@@ -651,13 +645,13 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
 
     # search for the start of the first full year
     firstIndex = 0
-    while(firstIndex < len(years) and months[firstIndex] != 1):
+    while (firstIndex < len(years) and months[firstIndex] != 1):
         firstIndex += 1
     startYear = years[firstIndex]
 
     # search for the end of the last full year
     lastIndex = len(years) - 1
-    while(lastIndex >= 0 and months[lastIndex] != 12):
+    while (lastIndex >= 0 and months[lastIndex] != 12):
         lastIndex -= 1
     endYear = years[lastIndex]
 
@@ -689,7 +683,3 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
     config.set(section, 'startDate', startDate)
     endDate = '{:04d}-12-31_23:59:59'.format(endYear)
     config.set(section, 'endDate', endDate)
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

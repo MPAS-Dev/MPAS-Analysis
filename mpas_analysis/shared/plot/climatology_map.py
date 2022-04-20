@@ -731,5 +731,3 @@ def _add_land_lakes_coastline(ax, ice_shelves=True):
                 facecolor='lightgray', linewidth=0.5)
         ax.add_feature(ice_50m, zorder=3)
     ax.add_feature(lakes_50m, zorder=4)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

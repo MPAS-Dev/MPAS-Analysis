@@ -61,7 +61,7 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
         check_call(args, logger=logger)
 
 
-class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
+class ComputeTransectMasksSubtask(AnalysisTask):
     """
     An analysis tasks for computing cell masks for transects defined by geojson
     features
@@ -87,7 +87,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, transectGroup, subprocessCount=None):
-        # {{{
+    
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -137,7 +137,6 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         self.geojsonFileName = \
             get_region_mask(self.config,
                             '{}.geojson'.format(self.outFileSuffix))
-        # }}}
 
     def make_transect_mask(self):
         """
@@ -172,7 +171,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             transectNames = get_feature_list(self.geojsonFileName)
         return transectNames
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -223,9 +222,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         if os.path.exists(self.maskFileName):
             # nothing to do so don't block a bunch of other processes
             self.subprocessCount = 1
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the requested climatologies
         """
@@ -244,6 +242,3 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             logger=self.logger, processCount=self.subprocessCount,
             dir=self.maskSubdirectory)
 
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

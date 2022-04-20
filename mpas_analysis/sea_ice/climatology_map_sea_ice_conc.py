@@ -23,7 +23,7 @@ from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
+class ClimatologyMapSeaIceConc(AnalysisTask):
     """
     An analysis task for comparison of sea ice concentration against
     observations
@@ -33,7 +33,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -115,11 +115,10 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                                 hemisphereLong, remapClimatologySubtask,
                                 controlConfig, mpasFieldName,
                                 fieldName, iselValues)
-        # }}}
 
     def _add_obs_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
-                       mpasFieldName):  # {{{
+                       mpasFieldName):
         config = self.config
         obsFieldName = 'seaIceConc'
         sectionName = self.taskName
@@ -183,12 +182,11 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                             prefix))
 
                     self.add_subtask(subtask)
-        # }}}
 
     def _add_ref_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
                        controlConfig, mpasFieldName, fieldName,
-                       iselValues):  # {{{
+                       iselValues):
 
         controlRunName = controlConfig.get('runs', 'mainRunName')
         galleryName = None
@@ -226,11 +224,9 @@ class ClimatologyMapSeaIceConc(AnalysisTask):  # {{{
                     galleryName=galleryName)
 
                 self.add_subtask(subtask)
-        # }}}
-    # }}}
 
 
-class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedConcClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping sea ice concentration observations
     """
@@ -238,7 +234,7 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -261,9 +257,9 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='t_lat',
                                                   lonVarName='t_lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -285,8 +281,3 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = xr.open_dataset(fileName)
         dsObs = dsObs.rename({'AICE': 'seaIceConc'})
         return dsObs
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -32,7 +32,7 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
 
-class ClimatologyMapWoa(AnalysisTask):  # {{{
+class ClimatologyMapWoa(AnalysisTask):
     """
     An analysis task for comparison of polar and global temperature and
     salinity against WOA18 climatology fields
@@ -42,7 +42,7 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
     # Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -254,13 +254,10 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                             configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
 class RemapWoaClimatology(RemapObservedClimatologySubtask):
-    # {{{
+
     """
     A subtask for reading and remapping WOA fields to the comparison grid
     """
@@ -272,7 +269,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
                  fieldNames, depths,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
+
         '''
         An analysis task for remapping WOA fields (either annual or monthly
         mean) to the comparison grid(s), depths and seasons provided
@@ -319,9 +316,8 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         super(RemapWoaClimatology, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -348,9 +344,9 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
                                                   latVarName='lat',
                                                   lonVarName='lon')
         dsObs.close()
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -398,8 +394,4 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.Dataset(data_vars=data_vars,
                            coords={'depthSlice': depthNames})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

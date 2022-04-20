@@ -93,7 +93,7 @@ def compute_lon_lat_region_masks(gridFileName, lonVar, latVar, geojsonFileName,
     check_call(args=args, logger=logger)
 
 
-class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
+class ComputeRegionMasksSubtask(AnalysisTask):
     """
     An analysis tasks for computing cell masks for regions defined by geojson
     features
@@ -129,6 +129,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         The name of the mesh or grid, used as part of the mask file name.
         Default is the MPAS mesh name
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -136,7 +137,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, regionGroup, meshName, subprocessCount=1,
                  obsFileName=None, lonVar='lon', latVar='lat',
                  useMpasMaskCreator=False):
-        # {{{
+
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -211,8 +212,6 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
 
         parentTask.add_subtask(self)
 
-        # }}}
-
     def make_region_mask(self):
         """
         If the geojson mask file has not already been cached in the diagnostics
@@ -246,7 +245,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
             regionNames = get_feature_list(self.geojsonFileName)
         return regionNames
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -295,9 +294,8 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
         if os.path.exists(self.maskFileName):
             # nothing to do so don't block a bunch of other processes
             self.subprocessCount = 1
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the requested climatologies
         """
@@ -332,7 +330,3 @@ class ComputeRegionMasksSubtask(AnalysisTask):  # {{{
                 self.geojsonFileName, self.maskFileName, self.logger,
                 self.subprocessCount,
                 multiprocessingMethod=multiprocessingMethod)
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

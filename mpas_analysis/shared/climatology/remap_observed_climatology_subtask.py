@@ -27,7 +27,7 @@ from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
 
 
-class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
+class RemapObservedClimatologySubtask(AnalysisTask):
     """
     An analysis task for comparison of 2D model fields against observations.
 
@@ -47,6 +47,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
     comparisonGridNames : list of str
         The name(s) of the comparison grid to use for remapping.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -54,7 +55,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
+
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -100,9 +101,8 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         super(RemapObservedClimatologySubtask, self).__init__(
             config=config, taskName=taskName, subtaskName=subtaskName,
             componentName=componentName, tags=tags)
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -128,9 +128,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
             ds = self.build_observational_dataset(self.fileName)
             write_netcdf(ds, obsFileName)
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs remapping of obsrevations to the comparsion grid
         """
@@ -188,9 +186,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
                             remappedFileName, remapper,
                             logger=self.logger)
 
-        # }}}
-
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid.  A subclass derived from
         this class must override this method to create the appropriate
@@ -210,9 +206,9 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        return None  # }}}
+        return None
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions.  A subclass derived from this class must
@@ -232,12 +228,10 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         # -------
         # Xylar Asay-Davis
 
-        return None  # }}}
-
-    # }}}
+        return None
 
     def get_file_name(self, stage, season=None, comparisonGridName=None):
-        # {{{
+
         """
         Given config options, the name of a field and a string identifying the
         months in a seasonal climatology, returns the full path for MPAS
@@ -307,9 +301,9 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         else:
             raise ValueError('Unknown stage {}'.format(stage))
 
-        return fileName  # }}}
+        return fileName
 
-    def _setup_remappers(self, fileName):  # {{{
+    def _setup_remappers(self, fileName):
         """
         Set up the remappers for remapping from observations to the comparison
         grids.
@@ -332,7 +326,6 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
         outFilePrefix = self.outFilePrefix
         self.remappers = {}
         for comparisonGridName in self.comparisonGridNames:
-
             comparisonDescriptor = get_comparison_descriptor(
                 config, comparison_grid_name=comparisonGridName)
 
@@ -344,7 +337,3 @@ class RemapObservedClimatologySubtask(AnalysisTask):  # {{{
                 method=config.get(sectionName,
                                   'interpolationMethod'),
                 logger=self.logger)
-        # }}}
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

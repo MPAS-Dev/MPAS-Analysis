@@ -88,5 +88,3 @@ def _date_tick(days, pos, calendar='gregorian', includeMonth=True):
     else:
         return '{:04d}'.format(date.year)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

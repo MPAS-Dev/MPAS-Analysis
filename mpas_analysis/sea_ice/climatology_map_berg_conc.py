@@ -20,7 +20,7 @@ from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
+class ClimatologyMapIcebergConc(AnalysisTask):
     """
     An analysis task for comparison of iceberg concentration against
     observations
@@ -30,7 +30,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
     # Darin Comeau, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -163,12 +163,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):  # {{{
 
                 self.add_subtask(subtask)
 
-        # }}}
 
-    # }}}
-
-
-class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping iceberg concentration from Altiberg
     observations
@@ -177,7 +173,7 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Darin Comeau, Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         """
         get a MeshDescriptor for the observation grid
 
@@ -200,9 +196,9 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='latitude',
                                                   lonVarName='longitude')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -227,8 +223,4 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.coords['year'] = dsObs['Time.year']
         dsObs = dsObs.transpose('Time', 'latitude', 'longitude')
 
-        return dsObs  # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

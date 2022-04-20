@@ -68,7 +68,7 @@ def get_simulation_start_time(streams):
     return simulationStartTime
 
 
-def string_to_datetime(dateString):  # {{{
+def string_to_datetime(dateString):
     """
     Given a date string and a calendar, returns a ``datetime.datetime``
 
@@ -109,10 +109,10 @@ def string_to_datetime(dateString):  # {{{
         _parse_date_string(dateString, isInterval=False)
 
     return datetime.datetime(year=year, month=month, day=day, hour=hour,
-                             minute=minute, second=second)  # }}}
+                             minute=minute, second=second)
 
 
-def string_to_relative_delta(dateString, calendar='gregorian'):  # {{{
+def string_to_relative_delta(dateString, calendar='gregorian'):
     """
     Given a date string and a calendar, returns an instance of
     ``MpasRelativeDelta``
@@ -159,7 +159,6 @@ def string_to_relative_delta(dateString, calendar='gregorian'):  # {{{
     return MpasRelativeDelta(years=years, months=months, days=days,
                              hours=hours, minutes=minutes, seconds=seconds,
                              calendar=calendar)
-    # }}}
 
 
 def string_to_days_since_date(dateString, calendar='gregorian',
@@ -375,7 +374,7 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
                             calendar=calendar)
 
 
-def _parse_date_string(dateString, isInterval=False):  # {{{
+def _parse_date_string(dateString, isInterval=False):
     """
     Given a string containing a date, returns a tuple defining a date of the
     form (year, month, day, hour, minute, second) appropriate for constructing
@@ -460,7 +459,7 @@ def _parse_date_string(dateString, isInterval=False):  # {{{
         second = int(hms)
         minute = 0
         hour = 0
-    return (year, month, day, hour, minute, second)  # }}}
+    return (year, month, day, hour, minute, second)
 
 
 def _mpas_to_netcdf_calendar(calendar):
@@ -490,5 +489,3 @@ def _round_datetime(date):
     add_seconds = int(1e-6 * microsecond + 0.5)
 
     return date + datetime.timedelta(0, add_seconds)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -22,7 +22,6 @@ from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
 
 
 def generate_html(config, analyses, controlConfig, customConfigFiles):
-    # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
@@ -96,8 +95,6 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
     if url is None:
         print("Done.")
 
-    # }}}
-
 
 class MainPage(object):
     """
@@ -122,6 +119,7 @@ class MainPage(object):
         Each component has a name, subdirectory and image name used to find
         the appropriate thumbnail.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -228,7 +226,7 @@ class MainPage(object):
             # substitute entries in the template and add the component to
             # the text describing all components
             componentsText = componentsText + \
-                _replace_tempate_text(self.componentTemplate, replacements)
+                             _replace_tempate_text(self.componentTemplate, replacements)
 
         githash = _get_git_hash()
         if githash is None:
@@ -248,13 +246,13 @@ class MainPage(object):
                             '@configDesc': shortName}
 
             configsText = configsText + \
-                _replace_tempate_text(self.configTemplate, replacements)
+                          _replace_tempate_text(self.configTemplate, replacements)
 
         replacements = {'@configName': 'complete.{}.cfg'.format(runName),
                         '@configDesc': 'Complete Configuration File'}
 
         configsText = configsText + \
-            _replace_tempate_text(self.configTemplate, replacements)
+                      _replace_tempate_text(self.configTemplate, replacements)
 
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
@@ -336,6 +334,7 @@ class ComponentPage(object):
         A tree of information describing the the gallery groups in the page,
         the galleries in each group and the images in each gallery.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -377,7 +376,6 @@ class ComponentPage(object):
 
         for templateName in ['page', 'quicklink', 'group', 'gallery', 'image',
                              'subtitle']:
-
             # get template text
             fileName = pkg_resources.resource_filename(
                 __name__,
@@ -497,10 +495,10 @@ class ComponentPage(object):
         galleriesText = ''
         for groupName, groupDict in self.groups.items():
             quickLinkText = quickLinkText + \
-                self._generate_quick_link_text(groupName, groupDict)
+                            self._generate_quick_link_text(groupName, groupDict)
 
             galleriesText = galleriesText + \
-                self._generate_group_text(groupName, groupDict)
+                            self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
@@ -563,7 +561,7 @@ class ComponentPage(object):
         imagesText = ''
         for imageFileName, imageDict in images.items():
             imagesText = imagesText + \
-                self._generate_image_text(imageFileName, imageDict)
+                         self._generate_image_text(imageFileName, imageDict)
 
         if galleryName == 'None':
             galleryTitle = ''
@@ -595,7 +593,7 @@ class ComponentPage(object):
         galleriesText = ''
         for galleryName, galleryDict in groupDict['galleries'].items():
             galleriesText = galleriesText + \
-                self._generate_gallery_text(galleryName, galleryDict['images'])
+                            self._generate_gallery_text(galleryName, galleryDict['images'])
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],

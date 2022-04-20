@@ -93,7 +93,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                  fieldNameInTitle, mpasFieldName, yAxisLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
                  groupLink, galleryName, subtaskName=None, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -185,9 +185,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.groupLink = groupLink
         self.galleryName = galleryName
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -247,9 +245,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         self.xmlFileNames = ['{}/{}.xml'.format(
             self.plotsDirectory, self.filePrefix)]
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute vertical aggregates of the data and plot the time series
         """
@@ -492,8 +490,6 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
 
-        # }}}
-
     def customize_fig(self, fig):
         """
         A function to override to customize the figure.
@@ -502,7 +498,3 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             The figure
         """
         pass
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -255,5 +255,3 @@ class TestClimatology(TestCase):
         self.assertArrayApproxEqual(monthlyClimatology.month.values,
                                     refClimatology.month.values)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

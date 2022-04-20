@@ -24,7 +24,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 
-class ClimatologyMapSST(AnalysisTask):  # {{{
+class ClimatologyMapSST(AnalysisTask):
     """
     An analysis task for comparison of sea surface temperature (sst) against
     observations
@@ -34,7 +34,7 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -152,11 +152,9 @@ class ClimatologyMapSST(AnalysisTask):  # {{{
                     galleryName=galleryName)
 
                 self.add_subtask(subtask)
-        # }}}
-    # }}}
 
 
-class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping SST observations
     """
@@ -164,7 +162,7 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -187,9 +185,9 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='lat',
                                                   lonVarName='lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -220,8 +218,4 @@ class RemapObservedSSTClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.coords['month'] = dsObs['Time.month']
         dsObs.coords['year'] = dsObs['Time.year']
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

@@ -53,5 +53,3 @@ def savefig(filename, config, tight=True, pad_inches=0.1):
 
     plt.close()
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -22,7 +22,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.shared.interpolation.utility import add_periodic_lon
 
 
-class ClimatologyMapBGC(AnalysisTask):  # {{{
+class ClimatologyMapBGC(AnalysisTask):
     """
     An analysis task for plotting of BGC variables
 
@@ -32,7 +32,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
     """
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         """
         Construct the analysis task.
 
@@ -206,7 +206,7 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
 
                     self.add_subtask(subtask)
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         '''
         Check if preindustrial flag is turned on or off.
         '''
@@ -231,11 +231,8 @@ class ClimatologyMapBGC(AnalysisTask):  # {{{
                   'True' under the ClimatologyMapBGC config section.
                   """)
 
-        # }}}
-    # }}}
 
-
-class RemapBGCClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapBGCClimatology(RemapMpasClimatologySubtask):
     """
     Apply unit conversions to native model output to align with observations.
     """
@@ -243,7 +240,7 @@ class RemapBGCClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Riley X. Brady
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Sum over all phytoplankton chlorophyll to create total chlorophyll
 
@@ -278,10 +275,10 @@ class RemapBGCClimatology(RemapMpasClimatologySubtask):  # {{{
                                    'timeMonthly_avg_ecosysTracers_diazChl',
                                    'timeMonthly_avg_ecosysTracers_phaeoChl'])
 
-        return climatology  # }}}
+        return climatology
 
     def customize_remapped_climatology(self, climatology, comparisonGridName,
-                                       season):  # {{{
+                                       season):
         """
         Convert CO2 gas flux from native units to mol/m2/yr,
         Convert dissolved O2 from native units to mL/L
@@ -317,12 +314,10 @@ class RemapBGCClimatology(RemapMpasClimatologySubtask):  # {{{
         elif fieldName == 'timeMonthly_avg_ecosysTracers_O2':
             conversion = 22.391 / 10**3
             climatology[fieldName] = conversion * climatology[fieldName]
-        return climatology  # }}}
-
-    # }}}
+        return climatology
 
 
-class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping BGC observations
     """
@@ -330,7 +325,7 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Riley X. Brady
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -354,9 +349,9 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='lat',
                                                   lonVarName='lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -378,8 +373,4 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = xr.open_dataset(fileName)
         degrees = 'degree' in dsObs.lon.units
         dsObs = add_periodic_lon(ds=dsObs, lonDim='lon', degrees=degrees)
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

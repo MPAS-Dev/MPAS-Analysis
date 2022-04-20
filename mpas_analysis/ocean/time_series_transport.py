@@ -32,17 +32,18 @@ from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.transects import ComputeTransectMasksSubtask
 
 
-class TimeSeriesTransport(AnalysisTask):  # {{{
+class TimeSeriesTransport(AnalysisTask):
     """
     Extract and plot time series of transport through transects on the MPAS
     mesh.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, config, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -110,12 +111,8 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
             plotTransportSubtask.run_after(combineSubtask)
             self.add_subtask(plotTransportSubtask)
 
-        # }}}
 
-    # }}}
-
-
-class ComputeTransportSubtask(AnalysisTask):  # {{{
+class ComputeTransportSubtask(AnalysisTask):
     """
     Computes time-series of transport through transects.
 
@@ -130,12 +127,13 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
     transectsToPlot : list of str
         A list of transects to plot
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, startYear, endYear,
-                 masksSubtask, transectsToPlot):  # {{{
+                 masksSubtask, transectsToPlot):
         """
         Construct the analysis task.
 
@@ -177,9 +175,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
 
         self.transectsToPlot = transectsToPlot
         self.restartFileName = None
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -213,9 +210,7 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for transport calculations')
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Computes time-series of transport through transects.
         """
@@ -258,8 +253,8 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
                 variableList.append('timeMonthly_avg_normalTransportVelocity')
             elif 'timeMonthly_avg_normalGMBolusVelocity' in dsIn:
                 variableList = variableList + \
-                    ['timeMonthly_avg_normalVelocity',
-                     'timeMonthly_avg_normalGMBolusVelocity']
+                               ['timeMonthly_avg_normalVelocity',
+                                'timeMonthly_avg_normalGMBolusVelocity']
             else:
                 self.logger.warning('Cannot compute transport velocity. '
                                     'Using advection velocity.')
@@ -390,20 +385,17 @@ class ComputeTransportSubtask(AnalysisTask):  # {{{
         dsOut['month'].attrs['units'] = 'months'
         write_netcdf(dsOut, outFileName)
 
-        # }}}
 
-    # }}}
-
-
-class CombineTransportSubtask(AnalysisTask):  # {{{
+class CombineTransportSubtask(AnalysisTask):
     """
     Combine individual time series into a single data set
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears):  # {{{
+    def __init__(self, parentTask, startYears, endYears):
         """
         Construct the analysis task.
 
@@ -430,9 +422,8 @@ class CombineTransportSubtask(AnalysisTask):  # {{{
 
         self.startYears = startYears
         self.endYears = endYears
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Combine the time series
         """
@@ -458,8 +449,6 @@ class CombineTransportSubtask(AnalysisTask):  # {{{
                                        concat_dim='Time', decode_times=False)
             ds.load()
             write_netcdf(ds, outFileName)
-        # }}}
-    # }}}
 
 
 class PlotTransportSubtask(AnalysisTask):
@@ -478,13 +467,14 @@ class PlotTransportSubtask(AnalysisTask):
         The configuration options for the control run (if any)
 
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, transect, transectIndex, controlConfig,
                  transportTransectFileName):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -520,9 +510,7 @@ class PlotTransportSubtask(AnalysisTask):
         self.transectIndex = transectIndex
         self.controlConfig = controlConfig
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -543,9 +531,8 @@ class PlotTransportSubtask(AnalysisTask):
 
         self.xmlFileNames = ['{}/transport_{}.xml'.format(
             self.plotsDirectory, self.transect.replace(' ', '_'))]
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of transport through transects.
         """
@@ -657,11 +644,10 @@ class PlotTransportSubtask(AnalysisTask):
 
         if bounds is not None:
             t = transport.Time.values
-            plt.gca().fill_between(t, bounds[0]*numpy.ones_like(t),
-                                   bounds[1]*numpy.ones_like(t), alpha=0.3,
+            plt.gca().fill_between(t, bounds[0] * numpy.ones_like(t),
+                                   bounds[1] * numpy.ones_like(t), alpha=0.3,
                                    label='observations')
             plt.legend(loc='lower left')
-
 
         # do this before the inset because otherwise it moves the inset
         # and cartopy doesn't play too well with tight_layout anyway
@@ -682,9 +668,8 @@ class PlotTransportSubtask(AnalysisTask):
             thumbnailDescription=thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
-        # }}}
 
-    def _load_transport(self, config):  # {{{
+    def _load_transport(self, config):
         """
         Reads transport time series for this transect
         """
@@ -705,8 +690,4 @@ class PlotTransportSubtask(AnalysisTask):
         transport = dsIn.transport.isel(nTransects=self.transectIndex)
         mean = transport.mean().values
         std = transport.std().values
-        return transport, mean, std  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return transport, mean, std

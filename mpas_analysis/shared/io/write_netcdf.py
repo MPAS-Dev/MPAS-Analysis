@@ -12,7 +12,7 @@ import netCDF4
 import numpy
 
 
-def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
+def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):
     '''
     Write an xarray data set to a NetCDF file using finite fill values and
     unicode strings
@@ -52,6 +52,5 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
 
     ds.to_netcdf(fileName, encoding=encodingDict)
 
-    # }}}
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

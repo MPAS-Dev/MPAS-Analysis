@@ -33,17 +33,18 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
 
-class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
+class ClimatologyMapArgoTemperature(AnalysisTask):
     """
     An analysis task for comparison of potential temperature against Argo
     observations
     """
+
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -170,22 +171,20 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
+class ClimatologyMapArgoSalinity(AnalysisTask):
     """
     An analysis task for comparison of global salinity against Argo
     observations
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -310,16 +309,13 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
 class RemapArgoClimatology(RemapObservedClimatologySubtask):
-    # {{{
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Luke Van Roekel
@@ -328,7 +324,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
                  fieldName, depths,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
+
         '''
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
@@ -374,9 +370,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         super(RemapArgoClimatology, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
+    def get_observation_descriptor(self, fileName):
         '''
         get a MeshDescriptor for the observation grid
 
@@ -403,9 +398,9 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
                                                   latVarName='latCoord',
                                                   lonVarName='lonCoord')
         dsObs.close()
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
+    def build_observational_dataset(self, fileName):
         '''
         read in the data sets for observations, and possibly rename some
         variables and dimensions
@@ -455,8 +450,4 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.Dataset(data_vars={self.fieldName: field},
                            coords={'depthSlice': depthNames})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

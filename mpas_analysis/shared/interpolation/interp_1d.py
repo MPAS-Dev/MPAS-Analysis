@@ -13,7 +13,7 @@ import xarray
 
 
 def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
-              outInterpCoord):  # {{{
+              outInterpCoord):
     """
     Interpolate 1D or 2D fields in 1D
 
@@ -46,11 +46,11 @@ def interp_1d(ds, inInterpDim, inInterpCoord, outInterpDim,
     # conert back to coords
     ds = ds.set_coords(coords)
 
-    return ds  # }}}
+    return ds
 
 
 def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
-                                 outInterpCoord):  # {{{
+                                 outInterpCoord):
     """
     add interpolation weights and indices to the data set
     """
@@ -158,10 +158,10 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
         indices[dim] = xarray.DataArray(indices[dim], dims=allOutDims)
     weight0 = xarray.DataArray(weight0, dims=allOutDims)
 
-    return indices, weight0  # }}}
+    return indices, weight0
 
 
-def _interp_1d_array(da, indices, weight0, inInterpDim):  # {{{
+def _interp_1d_array(da, indices, weight0, inInterpDim):
     """
     iterpolate a data array in 1D with the given indices and weights
     """
@@ -181,6 +181,4 @@ def _interp_1d_array(da, indices, weight0, inInterpDim):  # {{{
     da0 = da.isel(**indices0)
     da1 = da.isel(**indices1)
     da = weight0 * da0 + (1. - weight0) * da1
-    return da  # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+    return da
