@@ -34,7 +34,7 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     filePrefix : str

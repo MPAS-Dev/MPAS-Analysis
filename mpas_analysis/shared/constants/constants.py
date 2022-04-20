@@ -21,8 +21,6 @@ from __future__ import absolute_import, division, print_function, \
 import numpy as np
 
 # set parameters for default climatology comparison grid
-dLongitude = 0.5
-dLatitude = 0.5
 lonmin = -180.
 lonmax = 180.
 latmin = -90.

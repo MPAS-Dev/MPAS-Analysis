@@ -51,10 +51,10 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -79,7 +79,7 @@ class TimeSeriesTransport(AnalysisTask):  # {{{
 
         years = [year for year in range(startYear, endYear + 1)]
 
-        transectsToPlot = config.getExpression('timeSeriesTransport',
+        transectsToPlot = config.getexpression('timeSeriesTransport',
                                                'transectsToPlot')
         if len(transectsToPlot) == 0:
             return
@@ -477,7 +477,7 @@ class PlotTransportSubtask(AnalysisTask):
     transectIndex : int
         The index into the dimension ``nTransects`` of the transect to plot
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -503,7 +503,7 @@ class PlotTransportSubtask(AnalysisTask):
         transectIndex : int
             The index into the dimension ``nTransects`` of the transect to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -602,8 +602,8 @@ class PlotTransportSubtask(AnalysisTask):
         plotControl = self.controlConfig is not None
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = config.getint('timeSeriesTransport',
-                                            'movingAverageMonths')
+        movingAveragePoints = config.getint('timeSeriesTransport',
+                                            'movingAveragePoints')
 
         self.logger.info('  Plotting...')
 
@@ -651,7 +651,7 @@ class PlotTransportSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,

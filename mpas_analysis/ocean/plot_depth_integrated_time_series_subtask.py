@@ -85,7 +85,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     galleryName : str
         The name of the gallery in which this plot belongs
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
     """
     # Authors
@@ -151,7 +151,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotTimeSeries<RegionName>`` by default)
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             The configuration options for the control run (if any)
         """
         # Authors
@@ -268,8 +268,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        plotTitles = config.getExpression('regions', 'plotTitles')
-        allRegionNames = config.getExpression('regions', 'regions')
+        plotTitles = config.getexpression('regions', 'plotTitles')
+        allRegionNames = config.getexpression('regions', 'regions')
         regionIndex = allRegionNames.index(self.regionName)
         regionNameInTitle = plotTitles[regionIndex]
 
@@ -288,7 +288,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         depths = ds.depth.values
 
-        divisionDepths = config.getExpression(self.sectionName, 'depths')
+        divisionDepths = config.getexpression(self.sectionName, 'depths')
 
         # for each depth interval to plot, determine the top and bottom depth
         topDepths = [0, 0] + divisionDepths

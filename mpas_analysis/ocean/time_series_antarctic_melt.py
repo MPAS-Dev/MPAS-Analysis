@@ -51,7 +51,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
@@ -60,7 +60,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -75,7 +75,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             tags=['timeSeries', 'melt', 'landIceCavities', 'antarctic'])
 
         regionGroup = 'Ice Shelves'
-        iceShelvesToPlot = config.getExpression('timeSeriesAntarcticMelt',
+        iceShelvesToPlot = config.getexpression('timeSeriesAntarcticMelt',
                                                 'iceShelvesToPlot')
         if len(iceShelvesToPlot) == 0:
             # nothing else to do
@@ -450,7 +450,7 @@ class PlotMeltSubtask(AnalysisTask):
     regionIndex : int
         The index into the dimension ``nRegions`` of the ice shelf to plot
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -475,7 +475,7 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -599,8 +599,8 @@ class PlotMeltSubtask(AnalysisTask):
         # If areas from obs file used need to be converted from sq km to sq m
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = config.getint('timeSeriesAntarcticMelt',
-                                            'movingAverageMonths')
+        movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
+                                            'movingAveragePoints')
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
@@ -684,7 +684,7 @@ class PlotMeltSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,
@@ -752,7 +752,7 @@ class PlotMeltSubtask(AnalysisTask):
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
-                                       movingAveragePoints=movingAverageMonths,
+                                       movingAveragePoints=movingAveragePoints,
                                        lineColors=lineColors,
                                        lineWidths=lineWidths,
                                        legendText=legendText,

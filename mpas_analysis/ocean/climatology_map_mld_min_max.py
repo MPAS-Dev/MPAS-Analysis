@@ -35,14 +35,14 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTasks : dict of ``MpasClimatologyTask``
             The tasks that produced the climatology of monthly min and max to
             be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -110,13 +110,13 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(self.taskName, 'seasons')
+        seasons = config.getexpression(self.taskName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(self.taskName))
 
-        comparisonGridNames = config.getExpression(self.taskName,
+        comparisonGridNames = config.getexpression(self.taskName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:

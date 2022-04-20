@@ -63,7 +63,7 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -274,7 +274,7 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -460,7 +460,7 @@ def plot_projection_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -592,17 +592,17 @@ def plot_projection_comparison(
     useCartopyCoastline = config.getboolean(section, 'useCartopyCoastline')
 
     if refArray is None:
-        figsize = config.getExpression(section, 'onePanelFigSize')
+        figsize = config.getexpression(section, 'onePanelFigSize')
         subplots = [111]
     elif vertical:
-        figsize = config.getExpression(section, 'threePanelVertFigSize')
+        figsize = config.getexpression(section, 'threePanelVertFigSize')
         subplots = [311, 312, 313]
     else:
-        figsize = config.getExpression(section, 'threePanelHorizFigSize')
+        figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
 
-    latLines = config.getExpression(section, 'latLines', usenumpyfunc=True)
-    lonLines = config.getExpression(section, 'lonLines', usenumpyfunc=True)
+    latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
+    lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
 
     # put latitude labels on the left unless we're in a polar projection
     left_labels = projectionName not in ['arctic', 'antarctic']

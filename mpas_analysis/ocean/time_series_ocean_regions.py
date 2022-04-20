@@ -52,13 +52,13 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -81,7 +81,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         else:
             endYear = int(endYear)
 
-        regionGroups = config.getExpression(self.taskName, 'regionGroups')
+        regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
         obsDicts = {
             'SOSE': {
@@ -124,7 +124,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
-            regionNames = config.getExpression(sectionName, 'regionNames')
+            regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
                 # no regions in this group were requested
                 continue
@@ -136,7 +136,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             years = list(range(startYear, endYear + 1))
 
-            obsList = config.getExpression(sectionName, 'obs')
+            obsList = config.getexpression(sectionName, 'obs')
             groupObsDicts = {}
 
             for obsName in obsList:
@@ -528,7 +528,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = config.getExpression(sectionName, 'variables')
+        variables = config.getexpression(sectionName, 'variables')
 
         variableList = {'timeMonthly_avg_layerThickness'}
 
@@ -1023,7 +1023,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -1053,7 +1053,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the region to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -1114,7 +1114,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTimeSeriesSubtask, self).setup_and_check()
 
-        self.variables = self.config.getExpression(self.sectionName,
+        self.variables = self.config.getexpression(self.sectionName,
                                                    'variables')
 
         self.xmlFileNames = []
@@ -1181,7 +1181,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             zboundsRef = dsRef.zbounds.values
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = 1
+        movingAveragePoints = 1
 
         self.logger.info('  Make plots...')
 
@@ -1265,7 +1265,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             fig = timeseries_analysis_plot(
                 config, fields, calendar=calendar, title=title, xlabel=xLabel,
-                ylabel=yLabel, movingAveragePoints=movingAverageMonths,
+                ylabel=yLabel, movingAveragePoints=movingAveragePoints,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, titleFontSize=titleFontSize,
                 defaultFontSize=defaultFontSize)

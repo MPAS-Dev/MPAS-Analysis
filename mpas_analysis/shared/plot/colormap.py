@@ -88,9 +88,9 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     option = 'contourLevels{}'.format(suffix)
     if config.has_option(configSectionName, option):
-        contours = config.getExpression(configSectionName,
+        contours = config.getexpression(configSectionName,
                                         option,
-                                        usenumpyfunc=True)
+                                        use_numpyfunc=True)
         if isinstance(contours, string_types) and contours == 'none':
             contours = None
     else:
@@ -344,7 +344,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     normType = config.get(configSectionName, 'normType{}'.format(suffix))
 
-    kwargs = config.getExpression(configSectionName,
+    kwargs = config.getexpression(configSectionName,
                                   'normArgs{}'.format(suffix))
 
     if normType == 'symLog':
@@ -358,9 +358,9 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
             normType, configSectionName))
 
     try:
-        ticks = config.getExpression(
+        ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         ticks = None
 
@@ -403,14 +403,14 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
 
-    indices = config.getExpression(configSectionName,
+    indices = config.getexpression(configSectionName,
                                    'colormapIndices{}'.format(suffix),
-                                   usenumpyfunc=True)
+                                   use_numpyfunc=True)
 
     try:
-        levels = config.getExpression(
+        levels = config.getexpression(
             configSectionName, 'colorbarLevels{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         levels = None
 
@@ -435,9 +435,9 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     norm = cols.BoundaryNorm(levels, colormap.N)
 
     try:
-        ticks = config.getExpression(
+        ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         ticks = levels
 

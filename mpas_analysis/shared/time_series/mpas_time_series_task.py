@@ -61,7 +61,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         componentName : {'ocean', 'seaIce'}

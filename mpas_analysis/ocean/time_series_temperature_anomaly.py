@@ -35,7 +35,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
@@ -53,7 +53,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
             tags=['timeSeries', 'temperature', 'publicObs', 'anomaly'])
 
         sectionName = 'hovmollerTemperatureAnomaly'
-        regionNames = config.getExpression(sectionName, 'regions')
+        regionNames = config.getexpression(sectionName, 'regions')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         mpasFieldName = 'timeMonthly_avg_avgValueWithinOceanLayerRegion_' \

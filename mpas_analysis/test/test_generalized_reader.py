@@ -20,18 +20,19 @@ from __future__ import absolute_import, division, print_function, \
 
 import numpy
 import pytest
+
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures("loaddatadir")
 class TestGeneralizedReader(TestCase):
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasAnalysisConfigParser()
-        config.add_section('input')
+        config = MpasConfigParser()
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         return config
 

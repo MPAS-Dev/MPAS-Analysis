@@ -132,27 +132,13 @@ def main():
         out_subdir = os.path.join(machine, args.branch, args.run)
     out_common_dir = os.path.join(machine, args.branch)
 
-    if machine == 'cori-haswell':
-        execute_options = \
-            '# the number of MPI tasks to use in creating mapping files (1 means tasks run in\n' \
-            '# serial, the default)\n' \
-            'mapMpiTasks = 1\n' \
-            '\n' \
-            '# "None" if ESMF should perform mapping file generation in serial without a\n' \
-            '# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins\n' \
-            '# serial but with a command)\n' \
-            'mapParallelExec = None'
-    else:
-        execute_options = ''
-
     with open(os.path.join('suite', 'template.cfg')) as template_file:
         template_data = template_file.read()
     template = Template(template_data)
     config_text = template.render(
         run_name=args.run, input_base=input_base, simulation=simulation,
         mesh=mesh, output_base=output_base, html_base=html_base,
-        out_subdir=out_subdir, generate=generate, end_year=end_year,
-        execute_options=execute_options)
+        out_subdir=out_subdir, generate=generate, end_year=end_year)
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 

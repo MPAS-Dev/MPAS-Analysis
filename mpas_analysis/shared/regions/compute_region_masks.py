@@ -31,7 +31,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         conponentName : str
@@ -92,9 +92,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         if key not in self.regionMaskSubtasks:
 
-            subprocessCount = config.getWithDefault('execute',
-                                                    'parallelTaskCount',
-                                                    default=1)
+            subprocessCount = config.getint('execute', 'parallelTaskCount')
 
             if obsFileName is not None:
                 useMpasMaskCreator = False

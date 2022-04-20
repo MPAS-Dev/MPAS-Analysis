@@ -31,7 +31,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
     analysis : ``OrderedDict`` of ``AnalysisTask`` objects
@@ -40,7 +40,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
         the list of files to include on the webpage for the associated
         component.
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     customConfigFiles : list of str
@@ -108,10 +108,10 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     customConfigFiles : list of str
@@ -135,10 +135,10 @@ class MainPage(object):
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Config options
 
-        controlConfig : ``MpasAnalysisConfigParser``
+        controlConfig : mpas_tools.config.MpasConfigParser
             Config options for a control run
 
         customConfigFiles : list of str
@@ -253,7 +253,7 @@ class MainPage(object):
             configsText = configsText + \
                 _replace_tempate_text(self.configTemplate, replacements)
 
-        replacements = {'@configName': 'config.complete.{}'.format(runName),
+        replacements = {'@configName': 'complete.{}.cfg'.format(runName),
                         '@configDesc': 'Complete Configuration File'}
 
         configsText = configsText + \
@@ -318,10 +318,10 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     name : str
@@ -349,7 +349,7 @@ class ComponentPage(object):
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Config options
 
         name : str
@@ -360,7 +360,7 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Config options for a control run
         """
         # Authors
@@ -404,7 +404,7 @@ class ComponentPage(object):
         xmlFileName : str
             The full path to the XML file describing the image to be added
 
-        config : ``MpasAnalysisConfigParser`` object
+        config : mpas_tools.config.MpasConfigParser
             contains config options
 
         components : OrederdDict of dict
@@ -413,7 +413,7 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Config options for a control run
         """
         # Authors

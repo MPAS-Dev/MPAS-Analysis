@@ -54,7 +54,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
-    config :  instance of ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     simulationStartTime : string, optional

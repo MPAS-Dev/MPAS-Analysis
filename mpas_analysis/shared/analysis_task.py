@@ -35,7 +35,7 @@ class AnalysisTask(Process):  # {{{
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     taskName : str
@@ -112,7 +112,7 @@ class AnalysisTask(Process):  # {{{
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         taskName :  str
@@ -389,7 +389,7 @@ class AnalysisTask(Process):  # {{{
                              'must be None or a list of strings.')
 
         config = self.config
-        generateList = config.getExpression('output', 'generate')
+        generateList = config.getexpression('output', 'generate')
         if len(generateList) > 0 and generateList[0][0:5] == 'only_':
             # add 'all' if the first item in the list has the 'only' prefix.
             # Otherwise, we would not run any tasks
