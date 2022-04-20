@@ -27,6 +27,7 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
+    - f90nml
     - geometric_features >=0.5.0
     - gsw
     - lxml
