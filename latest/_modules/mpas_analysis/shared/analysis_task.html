@@ -119,7 +119,7 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : ``MpasAnalysisConfigParser``</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        Contains configuration options</span>
 
 <span class="sd">    taskName : str</span>
@@ -196,7 +196,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  instance of MpasAnalysisConfigParser</span>
+<span class="sd">        config :  mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Contains configuration options</span>
 
 <span class="sd">        taskName :  str</span>
@@ -473,7 +473,7 @@
                              <span class="s1">&#39;must be None or a list of strings.&#39;</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">generateList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">)</span>
+        <span class="n">generateList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">generateList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">generateList</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;only_&#39;</span><span class="p">:</span>
             <span class="c1"># add &#39;all&#39; if the first item in the list has the &#39;only&#39; prefix.</span>
             <span class="c1"># Otherwise, we would not run any tasks</span>

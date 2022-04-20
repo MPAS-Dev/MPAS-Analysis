@@ -136,7 +136,7 @@
 <span class="sd">        The subtask for remapping the observational climatology that this</span>
 <span class="sd">        subtask will plot</span>
 
-<span class="sd">    controlConfig :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">    controlconfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
 
 <span class="sd">    outFileLabel : str</span>
@@ -212,7 +212,7 @@
 <span class="sd">            The subtask for remapping the observational climatology that this</span>
 <span class="sd">            subtask will plot</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        subtaskSuffix : str, optional</span>
@@ -458,7 +458,7 @@
         <span class="c1"># for log plots, make sure the data is all positive to avoid masking</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normTypeResult&#39;</span><span class="p">):</span>
             <span class="n">normType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normTypeResult&#39;</span><span class="p">)</span>
-            <span class="n">normArgs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normArgsResult&#39;</span><span class="p">)</span>
+            <span class="n">normArgs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normArgsResult&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">normType</span> <span class="o">==</span> <span class="s1">&#39;log&#39;</span><span class="p">:</span>
                 <span class="n">epsilon</span> <span class="o">=</span> <span class="mf">1e-2</span> <span class="o">*</span> <span class="n">normArgs</span><span class="p">[</span><span class="s1">&#39;vmin&#39;</span><span class="p">]</span>
                 <span class="n">modelOutput</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">modelOutput</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">)</span>

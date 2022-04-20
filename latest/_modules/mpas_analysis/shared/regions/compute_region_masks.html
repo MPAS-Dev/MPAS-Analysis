@@ -115,7 +115,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        conponentName : str</span>
@@ -176,9 +176,7 @@
 
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskSubtasks</span><span class="p">:</span>
 
-            <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span>
-                                                    <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
-                                                    <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">obsFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">useMpasMaskCreator</span> <span class="o">=</span> <span class="kc">False</span>

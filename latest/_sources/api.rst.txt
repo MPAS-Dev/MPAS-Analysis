@@ -135,17 +135,6 @@ Sea ice tasks
    PlotClimatologyMapSubtask.set_plot_info
 
 
-Configuration
-==============
-.. currentmodule:: mpas_analysis.configuration
-
-.. autosummary::
-   :toctree: generated/
-
-   MpasAnalysisConfigParser.getWithDefault
-   MpasAnalysisConfigParser.getExpression
-
-
 Shared modules
 ==============
 

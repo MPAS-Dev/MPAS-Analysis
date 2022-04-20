@@ -169,7 +169,7 @@
 <span class="sd">    galleryName : str</span>
 <span class="sd">        The name of the gallery in which this plot belongs</span>
 
-<span class="sd">    controlConfig : ``MpasAnalysisConfigParser``</span>
+<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
@@ -235,7 +235,7 @@
 <span class="sd">        subtaskName :  str, optional</span>
 <span class="sd">            The name of the subtask (``plotTimeSeries&lt;RegionName&gt;`` by default)</span>
 
-<span class="sd">        controlConfig : ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            The configuration options for the control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -352,8 +352,8 @@
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
 
-        <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
-        <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
+        <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
         <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
         <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
 
@@ -372,7 +372,7 @@
 
         <span class="n">depths</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">depth</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="n">divisionDepths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+        <span class="n">divisionDepths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
 
         <span class="c1"># for each depth interval to plot, determine the top and bottom depth</span>
         <span class="n">topDepths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">divisionDepths</span>

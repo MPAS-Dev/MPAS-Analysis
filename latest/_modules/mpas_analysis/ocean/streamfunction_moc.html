@@ -145,13 +145,13 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  instance of MpasAnalysisConfigParser</span>
+<span class="sd">        config :  mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Contains configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -233,9 +233,7 @@
         <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
         <span class="n">regionGroup</span> <span class="o">=</span> <span class="s1">&#39;MOC Basins&#39;</span>
 
-        <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span>
-                                                <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
-                                                <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
 
         <span class="c1"># call the constructor from the base class (ComputeRegionMasksSubtask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -383,7 +381,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;streamfunctionMOC&#39;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;usePostprocessingScript&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mocAnalysisMemberEnabled</span><span class="p">:</span>
@@ -448,7 +446,7 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputFileName</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
         <span class="n">regionNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Global&#39;</span><span class="p">)</span>
 
         <span class="c1"># Read in depth and bin latitudes</span>
@@ -582,7 +580,7 @@
         <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
             <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
 
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
 
         <span class="c1"># Load basin region related variables and save them to dictionary</span>
         <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
@@ -724,7 +722,7 @@
 <span class="sd">        parentTask : ``StreamfunctionMOC``</span>
 <span class="sd">            The main task of which this is a subtask</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -776,7 +774,7 @@
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Global&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Global&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
                                                              <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">:</span>
@@ -834,9 +832,9 @@
             <span class="n">z</span> <span class="o">=</span> <span class="n">depth</span>
             <span class="n">regionMOC</span> <span class="o">=</span> <span class="n">moc</span><span class="p">[</span><span class="n">region</span><span class="p">]</span>
             <span class="c1"># Subset lat range</span>
-            <span class="n">minLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
+            <span class="n">minLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
                                           <span class="s1">&#39;latBinMin&#39;</span><span class="p">)</span>
-            <span class="n">maxLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
+            <span class="n">maxLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
                                           <span class="s1">&#39;latBinMax&#39;</span><span class="p">)</span>
             <span class="n">indLat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">minLat</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">maxLat</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">indLat</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -982,7 +980,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;streamfunctionMOC&#39;</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;usePostprocessingScript&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">usePostprocessing</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mocAnalysisMemberEnabled</span><span class="p">:</span>
@@ -1346,7 +1344,7 @@
 <span class="sd">        parentTask : ``StreamfunctionMOC``</span>
 <span class="sd">            The main task of which this is a subtask</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -1420,7 +1418,7 @@
 <span class="sd">        parentTask : ``StreamfunctionMOC``</span>
 <span class="sd">            The main task of which this is a subtask</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
