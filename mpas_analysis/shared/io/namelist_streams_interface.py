@@ -24,6 +24,8 @@ import six
 from lxml import etree
 import re
 import os.path
+import f90nml
+import json
 
 from mpas_analysis.shared.containers import ReadOnlyDict
 from mpas_analysis.shared.io.utility import paths
@@ -41,21 +43,25 @@ def convert_namelist_to_dict(fname, readonly=True):
 
     readonly : bool, optional
         Should the resulting dictionary read-only?
+
+    Returns
+    -------
+    nml : dict
+        A dictionary where keys are namelist options and values are namelist
     """
-    # Authors
-    # -------
-    # Phillip J Wolfram
+    nml = f90nml.read(fname).todict()
 
-    # form dictionary
-    nml = dict()
+    # convert ordered dict to dict (Python 3 dict is ordered)
+    # https://stackoverflow.com/a/27373027/7728169
+    nml = json.loads(json.dumps(nml))
 
-    regex = re.compile(r"^\s*(.*?)\s*=\s*['\"]*(.*?)['\"]*\s*\n")
-    with open(fname) as f:
-        for line in f:
-            match = regex.findall(line)
-            if len(match) > 0:
-                # assumes that there is only one match per line
-                nml[match[0][0].lower()] = match[0][1]
+    # flatten the dict
+    flat = dict()
+    for section in nml:
+        for key in nml[section]:
+            flat[key.lower()] = nml[section][key]
+    nml = flat
+
     if readonly:
         nml = ReadOnlyDict(nml)
 
@@ -124,7 +130,7 @@ class NameList:
     # provide accessor for dictionary notation (returns string)
     def __getitem__(self, key):
         """
-        Accessor for bracket noation, e.g., nml['field']
+        Accessor for bracket notation, e.g., nml['field']
 
         Parameters
         ----------
@@ -133,7 +139,7 @@ class NameList:
 
         Returns
         -------
-        value : str
+        value : Any
             The value associated with ``key``
         """
         # Authors
@@ -155,7 +161,7 @@ class NameList:
 
         Returns
         -------
-        value : str
+        value : Any
             The value associated with ``key``
         """
         # Authors
@@ -222,10 +228,9 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        if 'True' in self.nml[key.lower()] or 'true' in self.nml[key.lower()]:
-            return True
-        else:
-            return False
+        value = self.nml[key.lower()]
+        assert type(value) is bool
+        return value
 
     def find_option(self, possibleOptions):
         """

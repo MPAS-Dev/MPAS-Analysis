@@ -1,4 +1,4 @@
-# note, some entires are not for illustration and not used in MPAS
+# note, some entries are not for illustration and not used in MPAS
 &run_modes
     config_ocean_run_mode = 'forward'
 /
@@ -32,3 +32,4 @@
 &debug_checking_NOT_REAL
     config_test_extra_equals1 = 'a = b'
     config_test_extra_equals2 = "a = b"
+/
