@@ -16,7 +16,6 @@ Xylar Asay-Davis, Phillip J. Wolfram
 """
 
 import numpy
-import six
 
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
@@ -54,8 +53,8 @@ class TestMpasXarray(TestCase):
                                                 variableList=variableList)
         self.assertEqual(list(ds.data_vars.keys()), variableList)
 
-        with six.assertRaisesRegex(self, ValueError,
-                                   'Empty dataset is returned.'):
+        with self.assertRaisesRegex(ValueError,
+                                    'Empty dataset is returned.'):
             missingvars = ['foo', 'bar']
             ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
                                                     calendar=calendar,
@@ -126,9 +125,9 @@ class TestMpasXarray(TestCase):
              'refBottomDepth']
 
         selvals = {'refBottomDepth': 8.77999997138977}
-        with six.assertRaisesRegex(self, AssertionError,
-                                   'not a dimension in the dataset that '
-                                   'can be used for selection'):
+        with self.assertRaisesRegex(AssertionError,
+                                    'not a dimension in the dataset that '
+                                    'can be used for selection'):
             mpas_xarray.open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,

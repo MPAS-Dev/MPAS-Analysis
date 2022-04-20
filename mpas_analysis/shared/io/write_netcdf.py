@@ -11,8 +11,6 @@
 import netCDF4
 import numpy
 
-import six
-
 
 def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
     '''
@@ -50,7 +48,7 @@ def write_netcdf(ds, fileName, fillValues=netCDF4.default_fillvals):  # {{{
 
         # make strings write as unicode instead
         if dtype.type is numpy.string_:
-            encodingDict[variableName] = {'dtype': six.text_type}
+            encodingDict[variableName] = {'dtype': str}
 
     ds.to_netcdf(fileName, encoding=encodingDict)
 

@@ -20,10 +20,9 @@ import matplotlib.colors as cols
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 import xml.etree.ElementTree as ET
-from six.moves import configparser
+import configparser
 import cmocean
 import pkg_resources
-from six import string_types
 
 
 def setup_colormap(config, configSectionName, suffix=''):
@@ -88,7 +87,7 @@ def setup_colormap(config, configSectionName, suffix=''):
         contours = config.getexpression(configSectionName,
                                         option,
                                         use_numpyfunc=True)
-        if isinstance(contours, string_types) and contours == 'none':
+        if isinstance(contours, str) and contours == 'none':
             contours = None
     else:
         contours = None

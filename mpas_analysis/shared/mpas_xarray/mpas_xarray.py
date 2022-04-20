@@ -10,7 +10,6 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
 import numpy as np
-import six
 import xarray
 from functools import partial
 
@@ -344,7 +343,7 @@ def _ensure_list(alist):  # {{{
     # -------
     # Phillip J. Wolfram, Xylar Asay-Davis
 
-    if isinstance(alist, six.string_types):
+    if isinstance(alist, str):
         # print 'Warning, converting %s to a list'%(alist)
         alist = [alist]
 

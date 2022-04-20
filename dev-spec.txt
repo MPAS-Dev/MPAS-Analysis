@@ -28,7 +28,6 @@ requests
 scipy
 setuptools
 shapely
-six
 xarray>=0.14.1
 
 # Development

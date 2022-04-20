@@ -19,7 +19,6 @@ import datetime
 import netCDF4
 import xarray
 import numpy
-import six
 
 from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
     MpasRelativeDelta
@@ -215,7 +214,7 @@ def string_to_days_since_date(dateString, calendar='gregorian',
     # -------
     # Xylar Asay-Davis
 
-    isSingleString = isinstance(dateString, six.string_types)
+    isSingleString = isinstance(dateString, str)
 
     if isSingleString:
         dateString = [dateString]

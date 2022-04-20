@@ -9,7 +9,7 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-from six import StringIO
+from io import StringIO
 
 from mpas_tools.config import MpasConfigParser
 

@@ -22,7 +22,6 @@ open_multifile_dataset : opens a data set, maps variable names, preprocess
 # -------
 # Xylar Asay-Davis
 
-import six
 import xarray
 from functools import partial
 import resource
@@ -148,10 +147,10 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, six.string_types):
+        if isinstance(startDate, str):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, six.string_types):
+        if isinstance(endDate, str):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 

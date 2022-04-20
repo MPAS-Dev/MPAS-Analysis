@@ -21,7 +21,6 @@ import os
 from distutils.spawn import find_executable
 import glob
 import subprocess
-from six import string_types
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
@@ -65,7 +64,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
     if os.path.exists(outFileName):
         return
 
-    if isinstance(inFileNames, string_types):
+    if isinstance(inFileNames, str):
         inFileNames = sorted(glob.glob(inFileNames))
 
     args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl']

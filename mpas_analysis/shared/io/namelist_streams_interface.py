@@ -17,7 +17,6 @@ files.
 # -------
 # Phillip Wolfram, Xylar Asay-Davis
 
-import six
 from lxml import etree
 import re
 import os.path
@@ -442,12 +441,12 @@ class StreamsFile:
 
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
-            if isinstance(startDate, six.string_types):
+            if isinstance(startDate, str):
                 startDate = string_to_datetime(startDate)
 
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
-            if isinstance(endDate, six.string_types):
+            if isinstance(endDate, str):
                 endDate = string_to_datetime(endDate)
 
         # remove any path that's part of the template

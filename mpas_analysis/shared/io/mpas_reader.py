@@ -16,7 +16,6 @@ all but a given list of variables from a data set.
 # -------
 # Xylar Asay-Davis
 
-import six
 import xarray
 
 from mpas_analysis.shared.timekeeping.utility import \
@@ -75,10 +74,10 @@ def open_mpas_dataset(fileName, calendar,
         ds = _parse_dataset_time(ds, timeVariableNames, calendar)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, six.string_types):
+        if isinstance(startDate, str):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, six.string_types):
+        if isinstance(endDate, str):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 
