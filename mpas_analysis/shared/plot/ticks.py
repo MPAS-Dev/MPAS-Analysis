@@ -12,9 +12,6 @@
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter, FixedLocator
 import numpy as np

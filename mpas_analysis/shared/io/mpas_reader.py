@@ -16,9 +16,6 @@ all but a given list of variables from a data set.
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import six
 import xarray
 

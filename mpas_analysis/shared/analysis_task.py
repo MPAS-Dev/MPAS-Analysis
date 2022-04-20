@@ -15,9 +15,6 @@ Defines the base class for analysis tasks.
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from multiprocessing import Process, Value
 import time
 import traceback

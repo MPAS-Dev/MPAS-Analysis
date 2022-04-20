@@ -6,9 +6,6 @@
 # distributed with this code, or at http://mpas-dev.github.com/license.html
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 from pyremap import LatLonGridDescriptor
 

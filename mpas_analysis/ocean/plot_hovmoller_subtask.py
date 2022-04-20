@@ -11,9 +11,6 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy as np
 import os

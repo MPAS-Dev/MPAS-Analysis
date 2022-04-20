@@ -18,9 +18,6 @@ containing bibtex entries for related papers or reports.
 Xylar Asay-Davis
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xml.etree.ElementTree as ET
 import argparse
 import re

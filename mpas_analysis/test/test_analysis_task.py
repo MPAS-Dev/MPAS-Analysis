@@ -14,9 +14,6 @@ Unit tests for utility functions in AnalysisTask
 Xylar Asay-Davis
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import pytest
 
 from mpas_tools.config import MpasConfigParser

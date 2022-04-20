@@ -15,9 +15,6 @@ Constants that are common to all analysis tasks
 # -------
 # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import numpy as np
 
 # set parameters for default climatology comparison grid

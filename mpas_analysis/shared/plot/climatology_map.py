@@ -16,9 +16,6 @@ Functions for plotting remapped horizontal fields (and comparing with reference
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols

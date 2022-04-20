@@ -15,9 +15,6 @@ A utility for computing common ocean fields (e.g. zMid) from datasets
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import numpy
 import xarray
 

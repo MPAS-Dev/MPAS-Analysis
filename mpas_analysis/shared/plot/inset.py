@@ -15,9 +15,6 @@ Functions for plotting inset maps in plots (e.g. for transects)
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import matplotlib.path
 import matplotlib.ticker as mticker
 import cartopy

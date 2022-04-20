@@ -22,9 +22,6 @@ open_multifile_dataset : opens a data set, maps variable names, preprocess
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import six
 import xarray
 from functools import partial

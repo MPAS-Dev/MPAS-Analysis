@@ -11,9 +11,6 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 
 from mpas_analysis.shared import AnalysisTask

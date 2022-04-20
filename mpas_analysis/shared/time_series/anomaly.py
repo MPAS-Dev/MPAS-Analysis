@@ -11,9 +11,6 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from mpas_analysis.shared.io import open_mpas_dataset
 from mpas_analysis.shared.time_series.moving_average import compute_moving_avg
 

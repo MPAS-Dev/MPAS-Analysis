@@ -9,9 +9,6 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
