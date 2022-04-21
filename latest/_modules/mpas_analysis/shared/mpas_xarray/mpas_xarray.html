@@ -84,20 +84,16 @@
   <h1>Source code for mpas_analysis.shared.mpas_xarray.mpas_xarray</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
 
@@ -122,7 +118,7 @@
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                           <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
 <span class="sd">    calendar name.</span>
@@ -205,10 +201,10 @@
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="subset_variables"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a><span class="k">def</span> <span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="subset_variables"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a><span class="k">def</span> <span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a data set and a list of variable names, returns a new data set that</span>
 <span class="sd">    contains only variables with those names.</span>
@@ -251,11 +247,11 @@
             <span class="s1">&#39;are not found within the dataset &#39;</span>
             <span class="s1">&#39;variables: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableList</span><span class="p">,</span> <span class="n">allvars</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">ds</span></div>
 
 
 <div class="viewcode-block" id="preprocess"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">[docs]</a><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
-               <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">):</span>  <span class="c1"># {{{</span>
+               <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Builds correct time specification for MPAS, allowing a date offset</span>
 <span class="sd">    because the time must be between 1678 and 2262 based on the xarray</span>
@@ -345,10 +341,10 @@
     <span class="k">if</span> <span class="n">iselValues</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="n">iselValues</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="remove_repeated_time_index"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a><span class="k">def</span> <span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="remove_repeated_time_index"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a><span class="k">def</span> <span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove repeated times from xarray dataset.</span>
 
@@ -385,10 +381,10 @@
     <span class="c1"># remove repeated indices</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">indices</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<span class="k">def</span> <span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that dataset selections are compatable.</span>
 
@@ -420,10 +416,10 @@
     <span class="n">test_vals_in_ds</span><span class="p">(</span><span class="n">selvals</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
     <span class="n">test_vals_in_ds</span><span class="p">(</span><span class="n">iselvals</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
 
-    <span class="k">return</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span>
 
 
-<span class="k">def</span> <span class="nf">_ensure_list</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">_ensure_list</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that variables used as a list are actually lists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -431,16 +427,16 @@
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alist</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alist</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="c1"># print &#39;Warning, converting %s to a list&#39;%(alist)</span>
         <span class="n">alist</span> <span class="o">=</span> <span class="p">[</span><span class="n">alist</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">alist</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">alist</span>
 
 
 <span class="k">def</span> <span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                         <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">outTimeVariableName</span><span class="p">,</span>
-                        <span class="n">referenceDate</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                        <span class="n">referenceDate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A helper function for computing a time coordinate from an MPAS time</span>
 <span class="sd">    variable.  Given a data set and a time variable name (or tuple of 2</span>
@@ -596,10 +592,10 @@
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">outTimeVariableName</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">dsOut</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">dsOut</span>
 
 
-<span class="k">def</span> <span class="nf">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes chunking for a dataset.</span>
 
@@ -647,7 +643,7 @@
             <span class="s1">&#39;Chunking parameter choice is not understood &#39;</span>
             <span class="s1">&#39;for </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunking</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">chunking</span><span class="p">)))</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">ds</span>
 
 <span class="c1"># vim: ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
@@ -659,7 +655,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

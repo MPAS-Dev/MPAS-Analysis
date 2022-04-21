@@ -84,10 +84,10 @@
   <h1>Source code for mpas_analysis.shared.io.mpas_reader</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -100,10 +100,6 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> \
@@ -113,7 +109,7 @@
 <div class="viewcode-block" id="open_mpas_dataset"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.open_mpas_dataset.html#mpas_analysis.shared.io.open_mpas_dataset">[docs]</a><span class="k">def</span> <span class="nf">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                       <span class="n">timeVariableNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xtime_startMonthly&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;xtime_endMonthly&#39;</span><span class="p">],</span>
-                      <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                      <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
 <span class="sd">    calendar name.</span>
@@ -162,10 +158,10 @@
         <span class="n">ds</span> <span class="o">=</span> <span class="n">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">timeVariableNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">startDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">endDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">startDate</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                                   <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="n">endDate</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span>
                                                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
@@ -180,12 +176,12 @@
     <span class="k">if</span> <span class="n">variableList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variableList</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">ds</span></div>
 
 
 <span class="k">def</span> <span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                         <span class="n">outTimeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
-                        <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                        <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A helper function for computing a time coordinate from an MPAS time</span>
 <span class="sd">    variable.  Given a data set and a time variable name (or list of 2</span>
@@ -289,7 +285,7 @@
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">outTimeVariableName</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">dsOut</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">dsOut</span>
 
 
 <span class="c1"># vim: ai ts=4 sts=4 et sw=4 ft=python</span>
@@ -302,7 +298,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -85,10 +85,10 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -101,10 +101,6 @@
 <span class="c1"># -------</span>
 <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
-<span class="kn">import</span> <span class="nn">six</span>
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os.path</span>
@@ -157,6 +153,7 @@
 <span class="sd">    Class for fortran manipulation of namelist files, provides</span>
 <span class="sd">    read and write functionality</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -348,14 +345,13 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;None of the possible options </span><span class="si">{}</span><span class="s1"> found in namelist &#39;</span>
                          <span class="s1">&#39;file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleOptions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span>
 
-    <span class="c1"># }}}</span>
-
 
 <span class="k">class</span> <span class="nc">StreamsFile</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to read in streams configuration file, provdies</span>
 <span class="sd">    read and write functionality</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -529,12 +525,12 @@
 
         <span class="k">if</span> <span class="n">startDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># read one extra file before the start date to be on the safe side</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">startDate</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">endDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># read one extra file after the end date to be on the safe side</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="n">six</span><span class="o">.</span><span class="n">string_types</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">endDate</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">)</span>
 
         <span class="c1"># remove any path that&#39;s part of the template</span>
@@ -622,8 +618,6 @@
 
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;None of the possible streams </span><span class="si">{}</span><span class="s1"> found in streams &#39;</span>
                          <span class="s1">&#39;file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleStreams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span></div>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -633,7 +627,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

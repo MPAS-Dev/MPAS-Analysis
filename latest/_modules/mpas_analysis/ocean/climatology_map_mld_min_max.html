@@ -84,17 +84,14 @@
   <h1>Source code for mpas_analysis.ocean.climatology_map_mld_min_max</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
@@ -103,7 +100,7 @@
     <span class="n">PlotClimatologyMapSubtask</span>
 
 
-<div class="viewcode-block" id="ClimatologyMapMLDMinMax"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLDMinMax</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ClimatologyMapMLDMinMax"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLDMinMax</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of mixed layer depth (mld) against</span>
 <span class="sd">    observations</span>
@@ -113,7 +110,7 @@
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
 <div class="viewcode-block" id="ClimatologyMapMLDMinMax.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -156,12 +153,11 @@
                         <span class="n">mpasVariableSuffix</span><span class="o">=</span><span class="s1">&#39;boundaryLayerDepth&#39;</span><span class="p">,</span>
                         <span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;bld&#39;</span><span class="p">,</span>
                         <span class="n">sectionPrefix</span><span class="o">=</span><span class="s1">&#39;climatologyMapBLD&#39;</span><span class="p">)</span></div>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if MLD capability was turned on in the run.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -184,13 +180,11 @@
             <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_AM_timeSeriesStatsMonthlyMax_enable&#39;</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
     <span class="k">def</span> <span class="nf">_add_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
                    <span class="n">title</span><span class="p">,</span> <span class="n">mpasVariableSuffix</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">sectionPrefix</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add tasks for a given variable</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
@@ -307,10 +301,6 @@
                             <span class="n">configSectionName</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)</span>
 
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -320,7 +310,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

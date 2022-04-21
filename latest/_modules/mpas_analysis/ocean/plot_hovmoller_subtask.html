@@ -85,18 +85,15 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -180,7 +177,7 @@
                  <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span> <span class="n">unitsLabel</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">,</span>
                  <span class="n">thumbnailSuffix</span><span class="p">,</span> <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span>
                  <span class="n">groupLink</span><span class="p">,</span> <span class="n">galleryName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -277,9 +274,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">groupLink</span> <span class="o">=</span> <span class="n">groupLink</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">galleryName</span> <span class="o">=</span> <span class="n">galleryName</span></div>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -321,9 +316,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)]</span>
 
-        <span class="k">return</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make the Hovmoller plot from the time series.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -503,12 +498,6 @@
                 <span class="n">regionNameInTitle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailSuffix</span><span class="p">),</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span></div>
-
-        <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -518,7 +507,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -84,17 +84,17 @@
   <h1>Source code for mpas_analysis.ocean.climatology_map_argo</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Analysis tasks for comparing Global climatology maps against Argo data.</span>
-<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Luke Van Roekel</span>
@@ -117,17 +117,18 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapObservedClimatologySubtask</span>
 
 
-<div class="viewcode-block" id="ClimatologyMapArgoTemperature"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoTemperature</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ClimatologyMapArgoTemperature"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoTemperature</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of potential temperature against Argo</span>
 <span class="sd">    observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="ClimatologyMapArgoTemperature.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -254,22 +255,20 @@
                         <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
-        <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
 
 
-<div class="viewcode-block" id="ClimatologyMapArgoSalinity"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoSalinity</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ClimatologyMapArgoSalinity"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapArgoSalinity</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of global salinity against Argo</span>
 <span class="sd">    observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
 
 <div class="viewcode-block" id="ClimatologyMapArgoSalinity.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -394,16 +393,13 @@
                         <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
-        <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
 
 
 <span class="k">class</span> <span class="nc">RemapArgoClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
-    <span class="c1"># {{{</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping SOSE fields to the comparison grid</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
@@ -412,8 +408,8 @@
                  <span class="n">fieldName</span><span class="p">,</span> <span class="n">depths</span><span class="p">,</span>
                  <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">],</span>
                  <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservations&#39;</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct one analysis subtask for each plot (i.e. each season and</span>
 <span class="sd">        comparison grid) and a subtask for computing climatologies.</span>
 
@@ -445,7 +441,7 @@
 
 <span class="sd">        subtaskName : str, optional</span>
 <span class="sd">            The name of the subtask</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
@@ -458,10 +454,9 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">RemapArgoClimatology</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
             <span class="n">comparisonGridNames</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
 <span class="sd">        Parameters</span>
@@ -473,7 +468,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
 <span class="sd">            The descriptor for the observation grid</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
@@ -487,10 +482,10 @@
                                                   <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;latCoord&#39;</span><span class="p">,</span>
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lonCoord&#39;</span><span class="p">)</span>
         <span class="n">dsObs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">obsDescriptor</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">obsDescriptor</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -503,7 +498,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Luke Van Roekel</span>
@@ -539,11 +534,7 @@
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="p">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldName</span><span class="p">:</span> <span class="n">field</span><span class="p">},</span>
                            <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;depthSlice&#39;</span><span class="p">:</span> <span class="n">depthNames</span><span class="p">})</span>
 
-        <span class="k">return</span> <span class="n">dsObs</span>  <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+        <span class="k">return</span> <span class="n">dsObs</span>
 </pre></div>
 
            </div>
@@ -553,7 +544,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

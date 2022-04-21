@@ -85,10 +85,10 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -101,9 +101,6 @@
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">mpas_analysis</span>
 
@@ -145,7 +142,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasks</span>
 
 
-<span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the start and end year (and associated full date) for</span>
 <span class="sd">    climatologies, time series and climate indices based on the files that are</span>
@@ -162,10 +159,9 @@
     <span class="k">for</span> <span class="n">componentName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">]:</span>
             <span class="n">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">)</span>
-    <span class="c1"># }}}</span>
 
 
-<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks. New tasks should be added here, following</span>
 <span class="sd">    the approach used for existing analysis tasks.</span>
@@ -334,10 +330,10 @@
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">analyses</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">analyses</span></div>
 
 
-<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks to run based on the &#39;generate&#39; config</span>
 <span class="sd">    option (or command-line flag) and prerequisites and subtasks of each</span>
@@ -384,12 +380,12 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">analysesToGenerate</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">analysesToGenerate</span></div>
 
 
 <div class="viewcode-block" id="add_task_and_subtasks"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks">[docs]</a><span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
                           <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="c1"># {{{</span>
+
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If a task has been requested through the generate config option or</span>
 <span class="sd">    if it is a prerequisite of a requested task, add it to the dictionary of</span>
@@ -493,10 +489,9 @@
     <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
     <span class="k">assert</span><span class="p">(</span><span class="n">totalFailures</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">totalFailures</span></div>
-    <span class="c1"># }}}</span>
 
 
-<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the &#39;generate&#39; config option using a string from the command line.</span>
 
@@ -520,10 +515,10 @@
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
                                 <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">generateList</span><span class="p">])</span>
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">generateString</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">)</span>  <span class="c1"># }}}</span></div>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run all the tasks, either in serial or in parallel</span>
 
@@ -707,10 +702,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Log files for executed tasks can be found in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">logsDirectory</span><span class="p">))</span></div>
 
-    <span class="c1"># }}}</span>
 
-
-<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis modules based on the &#39;generate&#39; config option.</span>
 <span class="sd">    New tasks should be added here, following the approach used for existing</span>
@@ -736,7 +729,7 @@
         <span class="k">for</span> <span class="n">analysisTask</span> <span class="ow">in</span> <span class="n">runningTasks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
-                <span class="k">return</span> <span class="n">analysisTask</span>  <span class="c1"># }}}</span></div>
+                <span class="k">return</span> <span class="n">analysisTask</span></div>
 
 
 <span class="k">def</span> <span class="nf">purge_output</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
@@ -775,11 +768,11 @@
 
 
 <span class="k">def</span> <span class="nf">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create symlinks to the climatology and time-series directories for the</span>
 <span class="sd">    main run that has already been computed so we don&#39;t have to recompute</span>
 <span class="sd">    the analysis.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">link_dir</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">destDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
@@ -1017,8 +1010,6 @@
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -1028,7 +1019,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

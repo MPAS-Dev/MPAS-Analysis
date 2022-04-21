@@ -84,17 +84,14 @@
   <h1>Source code for mpas_analysis.shared.time_series.mpas_time_series_task</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -109,8 +106,8 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span>
 
 
-<div class="viewcode-block" id="MpasTimeSeriesTask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask">[docs]</a><span class="k">class</span> <span class="nc">MpasTimeSeriesTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="MpasTimeSeriesTask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask">[docs]</a><span class="k">class</span> <span class="nc">MpasTimeSeriesTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis tasks for computing time series from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly`` analysis member.</span>
 
@@ -133,14 +130,15 @@
 
 <span class="sd">    startYear, endYear : int</span>
 <span class="sd">        The start and end years of the time series</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="MpasTimeSeriesTask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+                 <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task for extracting time series.</span>
 
 <span class="sd">        Parameters</span>
@@ -162,7 +160,7 @@
 <span class="sd">        section : str, optional</span>
 <span class="sd">            The section of the config file from which to read the start and</span>
 <span class="sd">            end times for the time series, also added as a tag</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -175,7 +173,7 @@
 
         <span class="k">if</span> <span class="n">taskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> \
-                <span class="n">componentName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">componentName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                     <span class="n">componentName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">componentName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">taskName</span> <span class="o">=</span> <span class="s1">&#39;mpas</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
@@ -186,10 +184,8 @@
             <span class="n">componentName</span><span class="o">=</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span></div>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one or more variables to extract as a time series.</span>
 
 <span class="sd">        Parameters</span>
@@ -205,7 +201,7 @@
 <span class="sd">            the list of available variables has not yet been set) or if one</span>
 <span class="sd">            or more of the requested variables is not available in the</span>
 <span class="sd">            ``timeSeriesStatsMonthly`` output.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -226,12 +222,10 @@
             <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -269,11 +263,10 @@
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No files were found in stream </span><span class="si">{}</span><span class="s1"> between </span><span class="si">{}</span><span class="s1"> and &#39;</span>
                           <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">runMessage</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing MPAS time series from first year &#39;</span> \
-                          <span class="s1">&#39;plus files:</span><span class="se">\n</span><span class="s1">&#39;</span> \
-                          <span class="s1">&#39;    </span><span class="si">{}</span><span class="s1"> through</span><span class="se">\n</span><span class="s1">    </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
-                              <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runMessage</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing MPAS time series from first year plus files:</span><span class="se">\n</span><span class="s1">&#39;</span> \
+            <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> through</span><span class="se">\n</span><span class="s1">&#39;</span> \
+            <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="c1"># Make sure first year of data is included for computing anomalies</span>
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">):</span>
@@ -297,12 +290,10 @@
         <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested time series</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -315,11 +306,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_compute_time_series_with_ncrcat</span><span class="p">()</span>
 
-        <span class="c1"># }}}</span>
-
     <span class="k">def</span> <span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses ncrcat to extact time series from timeSeriesMonthlyOutput files</span>
 
 <span class="sd">        Raises</span>
@@ -330,7 +319,7 @@
 <span class="sd">        Author</span>
 <span class="sd">        ------</span>
 <span class="sd">        Xylar Asay-Davis</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">find_executable</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
@@ -427,12 +416,6 @@
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
                                                 <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
-
-        <span class="c1"># }}}</span>
-    <span class="c1"># }}}</span>
-
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -442,7 +425,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

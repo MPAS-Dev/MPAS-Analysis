@@ -85,18 +85,15 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
@@ -125,8 +122,8 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
-<div class="viewcode-block" id="IndexNino34"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a><span class="k">class</span> <span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="IndexNino34"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a><span class="k">class</span> <span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A task for computing and plotting time series and spectra of the El Nino</span>
 <span class="sd">    3.4 climate index</span>
 
@@ -138,14 +135,14 @@
 
 <span class="sd">    controlconfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="IndexNino34.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -158,7 +155,7 @@
 
 <span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -175,12 +172,10 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasTimeSeriesTask</span><span class="p">)</span></div>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -228,13 +223,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                         <span class="n">filePrefix</span><span class="p">))</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes NINO34 index and plots the time series and power spectrum with</span>
 <span class="sd">        95 and 99% confidence bounds</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -401,9 +394,7 @@
                         <span class="n">plotType</span><span class="o">=</span><span class="s1">&#39;Spectra&#39;</span><span class="p">,</span>
                         <span class="n">ninoIndexNumber</span><span class="o">=</span><span class="n">ninoIndexNumber</span><span class="p">)</span>
 
-    <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes nino34 index time series.  It follow the standard nino34</span>
 <span class="sd">        algorithm, i.e.,</span>
@@ -452,9 +443,9 @@
 
         <span class="c1"># Compute 5 month running mean</span>
         <span class="n">wgts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">5.</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_mean</span><span class="p">(</span><span class="n">anomaly</span><span class="p">,</span> <span class="n">wgts</span><span class="p">)</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_mean</span><span class="p">(</span><span class="n">anomaly</span><span class="p">,</span> <span class="n">wgts</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes power spectra of Nino34 index.</span>
 
@@ -539,9 +530,8 @@
                    <span class="s1">&#39;conf95&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">xLow</span><span class="p">,</span>
                    <span class="s1">&#39;redNoise&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">spectra</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes lag one auto-correlation for the NINO34 spectra calculation</span>
 
@@ -559,9 +549,9 @@
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]]))</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]]))</span>
 
-    <span class="k">def</span> <span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates a generic weighted running mean</span>
 
@@ -586,14 +576,14 @@
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">nt</span> <span class="o">-</span> <span class="p">(</span><span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
             <span class="n">runningMean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">wgts</span> <span class="o">*</span> <span class="n">inputData</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">sp</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">runningMean</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">runningMean</span>
 
     <span class="k">def</span> <span class="nf">_nino34_spectra_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spectra</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span>
                              <span class="n">outFileName</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Period (years)&#39;</span><span class="p">,</span>
                              <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Power ($^o$C / cycles mo$^{-1}$)&#39;</span><span class="p">,</span>
                              <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">periodMin</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">periodMax</span><span class="o">=</span><span class="mf">10.</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 <span class="sd">        Parameters</span>
@@ -694,13 +684,12 @@
             <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_nino34_timeseries_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34s</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                                 <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (years)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;($\degree$C)&#39;</span><span class="p">,</span>
                                 <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 
@@ -774,12 +763,11 @@
             <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_plot_nino_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ninoIndex</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
                               <span class="n">panelTitle</span><span class="p">,</span> <span class="n">title_font</span><span class="p">,</span> <span class="n">axis_font</span><span class="p">,</span>
-                              <span class="n">lineWidth</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+                              <span class="n">lineWidth</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the nino time series on a subplot</span>
 
 <span class="sd">        Parameters</span>
@@ -801,7 +789,7 @@
 
 <span class="sd">        lineWidth : list of str</span>
 <span class="sd">            control line width</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -825,9 +813,8 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">plotType</span><span class="p">,</span> <span class="n">ninoIndexNumber</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">plotType</span><span class="p">,</span> <span class="n">ninoIndexNumber</span><span class="p">):</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> of El Niño </span><span class="si">{}</span><span class="s1"> Climate Index&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotType</span><span class="p">,</span>
                                                            <span class="n">ninoIndexNumber</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
@@ -839,10 +826,10 @@
             <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;nino&#39;</span><span class="p">,</span>
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">plotType</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
-            <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>  <span class="c1"># }}}</span>
+            <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_plot_size_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the maximum y value over the given range of x values</span>
 
 <span class="sd">        Parameters</span>
@@ -858,7 +845,7 @@
 
 <span class="sd">        xmax : float, optional</span>
 <span class="sd">            The maximum x values</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -877,8 +864,6 @@
         <span class="k">return</span> <span class="n">maxY</span></div>
 
 <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -888,7 +873,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
