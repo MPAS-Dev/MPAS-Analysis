@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import os
 import subprocess
@@ -25,8 +22,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
-class MpasTimeSeriesTask(AnalysisTask):  # {{{
-    '''
+class MpasTimeSeriesTask(AnalysisTask):
+    """
     An analysis tasks for computing time series from output from the
     ``timeSeriesStatsMonthly`` analysis member.
 
@@ -49,14 +46,15 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
     startYear, endYear : int
         The start and end years of the time series
-    '''
+    """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, componentName, taskName=None,
-                 subtaskName=None, section='timeSeries'):  # {{{
-        '''
+                 subtaskName=None, section='timeSeries'):
+        """
         Construct the analysis task for extracting time series.
 
         Parameters
@@ -78,7 +76,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         section : str, optional
             The section of the config file from which to read the start and
             end times for the time series, also added as a tag
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -91,7 +89,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         if taskName is None:
             suffix = section[0].upper() + section[1:] + \
-                componentName[0].upper() + componentName[1:]
+                     componentName[0].upper() + componentName[1:]
             taskName = 'mpas{}'.format(suffix)
 
         # call the constructor from the base class (AnalysisTask)
@@ -102,10 +100,8 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             componentName=componentName,
             tags=tags)
 
-        # }}}
-
-    def add_variables(self, variableList):  # {{{
-        '''
+    def add_variables(self, variableList):
+        """
         Add one or more variables to extract as a time series.
 
         Parameters
@@ -121,7 +117,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             the list of available variables has not yet been set) or if one
             or more of the requested variables is not available in the
             ``timeSeriesStatsMonthly`` output.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -142,12 +138,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             if variable not in self.variableList:
                 self.variableList.append(variable)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -185,11 +179,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
             raise IOError('No files were found in stream {} between {} and '
                           '{}.'.format(streamName, startDate, endDate))
 
-        self.runMessage = '\nComputing MPAS time series from first year ' \
-                          'plus files:\n' \
-                          '    {} through\n    {}'.format(
-                              os.path.basename(self.inputFiles[0]),
-                              os.path.basename(self.inputFiles[-1]))
+        self.runMessage = \
+            f'\nComputing MPAS time series from first year plus files:\n' \
+            f'    {os.path.basename(self.inputFiles[0])} through\n' \
+            f'    {os.path.basename(self.inputFiles[-1])}'
 
         # Make sure first year of data is included for computing anomalies
         if config.has_option('timeSeries', 'anomalyRefYear'):
@@ -213,12 +206,10 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         with xr.open_dataset(self.inputFiles[0]) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
-        # }}}
-
-    def run_task(self):  # {{{
-        '''
+    def run_task(self):
+        """
         Compute the requested time series
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -231,11 +222,9 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
 
         self._compute_time_series_with_ncrcat()
 
-        # }}}
-
     def _compute_time_series_with_ncrcat(self):
-        # {{{
-        '''
+
+        """
         Uses ncrcat to extact time series from timeSeriesMonthlyOutput files
 
         Raises
@@ -246,7 +235,7 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         Author
         ------
         Xylar Asay-Davis
-        '''
+        """
 
         if find_executable('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '
@@ -343,9 +332,3 @@ class MpasTimeSeriesTask(AnalysisTask):  # {{{
         if process.returncode != 0:
             raise subprocess.CalledProcessError(process.returncode,
                                                 ' '.join(args))
-
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

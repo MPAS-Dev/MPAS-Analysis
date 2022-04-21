@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray
 import os
@@ -20,7 +17,6 @@ import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
 import glob
-
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -37,8 +33,8 @@ from mpas_analysis.shared.io import write_netcdf
 from mpas_analysis.shared.constants import constants
 
 
-class MpasClimatologyTask(AnalysisTask):  # {{{
-    '''
+class MpasClimatologyTask(AnalysisTask):
+    """
     An analysis tasks for computing climatologies from output from the
     ``timeSeriesStatsMonthly*`` analysis members.
 
@@ -78,13 +74,14 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         ``timeSeriesStatsMonthlyOutput``,
         ``timeSeriesStatsMonthlyMinOutput``,
         ``timeSeriesStatsMonthlyMaxOutput``
-    '''
+    """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, componentName, taskName=None, op='avg'):  # {{{
-        '''
+    def __init__(self, config, componentName, taskName=None, op='avg'):
+        """
         Construct the analysis task.
 
         Parameters
@@ -102,7 +99,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         taskName : str, optional
             the name of the task, defaults to
             mpasClimatology<ComponentName><Op>
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -132,7 +129,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         if taskName is None:
             suffix = componentName[0].upper() + componentName[1:] + \
-                op[0].upper() + op[1:]
+                     op[0].upper() + op[1:]
             taskName = 'mpasClimatology{}'.format(suffix)
 
         self.allVariables = None
@@ -154,7 +151,6 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 # running in serial
                 self.subprocessCount = 1
 
-
         self.seasonSubtasks = {}
 
         if not self.useNcclimo:
@@ -174,15 +170,14 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 if season in constants.abrevMonthNames:
                     continue
                 monthValues = constants.monthDictionary[season]
-                monthNames = [constants.abrevMonthNames[month-1] for month in
+                monthNames = [constants.abrevMonthNames[month - 1] for month in
                               monthValues]
                 for monthName in monthNames:
                     self.seasonSubtasks[season].run_after(
-                            self.seasonSubtasks[monthName])
-        # }}}
+                        self.seasonSubtasks[monthName])
 
-    def add_variables(self, variableList, seasons=None):  # {{{
-        '''
+    def add_variables(self, variableList, seasons=None):
+        """
         Add one or more variables and optionally one or more seasons for which
         to compute climatologies.
 
@@ -203,7 +198,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             if this funciton is called before this task has been set up (so
             the list of available variables has not yet been set) or if one
             or more of the requested variables is not available in the stream.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -235,14 +230,12 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         for season in seasons:
             if season not in constants.abrevMonthNames:
                 monthValues = constants.monthDictionary[season]
-                monthNames = [constants.abrevMonthNames[month-1] for month in
+                monthNames = [constants.abrevMonthNames[month - 1] for month in
                               monthValues]
                 self.add_variables(variableList, seasons=monthNames)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -251,7 +244,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -297,12 +290,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         with xarray.open_dataset(self.inputFiles[0]) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
-        # }}}
-
-    def run_task(self):  # {{{
-        '''
+    def run_task(self):
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -315,10 +306,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
             # subtasks will take care of it, so nothing to do
             return
 
-        self.logger.info('\nComputing MPAS climatologies from files:\n'
-                         '    {} through\n    {}'.format(
-                             os.path.basename(self.inputFiles[0]),
-                             os.path.basename(self.inputFiles[-1])))
+        self.logger.info(
+            f'\nComputing MPAS climatologies from files:\n'
+            f'    {os.path.basename(self.inputFiles[0])} through\n'
+            f'    {os.path.basename(self.inputFiles[-1])}')
 
         seasonsToCheck = list(constants.abrevMonthNames)
 
@@ -353,9 +344,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                 inDirectory=self.symlinkDirectory,
                 outDirectory=climatologyDirectory)
 
-        # }}}
-
-    def get_start_and_end(self):  # {{{
+    def get_start_and_end(self):
         """
         Get the start and end years and dates for the climatology.  This
         function is provided to allow a custom method for setting the start
@@ -377,9 +366,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         return startYear, endYear
 
-        # }}}
-
-    def get_file_name(self, season):  # {{{
+    def get_file_name(self, season):
         """
 
         Returns the full path for MPAS climatology file produced by ncclimo.
@@ -402,9 +389,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
                                                        self.componentName,
                                                        self.op)
 
-        # }}}
-
-    def _create_symlinks(self):  # {{{
+    def _create_symlinks(self):
         """
         Create symlinks to monthly mean files so they have the expected file
         naming convention for ncclimo.
@@ -434,9 +419,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         make_directories(symlinkDirectory)
 
         for inFileName, year, month in zip(fileNames, years, months):
-            outFileName = '{}/{}.hist.am.timeSeriesStatsMonthly.{:04d}-' \
-                '{:02d}-01.nc'.format(symlinkDirectory, self.ncclimoModel,
-                                      year, month)
+            outFileName = \
+                f'{symlinkDirectory}/{self.ncclimoModel}.hist.am.' \
+                f'timeSeriesStatsMonthly.{year:04d}-{month:02d}-01.nc'
 
             try:
                 os.symlink(inFileName, outFileName)
@@ -445,12 +430,10 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         return symlinkDirectory
 
-        # }}}
-
     def _compute_climatologies_with_ncclimo(self, inDirectory, outDirectory,
                                             remapper=None,
-                                            remappedDirectory=None):  # {{{
-        '''
+                                            remappedDirectory=None):
+        """
         Uses ncclimo to compute monthly, seasonal and/or annual climatologies.
 
         Parameters
@@ -475,7 +458,7 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
         ------
         OSError
             If ``ncclimo`` is not in the system path.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -554,12 +537,9 @@ class MpasClimatologyTask(AnalysisTask):  # {{{
 
         os.chdir(workDir)
 
-        # }}}
-    # }}}
 
-
-class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
-    '''
+class MpasClimatologySeasonSubtask(AnalysisTask):
+    """
     An analysis subtasks for computing climatologies from output from the
     ``timeSeriesStatsMonthly`` analysis member for a single month or season.
 
@@ -571,13 +551,14 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
 
     parentTask : ``MpasClimatologyTask``
         The task that this subtask belongs to.
-    '''
+    """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, season, subtaskName=None):  # {{{
-        '''
+    def __init__(self, parentTask, season, subtaskName=None):
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -592,7 +573,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
         subtaskName : str, optional
             the name of the subtask, defaults to season
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -620,12 +601,10 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
             multiprocessing.cpu_count(),
             self.config.getint('climatology', 'daskThreads'))
 
-        # }}}
-
-    def run_task(self):  # {{{
-        '''
+    def run_task(self):
+        """
         Compute the requested climatologies
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -642,10 +621,10 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
             # nothing to do
             return
 
-        self.logger.info('\nComputing MPAS climatology from files:\n'
-                         '    {} through\n    {}'.format(
-                             os.path.basename(parentTask.inputFiles[0]),
-                             os.path.basename(parentTask.inputFiles[-1])))
+        self.logger.info(
+            f'\nComputing MPAS climatologies from files:\n'
+            f'    {os.path.basename(parentTask.inputFiles[0])} through\n'
+            f'    {os.path.basename(parentTask.inputFiles[-1])}')
 
         climatologyFileName = parentTask.get_file_name(season)
         climatologyDirectory = get_unmasked_mpas_climatology_directory(
@@ -668,11 +647,9 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
                     inDirectory=parentTask.symlinkDirectory,
                     outDirectory=climatologyDirectory)
 
-        # }}}
-
     def _compute_climatologies_with_xarray(self, inDirectory, outDirectory):
-        # {{{
-        '''
+
+        """
         Uses xarray to compute seasonal and/or annual climatologies.
 
         Parameters
@@ -682,7 +659,8 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
 
         outDirectory : str
             The output directory where climatologies will be written
-        '''
+        """
+
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -704,7 +682,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
 
             fileNames = sorted(parentTask.inputFiles)
             years, months = get_files_year_month(
-                fileNames,  self.historyStreams,
+                fileNames, self.historyStreams,
                 parentTask.streamName)
 
             with xarray.open_mfdataset(parentTask.inputFiles,
@@ -732,9 +710,9 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
             fileNames = []
             weights = []
             for month in constants.monthDictionary[season]:
-                monthName = constants.abrevMonthNames[month-1]
+                monthName = constants.abrevMonthNames[month - 1]
                 fileNames.append(parentTask.get_file_name(season=monthName))
-                weights.append(constants.daysInMonth[month-1])
+                weights.append(constants.daysInMonth[month - 1])
 
             with xarray.open_mfdataset(fileNames, concat_dim='weight',
                                        combine='nested',
@@ -742,12 +720,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):  # {{{
                                        decode_cf=False, decode_times=False,
                                        preprocess=_preprocess) as ds:
                 ds.coords['weight'] = ('weight', weights)
-                ds = ((ds.weight*ds).sum(dim='weight') /
+                ds = ((ds.weight * ds).sum(dim='weight') /
                       ds.weight.sum(dim='weight'))
                 ds.compute(num_workers=self.subprocessCount)
                 write_netcdf(ds, outFileName)
-
-        # }}}
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

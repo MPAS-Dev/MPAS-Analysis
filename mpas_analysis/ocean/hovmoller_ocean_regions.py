@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -31,7 +31,7 @@ from mpas_analysis.shared.time_series import \
     compute_moving_avg_anomaly_from_start
 
 
-class HovmollerOceanRegions(AnalysisTask):  # {{{
+class HovmollerOceanRegions(AnalysisTask):
     """
     Compute and plot a Hovmoller diagram (depth vs. time) for regionally
     analyzed data.  The mean of the data are computed over each region at each
@@ -42,7 +42,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, regionMasksTask, oceanRegionalProfilesTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -191,8 +191,6 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
                     self.add_subtask(hovmollerSubtask)
 
         self.run_after(oceanRegionalProfilesTask)
-        # }}}
-    # }}}
 
 
 class ComputeHovmollerAnomalySubtask(AnalysisTask):
@@ -217,7 +215,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, inFileName, outFileName,
-                 movingAveragePoints, subtaskName='computeAnomaly'):  # {{{
+                 movingAveragePoints, subtaskName='computeAnomaly'):
         """
         Construct the analysis task.
 
@@ -255,9 +253,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
         self.outFileName = outFileName
         self.movingAveragePoints = movingAveragePoints
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -285,9 +281,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
             raise ValueError('Cannot meaningfully perform a rolling mean '
                              'because the time series is too short.')
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
         """
@@ -314,9 +308,4 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
             outFileName = '{}/{}'.format(baseDirectory,
                                          outFileName)
 
-        write_netcdf(ds, outFileName)  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        write_netcdf(ds, outFileName)

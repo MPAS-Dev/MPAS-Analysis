@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import datetime
 import xarray as xr
@@ -41,8 +38,8 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
 
 
-class IndexNino34(AnalysisTask):  # {{{
-    '''
+class IndexNino34(AnalysisTask):
+    """
     A task for computing and plotting time series and spectra of the El Nino
     3.4 climate index
 
@@ -54,14 +51,14 @@ class IndexNino34(AnalysisTask):  # {{{
 
     controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
-    '''
+    """
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
-        # {{{
-        '''
+
+        """
         Construct the analysis task.
 
         Parameters
@@ -74,7 +71,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -91,12 +88,10 @@ class IndexNino34(AnalysisTask):  # {{{
 
         self.run_after(mpasTimeSeriesTask)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -144,13 +139,11 @@ class IndexNino34(AnalysisTask):  # {{{
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
 
-        # }}}
-
-    def run_task(self):  # {{{
-        '''
+    def run_task(self):
+        """
         Computes NINO34 index and plots the time series and power spectrum with
         95 and 99% confidence bounds
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
@@ -317,9 +310,7 @@ class IndexNino34(AnalysisTask):  # {{{
                         plotType='Spectra',
                         ninoIndexNumber=ninoIndexNumber)
 
-    # }}}
-
-    def _compute_nino34_index(self, regionSST, calendar):  # {{{
+    def _compute_nino34_index(self, regionSST, calendar):
         """
         Computes nino34 index time series.  It follow the standard nino34
         algorithm, i.e.,
@@ -368,9 +359,9 @@ class IndexNino34(AnalysisTask):  # {{{
 
         # Compute 5 month running mean
         wgts = np.ones(5) / 5.
-        return self._running_mean(anomaly, wgts)  # }}}
+        return self._running_mean(anomaly, wgts)
 
-    def _compute_nino34_spectra(self, nino34Index):  # {{{
+    def _compute_nino34_spectra(self, nino34Index):
         """
         Computes power spectra of Nino34 index.
 
@@ -455,9 +446,8 @@ class IndexNino34(AnalysisTask):  # {{{
                    'conf95': mkov * scale * xLow,
                    'redNoise': mkov * scale}
         return spectra
-        # }}}
 
-    def _autocorr(self, x, t=1):  # {{{
+    def _autocorr(self, x, t=1):
         """
         Computes lag one auto-correlation for the NINO34 spectra calculation
 
@@ -475,9 +465,9 @@ class IndexNino34(AnalysisTask):  # {{{
         # -------
         # Luke Van Roekel
 
-        return np.corrcoef(np.array([x[0:len(x) - t], x[t:len(x)]]))  # }}}
+        return np.corrcoef(np.array([x[0:len(x) - t], x[t:len(x)]]))
 
-    def _running_mean(self, inputData, wgts):  # {{{
+    def _running_mean(self, inputData, wgts):
         """
         Calculates a generic weighted running mean
 
@@ -502,14 +492,14 @@ class IndexNino34(AnalysisTask):  # {{{
         for k in range(sp, nt - (sp + 1)):
             runningMean[k] = sum(wgts * inputData[k - sp:k + sp + 1].values)
 
-        return runningMean  # }}}
+        return runningMean
 
     def _nino34_spectra_plot(self, spectra, title, panelTitles,
                              outFileName, lineWidth=2, xlabel='Period (years)',
                              ylabel=r'Power ($^o$C / cycles mo$^{-1}$)',
                              titleFontSize=None, figsize=(9, 21), dpi=None,
                              periodMin=1., periodMax=10.):
-        # {{{
+
         """
         Plots the nino34 time series and power spectra in an image file
         Parameters
@@ -610,13 +600,12 @@ class IndexNino34(AnalysisTask):  # {{{
             savefig(outFileName, config)
 
         plt.close()
-        # }}}
 
     def _nino34_timeseries_plot(self, nino34s, title, panelTitles, outFileName,
                                 xlabel='Time (years)', ylabel=r'($\degree$C)',
                                 titleFontSize=None, figsize=(9, 21), dpi=None,
                                 maxXTicks=20, lineWidth=2):
-        # {{{
+
         """
         Plots the nino34 time series and power spectra in an image file
 
@@ -690,12 +679,11 @@ class IndexNino34(AnalysisTask):  # {{{
             savefig(outFileName, config)
 
         plt.close()
-        # }}}
 
     def _plot_nino_timeseries(self, ninoIndex, time, xlabel, ylabel,
                               panelTitle, title_font, axis_font,
-                              lineWidth):  # {{{
-        '''
+                              lineWidth):
+        """
         Plot the nino time series on a subplot
 
         Parameters
@@ -717,7 +705,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         lineWidth : list of str
             control line width
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
@@ -741,9 +729,8 @@ class IndexNino34(AnalysisTask):  # {{{
             plt.xlabel(xlabel, **axis_font)
         if ylabel is not None:
             plt.ylabel(ylabel, **axis_font)
-        # }}}
 
-    def _write_xml(self, filePrefix, plotType, ninoIndexNumber):  # {{{
+    def _write_xml(self, filePrefix, plotType, ninoIndexNumber):
         caption = u'{} of El Niño {} Climate Index'.format(plotType,
                                                            ninoIndexNumber)
         write_image_xml(
@@ -755,10 +742,10 @@ class IndexNino34(AnalysisTask):  # {{{
             groupLink='nino',
             thumbnailDescription=plotType,
             imageDescription=caption,
-            imageCaption=caption)  # }}}
+            imageCaption=caption)
 
     def _plot_size_y_axis(self, x, ys, xmin, xmax):
-        '''
+        """
         Get the maximum y value over the given range of x values
 
         Parameters
@@ -774,7 +761,7 @@ class IndexNino34(AnalysisTask):  # {{{
 
         xmax : float, optional
             The maximum x values
-        '''
+        """
         # Authors
         # -------
         # Luke Van Roekel, Xylar Asay-Davis
@@ -793,5 +780,3 @@ class IndexNino34(AnalysisTask):  # {{{
         return maxY
 
 # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

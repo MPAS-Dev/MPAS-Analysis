@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy as np
 
@@ -19,7 +16,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 from mpas_analysis.ocean.utility import compute_zmid
 
 
-class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
+class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
     """
     A task for creating and remapping climatologies of MPAS fields sliced
     at a given set of depths
@@ -43,8 +40,8 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
                  iselValues=None):
-        # {{{
-        '''
+
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -81,7 +78,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -94,7 +91,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
             mpasClimatologyTask, parentTask, climatologyName, variableList,
             seasons, comparisonGridNames, iselValues)
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute climatologies of T or S  from ACME/MPAS output
 
@@ -171,7 +168,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
         # which will perform the main function of the task
         super(RemapDepthSlicesSubtask, self).run_task()
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Uses ``verticalIndex`` to slice the 3D climatology field at each
         requested depth.  The resulting field has the depth appended to
@@ -223,9 +220,4 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):  # {{{
 
         climatology = climatology.transpose('depthSlice', 'nCells')
 
-        return climatology  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return climatology

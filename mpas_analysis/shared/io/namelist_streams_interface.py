@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -17,10 +17,6 @@ files.
 # -------
 # Phillip Wolfram, Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
-import six
 from lxml import etree
 import re
 import os.path
@@ -73,6 +69,7 @@ class NameList:
     Class for fortran manipulation of namelist files, provides
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -264,14 +261,13 @@ class NameList:
         raise ValueError('None of the possible options {} found in namelist '
                          'file {}.'.format(possibleOptions, self.fname))
 
-    # }}}
-
 
 class StreamsFile:
     """
     Class to read in streams configuration file, provdies
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -445,12 +441,12 @@ class StreamsFile:
 
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
-            if isinstance(startDate, six.string_types):
+            if isinstance(startDate, str):
                 startDate = string_to_datetime(startDate)
 
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
-            if isinstance(endDate, six.string_types):
+            if isinstance(endDate, str):
                 endDate = string_to_datetime(endDate)
 
         # remove any path that's part of the template
@@ -538,5 +534,3 @@ class StreamsFile:
 
         raise ValueError('None of the possible streams {} found in streams '
                          'file {}.'.format(possibleStreams, self.fname))
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

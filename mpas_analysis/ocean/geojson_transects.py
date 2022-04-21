@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from collections import OrderedDict
 import json
 import xarray
@@ -23,7 +20,7 @@ from mpas_analysis.ocean.compute_transects_subtask import \
 from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
 
-class GeojsonTransects(AnalysisTask):  # {{{
+class GeojsonTransects(AnalysisTask):
     """
     Plot model output at transects defined by lat/lon points in a geojson file
     """
@@ -32,9 +29,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-
-        # {{{
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -49,7 +44,7 @@ class GeojsonTransects(AnalysisTask):  # {{{
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -169,12 +164,9 @@ class GeojsonTransects(AnalysisTask):  # {{{
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class GeojsonTransectsObservations(TransectsObservations):  # {{{
+class GeojsonTransectsObservations(TransectsObservations):
     """
     A class for loading and manipulating geojson transects
 
@@ -188,8 +180,8 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def build_observational_dataset(self, fileName, transectName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName, transectName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -205,7 +197,7 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -228,7 +220,4 @@ class GeojsonTransectsObservations(TransectsObservations):  # {{{
         dsObs['lat'] = (('nPoints',), numpy.array(lat))
         dsObs.lat.attrs['units'] = 'degrees'
 
-        return dsObs  # }}}
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 import xarray
 import numpy
@@ -50,7 +47,7 @@ from mpas_analysis.shared.plot.colormap import register_custom_colormaps
 from mpas_analysis.shared.plot.title import limit_title
 
 
-class RegionalTSDiagrams(AnalysisTask):  # {{{
+class RegionalTSDiagrams(AnalysisTask):
     """
     Create T-S Diagrams of the climatology within a given ocean region
 
@@ -65,7 +62,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
 
     def __init__(self, config, mpasClimatologyTask, regionMasksTask,
                  controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -222,9 +219,7 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                     plotRegionSubtask.run_after(computeRegionSubtask)
                     self.add_subtask(plotRegionSubtask)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -246,7 +241,6 @@ class RegionalTSDiagrams(AnalysisTask):  # {{{
                         'timeMonthly_avg_layerThickness']
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
-    # }}}
 
 
 class ComputeObsTSClimatology(AnalysisTask):
@@ -265,7 +259,7 @@ class ComputeObsTSClimatology(AnalysisTask):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, obsName, obsDict, season):  # {{{
+    def __init__(self, parentTask, obsName, obsDict, season):
         """
         Construct the analysis task.
 
@@ -306,9 +300,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             multiprocessing.cpu_count(),
             self.config.getint(self.taskName, 'daskThreads'))
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of properties in an ocean region.
         """
@@ -442,7 +434,6 @@ class ComputeObsTSClimatology(AnalysisTask):
                 self.logger.info('  Deleting temp file {}'.format(file_name))
                 os.remove(file_name)
             self.logger.info('  Done!')
-        # }}}
 
     def _get_file_name(self, obsDict, suffix=''):
         obsSection = '{}Observations'.format(self.componentName)
@@ -457,8 +448,6 @@ class ComputeObsTSClimatology(AnalysisTask):
             climatologyDirectory, 'TS_{}'.format(obsDict['suffix']),
             obsDict['gridName'], self.season, suffix)
         return fileName
-
-    # }}}
 
 
 class ComputeRegionTSSubtask(AnalysisTask):
@@ -499,7 +488,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
     def __init__(self, parentTask, regionGroup, regionName, controlConfig,
                  sectionName, fullSuffix, mpasClimatologyTask,
                  mpasMasksSubtask, obsDicts, season):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -568,9 +557,8 @@ class ComputeRegionTSSubtask(AnalysisTask):
         self.daskThreads = min(
             multiprocessing.cpu_count(),
             self.config.getint(self.taskName, 'daskThreads'))
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of properties in an ocean region.
         """
@@ -585,7 +573,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
         for obsName in self.obsDicts:
             self._write_obs_t_s(self.obsDicts[obsName], zmin, zmax)
 
-    def _write_mpas_t_s(self, config):  # {{{
+    def _write_mpas_t_s(self, config):
 
         climatologyName = 'TS_{}_{}'.format(self.prefix, self.season)
         outFileName = get_masked_mpas_climatology_file_name(
@@ -700,9 +688,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
             write_netcdf(dsOut, outFileName)
 
-        return zmin, zmax  # }}}
+        return zmin, zmax
 
-    def _write_obs_t_s(self, obsDict, zmin, zmax):  # {{{
+    def _write_obs_t_s(self, obsDict, zmin, zmax):
         obsSection = '{}Observations'.format(self.componentName)
         climatologyDirectory = build_config_full_path(
             config=self.config, section='output',
@@ -788,10 +776,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
             write_netcdf(dsOut, outFileName)
 
-        # }}}
-
-    # }}}
-
 
 class PlotRegionTSDiagramSubtask(AnalysisTask):
     """
@@ -831,7 +815,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
     def __init__(self, parentTask, regionGroup, regionName, controlConfig,
                  sectionName, fullSuffix, mpasClimatologyTask,
                  mpasMasksSubtask, obsDicts, season):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -900,9 +884,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         self.daskThreads = min(
             multiprocessing.cpu_count(),
             self.config.getint(self.taskName, 'daskThreads'))
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -923,9 +906,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         self.xmlFileNames = ['{}/TS_diagram_{}_{}.xml'.format(
             self.plotsDirectory, self.prefix, self.season)]
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of properties in an ocean region.
         """
@@ -1182,9 +1165,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             imageDescription=caption,
             imageCaption=caption)
 
-        # }}}
-
-    def _get_mpas_t_s(self, config):  # {{{
+    def _get_mpas_t_s(self, config):
         climatologyName = 'TS_{}_{}'.format(self.prefix, self.season)
         inFileName = get_masked_mpas_climatology_file_name(
             config, self.season, self.componentName, climatologyName, op='avg')
@@ -1196,9 +1177,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         volume = ds.volume.values
         zmin, zmax = ds.zbounds.values
 
-        return T, S, z, volume, zmin, zmax  # }}}
+        return T, S, z, volume, zmin, zmax
 
-    def _get_obs_t_s(self, obsDict):  # {{{
+    def _get_obs_t_s(self, obsDict):
 
         obsSection = '{}Observations'.format(self.componentName)
         climatologyDirectory = build_config_full_path(
@@ -1215,9 +1196,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         z = ds.z.values
         volume = ds.volume.values
 
-        return T, S, z, volume  # }}}
+        return T, S, z, volume
 
-    def _plot_volumetric_panel(self, T, S, volume):  # {{{
+    def _plot_volumetric_panel(self, T, S, volume):
 
         config = self.config
         sectionName = self.sectionName
@@ -1238,9 +1219,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         else:
             volMin = None
             volMax = None
-        return panel, volMin, volMax  # }}}
+        return panel, volMin, volMax
 
-    def _plot_scatter_panel(self, T, S, z, zmin, zmax):  # {{{
+    def _plot_scatter_panel(self, T, S, z, zmin, zmax):
 
         config = self.config
         sectionName = self.sectionName
@@ -1251,8 +1232,4 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         panel = plt.scatter(S[indices], T[indices], c=z[indices],
                             s=5, vmin=zmin, vmax=zmax, cmap=cmap, zorder=1)
 
-        return panel  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return panel

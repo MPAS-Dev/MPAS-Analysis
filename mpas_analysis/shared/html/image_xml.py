@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import os
 import sys
@@ -151,7 +148,7 @@ def write_image_xml(config, filePrefix, componentName, componentSubdirectory,
     tree.write(xmlFileName, xml_declaration=True, pretty_print=True)
 
 
-def _provenance_command(root, history):  # {{{
+def _provenance_command(root, history):
     """
     Utility funciton for provenance of xml file associated with a plot.
     """
@@ -186,7 +183,7 @@ def _provenance_command(root, history):  # {{{
     except (IOError, OSError):
         githash = 'git hash unavailable'
 
-    etree.SubElement(root, 'githash').text = githash  # }}}
+    etree.SubElement(root, 'githash').text = githash
 
 
 def _generate_thumbnails(imageFileName, directory):
@@ -240,5 +237,3 @@ def _generate_thumbnails(imageFileName, directory):
 
     return imageSize, thumbnailSize, orientation
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -18,9 +18,6 @@ Utilities for downloading files
 # Milena Veneziani
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 
 import os
 import requests
@@ -29,9 +26,9 @@ import progressbar
 
 # From https://stackoverflow.com/a/1094933/7728169
 def sizeof_fmt(num, suffix='B'):
-    '''
+    """
     Covert a number of bytes to a human-readable file size
-    '''
+    """
     for unit in ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
@@ -40,9 +37,9 @@ def sizeof_fmt(num, suffix='B'):
 
 
 def download_files(fileList, urlBase, outDir, verify=True):
-    '''
+    """
     Download a list of files from a URL to a directory
-    '''
+    """
     # Authors
     # -------
     # Milena Veneziani

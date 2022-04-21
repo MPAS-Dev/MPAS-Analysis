@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,12 +15,8 @@ Unit test infrastructure for the Date class
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import pytest
 import datetime
-import six
 from mpas_analysis.shared.timekeeping.MpasRelativeDelta \
     import MpasRelativeDelta
 from mpas_analysis.test import TestCase
@@ -205,9 +201,9 @@ class TestTimekeeping(TestCase):
 
         # make sure there's an error when we try to add MpasRelativeDeltas
         # with different calendars
-        with six.assertRaisesRegex(self, ValueError,
-                                   'MpasRelativeDelta objects can only be '
-                                   'added if their calendars match.'):
+        with self.assertRaisesRegex(ValueError,
+                                    'MpasRelativeDelta objects can only be '
+                                    'added if their calendars match.'):
             delta1 = string_to_relative_delta('0000-01-00',
                                               calendar='gregorian')
             delta2 = string_to_relative_delta('0000-00-01',
@@ -297,5 +293,3 @@ class TestTimekeeping(TestCase):
                                 calendar=calendar,
                                 referenceDate=referenceDate)
             self.assertApproxEqual(days, expected_days)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

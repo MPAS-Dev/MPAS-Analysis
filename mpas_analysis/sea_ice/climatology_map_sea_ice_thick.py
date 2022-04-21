@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 from pyremap import LatLonGridDescriptor
@@ -26,7 +23,7 @@ from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
+class ClimatologyMapSeaIceThick(AnalysisTask):
     """
     An analysis task for comparison of sea ice thickness against
     observations
@@ -36,7 +33,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask, hemisphere,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -174,12 +171,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):  # {{{
 
                 self.add_subtask(subtask)
 
-        # }}}
 
-    # }}}
-
-
-class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedThickClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping sea ice thickness observations
     """
@@ -187,8 +180,8 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
+    def get_observation_descriptor(self, fileName):
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -200,7 +193,7 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -210,10 +203,10 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
                                                   latVarName='t_lat',
                                                   lonVarName='t_lon')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -226,7 +219,7 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -234,8 +227,3 @@ class RemapObservedThickClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs = xr.open_dataset(fileName)
         dsObs = dsObs.rename({'HI': 'seaIceThick'})
         return dsObs
-        # }}}
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

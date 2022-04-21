@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 import xarray
 import numpy
@@ -36,7 +33,7 @@ from mpas_analysis.ocean.utility import compute_zmid
 from mpas_analysis.shared.constants import constants
 
 
-class TimeSeriesOceanRegions(AnalysisTask):  # {{{
+class TimeSeriesOceanRegions(AnalysisTask):
     """
     Performs analysis of the time-series output of regionoal mean temperature,
     salinity, etc.
@@ -46,7 +43,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, regionMasksTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -199,12 +196,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
 
-        # }}}
 
-    # }}}
-
-
-class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
+class ComputeRegionDepthMasksSubtask(AnalysisTask):
     """
     Compute masks for regional and depth mean
 
@@ -224,7 +217,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, masksSubtask, regionGroup, regionNames):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -261,9 +254,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the regional-mean time series
         """
@@ -389,11 +381,9 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         dsOut['areaCell'] = areaCell
         dsOut['regionNames'] = dsRegionMask.regionNames
         write_netcdf(dsOut, outFileName)
-        # }}}
-    # }}}
 
 
-class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
+class ComputeRegionTimeSeriesSubtask(AnalysisTask):
     """
     Compute regional and depth mean at a function of time for a set of MPAS
     fields
@@ -417,7 +407,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, startYear, endYear, masksSubtask,
-                 regionGroup, regionNames):  # {{{
+                 regionGroup, regionNames):
         """
         Construct the analysis task.
 
@@ -460,9 +450,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -486,9 +475,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the regional-mean time series
         """
@@ -656,7 +643,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
 
-        write_netcdf(dsOut, outFileName)  # }}}
+        write_netcdf(dsOut, outFileName)
 
     def _add_thermal_forcing(self, dsIn, cellMask):
         """ compute the thermal forcing """
@@ -689,10 +676,9 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         timeSeries = temp - tempFreeze
 
         return timeSeries
-    # }}}
 
 
-class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
     """
     Combine individual time series into a single data set
     """
@@ -700,7 +686,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears, regionGroup):  # {{{
+    def __init__(self, parentTask, startYears, endYears, regionGroup):
         """
         Construct the analysis task.
 
@@ -735,9 +721,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.startYears = startYears
         self.endYears = endYears
         self.regionGroup = regionGroup
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Combine the time series
         """
@@ -774,8 +759,6 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 ds[var] = ds[var].isel(Time=0, drop=True)
 
             write_netcdf(ds, outFileName)
-        # }}}
-    # }}}
 
 
 class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
@@ -791,7 +774,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
     def __init__(self, parentTask, regionGroup, regionName, fullSuffix,
                  obsDict):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -841,9 +824,8 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             outputDirectory, obsDict['suffix'], self.prefix)
 
         self.run_after(obsDict['maskTask'])
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute time-series output of properties in an ocean region.
         """
@@ -1000,10 +982,6 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         dsOut['year'] = ('Time', numpy.ones(ds.sizes[tDim]))
         write_netcdf(dsOut, outFileName)
 
-        # }}}
-
-    # }}}
-
 
 class PlotRegionTimeSeriesSubtask(AnalysisTask):
     """
@@ -1034,7 +1012,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     def __init__(self, parentTask, regionGroup, regionName, regionIndex,
                  controlConfig, sectionName, fullSuffix, obsSubtasks,
                  geojsonFileName):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -1093,9 +1071,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         for obsName in obsSubtasks:
             self.run_after(obsSubtasks[obsName])
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -1121,9 +1097,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         for var in self.variables:
             self.xmlFileNames.append('{}/{}_{}.xml'.format(
                 self.plotsDirectory, self.prefix, var['name']))
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of properties in an ocean region.
         """
@@ -1290,9 +1266,3 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 thumbnailDescription=self.regionName,
                 imageDescription=caption,
                 imageCaption=caption)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

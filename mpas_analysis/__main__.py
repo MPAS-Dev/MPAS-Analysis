@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -17,9 +17,6 @@ specifying analysis options.
 # Authors
 # -------
 # Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import mpas_analysis
 
@@ -61,7 +58,7 @@ from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 from mpas_analysis.shared.regions import ComputeRegionMasks
 
 
-def update_time_bounds_in_config(config):  # {{{
+def update_time_bounds_in_config(config):
     """
     Updates the start and end year (and associated full date) for
     climatologies, time series and climate indices based on the files that are
@@ -78,10 +75,9 @@ def update_time_bounds_in_config(config):  # {{{
     for componentName in ['ocean', 'seaIce']:
         for section in ['climatology', 'timeSeries', 'index']:
             update_time_bounds_from_file_names(config, section, componentName)
-    # }}}
 
 
-def build_analysis_list(config, controlConfig):  # {{{
+def build_analysis_list(config, controlConfig):
     """
     Build a list of analysis tasks. New tasks should be added here, following
     the approach used for existing analysis tasks.
@@ -250,10 +246,10 @@ def build_analysis_list(config, controlConfig):  # {{{
         config=config, mpasClimatologyTask=seaIceClimatolgyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
-    return analyses  # }}}
+    return analyses
 
 
-def determine_analyses_to_generate(analyses, verbose):  # {{{
+def determine_analyses_to_generate(analyses, verbose):
     """
     Build a list of analysis tasks to run based on the 'generate' config
     option (or command-line flag) and prerequisites and subtasks of each
@@ -300,12 +296,12 @@ def determine_analyses_to_generate(analyses, verbose):  # {{{
 
     print('')
 
-    return analysesToGenerate  # }}}
+    return analysesToGenerate
 
 
 def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                           callCheckGenerate=True):
-    # {{{
+
     """
     If a task has been requested through the generate config option or
     if it is a prerequisite of a requested task, add it to the dictionary of
@@ -409,10 +405,9 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
     analysisTask._setupStatus = 'success'
     assert(totalFailures == 0)
     return totalFailures
-    # }}}
 
 
-def update_generate(config, generate):  # {{{
+def update_generate(config, generate):
     """
     Update the 'generate' config option using a string from the command line.
 
@@ -436,10 +431,10 @@ def update_generate(config, generate):  # {{{
     generateString = ', '.join(["'{}'".format(element)
                                 for element in generateList])
     generateString = '[{}]'.format(generateString)
-    config.set('output', 'generate', generateString)  # }}}
+    config.set('output', 'generate', generateString)
 
 
-def run_analysis(config, analyses):  # {{{
+def run_analysis(config, analyses):
     """
     Run all the tasks, either in serial or in parallel
 
@@ -623,10 +618,8 @@ def run_analysis(config, analyses):  # {{{
         print('Log files for executed tasks can be found in {}'.format(
             logsDirectory))
 
-    # }}}
 
-
-def wait_for_task(runningTasks, timeout=0.1):  # {{{
+def wait_for_task(runningTasks, timeout=0.1):
     """
     Build a list of analysis modules based on the 'generate' config option.
     New tasks should be added here, following the approach used for existing
@@ -652,7 +645,7 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
         for analysisTask in runningTasks.values():
             analysisTask.join(timeout=timeout)
             if not analysisTask.is_alive():
-                return analysisTask  # }}}
+                return analysisTask
 
 
 def purge_output(config):
@@ -691,11 +684,11 @@ def purge_output(config):
 
 
 def symlink_main_run(config):
-    '''
+    """
     Create symlinks to the climatology and time-series directories for the
     main run that has already been computed so we don't have to recompute
     the analysis.
-    '''
+    """
 
     def link_dir(section, option):
         destDirectory = build_config_full_path(config=config, section='output',
@@ -933,5 +926,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

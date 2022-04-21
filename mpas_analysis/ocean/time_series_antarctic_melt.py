@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 import xarray
 import numpy
@@ -34,7 +31,7 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.html import write_image_xml
 
 
-class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
+class TimeSeriesAntarcticMelt(AnalysisTask):
     """
     Performs analysis of the time-series output of Antarctic sub-ice-shelf
     melt rates.
@@ -45,7 +42,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
 
     def __init__(self, config, mpasTimeSeriesTask, regionMasksTask,
                  controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -122,12 +119,8 @@ class TimeSeriesAntarcticMelt(AnalysisTask):  # {{{
             plotMeltSubtask.run_after(combineSubtask)
             self.add_subtask(plotMeltSubtask)
 
-        # }}}
 
-    # }}}
-
-
-class ComputeMeltSubtask(AnalysisTask):  # {{{
+class ComputeMeltSubtask(AnalysisTask):
     """
     Computes time-series of Antarctic sub-ice-shelf melt rates.
 
@@ -147,7 +140,7 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, startYear, endYear, mpasTimeSeriesTask,
-                 masksSubtask, iceShelvesToPlot):  # {{{
+                 masksSubtask, iceShelvesToPlot):
         """
         Construct the analysis task.
 
@@ -193,9 +186,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
         self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
         self.variableList = \
             ['timeMonthly_avg_landIceFreshwaterFlux']
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -239,9 +231,9 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Computes time-series of Antarctic sub-ice-shelf melt rates.
         """
@@ -364,11 +356,8 @@ class ComputeMeltSubtask(AnalysisTask):  # {{{
 
         write_netcdf(dsOut, outFileName)
 
-        # }}}
-    # }}}
 
-
-class CombineMeltSubtask(AnalysisTask):  # {{{
+class CombineMeltSubtask(AnalysisTask):
     """
     Combine individual time series into a single data set
     """
@@ -376,7 +365,7 @@ class CombineMeltSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears):  # {{{
+    def __init__(self, parentTask, startYears, endYears):
         """
         Construct the analysis task.
 
@@ -404,9 +393,8 @@ class CombineMeltSubtask(AnalysisTask):  # {{{
 
         self.startYears = startYears
         self.endYears = endYears
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Combine the time series
         """
@@ -434,8 +422,6 @@ class CombineMeltSubtask(AnalysisTask):  # {{{
             ds.load()
 
             write_netcdf(ds, outFileName)
-        # }}}
-    # }}}
 
 
 class PlotMeltSubtask(AnalysisTask):
@@ -459,7 +445,7 @@ class PlotMeltSubtask(AnalysisTask):
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, iceShelf, regionIndex, controlConfig):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -495,9 +481,7 @@ class PlotMeltSubtask(AnalysisTask):
         self.regionIndex = regionIndex
         self.controlConfig = controlConfig
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -522,9 +506,9 @@ class PlotMeltSubtask(AnalysisTask):
             self.xmlFileNames.append(
                 '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
                                       self.iceShelf.replace(' ', '_')))
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of Antarctic sub-ice-shelf melt rates.
         """
@@ -783,9 +767,8 @@ class PlotMeltSubtask(AnalysisTask):
             thumbnailDescription=title,
             imageDescription=caption,
             imageCaption=caption)
-        # }}}
 
-    def _load_ice_shelf_fluxes(self, config):  # {{{
+    def _load_ice_shelf_fluxes(self, config):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
@@ -805,8 +788,3 @@ class PlotMeltSubtask(AnalysisTask):
 
         dsOut = xarray.open_dataset(outFileName)
         return dsOut.totalMeltFlux, dsOut.meltRates
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

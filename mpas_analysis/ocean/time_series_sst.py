@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -46,7 +43,7 @@ class TimeSeriesSST(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -77,9 +74,7 @@ class TimeSeriesSST(AnalysisTask):
 
         self.run_after(mpasTimeSeriesTask)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -125,9 +120,9 @@ class TimeSeriesSST(AnalysisTask):
                                                         filePrefix))
             self.filePrefixes[region] = filePrefix
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of the time-series output of sea-surface temperature
         (SST).
@@ -297,8 +292,5 @@ class TimeSeriesSST(AnalysisTask):
                 imageDescription=caption,
                 imageCaption=caption)
 
-        # }}}
 
 # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

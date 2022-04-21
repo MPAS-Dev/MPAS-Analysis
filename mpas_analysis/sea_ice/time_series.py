@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 
@@ -52,7 +49,7 @@ class TimeSeriesSeaIce(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasTimeSeriesTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
@@ -83,9 +80,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         self.run_after(mpasTimeSeriesTask)
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -183,9 +178,9 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         if polarPlot:
             self.xmlFileNames.extend(polarXMLFileNames)
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of time series of sea-ice properties.
         """
@@ -515,9 +510,8 @@ class TimeSeriesSeaIce(AnalysisTask):
                         thumbnailDescription=thumbnailDescription,
                         imageDescription=caption,
                         imageCaption=caption)
-        # }}}
 
-    def _replicate_cycle(self, ds, dsToReplicate, calendar):  # {{{
+    def _replicate_cycle(self, ds, dsToReplicate, calendar):
         """
         Replicates a periodic time series `dsToReplicate` to cover the
         timeframe of the dataset `ds`.
@@ -585,13 +579,13 @@ class TimeSeriesSeaIce(AnalysisTask):
                                      method=str('nearest')).values
         dsShift = dsShift.sel(Time=slice(dsStartTime, dsEndTime))
 
-        return dsShift  # }}}
+        return dsShift
 
-    def _compute_area_vol(self):  # {{{
-        '''
+    def _compute_area_vol(self):
+        """
         Compute part of the time series of sea ice volume and area, given time
         indices to process.
-        '''
+        """
 
         outFileNames = {}
         for hemisphere in ['NH', 'SH']:
@@ -643,7 +637,4 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             write_netcdf(dsAreaSum, outFileNames[hemisphere])
 
-        return dsTimeSeries  # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsTimeSeries

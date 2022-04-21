@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -14,9 +14,6 @@ Constants that are common to all analysis tasks
 # Authors
 # -------
 # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import numpy as np
 
@@ -72,5 +69,3 @@ kg_per_GT = 1e12
 
 # cm per m
 cm_per_m = 100.
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,22 +1,19 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Defines the base class for analysis tasks.
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 from multiprocessing import Process, Value
 import time
@@ -29,8 +26,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month
 
 
-class AnalysisTask(Process):  # {{{
-    '''
+class AnalysisTask(Process):
+    """
     The base class for analysis tasks.
 
     Attributes
@@ -88,7 +85,7 @@ class AnalysisTask(Process):  # {{{
 
     logger : ``logging.Logger``
         A logger for output during the run phase of an analysis task
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -102,8 +99,8 @@ class AnalysisTask(Process):  # {{{
     FAIL = 5
 
     def __init__(self, config, taskName, componentName, tags=[],
-                 subtaskName=None):  # {{{
-        '''
+                 subtaskName=None):
+        """
         Construct the analysis task.
 
         Individual tasks (children classes of this base class) should first
@@ -131,7 +128,7 @@ class AnalysisTask(Process):  # {{{
 
         subtaskName : str, optional
             If this is a subtask of ``taskName``, the name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -170,10 +167,9 @@ class AnalysisTask(Process):  # {{{
         # run the task directly as opposed to launching it as a new process
         # even in parallel because it has subprocesses such as Pools
         self.runDirectly = False
-        # }}}
 
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis (e.g. reading namelists and
         streams files).
 
@@ -188,7 +184,7 @@ class AnalysisTask(Process):  # {{{
         analysis-specific setup.  For example, this function could check if
         necessary observations and other data files are found, then, determine
         the list of files to be read when the analysis is run.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -235,21 +231,19 @@ class AnalysisTask(Process):  # {{{
         self._logFileName = '{}/{}.log'.format(logsDirectory,
                                                self.fullTaskName)
 
-        # }}}
-
-    def run_task(self):  # {{{
-        '''
+    def run_task(self):
+        """
         Run the analysis.  Each task should override this function to do the
         work of computing and/or plotting analysis
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
-        return  # }}}
+        return
 
-    def run_after(self, task):  # {{{
-        '''
+    def run_after(self, task):
+        """
         Only run this task after the given task has completed.  This allows a
         task to be constructed of multiple subtasks, some of which may block
         later tasks, while allowing some subtasks to run in parallel.  It also
@@ -260,17 +254,16 @@ class AnalysisTask(Process):  # {{{
         ----------
         task : ``AnalysisTask``
             The task that should finish before this one begins
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         if task not in self.runAfterTasks:
             self.runAfterTasks.append(task)
-        # }}}
 
-    def add_subtask(self, subtask):  # {{{
-        '''
+    def add_subtask(self, subtask):
+        """
         Add a subtask to this tasks.  This task always runs after the subtask
         has finished.  However, this task gets set up *before* the subtask,
         so the setup of the subtask can depend on fields defined during the
@@ -280,17 +273,16 @@ class AnalysisTask(Process):  # {{{
         ----------
         subtask : ``AnalysisTask``
             The subtask to run as part of this task
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         if subtask not in self.subtasks:
             self.subtasks.append(subtask)
-        # }}}
 
-    def run(self, writeLogFile=True):  # {{{
-        '''
+    def run(self, writeLogFile=True):
+        """
         Sets up logging and then runs the analysis task.
 
         Parameters
@@ -300,7 +292,7 @@ class AnalysisTask(Process):  # {{{
             Otherwise, the internal logger ``self.logger`` points to stdout
             and no log file is created.  The intention is for logging to take
             place in parallel mode but not in serial mode.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -352,11 +344,9 @@ class AnalysisTask(Process):  # {{{
         # writeLogFile==False)
         self.logger.handlers = []
 
-        # }}}
-
     def check_generate(self):
-        # {{{
-        '''
+
+        """
         Determines if this analysis should be generated, based on the
         ``generate`` config option and ``taskName``, ``componentName`` and
         ``tags``.
@@ -373,7 +363,7 @@ class AnalysisTask(Process):  # {{{
         ------
         ValueError : If one of ``self.taskName``, ``self.componentName``
             or ``self.tags`` has not been set.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -418,11 +408,11 @@ class AnalysisTask(Process):  # {{{
             elif element == self.taskName:
                 generate = True
 
-        return generate  # }}}
+        return generate
 
     def check_analysis_enabled(self, analysisOptionName, default=False,
                                raiseException=True):
-        '''
+        """
         Check to make sure a given analysis is turned on, issuing a warning or
         raising an exception if not.
 
@@ -450,7 +440,7 @@ class AnalysisTask(Process):  # {{{
             If the given analysis option is not found and ``default`` is not
             ``True`` or if the analysis option is found and is ``False``.  The
             exception is only raised if ``raiseException = True``.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -461,12 +451,12 @@ class AnalysisTask(Process):  # {{{
         except ValueError:
             enabled = default
             if default:
-                print('Warning: namelist option {} not found.\n'
-                      'This likely indicates that the simulation you '
-                      'are analyzing was run with an\n'
-                      'older version of MPAS-O that did not support '
-                      'this flag.  Assuming enabled.'.format(
-                          analysisOptionName))
+                print(f'Warning: namelist option {analysisOptionName} not '
+                      f'found.\n'
+                      f'This likely indicates that the simulation you '
+                      f'are analyzing was run with an\n'
+                      f'older version of MPAS-O that did not support '
+                      f'this flag.  Assuming enabled.')
 
         if not enabled and raiseException:
             raise RuntimeError('*** MPAS-Analysis relies on {} = .true.\n'
@@ -475,8 +465,8 @@ class AnalysisTask(Process):  # {{{
 
         return enabled
 
-    def set_start_end_date(self, section):  # {{{
-        '''
+    def set_start_end_date(self, section):
+        """
         Set the start and end dates in the ``config`` correspond to the start
         and end years in a given category of analysis
 
@@ -486,7 +476,7 @@ class AnalysisTask(Process):  # {{{
             The name of a section in the config file containing ``startYear``
             and ``endYear`` options. ``section`` is typically one of
             ``climatology``, ``timeSeries`` or ``index``
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -498,12 +488,13 @@ class AnalysisTask(Process):  # {{{
         if not self.config.has_option(section, 'endDate'):
             endDate = '{:04d}-12-31_23:59:59'.format(
                 self.config.getint(section, 'endYear'))
-            self.config.set(section, 'endDate', endDate)  # }}}
+            self.config.set(section, 'endDate', endDate)
+
 
 # }}}
 
 
-class AnalysisFormatter(logging.Formatter):  # {{{
+class AnalysisFormatter(logging.Formatter):
     """
     A custom formatter for logging
 
@@ -546,10 +537,12 @@ class AnalysisFormatter(logging.Formatter):  # {{{
         self._fmt = format_orig
 
         return result
+
+
 # }}}
 
 
-class StreamToLogger(object):  # {{{
+class StreamToLogger(object):
     """
     Modified based on code by:
     https://www.electricmonk.nl/log/2011/08/14/redirect-stdout-and-stderr-to-a-logger-in-python/
@@ -574,10 +567,8 @@ class StreamToLogger(object):  # {{{
     def flush(self):
         pass
 
-    # }}}
 
-
-def update_time_bounds_from_file_names(config, section, componentName):  # {{{
+def update_time_bounds_from_file_names(config, section, componentName):
     """
     Update the start and end years and dates for time series, climatologies or
     climate indices based on the years actually available in the list of files.
@@ -654,13 +645,13 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
 
     # search for the start of the first full year
     firstIndex = 0
-    while(firstIndex < len(years) and months[firstIndex] != 1):
+    while (firstIndex < len(years) and months[firstIndex] != 1):
         firstIndex += 1
     startYear = years[firstIndex]
 
     # search for the end of the last full year
     lastIndex = len(years) - 1
-    while(lastIndex >= 0 and months[lastIndex] != 12):
+    while (lastIndex >= 0 and months[lastIndex] != 12):
         lastIndex -= 1
     endYear = years[lastIndex]
 
@@ -692,7 +683,3 @@ def update_time_bounds_from_file_names(config, section, componentName):  # {{{
     config.set(section, 'startDate', startDate)
     endDate = '{:04d}-12-31_23:59:59'.format(endYear)
     config.set(section, 'endDate', endDate)
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
