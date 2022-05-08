@@ -123,7 +123,13 @@ class SoseTransects(AnalysisTask):
               'units': r'm s$^{-1}$',
               'titleName': 'Velocity Magnitude',
               'obsFilePrefix': None,
-              'obsFieldName': 'velMag'}]
+              'obsFieldName': 'velMag'},
+             {'prefix': 'potentialDensityContour',
+              'mpas': 'timeMonthly_avg_potentialDensity',
+              'units': r'kg m$^{-3}$',
+              'titleName': 'Potential Density Contours',
+              'obsFilePrefix': 'pot_den',
+              'obsFieldName': 'potentialDensity'}]
 
         fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
@@ -323,7 +329,7 @@ class SoseTransectsObservations(TransectsObservations):
         for field in self.fields:
             prefix = field['obsFilePrefix']
             fieldName = field['obsFieldName']
-            if prefix is None:
+            if prefix is None or (dsObs is not None and fieldName in dsObs):
                 continue
             print('  {}'.format(field['prefix']))
 

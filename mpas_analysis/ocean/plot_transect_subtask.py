@@ -515,8 +515,13 @@ class PlotTransectSubtask(AnalysisTask):
         # what line styles and line colors to use, and whether and how
         # to label contours
 
-        compareAsContours = config.getboolean('transects',
-                                              'compareAsContoursOnSinglePlot')
+        if config.has_option(configSectionName,
+                             'compareAsContoursOnSinglePlot'):
+            compareAsContours = config.getboolean(
+                configSectionName, 'compareAsContoursOnSinglePlot')
+        else:
+            compareAsContours = config.getboolean(
+                'transects', 'compareAsContoursOnSinglePlot')
 
         contourLineStyle = config.get('transects', 'contourLineStyle')
         contourLineColor = config.get('transects', 'contourLineColor')
