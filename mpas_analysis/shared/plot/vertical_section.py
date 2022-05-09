@@ -858,6 +858,11 @@ def plot_vertical_section(
         mask = field.notnull()
         maskedTriangulation, unmaskedTriangulation = _get_triangulation(
             x, y, mask)
+        if contourComparisonField is not None:
+            mask = field.notnull()
+            maskedComparisonTriangulation, _ = _get_triangulation(x, y, mask)
+        else:
+            maskedComparisonTriangulation = None
     else:
         mask = field.notnull()
         triMask = np.logical_not(mask.values)
@@ -867,6 +872,15 @@ def plot_vertical_section(
         mask_args = dict(triangulation_args)
         mask_args['mask'] = triMask
         maskedTriangulation = Triangulation(**mask_args)
+        if contourComparisonField is not None:
+            mask = contourComparisonField.notnull()
+            triMask = np.logical_not(mask.values)
+            triMask = np.amax(triMask, axis=1)
+            mask_args = dict(triangulation_args)
+            mask_args['mask'] = triMask
+            maskedComparisonTriangulation = Triangulation(**mask_args)
+        else:
+            maskedComparisonTriangulation = None
 
     # set up figure
     if dpi is None:
@@ -949,7 +963,7 @@ def plot_vertical_section(
             fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
         if plotAsContours and contourComparisonField is not None:
-            cs2 = plt.tricontour(maskedTriangulation,
+            cs2 = plt.tricontour(maskedComparisonTriangulation,
                                  contourComparisonField.values.ravel(),
                                  levels=contourLevels,
                                  colors=comparisonContourLineColor,
