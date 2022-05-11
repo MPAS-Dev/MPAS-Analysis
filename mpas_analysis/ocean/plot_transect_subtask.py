@@ -523,6 +523,7 @@ class PlotTransectSubtask(AnalysisTask):
             compareAsContours = config.getboolean(
                 'transects', 'compareAsContoursOnSinglePlot')
 
+        contourLineWidth = config.getint('transects', 'contourLineWidth')
         contourLineStyle = config.get('transects', 'contourLineStyle')
         contourLineColor = config.get('transects', 'contourLineColor')
         comparisonContourLineStyle = config.get('transects',
@@ -584,6 +585,7 @@ class PlotTransectSubtask(AnalysisTask):
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
+            lineWidth=contourLineWidth,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
             comparisonContourLineStyle=comparisonContourLineStyle,
