@@ -18,6 +18,8 @@ observations or reference data.
 
 import xarray as xr
 import numpy
+from matplotlib import colors
+from matplotlib import cm
 
 from geometric_features import FeatureCollection
 
@@ -525,16 +527,21 @@ class PlotTransectSubtask(AnalysisTask):
 
         contourLineWidth = config.getint('transects', 'contourLineWidth')
         contourLineStyle = config.get('transects', 'contourLineStyle')
-        contourLineColor = config.get('transects', 'contourLineColor')
         comparisonContourLineStyle = config.get('transects',
                                                 'comparisonContourLineStyle')
-        comparisonContourLineColor = config.get('transects',
-                                                'comparisonContourLineColor')
 
         if compareAsContours:
+            contourLineColor = None
+            comparisonContourLineColor = None
+            contourColormap, comparisonContourColormap = \
+                PlotTransectSubtask._get_contour_colormaps()
             labelContours = config.getboolean(
                 'transects', 'labelContoursOnContourComparisonPlots')
         else:
+            contourLineColor = config.get('transects', 'contourLineColor')
+            comparisonContourLineColor = None
+            contourColormap = None
+            comparisonContourColormap = None
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
 
@@ -588,8 +595,10 @@ class PlotTransectSubtask(AnalysisTask):
             lineWidth=contourLineWidth,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
+            contourColormap=contourColormap,
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
+            comparisonContourColormap=comparisonContourColormap,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             plotTitleFontSize=titleFontSize,
@@ -624,7 +633,7 @@ class PlotTransectSubtask(AnalysisTask):
             ax.spines['right'].set_linewidth(4)
 
         if compareAsContours:
-            add_inset(fig, fc, width=1.2, height=1.2, xbuffer=0.1, ybuffer=0.1)
+            add_inset(fig, fc, width=1., height=1., xbuffer=0.1, ybuffer=0.1)
         else:
             add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
 
@@ -843,3 +852,20 @@ class PlotTransectSubtask(AnalysisTask):
         triangulation_args = dict(x=x, y=y, triangles=tris)
 
         return triangulation_args
+
+    @staticmethod
+    def _get_contour_colormaps():
+        # https://stackoverflow.com/a/18926541/7728169
+
+        cmap = cm.get_cmap('cmo.haline')
+        x = numpy.linspace(0., 1., 100)
+        # passes through 0 and 1, but slowly at 0 and fast at 1 to minimize
+        # the yellow, which is also in the "hot" colormap
+        main_cmap = colors.LinearSegmentedColormap.from_list(
+            f'trunc_{cmap.name}', cmap(x**1.2))
+
+        cmap = cm.get_cmap('hot')
+        ref_cmap = colors.LinearSegmentedColormap.from_list(
+            f'trunc_{cmap.name}', cmap(numpy.linspace(0.1, 0.85, 100)))
+
+        return main_cmap, ref_cmap
