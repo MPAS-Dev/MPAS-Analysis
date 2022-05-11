@@ -623,7 +623,10 @@ class PlotTransectSubtask(AnalysisTask):
             ax.spines['left'].set_linewidth(4)
             ax.spines['right'].set_linewidth(4)
 
-        add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
+        if compareAsContours:
+            add_inset(fig, fc, width=1.2, height=1.2, xbuffer=0.1, ybuffer=0.1)
+        else:
+            add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
 
         savefig(outFileName, config, tight=False)
 

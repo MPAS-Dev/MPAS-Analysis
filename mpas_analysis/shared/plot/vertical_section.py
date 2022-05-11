@@ -980,7 +980,7 @@ def plot_vertical_section(
             comparisonFieldName = (comparisonFieldName + " (" +
                                    colorbarLabel + ")")
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
-                  loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
+                  loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=1)
 
     if title is not None:
         if plotAsContours and labelContours \
