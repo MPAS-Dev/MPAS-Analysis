@@ -525,7 +525,7 @@ class PlotTransectSubtask(AnalysisTask):
             compareAsContours = config.getboolean(
                 'transects', 'compareAsContoursOnSinglePlot')
 
-        contourLineWidth = config.getint('transects', 'contourLineWidth')
+        contourLineWidth = config.getfloat('transects', 'contourLineWidth')
         contourLineStyle = config.get('transects', 'contourLineStyle')
         comparisonContourLineStyle = config.get('transects',
                                                 'comparisonContourLineStyle')
@@ -533,17 +533,18 @@ class PlotTransectSubtask(AnalysisTask):
         if compareAsContours:
             contourLineColor = None
             comparisonContourLineColor = None
-            contourColormap, comparisonContourColormap = \
-                PlotTransectSubtask._get_contour_colormaps()
+            contourColormap = PlotTransectSubtask._get_contour_colormap()
             labelContours = config.getboolean(
                 'transects', 'labelContoursOnContourComparisonPlots')
+            comparisonContourLineWidth = \
+                config.getfloat('transects', 'comparisonContourLineWidth')
         else:
             contourLineColor = config.get('transects', 'contourLineColor')
             comparisonContourLineColor = None
             contourColormap = None
-            comparisonContourColormap = None
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
+            comparisonContourLineWidth = None
 
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
@@ -596,9 +597,9 @@ class PlotTransectSubtask(AnalysisTask):
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
             contourColormap=contourColormap,
+            comparisonContourLineWidth=comparisonContourLineWidth,
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
-            comparisonContourColormap=comparisonContourColormap,
             labelContours=labelContours,
             contourLabelPrecision=contourLabelPrecision,
             plotTitleFontSize=titleFontSize,
@@ -854,18 +855,11 @@ class PlotTransectSubtask(AnalysisTask):
         return triangulation_args
 
     @staticmethod
-    def _get_contour_colormaps():
+    def _get_contour_colormap():
         # https://stackoverflow.com/a/18926541/7728169
 
-        cmap = cm.get_cmap('cmo.haline')
-        x = numpy.linspace(0., 1., 100)
-        # passes through 0 and 1, but slowly at 0 and fast at 1 to minimize
-        # the yellow, which is also in the "hot" colormap
-        main_cmap = colors.LinearSegmentedColormap.from_list(
-            f'trunc_{cmap.name}', cmap(x**1.2))
-
         cmap = cm.get_cmap('hot')
-        ref_cmap = colors.LinearSegmentedColormap.from_list(
+        cmap = colors.LinearSegmentedColormap.from_list(
             f'trunc_{cmap.name}', cmap(numpy.linspace(0.1, 0.85, 100)))
 
-        return main_cmap, ref_cmap
+        return cmap

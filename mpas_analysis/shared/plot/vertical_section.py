@@ -77,9 +77,9 @@ def plot_vertical_section_comparison(
         maxXTicks=20,
         calendar='gregorian',
         compareAsContours=False,
+        comparisonContourLineWidth=None,
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
-        comparisonContourColormap=None,
         labelContours=False,
         contourLabelPrecision=1,
         resultSuffix='Result',
@@ -189,7 +189,7 @@ def plot_vertical_section_comparison(
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
 
-    lineWidth : int, optional
+    lineWidth : float, optional
         the line width of contour lines (if specified)
 
     lineStyle : str, optional
@@ -273,6 +273,10 @@ def plot_vertical_section_comparison(
        refArray is None, in which case only the contours of modelArray will be
        plotted on the single panel plot).
 
+    comparisonContourLineWidth : float, optional
+        the line width of contour lines of the comparisonFieldName field on
+        a contour comparison plot
+
     comparisonContourLineStyle : str, optional
         the line style of contour lines of the reference field on a contour
         comparison plot
@@ -337,15 +341,15 @@ def plot_vertical_section_comparison(
         # depending on how many x axes are to be displayed on the plots
         if singlePanel:
             if compareAsContours and refArray is not None and \
-                    contourColormap is None and \
-                    comparisonContourColormap is None:
+                    contourColormap is None:
                 # no color bar but there is a legend at the bottom
                 if len(xCoords) == 3:
                     figsize = (8, 8)
                 else:
                     figsize = (8, 7)
             else:
-                figsize = (8, 5)
+                # color bar and legend
+                figsize = (8, 7)
         elif len(xCoords) == 3:
             figsize = (8, 17)
         else:
@@ -436,9 +440,9 @@ def plot_vertical_section_comparison(
         contourComparisonField=contourComparisonField,
         comparisonFieldName=comparisonFieldName,
         originalFieldName=originalFieldName,
+        comparisonContourLineWidth=comparisonContourLineWidth,
         comparisonContourLineStyle=comparisonContourLineStyle,
         comparisonContourLineColor=comparisonContourLineColor,
-        comparisonContourColormap=comparisonContourColormap,
         labelContours=labelContours,
         contourLabelPrecision=contourLabelPrecision,
         maxTitleLength=maxTitleLength)
@@ -585,9 +589,9 @@ def plot_vertical_section(
         contourComparisonField=None,
         comparisonFieldName=None,
         originalFieldName=None,
+        comparisonContourLineWidth=None,
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
-        comparisonContourColormap=None,
         labelContours=False,
         contourLabelPrecision=1,
         maxTitleLength=70):
@@ -694,7 +698,7 @@ def plot_vertical_section(
     yLim : float array, optional
         y range of plot
 
-    lineWidth : int, optional
+    lineWidth : float, optional
         the line width of contour lines (if specified)
 
     lineStyle : str, optional
@@ -788,6 +792,10 @@ def plot_vertical_section(
         the name for the ``field`` field (for the purposes of labeling the
         contours on a contour comparison plot).  If contourComparisonField
         is None, this parameter is ignored.
+
+    comparisonContourLineWidth : float, optional
+        the line width of contour lines of the comparisonFieldName field on
+        a contour comparison plot
 
     comparisonContourLineStyle : str, optional
         the line style of contour lines of the comparisonFieldName field on
@@ -975,19 +983,26 @@ def plot_vertical_section(
             plt.clabel(cs1, fmt=fmt_string)
 
         if plotAsContours and contourComparisonField is not None:
+            if comparisonContourLineWidth is None:
+                comparisonContourLineWidth = lineWidth
             cs2 = plt.tricontour(maskedComparisonTriangulation,
                                  contourComparisonField.values.ravel(),
                                  levels=contourLevels,
                                  colors=comparisonContourLineColor,
                                  linestyles=comparisonContourLineStyle,
-                                 linewidths=lineWidth,
-                                 cmap=comparisonContourColormap)
+                                 linewidths=comparisonContourLineWidth,
+                                 cmap=contourColormap)
 
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
-    if plotAsContours and contourComparisonField is not None and \
-            lineColor is not None and comparisonContourLineColor is not None:
+    plotLegend = (((lineColor is not None and
+                    comparisonContourLineColor is not None) or
+                   (lineWidth is not None and
+                    comparisonContourLineWidth is not None)) and
+                  (plotAsContours and contourComparisonField is not None))
+
+    if plotLegend:
         h1, _ = cs1.legend_elements()
         h2, _ = cs2.legend_elements()
         if labelContours:
@@ -1043,29 +1058,13 @@ def plot_vertical_section(
                           yearStride=yearStrideXTicks)
 
     if contourLevels is not None:
-        if plotAsContours and contourComparisonField is not None and \
-                comparisonContourColormap is not None:
-            cbar2 = fig.colorbar(cs2, ax=ax, fraction=.05,
-                                 orientation='vertical',
-                                 spacing='proportional')
-            if colorbarLabel is None:
-                cbar2.set_label(comparisonFieldName)
-            else:
-                cbar2.set_label(f'{comparisonFieldName} ({colorbarLabel})')
-
         if contourColormap is not None:
             cbar1 = fig.colorbar(cs1, ax=ax, fraction=.05,
                                  orientation='vertical',
                                  spacing='proportional')
 
-            if contourComparisonField is None:
-                if colorbarLabel is None:
-                    cbar1.set_label(originalFieldName)
-                else:
-                    cbar1.set_label(f'{originalFieldName} ({colorbarLabel})')
-            else:
-                cbar1.ax.set_yticklabels([])
-                cbar1.set_label(originalFieldName)
+            if colorbarLabel is not None:
+                cbar1.set_label(colorbarLabel)
 
     # add a second x-axis scale, if it was requested
     if xCoords is not None and len(xCoords) >= 2:
