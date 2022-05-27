@@ -152,19 +152,24 @@
 
     <span class="n">register_custom_colormaps</span><span class="p">()</span>
 
-    <span class="n">colormapType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
-                              <span class="s1">&#39;colormapType</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">colormapType</span> <span class="o">==</span> <span class="s1">&#39;indexed&#39;</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span> <span class="o">=</span> <span class="n">_setup_indexed_colormap</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">colormapType</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">:</span>
-        <span class="p">(</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span> <span class="o">=</span> <span class="n">_setup_colormap_and_norm</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
-        <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;colormapType</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="n">colormapType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">colormapType</span> <span class="o">==</span> <span class="s1">&#39;indexed&#39;</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span> <span class="o">=</span> <span class="n">_setup_indexed_colormap</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">colormapType</span> <span class="o">==</span> <span class="s1">&#39;continuous&#39;</span><span class="p">:</span>
+            <span class="p">(</span><span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">ticks</span><span class="p">)</span> <span class="o">=</span> <span class="n">_setup_colormap_and_norm</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
+            <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">configSectionName</span><span class="si">}</span><span class="s1"> option &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">option</span><span class="si">}</span><span class="s1"> is not &quot;indexed&quot; or &quot;continuous&quot;&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> option colormapType</span><span class="si">{}</span><span class="s1"> is not &#39;</span>
-                         <span class="s1">&#39;&quot;indexed&quot; or &quot;continuous&quot;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                             <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+        <span class="n">colormap</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">ticks</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;contourLevels</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
