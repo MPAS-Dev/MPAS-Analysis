@@ -80,14 +80,22 @@ class WoceTransects(AnalysisTask):
         observationsDirectory = build_obs_path(
             config, 'ocean', 'woceSubdirectory')
 
-        obsFileNames = OrderedDict()
+        origObsFileNames = \
+            {'WOCE_A21': 'WOCE_A21_Drake_Passage_20181126.nc',
+             'WOCE_A23': 'WOCE_A23_South_Atlantic_20181126.nc',
+             'WOCE_A12': 'WOCE_A12_Prime_Meridian_20181126.nc'}
 
-        obsFileNames['WOCE_A21'] = \
-            'WOCE_A21_Drake_Passage_20181126.nc'
-        obsFileNames['WOCE_A23'] = \
-            'WOCE_A23_South_Atlantic_20181126.nc'
-        obsFileNames['WOCE_A12'] = \
-            'WOCE_A12_Prime_Meridian_20181126.nc'
+        obsFileNames = {}
+        for transectName in horizontalBounds:
+            found = False
+            for name in origObsFileNames:
+                if transectName.startswith(name):
+                    obsFileNames[transectName] = origObsFileNames[name]
+                    found = True
+                    break
+            if not found:
+                raise ValueError(f'Keys for horizontalBounds must start '
+                                 f'with one of {list(origObsFileNames)}')
 
         for transectName in obsFileNames:
             fileName = '{}/{}'.format(observationsDirectory,
@@ -109,12 +117,17 @@ class WoceTransects(AnalysisTask):
                 {'mpas': 'timeMonthly_avg_potentialDensity',
                  'obs': 'potentialDensity',
                  'titleName': 'Potential Density',
-                 'units': r'kg m$^{-3}$'}}
+                 'units': r'kg m$^{-3}$'},
+             'potentialDensityContour':
+                 {'mpas': 'timeMonthly_avg_potentialDensity',
+                  'obs': 'potentialDensity',
+                  'titleName': 'Potential Density Contours',
+                  'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'WOCE_transects'
         if horizontalResolution not in ['obs', 'mpas']:
-            transectCollectionName = '{}_{}km'.format(transectCollectionName,
-                                                      horizontalResolution)
+            transectCollectionName = \
+                f'{transectCollectionName}_{horizontalResolution}km'
 
         transectsObservations = TransectsObservations(config, obsFileNames,
                                                       horizontalResolution,
@@ -140,13 +153,15 @@ class WoceTransects(AnalysisTask):
 
         else:
             controlRunName = controlConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Control: {}'.format(controlRunName)
+            refTitleLabel = f'Control: {controlRunName}'
 
             diffTitleLabel = 'Main - Control'
 
         fieldNameDict = {'temperature': 'temperatureTransect',
                          'salinity': 'salinityTransect',
-                         'potentialDensity': 'potentialDensityTransect'}
+                         'potentialDensity': 'potentialDensityTransect',
+                         'potentialDensityContour':
+                             'potentialDensityContourTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:
@@ -159,9 +174,8 @@ class WoceTransects(AnalysisTask):
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     titleName = fields[fieldName]['titleName']
-                    fieldNameInTytle = '{} from {}'.format(
-                        titleName,
-                        transectName.replace('_', ' '))
+                    fieldNameInTitle = \
+                        f'{titleName} from {transectName.replace("_", " ")}'
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(
@@ -171,20 +185,18 @@ class WoceTransects(AnalysisTask):
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle=fieldNameInTytle,
+                        fieldNameInTitle=fieldNameInTitle,
                         mpasFieldName=fields[fieldName]['mpas'],
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=fields[fieldName]['units'],
-                        imageCaption='{} {}'.format(fieldNameInTytle,
-                                                    season),
+                        imageCaption=f'{fieldNameInTitle} {season}',
                         galleryGroup='WOCE Transects',
                         groupSubtitle=None,
                         groupLink='woce',
                         galleryName=titleName,
-                        configSectionName='woce{}Transects'.format(
-                            fieldNameUpper),
+                        configSectionName=f'woce{fieldNameUpper}Transects',
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)

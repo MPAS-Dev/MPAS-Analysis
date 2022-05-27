@@ -18,6 +18,8 @@ observations or reference data.
 
 import xarray as xr
 import numpy
+from matplotlib import colors
+from matplotlib import cm
 
 from geometric_features import FeatureCollection
 
@@ -515,22 +517,36 @@ class PlotTransectSubtask(AnalysisTask):
         # what line styles and line colors to use, and whether and how
         # to label contours
 
-        compareAsContours = config.getboolean('transects',
-                                              'compareAsContoursOnSinglePlot')
+        if config.has_option(configSectionName,
+                             'compareAsContoursOnSinglePlot'):
+            compareAsContours = config.getboolean(
+                configSectionName, 'compareAsContoursOnSinglePlot')
+        else:
+            compareAsContours = config.getboolean(
+                'transects', 'compareAsContoursOnSinglePlot')
 
         contourLineStyle = config.get('transects', 'contourLineStyle')
-        contourLineColor = config.get('transects', 'contourLineColor')
         comparisonContourLineStyle = config.get('transects',
                                                 'comparisonContourLineStyle')
-        comparisonContourLineColor = config.get('transects',
-                                                'comparisonContourLineColor')
 
         if compareAsContours:
+            contourLineWidth = \
+                config.getfloat('transects', 'mainContourLineWidth')
+            contourLineColor = None
+            comparisonContourLineColor = None
+            contourColormap = PlotTransectSubtask._get_contour_colormap()
             labelContours = config.getboolean(
                 'transects', 'labelContoursOnContourComparisonPlots')
+            comparisonContourLineWidth = \
+                config.getfloat('transects', 'comparisonContourLineWidth')
         else:
+            contourLineWidth = config.getfloat('transects', 'contourLineWidth')
+            contourLineColor = config.get('transects', 'contourLineColor')
+            comparisonContourLineColor = None
+            contourColormap = None
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
+            comparisonContourLineWidth = None
 
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
@@ -579,8 +595,11 @@ class PlotTransectSubtask(AnalysisTask):
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
+            lineWidth=contourLineWidth,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
+            contourColormap=contourColormap,
+            comparisonContourLineWidth=comparisonContourLineWidth,
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
@@ -616,7 +635,10 @@ class PlotTransectSubtask(AnalysisTask):
             ax.spines['left'].set_linewidth(4)
             ax.spines['right'].set_linewidth(4)
 
-        add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
+        if compareAsContours:
+            add_inset(fig, fc, width=1., height=1., xbuffer=0.1, ybuffer=0.1)
+        else:
+            add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
 
         savefig(outFileName, config, tight=False)
 
@@ -833,3 +855,13 @@ class PlotTransectSubtask(AnalysisTask):
         triangulation_args = dict(x=x, y=y, triangles=tris)
 
         return triangulation_args
+
+    @staticmethod
+    def _get_contour_colormap():
+        # https://stackoverflow.com/a/18926541/7728169
+
+        cmap = cm.get_cmap('hot')
+        cmap = colors.LinearSegmentedColormap.from_list(
+            f'trunc_{cmap.name}', cmap(numpy.linspace(0.1, 0.85, 100)))
+
+        return cmap
