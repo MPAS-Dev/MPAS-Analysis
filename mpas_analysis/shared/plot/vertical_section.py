@@ -972,7 +972,10 @@ def plot_vertical_section(
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        cs1 = plt.tricontour(maskedTriangulation, field.values.ravel(),
+        mask = field.notnull()
+        fieldMasked = field.where(mask, 0.0).values.ravel()
+
+        cs1 = plt.tricontour(maskedTriangulation, fieldMasked,
                              levels=contourLevels,
                              colors=lineColor,
                              linestyles=lineStyle,
@@ -985,8 +988,10 @@ def plot_vertical_section(
         if plotAsContours and contourComparisonField is not None:
             if comparisonContourLineWidth is None:
                 comparisonContourLineWidth = lineWidth
+            mask = contourComparisonField.notnull()
+            fieldMasked = contourComparisonField.where(mask, 0.0).values.ravel()
             cs2 = plt.tricontour(maskedComparisonTriangulation,
-                                 contourComparisonField.values.ravel(),
+                                 fieldMasked,
                                  levels=contourLevels,
                                  colors=comparisonContourLineColor,
                                  linestyles=comparisonContourLineStyle,
