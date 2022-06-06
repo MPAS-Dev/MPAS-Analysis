@@ -661,10 +661,6 @@ class PlotMeltSubtask(AnalysisTask):
         else:
             defaultFontSize = None
 
-        if self.iceShelf != 'Antarctica' and self.iceShelf != 'Filchner':
-            # we only need the legend in those 2
-            legendText = None
-
         fig = timeseries_analysis_plot(config, fields, calendar=calendar,
                                        title=title, xlabel=xLabel,
                                        ylabel=yLabel,
