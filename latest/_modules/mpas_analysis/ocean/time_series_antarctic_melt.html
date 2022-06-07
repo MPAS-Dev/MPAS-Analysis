@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -744,10 +745,6 @@
                                             <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span> <span class="o">!=</span> <span class="s1">&#39;Antarctica&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span> <span class="o">!=</span> <span class="s1">&#39;Filchner&#39;</span><span class="p">:</span>
-            <span class="c1"># we only need the legend in those 2</span>
-            <span class="n">legendText</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>

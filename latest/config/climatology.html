@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -114,7 +115,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="climatology">
-<span id="config-climatology"></span><h1>Climatology<a class="headerlink" href="#climatology" title="Permalink to this headline">¶</a></h1>
+<span id="config-climatology"></span><h1>Climatology<a class="headerlink" href="#climatology" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[climatology]</span></code> section of a configuration file contains options used to
 determine the start and end years of climatologies, the reference years for
 anomalies and to control remapping of climatologies to comparions grids:</p>
@@ -169,14 +170,14 @@ anomalies and to control remapping of climatologies to comparions grids:</p>
 </pre></div>
 </div>
 <div class="section" id="start-and-end-year">
-<h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Permalink to this headline">¶</a></h2>
+<h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Permalink to this heading">¶</a></h2>
 <p>A custom config file should specify a start and end year for climatologies.
 Simulation data must exist for all 12 months of each year in this range.
 Otherwise, the range will be reduced to those years with complete data and
 a warning message will be displayed.</p>
 </div>
 <div class="section" id="anomaly-reference-year">
-<h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Permalink to this headline">¶</a></h2>
+<h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Permalink to this heading">¶</a></h2>
 <p>Anomalies between a climatology and the associated field from a reference year
 is used in a few analysis tasks.  By default, the reference year is not
 specified in the configuration file and it taken to be the start of the
@@ -189,7 +190,7 @@ specify a different year to use for computing anomalies:</p>
 </div>
 </div>
 <div class="section" id="remapping-options">
-<span id="config-remapping"></span><h2>Remapping Options<a class="headerlink" href="#remapping-options" title="Permalink to this headline">¶</a></h2>
+<span id="config-remapping"></span><h2>Remapping Options<a class="headerlink" href="#remapping-options" title="Permalink to this heading">¶</a></h2>
 <p>Climatologies are remapped from MPAS meshes and observations grids to common
 comparison grids.  The remapping can be performed with any of three methods:
 <code class="docutils literal notranslate"><span class="pre">bilinear</span></code>, <code class="docutils literal notranslate"><span class="pre">neareststod</span></code> (nearest neighbor) or <code class="docutils literal notranslate"><span class="pre">conserve</span></code>.  Mapping
@@ -223,7 +224,7 @@ be being masked out unnecessarily on the comparison grid, perhaps this value
 should be made smaller.</p>
 </div>
 <div class="section" id="computing-climatologies">
-<h2>Computing climatologies<a class="headerlink" href="#computing-climatologies" title="Permalink to this headline">¶</a></h2>
+<h2>Computing climatologies<a class="headerlink" href="#computing-climatologies" title="Permalink to this heading">¶</a></h2>
 <p>MPAS-Analysis typically uses the <a class="reference external" href="http://nco.sourceforge.net/nco.html">NCO</a> tool <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> to compute
 climatologies.  For some large data sets on a single node, <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> runs
 out of memory in <code class="docutils literal notranslate"><span class="pre">bck</span></code> mode but is painfully slow in <code class="docutils literal notranslate"><span class="pre">serial</span></code> mode and
@@ -235,7 +236,7 @@ of computing climatologies:</p>
 </div>
 </div>
 <div class="section" id="other-options">
-<h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this headline">¶</a></h2>
+<h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
 <li><p><a class="reference internal" href="dask_threads.html#dask-threads"><span class="std std-ref">Dask threads and subprocess count</span></a></p></li>
