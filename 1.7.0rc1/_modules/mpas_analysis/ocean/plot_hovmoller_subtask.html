@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.plot_hovmoller_subtask &mdash; MPAS-Analysis 1.7.0rc1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.0rc1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.ocean.plot_hovmoller_subtask</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.plot_hovmoller_subtask</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section_comparison</span><span class="p">,</span> \
+    <span class="n">savefig</span><span class="p">,</span> <span class="n">add_inset</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+    <span class="n">decode_strings</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
+
+
+<div class="viewcode-block" id="PlotHovmollerSubtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask">[docs]</a><span class="k">class</span> <span class="nc">PlotHovmollerSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a time series vs. depth</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    controlconfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Configuration options for a control run (if any)</span>
+
+<span class="sd">    regionName : str</span>
+<span class="sd">        The name of the region to plot</span>
+
+<span class="sd">    inFileName : str</span>
+<span class="sd">        The file containing the time-depth data set to plot</span>
+
+<span class="sd">    outFileLabel : str</span>
+<span class="sd">        The prefix on each plot and associated XML file</span>
+
+<span class="sd">    fieldNameInTitle : str</span>
+<span class="sd">        The name of the field being plotted, as used in the plot title</span>
+
+<span class="sd">    mpasFieldName : str</span>
+<span class="sd">        The name of the variable in the MPAS timeSeriesStatsMonthly output</span>
+
+<span class="sd">    unitsLabel : str</span>
+<span class="sd">        The units of the plotted field, to be displayed on color bars</span>
+
+<span class="sd">    sectionName : str</span>
+<span class="sd">        A section in the config file where the colormap and contour values</span>
+<span class="sd">        are defined</span>
+
+<span class="sd">    regionMaskFile : str</span>
+<span class="sd">        A geojson file with regions (including one corresponding to</span>
+<span class="sd">        ``regionName``) that will be used to make an inset</span>
+
+<span class="sd">    thumbnailSuffix : str</span>
+<span class="sd">        The text to be displayed under the thumbnail image, to which the</span>
+<span class="sd">        region name will be prepended</span>
+
+<span class="sd">    imageCaption : str</span>
+<span class="sd">        The caption when mousing over the plot or displaying it full</span>
+<span class="sd">        screen</span>
+
+<span class="sd">    galleryGroup : str</span>
+<span class="sd">        The name of the group of galleries in which this plot belongs</span>
+
+<span class="sd">    groupSubtitle : str</span>
+<span class="sd">        The subtitle of the group in which this plot belongs (or blank</span>
+<span class="sd">        if none)</span>
+
+<span class="sd">    groupLink : str</span>
+<span class="sd">        A short name (with no spaces) for the link to the gallery group</span>
+
+<span class="sd">    galleryName : str</span>
+<span class="sd">        The name of the gallery in which this plot belongs</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
+
+<div class="viewcode-block" id="PlotHovmollerSubtask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span>
+                 <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span> <span class="n">unitsLabel</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">,</span>
+                 <span class="n">thumbnailSuffix</span><span class="p">,</span> <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span>
+                 <span class="n">groupLink</span><span class="p">,</span> <span class="n">galleryName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask : ``AnalysisTask``</span>
+<span class="sd">            The parent task of which this is a subtask</span>
+
+<span class="sd">        regionName : str</span>
+<span class="sd">            The name of the region to plot</span>
+
+<span class="sd">        inFileName : str</span>
+<span class="sd">            The file containing the time-depth data set to plot</span>
+
+<span class="sd">        outFileLabel : str</span>
+<span class="sd">            The prefix on each plot and associated XML file</span>
+
+<span class="sd">        fieldNameInTitle : str</span>
+<span class="sd">            The name of the field being plotted, as used in the plot title</span>
+
+<span class="sd">        mpasFieldName : str</span>
+<span class="sd">            The name of the variable in the MPAS timeSeriesStatsMonthly output</span>
+
+<span class="sd">        unitsLabel : str</span>
+<span class="sd">            the units of the plotted field, to be displayed on color bars</span>
+
+<span class="sd">        sectionName : str</span>
+<span class="sd">            a section in the config file where the colormap and contour values</span>
+<span class="sd">            are defined</span>
+
+<span class="sd">        thumbnailSuffix : str</span>
+<span class="sd">            The text to be displayed under the thumbnail image, to which the</span>
+<span class="sd">            region name will be prepended</span>
+
+<span class="sd">        imageCaption : str</span>
+<span class="sd">            the caption when mousing over the plot or displaying it full</span>
+<span class="sd">            screen</span>
+
+<span class="sd">        galleryGroup : str</span>
+<span class="sd">            the name of the group of galleries in which this plot belongs</span>
+
+<span class="sd">        groupSubtitle : str</span>
+<span class="sd">            the subtitle of the group in which this plot belongs (or blank</span>
+<span class="sd">            if none)</span>
+
+<span class="sd">        groupLink : str</span>
+<span class="sd">            a short name (with no spaces) for the link to the gallery group</span>
+
+<span class="sd">        galleryName : str</span>
+<span class="sd">            the name of the gallery in which this plot belongs</span>
+
+<span class="sd">        subtaskName :  str, optional</span>
+<span class="sd">            The name of the subtask (``plotHovmoller&lt;RegionName&gt;`` by default)</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+
+<span class="sd">        regionMaskFile : str, optional</span>
+<span class="sd">            A geojson file with regions (including one corresponding to</span>
+<span class="sd">            ``regionName``) that will be used to make an inset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plotHovmoller</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+
+        <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlotHovmollerSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span> <span class="o">=</span> <span class="n">regionName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span> <span class="o">=</span> <span class="n">inFileName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outFileLabel</span> <span class="o">=</span> <span class="n">outFileLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="n">fieldNameInTitle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span> <span class="o">=</span> <span class="n">unitsLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="n">sectionName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskFile</span> <span class="o">=</span> <span class="n">regionMaskFile</span>
+
+        <span class="c1"># xml/html related variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailSuffix</span> <span class="o">=</span> <span class="n">thumbnailSuffix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span> <span class="o">=</span> <span class="n">imageCaption</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span> <span class="o">=</span> <span class="n">galleryGroup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupSubtitle</span> <span class="o">=</span> <span class="n">groupSubtitle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupLink</span> <span class="o">=</span> <span class="n">groupLink</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">galleryName</span> <span class="o">=</span> <span class="n">galleryName</span></div>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Greg Streletz</span>
+
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#     self.runDirectory , self.historyDirectory, self.plotsDirectory,</span>
+        <span class="c1">#     self.namelist, self.runStreams, self.historyStreams,</span>
+        <span class="c1">#     self.calendar</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlotHovmollerSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">))</span>
+            <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">controlFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">controlFileName</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">):</span>
+            <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
+
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFileLabel</span><span class="p">,</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">,</span>
+                                            <span class="n">mainRunName</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)]</span>
+
+        <span class="k">return</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Make the Hovmoller plot from the time series.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting </span><span class="si">{}</span><span class="s2"> time series vs. depth...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">))</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load ocean data...&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+
+            <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+            <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">regionDim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
+            <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+            <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
+            <span class="n">regionDim</span> <span class="o">=</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">regionDim</span><span class="p">:</span> <span class="n">regionIndex</span><span class="p">})</span>
+
+        <span class="c1"># Note: restart file, not a mesh file because we need refBottomDepth,</span>
+        <span class="c1"># not in a mesh file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">restartFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one &#39;</span>
+                          <span class="s1">&#39;restart file for plotting time series vs. depth&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Define/read in general variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Read in depth...&#39;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsRestart</span><span class="p">:</span>
+            <span class="c1"># reference depth [m]</span>
+            <span class="n">depths</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">depths</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">depths</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">depths</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">depths</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">Time</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Time</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">]</span>
+
+        <span class="c1"># drop any NaN values, because this causes issues with rolling averages</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (years)&#39;</span>
+        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Depth (m)&#39;</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">regionNameInTitle</span><span class="p">)</span>
+
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
+            <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
+            <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">):</span>
+            <span class="n">yLim</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yLim&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yLim</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">refField</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">refTitle</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">diffTitle</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">controlConfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span>
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlFileName</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+                <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRef</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+                <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+                <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="n">regionDim</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                                                         <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
+                <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
+                                                             <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+                <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+                <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
+                <span class="n">regionDim</span> <span class="o">=</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span>
+
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">regionDim</span><span class="p">:</span> <span class="n">regionIndex</span><span class="p">})</span>
+            <span class="n">refField</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">]</span>
+            <span class="c1"># drop any NaN values, because this causes issues with rolling</span>
+            <span class="c1"># averages</span>
+            <span class="n">refMask</span> <span class="o">=</span> <span class="n">refField</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+            <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">refMask</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="n">refField</span> <span class="o">=</span> <span class="n">refField</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">assert</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">refField</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="n">field</span> <span class="o">-</span> <span class="n">refField</span>
+            <span class="n">refTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">diffTitle</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">):</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">fig</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">suptitle</span> <span class="o">=</span> <span class="n">plot_vertical_section_comparison</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">refField</span><span class="p">,</span> <span class="n">diff</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="n">xCoords</span><span class="o">=</span><span class="n">Time</span><span class="p">,</span>
+            <span class="n">zCoord</span><span class="o">=</span><span class="n">z</span><span class="p">,</span> <span class="n">colorbarLabel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">unitsLabel</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">modelTitle</span><span class="o">=</span><span class="n">mainRunName</span><span class="p">,</span> <span class="n">refTitle</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span> <span class="n">diffTitle</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
+            <span class="n">xlabels</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">xCoordIsTime</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
+            <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
+            <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span> <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span> <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="c1"># shift the super-title a little to the left to make room for the</span>
+            <span class="c1"># inset</span>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">suptitle</span><span class="o">.</span><span class="n">get_position</span><span class="p">()</span>
+            <span class="n">suptitle</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+            <span class="n">fcAll</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionMaskFile</span><span class="p">)</span>
+
+            <span class="n">fc</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">fcAll</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">:</span>
+                    <span class="n">fc</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+            <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">xbuffer</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">ybuffer</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+            <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+        <span class="n">write_image_xml</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">filePrefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
+            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span><span class="p">,</span>
+            <span class="n">groupSubtitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSubtitle</span><span class="p">,</span>
+            <span class="n">groupLink</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groupLink</span><span class="p">,</span>
+            <span class="n">gallery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryName</span><span class="p">,</span>
+            <span class="n">thumbnailDescription</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">regionNameInTitle</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailSuffix</span><span class="p">),</span>
+            <span class="n">imageDescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">,</span>
+            <span class="n">imageCaption</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

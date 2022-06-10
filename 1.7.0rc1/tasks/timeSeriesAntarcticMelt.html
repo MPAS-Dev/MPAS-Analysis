@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>timeSeriesAntarcticMelt &mdash; MPAS-Analysis 1.7.0rc1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="timeSeriesOceanRegions" href="timeSeriesOceanRegions.html" />
+    <link rel="prev" title="hovmollerOceanRegions" href="hovmollerOceanRegions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.0rc1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">timeSeriesAntarcticMelt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ice-shelf-and-region-names">Ice Shelf and Region Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-options">Other Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
+      <li>timeSeriesAntarcticMelt</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tasks/timeSeriesAntarcticMelt.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="timeseriesantarcticmelt">
+<span id="task-timeseriesantarcticmelt"></span><h1>timeSeriesAntarcticMelt<a class="headerlink" href="#timeseriesantarcticmelt" title="Permalink to this heading">¶</a></h1>
+<p>An analysis task for plotting time series of mean melt rates per ice shelf or
+Antarctic region along with observations from <a class="reference external" href="http://doi.org/10.1126/science.1235798">Rignot et al. (2013)</a>.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">timeSeries</span><span class="p">,</span> <span class="n">melt</span><span class="p">,</span> <span class="n">landIceCavities</span>
+</pre></div>
+</div>
+<div class="section" id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">timeSeriesAntarcticMelt</span><span class="p">]</span>
+<span class="c1">## options related to plotting time series of melt below Antarctic ice shelves</span>
+
+<span class="c1"># list of ice shelves to plot or [&#39;all&#39;] for all 106 ice shelves and regions.</span>
+<span class="c1"># See &quot;regionNames&quot; in the ice shelf masks file in regionMaskSubdirectory for</span>
+<span class="c1"># details.</span>
+<span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Antarctica&#39;</span><span class="p">,</span> <span class="s1">&#39;Peninsula&#39;</span><span class="p">,</span> <span class="s1">&#39;West Antarctica&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;East Antarctica&#39;</span><span class="p">,</span> <span class="s1">&#39;Larsen_C&#39;</span><span class="p">,</span> <span class="s1">&#39;Filchner&#39;</span><span class="p">,</span> <span class="s1">&#39;Ronne&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Filchner-Ronne&#39;</span><span class="p">,</span> <span class="s1">&#39;Brunt_Stancomb&#39;</span><span class="p">,</span> <span class="s1">&#39;Fimbul&#39;</span><span class="p">,</span> <span class="s1">&#39;Amery&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Totten&#39;</span><span class="p">,</span> <span class="s1">&#39;Eastern_Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Western_Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Ross&#39;</span><span class="p">,</span> <span class="s1">&#39;Getz&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;Thwaites&#39;</span><span class="p">,</span> <span class="s1">&#39;Pine_Island&#39;</span><span class="p">,</span> <span class="s1">&#39;Abbot&#39;</span><span class="p">,</span> <span class="s1">&#39;George_VI&#39;</span><span class="p">]</span>
+
+<span class="c1"># Number of months over which to compute moving average</span>
+<span class="n">movingAverageMonths</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
+<span class="c1"># to start at the beginning of the time series.</span>
+
+<span class="c1"># firstYearXTicks = 1</span>
+
+<span class="c1"># An optional number of years between tick marks on the x axis.  Leave</span>
+<span class="c1"># commented out to determine the distance between ticks automatically.</span>
+
+<span class="c1"># yearStrideXTicks = 1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ice-shelf-and-region-names">
+<h2>Ice Shelf and Region Names<a class="headerlink" href="#ice-shelf-and-region-names" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">iceShelvesToPlot</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all 106 ice shelves
+and regions (not recommended, as this is typically a waste of time). Otherwise,
+it is a list consisting of any subset of the following ice shelves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Abbot&quot;</span><span class="p">,</span> <span class="s2">&quot;Amery&quot;</span><span class="p">,</span> <span class="s2">&quot;Atka&quot;</span><span class="p">,</span> <span class="s2">&quot;Aviator&quot;</span><span class="p">,</span> <span class="s2">&quot;Bach&quot;</span><span class="p">,</span> <span class="s2">&quot;Baudouin&quot;</span><span class="p">,</span> <span class="s2">&quot;Borchgrevink&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Brahms&quot;</span><span class="p">,</span> <span class="s2">&quot;Brunt_Stancomb&quot;</span><span class="p">,</span> <span class="s2">&quot;Campbell&quot;</span><span class="p">,</span> <span class="s2">&quot;Cheetham&quot;</span><span class="p">,</span> <span class="s2">&quot;Conger_Glenzer&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Cook&quot;</span><span class="p">,</span> <span class="s2">&quot;Cosgrove&quot;</span><span class="p">,</span> <span class="s2">&quot;Crosson&quot;</span><span class="p">,</span> <span class="s2">&quot;Dennistoun&quot;</span><span class="p">,</span> <span class="s2">&quot;Dibble&quot;</span><span class="p">,</span> <span class="s2">&quot;Dotson&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Drygalski&quot;</span><span class="p">,</span> <span class="s2">&quot;Edward_VIII&quot;</span><span class="p">,</span> <span class="s2">&quot;Ekstrom&quot;</span><span class="p">,</span> <span class="s2">&quot;Ferrigno&quot;</span><span class="p">,</span> <span class="s2">&quot;Filchner&quot;</span><span class="p">,</span> <span class="s2">&quot;Fimbul&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Fitzgerald&quot;</span><span class="p">,</span> <span class="s2">&quot;Frost&quot;</span><span class="p">,</span> <span class="s2">&quot;GeikieInlet&quot;</span><span class="p">,</span> <span class="s2">&quot;George_VI&quot;</span><span class="p">,</span> <span class="s2">&quot;Getz&quot;</span><span class="p">,</span> <span class="s2">&quot;Gillet&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Hamilton&quot;</span><span class="p">,</span> <span class="s2">&quot;Hannan&quot;</span><span class="p">,</span> <span class="s2">&quot;HarbordGlacier&quot;</span><span class="p">,</span> <span class="s2">&quot;Helen&quot;</span><span class="p">,</span> <span class="s2">&quot;Holmes&quot;</span><span class="p">,</span> <span class="s2">&quot;HolmesWest&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Hull&quot;</span><span class="p">,</span> <span class="s2">&quot;Jelbart&quot;</span><span class="p">,</span> <span class="s2">&quot;Land&quot;</span><span class="p">,</span> <span class="s2">&quot;Larsen_B&quot;</span><span class="p">,</span> <span class="s2">&quot;Larsen_C&quot;</span><span class="p">,</span> <span class="s2">&quot;Larsen_D&quot;</span><span class="p">,</span> <span class="s2">&quot;Larsen_E&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Larsen_F&quot;</span><span class="p">,</span> <span class="s2">&quot;Larsen_G&quot;</span><span class="p">,</span> <span class="s2">&quot;Lazarev&quot;</span><span class="p">,</span> <span class="s2">&quot;Lillie&quot;</span><span class="p">,</span> <span class="s2">&quot;Mariner&quot;</span><span class="p">,</span> <span class="s2">&quot;Matusevitch&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Mendelssohn&quot;</span><span class="p">,</span> <span class="s2">&quot;Mertz&quot;</span><span class="p">,</span> <span class="s2">&quot;Moscow_University&quot;</span><span class="p">,</span> <span class="s2">&quot;Moubray&quot;</span><span class="p">,</span> <span class="s2">&quot;Mulebreen&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Myers&quot;</span><span class="p">,</span> <span class="s2">&quot;Nansen&quot;</span><span class="p">,</span> <span class="s2">&quot;Nickerson&quot;</span><span class="p">,</span> <span class="s2">&quot;Ninnis&quot;</span><span class="p">,</span> <span class="s2">&quot;Nivl&quot;</span><span class="p">,</span> <span class="s2">&quot;Noll&quot;</span><span class="p">,</span> <span class="s2">&quot;Nordenskjold&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Pine_Island&quot;</span><span class="p">,</span> <span class="s2">&quot;PourquoiPas&quot;</span><span class="p">,</span> <span class="s2">&quot;Prince_Harald&quot;</span><span class="p">,</span> <span class="s2">&quot;Publications&quot;</span><span class="p">,</span>  <span class="s2">&quot;Quar&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Rayner_Thyer&quot;</span><span class="p">,</span> <span class="s2">&quot;Rennick&quot;</span><span class="p">,</span> <span class="s2">&quot;Richter&quot;</span><span class="p">,</span> <span class="s2">&quot;Riiser-Larsen&quot;</span><span class="p">,</span> <span class="s2">&quot;Ronne&quot;</span><span class="p">,</span> <span class="s2">&quot;Western_Ross&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Eastern_Ross&quot;</span><span class="p">,</span> <span class="s2">&quot;Shackleton&quot;</span><span class="p">,</span> <span class="s2">&quot;Shirase&quot;</span><span class="p">,</span> <span class="s2">&quot;Slava&quot;</span><span class="p">,</span> <span class="s2">&quot;SmithInlet&quot;</span><span class="p">,</span> <span class="s2">&quot;Stange&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Sulzberger&quot;</span><span class="p">,</span> <span class="s2">&quot;Suvorov&quot;</span><span class="p">,</span> <span class="s2">&quot;Swinburne&quot;</span><span class="p">,</span> <span class="s2">&quot;Thwaites&quot;</span><span class="p">,</span> <span class="s2">&quot;Tinker&quot;</span><span class="p">,</span> <span class="s2">&quot;Totten&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Tracy_Tremenchus&quot;</span><span class="p">,</span> <span class="s2">&quot;Tucker&quot;</span><span class="p">,</span> <span class="s2">&quot;Underwood&quot;</span><span class="p">,</span> <span class="s2">&quot;Utsikkar&quot;</span><span class="p">,</span> <span class="s2">&quot;Venable&quot;</span><span class="p">,</span> <span class="s2">&quot;Verdi&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Vigrid&quot;</span><span class="p">,</span> <span class="s2">&quot;Vincennes&quot;</span><span class="p">,</span> <span class="s2">&quot;Voyeykov&quot;</span><span class="p">,</span> <span class="s2">&quot;West&quot;</span><span class="p">,</span> <span class="s2">&quot;Wilkins&quot;</span><span class="p">,</span> <span class="s2">&quot;Wilma_Robert_Downer&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Withrow&quot;</span><span class="p">,</span> <span class="s2">&quot;Wordie&quot;</span><span class="p">,</span> <span class="s2">&quot;Wylde&quot;</span><span class="p">,</span>  <span class="s2">&quot;Zubchatyy&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>or these regions made up of 2 or more ice shelves:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Antarctica&quot;</span><span class="p">,</span> <span class="s2">&quot;Peninsula&quot;</span><span class="p">,</span> <span class="s2">&quot;West Antarctica&quot;</span><span class="p">,</span> <span class="s2">&quot;East Antarctica&quot;</span><span class="p">,</span> <span class="s2">&quot;Ross&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;Filchner-Ronne&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE1&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE2&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE3&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE4&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE5&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;IMBIE6&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE7&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE8&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE9&quot;</span><span class="p">,</span>   <span class="s2">&quot;IMBIE10&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE11&quot;</span><span class="p">,</span>  <span class="s2">&quot;IMBIE12&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;IMBIE13&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE14&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE15&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE16&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE17&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE18&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE19&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;IMBIE20&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE21&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE22&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE23&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE24&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE25&quot;</span><span class="p">,</span> <span class="s2">&quot;IMBIE26&quot;</span><span class="p">,</span>
+ <span class="s2">&quot;IMBIE27&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The default list of ice shelves and regions was determined to highlight the
+largest ice shelves and regions along with a representative sample of smaller
+shelves from different regions.</p>
+<p>Most of these regions are determined based on the centroid locations given
+in the supplementary material of <a class="reference external" href="http://doi.org/10.1126/science.1235798">Rignot et al. (2013)</a>.  Ice shelf regions
+have been extended into grounded ice and onto the Antarctic continental shelf
+based which floating ice shelf is closest.  The <a class="reference external" href="http://imbie.org/imbie-2016/drainage-basins/">IMBIE Basins</a> are defined
+following <a class="reference external" href="https://icesat4.gsfc.nasa.gov/cryo_data/ant_grn_drainage_systems.php">Zwally et al. (2012)</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Time series are computed and stored in a NetCDF file for all 106 ice shelves
+and regions even if only a subset are plotted, allowing you to plot
+additional ice shelves externally or by re-running MPAS-Analysis.  These
+can be found in <code class="docutils literal notranslate"><span class="pre">timeseries/iceShelfAggregatedFluxes.nc</span></code> within your output
+base directory</p>
+</div>
+</div>
+<div class="section" id="other-options">
+<h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../config/moving_average.html#config-moving-average"><span class="std std-ref">Moving Average</span></a></p></li>
+<li><p><a class="reference internal" href="../config/time_axis_ticks.html#config-time-axis-ticks"><span class="std std-ref">Time-Axis Tick Marks</span></a></p></li>
+</ul>
+</div>
+<div class="section" id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference internal" href="../obs/rignot_melt.html#rignot-melt"><span class="std std-ref">Antarctic melt rates and fluxes</span></a></p>
+</div>
+<div class="section" id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="../_images/melt_flux_east_ant.png"><img alt="../_images/melt_flux_east_ant.png" class="align-center" src="../_images/melt_flux_east_ant.png" style="width: 500px;" /></a>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hovmollerOceanRegions.html" class="btn btn-neutral float-left" title="hovmollerOceanRegions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="timeSeriesOceanRegions.html" class="btn btn-neutral float-right" title="timeSeriesOceanRegions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
