@@ -34,6 +34,14 @@ def main():
     account, partition, configuration, qos = \
         machine_info.get_account_defaults()
 
+    use_e3sm_unified = 'E3SMU_SCRIPT' in os.environ
+    if use_e3sm_unified:
+        e3sm_unified_script = os.environ['E3SMU_SCRIPT']
+        args.branch = \
+            os.path.splitext(os.path.basename(e3sm_unified_script))[0]
+    else:
+        e3sm_unified_script = None
+
     if machine == 'chrysalis':
         # we don't want the default, which is 'debug'
         partition = 'compute'
@@ -169,7 +177,9 @@ def main():
             template_data = template_file.read()
         template = Template(template_data)
         job_text = template.render(
-            sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
+            sbatch=sbatch, conda_base=conda_base,
+            use_e3sm_unified=use_e3sm_unified,
+            e3sm_unified_script=e3sm_unified_script, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
             parallel_exec=parallel_exec, html_base=html_base,
             out_subdir=out_subdir, out_common_dir=out_common_dir)
