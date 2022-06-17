@@ -144,9 +144,10 @@ def main():
         template_data = template_file.read()
     template = Template(template_data)
     config_text = template.render(
-        run_name=args.run, input_base=input_base, simulation=simulation,
-        mesh=mesh, output_base=output_base, html_base=html_base,
-        out_subdir=out_subdir, generate=generate, end_year=end_year)
+        use_e3sm_unified=use_e3sm_unified, run_name=args.run,
+        input_base=input_base, simulation=simulation, mesh=mesh,
+        output_base=output_base, html_base=html_base, out_subdir=out_subdir,
+        generate=generate, end_year=end_year)
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
