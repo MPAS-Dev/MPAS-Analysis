@@ -8,13 +8,20 @@
 
 set -e
 
+{% if use_e3sm_unified %}
+source {{ e3sm_unified_script }}
+
+echo E3SM-Unified: {{ e3sm_unified_script }}
+{% else %}
 source {{ conda_base }}/etc/profile.d/conda.sh
 conda activate {{ conda_env }}
 export HDF5_USE_FILE_LOCKING=FALSE
 export E3SMU_MACHINE={{ machine }}
 
 echo env: {{ conda_env }}
+{% endif %}
 echo configs: {{ flags }} {{ config }}
+
 
 {{ parallel_exec }} mpas_analysis --list
 {{ parallel_exec }} mpas_analysis --plot_colormaps
