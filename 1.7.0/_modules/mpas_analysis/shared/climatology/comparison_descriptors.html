@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.climatology.comparison_descriptors &mdash; MPAS-Analysis 1.7.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.shared.climatology.comparison_descriptors</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.climatology.comparison_descriptors</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions for creating climatologies from monthly time series data</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.projection</span> <span class="kn">import</span> <span class="n">known_comparison_grids</span><span class="p">,</span> \
+    <span class="n">get_pyproj_projection</span>
+
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span>
+
+
+<div class="viewcode-block" id="get_comparison_descriptor"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_comparison_descriptor.html#mpas_analysis.shared.climatology.get_comparison_descriptor">[docs]</a><span class="k">def</span> <span class="nf">get_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the comparison grid descriptor from the comparison_grid_name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    comparison_grid_name : {&#39;latlon&#39;, &#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;,</span>
+<span class="sd">                            &#39;north_pacific&#39;}</span>
+<span class="sd">        The name of the comparison grid to use for remapping.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If comparison_grid_name does not describe a known comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_comparison_grids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Unknown comparison grid type </span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
+        <span class="n">comparison_descriptor</span> <span class="o">=</span> \
+            <span class="n">_get_lat_lon_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">comparison_descriptor</span> <span class="o">=</span> \
+            <span class="n">_get_projection_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">comparison_descriptor</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_lat_lon_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a descriptor of the lat/lon comparison grid, used for remapping and</span>
+<span class="sd">    determining the grid name</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    descriptor : LatLonGridDescriptor</span>
+<span class="sd">        A descriptor of the lat/lon grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;climatology&#39;</span>
+
+    <span class="n">lat_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;comparisonLatResolution&#39;</span><span class="p">)</span>
+    <span class="n">lon_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;comparisonLatResolution&#39;</span><span class="p">)</span>
+
+    <span class="n">nlat</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">constants</span><span class="o">.</span><span class="n">latmax</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">latmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">lat_res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">nlon</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">constants</span><span class="o">.</span><span class="n">lonmax</span> <span class="o">-</span> <span class="n">constants</span><span class="o">.</span><span class="n">lonmin</span><span class="p">)</span> <span class="o">/</span> <span class="n">lon_res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">latmin</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">latmax</span><span class="p">,</span> <span class="n">nlat</span><span class="p">)</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">lonmin</span><span class="p">,</span> <span class="n">constants</span><span class="o">.</span><span class="n">lonmax</span><span class="p">,</span> <span class="n">nlon</span><span class="p">)</span>
+
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">&#39;degrees&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">descriptor</span>
+
+
+<span class="k">def</span> <span class="nf">_get_projection_comparison_descriptor</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a descriptor of any comparison grid base on a projection, used for</span>
+<span class="sd">    remapping and determining the grid name</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    comparison_grid_name : str</span>
+<span class="sd">        One of the projections</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    descriptor : pyremap.ProjectionGridDescriptor</span>
+<span class="sd">        A descriptor of the Arctic comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;climatology&#39;</span>
+
+    <span class="n">option_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticStereo&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticStereo&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthAtlantic&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthPacific&#39;</span><span class="p">}</span>
+
+    <span class="n">grid_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Atlantic&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Pacific&#39;</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">option_suffixes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1"> is not one of the supported &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;projection grids&#39;</span><span class="p">)</span>
+
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">)</span>
+
+    <span class="n">option_suffix</span> <span class="o">=</span> <span class="n">option_suffixes</span><span class="p">[</span><span class="n">comparison_grid_name</span><span class="p">]</span>
+    <span class="n">grid_suffix</span> <span class="o">=</span> <span class="n">grid_suffixes</span><span class="p">[</span><span class="n">comparison_grid_name</span><span class="p">]</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Width&#39;</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Height&#39;</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="n">width</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+        <span class="n">section</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;comparison</span><span class="si">{</span><span class="n">option_suffix</span><span class="si">}</span><span class="s1">Resolution&#39;</span><span class="p">)</span>
+
+    <span class="n">xmax</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">width</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">nx</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">xmax</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">nx</span><span class="p">)</span>
+
+    <span class="n">ymax</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="mf">1e3</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">/</span> <span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">ymax</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">ny</span><span class="p">)</span>
+
+    <span class="n">mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">grid_suffix</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mesh_name</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">descriptor</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

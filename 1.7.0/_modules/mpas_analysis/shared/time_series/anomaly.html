@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.time_series.anomaly &mdash; MPAS-Analysis 1.7.0 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.shared.time_series.anomaly</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.time_series.anomaly</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.time_series.moving_average</span> <span class="kn">import</span> <span class="n">compute_moving_avg</span>
+
+
+<div class="viewcode-block" id="compute_moving_avg_anomaly_from_start"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html#mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start">[docs]</a><span class="k">def</span> <span class="nf">compute_moving_avg_anomaly_from_start</span><span class="p">(</span><span class="n">timeSeriesFileName</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span>
+                                          <span class="n">anomalyStartTime</span><span class="p">,</span> <span class="n">anomalyEndTime</span><span class="p">,</span>
+                                          <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
+                                          <span class="n">movingAveragePoints</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+                                          <span class="n">alter_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the rolling mean of the anomaly of a quantity from the beginning</span>
+<span class="sd">    of the simulation (such that the rolling mean starts at zero by definition)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    timeSeriesFileName :  str</span>
+<span class="sd">        a file produced by ``MpasTimeSeriesTask`` containing variables, the</span>
+<span class="sd">        anomaly and rolling mean of which is to be computed</span>
+
+<span class="sd">    variableList :  list of str</span>
+<span class="sd">        variable names to include in the resulting data set</span>
+
+<span class="sd">    anomalyStartTime, anomalyEndTime :  str</span>
+<span class="sd">        the start and end times of the reference point for the anomaly</span>
+
+<span class="sd">    startDate, endDate :  str</span>
+<span class="sd">        the start and end dates of the time series</span>
+
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregoraian_noleap&#39;}</span>
+<span class="sd">        The calendar used in the MPAS run</span>
+
+<span class="sd">    movingAveragePoints : int, optional</span>
+<span class="sd">        The number of points (months) over which to perform the rolling average</span>
+<span class="sd">        of the data set</span>
+
+<span class="sd">    alter_dataset : function</span>
+<span class="sd">        A function for manipulating the data set (e.g. computing new</span>
+<span class="sd">        variables), taking an ``xarray.Dataset`` as input argument and</span>
+<span class="sd">        returning an ``xarray.Dataset``</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds : ``xarray.Dataset``</span>
+<span class="sd">        The anomaly of the rolling time mean from the start of the simulation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
+                           <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                           <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                           <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                           <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alter_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">alter_dataset</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+
+    <span class="n">dsStart</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
+        <span class="n">fileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
+        <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+        <span class="n">startDate</span><span class="o">=</span><span class="n">anomalyStartTime</span><span class="p">,</span>
+        <span class="n">endDate</span><span class="o">=</span><span class="n">anomalyEndTime</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">alter_dataset</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dsStart</span> <span class="o">=</span> <span class="n">alter_dataset</span><span class="p">(</span><span class="n">dsStart</span><span class="p">)</span>
+
+    <span class="n">dsStart</span> <span class="o">=</span> <span class="n">dsStart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+        <span class="n">ds</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">-</span> <span class="n">dsStart</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">compute_moving_avg</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
