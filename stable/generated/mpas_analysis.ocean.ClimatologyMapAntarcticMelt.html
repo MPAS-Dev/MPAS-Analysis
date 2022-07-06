@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -85,7 +86,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a></li>
 </ul>
 </li>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="mpas-analysis-ocean-climatologymapantarcticmelt">
-<h1>mpas_analysis.ocean.ClimatologyMapAntarcticMelt<a class="headerlink" href="#mpas-analysis-ocean-climatologymapantarcticmelt" title="Permalink to this headline">¶</a></h1>
+<h1>mpas_analysis.ocean.ClimatologyMapAntarcticMelt<a class="headerlink" href="#mpas-analysis-ocean-climatologymapantarcticmelt" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapAntarcticMelt">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapAntarcticMelt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionMasksTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/climatology_map_antarctic_melt.html#ClimatologyMapAntarcticMelt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapAntarcticMelt" title="Permalink to this definition">¶</a></dt>
@@ -138,17 +138,17 @@ observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options</p></li>
 <li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
 <li><p><strong>regionMasksTask</strong> (<code class="docutils literal notranslate"><span class="pre">ComputeRegionMasks</span></code>) – A task for computing region masks</p></li>
-<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – Configuration options for a control run</p></li>
+<li><p><strong>controlconfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options for a control run</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -202,7 +202,7 @@ observations</p>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -264,7 +264,7 @@ observations</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

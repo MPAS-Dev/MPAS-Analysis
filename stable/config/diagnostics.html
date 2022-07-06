@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -111,7 +112,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="diagnostics">
-<span id="config-diagnostics"></span><h1>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this headline">¶</a></h1>
+<span id="config-diagnostics"></span><h1>Diagnostics<a class="headerlink" href="#diagnostics" title="Permalink to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section of a configuration file contains options related
 to paths containing observations, region-mask files and mapping files used to
 interpolate MPAS data and observations to common reference grids:</p>
@@ -143,7 +144,7 @@ interpolate MPAS data and observations to common reference grids:</p>
 </pre></div>
 </div>
 <div class="section" id="diagnostics-directories">
-<h2>Diagnostics Directories<a class="headerlink" href="#diagnostics-directories" title="Permalink to this headline">¶</a></h2>
+<h2>Diagnostics Directories<a class="headerlink" href="#diagnostics-directories" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the location where files were downloaded with the
 <code class="docutils literal notranslate"><span class="pre">download_analysis_data.py</span></code>.  If the user is on an E3SM supported machine,
 this data has already been downloaded to a shared location (see example config
@@ -159,7 +160,7 @@ Typically, there is no reason to change <code class="docutils literal notranslat
 when these files are downloaded from the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">E3SM public data repository</a>.</p>
 </div>
 <div class="section" id="mapping-files">
-<span id="config-mapping-files"></span><h2>Mapping Files<a class="headerlink" href="#mapping-files" title="Permalink to this headline">¶</a></h2>
+<span id="config-mapping-files"></span><h2>Mapping Files<a class="headerlink" href="#mapping-files" title="Permalink to this heading">¶</a></h2>
 <p>Mapping files are used in many MPAS-Analysis tasks to remap from either the
 native MPAS mesh or an observations grid to a comparison grid (see
 <a class="reference internal" href="comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a>).  By default, these mapping files are generated
@@ -188,7 +189,7 @@ your mapping files cache directory.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

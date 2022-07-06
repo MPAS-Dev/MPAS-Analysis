@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -84,10 +85,10 @@
   <h1>Source code for mpas_analysis.shared.regions.compute_region_masks_subtask</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -177,7 +178,7 @@
     <span class="n">check_call</span><span class="p">(</span><span class="n">args</span><span class="o">=</span><span class="n">args</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="ComputeRegionMasksSubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">[docs]</a><span class="k">class</span> <span class="nc">ComputeRegionMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ComputeRegionMasksSubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">[docs]</a><span class="k">class</span> <span class="nc">ComputeRegionMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis tasks for computing cell masks for regions defined by geojson</span>
 <span class="sd">    features</span>
@@ -213,6 +214,7 @@
 <span class="sd">        The name of the mesh or grid, used as part of the mask file name.</span>
 <span class="sd">        Default is the MPAS mesh name</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -220,7 +222,7 @@
 <div class="viewcode-block" id="ComputeRegionMasksSubtask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">meshName</span><span class="p">,</span> <span class="n">subprocessCount</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                  <span class="n">obsFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lonVar</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="n">latVar</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
                  <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
@@ -295,8 +297,6 @@
 
         <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-        <span class="c1"># }}}</span>
-
     <span class="k">def</span> <span class="nf">make_region_mask</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If the geojson mask file has not already been cached in the diagnostics</span>
@@ -330,7 +330,7 @@
             <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_feature_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">regionNames</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -379,9 +379,8 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">):</span>
             <span class="c1"># nothing to do so don&#39;t block a bunch of other processes</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested climatologies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -416,10 +415,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskFileName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span><span class="p">,</span>
                 <span class="n">multiprocessingMethod</span><span class="o">=</span><span class="n">multiprocessingMethod</span><span class="p">)</span></div>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -429,7 +424,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

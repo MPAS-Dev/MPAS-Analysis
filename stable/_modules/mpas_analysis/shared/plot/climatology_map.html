@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -84,10 +85,10 @@
   <h1>Source code for mpas_analysis.shared.plot.climatology_map</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -99,9 +100,6 @@
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -147,7 +145,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_analysis.configuration.MpasAnalysisConfigParser</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -358,7 +356,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_analysis.configuration.MpasAnalysisConfigParser</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -544,7 +542,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_analysis.configuration.MpasAnalysisConfigParser</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -676,17 +674,17 @@
     <span class="n">useCartopyCoastline</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;useCartopyCoastline&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;onePanelFigSize&#39;</span><span class="p">)</span>
+        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;onePanelFigSize&#39;</span><span class="p">)</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">111</span><span class="p">]</span>
     <span class="k">elif</span> <span class="n">vertical</span><span class="p">:</span>
-        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelVertFigSize&#39;</span><span class="p">)</span>
+        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelVertFigSize&#39;</span><span class="p">)</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">311</span><span class="p">,</span> <span class="mi">312</span><span class="p">,</span> <span class="mi">313</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelHorizFigSize&#39;</span><span class="p">)</span>
+        <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelHorizFigSize&#39;</span><span class="p">)</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">131</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">133</span><span class="p">]</span>
 
-    <span class="n">latLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;latLines&#39;</span><span class="p">,</span> <span class="n">usenumpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">lonLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;lonLines&#39;</span><span class="p">,</span> <span class="n">usenumpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">latLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;latLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">lonLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;lonLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># put latitude labels on the left unless we&#39;re in a polar projection</span>
     <span class="n">left_labels</span> <span class="o">=</span> <span class="n">projectionName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
@@ -818,8 +816,6 @@
                 <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">ice_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">lakes_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -829,7 +825,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

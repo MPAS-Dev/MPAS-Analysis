@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -84,10 +85,10 @@
   <h1>Source code for mpas_analysis.shared.io.utility</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -97,9 +98,6 @@
 
 <span class="sd">Phillip J. Wolfram, Xylar Asay-Davis</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -111,7 +109,7 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 
-<div class="viewcode-block" id="paths"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a><span class="k">def</span> <span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="paths"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a><span class="k">def</span> <span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns glob&#39;d paths in list for arbitrary number of function arguments.</span>
 <span class="sd">    Note, each expanded set of paths is sorted.</span>
@@ -133,11 +131,11 @@
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">aargs</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="n">paths</span> <span class="o">+=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">aargs</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">paths</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">paths</span></div>
 
 
 <span class="k">def</span> <span class="nf">fingerprint_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-                          <span class="n">chars</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                          <span class="n">chars</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a random string that can be used as a unique fingerprint</span>
 
@@ -162,10 +160,10 @@
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram</span>
 
-    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="make_directories"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a><span class="k">def</span> <span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="make_directories"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a><span class="k">def</span> <span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make the given path if it does not already exist.</span>
 
@@ -187,19 +185,19 @@
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
         <span class="k">pass</span>
-    <span class="k">return</span> <span class="n">path</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">path</span></div>
 
 
 <div class="viewcode-block" id="build_config_full_path"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.build_config_full_path.html#mpas_analysis.shared.io.utility.build_config_full_path">[docs]</a><span class="k">def</span> <span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
                            <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">defaultPath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                           <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a full path from a base directory and a relative path</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : MpasAnalysisConfigParser object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        configuration from which to read the path</span>
 
 <span class="sd">    section : str</span>
@@ -241,16 +239,16 @@
 
     <span class="k">if</span> <span class="n">defaultPath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullPath</span><span class="p">):</span>
         <span class="n">fullPath</span> <span class="o">=</span> <span class="n">defaultPath</span>
-    <span class="k">return</span> <span class="n">fullPath</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">fullPath</span></div>
 
 
-<span class="k">def</span> <span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the full path for a region mask with a given file name</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : MpasAnalysisConfigParser object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        configuration from which to read the path</span>
 
 <span class="sd">    regionMaskFile : str</span>
@@ -301,16 +299,16 @@
             <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">,</span>
                                           <span class="n">regionMaskFile</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">fullFileName</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">fullFileName</span>
 
 
 <span class="k">def</span> <span class="nf">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                   <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativePath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                   <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativePath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : MpasAnalysisConfigParser object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        configuration from which to read the path</span>
 
 <span class="sd">    component : {&#39;ocean&#39;, &#39;seaIce&#39;, &#39;iceberg&#39;}</span>
@@ -361,10 +359,10 @@
                 <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basePath</span><span class="p">,</span> <span class="n">obsSubdirectory</span><span class="p">,</span>
                                              <span class="n">relativePath</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">fullPath</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">fullPath</span>
 
 
-<div class="viewcode-block" id="check_path_exists"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a><span class="k">def</span> <span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="check_path_exists"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a><span class="k">def</span> <span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raise an exception if the given path does not exist.</span>
 
@@ -383,10 +381,10 @@
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Path </span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>  <span class="c1"># }}}</span></div>
+        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Path </span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 
-<span class="k">def</span> <span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract the year and month from file names associated with a stream</span>
 
@@ -418,7 +416,7 @@
     <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span> <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">dts</span><span class="p">]</span>
     <span class="n">months</span> <span class="o">=</span> <span class="p">[</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span> <span class="k">for</span> <span class="n">dt</span> <span class="ow">in</span> <span class="n">dts</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">years</span><span class="p">,</span> <span class="n">months</span>  <span class="c1"># }}}</span>
+    <span class="k">return</span> <span class="n">years</span><span class="p">,</span> <span class="n">months</span>
 
 
 <span class="k">def</span> <span class="nf">decode_strings</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
@@ -458,8 +456,6 @@
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Making a slow copy from </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fsrc</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fdst</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fsrc</span><span class="p">,</span> <span class="n">fdst</span><span class="p">)</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -469,7 +465,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

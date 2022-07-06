@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -84,17 +85,14 @@
   <h1>Source code for mpas_analysis.ocean.climatology_map_sst</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 
@@ -111,7 +109,7 @@
     <span class="n">PlotClimatologyMapSubtask</span>
 
 
-<div class="viewcode-block" id="ClimatologyMapSST"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapSST.html#mpas_analysis.ocean.ClimatologyMapSST">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapSST</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ClimatologyMapSST"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapSST.html#mpas_analysis.ocean.ClimatologyMapSST">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapSST</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of sea surface temperature (sst) against</span>
 <span class="sd">    observations</span>
@@ -121,19 +119,19 @@
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
 <div class="viewcode-block" id="ClimatologyMapSST.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapSST.html#mpas_analysis.ocean.ClimatologyMapSST.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -156,13 +154,13 @@
         <span class="n">climEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;obsEndYear&#39;</span><span class="p">)</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
                              <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
-        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
                                                    <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -239,11 +237,9 @@
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
-        <span class="c1"># }}}</span>
-    <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">RemapObservedSSTClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span> <span class="nc">RemapObservedSSTClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping SST observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -251,8 +247,8 @@
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
-    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
 <span class="sd">        Parameters</span>
@@ -264,7 +260,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
 <span class="sd">            The descriptor for the observation grid</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -274,10 +270,10 @@
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
                                                   <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">obsDescriptor</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">obsDescriptor</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -290,7 +286,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -307,11 +303,7 @@
         <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;Time.month&#39;</span><span class="p">]</span>
         <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;Time.year&#39;</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">dsObs</span>  <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+        <span class="k">return</span> <span class="n">dsObs</span>
 </pre></div>
 
            </div>
@@ -321,7 +313,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

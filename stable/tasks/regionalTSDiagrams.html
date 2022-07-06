@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -133,7 +134,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="regionaltsdiagrams">
-<span id="task-regionaltsdiagrams"></span><h1>regionalTSDiagrams<a class="headerlink" href="#regionaltsdiagrams" title="Permalink to this headline">¶</a></h1>
+<span id="task-regionaltsdiagrams"></span><h1>regionalTSDiagrams<a class="headerlink" href="#regionaltsdiagrams" title="Permalink to this heading">¶</a></h1>
 <p>An analysis task for plotting T-S (potential temperature vs. salinity)
 diagrams of climatologies in ocean regions.</p>
 <p>Component and Tags:</p>
@@ -142,7 +143,7 @@ diagrams of climatologies in ocean regions.</p>
 </pre></div>
 </div>
 <div class="section" id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this headline">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[regionalTSDiagrams]</span><span class="w"></span>
 <span class="c1">## options related to plotting T/S diagrams of ocean regions</span><span class="w"></span>
@@ -250,7 +251,7 @@ diagrams of climatologies in ocean regions.</p>
 </div>
 </div>
 <div class="section" id="region-groups">
-<h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this headline">¶</a></h2>
+<h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
 <p>A list of groups of regions, each of which will get its own gallery on
 the resulting analysis web page.  See <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for
 more information on the available region groups.  For each region group, there
@@ -259,7 +260,7 @@ file, with any spaces removed from the name of the region group.  By default,
 the only region group is <code class="docutils literal notranslate"><span class="pre">'Ocean</span> <span class="pre">Basins'</span></code>.</p>
 </div>
 <div class="section" id="region-names">
-<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this headline">¶</a></h2>
+<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the
 regions in the geojson file.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these
 are:</p>
@@ -280,7 +281,7 @@ are:</p>
 </div>
 </div>
 <div class="section" id="diagram-type">
-<h2>Diagram Type<a class="headerlink" href="#diagram-type" title="Permalink to this headline">¶</a></h2>
+<h2>Diagram Type<a class="headerlink" href="#diagram-type" title="Permalink to this heading">¶</a></h2>
 <p>By default, a “volumetric” diagram is produced, where the volume of ocean water
 in a region is binned in T and S space, and the volume of each bin is plotted.
 This allows for more quantitative comparison with observation- and model-based
@@ -298,7 +299,7 @@ bin volume is taken from the first panel containing the “main” MPAS-Ocean pl
 and the same color map range is used for all panels.</p>
 </div>
 <div class="section" id="bins-and-contour-intervals">
-<h2>Bins and Contour Intervals<a class="headerlink" href="#bins-and-contour-intervals" title="Permalink to this headline">¶</a></h2>
+<h2>Bins and Contour Intervals<a class="headerlink" href="#bins-and-contour-intervals" title="Permalink to this heading">¶</a></h2>
 <p>If <code class="docutils literal notranslate"><span class="pre">diagramType</span> <span class="pre">=</span> <span class="pre">volumetric</span></code>, the number and spacing of potential
 temperature and salinity bins is set in <code class="docutils literal notranslate"><span class="pre">Tbins</span></code> and <code class="docutils literal notranslate"><span class="pre">Sbins</span></code>.  For
 <code class="docutils literal notranslate"><span class="pre">diagramType</span> <span class="pre">=</span> <span class="pre">scatter</span></code>, <code class="docutils literal notranslate"><span class="pre">Tbins</span></code> and <code class="docutils literal notranslate"><span class="pre">Sbins</span></code> are used to make contour
@@ -309,7 +310,7 @@ up) of the ocean region.  If available (e.g. for “Antarctic Regions”), the
 default is to read them from geojson file.</p>
 </div>
 <div class="section" id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this headline">¶</a></h2>
+<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">obs</span></code> option contains a list of the names of observational data sets.
 Currently, “SOSE” and “WOA18” are the only data sets available, but we
 anticipate adding several additional data sets in the near future.</p>
@@ -317,7 +318,7 @@ anticipate adding several additional data sets in the near future.</p>
 <a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
 </div>
 <div class="section" id="other-config-options">
-<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this headline">¶</a></h2>
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>For more details on the remaining config options, see</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
@@ -329,7 +330,7 @@ anticipate adding several additional data sets in the near future.</p>
 </dl>
 </div>
 <div class="section" id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this headline">¶</a></h2>
+<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../_images/so_ts_diag.png"><img alt="../_images/so_ts_diag.png" class="align-center" src="../_images/so_ts_diag.png" style="width: 500px;" /></a>
 </div>
 </div>
@@ -345,7 +346,7 @@ anticipate adding several additional data sets in the near future.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

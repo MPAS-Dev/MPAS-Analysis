@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -85,7 +86,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a></li>
 </ul>
 </li>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="mpas-analysis-ocean-plot-depth-integrated-time-series-subtask-plotdepthintegratedtimeseriessubtask">
-<h1>mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask<a class="headerlink" href="#mpas-analysis-ocean-plot-depth-integrated-time-series-subtask-plotdepthintegratedtimeseriessubtask" title="Permalink to this headline">¶</a></h1>
+<h1>mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask<a class="headerlink" href="#mpas-analysis-ocean-plot-depth-integrated-time-series-subtask-plotdepthintegratedtimeseriessubtask" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.</span></span><span class="sig-name descname"><span class="pre">PlotDepthIntegratedTimeSeriesSubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFileLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldNameInTitle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasFieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yAxisLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sectionName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thumbnailSuffix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageCaption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galleryGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupSubtitle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupLink</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galleryName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtaskName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/plot_depth_integrated_time_series_subtask.html#PlotDepthIntegratedTimeSeriesSubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" title="Permalink to this definition">¶</a></dt>
@@ -133,24 +133,24 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the region to plot</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.yAxisLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the y-axis label of the plotted field (including units)</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A section in the config file where the colormap and contour values
+<li><p><strong>regionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the region to plot</p></li>
+<li><p><strong>inFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file containing the time-depth data set to plot</p></li>
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>yAxisLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the y-axis label of the plotted field (including units)</p></li>
+<li><p><strong>sectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A section in the config file where the colormap and contour values
 are defined</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
+<li><p><strong>thumbnailSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The text to be displayed under the thumbnail image, to which the
 region name will be prepended</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The caption when mousing over the plot or displaying it full
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the gallery in which this plot belongs</p></li>
-<li><p><strong>~PlotDepthIntegratedTimeSeriesSubtask.controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>) – The configuration options for the control run (if any)</p></li>
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the gallery in which this plot belongs</p></li>
+<li><p><strong>controlConfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – The configuration options for the control run (if any)</p></li>
 </ul>
 </dd>
 </dl>
@@ -180,14 +180,14 @@ if none)</p></li>
 <li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
 <li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
 <li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask (<code class="docutils literal notranslate"><span class="pre">plotTimeSeries&lt;RegionName&gt;</span></code> by default)</p></li>
-<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – The configuration options for the control run (if any)</p></li>
+<li><p><strong>controlConfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – The configuration options for the control run (if any)</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -244,7 +244,7 @@ if none)</p></li>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -306,7 +306,7 @@ if none)</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

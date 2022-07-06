@@ -13,6 +13,7 @@
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -85,10 +86,10 @@
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -102,15 +103,11 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">mpas_analysis</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">traceback</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">path</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
@@ -118,13 +115,12 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
 
 <span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span><span class="p">,</span> <span class="n">MachineInfo</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisFormatter</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.config</span> <span class="kn">import</span> <span class="n">MpasConfigParser</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.configuration</span> <span class="kn">import</span> <span class="n">MpasAnalysisConfigParser</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisFormatter</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">copyfile</span>
@@ -147,7 +143,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasks</span>
 
 
-<span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the start and end year (and associated full date) for</span>
 <span class="sd">    climatologies, time series and climate indices based on the files that are</span>
@@ -155,7 +151,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : ``MpasAnalysisConfigParser`` object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -164,20 +160,19 @@
     <span class="k">for</span> <span class="n">componentName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">]:</span>
         <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">]:</span>
             <span class="n">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">)</span>
-    <span class="c1"># }}}</span>
 
 
-<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks. New tasks should be added here, following</span>
 <span class="sd">    the approach used for existing analysis tasks.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : ``MpasAnalysisConfigParser`` object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        contains config options</span>
 
-<span class="sd">    controlConfig : ``MpasAnalysisConfigParser`` object</span>
+<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        contains config options for a control run, or ``None`` if no config</span>
 <span class="sd">        file for a control run was specified</span>
 
@@ -336,10 +331,10 @@
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="k">return</span> <span class="n">analyses</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">analyses</span></div>
 
 
-<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks to run based on the &#39;generate&#39; config</span>
 <span class="sd">    option (or command-line flag) and prerequisites and subtasks of each</span>
@@ -386,12 +381,12 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">analysesToGenerate</span>  <span class="c1"># }}}</span></div>
+    <span class="k">return</span> <span class="n">analysesToGenerate</span></div>
 
 
 <div class="viewcode-block" id="add_task_and_subtasks"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks">[docs]</a><span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
                           <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="c1"># {{{</span>
+
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If a task has been requested through the generate config option or</span>
 <span class="sd">    if it is a prerequisite of a requested task, add it to the dictionary of</span>
@@ -495,16 +490,15 @@
     <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
     <span class="k">assert</span><span class="p">(</span><span class="n">totalFailures</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">totalFailures</span></div>
-    <span class="c1"># }}}</span>
 
 
-<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the &#39;generate&#39; config option using a string from the command line.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : ``MpasAnalysisConfigParser`` object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    generate : str</span>
@@ -522,16 +516,16 @@
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
                                 <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">generateList</span><span class="p">])</span>
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">generateString</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">)</span>  <span class="c1"># }}}</span></div>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run all the tasks, either in serial or in parallel</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : ``MpasAnalysisConfigParser`` object</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    analyses : OrderedDict of ``AnalysisTask`` objects</span>
@@ -558,8 +552,7 @@
     <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configFile</span><span class="p">)</span>
     <span class="n">configFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">,</span>
-                                              <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
 
     <span class="n">isParallel</span> <span class="o">=</span> <span class="n">parallelTaskCount</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">analyses</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
 
@@ -710,10 +703,8 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Log files for executed tasks can be found in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">logsDirectory</span><span class="p">))</span></div>
 
-    <span class="c1"># }}}</span>
 
-
-<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis modules based on the &#39;generate&#39; config option.</span>
 <span class="sd">    New tasks should be added here, following the approach used for existing</span>
@@ -739,7 +730,7 @@
         <span class="k">for</span> <span class="n">analysisTask</span> <span class="ow">in</span> <span class="n">runningTasks</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
-                <span class="k">return</span> <span class="n">analysisTask</span>  <span class="c1"># }}}</span></div>
+                <span class="k">return</span> <span class="n">analysisTask</span></div>
 
 
 <span class="k">def</span> <span class="nf">purge_output</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
@@ -777,12 +768,12 @@
                         <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">defaultConfig</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="k">def</span> <span class="nf">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create symlinks to the climatology and time-series directories for the</span>
-<span class="sd">    main run that has aleady been computed so we don&#39;t have to recompute</span>
+<span class="sd">    main run that has already been computed so we don&#39;t have to recompute</span>
 <span class="sd">    the analysis.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">link_dir</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">destDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
@@ -806,11 +797,9 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mainConfigFile</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;A main config file </span><span class="si">{}</span><span class="s1"> was specified but the &#39;</span>
                       <span class="s1">&#39;file does not exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainConfigFile</span><span class="p">))</span>
-    <span class="n">mainConfigFiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainConfigFile</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">defaultConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">mainConfigFiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">defaultConfig</span><span class="p">]</span> <span class="o">+</span> <span class="n">mainConfigFiles</span>
-    <span class="n">mainConfig</span> <span class="o">=</span> <span class="n">MpasAnalysisConfigParser</span><span class="p">()</span>
-    <span class="n">mainConfig</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">mainConfigFiles</span><span class="p">)</span>
+    <span class="n">mainConfig</span> <span class="o">=</span> <span class="n">MpasConfigParser</span><span class="p">()</span>
+    <span class="n">mainConfig</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
+    <span class="n">mainConfig</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">mainConfigFile</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">subdirectory</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpasClimatology&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping&#39;</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;profiles&#39;</span><span class="p">]:</span>
@@ -852,8 +841,8 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="s2">&quot;--purge&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;purge&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Purge the analysis by deleting the output&quot;</span>
                         <span class="s2">&quot;directory before running&quot;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;config_files&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span>
-                        <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;config file&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;config_file&quot;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
+                        <span class="n">help</span><span class="o">=</span><span class="s2">&quot;config file&quot;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&quot;--plot_colormaps&quot;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s2">&quot;plot_colormaps&quot;</span><span class="p">,</span>
                         <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                         <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Make a plot displaying all available colormaps&quot;</span><span class="p">)</span>
@@ -873,16 +862,11 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">config_files</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Config file </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
-
-    <span class="n">shared_configs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">MpasConfigParser</span><span class="p">()</span>
 
     <span class="c1"># add default.cfg to cover default not included in the config files</span>
     <span class="c1"># provided on the command line</span>
-    <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;mpas_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">default_config</span><span class="p">:</span>
-        <span class="n">shared_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">default_config</span><span class="p">))</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;default.cfg&#39;</span><span class="p">)</span>
 
     <span class="c1"># Add config options for E3SM supported machines from the mache package</span>
     <span class="n">machine</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">machine</span>
@@ -895,12 +879,10 @@
 
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Detected E3SM supported machine: </span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">machine_config</span><span class="p">:</span>
-            <span class="n">shared_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">machine_config</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;mpas_analysis.configuration&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span> \
-                    <span class="k">as</span> <span class="n">machine_config</span><span class="p">:</span>
-                <span class="n">shared_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">machine_config</span><span class="p">))</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis.configuration&#39;</span><span class="p">,</span>
+                                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
             <span class="c1"># we don&#39;t have a config file for this machine, so we&#39;ll just</span>
             <span class="c1"># skip it.</span>
@@ -909,24 +891,24 @@
             <span class="k">pass</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">polar_regions</span><span class="p">:</span>
-        <span class="k">with</span> <span class="n">path</span><span class="p">(</span><span class="s1">&#39;mpas_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;polar_regions.cfg&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">polar_config</span><span class="p">:</span>
-            <span class="n">shared_configs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">polar_config</span><span class="p">))</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis&#39;</span><span class="p">,</span> <span class="s1">&#39;polar_regions.cfg&#39;</span><span class="p">)</span>
 
-    <span class="n">main_configs</span> <span class="o">=</span> <span class="n">shared_configs</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">config_files</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using the following config files:&#39;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">main_configs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">config_file</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Config file </span><span class="si">{config_file}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="n">config</span> <span class="o">=</span> <span class="n">MpasAnalysisConfigParser</span><span class="p">(</span>
-        <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># set the username so we can use it in the htmlSubdirectory</span>
         <span class="n">machine_info</span> <span class="o">=</span> <span class="n">MachineInfo</span><span class="p">(</span><span class="n">machine</span><span class="o">=</span><span class="n">machine</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_section</span><span class="p">(</span><span class="s1">&#39;web_portal&#39;</span><span class="p">)</span>
         <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;web_portal&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="n">machine_info</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">main_configs</span><span class="p">)</span>
+
+    <span class="n">shared_configs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">list_files</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">user_config</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_config</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Config file </span><span class="si">{</span><span class="n">user_config</span><span class="si">}</span><span class="s1"> not found.&#39;</span><span class="p">)</span>
+
+        <span class="n">config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">user_config</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Using the following config files:&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">list_files</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   </span><span class="si">{</span><span class="n">config_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">list</span><span class="p">:</span>
         <span class="c1"># set this config option so we don&#39;t have issues</span>
@@ -948,11 +930,14 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">control_config_file</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;A control config file </span><span class="si">{}</span><span class="s1"> was specified but the &#39;</span>
                           <span class="s1">&#39;file does not exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">control_config_file</span><span class="p">))</span>
-        <span class="n">control_configs</span> <span class="o">=</span> <span class="n">shared_configs</span> <span class="o">+</span> <span class="p">[</span><span class="n">control_config_file</span><span class="p">]</span>
 
-        <span class="n">control_config</span> <span class="o">=</span> <span class="n">MpasAnalysisConfigParser</span><span class="p">(</span>
-            <span class="n">interpolation</span><span class="o">=</span><span class="n">configparser</span><span class="o">.</span><span class="n">ExtendedInterpolation</span><span class="p">())</span>
-        <span class="n">control_config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">control_configs</span><span class="p">)</span>
+        <span class="n">control_config</span> <span class="o">=</span> <span class="n">MpasConfigParser</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">shared_configs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">config_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">):</span>
+                <span class="c1"># we&#39;ll skip config options set in python files</span>
+                <span class="k">continue</span>
+            <span class="n">control_config</span><span class="o">.</span><span class="n">add_from_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">)</span>
+        <span class="n">control_config</span><span class="o">.</span><span class="n">add_user_config</span><span class="p">(</span><span class="n">control_config_file</span><span class="p">)</span>
 
         <span class="c1"># replace the log directory so log files get written to this run&#39;s</span>
         <span class="c1"># log directory, not the control run&#39;s</span>
@@ -971,7 +956,7 @@
         <span class="n">purge_output</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunConfigFile&#39;</span><span class="p">):</span>
-        <span class="n">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">default_config</span><span class="p">)</span>
+        <span class="n">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">generate</span><span class="p">:</span>
         <span class="n">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">generate</span><span class="p">)</span>
@@ -999,7 +984,7 @@
     <span class="n">html_base_directory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                                  <span class="s1">&#39;htmlSubdirectory&#39;</span><span class="p">)</span>
     <span class="n">make_directories</span><span class="p">(</span><span class="n">html_base_directory</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">config_filename</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">config_files</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">config_filename</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">:</span>
         <span class="n">config_filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;copying </span><span class="si">{</span><span class="n">config_filename</span><span class="si">}</span><span class="s1"> to HTML dir.&#39;</span><span class="p">)</span>
         <span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">config_filename</span><span class="p">)</span>
@@ -1021,13 +1006,11 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total run time: </span><span class="si">{}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:05.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">setup_only</span><span class="p">:</span>
-        <span class="n">generate_html</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">,</span> <span class="n">control_config</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">config_files</span><span class="p">)</span></div>
+        <span class="n">generate_html</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">,</span> <span class="n">control_config</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">config_file</span><span class="p">)</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -1037,7 +1020,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

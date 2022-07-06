@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -84,23 +85,19 @@
   <h1>Source code for mpas_analysis.shared.climatology.remap_mpas_climatology_subtask</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasMeshDescriptor</span>
-
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -118,8 +115,8 @@
     <span class="n">get_comparison_descriptor</span>
 
 
-<div class="viewcode-block" id="RemapMpasClimatologySubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask">[docs]</a><span class="k">class</span> <span class="nc">RemapMpasClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<div class="viewcode-block" id="RemapMpasClimatologySubtask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask">[docs]</a><span class="k">class</span> <span class="nc">RemapMpasClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis tasks for computing climatologies from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly`` analysis member.</span>
 
@@ -160,7 +157,8 @@
 <span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
 <span class="sd">         operator for monthly stats</span>
 
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -169,8 +167,8 @@
                  <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapMpasClimatology&#39;</span><span class="p">,</span>
                  <span class="n">useNcremap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -217,7 +215,7 @@
 <span class="sd">            if it is not explicitly given.  If a comparison grid other than</span>
 <span class="sd">            ``latlon`` is given, ncremap is not supported so this flag is set</span>
 <span class="sd">            to ``False``.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -261,10 +259,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span> <span class="o">=</span> <span class="n">useNcremap</span></div>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
@@ -273,7 +269,7 @@
 <span class="sd">            If a restart file is not available from which to read mesh</span>
 <span class="sd">            information or if no history files are available from which to</span>
 <span class="sd">            compute the climatology in the desired time range.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -306,12 +302,10 @@
                                                      <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">)</span>
         <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested climatologies</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -347,11 +341,10 @@
                                 <span class="n">remapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">],</span>
                                 <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
                                 <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">add_comparison_grid_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
-                                       <span class="n">comparisonDescriptor</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+                                       <span class="n">comparisonDescriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a custom grid descriptor (something other than &#39;latlon&#39;,</span>
 <span class="sd">        &#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;, or &#39;north_pacific&#39;).</span>
 
@@ -364,11 +357,11 @@
 <span class="sd">            A descriptor of the comparison grid to use for</span>
 <span class="sd">            remapping</span>
 
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">comparisonDescriptor</span>  <span class="c1"># }}}</span>
+            <span class="n">comparisonDescriptor</span>
 
-<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_masked_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_masked_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_masked_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_masked_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given config options, the name of a field and a string identifying the</span>
 <span class="sd">        months in a seasonal climatology, returns the full path for MPAS</span>
@@ -394,9 +387,9 @@
                                                          <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
                                                          <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">fileName</span>  <span class="c1"># }}}</span></div>
+        <span class="k">return</span> <span class="n">fileName</span></div>
 
-<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_remapped_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_remapped_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_remapped_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_remapped_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given config options, the name of a field and a string identifying the</span>
 <span class="sd">        months in a seasonal climatology, returns the full path for MPAS</span>
@@ -423,9 +416,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
             <span class="n">comparisonGridName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">fileName</span>  <span class="c1"># }}}</span></div>
+        <span class="k">return</span> <span class="n">fileName</span></div>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override this function to customize the climatology during the masking</span>
 <span class="sd">        phase (before remapping)</span>
@@ -449,10 +442,10 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">climatology</span>
 
     <span class="k">def</span> <span class="nf">customize_remapped_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="p">,</span>
-                                       <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                                       <span class="n">season</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Override this function to customize the climatology after remapping</span>
 
@@ -477,9 +470,9 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">return</span> <span class="n">climatology</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">climatology</span>
 
-    <span class="k">def</span> <span class="nf">_setup_remappers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_setup_remappers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set up the remappers for remapping from the MPAS to the comparison</span>
 <span class="sd">        grids.</span>
@@ -494,7 +487,6 @@
         <span class="n">mappingFilePrefix</span> <span class="o">=</span> <span class="s1">&#39;map&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
-
             <span class="n">comparisonDescriptor</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
@@ -510,9 +502,7 @@
                 <span class="n">method</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasInterpolationMethod&#39;</span><span class="p">),</span>
                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">_setup_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_setup_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a dictionary of file names and directories for this climatology</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -581,10 +571,9 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_outputDirs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">directory</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_outputFiles</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        For each season, creates a masked version of the climatology</span>
 
 <span class="sd">        Parameters</span>
@@ -599,7 +588,7 @@
 <span class="sd">        Author</span>
 <span class="sd">        ------</span>
 <span class="sd">        Xylar Asay-Davis</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">climatologyFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
 
@@ -634,10 +623,9 @@
                                                             <span class="n">season</span><span class="p">)</span>
 
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span> <span class="n">maskedClimatologyFileName</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">_remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">remapper</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
-               <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+               <span class="n">season</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Performs remapping either using ``ncremap`` or the native python code,</span>
 <span class="sd">        depending on the requested setting and the comparison grid</span>
@@ -699,12 +687,7 @@
         <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">customize_remapped_climatology</span><span class="p">(</span>
             <span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">season</span><span class="p">)</span>
 
-        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>  <span class="c1"># }}}</span></div>
-
-    <span class="c1"># }}}</span>
-
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
@@ -714,7 +697,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

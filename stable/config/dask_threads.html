@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -111,7 +112,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="dask-threads-and-subprocess-count">
-<span id="dask-threads"></span><h1>Dask threads and subprocess count<a class="headerlink" href="#dask-threads-and-subprocess-count" title="Permalink to this headline">¶</a></h1>
+<span id="dask-threads"></span><h1>Dask threads and subprocess count<a class="headerlink" href="#dask-threads-and-subprocess-count" title="Permalink to this heading">¶</a></h1>
 <p>Several tasks and subtasks have config options <code class="docutils literal notranslate"><span class="pre">daskThreads</span></code> and
 <code class="docutils literal notranslate"><span class="pre">subprocessCount</span></code> used to control threading within a subtask:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The number of threads dask is allowed to spawn for each task/subtask.</span>
@@ -125,7 +126,7 @@
 </pre></div>
 </div>
 <div class="section" id="id1">
-<h2>Dask threads<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>Dask threads<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
 <p>Dask and xarray support thread-parallel operations on data sets.  They also
 support chunk-wise operation on data sets that can’t fit in memory.  These
 capabilities are very powerful but also difficult to configure for general
@@ -143,7 +144,7 @@ by <code class="docutils literal notranslate"><span class="pre">subprocessCount<
 <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code>.</p>
 </div>
 <div class="section" id="subprocess-count">
-<h2>Subprocess count<a class="headerlink" href="#subprocess-count" title="Permalink to this headline">¶</a></h2>
+<h2>Subprocess count<a class="headerlink" href="#subprocess-count" title="Permalink to this heading">¶</a></h2>
 <p>Tasks or subtasks that use dask threading may consume too much memory or use
 too many threads to “count” as a single task.  That is, it might not be safe to
 run with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code> simultaneious instances of the task/subtask and
@@ -166,7 +167,7 @@ subtasks would be allowed to run simultaneiously.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

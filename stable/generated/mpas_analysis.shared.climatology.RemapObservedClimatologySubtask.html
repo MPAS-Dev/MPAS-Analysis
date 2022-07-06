@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,7 +53,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#climatology">Climatology</a><ul class="current">
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="mpas-analysis-shared-climatology-remapobservedclimatologysubtask">
-<h1>mpas_analysis.shared.climatology.RemapObservedClimatologySubtask<a class="headerlink" href="#mpas-analysis-shared-climatology-remapobservedclimatologysubtask" title="Permalink to this headline">¶</a></h1>
+<h1>mpas_analysis.shared.climatology.RemapObservedClimatologySubtask<a class="headerlink" href="#mpas-analysis-shared-climatology-remapobservedclimatologysubtask" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.climatology.</span></span><span class="sig-name descname"><span class="pre">RemapObservedClimatologySubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seasons</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outFilePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonGridNames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['latlon']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtaskName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'remapObservations'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/climatology/remap_observed_climatology_subtask.html#RemapObservedClimatologySubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask" title="Permalink to this definition">¶</a></dt>
@@ -133,12 +133,12 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>~RemapObservedClimatologySubtask.seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code>) over
+<li><p><strong>seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">constants.monthDictionary</span></code>) over
 which the climatology should be computed.</p></li>
-<li><p><strong>~RemapObservedClimatologySubtask.fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the observation file</p></li>
-<li><p><strong>~RemapObservedClimatologySubtask.outFilePrefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix in front of output files and mapping files, typically the
+<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the observation file</p></li>
+<li><p><strong>outFilePrefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix in front of output files and mapping files, typically the
 name of the field being remapped</p></li>
-<li><p><strong>~RemapObservedClimatologySubtask.comparisonGridNames</strong> (<em>list of str</em>) – The name(s) of the comparison grid to use for remapping.</p></li>
+<li><p><strong>comparisonGridNames</strong> (<em>list of str</em>) – The name(s) of the comparison grid to use for remapping.</p></li>
 </ul>
 </dd>
 </dl>
@@ -165,7 +165,7 @@ The name(s) of the comparison grid to use for remapping.</p></li>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -228,7 +228,7 @@ The name(s) of the comparison grid to use for remapping.</p></li>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -290,7 +290,7 @@ The name(s) of the comparison grid to use for remapping.</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

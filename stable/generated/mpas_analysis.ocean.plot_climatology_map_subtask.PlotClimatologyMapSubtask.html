@@ -13,6 +13,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -85,7 +86,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a></li>
 </ul>
 </li>
@@ -125,7 +125,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="mpas-analysis-ocean-plot-climatology-map-subtask-plotclimatologymapsubtask">
-<h1>mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask<a class="headerlink" href="#mpas-analysis-ocean-plot-climatology-map-subtask-plotclimatologymapsubtask" title="Permalink to this headline">¶</a></h1>
+<h1>mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask<a class="headerlink" href="#mpas-analysis-ocean-plot-climatology-map-subtask-plotclimatologymapsubtask" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.plot_climatology_map_subtask.</span></span><span class="sig-name descname"><span class="pre">PlotClimatologyMapSubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">season</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonGridName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remapMpasClimatologySubtask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remapObsClimatologySubtask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secondRemapMpasClimatologySubtask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">removeMean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subtaskName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/ocean/plot_climatology_map_subtask.html#PlotClimatologyMapSubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" title="Permalink to this definition">¶</a></dt>
@@ -133,35 +133,35 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>~PlotClimatologyMapSubtask.season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A season (key in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>) to be
 plotted.</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.comparisonGridName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the comparison grid to plot.</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.remapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – The subtask for remapping the MPAS climatology that this subtask
+<li><p><strong>comparisonGridName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the comparison grid to plot.</p></li>
+<li><p><strong>remapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – The subtask for remapping the MPAS climatology that this subtask
 will plot</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.remapObsClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask</span></code>) – The subtask for remapping the observational climatology that this
+<li><p><strong>remapObsClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask</span></code>) – The subtask for remapping the observational climatology that this
 subtask will plot</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.secondRemapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – A second subtask for remapping another MPAS climatology to plot
+<li><p><strong>secondRemapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>) – A second subtask for remapping another MPAS climatology to plot
 in the second panel and compare with in the third panel</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
+<li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
 computed (where both are valid) and the mean over that mask is
 subtracted from both the model and reference results.  This is
 useful for data sets where the desire is to compare the spatial
 pattern but the mean offset is not meaningful (e.g. SSH)</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.depth</strong> (<em>{None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em>) – Depth at which to perform the comparison, ‘top’ for the sea surface
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>depth</strong> (<em>{None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em>) – Depth at which to perform the comparison, ‘top’ for the sea surface
 ‘bot’ for the sea floor</p></li>
-<li><p><strong>~PlotClimatologyMapSubtask.configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the section where the color map and range is defined</p></li>
+<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the section where the color map and range is defined</p></li>
 </ul>
 </dd>
 </dl>
@@ -183,7 +183,7 @@ will plot</p></li>
 subtask will plot</p></li>
 <li><p><strong>secondRemapMpasClimatologySubtask</strong> (<code class="docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code>, optional) – A second subtask for remapping another MPAS climatology to plot
 in the second panel and compare with in the third panel</p></li>
-<li><p><strong>controlConfig</strong> (<code class="docutils literal notranslate"><span class="pre">MpasAnalysisConfigParser</span></code>, optional) – Configuration options for a control run (if any)</p></li>
+<li><p><strong>controlconfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
 <li><p><strong>depth</strong> (<em>{float</em><em>, </em><em>'top'</em><em>, </em><em>'bot'}</em><em>, </em><em>optional</em>) – Depth the data is being plotted, ‘top’ for the sea surface
 ‘bot’ for the sea floor</p></li>
 <li><p><strong>removeMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.10)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, a common mask for the model and reference data sets is
@@ -200,7 +200,7 @@ depth being sliced (if any)</p></li>
 </dd></dl>
 
 <p class="rubric">Methods</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -257,7 +257,7 @@ depth being sliced (if any)</p></li>
 </tbody>
 </table>
 <p class="rubric">Attributes</p>
-<table class="longtable docutils align-default">
+<table class="autosummary longtable docutils align-default">
 <colgroup>
 <col style="width: 10%" />
 <col style="width: 90%" />
@@ -319,7 +319,7 @@ depth being sliced (if any)</p></li>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

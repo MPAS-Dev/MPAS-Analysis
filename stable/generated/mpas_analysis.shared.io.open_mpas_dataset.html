@@ -13,12 +13,13 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html" />
-    <link rel="prev" title="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression" href="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression.html" /> 
+    <link rel="prev" title="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info" href="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,7 +53,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../api.html#configuration">Configuration</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a><ul class="current">
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.io.open_mpas_dataset</a></li>
@@ -112,7 +112,7 @@
            <div itemprop="articleBody">
              
   <div class="section" id="mpas-analysis-shared-io-open-mpas-dataset">
-<h1>mpas_analysis.shared.io.open_mpas_dataset<a class="headerlink" href="#mpas-analysis-shared-io-open-mpas-dataset" title="Permalink to this headline">¶</a></h1>
+<h1>mpas_analysis.shared.io.open_mpas_dataset<a class="headerlink" href="#mpas-analysis-shared-io-open-mpas-dataset" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.io.open_mpas_dataset">
 <span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.io.</span></span><span class="sig-name descname"><span class="pre">open_mpas_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableNames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">['xtime_startMonthly',</span> <span class="pre">'xtime_endMonthly']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/io/mpas_reader.html#open_mpas_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.io.open_mpas_dataset" title="Permalink to this definition">¶</a></dt>
@@ -152,14 +152,14 @@ time variable is sliced to only include dates within this range.</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression.html" class="btn btn-neutral float-left" title="mpas_analysis.configuration.MpasAnalysisConfigParser.getExpression" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html" class="btn btn-neutral float-left" title="mpas_analysis.sea_ice.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

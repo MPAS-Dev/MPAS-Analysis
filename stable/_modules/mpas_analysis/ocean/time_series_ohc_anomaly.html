@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -85,18 +86,15 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -123,19 +121,19 @@
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
 <div class="viewcode-block" id="TimeSeriesOHCAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
 <span class="sd">            The task that extracts the time series from MPAS monthly output</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -150,7 +148,7 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;ohc&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span>
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -216,14 +214,12 @@
             <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC time series.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="c1"># regionNames = self.config.getExpression(&#39;regions&#39;, &#39;regions&#39;)</span>
+        <span class="c1"># regionNames = self.config.getexpression(&#39;regions&#39;, &#39;regions&#39;)</span>
         <span class="c1"># ds[&#39;regionNames&#39;] = (&#39;nOceanRegionsTmp&#39;, regionNames)</span>
 
         <span class="c1"># for convenience, rename the variables to simpler, shorter names</span>
@@ -257,9 +253,7 @@
             <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
                                   <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">ds</span>  <span class="c1"># }}}</span></div>
-
-    <span class="c1"># }}}</span>
+        <span class="k">return</span> <span class="n">ds</span></div>
 
 
 <span class="k">class</span> <span class="nc">PlotOHCAnomaly</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">):</span>
@@ -300,9 +294,6 @@
         <span class="k">for</span> <span class="n">ytick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xlim</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">watts_m2_to_joules</span><span class="p">(</span><span class="n">ytick</span><span class="p">)],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
                      <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
-
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -312,7 +303,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

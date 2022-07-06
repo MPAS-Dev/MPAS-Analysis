@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -84,17 +85,14 @@
   <h1>Source code for mpas_analysis.ocean.time_series_antarctic_melt</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -118,7 +116,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
-<div class="viewcode-block" id="TimeSeriesAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="TimeSeriesAntarcticMelt"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of the time-series output of Antarctic sub-ice-shelf</span>
 <span class="sd">    melt rates.</span>
@@ -129,13 +127,13 @@
 
 <div class="viewcode-block" id="TimeSeriesAntarcticMelt.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
@@ -144,7 +142,7 @@
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
 <span class="sd">            A task for computing region masks</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -159,7 +157,7 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;melt&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceCavities&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
 
         <span class="n">regionGroup</span> <span class="o">=</span> <span class="s1">&#39;Ice Shelves&#39;</span>
-        <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
+        <span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
                                                 <span class="s1">&#39;iceShelvesToPlot&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iceShelvesToPlot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># nothing else to do</span>
@@ -206,12 +204,8 @@
             <span class="n">plotMeltSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineSubtask</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotMeltSubtask</span><span class="p">)</span></div></div>
 
-        <span class="c1"># }}}</span>
 
-    <span class="c1"># }}}</span>
-
-
-<span class="k">class</span> <span class="nc">ComputeMeltSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span> <span class="nc">ComputeMeltSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes time-series of Antarctic sub-ice-shelf melt rates.</span>
 
@@ -231,7 +225,7 @@
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span>
-                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">iceShelvesToPlot</span><span class="p">):</span>  <span class="c1"># {{{</span>
+                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">iceShelvesToPlot</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -277,9 +271,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> \
             <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span><span class="p">]</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -323,9 +316,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
-        <span class="k">return</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes time-series of Antarctic sub-ice-shelf melt rates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -448,11 +441,8 @@
 
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-    <span class="c1"># }}}</span>
 
-
-<span class="k">class</span> <span class="nc">CombineMeltSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span> <span class="nc">CombineMeltSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series into a single data set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -460,7 +450,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -488,9 +478,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">startYears</span> <span class="o">=</span> <span class="n">startYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -518,8 +507,6 @@
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
             <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
-    <span class="c1"># }}}</span>
 
 
 <span class="k">class</span> <span class="nc">PlotMeltSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
@@ -534,7 +521,7 @@
 <span class="sd">    regionIndex : int</span>
 <span class="sd">        The index into the dimension ``nRegions`` of the ice shelf to plot</span>
 
-<span class="sd">    controlConfig : ``MpasAnalysisConfigParser``</span>
+<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -543,7 +530,7 @@
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">iceShelf</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -559,7 +546,7 @@
 <span class="sd">        regionIndex : int</span>
 <span class="sd">            The index into the dimension ``nRegions`` of the ice shelf to plot</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -579,9 +566,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span> <span class="o">=</span> <span class="n">regionIndex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
 
-        <span class="c1"># }}}</span>
-
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -606,9 +591,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
                 <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span>
                                       <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)))</span>
-        <span class="k">return</span>  <span class="c1"># }}}</span>
+        <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots time-series output of Antarctic sub-ice-shelf melt rates.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -683,8 +668,8 @@
         <span class="c1"># If areas from obs file used need to be converted from sq km to sq m</span>
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-        <span class="n">movingAverageMonths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;movingAverageMonths&#39;</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                                  <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">)</span>
@@ -761,14 +746,10 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span> <span class="o">!=</span> <span class="s1">&#39;Antarctica&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span> <span class="o">!=</span> <span class="s1">&#39;Filchner&#39;</span><span class="p">:</span>
-            <span class="c1"># we only need the legend in those 2</span>
-            <span class="n">legendText</span> <span class="o">=</span> <span class="kc">None</span>
-
         <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
                                        <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
@@ -836,7 +817,7 @@
         <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                                        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span>
                                        <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
-                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAverageMonths</span><span class="p">,</span>
+                                       <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
                                        <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
                                        <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                                        <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
@@ -867,9 +848,8 @@
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">_load_ice_shelf_fluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span> <span class="nf">_load_ice_shelf_fluxes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads melt flux time series and computes regional total melt flux and</span>
 <span class="sd">        mean melt rate.</span>
@@ -889,11 +869,6 @@
 
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">,</span> <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span>
-        <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -903,7 +878,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

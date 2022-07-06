@@ -13,6 +13,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -84,10 +85,10 @@
   <h1>Source code for mpas_analysis.shared.time_series.time_series</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
@@ -99,24 +100,19 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="kn">import</span> <span class="n">find_executable</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">six</span> <span class="kn">import</span> <span class="n">string_types</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
 
 
 <span class="k">def</span> <span class="nf">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                                     <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses ncrcat to extact time series from a series of files</span>
 
 <span class="sd">    inFileNames : str or list of str</span>
@@ -140,7 +136,7 @@
 <span class="sd">    Author</span>
 <span class="sd">    ------</span>
 <span class="sd">    Xylar Asay-Davis</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">find_executable</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
@@ -152,7 +148,7 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
         <span class="k">return</span>
 
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">string_types</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">inFileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">))</span>
 
     <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">,</span> <span class="s1">&#39;-4&#39;</span><span class="p">,</span> <span class="s1">&#39;--record_append&#39;</span><span class="p">,</span> <span class="s1">&#39;--no_tmp_fl&#39;</span><span class="p">]</span>
@@ -195,13 +191,11 @@
         <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
                                             <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
 
-    <span class="c1"># }}}</span>
-
 
 <div class="viewcode-block" id="cache_time_series"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.time_series.cache_time_series.html#mpas_analysis.shared.time_series.cache_time_series">[docs]</a><span class="k">def</span> <span class="nf">cache_time_series</span><span class="p">(</span><span class="n">timesInDataSet</span><span class="p">,</span> <span class="n">timeSeriesCalcFunction</span><span class="p">,</span> <span class="n">cacheFileName</span><span class="p">,</span>
                       <span class="n">calendar</span><span class="p">,</span> <span class="n">yearsPerCacheUpdate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                      <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+                      <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create or update a NetCDF file ``cacheFileName`` containing the given time</span>
 <span class="sd">    series, calculated with ``timeSeriesCalcFunction`` over the given times,</span>
 <span class="sd">    start and end year, and time frequency with which results are cached.</span>
@@ -245,7 +239,7 @@
 <span class="sd">        A data set without the ``&#39;Time&#39;`` coordinate containing the mean</span>
 <span class="sd">        of ds over all months in monthValues, weighted by the number of days</span>
 <span class="sd">        in each month.</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -323,10 +317,6 @@
         <span class="n">dsCache</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="n">cacheFileName</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dsCache</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timesInDataSet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timesInDataSet</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span></div>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -336,7 +326,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

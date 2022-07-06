@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -85,18 +86,15 @@
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
 <span class="c1">#</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -113,13 +111,13 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="TimeSeriesTemperatureAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="TimeSeriesTemperatureAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  instance of MpasAnalysisConfigParser</span>
+<span class="sd">        config :  mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Contains configuration options</span>
 
 <span class="sd">        mpasTimeSeriesTask : ``MpasTimeSeriesTask``</span>
@@ -137,7 +135,7 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;hovmollerTemperatureAnomaly&#39;</span>
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_avgValueWithinOceanLayerRegion_&#39;</span> \
@@ -174,12 +172,6 @@
 
             <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div></div>
-
-        <span class="c1"># }}}</span>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -189,7 +181,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

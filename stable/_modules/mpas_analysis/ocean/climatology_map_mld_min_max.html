@@ -13,6 +13,7 @@
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
         <script src="../../../_static/jquery.js"></script>
         <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -84,17 +85,14 @@
   <h1>Source code for mpas_analysis.ocean.climatology_map_mld_min_max</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
-<span class="c1"># Copyright (c) 2020 Triad National Security, LLC. All rights reserved.</span>
-<span class="c1"># Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
 <span class="c1"># reserved.</span>
-<span class="c1"># Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
-    <span class="n">unicode_literals</span>
-
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
@@ -103,7 +101,7 @@
     <span class="n">PlotClimatologyMapSubtask</span>
 
 
-<div class="viewcode-block" id="ClimatologyMapMLDMinMax"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLDMinMax</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<div class="viewcode-block" id="ClimatologyMapMLDMinMax"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapMLDMinMax</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of mixed layer depth (mld) against</span>
 <span class="sd">    observations</span>
@@ -113,20 +111,20 @@
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
 <div class="viewcode-block" id="ClimatologyMapMLDMinMax.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="c1"># {{{</span>
+
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config :  ``MpasAnalysisConfigParser``</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTasks : dict of ``MpasClimatologyTask``</span>
 <span class="sd">            The tasks that produced the climatology of monthly min and max to</span>
 <span class="sd">            be remapped and plotted</span>
 
-<span class="sd">        controlConfig :  ``MpasAnalysisConfigParser``, optional</span>
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -156,12 +154,11 @@
                         <span class="n">mpasVariableSuffix</span><span class="o">=</span><span class="s1">&#39;boundaryLayerDepth&#39;</span><span class="p">,</span>
                         <span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;bld&#39;</span><span class="p">,</span>
                         <span class="n">sectionPrefix</span><span class="o">=</span><span class="s1">&#39;climatologyMapBLD&#39;</span><span class="p">)</span></div>
-        <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if MLD capability was turned on in the run.</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -184,23 +181,21 @@
             <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_AM_timeSeriesStatsMonthlyMax_enable&#39;</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="c1"># }}}</span>
-
     <span class="k">def</span> <span class="nf">_add_tasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTasks</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
                    <span class="n">title</span><span class="p">,</span> <span class="n">mpasVariableSuffix</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">sectionPrefix</span><span class="p">):</span>
-        <span class="sd">&#39;&#39;&#39;</span>
+        <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add tasks for a given variable</span>
-<span class="sd">        &#39;&#39;&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
                              <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">))</span>
 
-        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getExpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
                                                    <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -307,10 +302,6 @@
                             <span class="n">configSectionName</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)</span>
 
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
-
-    <span class="c1"># }}}</span>
-
-<span class="c1"># vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python</span>
 </pre></div>
 
            </div>
@@ -320,7 +311,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2020 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
