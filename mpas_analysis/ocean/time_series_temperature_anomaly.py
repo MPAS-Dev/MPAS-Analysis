@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -29,13 +26,13 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasTimeSeriesTask):  # {{{
+    def __init__(self, config, mpasTimeSeriesTask):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
@@ -53,7 +50,7 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
             tags=['timeSeries', 'temperature', 'publicObs', 'anomaly'])
 
         sectionName = 'hovmollerTemperatureAnomaly'
-        regionNames = config.getExpression(sectionName, 'regions')
+        regionNames = config.getexpression(sectionName, 'regions')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         mpasFieldName = 'timeMonthly_avg_avgValueWithinOceanLayerRegion_' \
@@ -90,9 +87,3 @@ class TimeSeriesTemperatureAnomaly(AnalysisTask):
 
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

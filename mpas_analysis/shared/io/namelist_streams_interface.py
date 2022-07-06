@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -17,13 +17,11 @@ files.
 # -------
 # Phillip Wolfram, Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
-import six
 from lxml import etree
 import re
 import os.path
+import f90nml
+import json
 
 from mpas_analysis.shared.containers import ReadOnlyDict
 from mpas_analysis.shared.io.utility import paths
@@ -41,21 +39,25 @@ def convert_namelist_to_dict(fname, readonly=True):
 
     readonly : bool, optional
         Should the resulting dictionary read-only?
+
+    Returns
+    -------
+    nml : dict
+        A dictionary where keys are namelist options and values are namelist
     """
-    # Authors
-    # -------
-    # Phillip J Wolfram
+    nml = f90nml.read(fname).todict()
 
-    # form dictionary
-    nml = dict()
+    # convert ordered dict to dict (Python 3 dict is ordered)
+    # https://stackoverflow.com/a/27373027/7728169
+    nml = json.loads(json.dumps(nml))
 
-    regex = re.compile(r"^\s*(.*?)\s*=\s*['\"]*(.*?)['\"]*\s*\n")
-    with open(fname) as f:
-        for line in f:
-            match = regex.findall(line)
-            if len(match) > 0:
-                # assumes that there is only one match per line
-                nml[match[0][0].lower()] = match[0][1]
+    # flatten the dict
+    flat = dict()
+    for section in nml:
+        for key in nml[section]:
+            flat[key.lower()] = nml[section][key]
+    nml = flat
+
     if readonly:
         nml = ReadOnlyDict(nml)
 
@@ -67,6 +69,7 @@ class NameList:
     Class for fortran manipulation of namelist files, provides
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -124,7 +127,7 @@ class NameList:
     # provide accessor for dictionary notation (returns string)
     def __getitem__(self, key):
         """
-        Accessor for bracket noation, e.g., nml['field']
+        Accessor for bracket notation, e.g., nml['field']
 
         Parameters
         ----------
@@ -133,7 +136,7 @@ class NameList:
 
         Returns
         -------
-        value : str
+        value : Any
             The value associated with ``key``
         """
         # Authors
@@ -155,7 +158,7 @@ class NameList:
 
         Returns
         -------
-        value : str
+        value : Any
             The value associated with ``key``
         """
         # Authors
@@ -222,10 +225,9 @@ class NameList:
         # -------
         # Phillip Wolfram, Xylar Asay-Davis
 
-        if 'True' in self.nml[key.lower()] or 'true' in self.nml[key.lower()]:
-            return True
-        else:
-            return False
+        value = self.nml[key.lower()]
+        assert type(value) is bool
+        return value
 
     def find_option(self, possibleOptions):
         """
@@ -259,14 +261,13 @@ class NameList:
         raise ValueError('None of the possible options {} found in namelist '
                          'file {}.'.format(possibleOptions, self.fname))
 
-    # }}}
-
 
 class StreamsFile:
     """
     Class to read in streams configuration file, provdies
     read and write functionality
     """
+
     # Authors
     # -------
     # Phillip Wolfram, Xylar Asay-Davis
@@ -440,12 +441,12 @@ class StreamsFile:
 
         if startDate is not None:
             # read one extra file before the start date to be on the safe side
-            if isinstance(startDate, six.string_types):
+            if isinstance(startDate, str):
                 startDate = string_to_datetime(startDate)
 
         if endDate is not None:
             # read one extra file after the end date to be on the safe side
-            if isinstance(endDate, six.string_types):
+            if isinstance(endDate, str):
                 endDate = string_to_datetime(endDate)
 
         # remove any path that's part of the template
@@ -533,5 +534,3 @@ class StreamsFile:
 
         raise ValueError('None of the possible streams {} found in streams '
                          'file {}.'.format(possibleStreams, self.fname))
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

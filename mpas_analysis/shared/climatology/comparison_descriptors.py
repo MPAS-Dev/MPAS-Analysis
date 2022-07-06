@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -14,9 +14,6 @@ Functions for creating climatologies from monthly time series data
 # Authors
 # -------
 # Xylar Asay-Davis
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import numpy
 
@@ -33,7 +30,7 @@ def get_comparison_descriptor(config, comparison_grid_name):
 
     Parameters
     ----------
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     comparison_grid_name : {'latlon', 'antarctic', 'arctic', 'north_atlantic',
@@ -70,7 +67,7 @@ def _get_lat_lon_comparison_descriptor(config):
 
     Parameters
     ----------
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     Returns
@@ -84,10 +81,8 @@ def _get_lat_lon_comparison_descriptor(config):
 
     section = 'climatology'
 
-    lat_res = config.getWithDefault(section, 'comparisonLatResolution',
-                                    constants.dLatitude)
-    lon_res = config.getWithDefault(section, 'comparisonLatResolution',
-                                    constants.dLongitude)
+    lat_res = config.getfloat(section, 'comparisonLatResolution')
+    lon_res = config.getfloat(section, 'comparisonLatResolution')
 
     nlat = int((constants.latmax - constants.latmin) / lat_res) + 1
     nlon = int((constants.lonmax - constants.lonmin) / lon_res) + 1
@@ -106,7 +101,7 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     Parameters
     ----------
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     comparison_grid_name : str

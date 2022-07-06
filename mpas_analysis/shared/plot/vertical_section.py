@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -16,12 +16,10 @@ runs or with observations
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.tri import Triangulation
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import xarray as xr
 import numpy as np
 
@@ -63,6 +61,7 @@ def plot_vertical_section_comparison(
         lineWidth=2,
         lineStyle='solid',
         lineColor='black',
+        contourColormap=None,
         backgroundColor='grey',
         invalidColor='white',
         outlineValid=True,
@@ -78,6 +77,7 @@ def plot_vertical_section_comparison(
         maxXTicks=20,
         calendar='gregorian',
         compareAsContours=False,
+        comparisonContourLineWidth=None,
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
         labelContours=False,
@@ -189,7 +189,7 @@ def plot_vertical_section_comparison(
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
 
-    lineWidth : int, optional
+    lineWidth : float, optional
         the line width of contour lines (if specified)
 
     lineStyle : str, optional
@@ -273,6 +273,10 @@ def plot_vertical_section_comparison(
        refArray is None, in which case only the contours of modelArray will be
        plotted on the single panel plot).
 
+    comparisonContourLineWidth : float, optional
+        the line width of contour lines of the comparisonFieldName field on
+        a contour comparison plot
+
     comparisonContourLineStyle : str, optional
         the line style of contour lines of the reference field on a contour
         comparison plot
@@ -336,13 +340,16 @@ def plot_vertical_section_comparison(
         # set the defaults, depending on if we have 1 or 3 panels, and
         # depending on how many x axes are to be displayed on the plots
         if singlePanel:
-            if compareAsContours and refArray is not None:
+            if compareAsContours and refArray is not None and \
+                    contourColormap is None:
+                # no color bar but there is a legend at the bottom
                 if len(xCoords) == 3:
                     figsize = (8, 8)
                 else:
                     figsize = (8, 7)
             else:
-                figsize = (8, 5)
+                # color bar and legend
+                figsize = (8, 7)
         elif len(xCoords) == 3:
             figsize = (8, 17)
         else:
@@ -417,6 +424,7 @@ def plot_vertical_section_comparison(
         lineWidth=lineWidth,
         lineStyle=lineStyle,
         lineColor=lineColor,
+        contourColormap=contourColormap,
         numUpperTicks=numUpperTicks,
         upperXAxisTickLabelPrecision=upperXAxisTickLabelPrecision,
         invertYAxis=invertYAxis,
@@ -432,6 +440,7 @@ def plot_vertical_section_comparison(
         contourComparisonField=contourComparisonField,
         comparisonFieldName=comparisonFieldName,
         originalFieldName=originalFieldName,
+        comparisonContourLineWidth=comparisonContourLineWidth,
         comparisonContourLineStyle=comparisonContourLineStyle,
         comparisonContourLineColor=comparisonContourLineColor,
         labelContours=labelContours,
@@ -563,6 +572,7 @@ def plot_vertical_section(
         lineWidth=2,
         lineStyle='solid',
         lineColor='black',
+        contourColormap=None,
         backgroundColor='grey',
         invalidColor='white',
         outlineValid=True,
@@ -579,11 +589,12 @@ def plot_vertical_section(
         contourComparisonField=None,
         comparisonFieldName=None,
         originalFieldName=None,
+        comparisonContourLineWidth=None,
         comparisonContourLineStyle=None,
         comparisonContourLineColor=None,
         labelContours=False,
         contourLabelPrecision=1,
-        maxTitleLength=70):  # {{{
+        maxTitleLength=70):
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
@@ -687,7 +698,7 @@ def plot_vertical_section(
     yLim : float array, optional
         y range of plot
 
-    lineWidth : int, optional
+    lineWidth : float, optional
         the line width of contour lines (if specified)
 
     lineStyle : str, optional
@@ -782,6 +793,10 @@ def plot_vertical_section(
         contours on a contour comparison plot).  If contourComparisonField
         is None, this parameter is ignored.
 
+    comparisonContourLineWidth : float, optional
+        the line width of contour lines of the comparisonFieldName field on
+        a contour comparison plot
+
     comparisonContourLineStyle : str, optional
         the line style of contour lines of the comparisonFieldName field on
         a contour comparison plot
@@ -850,7 +865,6 @@ def plot_vertical_section(
 
         # compute moving averages with respect to the x dimension
         if movingAveragePoints is not None and movingAveragePoints != 1:
-
             dim = field.dims[0]
             field = field.rolling(dim={dim: movingAveragePoints},
                                   center=True).mean().dropna(dim)
@@ -862,6 +876,11 @@ def plot_vertical_section(
         mask = field.notnull()
         maskedTriangulation, unmaskedTriangulation = _get_triangulation(
             x, y, mask)
+        if contourComparisonField is not None:
+            mask = field.notnull()
+            maskedComparisonTriangulation, _ = _get_triangulation(x, y, mask)
+        else:
+            maskedComparisonTriangulation = None
     else:
         mask = field.notnull()
         triMask = np.logical_not(mask.values)
@@ -871,6 +890,15 @@ def plot_vertical_section(
         mask_args = dict(triangulation_args)
         mask_args['mask'] = triMask
         maskedTriangulation = Triangulation(**mask_args)
+        if contourComparisonField is not None:
+            mask = contourComparisonField.notnull()
+            triMask = np.logical_not(mask.values)
+            triMask = np.amax(triMask, axis=1)
+            mask_args = dict(triangulation_args)
+            mask_args['mask'] = triMask
+            maskedComparisonTriangulation = Triangulation(**mask_args)
+        else:
+            maskedComparisonTriangulation = None
 
     # set up figure
     if dpi is None:
@@ -934,7 +962,6 @@ def plot_vertical_section(
             plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
                            colors='black', linewidths=1)
 
-
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
     fmt_string = None
@@ -945,38 +972,56 @@ def plot_vertical_section(
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        cs1 = plt.tricontour(maskedTriangulation, field.values.ravel(),
+        mask = field.notnull()
+        fieldMasked = field.where(mask, 0.0).values.ravel()
+
+        cs1 = plt.tricontour(maskedTriangulation, fieldMasked,
                              levels=contourLevels,
                              colors=lineColor,
                              linestyles=lineStyle,
-                             linewidths=lineWidth)
+                             linewidths=lineWidth,
+                             cmap=contourColormap)
         if labelContours:
             fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
+
         if plotAsContours and contourComparisonField is not None:
-            cs2 = plt.tricontour(maskedTriangulation,
-                                 contourComparisonField.values.ravel(),
+            if comparisonContourLineWidth is None:
+                comparisonContourLineWidth = lineWidth
+            mask = contourComparisonField.notnull()
+            fieldMasked = contourComparisonField.where(mask, 0.0).values.ravel()
+            cs2 = plt.tricontour(maskedComparisonTriangulation,
+                                 fieldMasked,
                                  levels=contourLevels,
                                  colors=comparisonContourLineColor,
                                  linestyles=comparisonContourLineStyle,
-                                 linewidths=lineWidth)
+                                 linewidths=comparisonContourLineWidth,
+                                 cmap=contourColormap)
+
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
-    if plotAsContours and contourComparisonField is not None:
+    plotLegend = (((lineColor is not None and
+                    comparisonContourLineColor is not None) or
+                   (lineWidth is not None and
+                    comparisonContourLineWidth is not None)) and
+                  (plotAsContours and contourComparisonField is not None))
+
+    if plotLegend:
         h1, _ = cs1.legend_elements()
         h2, _ = cs2.legend_elements()
         if labelContours:
             originalFieldName = originalFieldName + " (" + colorbarLabel + ")"
-            comparisonFieldName = comparisonFieldName + " (" + \
-                colorbarLabel + ")"
+            comparisonFieldName = (comparisonFieldName + " (" +
+                                   colorbarLabel + ")")
         ax.legend([h1[0], h2[0]], [originalFieldName, comparisonFieldName],
-                  loc='upper center', bbox_to_anchor=(0.5, -0.25), ncol=1)
+                  loc='upper center', bbox_to_anchor=(0.5, -0.15), ncol=1)
 
     if title is not None:
         if plotAsContours and labelContours \
                 and contourComparisonField is None:
-            title = limit_title(title, maxTitleLength-(3+len(colorbarLabel)))
+            title = limit_title(title,
+                                maxTitleLength - (3 + len(colorbarLabel)))
             title = title + " (" + colorbarLabel + ")"
         else:
             title = limit_title(title, maxTitleLength)
@@ -1017,6 +1062,15 @@ def plot_vertical_section(
         plot_xtick_format(calendar, minDays, maxDays, maxXTicks,
                           yearStride=yearStrideXTicks)
 
+    if contourLevels is not None:
+        if contourColormap is not None:
+            cbar1 = fig.colorbar(cs1, ax=ax, fraction=.05,
+                                 orientation='vertical',
+                                 spacing='proportional')
+
+            if colorbarLabel is not None:
+                cbar1.set_label(colorbarLabel)
+
     # add a second x-axis scale, if it was requested
     if xCoords is not None and len(xCoords) >= 2:
         ax2 = ax.twiny()
@@ -1050,7 +1104,7 @@ def plot_vertical_section(
                                      for member in tickValues])
                 ax3.spines['top'].set_position(('outward', 36))
 
-    return fig, ax  # }}}
+    return fig, ax
 
 
 def _get_triangulation(x, y, mask):
@@ -1058,7 +1112,7 @@ def _get_triangulation(x, y, mask):
 
     nx = x.sizes[x.dims[0]] - 1
     ny = x.sizes[x.dims[1]] - 1
-    nTriangles = 2*nx*ny
+    nTriangles = 2 * nx * ny
 
     mask = mask.values
     mask = np.logical_and(np.logical_and(mask[0:-1, 0:-1], mask[1:, 0:-1]),
@@ -1074,13 +1128,13 @@ def _get_triangulation(x, y, mask):
 
     tris = np.zeros((nx, ny, 2, 3), int)
     # upper triangles:
-    tris[:, :, 0, 0] = (ny+1)*xIndices + yIndices
-    tris[:, :, 0, 1] = (ny+1)*(xIndices + 1) + yIndices
-    tris[:, :, 0, 2] = (ny+1)*xIndices + yIndices + 1
+    tris[:, :, 0, 0] = (ny + 1) * xIndices + yIndices
+    tris[:, :, 0, 1] = (ny + 1) * (xIndices + 1) + yIndices
+    tris[:, :, 0, 2] = (ny + 1) * xIndices + yIndices + 1
     # lower triangle
-    tris[:, :, 1, 0] = (ny+1)*xIndices + yIndices + 1
-    tris[:, :, 1, 1] = (ny+1)*(xIndices + 1) + yIndices
-    tris[:, :, 1, 2] = (ny+1)*(xIndices + 1) + yIndices + 1
+    tris[:, :, 1, 0] = (ny + 1) * xIndices + yIndices + 1
+    tris[:, :, 1, 1] = (ny + 1) * (xIndices + 1) + yIndices
+    tris[:, :, 1, 2] = (ny + 1) * (xIndices + 1) + yIndices + 1
 
     tris = tris.reshape((nTriangles, 3))
 
@@ -1091,5 +1145,3 @@ def _get_triangulation(x, y, mask):
     unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
 
     return maskedTriangulation, unmaskedTriangulation
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

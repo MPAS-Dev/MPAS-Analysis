@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -31,7 +31,7 @@ from mpas_analysis.shared.time_series import \
     compute_moving_avg_anomaly_from_start
 
 
-class HovmollerOceanRegions(AnalysisTask):  # {{{
+class HovmollerOceanRegions(AnalysisTask):
     """
     Compute and plot a Hovmoller diagram (depth vs. time) for regionally
     analyzed data.  The mean of the data are computed over each region at each
@@ -42,13 +42,13 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, regionMasksTask, oceanRegionalProfilesTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
@@ -57,7 +57,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
         oceanRegionalProfilesTask : mpas_analysis.ocean.OceanRegionalProfiles
             A task for computing ocean regional profiles
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -80,13 +80,13 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
         else:
             endYear = int(endYear)
 
-        regionGroups = config.getExpression('hovmollerOceanRegions',
+        regionGroups = config.getexpression('hovmollerOceanRegions',
                                             'regionGroups')
 
         for regionGroup in regionGroups:
             suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
             regionGroupSection = 'hovmoller{}'.format(suffix)
-            regionNames = config.getExpression(regionGroupSection,
+            regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
             if len(regionNames) == 0:
                 return
@@ -94,7 +94,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
             computeAnomaly = config.getboolean(regionGroupSection,
                                                'computeAnomaly')
 
-            fields = config.getExpression(regionGroupSection, 'fields')
+            fields = config.getexpression(regionGroupSection, 'fields')
 
             masksSubtask = regionMasksTask.add_mask_subtask(regionGroup)
             masksFile = masksSubtask.geojsonFileName
@@ -111,8 +111,8 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
             combineSubtask = oceanRegionalProfilesTask.combineSubtasks[
                 regionGroup][(startYear, endYear)]
 
-            movingAverageMonths = config.getint(
-                regionGroupSection, 'movingAverageMonths')
+            movingAveragePoints = config.getint(
+                regionGroupSection, 'movingAveragePoints')
 
             baseDirectory = build_config_full_path(
                 config, 'output', 'timeSeriesSubdirectory')
@@ -130,7 +130,7 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
                         startYear, endYear)
                 outFullPath = '{}/{}'.format(baseDirectory, outFileName)
                 anomalySubtask = ComputeHovmollerAnomalySubtask(
-                    self, inFullPath, outFullPath, movingAverageMonths)
+                    self, inFullPath, outFullPath, movingAveragePoints)
                 self.add_subtask(anomalySubtask)
                 anomalySubtask.run_after(combineSubtask)
                 # PlotHovmollerSubtask requires a relative path
@@ -143,8 +143,8 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
                 suffix = prefix[0].upper() + prefix[1:]
                 fieldSectionName = 'hovmollerOceanRegions{}'.format(suffix)
 
-                config.set(fieldSectionName, 'movingAverageMonths',
-                           '{}'.format(movingAverageMonths))
+                config.set(fieldSectionName, 'movingAveragePoints',
+                           '{}'.format(movingAveragePoints))
 
                 for regionName in regionNames:
                     if computeAnomaly:
@@ -191,8 +191,6 @@ class HovmollerOceanRegions(AnalysisTask):  # {{{
                     self.add_subtask(hovmollerSubtask)
 
         self.run_after(oceanRegionalProfilesTask)
-        # }}}
-    # }}}
 
 
 class ComputeHovmollerAnomalySubtask(AnalysisTask):
@@ -217,7 +215,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, inFileName, outFileName,
-                 movingAverageMonths, subtaskName='computeAnomaly'):  # {{{
+                 movingAveragePoints, subtaskName='computeAnomaly'):
         """
         Construct the analysis task.
 
@@ -232,7 +230,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
         outFileName : str
             The file name for the anomaly
 
-        movingAverageMonths : int
+        movingAveragePoints : int
             The number of months used in the moving average used to
             smooth the data set
 
@@ -253,11 +251,9 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
 
         self.inFileName = inFileName
         self.outFileName = outFileName
-        self.movingAverageMonths = movingAverageMonths
+        self.movingAveragePoints = movingAveragePoints
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -281,13 +277,11 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
 
         months = delta.months + 12*delta.years
 
-        if months <= self.movingAverageMonths:
+        if months <= self.movingAveragePoints:
             raise ValueError('Cannot meaningfully perform a rolling mean '
                              'because the time series is too short.')
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of ocean heat content (OHC) from time-series output.
         """
@@ -301,7 +295,7 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
 
         ds = xarray.open_dataset(self.inFileName)
 
-        dsStart = ds.isel(Time=slice(0, self.movingAverageMonths)).mean('Time')
+        dsStart = ds.isel(Time=slice(0, self.movingAveragePoints)).mean('Time')
 
         for variable in ds.data_vars:
             ds[variable] = ds[variable] - dsStart[variable]
@@ -314,9 +308,4 @@ class ComputeHovmollerAnomalySubtask(AnalysisTask):
             outFileName = '{}/{}'.format(baseDirectory,
                                          outFileName)
 
-        write_netcdf(ds, outFileName)  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        write_netcdf(ds, outFileName)

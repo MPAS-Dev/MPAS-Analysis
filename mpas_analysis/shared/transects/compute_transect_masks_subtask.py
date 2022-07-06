@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import os
 import xarray as xr
@@ -64,7 +61,7 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
         check_call(args, logger=logger)
 
 
-class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
+class ComputeTransectMasksSubtask(AnalysisTask):
     """
     An analysis tasks for computing cell masks for transects defined by geojson
     features
@@ -90,7 +87,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, transectGroup, subprocessCount=None):
-        # {{{
+
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -124,8 +121,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             tags=[])
 
         if subprocessCount is None:
-            self.subprocessCount = self.config.getWithDefault(
-                'execute', 'parallelTaskCount', default=1)
+            self.subprocessCount = self.config.getint(
+                'execute', 'parallelTaskCount')
         else:
             self.subprocessCount = subprocessCount
 
@@ -140,7 +137,6 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         self.geojsonFileName = \
             get_region_mask(self.config,
                             '{}.geojson'.format(self.outFileSuffix))
-        # }}}
 
     def make_transect_mask(self):
         """
@@ -175,7 +171,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             transectNames = get_feature_list(self.geojsonFileName)
         return transectNames
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -226,9 +222,8 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
         if os.path.exists(self.maskFileName):
             # nothing to do so don't block a bunch of other processes
             self.subprocessCount = 1
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the requested climatologies
         """
@@ -247,6 +242,3 @@ class ComputeTransectMasksSubtask(AnalysisTask):  # {{{
             logger=self.logger, processCount=self.subprocessCount,
             dir=self.maskSubdirectory)
 
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 import numpy as np
@@ -37,7 +34,7 @@ class PlotHovmollerSubtask(AnalysisTask):
     Attributes
     ----------
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
 
     regionName : str
@@ -96,7 +93,7 @@ class PlotHovmollerSubtask(AnalysisTask):
                  fieldNameInTitle, mpasFieldName, unitsLabel, sectionName,
                  thumbnailSuffix, imageCaption, galleryGroup, groupSubtitle,
                  groupLink, galleryName, subtaskName=None,
-                 controlConfig=None, regionMaskFile=None):  # {{{
+                 controlConfig=None, regionMaskFile=None):
         """
         Construct the analysis task.
 
@@ -151,7 +148,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         regionMaskFile : str, optional
@@ -193,9 +190,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.groupLink = groupLink
         self.galleryName = galleryName
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -237,9 +232,9 @@ class PlotHovmollerSubtask(AnalysisTask):
         self.xmlFileNames = ['{}/{}.xml'.format(
             self.plotsDirectory, self.filePrefix)]
 
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Make the Hovmoller plot from the time series.
         """
@@ -264,8 +259,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             regionNameInTitle = self.regionName.replace('_', ' ')
             regionDim = ds.regionNames.dims[0]
         else:
-            plotTitles = config.getExpression('regions', 'plotTitles')
-            allRegionNames = config.getExpression('regions', 'regions')
+            plotTitles = config.getexpression('regions', 'plotTitles')
+            allRegionNames = config.getexpression('regions', 'regions')
             regionIndex = allRegionNames.index(self.regionName)
             regionNameInTitle = plotTitles[regionIndex]
             regionDim = 'nOceanRegionsTmp'
@@ -316,11 +311,11 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             yearStrideXTicks = None
 
-        movingAverageMonths = config.getWithDefault(
-            sectionName, 'movingAverageMonths', 1)
+        movingAveragePoints = config.getint(
+            sectionName, 'movingAveragePoints')
 
         if config.has_option(sectionName, 'yLim'):
-            yLim = config.getExpression(sectionName, 'yLim')
+            yLim = config.getexpression(sectionName, 'yLim')
         else:
             yLim = None
 
@@ -339,9 +334,9 @@ class PlotHovmollerSubtask(AnalysisTask):
                 regionNameInTitle = self.regionName.replace('_', ' ')
                 regionDim = dsRef.regionNames.dims[0]
             else:
-                plotTitles = controlConfig.getExpression('regions',
+                plotTitles = controlConfig.getexpression('regions',
                                                          'plotTitles')
-                allRegionNames = controlConfig.getExpression('regions',
+                allRegionNames = controlConfig.getexpression('regions',
                                                              'regions')
                 regionIndex = allRegionNames.index(self.regionName)
                 regionNameInTitle = plotTitles[regionIndex]
@@ -379,7 +374,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             zCoord=z, colorbarLabel=self.unitsLabel, title=title,
             modelTitle=mainRunName, refTitle=refTitle, diffTitle=diffTitle,
             xlabels=xLabel, ylabel=yLabel, lineWidth=1, xCoordIsTime=True,
-            movingAveragePoints=movingAverageMonths, calendar=self.calendar,
+            movingAveragePoints=movingAveragePoints, calendar=self.calendar,
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
             yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
             axisFontSize=axisFontSize, defaultFontSize=defaultFontSize)
@@ -419,9 +414,3 @@ class PlotHovmollerSubtask(AnalysisTask):
                 regionNameInTitle, self.thumbnailSuffix),
             imageDescription=self.imageCaption,
             imageCaption=self.imageCaption)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

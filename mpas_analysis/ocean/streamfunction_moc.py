@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 import numpy as np
@@ -41,7 +38,7 @@ from mpas_analysis.shared.climatology.climatology import \
 from mpas_analysis.shared.regions import ComputeRegionMasksSubtask
 
 
-class StreamfunctionMOC(AnalysisTask):  # {{{
+class StreamfunctionMOC(AnalysisTask):
     """
     Computation and plotting of model meridional overturning circulation.
     Will eventually support:
@@ -55,19 +52,19 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -116,11 +113,8 @@ class StreamfunctionMOC(AnalysisTask):  # {{{
         plotTimeSeriesSubtask = PlotMOCTimeSeriesSubtask(self, controlConfig)
         plotTimeSeriesSubtask.run_after(combineTimeSeriesSubtask)
 
-        # }}}
-    # }}}
 
-
-class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
+class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):
     """
     An analysis subtasks for computing cell masks and southern transects for
     MOC regions
@@ -130,7 +124,7 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask):
-        # {{{
+
         """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
@@ -149,9 +143,7 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
         meshName = config.get('input', 'mpasMeshName')
         regionGroup = 'MOC Basins'
 
-        subprocessCount = config.getWithDefault('execute',
-                                                'parallelTaskCount',
-                                                default=1)
+        subprocessCount = config.getint('execute', 'parallelTaskCount')
 
         # call the constructor from the base class (ComputeRegionMasksSubtask)
         super().__init__(
@@ -161,9 +153,7 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
 
         self.maskAndTransectFileName = None
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -184,9 +174,8 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
         self.maskAndTransectFileName = get_region_mask(
             self.config, '{}_mocBasinsAndTransects{}.nc'.format(
                 self.meshName, self.date))
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the requested climatologies
         """
@@ -210,11 +199,10 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):  # {{{
 
         write_netcdf(dsMasksAndTransects, self.maskAndTransectFileName,
                      char_dim_name='StrLen')
-        # }}}
 # }}}
 
 
-class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
+class ComputeMOCClimatologySubtask(AnalysisTask):
     """
     Computation of a climatology of the model meridional overturning
     circulation.
@@ -230,7 +218,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, mpasClimatologyTask, maskSubtask):  # {{{
+    def __init__(self, parentTask, mpasClimatologyTask, maskSubtask):
         """
         Construct the analysis task.
 
@@ -264,9 +252,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         self.run_after(maskSubtask)
 
         parentTask.add_subtask(self)
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -299,7 +286,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        self.usePostprocessing = config.getExpression(
+        self.usePostprocessing = config.getexpression(
             self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
@@ -326,9 +313,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Process MOC analysis member data if available, or compute MOC at
         post-processing if not.
@@ -346,9 +331,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         else:
             self._compute_moc_climo_postprocess()
 
-        # }}}
-
-    def _compute_moc_climo_analysismember(self):  # {{{
+    def _compute_moc_climo_analysismember(self):
         """compute mean MOC streamfunction from analysis member"""
 
         config = self.config
@@ -364,7 +347,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         if os.path.exists(outputFileName):
             return
 
-        regionNames = config.getExpression(self.sectionName, 'regionNames')
+        regionNames = config.getexpression(self.sectionName, 'regionNames')
         regionNames.append('Global')
 
         # Read in depth and bin latitudes
@@ -478,9 +461,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         depthVar.units = 'meters'
         depthVar[:] = depth
         ncFile.close()
-        # }}}
 
-    def _compute_moc_climo_postprocess(self):  # {{{
+    def _compute_moc_climo_postprocess(self):
         """compute mean MOC streamfunction as a post-process"""
 
         config = self.config
@@ -498,7 +480,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
 
-        regionNames = config.getExpression(self.sectionName, 'regionNames')
+        regionNames = config.getexpression(self.sectionName, 'regionNames')
 
         # Load basin region related variables and save them to dictionary
         mpasMeshName = config.get('input', 'mpasMeshName')
@@ -617,12 +599,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):  # {{{
         depthVar.units = 'meters'
         depthVar[:] = depth
         ncFile.close()
-        # }}}
-
-    # }}}
 
 
-class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
+class PlotMOCClimatologySubtask(AnalysisTask):
     """
     Computation of a climatology of the model meridional overturning
     circulation.
@@ -631,7 +610,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, controlConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):
         """
         Construct the analysis task.
 
@@ -640,7 +619,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -658,9 +637,8 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         parentTask.add_subtask(self)
 
         self.controlConfig = controlConfig
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -692,7 +670,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        self.regionNames = ['Global'] + config.getExpression(self.sectionName,
+        self.regionNames = ['Global'] + config.getexpression(self.sectionName,
                                                              'regionNames')
 
         for region in self.regionNames:
@@ -704,9 +682,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[region] = filePrefix
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plot the MOC climatology
         """
@@ -750,9 +726,9 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
             z = depth
             regionMOC = moc[region]
             # Subset lat range
-            minLat = config.getExpression('streamfunctionMOC{}'.format(region),
+            minLat = config.getexpression('streamfunctionMOC{}'.format(region),
                                           'latBinMin')
-            maxLat = config.getExpression('streamfunctionMOC{}'.format(region),
+            maxLat = config.getexpression('streamfunctionMOC{}'.format(region),
                                           'latBinMax')
             indLat = np.logical_and(x >= minLat, x <= maxLat)
             x = x.where(indLat, drop=True)
@@ -793,9 +769,9 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
                 groupLink='moc',
                 thumbnailDescription=region,
                 imageDescription=caption,
-                imageCaption=caption)  # }}}
+                imageCaption=caption)
 
-    def _load_moc(self, config):  # {{{
+    def _load_moc(self, config):
         """compute mean MOC streamfunction from analysis member"""
 
         startYear = config.getint('climatology', 'startYear')
@@ -817,12 +793,10 @@ class PlotMOCClimatologySubtask(AnalysisTask):  # {{{
         for region in self.regionNames:
             lat[region] = ds['lat{}'.format(region)]
             moc[region] = ds['moc{}'.format(region)]
-        return depth, lat, moc  # }}}
-
-    # }}}
+        return depth, lat, moc
 
 
-class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
+class ComputeMOCTimeSeriesSubtask(AnalysisTask):
     """
     Computation of a time series of max Atlantic MOC at 26.5N.
     """
@@ -830,7 +804,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYear, endYear, maskSubtask):  # {{{
+    def __init__(self, parentTask, startYear, endYear, maskSubtask):
         """
         Construct the analysis task.
 
@@ -868,9 +842,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask.add_subtask(self)
         self.startYear = startYear
         self.endYear = endYear
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -898,7 +871,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         self.sectionName = 'streamfunctionMOC'
 
-        self.usePostprocessing = config.getExpression(
+        self.usePostprocessing = config.getexpression(
             self.sectionName, 'usePostprocessingScript')
 
         if not self.usePostprocessing and self.mocAnalysisMemberEnabled:
@@ -921,9 +894,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                 self.variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
                      'timeMonthly_avg_vertGMBolusVelocityTop'])
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Process MOC analysis member data if available, or compute MOC at
         post-processing if not.
@@ -943,9 +915,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             self._compute_moc_time_series_analysismember()
         else:
             self._compute_moc_time_series_postprocess()
-        # }}}
 
-    def _compute_moc_time_series_analysismember(self):  # {{{
+    def _compute_moc_time_series_analysismember(self):
         """compute MOC time series from analysis member"""
 
         # Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)
@@ -1081,9 +1052,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                               'description': description}}}}
         dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
-        # }}}
 
-    def _compute_moc_time_series_postprocess(self):  # {{{
+    def _compute_moc_time_series_postprocess(self):
         """compute MOC time series as a post-process"""
 
         config = self.config
@@ -1240,11 +1210,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                               'description': description}}}}
         dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
-        # }}}
-    # }}}
 
 
-class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
+class CombineMOCTimeSeriesSubtask(AnalysisTask):
     """
     Combine individual time series of max Atlantic MOC at 26.5N into a single
     data set
@@ -1253,7 +1221,7 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears):  # {{{
+    def __init__(self, parentTask, startYears, endYears):
         """
         Construct the analysis task.
 
@@ -1262,7 +1230,7 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1280,9 +1248,8 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask.add_subtask(self)
         self.startYears = startYears
         self.endYears = endYears
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plot the MOC time series
         """
@@ -1315,11 +1282,10 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):  # {{{
 
         ds.load()
 
-        write_netcdf(ds, outputFileName)  # }}}
-    # }}}
+        write_netcdf(ds, outputFileName)
 
 
-class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
+class PlotMOCTimeSeriesSubtask(AnalysisTask):
     """
     Plots a time series of max Atlantic MOC at 26.5N.
     """
@@ -1327,7 +1293,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis
 
-    def __init__(self, parentTask, controlConfig):  # {{{
+    def __init__(self, parentTask, controlConfig):
         """
         Construct the analysis task.
 
@@ -1336,7 +1302,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1354,9 +1320,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
         parentTask.add_subtask(self)
 
         self.controlConfig = controlConfig
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -1387,9 +1352,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
                                                 filePrefix)]
         self.filePrefix = filePrefix
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plot the MOC time series
         """
@@ -1471,9 +1434,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-        # }}}
-
-    def _load_moc(self, config):  # {{{
+    def _load_moc(self, config):
         """compute mean MOC streamfunction from analysis member"""
 
         outputDirectory = build_config_full_path(config, 'output',
@@ -1486,12 +1447,10 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):  # {{{
             outputDirectory, startYear, endYear)
 
         dsMOCTimeSeries = xr.open_dataset(inputFileName, decode_times=False)
-        return dsMOCTimeSeries  # }}}
-
-    # }}}
+        return dsMOCTimeSeries
 
 
-def _load_mesh(runStreams):  # {{{
+def _load_mesh(runStreams):
     # Load mesh related variables
     try:
         restartFile = runStreams.readpath('restart')[0]
@@ -1515,12 +1474,9 @@ def _load_mesh(runStreams):  # {{{
 
     return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
         refTopDepth, refLayerThickness
-    # }}}
 
 
 def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
-    # {{{
-
     if not os.path.exists(regionMaskFile):
         raise IOError('Regional masking file {} for MOC calculation '
                       'does not exist'.format(regionMaskFile))
@@ -1555,12 +1511,12 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
             'transectEdgeMaskSigns': transectEdgeMaskSigns,
             'transectEdgeGlobalIDs': transectEdgeGlobalIDs}
 
-    return dictRegion  # }}}
+    return dictRegion
 
 
 def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
                        transectEdgeMaskSigns, nz, dvEdge,
-                       refLayerThickness, horizontalVel):  # {{{
+                       refLayerThickness, horizontalVel):
     """compute mass transport across southern transect of ocean basin"""
 
     transportZEdge = np.zeros([nz, maxEdgesInTransect])
@@ -1574,11 +1530,11 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             dvEdge[iEdge, np.newaxis] * \
             refLayerThickness[np.newaxis, :]
     transportZ = transportZEdge.sum(axis=1)
-    return transportZ  # }}}
+    return transportZ
 
 
 def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
-                 velArea):  # {{{
+                 velArea):
     """compute meridionally integrated MOC streamfunction"""
 
     mocTop = np.zeros([np.size(latBins), nz + 1])
@@ -1592,7 +1548,7 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
     # convert m^3/s to Sverdrup
     mocTop = mocTop * m3ps_to_Sv
     mocTop = mocTop.T
-    return mocTop  # }}}
+    return mocTop
 
 
 def _interp_moc(x, z, regionMOC, refX, refZ, refMOC):
@@ -1618,5 +1574,3 @@ def _interp_moc(x, z, regionMOC, refX, refZ, refMOC):
             left=np.nan, right=np.nan)
 
     return xr.DataArray(dims=dims, data=refRegionMOC)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import pkg_resources
 from os import makedirs
@@ -25,13 +22,12 @@ from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
 
 
 def generate_html(config, analyses, controlConfig, customConfigFiles):
-    # {{{
     """
     Generates webpages for diplaying the plots from each analysis task
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
     analysis : ``OrderedDict`` of ``AnalysisTask`` objects
@@ -40,7 +36,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
         the list of files to include on the webpage for the associated
         component.
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     customConfigFiles : list of str
@@ -99,8 +95,6 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
     if url is None:
         print("Done.")
 
-    # }}}
-
 
 class MainPage(object):
     """
@@ -108,10 +102,10 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     customConfigFiles : list of str
@@ -125,6 +119,7 @@ class MainPage(object):
         Each component has a name, subdirectory and image name used to find
         the appropriate thumbnail.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -135,10 +130,10 @@ class MainPage(object):
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Config options
 
-        controlConfig : ``MpasAnalysisConfigParser``
+        controlConfig : mpas_tools.config.MpasConfigParser
             Config options for a control run
 
         customConfigFiles : list of str
@@ -230,7 +225,8 @@ class MainPage(object):
 
             # substitute entries in the template and add the component to
             # the text describing all components
-            componentsText = componentsText + \
+            componentsText = \
+                componentsText + \
                 _replace_tempate_text(self.componentTemplate, replacements)
 
         githash = _get_git_hash()
@@ -250,13 +246,15 @@ class MainPage(object):
             replacements = {'@configName': os.path.basename(configFileName),
                             '@configDesc': shortName}
 
-            configsText = configsText + \
+            configsText = \
+                configsText + \
                 _replace_tempate_text(self.configTemplate, replacements)
 
-        replacements = {'@configName': 'config.complete.{}'.format(runName),
+        replacements = {'@configName': 'complete.{}.cfg'.format(runName),
                         '@configDesc': 'Complete Configuration File'}
 
-        configsText = configsText + \
+        configsText = \
+            configsText + \
             _replace_tempate_text(self.configTemplate, replacements)
 
         replacements = {'@runName': runName,
@@ -318,10 +316,10 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Config options
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         Config options for a control run
 
     name : str
@@ -339,6 +337,7 @@ class ComponentPage(object):
         A tree of information describing the the gallery groups in the page,
         the galleries in each group and the images in each gallery.
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -349,7 +348,7 @@ class ComponentPage(object):
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Config options
 
         name : str
@@ -360,7 +359,7 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Config options for a control run
         """
         # Authors
@@ -380,7 +379,6 @@ class ComponentPage(object):
 
         for templateName in ['page', 'quicklink', 'group', 'gallery', 'image',
                              'subtitle']:
-
             # get template text
             fileName = pkg_resources.resource_filename(
                 __name__,
@@ -404,7 +402,7 @@ class ComponentPage(object):
         xmlFileName : str
             The full path to the XML file describing the image to be added
 
-        config : ``MpasAnalysisConfigParser`` object
+        config : mpas_tools.config.MpasConfigParser
             contains config options
 
         components : OrederdDict of dict
@@ -413,7 +411,7 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        controlConfig : ``MpasAnalysisConfigParser``, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Config options for a control run
         """
         # Authors
@@ -499,10 +497,12 @@ class ComponentPage(object):
         quickLinkText = ''
         galleriesText = ''
         for groupName, groupDict in self.groups.items():
-            quickLinkText = quickLinkText + \
+            quickLinkText = \
+                quickLinkText + \
                 self._generate_quick_link_text(groupName, groupDict)
 
-            galleriesText = galleriesText + \
+            galleriesText = \
+                galleriesText + \
                 self._generate_group_text(groupName, groupDict)
 
         replacements = {'@runName': runName,
@@ -566,7 +566,7 @@ class ComponentPage(object):
         imagesText = ''
         for imageFileName, imageDict in images.items():
             imagesText = imagesText + \
-                self._generate_image_text(imageFileName, imageDict)
+                         self._generate_image_text(imageFileName, imageDict)
 
         if galleryName == 'None':
             galleryTitle = ''
@@ -597,7 +597,8 @@ class ComponentPage(object):
         """
         galleriesText = ''
         for galleryName, galleryDict in groupDict['galleries'].items():
-            galleriesText = galleriesText + \
+            galleriesText = \
+                galleriesText + \
                 self._generate_gallery_text(galleryName, galleryDict['images'])
 
         replacements = {'@analysisGroupName': groupName,

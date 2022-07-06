@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -14,9 +14,6 @@ Unit test infrastructure, adapted from approach of xarray.
 Phillip J. Wolfram
 10/07/2016
 """
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import os
 import pytest
@@ -32,5 +29,3 @@ class TestPaths(TestCase):
                          ['0.txt', '1.txt', '2.txt', 'a.txt', 'b.txt',
                           'c.txt'])
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

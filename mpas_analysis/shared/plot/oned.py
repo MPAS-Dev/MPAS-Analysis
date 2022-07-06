@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -18,9 +18,6 @@ Plotting utilities, including routines for plotting:
 # Authors
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -40,7 +37,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             maxTitleLength=80,
             titleFontSize=None,
             axisFontSize=None,
-            defaultFontSize=None):  # {{{
+            defaultFontSize=None):
     """
     Plots a 1D line plot with error bars if available.
 
@@ -188,7 +185,5 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     if fileout is not None:
         savefig(fileout, config)
 
-    plt.close()  # }}}
+    plt.close()
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

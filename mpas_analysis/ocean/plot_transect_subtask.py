@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -16,11 +16,10 @@ observations or reference data.
 # -------
 # Xylar Asay-Davis, Greg Streletz
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy
+from matplotlib import colors
+from matplotlib import cm
 
 from geometric_features import FeatureCollection
 
@@ -39,7 +38,7 @@ from mpas_analysis.shared.climatology import compute_climatology, \
 from mpas_analysis.shared.constants import constants
 
 
-class PlotTransectSubtask(AnalysisTask):  # {{{
+class PlotTransectSubtask(AnalysisTask):
     """
     An analysis task for plotting 2D model fields against observations.
 
@@ -59,7 +58,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     plotObs : bool, optional
         Whether to plot against observations.
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any), ignored if
         ``plotObs == True``
 
@@ -109,8 +108,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, season, transectName, fieldName,
                  computeTransectsSubtask, plotObs=True,
                  controlConfig=None, horizontalBounds=None):
-        # {{{
-        '''
+
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -136,14 +135,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         plotObs : bool, optional
             Whether to plot against observations.
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any), ignored if
             ``plotObs == True``
 
         horizontalBounds : [float, float], optional
             The distance in km of the left- and right-hand edges of the plot,
             chosen automatically by default or if the list is empty
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -173,15 +172,14 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
         self.run_after(computeTransectsSubtask)
-        # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, configSectionName, verticalBounds,
                       diffTitleLabel='Model - Observations'):
-        # {{{
-        '''
+
+        """
         Store attributes related to plots, plot file names and HTML output.
 
         Parameters
@@ -232,7 +230,7 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         diffTitleLabel : str, optional
             the title of the difference subplot
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -260,9 +258,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             self.verticalBounds = None
         else:
             self.verticalBounds = verticalBounds
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -299,9 +296,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                     self.filePrefix))
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots a comparison of ACME/MPAS output to SST, MLD or SSS observations
         or a control run
@@ -368,10 +364,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         if remappedRefClimatology is not None:
             remappedRefClimatology.close()
 
-        # }}}
-
     def _plot_transect(self, remappedModelClimatology, remappedRefClimatology):
-        # {{{
+
         """ plotting the transect """
 
         season = self.season
@@ -523,22 +517,36 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         # what line styles and line colors to use, and whether and how
         # to label contours
 
-        compareAsContours = config.getboolean('transects',
-                                              'compareAsContoursOnSinglePlot')
+        if config.has_option(configSectionName,
+                             'compareAsContoursOnSinglePlot'):
+            compareAsContours = config.getboolean(
+                configSectionName, 'compareAsContoursOnSinglePlot')
+        else:
+            compareAsContours = config.getboolean(
+                'transects', 'compareAsContoursOnSinglePlot')
 
         contourLineStyle = config.get('transects', 'contourLineStyle')
-        contourLineColor = config.get('transects', 'contourLineColor')
         comparisonContourLineStyle = config.get('transects',
                                                 'comparisonContourLineStyle')
-        comparisonContourLineColor = config.get('transects',
-                                                'comparisonContourLineColor')
 
         if compareAsContours:
+            contourLineWidth = \
+                config.getfloat('transects', 'mainContourLineWidth')
+            contourLineColor = None
+            comparisonContourLineColor = None
+            contourColormap = PlotTransectSubtask._get_contour_colormap()
             labelContours = config.getboolean(
                 'transects', 'labelContoursOnContourComparisonPlots')
+            comparisonContourLineWidth = \
+                config.getfloat('transects', 'comparisonContourLineWidth')
         else:
+            contourLineWidth = config.getfloat('transects', 'contourLineWidth')
+            contourLineColor = config.get('transects', 'contourLineColor')
+            comparisonContourLineColor = None
+            contourColormap = None
             labelContours = config.getboolean('transects',
                                               'labelContoursOnHeatmaps')
+            comparisonContourLineWidth = None
 
         contourLabelPrecision = config.getint('transects',
                                               'contourLabelPrecision')
@@ -587,8 +595,11 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             xLim=self.horizontalBounds,
             yLim=self.verticalBounds,
             compareAsContours=compareAsContours,
+            lineWidth=contourLineWidth,
             lineStyle=contourLineStyle,
             lineColor=contourLineColor,
+            contourColormap=contourColormap,
+            comparisonContourLineWidth=comparisonContourLineWidth,
             comparisonContourLineStyle=comparisonContourLineStyle,
             comparisonContourLineColor=comparisonContourLineColor,
             labelContours=labelContours,
@@ -624,7 +635,10 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             ax.spines['left'].set_linewidth(4)
             ax.spines['right'].set_linewidth(4)
 
-        add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
+        if compareAsContours:
+            add_inset(fig, fc, width=1., height=1., xbuffer=0.1, ybuffer=0.1)
+        else:
+            add_inset(fig, fc, width=1.5, height=1.5, xbuffer=0.1, ybuffer=0.1)
 
         savefig(outFileName, config, tight=False)
 
@@ -642,10 +656,8 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             imageDescription=caption,
             imageCaption=caption)
 
-        # }}}
-
     def _lat_greater_extent(self, lat, lon):
-        # {{{
+
         """
         Returns True if lat has a greater extent (in degrees) than lon (or the
         same extent as lon), and False otherwise.
@@ -720,10 +732,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return True
         else:
             return False
-        # }}}
 
     def _strictly_monotonic(self, coord):
-        # {{{
+
         """Whether the coordinate is strictly monotonic"""
         # Authors
         # -------
@@ -734,10 +745,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
         coord_diff = numpy.where(coord_diff < -180, coord_diff + 360,
                                  coord_diff)
         return numpy.all(coord_diff > 0) or numpy.all(coord_diff < 0)
-        # }}}
 
     def _lat_most_monotonic(self, lat, lon):
-        # {{{
+
         """
         Returns True if lat is "more monotonic" than lon in terms of the
         difference between the total number of degrees traversed and the net
@@ -759,10 +769,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return True
         else:
             return False
-        # }}}
 
     def _lat_most_steps_in_same_direction(self, lat, lon):
-        # {{{
+
         """
         Returns True if lat is has more steps in the same direction (either
         steps that increase the latitude or steps that decrease the latitude)
@@ -794,10 +803,9 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return True
         else:
             return False
-        # }}}
 
     def _lat_fewest_direction_changes(self, lat, lon):
-        # {{{
+
         """
         Returns True if lat is has fewer changes in direction (from increasing
         in value to decreasing in value, or vice versa) than lon (or if both
@@ -829,7 +837,6 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
             return True
         else:
             return False
-        # }}}
 
     def _get_ds_triangulation(self, dsTransectTriangles):
         """get matplotlib Triangulation from triangulation dataset"""
@@ -849,7 +856,12 @@ class PlotTransectSubtask(AnalysisTask):  # {{{
 
         return triangulation_args
 
-    # }}}
+    @staticmethod
+    def _get_contour_colormap():
+        # https://stackoverflow.com/a/18926541/7728169
 
+        cmap = cm.get_cmap('hot')
+        cmap = colors.LinearSegmentedColormap.from_list(
+            f'trunc_{cmap.name}', cmap(numpy.linspace(0.1, 0.85, 100)))
 
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return cmap

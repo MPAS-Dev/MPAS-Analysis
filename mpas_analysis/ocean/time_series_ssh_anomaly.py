@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -36,7 +36,7 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
     timeSeriesFileName : str
         The name of the file where the ssh anomaly is stored
 
-    controlConfig :  mpas_analysis.configuration.MpasAnalysisConfigParser
+    controlConfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if one is provided)
 
     filePrefix : str
@@ -53,13 +53,13 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasTimeSeriesTask : mpas_analysis.shared.time_series.MpasTimeSeriesTask
             The task that extracts the time series from MPAS monthly output
 
-        controlConfig :  mpas_analysis.configuration.MpasAnalysisConfigParser
+        controlConfig : mpas_tools.config.MpasConfigParser
             Configuration options for a control run (if any)
         """
         # Authors

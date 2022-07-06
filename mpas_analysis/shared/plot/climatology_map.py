@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,9 +15,6 @@ Functions for plotting remapped horizontal fields (and comparing with reference
 # Authors
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -63,7 +60,7 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -274,7 +271,7 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -460,7 +457,7 @@ def plot_projection_comparison(
 
     Parameters
     ----------
-    config : mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -592,17 +589,17 @@ def plot_projection_comparison(
     useCartopyCoastline = config.getboolean(section, 'useCartopyCoastline')
 
     if refArray is None:
-        figsize = config.getExpression(section, 'onePanelFigSize')
+        figsize = config.getexpression(section, 'onePanelFigSize')
         subplots = [111]
     elif vertical:
-        figsize = config.getExpression(section, 'threePanelVertFigSize')
+        figsize = config.getexpression(section, 'threePanelVertFigSize')
         subplots = [311, 312, 313]
     else:
-        figsize = config.getExpression(section, 'threePanelHorizFigSize')
+        figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
 
-    latLines = config.getExpression(section, 'latLines', usenumpyfunc=True)
-    lonLines = config.getExpression(section, 'lonLines', usenumpyfunc=True)
+    latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
+    lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
 
     # put latitude labels on the left unless we're in a polar projection
     left_labels = projectionName not in ['arctic', 'antarctic']
@@ -734,5 +731,3 @@ def _add_land_lakes_coastline(ax, ice_shelves=True):
                 facecolor='lightgray', linewidth=0.5)
         ax.add_feature(ice_50m, zorder=3)
     ax.add_feature(lakes_50m, zorder=4)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

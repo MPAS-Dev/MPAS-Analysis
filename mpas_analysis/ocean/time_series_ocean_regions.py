@@ -1,22 +1,20 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import os
 import xarray
 import numpy
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -35,7 +33,7 @@ from mpas_analysis.ocean.utility import compute_zmid
 from mpas_analysis.shared.constants import constants
 
 
-class TimeSeriesOceanRegions(AnalysisTask):  # {{{
+class TimeSeriesOceanRegions(AnalysisTask):
     """
     Performs analysis of the time-series output of regionoal mean temperature,
     salinity, etc.
@@ -45,19 +43,19 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, regionMasksTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -80,7 +78,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
         else:
             endYear = int(endYear)
 
-        regionGroups = config.getExpression(self.taskName, 'regionGroups')
+        regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
         obsDicts = {
             'SOSE': {
@@ -123,7 +121,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
 
-            regionNames = config.getExpression(sectionName, 'regionNames')
+            regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
                 # no regions in this group were requested
                 continue
@@ -135,7 +133,7 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
 
             years = list(range(startYear, endYear + 1))
 
-            obsList = config.getExpression(sectionName, 'obs')
+            obsList = config.getexpression(sectionName, 'obs')
             groupObsDicts = {}
 
             for obsName in obsList:
@@ -198,12 +196,8 @@ class TimeSeriesOceanRegions(AnalysisTask):  # {{{
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
 
-        # }}}
 
-    # }}}
-
-
-class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
+class ComputeRegionDepthMasksSubtask(AnalysisTask):
     """
     Compute masks for regional and depth mean
 
@@ -223,7 +217,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, masksSubtask, regionGroup, regionNames):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -260,9 +254,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the regional-mean time series
         """
@@ -388,11 +381,9 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):  # {{{
         dsOut['areaCell'] = areaCell
         dsOut['regionNames'] = dsRegionMask.regionNames
         write_netcdf(dsOut, outFileName)
-        # }}}
-    # }}}
 
 
-class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
+class ComputeRegionTimeSeriesSubtask(AnalysisTask):
     """
     Compute regional and depth mean at a function of time for a set of MPAS
     fields
@@ -416,7 +407,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, startYear, endYear, masksSubtask,
-                 regionGroup, regionNames):  # {{{
+                 regionGroup, regionNames):
         """
         Construct the analysis task.
 
@@ -459,9 +450,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         self.masksSubtask = masksSubtask
         self.regionGroup = regionGroup
         self.regionNames = regionNames
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -485,9 +475,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute the regional-mean time series
         """
@@ -527,10 +515,19 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = config.getExpression(sectionName, 'variables')
+        variables = config.getexpression(sectionName, 'variables')
 
-        variableList = [var['mpas'] for var in variables] + \
-            ['timeMonthly_avg_layerThickness']
+        variableList = {'timeMonthly_avg_layerThickness'}
+
+        for var in variables:
+            mpas_var = var['mpas']
+            if mpas_var == 'none':
+                continue
+            if isinstance(mpas_var, (list, tuple)):
+                for v in mpas_var:
+                    variableList.add(v)
+            else:
+                variableList.add(mpas_var)
 
         outputExists = os.path.exists(outFileName)
         outputValid = outputExists
@@ -601,10 +598,17 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
                 for var in variables:
                     outName = var['name']
                     self.logger.info('      {}'.format(outName))
-                    mpasVarName = var['mpas']
-                    timeSeries = dsIn[mpasVarName].where(cellMask, drop=True)
-                    units = timeSeries.units
-                    description = timeSeries.long_name
+                    if outName == 'thermalForcing':
+                        timeSeries = self._add_thermal_forcing(dsIn, cellMask)
+                        units = 'degrees Celsius'
+                        description = 'potential temperature minus the ' \
+                                      'potential freezing temperature'
+                    else:
+                        mpasVarName = var['mpas']
+                        timeSeries = \
+                            dsIn[mpasVarName].where(cellMask, drop=True)
+                        units = timeSeries.units
+                        description = timeSeries.long_name
 
                     is3d = 'nVertLevels' in timeSeries.dims
                     if is3d:
@@ -639,11 +643,42 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):  # {{{
         dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
 
-        write_netcdf(dsOut, outFileName)  # }}}
-    # }}}
+        write_netcdf(dsOut, outFileName)
+
+    def _add_thermal_forcing(self, dsIn, cellMask):
+        """ compute the thermal forcing """
+
+        c0 = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_0')
+        cs = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_S')
+        cp = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_p')
+        cps = self.namelist.getfloat(
+            'config_land_ice_cavity_freezing_temperature_coeff_pS')
+
+        vars = ['timeMonthly_avg_activeTracers_temperature',
+                'timeMonthly_avg_activeTracers_salinity',
+                'timeMonthly_avg_density',
+                'timeMonthly_avg_layerThickness']
+        ds = dsIn[vars].where(cellMask, drop=True)
+
+        temp = ds.timeMonthly_avg_activeTracers_temperature
+        salin = ds.timeMonthly_avg_activeTracers_salinity
+        dens = ds.timeMonthly_avg_density
+        thick = ds.timeMonthly_avg_layerThickness
+
+        dp = cime_constants['SHR_CONST_G']*dens*thick
+        press = dp.cumsum(dim='nVertLevels') - 0.5*dp
+
+        tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
+
+        timeSeries = temp - tempFreeze
+
+        return timeSeries
 
 
-class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
     """
     Combine individual time series into a single data set
     """
@@ -651,7 +686,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears, regionGroup):  # {{{
+    def __init__(self, parentTask, startYears, endYears, regionGroup):
         """
         Construct the analysis task.
 
@@ -686,9 +721,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.startYears = startYears
         self.endYears = endYears
         self.regionGroup = regionGroup
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Combine the time series
         """
@@ -725,8 +759,6 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 ds[var] = ds[var].isel(Time=0, drop=True)
 
             write_netcdf(ds, outFileName)
-        # }}}
-    # }}}
 
 
 class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
@@ -742,7 +774,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
     def __init__(self, parentTask, regionGroup, regionName, fullSuffix,
                  obsDict):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -792,9 +824,8 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             outputDirectory, obsDict['suffix'], self.prefix)
 
         self.run_after(obsDict['maskTask'])
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute time-series output of properties in an ocean region.
         """
@@ -951,10 +982,6 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         dsOut['year'] = ('Time', numpy.ones(ds.sizes[tDim]))
         write_netcdf(dsOut, outFileName)
 
-        # }}}
-
-    # }}}
-
 
 class PlotRegionTimeSeriesSubtask(AnalysisTask):
     """
@@ -974,7 +1001,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : ``MpasAnalysisConfigParser``
+    controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
     """
@@ -985,7 +1012,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     def __init__(self, parentTask, regionGroup, regionName, regionIndex,
                  controlConfig, sectionName, fullSuffix, obsSubtasks,
                  geojsonFileName):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -1004,7 +1031,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the region to plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -1044,9 +1071,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         for obsName in obsSubtasks:
             self.run_after(obsSubtasks[obsName])
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -1065,16 +1090,16 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTimeSeriesSubtask, self).setup_and_check()
 
-        self.variables = self.config.getExpression(self.sectionName,
+        self.variables = self.config.getexpression(self.sectionName,
                                                    'variables')
 
         self.xmlFileNames = []
         for var in self.variables:
             self.xmlFileNames.append('{}/{}_{}.xml'.format(
                 self.plotsDirectory, self.prefix, var['name']))
-        return  # }}}
+        return
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plots time-series output of properties in an ocean region.
         """
@@ -1132,7 +1157,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             zboundsRef = dsRef.zbounds.values
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAverageMonths = 1
+        movingAveragePoints = 1
 
         self.logger.info('  Make plots...')
 
@@ -1216,7 +1241,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             fig = timeseries_analysis_plot(
                 config, fields, calendar=calendar, title=title, xlabel=xLabel,
-                ylabel=yLabel, movingAveragePoints=movingAverageMonths,
+                ylabel=yLabel, movingAveragePoints=movingAveragePoints,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, titleFontSize=titleFontSize,
                 defaultFontSize=defaultFontSize)
@@ -1241,9 +1266,3 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 thumbnailDescription=self.regionName,
                 imageDescription=caption,
                 imageCaption=caption)
-
-        # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

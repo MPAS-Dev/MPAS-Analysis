@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -13,9 +13,6 @@ IO utility functions
 
 Phillip J. Wolfram, Xylar Asay-Davis
 """
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import glob
 import os
@@ -27,7 +24,7 @@ import shutil
 import warnings
 
 
-def paths(*args):  # {{{
+def paths(*args):
     """
     Returns glob'd paths in list for arbitrary number of function arguments.
     Note, each expanded set of paths is sorted.
@@ -49,11 +46,11 @@ def paths(*args):  # {{{
     paths = []
     for aargs in args:
         paths += sorted(glob.glob(aargs))
-    return paths  # }}}
+    return paths
 
 
 def fingerprint_generator(size=12,
-                          chars=string.ascii_uppercase + string.digits):  # {{{
+                          chars=string.ascii_uppercase + string.digits):
     """
     Returns a random string that can be used as a unique fingerprint
 
@@ -78,10 +75,10 @@ def fingerprint_generator(size=12,
     # -------
     # Phillip J. Wolfram
 
-    return ''.join(random.choice(chars) for _ in range(size))  # }}}
+    return ''.join(random.choice(chars) for _ in range(size))
 
 
-def make_directories(path):  # {{{
+def make_directories(path):
     """
     Make the given path if it does not already exist.
 
@@ -103,19 +100,19 @@ def make_directories(path):  # {{{
         os.makedirs(path)
     except OSError:
         pass
-    return path  # }}}
+    return path
 
 
 def build_config_full_path(config, section, relativePathOption,
                            relativePathSection=None,
                            defaultPath=None,
-                           baseDirectoryOption='baseDirectory'):  # {{{
+                           baseDirectoryOption='baseDirectory'):
     """
     Get a full path from a base directory and a relative path
 
     Parameters
     ----------
-    config : MpasAnalysisConfigParser object
+    config : mpas_tools.config.MpasConfigParser
         configuration from which to read the path
 
     section : str
@@ -157,16 +154,16 @@ def build_config_full_path(config, section, relativePathOption,
 
     if defaultPath is not None and not os.path.exists(fullPath):
         fullPath = defaultPath
-    return fullPath  # }}}
+    return fullPath
 
 
-def get_region_mask(config, regionMaskFile):  # {{{
+def get_region_mask(config, regionMaskFile):
     """
     Get the full path for a region mask with a given file name
 
     Parameters
     ----------
-    config : MpasAnalysisConfigParser object
+    config : mpas_tools.config.MpasConfigParser
         configuration from which to read the path
 
     regionMaskFile : str
@@ -217,16 +214,16 @@ def get_region_mask(config, regionMaskFile):  # {{{
             fullFileName = '{}/{}'.format(maskSubdirectory,
                                           regionMaskFile)
 
-    return fullFileName  # }}}
+    return fullFileName
 
 
 def build_obs_path(config, component, relativePathOption=None,
-                   relativePathSection=None, relativePath=None):  # {{{
+                   relativePathSection=None, relativePath=None):
     """
 
     Parameters
     ----------
-    config : MpasAnalysisConfigParser object
+    config : mpas_tools.config.MpasConfigParser
         configuration from which to read the path
 
     component : {'ocean', 'seaIce', 'iceberg'}
@@ -277,10 +274,10 @@ def build_obs_path(config, component, relativePathOption=None,
                 fullPath = '{}/{}/{}'.format(basePath, obsSubdirectory,
                                              relativePath)
 
-    return fullPath  # }}}
+    return fullPath
 
 
-def check_path_exists(path):  # {{{
+def check_path_exists(path):
     """
     Raise an exception if the given path does not exist.
 
@@ -299,10 +296,10 @@ def check_path_exists(path):  # {{{
     # Xylar Asay-Davis
 
     if not (os.path.isdir(path) or os.path.isfile(path)):
-        raise OSError('Path {} not found'.format(path))  # }}}
+        raise OSError('Path {} not found'.format(path))
 
 
-def get_files_year_month(fileNames, streamsFile, streamName):  # {{{
+def get_files_year_month(fileNames, streamsFile, streamName):
     """
     Extract the year and month from file names associated with a stream
 
@@ -334,7 +331,7 @@ def get_files_year_month(fileNames, streamsFile, streamName):  # {{{
     years = [dt.year for dt in dts]
     months = [dt.month for dt in dts]
 
-    return years, months  # }}}
+    return years, months
 
 
 def decode_strings(da):
@@ -374,5 +371,3 @@ def copyfile(src, dst):
         warnings.warn('Making a slow copy from {} to {}'.format(src, dst))
         with open(src, 'rb') as fsrc, open(dst, 'wb') as fdst:
             shutil.copyfileobj(fsrc, fdst)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

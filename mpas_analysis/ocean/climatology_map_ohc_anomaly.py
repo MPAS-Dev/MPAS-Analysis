@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray
 import numpy
 
@@ -24,7 +21,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
 from mpas_analysis.ocean.utility import compute_zmid
 
 
-class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
+class ClimatologyMapOHCAnomaly(AnalysisTask):
     """
     An analysis task for comparison of the anomaly from a reference year
     (typically the start of the simulation) of ocean heat content (OHC)
@@ -43,13 +40,13 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, refYearClimatolgyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -59,7 +56,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -79,13 +76,13 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         mpasFieldName = 'deltaOHC'
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -95,9 +92,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
         variableList = ['timeMonthly_avg_activeTracers_temperature',
                         'timeMonthly_avg_layerThickness']
 
-        depthRanges = config.getExpression('climatologyMapOHCAnomaly',
+        depthRanges = config.getexpression('climatologyMapOHCAnomaly',
                                            'depthRanges',
-                                           usenumpyfunc=True)
+                                           use_numpyfunc=True)
 
         self.mpasClimatologyTask = mpasClimatologyTask
         self.refYearClimatolgyTask = refYearClimatolgyTask
@@ -159,17 +156,16 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
                         galleryName=None)
 
                     self.add_subtask(subtask)
-        # }}}
 
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Checks whether analysis is being performed only on the reference year,
         in which case the analysis will not be meaningful.
 
         Raises
         ------
         ValueError: if attempting to analyze only the reference year
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -189,11 +185,8 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):  # {{{
             raise ValueError('OHC Anomaly is not meaningful and will not work '
                              'when climatology and ref year are the same.')
 
-        # }}}
-    # }}}
 
-
-class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
     """
     A subtask for computing climatologies of ocean heat content from
     climatologies of temperature
@@ -210,8 +203,8 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
     def __init__(self, mpasClimatologyTask, refYearClimatolgyTask, parentTask,
                  climatologyName, variableList, seasons, comparisonGridNames,
                  minDepth, maxDepth):
-        # {{{
-        '''
+
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
@@ -248,7 +241,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         minDepth, maxDepth : float
             The minimum and maximum depths for integration
 
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -266,10 +259,9 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         self.run_after(refYearClimatolgyTask)
         self.minDepth = minDepth
         self.maxDepth = maxDepth
-        # }}}
 
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis and check for errors in the setup.
 
         Raises
@@ -278,7 +270,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
             If a restart file is not available from which to read mesh
             information or if no history files are available from which to
             compute the climatology in the desired time range.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -293,9 +285,7 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
         self.refYearClimatolgyTask.add_variables(self.variableList,
                                                  self.seasons)
 
-        # }}}
-
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Mask the melt rates using ``landIceMask`` and rescale it to m/yr
 
@@ -331,9 +321,9 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         climatology = climatology.drop_vars(self.variableList)
 
-        return climatology  # }}}
+        return climatology
 
-    def _compute_ohc(self, climatology):  # {{{
+    def _compute_ohc(self, climatology):
         """
         Compute the OHC from the temperature and layer thicknesses in a given
         climatology data sets.
@@ -368,9 +358,4 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):  # {{{
 
         ohc = unitsScalefactor * rho * cp * layerThickness * temperature
         ohc = ohc.sum(dim='nVertLevels')
-        return ohc  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return ohc

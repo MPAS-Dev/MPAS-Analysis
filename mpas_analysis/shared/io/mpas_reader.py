@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -16,10 +16,6 @@ all but a given list of variables from a data set.
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
-import six
 import xarray
 
 from mpas_analysis.shared.timekeeping.utility import \
@@ -29,7 +25,7 @@ from mpas_analysis.shared.timekeeping.utility import \
 def open_mpas_dataset(fileName, calendar,
                       timeVariableNames=['xtime_startMonthly',
                                          'xtime_endMonthly'],
-                      variableList=None, startDate=None, endDate=None):  # {{{
+                      variableList=None, startDate=None, endDate=None):
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -78,10 +74,10 @@ def open_mpas_dataset(fileName, calendar,
         ds = _parse_dataset_time(ds, timeVariableNames, calendar)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, six.string_types):
+        if isinstance(startDate, str):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, six.string_types):
+        if isinstance(endDate, str):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 
@@ -96,12 +92,12 @@ def open_mpas_dataset(fileName, calendar,
     if variableList is not None:
         ds = ds[variableList]
 
-    return ds  # }}}
+    return ds
 
 
 def _parse_dataset_time(ds, inTimeVariableName, calendar,
                         outTimeVariableName='Time',
-                        referenceDate='0001-01-01'):  # {{{
+                        referenceDate='0001-01-01'):
     """
     A helper function for computing a time coordinate from an MPAS time
     variable.  Given a data set and a time variable name (or list of 2
@@ -205,7 +201,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         dsOut = ds.copy()
         dsOut.coords[outTimeVariableName] = (outTimeVariableName, days)
 
-    return dsOut  # }}}
+    return dsOut
 
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

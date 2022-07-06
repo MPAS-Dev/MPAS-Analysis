@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,9 +15,6 @@ observations.
 # Authors
 # -------
 # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 import numpy as np
@@ -116,7 +113,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  secondRemapMpasClimatologySubtask=None, controlConfig=None,
                  depth=None, removeMean=False, subtaskName=None):
-        '''
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -144,7 +141,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             A second subtask for remapping another MPAS climatology to plot
             in the second panel and compare with in the third panel
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         depth : {float, 'top', 'bot'}, optional
@@ -162,7 +159,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             The name of the subtask.  If not specified, it is
             ``plot<season>_<comparisonGridName>`` with a suffix indicating the
             depth being sliced (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis

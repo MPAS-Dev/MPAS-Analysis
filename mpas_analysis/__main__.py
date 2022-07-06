@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -18,15 +18,11 @@ specifying analysis options.
 # -------
 # Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import mpas_analysis
 
 import argparse
 import traceback
 import sys
-from importlib.resources import path
 import shutil
 import os
 from collections import OrderedDict
@@ -34,13 +30,12 @@ import progressbar
 import logging
 import xarray
 import time
-import configparser
 
 from mache import discover_machine, MachineInfo
 
-from mpas_analysis.shared.analysis_task import AnalysisFormatter
+from mpas_tools.config import MpasConfigParser
 
-from mpas_analysis.configuration import MpasAnalysisConfigParser
+from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, copyfile
@@ -63,7 +58,7 @@ from mpas_analysis.shared.time_series import MpasTimeSeriesTask
 from mpas_analysis.shared.regions import ComputeRegionMasks
 
 
-def update_time_bounds_in_config(config):  # {{{
+def update_time_bounds_in_config(config):
     """
     Updates the start and end year (and associated full date) for
     climatologies, time series and climate indices based on the files that are
@@ -71,7 +66,7 @@ def update_time_bounds_in_config(config):  # {{{
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     """
@@ -80,20 +75,19 @@ def update_time_bounds_in_config(config):  # {{{
     for componentName in ['ocean', 'seaIce']:
         for section in ['climatology', 'timeSeries', 'index']:
             update_time_bounds_from_file_names(config, section, componentName)
-    # }}}
 
 
-def build_analysis_list(config, controlConfig):  # {{{
+def build_analysis_list(config, controlConfig):
     """
     Build a list of analysis tasks. New tasks should be added here, following
     the approach used for existing analysis tasks.
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
-    controlConfig : ``MpasAnalysisConfigParser`` object
+    controlConfig : mpas_tools.config.MpasConfigParser
         contains config options for a control run, or ``None`` if no config
         file for a control run was specified
 
@@ -252,10 +246,10 @@ def build_analysis_list(config, controlConfig):  # {{{
         config=config, mpasClimatologyTask=seaIceClimatolgyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
-    return analyses  # }}}
+    return analyses
 
 
-def determine_analyses_to_generate(analyses, verbose):  # {{{
+def determine_analyses_to_generate(analyses, verbose):
     """
     Build a list of analysis tasks to run based on the 'generate' config
     option (or command-line flag) and prerequisites and subtasks of each
@@ -302,12 +296,12 @@ def determine_analyses_to_generate(analyses, verbose):  # {{{
 
     print('')
 
-    return analysesToGenerate  # }}}
+    return analysesToGenerate
 
 
 def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                           callCheckGenerate=True):
-    # {{{
+
     """
     If a task has been requested through the generate config option or
     if it is a prerequisite of a requested task, add it to the dictionary of
@@ -411,16 +405,15 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
     analysisTask._setupStatus = 'success'
     assert(totalFailures == 0)
     return totalFailures
-    # }}}
 
 
-def update_generate(config, generate):  # {{{
+def update_generate(config, generate):
     """
     Update the 'generate' config option using a string from the command line.
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     generate : str
@@ -438,16 +431,16 @@ def update_generate(config, generate):  # {{{
     generateString = ', '.join(["'{}'".format(element)
                                 for element in generateList])
     generateString = '[{}]'.format(generateString)
-    config.set('output', 'generate', generateString)  # }}}
+    config.set('output', 'generate', generateString)
 
 
-def run_analysis(config, analyses):  # {{{
+def run_analysis(config, analyses):
     """
     Run all the tasks, either in serial or in parallel
 
     Parameters
     ----------
-    config : ``MpasAnalysisConfigParser`` object
+    config : mpas_tools.config.MpasConfigParser
         contains config options
 
     analyses : OrderedDict of ``AnalysisTask`` objects
@@ -474,8 +467,7 @@ def run_analysis(config, analyses):  # {{{
     config.write(configFile)
     configFile.close()
 
-    parallelTaskCount = config.getWithDefault('execute', 'parallelTaskCount',
-                                              default=1)
+    parallelTaskCount = config.getint('execute', 'parallelTaskCount')
 
     isParallel = parallelTaskCount > 1 and len(analyses) > 1
 
@@ -626,10 +618,8 @@ def run_analysis(config, analyses):  # {{{
         print('Log files for executed tasks can be found in {}'.format(
             logsDirectory))
 
-    # }}}
 
-
-def wait_for_task(runningTasks, timeout=0.1):  # {{{
+def wait_for_task(runningTasks, timeout=0.1):
     """
     Build a list of analysis modules based on the 'generate' config option.
     New tasks should be added here, following the approach used for existing
@@ -655,7 +645,7 @@ def wait_for_task(runningTasks, timeout=0.1):  # {{{
         for analysisTask in runningTasks.values():
             analysisTask.join(timeout=timeout)
             if not analysisTask.is_alive():
-                return analysisTask  # }}}
+                return analysisTask
 
 
 def purge_output(config):
@@ -693,12 +683,12 @@ def purge_output(config):
                         shutil.rmtree(directory)
 
 
-def symlink_main_run(config, defaultConfig):
-    '''
+def symlink_main_run(config):
+    """
     Create symlinks to the climatology and time-series directories for the
-    main run that has aleady been computed so we don't have to recompute
+    main run that has already been computed so we don't have to recompute
     the analysis.
-    '''
+    """
 
     def link_dir(section, option):
         destDirectory = build_config_full_path(config=config, section='output',
@@ -722,11 +712,9 @@ def symlink_main_run(config, defaultConfig):
     if not os.path.exists(mainConfigFile):
         raise OSError('A main config file {} was specified but the '
                       'file does not exist'.format(mainConfigFile))
-    mainConfigFiles = [mainConfigFile]
-    if defaultConfig is not None:
-        mainConfigFiles = [defaultConfig] + mainConfigFiles
-    mainConfig = MpasAnalysisConfigParser()
-    mainConfig.read(mainConfigFiles)
+    mainConfig = MpasConfigParser()
+    mainConfig.add_from_package('mpas_analysis', 'default.cfg')
+    mainConfig.add_user_config(mainConfigFile)
 
     for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask',
                          'profiles']:
@@ -768,8 +756,8 @@ def main():
     parser.add_argument("-p", "--purge", dest="purge", action='store_true',
                         help="Purge the analysis by deleting the output"
                         "directory before running")
-    parser.add_argument('config_files', metavar='CONFIG',
-                        type=str, nargs='*', help='config file')
+    parser.add_argument("config_file", metavar="CONFIG", type=str, nargs='*',
+                        help="config file")
     parser.add_argument("--plot_colormaps", dest="plot_colormaps",
                         action='store_true',
                         help="Make a plot displaying all available colormaps")
@@ -789,16 +777,11 @@ def main():
         parser.print_help()
         sys.exit(0)
 
-    for config_file in args.config_files:
-        if not os.path.exists(config_file):
-            raise OSError(f'Config file {config_file} not found.')
-
-    shared_configs = list()
+    config = MpasConfigParser()
 
     # add default.cfg to cover default not included in the config files
     # provided on the command line
-    with path('mpas_analysis', 'default.cfg') as default_config:
-        shared_configs.append(str(default_config))
+    config.add_from_package('mpas_analysis', 'default.cfg')
 
     # Add config options for E3SM supported machines from the mache package
     machine = args.machine
@@ -811,12 +794,10 @@ def main():
 
     if machine is not None:
         print(f'Detected E3SM supported machine: {machine}')
-        with path('mache.machines', f'{machine}.cfg') as machine_config:
-            shared_configs.append(str(machine_config))
+        config.add_from_package('mache.machines', f'{machine}.cfg')
         try:
-            with path('mpas_analysis.configuration', f'{machine}.cfg') \
-                    as machine_config:
-                shared_configs.append(str(machine_config))
+            config.add_from_package('mpas_analysis.configuration',
+                                    f'{machine}.cfg')
         except FileNotFoundError:
             # we don't have a config file for this machine, so we'll just
             # skip it.
@@ -825,24 +806,24 @@ def main():
             pass
 
     if args.polar_regions:
-        with path('mpas_analysis', 'polar_regions.cfg') as polar_config:
-            shared_configs.append(str(polar_config))
+        config.add_from_package('mpas_analysis', 'polar_regions.cfg')
 
-    main_configs = shared_configs + args.config_files
-    print('Using the following config files:')
-    for config_file in main_configs:
-        if not os.path.exists(config_file):
-            raise OSError('Config file {config_file} not found.')
-        print(f'   {config_file}')
-
-    config = MpasAnalysisConfigParser(
-        interpolation=configparser.ExtendedInterpolation())
     if machine is not None:
         # set the username so we can use it in the htmlSubdirectory
         machine_info = MachineInfo(machine=machine)
-        config.add_section('web_portal')
         config.set('web_portal', 'username', machine_info.username)
-    config.read(main_configs)
+
+    shared_configs = config.list_files()
+
+    for user_config in args.config_file:
+        if not os.path.exists(user_config):
+            raise OSError(f'Config file {user_config} not found.')
+
+        config.add_user_config(user_config)
+
+    print('Using the following config files:')
+    for config_file in config.list_files():
+        print(f'   {config_file}')
 
     if args.list:
         # set this config option so we don't have issues
@@ -864,11 +845,14 @@ def main():
         if not os.path.exists(control_config_file):
             raise OSError('A control config file {} was specified but the '
                           'file does not exist'.format(control_config_file))
-        control_configs = shared_configs + [control_config_file]
 
-        control_config = MpasAnalysisConfigParser(
-            interpolation=configparser.ExtendedInterpolation())
-        control_config.read(control_configs)
+        control_config = MpasConfigParser()
+        for config_file in shared_configs:
+            if config_file.endswith('.py'):
+                # we'll skip config options set in python files
+                continue
+            control_config.add_from_file(config_file)
+        control_config.add_user_config(control_config_file)
 
         # replace the log directory so log files get written to this run's
         # log directory, not the control run's
@@ -887,7 +871,7 @@ def main():
         purge_output(config)
 
     if config.has_option('runs', 'mainRunConfigFile'):
-        symlink_main_run(config, default_config)
+        symlink_main_run(config)
 
     if args.generate:
         update_generate(config, args.generate)
@@ -915,7 +899,7 @@ def main():
     html_base_directory = build_config_full_path(config, 'output',
                                                  'htmlSubdirectory')
     make_directories(html_base_directory)
-    for config_filename in args.config_files:
+    for config_filename in args.config_file:
         config_filename = os.path.abspath(config_filename)
         print(f'copying {config_filename} to HTML dir.')
         basename = os.path.basename(config_filename)
@@ -937,10 +921,8 @@ def main():
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, control_config, args.config_files)
+        generate_html(config, analyses, control_config, args.config_file)
 
 
 if __name__ == "__main__":
     main()
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

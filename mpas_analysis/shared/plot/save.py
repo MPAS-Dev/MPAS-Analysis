@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import os
 
@@ -26,7 +23,7 @@ def savefig(filename, config, tight=True, pad_inches=0.1):
     filename : str
         the file name to be written
 
-    config :  mpas_analysis.configuration.MpasAnalysisConfigParser
+    config : mpas_tools.config.MpasConfigParser
         Configuration options
 
     tight : bool, optional
@@ -56,5 +53,3 @@ def savefig(filename, config, tight=True, pad_inches=0.1):
 
     plt.close()
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

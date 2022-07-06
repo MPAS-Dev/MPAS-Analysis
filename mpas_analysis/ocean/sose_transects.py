@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy
 import os
@@ -31,34 +28,33 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 
-class SoseTransects(AnalysisTask):  # {{{
+class SoseTransects(AnalysisTask):
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-
-        # {{{
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -73,7 +69,7 @@ class SoseTransects(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         horizontalResolution = config.get(sectionName, 'horizontalResolution')
 
@@ -83,13 +79,13 @@ class SoseTransects(AnalysisTask):  # {{{
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getExpression(
-                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+            verticalComparisonGrid = config.getexpression(
+                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+        verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        longitudes = sorted(config.getExpression(sectionName, 'longitudes',
-                                                 usenumpyfunc=True))
+        longitudes = sorted(config.getexpression(sectionName, 'longitudes',
+                                                 use_numpyfunc=True))
 
         fields = \
             [{'prefix': 'temperature',
@@ -127,9 +123,15 @@ class SoseTransects(AnalysisTask):  # {{{
               'units': r'm s$^{-1}$',
               'titleName': 'Velocity Magnitude',
               'obsFilePrefix': None,
-              'obsFieldName': 'velMag'}]
+              'obsFieldName': 'velMag'},
+             {'prefix': 'potentialDensityContour',
+              'mpas': 'timeMonthly_avg_potentialDensity',
+              'units': r'kg m$^{-3}$',
+              'titleName': 'Potential Density Contours',
+              'obsFilePrefix': 'pot_den',
+              'obsFieldName': 'potentialDensity'}]
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
         variableList = [field['mpas'] for field in fields
@@ -209,12 +211,9 @@ class SoseTransects(AnalysisTask):  # {{{
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class SoseTransectsObservations(TransectsObservations):  # {{{
+class SoseTransectsObservations(TransectsObservations):
     """
     A class for loading and manipulating SOSE transect data
 
@@ -224,19 +223,20 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
     fields : list of dict
         dictionaries defining the fields with associated SOSE data
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, config, horizontalResolution,
                  transectCollectionName, fields):
-        # {{{
-        '''
+
+        """
         Construct the object, setting the observations dictionary to None.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         horizontalResolution : str
@@ -250,7 +250,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         fields : list of dict
             dictionaries defining the fields with associated SOSE data
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -265,17 +265,15 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         self.fields = fields
 
-        # }}}
-
-    def get_observations(self):  # {{{
-        '''
+    def get_observations(self):
+        """
         Read in and set up the observations.
 
         Returns
         -------
         obsDatasets : OrderedDict
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -285,20 +283,20 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
             self.combine_observations()
 
         # then, call the method from the parent class
-        return super(SoseTransectsObservations, self).get_observations()  # }}}
+        return super(SoseTransectsObservations, self).get_observations()
 
-    def combine_observations(self):  # {{{
-        '''
+    def combine_observations(self):
+        """
         Combine SOSE oservations into a single file
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         config = self.config
 
-        longitudes = sorted(config.getExpression('soseTransects', 'longitudes',
-                                                 usenumpyfunc=True))
+        longitudes = sorted(config.getexpression('soseTransects', 'longitudes',
+                                                 use_numpyfunc=True))
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'soseSubdirectory')
@@ -331,13 +329,12 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         for field in self.fields:
             prefix = field['obsFilePrefix']
             fieldName = field['obsFieldName']
-            if prefix is None:
+            if prefix is None or (dsObs is not None and fieldName in dsObs):
                 continue
             print('  {}'.format(field['prefix']))
 
-            fileName = '{}/SOSE_2005-2010_monthly_{}_SouthernOcean' \
-                       '_0.167x0.167degree_20180710.nc'.format(
-                           observationsDirectory, prefix)
+            fileName = f'{observationsDirectory}/SOSE_2005-2010_monthly_' \
+                       f'{prefix}_SouthernOcean_0.167x0.167degree_20180710.nc'
 
             dsLocal = xr.open_dataset(fileName)
 
@@ -377,7 +374,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
                           'from 2005-2010 average of the Southern Ocean ' \
                           'State Estimate (SOSE)'
             dsObs['velMag'] = numpy.sqrt(
-                dsObs.zonalVel**2 + dsObs.meridVel**2)
+                dsObs.zonalVel ** 2 + dsObs.meridVel ** 2)
             dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
             dsObs.velMag.attrs['description'] = description
 
@@ -390,10 +387,8 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
 
         print('  Done.')
 
-        # }}}
-
-    def build_observational_dataset(self, fileName, transectName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName, transectName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -409,7 +404,7 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -429,9 +424,4 @@ class SoseTransectsObservations(TransectsObservations):  # {{{
         dsObs['lon'] = ('nPoints', lon * numpy.ones(dsObs.sizes['nPoints']))
         dsObs = dsObs.drop_vars(['nPoints', 'nz'])
 
-        return dsObs  # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

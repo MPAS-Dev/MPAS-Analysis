@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -31,7 +31,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         conponentName : str
@@ -92,9 +92,7 @@ class ComputeRegionMasks(AnalysisTask):
 
         if key not in self.regionMaskSubtasks:
 
-            subprocessCount = config.getWithDefault('execute',
-                                                    'parallelTaskCount',
-                                                    default=1)
+            subprocessCount = config.getint('execute', 'parallelTaskCount')
 
             if obsFileName is not None:
                 useMpasMaskCreator = False

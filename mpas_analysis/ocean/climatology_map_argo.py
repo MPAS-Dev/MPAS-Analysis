@@ -1,16 +1,16 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Analysis tasks for comparing Global climatology maps against Argo data.
-'''
+"""
 # Authors
 # -------
 # Luke Van Roekel
@@ -33,29 +33,30 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
 
-class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
+class ClimatologyMapArgoTemperature(AnalysisTask):
     """
     An analysis task for comparison of potential temperature against Argo
     observations
     """
+
     # Authors
     # -------
     # Luke Van Roekel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -76,20 +77,20 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        depths = config.getexpression(sectionName, 'depths')
 
         if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '
@@ -170,34 +171,32 @@ class ClimatologyMapArgoTemperature(AnalysisTask):  # {{{
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
+class ClimatologyMapArgoSalinity(AnalysisTask):
     """
     An analysis task for comparison of global salinity against Argo
     observations
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Luke Van Roekel
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -217,20 +216,20 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        depths = config.getexpression(sectionName, 'depths')
 
         if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '
@@ -310,16 +309,13 @@ class ClimatologyMapArgoSalinity(AnalysisTask):  # {{{
                         galleryName=galleryName)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
 class RemapArgoClimatology(RemapObservedClimatologySubtask):
-    # {{{
     """
     A subtask for reading and remapping SOSE fields to the comparison grid
     """
+
     # Authors
     # -------
     # Xylar Asay-Davis, Luke Van Roekel
@@ -328,8 +324,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
                  fieldName, depths,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
-        '''
+
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -361,7 +357,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Luke Van Roekel
@@ -374,10 +370,9 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         super(RemapArgoClimatology, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
+    def get_observation_descriptor(self, fileName):
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -389,7 +384,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Luke Van Roekel
@@ -403,10 +398,10 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
                                                   latVarName='latCoord',
                                                   lonVarName='lonCoord')
         dsObs.close()
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -419,7 +414,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Luke Van Roekel
@@ -455,8 +450,4 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.Dataset(data_vars={self.fieldName: field},
                            coords={'depthSlice': depthNames})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

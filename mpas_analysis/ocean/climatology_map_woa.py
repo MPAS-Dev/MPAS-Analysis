@@ -1,17 +1,17 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Analysis tasks for comparing Polar (and global) climatology maps against
 WOA18 climatological data.
-'''
+"""
 # Authors
 # -------
 # Milena Veneziani
@@ -32,7 +32,7 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 
 
-class ClimatologyMapWoa(AnalysisTask):  # {{{
+class ClimatologyMapWoa(AnalysisTask):
     """
     An analysis task for comparison of polar and global temperature and
     salinity against WOA18 climatology fields
@@ -42,19 +42,19 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
     # Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -84,24 +84,24 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        depths = config.getExpression(sectionName, 'depths')
+        depths = config.getexpression(sectionName, 'depths')
 
         if len(depths) == 0:
             raise ValueError('config section {} does not contain valid '
@@ -254,13 +254,10 @@ class ClimatologyMapWoa(AnalysisTask):  # {{{
                             configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
 class RemapWoaClimatology(RemapObservedClimatologySubtask):
-    # {{{
+
     """
     A subtask for reading and remapping WOA fields to the comparison grid
     """
@@ -272,8 +269,8 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
                  fieldNames, depths,
                  comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
-        '''
+
+        """
         An analysis task for remapping WOA fields (either annual or monthly
         mean) to the comparison grid(s), depths and seasons provided
 
@@ -306,7 +303,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Milena Veneziani
@@ -319,10 +316,9 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         super(RemapWoaClimatology, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
+    def get_observation_descriptor(self, fileName):
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -334,7 +330,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Milena Veneziani
@@ -348,10 +344,10 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
                                                   latVarName='lat',
                                                   lonVarName='lon')
         dsObs.close()
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -364,7 +360,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis, Milena Veneziani
@@ -398,8 +394,4 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         dsObs = xr.Dataset(data_vars=data_vars,
                            coords={'depthSlice': depthNames})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

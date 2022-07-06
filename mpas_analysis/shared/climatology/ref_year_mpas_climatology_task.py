@@ -1,27 +1,24 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
+from io import StringIO
 
-from six import StringIO
-
-from mpas_analysis.configuration import MpasAnalysisConfigParser
+from mpas_tools.config import MpasConfigParser
 
 from mpas_analysis.shared.climatology import MpasClimatologyTask
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 
 
-class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
-    '''
+class RefYearMpasClimatologyTask(MpasClimatologyTask):
+    """
     An analysis tasks for computing a reference-year climatology for computing
     climatology anomalies from the``timeSeriesStatsMonthly`` analysis member.
 
@@ -30,19 +27,19 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
 
     anomalyRefYear : int
         The reference year over which to compute the climatology
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, componentName, taskName=None):  # {{{
-        '''
+    def __init__(self, config, componentName, taskName=None):
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
         Parameters
         ----------
-        config : ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         componentName : {'ocean', 'seaIce'}
@@ -51,7 +48,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
 
         taskName : str, optional
             the name of the task, defaults to mpasClimatology<ComponentName>
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -63,12 +60,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
         # make a deep copy of the config so we can change the start and end
         # years and dates without causing trouble for other tasks
 
-        config_string = StringIO()
-        config.write(config_string)
-        # We must reset the buffer to make it ready for reading.
-        config_string.seek(0)
-        new_config = MpasAnalysisConfigParser()
-        new_config.read_file(config_string)
+        new_config = config.copy()
 
         # call the constructor from the base class (AnalysisTask)
         super(RefYearMpasClimatologyTask, self).__init__(
@@ -77,9 +69,8 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
             taskName=taskName)
 
         self.tags.append('anomaly')
-        # }}}
 
-    def get_start_and_end(self):  # {{{
+    def get_start_and_end(self):
         """
         Get the start and end years and dates for the climatology.  This
         function is provided to allow a custom method for setting the start
@@ -116,8 +107,4 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):  # {{{
 
         return startYear, endYear
 
-        # }}}
-    # }}}
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

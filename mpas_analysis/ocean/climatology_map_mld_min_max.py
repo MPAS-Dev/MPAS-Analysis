@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
@@ -19,7 +16,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 
-class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
+class ClimatologyMapMLDMinMax(AnalysisTask):
     """
     An analysis task for comparison of mixed layer depth (mld) against
     observations
@@ -29,20 +26,20 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
     # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, config, mpasClimatologyTasks, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTasks : dict of ``MpasClimatologyTask``
             The tasks that produced the climatology of monthly min and max to
             be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -72,12 +69,11 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                         mpasVariableSuffix='boundaryLayerDepth',
                         filePrefix='bld',
                         sectionPrefix='climatologyMapBLD')
-        # }}}
 
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Check if MLD capability was turned on in the run.
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -100,23 +96,21 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
             analysisOptionName='config_AM_timeSeriesStatsMonthlyMax_enable',
             raiseException=True)
 
-        # }}}
-
     def _add_tasks(self, config, mpasClimatologyTasks, controlConfig,
                    title, mpasVariableSuffix, filePrefix, sectionPrefix):
-        '''
+        """
         Add tasks for a given variable
-        '''
+        """
         iselValues = None
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(self.taskName, 'seasons')
+        seasons = config.getexpression(self.taskName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(self.taskName))
 
-        comparisonGridNames = config.getExpression(self.taskName,
+        comparisonGridNames = config.getexpression(self.taskName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -223,7 +217,3 @@ class ClimatologyMapMLDMinMax(AnalysisTask):  # {{{
                             configSectionName=sectionName)
 
                         self.add_subtask(subtask)
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

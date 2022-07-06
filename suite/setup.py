@@ -34,6 +34,14 @@ def main():
     account, partition, configuration, qos = \
         machine_info.get_account_defaults()
 
+    use_e3sm_unified = 'E3SMU_SCRIPT' in os.environ
+    if use_e3sm_unified:
+        e3sm_unified_script = os.environ['E3SMU_SCRIPT']
+        args.branch = \
+            os.path.splitext(os.path.basename(e3sm_unified_script))[0]
+    else:
+        e3sm_unified_script = None
+
     if machine == 'chrysalis':
         # we don't want the default, which is 'debug'
         partition = 'compute'
@@ -132,27 +140,14 @@ def main():
         out_subdir = os.path.join(machine, args.branch, args.run)
     out_common_dir = os.path.join(machine, args.branch)
 
-    if machine == 'cori-haswell':
-        execute_options = \
-            '# the number of MPI tasks to use in creating mapping files (1 means tasks run in\n' \
-            '# serial, the default)\n' \
-            'mapMpiTasks = 1\n' \
-            '\n' \
-            '# "None" if ESMF should perform mapping file generation in serial without a\n' \
-            '# command, or one of "srun" or "mpirun" if it should be run in parallel (or ins\n' \
-            '# serial but with a command)\n' \
-            'mapParallelExec = None'
-    else:
-        execute_options = ''
-
     with open(os.path.join('suite', 'template.cfg')) as template_file:
         template_data = template_file.read()
     template = Template(template_data)
     config_text = template.render(
-        run_name=args.run, input_base=input_base, simulation=simulation,
-        mesh=mesh, output_base=output_base, html_base=html_base,
-        out_subdir=out_subdir, generate=generate, end_year=end_year,
-        execute_options=execute_options)
+        use_e3sm_unified=use_e3sm_unified, run_name=args.run,
+        input_base=input_base, simulation=simulation, mesh=mesh,
+        output_base=output_base, html_base=html_base, out_subdir=out_subdir,
+        generate=generate, end_year=end_year)
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
@@ -183,7 +178,9 @@ def main():
             template_data = template_file.read()
         template = Template(template_data)
         job_text = template.render(
-            sbatch=sbatch, conda_base=conda_base, conda_env=conda_env,
+            sbatch=sbatch, conda_base=conda_base,
+            use_e3sm_unified=use_e3sm_unified,
+            e3sm_unified_script=e3sm_unified_script, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
             parallel_exec=parallel_exec, html_base=html_base,
             out_subdir=out_subdir, out_common_dir=out_common_dir)

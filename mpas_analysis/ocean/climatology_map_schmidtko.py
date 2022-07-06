@@ -1,17 +1,17 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Analysis tasks for comparing climatology maps of Antarctic seafloor fields
 against observations from Schmidtko et al. (2014, DOI: 10.1126/science.1256117)
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -32,7 +32,7 @@ from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 from mpas_analysis.shared.projection import get_pyproj_projection
 
 
-class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
+class ClimatologyMapSchmidtko(AnalysisTask):
     """
     An analysis task for comparison of Antarctic Bottom Water properties
     against Schmidtko et al. (2014) observations
@@ -41,19 +41,19 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -88,13 +88,13 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
         sectionName = self.taskName
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -183,12 +183,9 @@ class ClimatologyMapSchmidtko(AnalysisTask):  # {{{
                             upperFieldPrefix))
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
+class RemapSchmidtko(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping Schmidtko et al. (2014) observations
     """
@@ -199,8 +196,8 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  fieldName, comparisonGridNames=['latlon'],
                  subtaskName='remapObservations'):
-        # {{{
-        '''
+
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -228,7 +225,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
 
         subtaskName : str, optional
             The name of the subtask
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -240,10 +237,9 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         super(RemapSchmidtko, self).__init__(
             parentTask, seasons, fileName, outFilePrefix,
             comparisonGridNames, subtaskName)
-        # }}}
 
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
+    def get_observation_descriptor(self, fileName):
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -255,7 +251,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -265,10 +261,10 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -281,7 +277,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -294,8 +290,4 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):  # {{{
         dsObs = xr.Dataset(data_vars={self.fieldName: field},
                            coords={'depthSlice': ['bot']})
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

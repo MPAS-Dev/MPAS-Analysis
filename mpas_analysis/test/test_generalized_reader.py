@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,23 +15,21 @@ Xylar Asay-Davis
 02/16/2017
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import numpy
 import pytest
+
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 @pytest.mark.usefixtures("loaddatadir")
 class TestGeneralizedReader(TestCase):
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasAnalysisConfigParser()
-        config.add_section('input')
+        config = MpasConfigParser()
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         return config
 
@@ -132,5 +130,3 @@ class TestGeneralizedReader(TestCase):
                 startDate='0005-02-01',
                 endDate='0005-03-01')
             self.assertEqual(len(ds.Time), 1)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

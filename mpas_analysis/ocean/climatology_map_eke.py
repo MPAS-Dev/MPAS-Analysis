@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 from pyremap import LatLonGridDescriptor
 
@@ -25,7 +22,7 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 
 
-class ClimatologyMapEKE(AnalysisTask):  # {{{
+class ClimatologyMapEKE(AnalysisTask):
     """
     An analysis task for comparison of eddy kinetic energy (eke) against
     observations
@@ -35,19 +32,19 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
     # Kevin Rosa
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -67,7 +64,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
         sectionName = self.taskName
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         # EKE observations are annual climatology so only accept annual
         # climatology **should move this to setup_and_check()
@@ -76,7 +73,7 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                              'of seasons. For EKE, may only request annual '
                              'climatology'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -154,12 +151,10 @@ class ClimatologyMapEKE(AnalysisTask):  # {{{
                     galleryName=galleryName)
 
                 self.add_subtask(subtask)
-        # }}}
-    # }}}
 
 
 # adds to the functionality of RemapDepthSlicesSubtask
-class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
+class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):
     """
     A subtask for computing climatologies of eddy kinetic energy from means of
     velocity and velocity-squared.
@@ -168,7 +163,7 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
     # -------
     # Kevin Rosa
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Construct velocity magnitude as part of the climatology
 
@@ -214,12 +209,10 @@ class RemapMpasEKEClimatology(RemapMpasClimatologySubtask):  # {{{
         climatology.eke.attrs['units'] = 'cm$^[2]$ s$^{-2}$'
         climatology.eke.attrs['description'] = 'eddy kinetic energy'
 
-        return climatology  # }}}
-
-    # }}}
+        return climatology
 
 
-class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
+class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):
     """
     A subtask for reading and remapping EKE observations
     """
@@ -227,8 +220,8 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
     # -------
     # Kevin Rosa
 
-    def get_observation_descriptor(self, fileName):  # {{{
-        '''
+    def get_observation_descriptor(self, fileName):
+        """
         get a MeshDescriptor for the observation grid
 
         Parameters
@@ -240,7 +233,7 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         obsDescriptor : ``MeshDescriptor``
             The descriptor for the observation grid
-        '''
+        """
         # Authors
         # -------
         # Kevin Rosa
@@ -251,10 +244,10 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
                                                   latVarName='Lat',
                                                   lonVarName='Lon')
 
-        return obsDescriptor  # }}}
+        return obsDescriptor
 
-    def build_observational_dataset(self, fileName):  # {{{
-        '''
+    def build_observational_dataset(self, fileName):
+        """
         read in the data sets for observations, and possibly rename some
         variables and dimensions
 
@@ -267,7 +260,7 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
         -------
         dsObs : ``xarray.Dataset``
             The observational dataset
-        '''
+        """
         # Authors
         # -------
         # Kevin Rosa, Xylar Asay-Davis
@@ -287,8 +280,4 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.eke.attrs['units'] = 'cm$^2$ s$^{-2}$'
         dsObs.eke.attrs['long_name'] = 'Eddy kinetic energy'
 
-        return dsObs  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return dsObs

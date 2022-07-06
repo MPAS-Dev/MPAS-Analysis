@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,22 +15,18 @@ Utilities for handling color maps and color bars
 # -------
 # Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
 import xml.etree.ElementTree as ET
-from six.moves import configparser
+import configparser
 import cmocean
 import pkg_resources
-from six import string_types
 
 
 def setup_colormap(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -65,33 +61,38 @@ def setup_colormap(config, configSectionName, suffix=''):
         'lineWidth' is the width of contour lines or ``None`` if not specified
 
         'lineColor' is the color of contour lines or ``None`` if not specified
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     register_custom_colormaps()
 
-    colormapType = config.get(configSectionName,
-                              'colormapType{}'.format(suffix))
-    if colormapType == 'indexed':
-        (colormap, norm, levels, ticks) = _setup_indexed_colormap(
-            config, configSectionName, suffix=suffix)
-    elif colormapType == 'continuous':
-        (colormap, norm, ticks) = _setup_colormap_and_norm(
-            config, configSectionName, suffix=suffix)
-        levels = None
+    option = 'colormapType{}'.format(suffix)
+    if config.has_option(configSectionName, option):
+        colormapType = config.get(configSectionName, option)
+        if colormapType == 'indexed':
+            (colormap, norm, levels, ticks) = _setup_indexed_colormap(
+                config, configSectionName, suffix=suffix)
+        elif colormapType == 'continuous':
+            (colormap, norm, ticks) = _setup_colormap_and_norm(
+                config, configSectionName, suffix=suffix)
+            levels = None
+        else:
+            raise ValueError(f'config section {configSectionName} option '
+                             f'{option} is not "indexed" or "continuous"')
     else:
-        raise ValueError('config section {} option colormapType{} is not '
-                         '"indexed" or "continuous"'.format(
-                             configSectionName, suffix))
+        colormap = None
+        norm = None
+        levels = None
+        ticks = None
 
     option = 'contourLevels{}'.format(suffix)
     if config.has_option(configSectionName, option):
-        contours = config.getExpression(configSectionName,
+        contours = config.getexpression(configSectionName,
                                         option,
-                                        usenumpyfunc=True)
-        if isinstance(contours, string_types) and contours == 'none':
+                                        use_numpyfunc=True)
+        if isinstance(contours, str) and contours == 'none':
             contours = None
     else:
         contours = None
@@ -307,7 +308,7 @@ def register_custom_colormaps():
 
 
 def _setup_colormap_and_norm(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -332,7 +333,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -344,7 +345,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
     normType = config.get(configSectionName, 'normType{}'.format(suffix))
 
-    kwargs = config.getExpression(configSectionName,
+    kwargs = config.getexpression(configSectionName,
                                   'normArgs{}'.format(suffix))
 
     if normType == 'symLog':
@@ -358,9 +359,9 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
             normType, configSectionName))
 
     try:
-        ticks = config.getExpression(
+        ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         ticks = None
 
@@ -368,7 +369,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
 
 
 def _setup_indexed_colormap(config, configSectionName, suffix=''):
-    '''
+    """
     Set up a colormap from the registry
 
     Parameters
@@ -395,7 +396,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     ticks : array of float
         the tick marks on the colormap
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
@@ -403,14 +404,14 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     colormap = plt.get_cmap(config.get(configSectionName,
                                        'colormapName{}'.format(suffix)))
 
-    indices = config.getExpression(configSectionName,
+    indices = config.getexpression(configSectionName,
                                    'colormapIndices{}'.format(suffix),
-                                   usenumpyfunc=True)
+                                   use_numpyfunc=True)
 
     try:
-        levels = config.getExpression(
+        levels = config.getexpression(
             configSectionName, 'colorbarLevels{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         levels = None
 
@@ -435,9 +436,9 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     norm = cols.BoundaryNorm(levels, colormap.N)
 
     try:
-        ticks = config.getExpression(
+        ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
-            usenumpyfunc=True)
+            use_numpyfunc=True)
     except(configparser.NoOptionError):
         ticks = levels
 
@@ -445,7 +446,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
 
 def _read_xml_colormap(xmlFile, map_name):
-    '''Read in an XML colormap'''
+    """Read in an XML colormap"""
 
     xml = ET.parse(xmlFile)
 
@@ -473,7 +474,7 @@ def _register_colormap_and_reverse(map_name, cmap):
 
 
 def _plot_color_gradients():
-    '''from https://matplotlib.org/tutorials/colors/colormaps.html'''
+    """from https://matplotlib.org/tutorials/colors/colormaps.html"""
 
     cmap_list = [m for m in plt.colormaps() if not m.endswith("_r")]
 
@@ -497,5 +498,3 @@ def _plot_color_gradients():
         ax.set_axis_off()
 
     plt.savefig('colormaps.png', dpi=100)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

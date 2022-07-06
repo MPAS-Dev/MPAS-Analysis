@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 import numpy
@@ -39,19 +36,19 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     def __init__(self, config, mpasTimeSeriesTask, controlConfig=None):
-        # {{{
+
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -66,7 +63,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             tags=['timeSeries', 'ohc', 'publicObs', 'anomaly'])
 
         sectionName = 'timeSeriesOHCAnomaly'
-        regionNames = config.getExpression(sectionName, 'regions')
+        regionNames = config.getexpression(sectionName, 'regions')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         self.variableDict = {}
@@ -132,14 +129,12 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)
 
-        # }}}
-
-    def _compute_ohc(self, ds):  # {{{
-        '''
+    def _compute_ohc(self, ds):
+        """
         Compute the OHC time series.
-        '''
+        """
 
-        # regionNames = self.config.getExpression('regions', 'regions')
+        # regionNames = self.config.getexpression('regions', 'regions')
         # ds['regionNames'] = ('nOceanRegionsTmp', regionNames)
 
         # for convenience, rename the variables to simpler, shorter names
@@ -173,9 +168,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             ds.coords['depth'] = (('nVertLevels',),
                                   dsRestart.refBottomDepth.values)
 
-        return ds  # }}}
-
-    # }}}
+        return ds
 
 
 class PlotOHCAnomaly(PlotDepthIntegratedTimeSeriesSubtask):
@@ -216,6 +209,3 @@ class PlotOHCAnomaly(PlotDepthIntegratedTimeSeriesSubtask):
         for ytick in yticks:
             plt.plot(xlim, [0, watts_m2_to_joules(ytick)], color=color,
                      linewidth=0.5)
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

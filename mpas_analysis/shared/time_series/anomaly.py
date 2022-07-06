@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 from mpas_analysis.shared.io import open_mpas_dataset
 from mpas_analysis.shared.time_series.moving_average import compute_moving_avg
@@ -22,8 +19,8 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
                                           anomalyStartTime, anomalyEndTime,
                                           startDate, endDate, calendar,
                                           movingAveragePoints=12,
-                                          alter_dataset=None):  # {{{
-    '''
+                                          alter_dataset=None):
+    """
     Compute the rolling mean of the anomaly of a quantity from the beginning
     of the simulation (such that the rolling mean starts at zero by definition)
 
@@ -58,7 +55,7 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -91,6 +88,3 @@ def compute_moving_avg_anomaly_from_start(timeSeriesFileName, variableList,
 
     return ds
 
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

@@ -1,23 +1,19 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import xarray as xr
 import numpy as np
 import os
 
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
-
 
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
 from mpas_analysis.shared.io import write_netcdf
@@ -28,8 +24,8 @@ from mpas_analysis.shared.climatology.climatology import \
     get_climatology_op_directory
 
 
-class MeridionalHeatTransport(AnalysisTask):  # {{{
-    '''
+class MeridionalHeatTransport(AnalysisTask):
+    """
     Plot meridional heat transport from the analysis member output.
 
     Attributes
@@ -38,28 +34,29 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
-    '''
+    """
+
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, controlConfig=None):  # {{{
-        '''
+    def __init__(self, config, mpasClimatologyTask, controlConfig=None):
+        """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -76,12 +73,10 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         self.controlConfig = controlConfig
 
-        # }}}
-
-    def setup_and_check(self):  # {{{
-        '''
+    def setup_and_check(self):
+        """
         Perform steps to set up the analysis and check for errors in the setup.
-        '''
+        """
         # Authors
         # -------
         # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
@@ -145,9 +140,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
                                                         filePrefix))
             self.filePrefixes[prefix] = filePrefix
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Process MHT analysis member data if available.
         Plots MHT as:
@@ -164,9 +157,9 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        depthLimGlobal = config.getExpression(self.sectionName,
+        depthLimGlobal = config.getexpression(self.sectionName,
                                               'depthLimGlobal')
-        xLimGlobal = config.getExpression(self.sectionName, 'xLimGlobal')
+        xLimGlobal = config.getexpression(self.sectionName, 'xLimGlobal')
         movingAveragePoints = config.getint('meridionalHeatTransport',
                                             'movingAveragePoints')
 
@@ -310,7 +303,6 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             errArrays.extend([ncepErrGlobal, ecmwfErrGlobal])
 
         if self.controlConfig is not None:
-
             controlStartYear = self.controlConfig.getint('climatology',
                                                          'startYear')
             controlEndYear = self.controlConfig.getint('climatology',
@@ -369,9 +361,7 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
 
             self._write_xml(filePrefix)
 
-        # }}}
-
-    def _write_xml(self, filePrefix):  # {{{
+    def _write_xml(self, filePrefix):
         caption = 'Meridional Heat Transport'
         write_image_xml(
             config=self.config,
@@ -381,8 +371,4 @@ class MeridionalHeatTransport(AnalysisTask):  # {{{
             galleryGroup='Meridional Heat Transport',
             groupLink='mht',
             imageDescription=caption,
-            imageCaption=caption)  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+            imageCaption=caption)

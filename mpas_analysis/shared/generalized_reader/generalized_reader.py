@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -22,10 +22,6 @@ open_multifile_dataset : opens a data set, maps variable names, preprocess
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
-import six
 import xarray
 from functools import partial
 import resource
@@ -41,7 +37,7 @@ def open_multifile_dataset(fileNames, calendar, config,
                            variableList=None, selValues=None,
                            iselValues=None, variableMap=None,
                            startDate=None, endDate=None,
-                           chunking=None):  # {{{
+                           chunking=None):
     """
     Opens and returns an xarray data set given file name(s) and the MPAS
     calendar name.
@@ -54,7 +50,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
-    config :  instance of ``MpasAnalysisConfigParser``
+    config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
     simulationStartTime : string, optional
@@ -151,10 +147,10 @@ def open_multifile_dataset(fileNames, calendar, config,
     ds = mpas_xarray.remove_repeated_time_index(ds)
 
     if startDate is not None and endDate is not None:
-        if isinstance(startDate, six.string_types):
+        if isinstance(startDate, str):
             startDate = string_to_days_since_date(dateString=startDate,
                                                   calendar=calendar)
-        if isinstance(endDate, six.string_types):
+        if isinstance(endDate, str):
             endDate = string_to_days_since_date(dateString=endDate,
                                                 calendar=calendar)
 
@@ -173,12 +169,12 @@ def open_multifile_dataset(fileNames, calendar, config,
 
     ds = mpas_xarray.process_chunking(ds, chunking)
 
-    return ds  # }}}
+    return ds
 
 
 def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                 variableList, selValues, iselValues, variableMap,
-                startDate, endDate):  # {{{
+                startDate, endDate):
     """
     Performs variable remapping, then calls mpas_xarray.preprocess, to
     perform the remainder of preprocessing.
@@ -281,10 +277,10 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
                                 selValues=selValues,
                                 iselValues=iselValues)
 
-    return ds  # }}}
+    return ds
 
 
-def _map_variable_name(variableName, ds, variableMap):  # {{{
+def _map_variable_name(variableName, ds, variableMap):
     """
     Given a `variableName` in a `variableMap` and an xarray `ds`,
     return the name of the the first variable in `variableMap[variableName]`
@@ -343,10 +339,9 @@ def _map_variable_name(variableName, ds, variableMap):  # {{{
                      'variables in {}.'.format(
                          variableName, possibleVariables,
                          ds.data_vars.keys()))
-    # }}}
 
 
-def _rename_variables(ds, variableMap):  # {{{
+def _rename_variables(ds, variableMap):
     """
     Given an `xarray.DataSet` object `ds` and a dictionary mapping
     variable names `variableMap`, returns a new data set in which variables
@@ -380,7 +375,7 @@ def _rename_variables(ds, variableMap):  # {{{
                 renameDict[datasetVariable] = mapVariable
                 break
 
-    return ds.rename(renameDict)  # }}}
+    return ds.rename(renameDict)
 
 
 # vim: ai ts=4 sts=4 et sw=4 ft=python

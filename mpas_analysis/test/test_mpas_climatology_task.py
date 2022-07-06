@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -14,16 +14,14 @@ Unit test infrastructure for MpasClimatologyTask.
 Xylar Asay-Davis
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import pytest
 import tempfile
 import shutil
 import os
 
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
     RemapMpasClimatologySubtask
 from mpas_analysis.shared import AnalysisTask
@@ -46,8 +44,8 @@ class TestMpasClimatologyTask(TestCase):
 
     def setup_config(self):
         configPath = self.datadir.join('QU240.cfg')
-        config = MpasAnalysisConfigParser()
-        config.read(str(configPath))
+        config = MpasConfigParser()
+        config.add_from_file(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
         config.set('output', 'baseDirectory', str(self.test_dir))
         return config

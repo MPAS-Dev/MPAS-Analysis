@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
 import numpy.ma as ma
 import numpy as np
@@ -27,7 +24,7 @@ from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 
 
-class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
+class PlotClimatologyMapSubtask(AnalysisTask):
     """
     An analysis task for plotting 2D model fields against observations or a
     control run.
@@ -52,7 +49,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         The subtask for remapping the observational climatology that this
         subtask will plot
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
 
     outFileLabel : str
@@ -100,8 +97,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
     def __init__(self, parentTask, hemisphere, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
                  controlConfig=None, subtaskSuffix=None):
-        # {{{
-        '''
+
+        """
         Construct one analysis subtask for each plot (i.e. each season and
         comparison grid) and a subtask for computing climatologies.
 
@@ -128,13 +125,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         subtaskSuffix : str, optional
             A suffix on the subtask to ensure that it is unique (e.g. the
             observations being plotted)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -164,13 +161,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.run_after(remapMpasClimatologySubtask)
         if remapObsClimatologySubtask is not None:
             self.run_after(remapObsClimatologySubtask)
-        # }}}
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, diffTitleLabel, unitsLabel,
                       imageDescription, imageCaption, galleryGroup,
                       groupSubtitle, groupLink, galleryName, maskValue=None):
-        # {{{
+
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -241,9 +237,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.galleryName = galleryName
 
         self.maskValue = maskValue
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -271,9 +266,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                     self.filePrefix))
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Performs analysis of sea-ice properties by comparing with
         previous model results and/or observations.
@@ -374,7 +367,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
         # for log plots, make sure the data is all positive to avoid masking
         if config.has_option(sectionName, 'normTypeResult'):
             normType = config.get(sectionName, 'normTypeResult')
-            normArgs = config.getExpression(sectionName, 'normArgsResult')
+            normArgs = config.getexpression(sectionName, 'normArgsResult')
             if normType == 'log':
                 epsilon = 1e-2 * normArgs['vmin']
                 modelOutput = np.maximum(modelOutput, epsilon)
@@ -418,7 +411,3 @@ class PlotClimatologyMapSubtask(AnalysisTask):  # {{{
             thumbnailDescription=season,
             imageDescription=self.imageDescription,
             imageCaption=self.imageCaption)
-        # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

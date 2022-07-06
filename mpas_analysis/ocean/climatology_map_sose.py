@@ -1,17 +1,17 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-'''
+"""
 Analysis tasks for comparing Antarctic climatology maps against observations
 and reanalysis data.
-'''
+"""
 # Authors
 # -------
 # Xylar Asay-Davis
@@ -31,7 +31,7 @@ from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSose(AnalysisTask):  # {{{
+class ClimatologyMapSose(AnalysisTask):
     """
     An analysis task for comparison of antarctic field against the Southern
     Ocean State Estimate
@@ -41,19 +41,19 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask,
-                 controlConfig=None):  # {{{
+                 controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -133,17 +133,17 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if fileSuffix.endswith('.nc'):
             fileSuffix = fileSuffix.strip('.nc')
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid '
                              'list of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
@@ -154,7 +154,7 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
         if not numpy.any([field['3D'] for field in fields]):
             depths = None
         else:
-            depths = config.getExpression(sectionName, 'depths')
+            depths = config.getexpression(sectionName, 'depths')
 
             if len(depths) == 0:
                 raise ValueError('config section {} does not contain valid '
@@ -298,12 +298,9 @@ class ClimatologyMapSose(AnalysisTask):  # {{{
                             configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
-        # }}}
-
-    # }}}
 
 
-class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
+class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):
     """
     A subtask for computing climatologies of velocity magnitude from zonal
     and meridional components
@@ -312,7 +309,7 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def customize_masked_climatology(self, climatology, season):  # {{{
+    def customize_masked_climatology(self, climatology, season):
         """
         Construct velocity magnitude as part of the climatology
 
@@ -347,8 +344,4 @@ class RemapMpasVelMagClimatology(RemapDepthSlicesSubtask):  # {{{
             climatology.velMag.attrs['units'] = 'm s$^{-1}$'
             climatology.velMag.attrs['description'] = 'velocity magnitude'
 
-        return climatology  # }}}
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
+        return climatology

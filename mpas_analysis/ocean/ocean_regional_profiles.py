@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -29,7 +29,7 @@ from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.plot import savefig, add_inset
 
 
-class OceanRegionalProfiles(AnalysisTask):  # {{{
+class OceanRegionalProfiles(AnalysisTask):
     """
     Compute and plot vertical profiles of regionally analyzed data.  The
     mean and standard deviation of the data are computed over each region.
@@ -41,19 +41,19 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, regionMasksTask, controlConfig=None):  # {{{
+    def __init__(self, config, regionMasksTask, controlConfig=None):
         """
         Construct the analysis task.
 
         Parameters
         ----------
-        config :  instance of MpasAnalysisConfigParser
+        config :  mpas_tools.config.MpasConfigParser
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -74,18 +74,18 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
         startYear = config.getint('climatology', 'startYear')
         endYear = config.getint('climatology', 'endYear')
 
-        regionGroups = config.getExpression('oceanRegionalProfiles',
+        regionGroups = config.getexpression('oceanRegionalProfiles',
                                             'regionGroups')
 
         for regionGroup in regionGroups:
             regionGroupSection = 'profiles{}'.format(
                 regionGroup.replace(' ', ''))
 
-            fields = config.getExpression(regionGroupSection, 'fields')
+            fields = config.getexpression(regionGroupSection, 'fields')
 
-            seasons = config.getExpression(regionGroupSection, 'seasons')
+            seasons = config.getexpression(regionGroupSection, 'seasons')
 
-            regionNames = config.getExpression(regionGroupSection,
+            regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
             if len(regionNames) == 0:
                 return
@@ -108,8 +108,6 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                             timeSeriesName, startYear, endYear, controlConfig)
                         plotSubtask.run_after(combineSubtask)
                         self.add_subtask(plotSubtask)
-
-        # }}}
 
     def add_region_group(self, regionMasksTask, regionGroup, regionNames,
                          fields, startYear, endYear, seasons=None):
@@ -169,10 +167,8 @@ class OceanRegionalProfiles(AnalysisTask):  # {{{
                 combineSubtask.run_after(computeSubtask)
                 self.computeSubtasks[regionGroup][key] = computeSubtask
 
-    # }}}
 
-
-class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
     """
     Compute regional statistics on each layer and time point of a set of
     MPAS fields
@@ -190,7 +186,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, masksSubtask, regionGroup, regionNames,
-                 fields, startYear, endYear):  # {{{
+                 fields, startYear, endYear):
         """
         Construct the analysis task.
 
@@ -235,9 +231,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.fields = fields
         self.startYear = startYear
         self.endYear = endYear
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
 
@@ -261,9 +256,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             analysisOptionName='config_am_timeseriesstatsmonthly_enable',
             raiseException=True)
 
-        # }}}
-
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Compute time series of regional profiles
         """
@@ -427,7 +420,6 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         dsOut['z'].attrs['units'] = 'meters'
 
         write_netcdf(dsOut, outputFileName)
-        # }}}
 
     @staticmethod
     def _masked_area_sum(cellMasks, areaCell, var):
@@ -441,10 +433,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         total = xr.concat(totals, 'nRegions')
         return total
 
-    # }}}
 
-
-class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
     """
     Combine individual time series into a single data set
     """
@@ -453,7 +443,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, regionGroup, timeSeriesName, seasons, fields,
-                 startYears, endYears):  # {{{
+                 startYears, endYears):
         """
         Construct the analysis task.
 
@@ -495,9 +485,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.timeSeriesName = timeSeriesName
         self.seasons = seasons
         self.fields = fields
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Combine the time series
         """
@@ -580,11 +569,8 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
                 dsSeason.coords['regionNames'] = regionNames
                 write_netcdf(dsSeason, outputFileName)
 
-        # }}}
-    # }}}
 
-
-class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
+class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):
     """
     Plot a profile averaged over an ocean region and in time, along with
     variability in both space and time.
@@ -603,7 +589,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
     field : dict
         Information about the field (e.g. temperature) being plotted
 
-    controlConfig :  ``MpasAnalysisConfigParser``
+    controlconfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if any)
     """
     # Authors
@@ -612,7 +598,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
 
     def __init__(self, parentTask, masksSubtask, season, regionName, field,
                  timeSeriesName, startYear, endYear, controlConfig):
-        # {{{
+
         """
         Construct the analysis task.
 
@@ -640,7 +626,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         startYear, endYear : int
             The beginning and end of the time series to compute
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -669,9 +655,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
         self.field = field
         self.filePrefix = None
         self.xmlFileNames = []
-        # }}}
 
-    def setup_and_check(self):  # {{{
+    def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
@@ -692,9 +677,8 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             self.endYear)
         self.xmlFileNames = ['{}/{}.xml'.format(self.plotsDirectory,
                                                 self.filePrefix)]
-        # }}}
 
-    def run_task(self):  # {{{
+    def run_task(self):
         """
         Plot a depth profile with variability
         """
@@ -799,7 +783,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             fieldArrays.append(dsControl[meanFieldName].values)
             errArrays.append(dsControl[stdFieldName].values)
 
-        depthRange = config.getExpression(regionGroupSection, 'depthRange')
+        depthRange = config.getexpression(regionGroupSection, 'depthRange')
         if len(depthRange) == 0:
             depthRange = None
 
@@ -828,11 +812,10 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             imageCaption=caption,
             gallery=titleFieldName,
             thumbnailDescription='{} {}'.format(regionName, self.season))
-        # }}}
 
     def plot(self, zArrays, fieldArrays, errArrays, lineColors, lineWidths,
              legendText, title, xLabel, yLabel, xLim=None, yLim=None,
-             figureSize=(10, 4), dpi=None):  # {{{
+             figureSize=(10, 4), dpi=None):
         """
         Plots a 1D line plot with error bars if available.
 
@@ -931,9 +914,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):  # {{{
             plt.xlim(xLim)
         if yLim:
             plt.ylim(yLim)
-        return fig  # }}}
-
-    # }}}
+        return fig
 
 
 def _update_fields(fields, newFields):
@@ -951,5 +932,3 @@ def _update_fields(fields, newFields):
                 break
         if not found:
             fields.append(newFields[outer])
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

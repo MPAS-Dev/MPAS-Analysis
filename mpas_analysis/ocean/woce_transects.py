@@ -1,16 +1,13 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.ocean.compute_transects_subtask import \
     ComputeTransectsSubtask, TransectsObservations
@@ -22,7 +19,7 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from collections import OrderedDict
 
 
-class WoceTransects(AnalysisTask):  # {{{
+class WoceTransects(AnalysisTask):
     """
     Plot model output at WOCE transects and compare it against WOCE
     observations
@@ -32,24 +29,22 @@ class WoceTransects(AnalysisTask):  # {{{
     # Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
-
-        # {{{
-        '''
+        """
         Construct the analysis task and adds it as a subtask of the
         ``parentTask``.
 
         Parameters
         ----------
-        config :  ``MpasAnalysisConfigParser``
+        config : mpas_tools.config.MpasConfigParser
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlConfig :  ``MpasAnalysisConfigParser``, optional
+        controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        '''
+        """
         # Authors
         # -------
         # Xylar Asay-Davis
@@ -64,7 +59,7 @@ class WoceTransects(AnalysisTask):  # {{{
 
         sectionName = self.taskName
 
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
         horizontalResolution = config.get(sectionName, 'horizontalResolution')
 
@@ -74,25 +69,33 @@ class WoceTransects(AnalysisTask):  # {{{
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getExpression(
-                sectionName, 'verticalComparisonGrid', usenumpyfunc=True)
+            verticalComparisonGrid = config.getexpression(
+                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        verticalBounds = config.getExpression(sectionName, 'verticalBounds')
+        verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        horizontalBounds = config.getExpression(
+        horizontalBounds = config.getexpression(
             sectionName, 'horizontalBounds')
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'woceSubdirectory')
 
-        obsFileNames = OrderedDict()
+        origObsFileNames = \
+            {'WOCE_A21': 'WOCE_A21_Drake_Passage_20181126.nc',
+             'WOCE_A23': 'WOCE_A23_South_Atlantic_20181126.nc',
+             'WOCE_A12': 'WOCE_A12_Prime_Meridian_20181126.nc'}
 
-        obsFileNames['WOCE_A21'] = \
-            'WOCE_A21_Drake_Passage_20181126.nc'
-        obsFileNames['WOCE_A23'] = \
-            'WOCE_A23_South_Atlantic_20181126.nc'
-        obsFileNames['WOCE_A12'] = \
-            'WOCE_A12_Prime_Meridian_20181126.nc'
+        obsFileNames = {}
+        for transectName in horizontalBounds:
+            found = False
+            for name in origObsFileNames:
+                if transectName.startswith(name):
+                    obsFileNames[transectName] = origObsFileNames[name]
+                    found = True
+                    break
+            if not found:
+                raise ValueError(f'Keys for horizontalBounds must start '
+                                 f'with one of {list(origObsFileNames)}')
 
         for transectName in obsFileNames:
             fileName = '{}/{}'.format(observationsDirectory,
@@ -114,12 +117,17 @@ class WoceTransects(AnalysisTask):  # {{{
                 {'mpas': 'timeMonthly_avg_potentialDensity',
                  'obs': 'potentialDensity',
                  'titleName': 'Potential Density',
-                 'units': r'kg m$^{-3}$'}}
+                 'units': r'kg m$^{-3}$'},
+             'potentialDensityContour':
+                 {'mpas': 'timeMonthly_avg_potentialDensity',
+                  'obs': 'potentialDensity',
+                  'titleName': 'Potential Density Contours',
+                  'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'WOCE_transects'
         if horizontalResolution not in ['obs', 'mpas']:
-            transectCollectionName = '{}_{}km'.format(transectCollectionName,
-                                                      horizontalResolution)
+            transectCollectionName = \
+                f'{transectCollectionName}_{horizontalResolution}km'
 
         transectsObservations = TransectsObservations(config, obsFileNames,
                                                       horizontalResolution,
@@ -145,13 +153,15 @@ class WoceTransects(AnalysisTask):  # {{{
 
         else:
             controlRunName = controlConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Control: {}'.format(controlRunName)
+            refTitleLabel = f'Control: {controlRunName}'
 
             diffTitleLabel = 'Main - Control'
 
         fieldNameDict = {'temperature': 'temperatureTransect',
                          'salinity': 'salinityTransect',
-                         'potentialDensity': 'potentialDensityTransect'}
+                         'potentialDensity': 'potentialDensityTransect',
+                         'potentialDensityContour':
+                             'potentialDensityContourTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:
@@ -164,9 +174,8 @@ class WoceTransects(AnalysisTask):  # {{{
 
                     fieldNameUpper = fieldName[0].upper() + fieldName[1:]
                     titleName = fields[fieldName]['titleName']
-                    fieldNameInTytle = '{} from {}'.format(
-                        titleName,
-                        transectName.replace('_', ' '))
+                    fieldNameInTitle = \
+                        f'{titleName} from {transectName.replace("_", " ")}'
 
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(
@@ -176,26 +185,18 @@ class WoceTransects(AnalysisTask):  # {{{
 
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
-                        fieldNameInTitle=fieldNameInTytle,
+                        fieldNameInTitle=fieldNameInTitle,
                         mpasFieldName=fields[fieldName]['mpas'],
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=fields[fieldName]['units'],
-                        imageCaption='{} {}'.format(fieldNameInTytle,
-                                                    season),
+                        imageCaption=f'{fieldNameInTitle} {season}',
                         galleryGroup='WOCE Transects',
                         groupSubtitle=None,
                         groupLink='woce',
                         galleryName=titleName,
-                        configSectionName='woce{}Transects'.format(
-                            fieldNameUpper),
+                        configSectionName=f'woce{fieldNameUpper}Transects',
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
-        # }}}
-
-    # }}}
-
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

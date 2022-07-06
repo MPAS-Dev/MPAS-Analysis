@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,11 +15,7 @@ Xylar Asay-Davis, Phillip J. Wolfram
 02/15/2017
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import numpy
-import six
 
 import pytest
 from mpas_analysis.test import TestCase, loaddatadir
@@ -57,8 +53,8 @@ class TestMpasXarray(TestCase):
                                                 variableList=variableList)
         self.assertEqual(list(ds.data_vars.keys()), variableList)
 
-        with six.assertRaisesRegex(self, ValueError,
-                                   'Empty dataset is returned.'):
+        with self.assertRaisesRegex(ValueError,
+                                    'Empty dataset is returned.'):
             missingvars = ['foo', 'bar']
             ds = mpas_xarray.open_multifile_dataset(fileNames=fileName,
                                                     calendar=calendar,
@@ -129,9 +125,9 @@ class TestMpasXarray(TestCase):
              'refBottomDepth']
 
         selvals = {'refBottomDepth': 8.77999997138977}
-        with six.assertRaisesRegex(self, AssertionError,
-                                   'not a dimension in the dataset that '
-                                   'can be used for selection'):
+        with self.assertRaisesRegex(AssertionError,
+                                    'not a dimension in the dataset that '
+                                    'can be used for selection'):
             mpas_xarray.open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
@@ -193,5 +189,3 @@ class TestMpasXarray(TestCase):
         # There would be 3 time indices if repeat indices had not been removed.
         # Make sure there are 2.
         self.assertEqual(len(ds.Time.values), 2)
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

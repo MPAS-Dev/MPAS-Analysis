@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
 
-
-def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
-    '''
+def compute_moving_avg(ds, movingAveragePoints=12):
+    """
     Compute the rolling mean of a data set
 
     Parameters
@@ -32,7 +29,7 @@ def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
     -------
     ds : ``xarray.Dataset``
         The anomaly of the rolling time mean from the start of the simulation
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -42,6 +39,3 @@ def compute_moving_avg(ds, movingAveragePoints=12):  # {{{
 
     return ds
 
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

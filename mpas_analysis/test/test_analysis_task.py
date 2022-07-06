@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -14,13 +14,12 @@ Unit tests for utility functions in AnalysisTask
 Xylar Asay-Davis
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import pytest
+
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 
 
 class TestAnalysisTask(TestCase):
@@ -28,8 +27,7 @@ class TestAnalysisTask(TestCase):
     def test_checkGenerate(self):
 
         def doTest(generate, expectedResults):
-            config = MpasAnalysisConfigParser()
-            config.add_section('output')
+            config = MpasConfigParser()
             config.set('output', 'generate', generate)
             for taskName in expectedResults:
                 genericTask = AnalysisTask(config=config,
@@ -167,5 +165,3 @@ class TestAnalysisTask(TestCase):
         expectedResults['timeSeriesOHC'] = False
         doTest("['all', 'no_timeSeriesOHC']", expectedResults)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

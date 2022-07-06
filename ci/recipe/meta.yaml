@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.6.1" %}
+{% set version = "1.7.0" %}
 
 package:
   name: {{ name|lower }}
@@ -27,12 +27,13 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
+    - f90nml
     - geometric_features >=0.5.0
     - gsw
     - lxml
     - mache >=1.1.2
     - matplotlib-base >=3.0.2
-    - mpas_tools >=0.5.1
+    - mpas_tools >=0.14.0
     - nco >=4.8.1
     - netcdf4
     - numpy
@@ -46,7 +47,6 @@ requirements:
     - scipy
     - setuptools
     - shapely
-    - six
     - xarray >=0.14.1
 
 test:

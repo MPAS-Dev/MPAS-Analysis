@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,24 +15,19 @@ Utility functions related to time-series data sets
 # -------
 # Xylar Asay-Davis
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import xarray as xr
 import numpy
 import os
 from distutils.spawn import find_executable
 import glob
 import subprocess
-from six import string_types
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 
 def combine_time_series_with_ncrcat(inFileNames, outFileName,
                                     variableList=None, logger=None):
-    # {{{
-    '''
+    """
     Uses ncrcat to extact time series from a series of files
 
     inFileNames : str or list of str
@@ -56,7 +51,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
     Author
     ------
     Xylar Asay-Davis
-    '''
+    """
 
     if find_executable('ncrcat') is None:
         raise OSError('ncrcat not found. Make sure the latest nco '
@@ -68,7 +63,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
     if os.path.exists(outFileName):
         return
 
-    if isinstance(inFileNames, string_types):
+    if isinstance(inFileNames, str):
         inFileNames = sorted(glob.glob(inFileNames))
 
     args = ['ncrcat', '-4', '--record_append', '--no_tmp_fl']
@@ -111,13 +106,11 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
         raise subprocess.CalledProcessError(process.returncode,
                                             ' '.join(args))
 
-    # }}}
-
 
 def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
                       calendar, yearsPerCacheUpdate=1,
-                      logger=None):  # {{{
-    '''
+                      logger=None):
+    """
     Create or update a NetCDF file ``cacheFileName`` containing the given time
     series, calculated with ``timeSeriesCalcFunction`` over the given times,
     start and end year, and time frequency with which results are cached.
@@ -161,7 +154,7 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         A data set without the ``'Time'`` coordinate containing the mean
         of ds over all months in monthValues, weighted by the number of days
         in each month.
-    '''
+    """
     # Authors
     # -------
     # Xylar Asay-Davis
@@ -239,7 +232,3 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         dsCache.to_netcdf(cacheFileName)
 
     return dsCache.sel(Time=slice(timesInDataSet[0], timesInDataSet[-1]))
-
-    # }}}
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python

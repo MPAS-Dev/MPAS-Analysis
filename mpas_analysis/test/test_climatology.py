@@ -1,9 +1,9 @@
 # This software is open source software available under the BSD-3 license.
 #
-# Copyright (c) 2020 Triad National Security, LLC. All rights reserved.
-# Copyright (c) 2020 Lawrence Livermore National Security, LLC. All rights
+# Copyright (c) 2022 Triad National Security, LLC. All rights reserved.
+# Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights
 # reserved.
-# Copyright (c) 2020 UT-Battelle, LLC. All rights reserved.
+# Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
@@ -15,9 +15,6 @@ Xylar Asay-Davis
 04/11/2017
 """
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
 import pytest
 import tempfile
 import shutil
@@ -26,10 +23,11 @@ import numpy
 import xarray
 from pyremap import MpasMeshDescriptor, LatLonGridDescriptor
 
+from mpas_tools.config import MpasConfigParser
+
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
     import open_multifile_dataset
-from mpas_analysis.configuration import MpasAnalysisConfigParser
 from mpas_analysis.shared.climatology import \
     get_comparison_descriptor, get_remapper, \
     add_years_months_days_in_month, compute_climatology, \
@@ -49,26 +47,22 @@ class TestClimatology(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasAnalysisConfigParser()
+        config = MpasConfigParser()
 
-        config.add_section('execute')
         config.set('execute', 'mapParallelExec', 'None')
+        config.set('execute', 'mapMpiTasks', '1')
 
-        config.add_section('diagnostics')
         config.set('diagnostics', 'base_path', self.test_dir)
         config.set('diagnostics', 'customDirectory', 'none')
         config.set('diagnostics', 'mappingSubdirectory', 'maps')
 
-        config.add_section('input')
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         config.set('input', 'mpasMeshName', 'QU240')
 
-        config.add_section('output')
         config.set('output', 'baseDirectory', self.test_dir)
         config.set('output', 'mappingSubdirectory', '.')
         config.set('output', 'mpasClimatologySubdirectory', 'clim/mpas')
 
-        config.add_section('climatology')
         config.set('climatology', 'startYear', '2')
         config.set('climatology', 'endYear', '2')
         config.set('climatology', 'comparisonLatResolution', '0.5')
@@ -76,7 +70,6 @@ class TestClimatology(TestCase):
 
         config.set('climatology', 'mpasInterpolationMethod', 'bilinear')
 
-        config.add_section('oceanObservations')
         config.set('oceanObservations', 'interpolationMethod', 'bilinear')
         config.set('oceanObservations', 'climatologySubdirectory', 'clim/obs')
         config.set('oceanObservations', 'remappedClimSubdirectory',
@@ -262,5 +255,3 @@ class TestClimatology(TestCase):
         self.assertArrayApproxEqual(monthlyClimatology.month.values,
                                     refClimatology.month.values)
 
-
-# vim: foldmethod=marker ai ts=4 sts=4 et sw=4 ft=python
