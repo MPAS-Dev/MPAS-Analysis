@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.7.0rc1" %}
+{% set version = "1.7.0" %}
 
 package:
   name: {{ name|lower }}
