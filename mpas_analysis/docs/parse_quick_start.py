@@ -18,7 +18,7 @@ def build_quick_start():
     skip = [('## conda-forge', '## Installation')]
     outContent = ''
     skipMode = False
-    with open('../README.md', 'r') as inFile:
+    with open('../../README.md', 'r') as inFile:
         for line in inFile.readlines():
             for skipStart, skipEnd in skip:
                 if not skipMode and skipStart in line:
