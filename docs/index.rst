@@ -28,6 +28,7 @@ used those components.
    :caption: Developer's guide
    :maxdepth: 2
 
+   developers_guide/overview
    developers_guide/api
 
    design_docs/index
