@@ -100,10 +100,12 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):
         startDate = '{:04d}-01-01_00:00:00'.format(startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(endYear)
 
-        config.set('climatology', 'startYear', str(startYear))
-        config.set('climatology', 'startDate', startDate)
-        config.set('climatology', 'endYear', str(endYear))
-        config.set('climatology', 'endDate', endDate)
+        # using "user=True" so these changes take priority over user config
+        # options
+        config.set('climatology', 'startYear', str(startYear), user=True)
+        config.set('climatology', 'startDate', startDate, user=True)
+        config.set('climatology', 'endYear', str(endYear), user=True)
+        config.set('climatology', 'endDate', endDate, user=True)
 
         return startYear, endYear
 
