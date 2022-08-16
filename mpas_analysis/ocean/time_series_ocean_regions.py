@@ -871,7 +871,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             xarray.open_dataset(regionMaskFileName).stack(
                     nCells=(obsDict['latVar'], obsDict['lonVar']))
         dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-            [obsDict['latVar'], obsDict['lonVar']])
+            [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
 
         maskRegionNames = decode_strings(dsRegionMask.regionNames)
         regionIndex = maskRegionNames.index(self.regionName)
@@ -956,7 +956,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             dsMonth = dsMonth.stack(nCells=(obsDict['latVar'],
                                             obsDict['lonVar']))
             dsMonth = dsMonth.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar']])
+                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
 
             dsMonth = dsMonth.where(cellMask, drop=True)
 

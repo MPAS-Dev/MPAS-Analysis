@@ -77,7 +77,7 @@ class RegionalTSDiagrams(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -658,12 +658,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
 
             ds = ds.where(cellMask, drop=True)
 
-            self.logger.info("Don't worry about the following dask "
-                             "warnings.")
             depthMask = numpy.logical_and(ds.zMid >= zmin,
                                           ds.zMid <= zmax)
             depthMask.compute()
-            self.logger.info("Dask warnings should be done.")
             ds['depthMask'] = depthMask
 
             for var in variableList:
@@ -715,7 +712,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
             dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar']])
+                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
@@ -745,7 +742,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
             ds = ds.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar']])
+                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
 
             ds = ds.where(cellMask, drop=True)
 
