@@ -658,12 +658,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
 
             ds = ds.where(cellMask, drop=True)
 
-            self.logger.info("Don't worry about the following dask "
-                             "warnings.")
             depthMask = numpy.logical_and(ds.zMid >= zmin,
                                           ds.zMid <= zmax)
             depthMask.compute()
-            self.logger.info("Dask warnings should be done.")
             ds['depthMask'] = depthMask
 
             for var in variableList:
