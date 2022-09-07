@@ -1538,7 +1538,8 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
     """compute meridionally integrated MOC streamfunction"""
 
     mocTop = np.zeros([np.size(latBins), nz + 1])
-    mocTop[0, range(1, nz + 1)] = transportZ.cumsum()
+    mocSouthBottomUp = - transportZ[::-1].cumsum()
+    mocTop[0, 0:nz] = mocSouthBottomUp[::-1]
     for iLat in range(1, np.size(latBins)):
         indlat = np.logical_and(np.logical_and(
             regionCellMask == 1, latCell >= latBins[iLat - 1]),
