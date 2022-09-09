@@ -1110,6 +1110,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                              'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFiles))
+        moc = np.zeros((len(inputFiles), nVertLevels+1, len(latBins)))
         times = np.zeros(len(inputFiles))
         computed = np.zeros(len(inputFiles), bool)
 
@@ -1135,6 +1136,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                     outIndex = np.where(mask)[0][0]
 
                     mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                    moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
                     times[outIndex] = dsMOCIn.Time[inIndex]
                     computed[outIndex] = True
 
@@ -1185,30 +1187,49 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                             horizontalVel)
             mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
+            moc[timeIndex, :, :] = mocTop
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'
 
-        dictonary = {'dims': ['Time'],
-                     'coords': {'Time':
-                                {'dims': ('Time'),
-                                 'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}},
-                                'year':
-                                {'dims': ('Time'),
-                                 'data': years,
-                                 'attrs': {'units': 'year'}},
-                                'month':
-                                {'dims': ('Time'),
-                                 'data': months,
-                                 'attrs': {'units': 'month'}}},
-                     'data_vars': {'mocAtlantic26':
-                                   {'dims': ('Time'),
-                                    'data': mocRegion,
-                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
-                                              'description': description}}}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
+        descriptionAtl = 'Atlantic MOC streamfunction'
+
+        dictionary = {
+            'dims': ['Time', 'depth', 'lat'],
+            'coords': {
+                'Time': {
+                    'dims': ('Time',),
+                    'data': times,
+                    'attrs': {'units': 'days since 0001-01-01'}},
+                'year': {
+                    'dims': ('Time',),
+                    'data': years,
+                    'attrs': {'units': 'year'}},
+                'month': {
+                    'dims': ('Time',),
+                    'data': months,
+                    'attrs': {'units': 'month'}},
+                'lat': {
+                    'dims': ('lat',),
+                    'data': latAtlantic,
+                    'attrs': {'units': 'degrees north'}},
+                'depth': {
+                    'dims': ('depth',),
+                    'data': refTopDepth,
+                    'attrs': {'units': 'meters'}}},
+            'data_vars': {
+                'mocAtlantic26': {
+                    'dims': ('Time',),
+                    'data': mocRegion,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': description}},
+                'mocAtlantic': {
+                    'dims': ('Time', 'depth', 'lat'),
+                    'data': moc,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': descriptionAtl}}}}
+        dsMOCTimeSeries = xr.Dataset.from_dict(dictionary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
 
 
