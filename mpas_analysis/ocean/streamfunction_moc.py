@@ -10,7 +10,7 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-import xarray
+
 import xarray as xr
 import numpy as np
 import netCDF4
@@ -253,6 +253,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
         parentTask.add_subtask(self)
 
+        self.includeBolus = None
+        self.includeSubmesoscale = None
+
     def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
@@ -305,10 +308,23 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                 # the old name
                 self.includeBolus = self.namelist.getbool(
                     'config_use_standardgm')
+            try:
+                self.includeSubmesoscale = \
+                    self.namelist.getbool('config_submesoscale_enable')
+            except KeyError:
+                # an old run without submesoscale
+                self.includeSubmesoscale = False
+
             if self.includeBolus:
                 variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
                      'timeMonthly_avg_vertGMBolusVelocityTop'])
+
+            if self.includeSubmesoscale:
+                variableList.extend(
+                    ['timeMonthly_avg_normalMLEvelocity',
+                     'timeMonthly_avg_vertMLEVelocityTop'])
+
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
@@ -507,19 +523,28 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         if 'Time' in annualClimatology.dims:
             annualClimatology = annualClimatology.isel(Time=0)
 
+        # rename some variables for convenience
+        annualClimatology = annualClimatology.rename(
+            {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+             'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
         if self.includeBolus:
             annualClimatology['avgNormalVelocity'] = \
-                annualClimatology['timeMonthly_avg_normalVelocity'] + \
+                annualClimatology['avgNormalVelocity'] + \
                 annualClimatology['timeMonthly_avg_normalGMBolusVelocity']
 
             annualClimatology['avgVertVelocityTop'] = \
-                annualClimatology['timeMonthly_avg_vertVelocityTop'] + \
+                annualClimatology['avgVertVelocityTop'] + \
                 annualClimatology['timeMonthly_avg_vertGMBolusVelocityTop']
-        else:
-            # rename some variables for convenience
-            annualClimatology = annualClimatology.rename(
-                {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+        if self.includeSubmesoscale:
+            annualClimatology['avgNormalVelocity'] = \
+                annualClimatology['avgNormalVelocity'] + \
+                annualClimatology['timeMonthly_avg_normalMLEvelocity']
+
+            annualClimatology['avgVertVelocityTop'] = \
+                annualClimatology['avgVertVelocityTop'] + \
+                annualClimatology['timeMonthly_avg_vertMLEVelocityTop']
 
         # Convert to numpy arrays
         # (can result in a memory error for large array size)
@@ -843,6 +868,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
         self.startYear = startYear
         self.endYear = endYear
 
+        self.includeBolus = None
+        self.includeSubmesoscale = None
+
     def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
@@ -890,10 +918,23 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 # the old name
                 self.includeBolus = self.namelist.getbool(
                     'config_use_standardgm')
+
+            try:
+                self.includeSubmesoscale = \
+                    self.namelist.getbool('config_submesoscale_enable')
+            except KeyError:
+                # an old run without submesoscale
+                self.includeSubmesoscale = False
+
             if self.includeBolus:
                 self.variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
                      'timeMonthly_avg_vertGMBolusVelocityTop'])
+
+            if self.includeSubmesoscale:
+                self.variableList.extend(
+                    ['timeMonthly_avg_normalMLEvelocity',
+                     'timeMonthly_avg_vertMLEVelocityTop'])
 
     def run_task(self):
         """
@@ -1045,7 +1086,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 except ValueError:
                     raise IOError('No MPAS-O restart file found: need at '
                                   'least one restart file for MOC calculation')
-                with xarray.open_dataset(restartFile) as dsRestart:
+                with xr.open_dataset(restartFile) as dsRestart:
                     refBottomDepth = dsRestart.refBottomDepth.values
                 nVertLevels = len(refBottomDepth)
                 refTopDepth = np.zeros(nVertLevels + 1)
@@ -1204,19 +1245,28 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
                                                                date.month))
 
+            # rename some variables for convenience
+            dsLocal = dsLocal.rename(
+                {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
             if self.includeBolus:
                 dsLocal['avgNormalVelocity'] = \
-                    dsLocal['timeMonthly_avg_normalVelocity'] + \
+                    dsLocal['avgNormalVelocity'] + \
                     dsLocal['timeMonthly_avg_normalGMBolusVelocity']
 
                 dsLocal['avgVertVelocityTop'] = \
-                    dsLocal['timeMonthly_avg_vertVelocityTop'] + \
+                    dsLocal['avgVertVelocityTop'] + \
                     dsLocal['timeMonthly_avg_vertGMBolusVelocityTop']
-            else:
-                # rename some variables for convenience
-                dsLocal = dsLocal.rename(
-                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+            if self.includeSubmesoscale:
+                dsLocal['avgNormalVelocity'] = \
+                    dsLocal['avgNormalVelocity'] + \
+                    dsLocal['timeMonthly_avg_normalMLEvelocity']
+
+                dsLocal['avgVertVelocityTop'] = \
+                    dsLocal['avgVertVelocityTop'] + \
+                    dsLocal['timeMonthly_avg_vertMLEVelocityTop']
 
             horizontalVel = dsLocal.avgNormalVelocity.values
             verticalVel = dsLocal.avgVertVelocityTop.values
