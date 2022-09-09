@@ -10,7 +10,7 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 #
-
+import xarray
 import xarray as xr
 import numpy as np
 import netCDF4
@@ -935,8 +935,6 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
         outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
             outputDirectory, self.startYear, self.endYear)
 
-        streamName = 'timeSeriesStatsMonthlyOutput'
-
         # Get bin latitudes and index of 26.5N
         binBoundaryMocStreamfunction = None
         # first try timeSeriesStatsMonthly for bin boundaries, then try
@@ -973,6 +971,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                              'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFiles))
+        moc = None
+        refTopDepth = None
         times = np.zeros(len(inputFiles))
         computed = np.zeros(len(inputFiles), bool)
 
@@ -988,6 +988,12 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
                 dsMOCIn.load()
 
+                if moc is None:
+                    sizes = dsMOCIn.sizes
+                    moc = np.zeros((len(inputFiles), sizes['depth'],
+                                    sizes['lat']))
+                    refTopDepth = dsMOCIn.depth.values
+
                 # first, copy all computed data
                 for inIndex in range(dsMOCIn.dims['Time']):
 
@@ -998,6 +1004,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                     outIndex = np.where(mask)[0][0]
 
                     mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                    moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
                     times[outIndex] = dsMOCIn.Time[inIndex]
                     computed[outIndex] = True
 
@@ -1029,28 +1036,63 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             mocTop = mocVar[indRegion, :, :].values
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
+            if moc is None:
+                sizes = dsLocal.sizes
+                moc = np.zeros((len(inputFiles), sizes['nVertLevels']+1,
+                                len(binBoundaryMocStreamfunction)))
+                try:
+                    restartFile = self.runStreams.readpath('restart')[0]
+                except ValueError:
+                    raise IOError('No MPAS-O restart file found: need at '
+                                  'least one restart file for MOC calculation')
+                with xarray.open_dataset(restartFile) as dsRestart:
+                    refBottomDepth = dsRestart.refBottomDepth.values
+                nVertLevels = len(refBottomDepth)
+                refTopDepth = np.zeros(nVertLevels + 1)
+                refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
+
+            moc[timeIndex, 0:-1, :] = mocTop
+
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'
 
-        dictonary = {'dims': ['Time'],
-                     'coords': {'Time':
-                                {'dims': ('Time'),
-                                 'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}},
-                                'year':
-                                {'dims': ('Time'),
-                                 'data': years,
-                                 'attrs': {'units': 'year'}},
-                                'month':
-                                {'dims': ('Time'),
-                                 'data': months,
-                                 'attrs': {'units': 'month'}}},
-                     'data_vars': {'mocAtlantic26':
-                                   {'dims': ('Time'),
-                                    'data': mocRegion,
-                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
-                                              'description': description}}}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
+        descriptionAtl = 'Atlantic MOC streamfunction'
+
+        dictionary = {
+            'dims': ['Time', 'depth', 'lat'],
+            'coords': {
+                'Time': {
+                    'dims': ('Time',),
+                    'data': times,
+                    'attrs': {'units': 'days since 0001-01-01'}},
+                'year': {
+                    'dims': ('Time',),
+                    'data': years,
+                    'attrs': {'units': 'year'}},
+                'month': {
+                    'dims': ('Time',),
+                    'data': months,
+                    'attrs': {'units': 'month'}},
+                'lat': {
+                    'dims': ('lat',),
+                    'data': binBoundaryMocStreamfunction,
+                    'attrs': {'units': 'degrees north'}},
+                'depth': {
+                    'dims': ('depth',),
+                    'data': refTopDepth,
+                    'attrs': {'units': 'meters'}}},
+            'data_vars': {
+                'mocAtlantic26': {
+                    'dims': ('Time',),
+                    'data': mocRegion,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': description}},
+                'mocAtlantic': {
+                    'dims': ('Time', 'depth', 'lat'),
+                    'data': moc,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': descriptionAtl}}}}
+        dsMOCTimeSeries = xr.Dataset.from_dict(dictionary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
 
     def _compute_moc_time_series_postprocess(self):
