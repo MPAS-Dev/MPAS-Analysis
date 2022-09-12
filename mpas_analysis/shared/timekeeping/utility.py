@@ -137,7 +137,7 @@ def string_to_relative_delta(dateString, calendar='gregorian'):
         Note: either underscores or spaces can be used to separate the date
         from the time portion of the string.
 
-    calendar: {'gregorian', 'gregorian_noleap'}, optional
+    calendar: {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores
 
     Returns
@@ -189,7 +189,7 @@ def string_to_days_since_date(dateString, calendar='gregorian',
         Note: either underscores or spaces can be used to separate the date
         from the time portion of the string.
 
-    calendar: {'gregorian', 'gregorian_noleap'}, optional
+    calendar: {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores
 
     referenceDate : str, optional
@@ -232,14 +232,14 @@ def string_to_days_since_date(dateString, calendar='gregorian',
 def days_to_datetime(days, calendar='gregorian', referenceDate='0001-01-01'):
     """
     Covert days to ``datetime.datetime`` objects given a reference date and an
-    MPAS calendar (either 'gregorian' or 'gregorian_noleap').
+    MPAS calendar (either 'gregorian' or 'noleap').
 
     Parameters
     ----------
     days : float or array-like of floats
         The number of days since the reference date.
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         A calendar to be used to convert days to a ``datetime.datetime``
         object.
 
@@ -293,7 +293,7 @@ def datetime_to_days(dates, calendar='gregorian', referenceDate='0001-01-01'):
         The date(s) to be converted to days since ``referenceDate`` on the
         given ``calendar``.
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         A calendar to be used to convert days to a ``datetime.datetime`` object.
 
     referenceDate : str, optional
@@ -342,7 +342,7 @@ def date_to_days(year=1, month=1, day=1, hour=0, minute=0, second=0,
         The date to be converted to days since ``referenceDate`` on the
         given ``calendar``.
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         A calendar to be used to convert days to a ``datetime.datetime``
         object.
 
@@ -469,7 +469,7 @@ def _mpas_to_netcdf_calendar(calendar):
 
     if calendar == 'gregorian_noleap':
         calendar = 'noleap'
-    elif calendar != 'gregorian':
+    if calendar not in ['gregorian', 'noleap']:
         raise ValueError('Unsupported calendar {}'.format(calendar))
     return calendar
 

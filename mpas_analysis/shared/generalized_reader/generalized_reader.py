@@ -47,7 +47,7 @@ def open_multifile_dataset(fileNames, calendar, config,
     fileNames : list of strings
         A lsit of file paths to read
 
-    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
+    calendar : {``'gregorian'``, ``'noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
     config : mpas_tools.config.MpasConfigParser
@@ -186,7 +186,7 @@ def _preprocess(ds, calendar, simulationStartTime, timeVariableName,
         an xarray time coordinate and with variable names to be
         substituted.
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {'gregorian', 'noleap'}
         The name of one of the calendars supported by MPAS cores
 
         The name of the time variable (typically 'Time' if using a variableMap

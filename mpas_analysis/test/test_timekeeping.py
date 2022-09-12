@@ -40,7 +40,7 @@ class TestTimekeeping(TestCase):
         # YYYY-MM-DD
         # SSSSS
 
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             # test datetime.datetime
             # YYYY-MM-DD_hh:mm:ss
             date1 = string_to_datetime('0001-01-01_00:00:00')
@@ -136,7 +136,7 @@ class TestTimekeeping(TestCase):
         # also, test addition and subtraction of the form
         # datetime.datetime +/- MpasRelativeDelta above
         # both calendars with adding one day
-        for calendar, expected in zip(['gregorian', 'gregorian_noleap'],
+        for calendar, expected in zip(['gregorian', 'noleap'],
                                       ['2016-02-29', '2016-03-01']):
             self.assertEqual(string_to_datetime('2016-02-28') +
                              string_to_relative_delta('0000-00-01',
@@ -144,7 +144,7 @@ class TestTimekeeping(TestCase):
                              string_to_datetime(expected))
 
         # both calendars with subtracting one day
-        for calendar, expected in zip(['gregorian', 'gregorian_noleap'],
+        for calendar, expected in zip(['gregorian', 'noleap'],
                                       ['2016-02-29', '2016-02-28']):
             self.assertEqual(string_to_datetime('2016-03-01') -
                              string_to_relative_delta('0000-00-01',
@@ -152,7 +152,7 @@ class TestTimekeeping(TestCase):
                              string_to_datetime(expected))
 
         # both calendars with adding one month
-        for calendar, expected in zip(['gregorian', 'gregorian_noleap'],
+        for calendar, expected in zip(['gregorian', 'noleap'],
                                       ['2016-02-29', '2016-02-28']):
             self.assertEqual(string_to_datetime('2016-01-31') +
                              string_to_relative_delta('0000-01-00',
@@ -160,14 +160,14 @@ class TestTimekeeping(TestCase):
                              string_to_datetime(expected))
 
         # both calendars with subtracting one month
-        for calendar, expected in zip(['gregorian', 'gregorian_noleap'],
+        for calendar, expected in zip(['gregorian', 'noleap'],
                                       ['2016-02-29', '2016-02-28']):
             self.assertEqual(string_to_datetime('2016-03-31') -
                              string_to_relative_delta('0000-01-00',
                                                       calendar=calendar),
                              string_to_datetime(expected))
 
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
 
             delta1 = string_to_relative_delta('0000-01-00', calendar=calendar)
             delta2 = string_to_relative_delta('0000-00-01', calendar=calendar)
@@ -207,12 +207,12 @@ class TestTimekeeping(TestCase):
             delta1 = string_to_relative_delta('0000-01-00',
                                               calendar='gregorian')
             delta2 = string_to_relative_delta('0000-00-01',
-                                              calendar='gregorian_noleap')
+                                              calendar='noleap')
             deltaSum = delta1 + delta2
 
     def test_string_to_days_since_date(self):
         referenceDate = '0001-01-01'
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             for dateString, expected_days in [('0001-01-01', 0.),
                                               ('0001-01-02', 1.),
                                               ('0001-02-01', 31.),
@@ -224,7 +224,7 @@ class TestTimekeeping(TestCase):
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
-                                        ('gregorian_noleap', 365.)]:
+                                        ('noleap', 365.)]:
             days = string_to_days_since_date(dateString='2017-01-01',
                                              calendar=calendar,
                                              referenceDate=referenceDate)
@@ -232,7 +232,7 @@ class TestTimekeeping(TestCase):
 
     def test_days_to_datetime(self):
         referenceDate = '0001-01-01'
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             for dateString, days in [('0001-01-01', 0.),
                                      ('0001-01-02', 1.),
                                      ('0001-02-01', 31.),
@@ -244,7 +244,7 @@ class TestTimekeeping(TestCase):
 
         referenceDate = '2016-01-01'
         for calendar, days in [('gregorian', 366.),
-                               ('gregorian_noleap', 365.)]:
+                               ('noleap', 365.)]:
             datetime = days_to_datetime(days=days,
                                         calendar=calendar,
                                         referenceDate=referenceDate)
@@ -252,7 +252,7 @@ class TestTimekeeping(TestCase):
 
     def test_datetime_to_days(self):
         referenceDate = '0001-01-01'
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             for dateString, expected_days in [('0001-01-01', 0.),
                                               ('0001-01-02', 1.),
                                               ('0001-02-01', 31.),
@@ -264,7 +264,7 @@ class TestTimekeeping(TestCase):
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
-                                        ('gregorian_noleap', 365.)]:
+                                        ('noleap', 365.)]:
             days = datetime_to_days(dates=string_to_datetime('2017-01-01'),
                                     calendar=calendar,
                                     referenceDate=referenceDate)
@@ -272,7 +272,7 @@ class TestTimekeeping(TestCase):
 
     def test_date_to_days(self):
         referenceDate = '0001-01-01'
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             days = date_to_days(year=1, month=1, day=1, calendar=calendar,
                                 referenceDate=referenceDate)
             self.assertApproxEqual(days, 0.)
@@ -288,7 +288,7 @@ class TestTimekeeping(TestCase):
 
         referenceDate = '2016-01-01'
         for calendar, expected_days in [('gregorian', 366.),
-                                        ('gregorian_noleap', 365.)]:
+                                        ('noleap', 365.)]:
             days = date_to_days(year=2017, month=1, day=1,
                                 calendar=calendar,
                                 referenceDate=referenceDate)

@@ -390,7 +390,7 @@ class StreamsFile:
             and added to endDate because the file date might be the first
             or last date contained in the file (or anything in between).
 
-        calendar : {'gregorian', 'gregorian_noleap'}, optional
+        calendar : {'gregorian', 'noleap'}, optional
             The name of one of the calendars supported by MPAS cores, and is
             required if startDate and/or endDate are supplied
 

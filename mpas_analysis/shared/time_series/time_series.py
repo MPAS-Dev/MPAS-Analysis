@@ -135,7 +135,7 @@ def cache_time_series(timesInDataSet, timeSeriesCalcFunction, cacheFileName,
         The absolute path to the cache file where the times series will be
         stored
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {'gregorian', 'noleap'}
         The name of one of the calendars supported by MPAS cores, used to
         determine ``year`` and ``month`` from ``Time`` coordinate
 
