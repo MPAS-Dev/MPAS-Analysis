@@ -16,6 +16,7 @@ Documentation    On GitHub
 `v1.6.0`_        `1.6.0`_
 `v1.6.1`_        `1.6.1`_
 `v1.7.0`_        `1.7.0`_
+`v1.7.1`_        `1.7.1`_
 ================ ===============
 
 .. _`stable`: ../stable/index.html
@@ -30,6 +31,7 @@ Documentation    On GitHub
 .. _`v1.6.0`: ../1.6.0/index.html
 .. _`v1.6.1`: ../1.6.1/index.html
 .. _`v1.7.0`: ../1.7.0/index.html
+.. _`v1.7.1`: ../1.7.1/index.html
 .. _`master`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/master
 .. _`develop`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop
 .. _`1.2.6`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.2.6
@@ -42,3 +44,4 @@ Documentation    On GitHub
 .. _`1.6.0`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.6.0
 .. _`1.6.1`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.6.1
 .. _`1.7.0`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.7.0
+.. _`1.7.1`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/1.7.1
