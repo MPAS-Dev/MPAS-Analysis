@@ -222,7 +222,7 @@
 <span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
 <span class="sd">        from the time portion of the string.</span>
 
-<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    Returns</span>
@@ -274,7 +274,7 @@
 <span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
 <span class="sd">        from the time portion of the string.</span>
 
-<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    referenceDate : str, optional</span>
@@ -317,14 +317,14 @@
 <div class="viewcode-block" id="days_to_datetime"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">days_to_datetime</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Covert days to ``datetime.datetime`` objects given a reference date and an</span>
-<span class="sd">    MPAS calendar (either &#39;gregorian&#39; or &#39;gregorian_noleap&#39;).</span>
+<span class="sd">    MPAS calendar (either &#39;gregorian&#39; or &#39;noleap&#39;).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    days : float or array-like of floats</span>
 <span class="sd">        The number of days since the reference date.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime``</span>
 <span class="sd">        object.</span>
 
@@ -378,7 +378,7 @@
 <span class="sd">        The date(s) to be converted to days since ``referenceDate`` on the</span>
 <span class="sd">        given ``calendar``.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime`` object.</span>
 
 <span class="sd">    referenceDate : str, optional</span>
@@ -427,7 +427,7 @@
 <span class="sd">        The date to be converted to days since ``referenceDate`` on the</span>
 <span class="sd">        given ``calendar``.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime``</span>
 <span class="sd">        object.</span>
 
@@ -554,7 +554,7 @@
 
     <span class="k">if</span> <span class="n">calendar</span> <span class="o">==</span> <span class="s1">&#39;gregorian_noleap&#39;</span><span class="p">:</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="s1">&#39;noleap&#39;</span>
-    <span class="k">elif</span> <span class="n">calendar</span> <span class="o">!=</span> <span class="s1">&#39;gregorian&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">calendar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="s1">&#39;noleap&#39;</span><span class="p">]:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported calendar </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calendar</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">calendar</span>
 

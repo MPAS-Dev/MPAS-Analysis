@@ -119,12 +119,12 @@
 <dt class="sig sig-object py" id="mpas_analysis.shared.timekeeping.utility.days_to_datetime">
 <span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.timekeeping.utility.</span></span><span class="sig-name descname"><span class="pre">days_to_datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">days</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referenceDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0001-01-01'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mpas_analysis/shared/timekeeping/utility.html#days_to_datetime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.days_to_datetime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Covert days to <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects given a reference date and an
-MPAS calendar (either ‘gregorian’ or ‘gregorian_noleap’).</p>
+MPAS calendar (either ‘gregorian’ or ‘noleap’).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>days</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><em>array-like of floats</em>) – The number of days since the reference date.</p></li>
-<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregorian_noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
+<li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>
 object.</p></li>
 <li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
