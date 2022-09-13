@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moving variable mapping outside of mpas_xarray &mdash; MPAS-Analysis 1.7.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Support Parallel Tasks" href="parallel_tasks.html" />
+    <link rel="prev" title="Generalize Calendar supported by Analysis" href="generalize_calendar.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../design_docs.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../design_docs.html">Design Documents</a> &raquo;</li>
+      <li>Moving variable mapping outside of mpas_xarray</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/design_docs/variable_mapping_reorg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="moving-variable-mapping-outside-of-mpas-xarray">
+<h1>Moving variable mapping outside of mpas_xarray<a class="headerlink" href="#moving-variable-mapping-outside-of-mpas-xarray" title="Permalink to this heading">¶</a></h1>
+<h2>
+Xylar Asay-Davis <br>
+date: 2017/02/10 <br>
+</h2>
+<h3> Summary </h3>
+
+In discussions with @pwolfram, it became clear that we would like to keep
+mpas_xarray as general as possible, rather than adding code specific to
+MPAS-Analysis.  In particular, the capability for mapping variable names
+that is currently part of mpas_xarray is likely a capability that only
+MPAS-Analysis will need when opening xarray data sets.  Likewise, there is
+a desire for mpax_xarray not to use any of the functionality outside of its
+own module so that it remains autonomous from MPAS-Analysis.
+
+At the same time, it is desirable for efficiency and parallelism to perform
+certain operations during the preprocessing step within xarray, rather than
+constructing a data set first and then (in serial) performing manipulations
+(e.g. creating a time coordinate and slicing variables).
+
+The solution will be tested by making sure it produces bit-for-bit identical
+results to those from the develop branch for typical test cases on LANL IC
+and Edison.
+
+<h2> Requirements </h2><h3> Requirement: mpas_xarray does not include MPAS-Analysis specific
+functionality <br>
+Date last modified: 2017/02/10 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>MPAS-Analysis specific functionality such as variable mapping should be
+removed from mpas_xarray so it can remain an independent module, requiring
+minimal modification to accommodate MPAS-Analysis’ needs.</p>
+<h3> Requirement: MPAS-Analysis specific functionality should be supported in
+xarray preprossing <br>
+Date last modified: 2017/02/10 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>There should be a way to perform MPAS-Analysis specific functionality such as
+mapping variables during preprocessing.  This functionality should be
+relatively easy to add to as new preprocessing needs arise.</p>
+<h2> Algorithmic Formulations (optional) </h2><h3> Algorithm: mpas_xarray does not include MPAS-Analysis specific
+functionality <br>
+Date last modified: 2017/02/10 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>All functions and function arguments related to variable mapping will
+be removed from mpas_xarray and moved elsewhere.</p>
+<h3> Algorithm: MPAS-Analysis specific functionality should be supported in
+xarray preprossing <br>
+Date last modified: 2017/02/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>A new utility function, <code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code> will added to <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>
+that simplifies current calls to <code class="docutils literal notranslate"><span class="pre">xarray.open_mfdataset</span></code> to hide the
+preprocessor and take care of removing redundant time indices once the dataset
+has been built. (This function doesn’t directly address the requirement but
+is meant to make <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code> easier to use and made sense because it
+has a one-to-one correspondence with other functionality, described below,
+that does address the requirement.)</p>
+<p>A new module, <code class="docutils literal notranslate"><span class="pre">generalized_reader</span></code> will also be added with its own
+<code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code> function.  This version takes additional arguments
+including a variable map and start and end dates for the dataset.
+<code class="docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code> will create a data set
+by calling <code class="docutils literal notranslate"><span class="pre">xarray.open_mfdataset</span></code> with its own preprocessing function,
+<code class="docutils literal notranslate"><span class="pre">generalized_reader._preprocess</span></code> that first maps variable names, then
+calls <code class="docutils literal notranslate"><span class="pre">mpas_xarray.preprocess</span></code> to finish the job.  Once the dataset has
+been constructed, redundant time indices are removed and the ‘Time’
+coordinate is sliced to be between the supplied start and end dates.</p>
+<p>This solution may add some confusion in terms of which reader should
+be used to open xarray datasets.  It is my sense that most developers
+adding new functionality will do so by modifying existing scripts, and
+these examples should make it clear which version of
+<code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code> is most appropriate.  Nevertheless, clear
+documentation of <code class="docutils literal notranslate"><span class="pre">generalized_reader</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>, and their
+differences are needed.</p>
+<p>Here is a typical usage of <code class="docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_analysis.shared.generalized_reader.generalized_reader</span> \
+    <span class="kn">import</span> <span class="nn">open_multifile_dataset</span>
+
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
+<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
+<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">]</span>
+<span class="n">variable_map</span> <span class="o">=</span> <span class="p">{</span>
+   <span class="s1">&#39;avgSurfaceTemperature&#39;</span><span class="p">:</span>
+       <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;other_string&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;yet_another_string&#39;</span><span class="p">],</span>
+   <span class="s1">&#39;daysSinceStartOfSim&#39;</span><span class="p">:</span>
+       <span class="p">[</span><span class="s1">&#39;time_avg_daysSinceStartOfSim&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;something_else&#39;</span><span class="p">]}</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+                            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                            <span class="n">time_variable_name</span><span class="o">=</span><span class="n">timestr</span><span class="p">,</span>
+                            <span class="n">variable_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">,</span>
+                            <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">,</span>
+                            <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;9999-12-31&#39;</span><span class="p">,</span>
+                            <span class="n">variable_map</span><span class="o">=</span><span class="n">variable_map</span><span class="p">,</span>
+                            <span class="n">year_offset</span><span class="o">=</span><span class="mi">1850</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here is the same for <code class="docutils literal notranslate"><span class="pre">mpas_xarray.open_multifile_dataset</span></code> without the
+variable map, start and end dates:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray.mpas_xarray</span> \
+    <span class="kn">import</span> <span class="nn">open_multifile_dataset</span>
+
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
+<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
+<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">]</span>
+
+<span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
+                            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                            <span class="n">time_variable_name</span><span class="o">=</span><span class="n">timestr</span><span class="p">,</span>
+                            <span class="n">variable_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">,</span>
+                            <span class="n">year_offset</span><span class="o">=</span><span class="mi">1850</span><span class="p">)</span>
+</pre></div>
+</div>
+<h2> Design and Implementation </h2><h3> Implementation: mpas_xarray does not include MPAS-Analysis specific
+functionality <br>
+Date last modified: 2017/02/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>A test branch can be found here
+<a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg">xylar/MPAS-Analysis/variable_mapping_reorg</a></p>
+<p>I have removed <code class="docutils literal notranslate"><span class="pre">map_variable</span></code> and <code class="docutils literal notranslate"><span class="pre">rename_variables</span></code> from <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>.
+I also removed any mention of the variable map from the rest of <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>.</p>
+<p>This branch also includes several other cleanup operations that are not
+addressing any requirements.  These include:</p>
+<ul class="simple">
+<li><p>I added a new helper function, <code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code>, for opening an
+xarray data set in a single, simple command without reference to the
+preprocessor.  This function should make opening new data sets more
+intuitive for mpas_xarray users.</p></li>
+<li><p>making several utility functions non-public (it is unclear to me why anyone
+want to call these directly):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">_assert_valid_datetimes</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_assert_valid_selections</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_ensure_list</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_get_datetimes</span></code></p></li>
+</ul>
+</li>
+<li><p>I have removed the ability to run <code class="docutils literal notranslate"><span class="pre">mpas_xarray.py</span></code> as a script and the associated
+tests.  This is on the premise that 1) the test were outdated and would have
+needed to be updated to work with the current code and 2) unit testing in
+<code class="docutils literal notranslate"><span class="pre">test/test_mpas_xarray.py</span></code> takes care of this capability in a better way.</p></li>
+<li><p>I have tried to make variable names a bit more verbose in various places.
+However, at &#64;pwolfram’2 request, I have left ds for datasets, following the
+<code class="docutils literal notranslate"><span class="pre">xarray</span></code> convention.</p></li>
+<li><p>I have tried to improve the docstrings using a syntax that should be useful
+for generating documentation later on.</p></li>
+<li><p>I have update unit testing to work with the new inerface, notably the
+<code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code> function.</p></li>
+</ul>
+<h3> Implementation: MPAS-Analysis specific functionality should be supported in
+xarray preprossing <br>
+Date last modified: 2017/02/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>In the same branch as above, I have added a <code class="docutils literal notranslate"><span class="pre">generalized_reader</span></code> module that
+extends the capabilities of <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code> to include mapping of variable names.
+The file structure is as follows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis/shared/
+             -  generalized_reader/
+                     __init__.py
+                    generalized_reader.py
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">generalized_reader.py</span></code> contains a function <code class="docutils literal notranslate"><span class="pre">open_multifile_dataset</span></code> that is similar to
+the one in <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code> but with additional arguments needed by analysis:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">variable_map</span></code>, a map between MPAS and MPAS-Analysis variable names</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start_date</span></code>, the start date of the analysis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">end_date</span></code>, the end date of the analysis
+This function performs the same steps as <code class="docutils literal notranslate"><span class="pre">mpas_xarray.open_multifile_dataset</span></code>
+but uses the local preprocessing function, <code class="docutils literal notranslate"><span class="pre">_preprocess</span></code>, and also slices
+the ‘Time’ coordinate using the given start and end dates as a final step.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">generalized_reader._preprocess</span></code> funciton first maps variable names, then calls
+<code class="docutils literal notranslate"><span class="pre">mpas_xarray.preprocess</span></code> to do the rest of the preprocessing as normal.</p>
+<p>Two private functions, <code class="docutils literal notranslate"><span class="pre">_map_variable_name</span></code> and <code class="docutils literal notranslate"><span class="pre">_rename_variables</span></code> (take out of
+<code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>) are used to perform variable-name mapping.</p>
+<h2> Testing </h2><h3> Testing and Validation: MPAS-Analysis specific functionality should be supported in
+xarray preprossing <br>
+Date last modified: 2017/02/15 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg">xylar/MPAS-Analysis/variable_mapping_reorg</a>,
+the unit testing for mpas_xarray has been updated.  This includes moving unit testing for
+variable mapping elsewhere.</p>
+<p>I will make sure all tests with config files in the <code class="docutils literal notranslate"><span class="pre">configs/lanl</span></code> and <code class="docutils literal notranslate"><span class="pre">configs/edison</span></code>
+directories produce bit-for-bit results with the current <code class="docutils literal notranslate"><span class="pre">develop</span></code>.</p>
+<h3> Testing and Validation: MPAS-Analysis specific functionality should be supported in
+xarray preprossing <br>
+Date last modified: 2017/02/10 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Largely, the same as above.</p>
+<p>I have added unit testing for <code class="docutils literal notranslate"><span class="pre">generalized_reader</span></code> (via the standalone
+<code class="docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code> function).  These tests ensure that:</p>
+<ul class="simple">
+<li><p>variable mapping works as expected</p></li>
+<li><p>start and end dates work as expected</p></li>
+</ul>
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="generalize_calendar.html" class="btn btn-neutral float-left" title="Generalize Calendar supported by Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parallel_tasks.html" class="btn btn-neutral float-right" title="Support Parallel Tasks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

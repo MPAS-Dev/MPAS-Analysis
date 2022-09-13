@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.climatology_map_ohc_anomaly &mdash; MPAS-Analysis 1.7.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.ocean.climatology_map_ohc_anomaly</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.climatology_map_ohc_anomaly</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">compute_zmid</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapOHCAnomaly"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of the anomaly from a reference year</span>
+<span class="sd">    (typically the start of the simulation) of ocean heat content (OHC)</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">        The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">    refYearClimatolgyTask : ``RefYearMpasClimatologyTask``</span>
+<span class="sd">        The task that produced the climatology from the first year to be</span>
+<span class="sd">        remapped and then subtracted from the main climatology</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="ClimatologyMapOHCAnomaly.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">refYearClimatolgyTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        refYearClimatolgyTask : ``RefYearMpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology from the first year to be</span>
+<span class="sd">            remapped and then subtracted from the main climatology</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapOHCAnomaly</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+
+        <span class="n">depthRanges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;depthRanges&#39;</span><span class="p">,</span>
+                                           <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span> <span class="o">=</span> <span class="n">refYearClimatolgyTask</span>
+
+        <span class="k">for</span> <span class="n">minDepth</span><span class="p">,</span> <span class="n">maxDepth</span> <span class="ow">in</span> <span class="n">depthRanges</span><span class="p">:</span>
+            <span class="n">depthRangeString</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:g}</span><span class="s1">-</span><span class="si">{:g}</span><span class="s1">m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">minDepth</span><span class="p">),</span>
+                                                   <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">maxDepth</span><span class="p">))</span>
+            <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasOHCClimatology</span><span class="p">(</span>
+                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                <span class="n">refYearClimatolgyTask</span><span class="o">=</span><span class="n">refYearClimatolgyTask</span><span class="p">,</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">,</span> <span class="n">depthRangeString</span><span class="p">),</span>
+                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                <span class="n">minDepth</span><span class="o">=</span><span class="n">minDepth</span><span class="p">,</span>
+                <span class="n">maxDepth</span><span class="o">=</span><span class="n">maxDepth</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapClimatologySubtask</span><span class="p">)</span>
+
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depthRangeString</span><span class="p">)</span>
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                    <span class="c1"># make a new subtask for this season and comparison grid</span>
+                    <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plot</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">depthRangeString</span><span class="p">)</span>
+
+                    <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+                        <span class="n">remapClimatologySubtask</span><span class="p">,</span> <span class="n">remapObservationsSubtask</span><span class="p">,</span>
+                        <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                    <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                        <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$OHC over </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">depthRangeString</span><span class="p">),</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                        <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                        <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                        <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;GJ m$^{-2}$&#39;</span><span class="p">,</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Anomaly in Ocean Heat Content over &#39;</span>
+                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depthRangeString</span><span class="p">),</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;OHC Anomaly&#39;</span><span class="p">,</span>
+                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;ohc_anom&#39;</span><span class="p">,</span>
+                        <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether analysis is being performed only on the reference year,</span>
+<span class="sd">        in which case the analysis will not be meaningful.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError: if attempting to analyze only the reference year</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#     self.runDirectory , self.historyDirectory, self.plotsDirectory,</span>
+        <span class="c1">#     self.namelist, self.runStreams, self.historyStreams,</span>
+        <span class="c1">#     self.calendar</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapOHCAnomaly</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_start_and_end</span><span class="p">()</span>
+        <span class="n">refStartYear</span><span class="p">,</span> <span class="n">refEndYear</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span><span class="o">.</span><span class="n">get_start_and_end</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">startYear</span> <span class="o">==</span> <span class="n">refStartYear</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">endYear</span> <span class="o">==</span> <span class="n">refEndYear</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;OHC Anomaly is not meaningful and will not work &#39;</span>
+                             <span class="s1">&#39;when climatology and ref year are the same.&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
+<span class="sd">    climatologies of temperature</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    minDepth, maxDepth : float</span>
+<span class="sd">        The minimum and maximum depths for integration</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">refYearClimatolgyTask</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span>
+                 <span class="n">climatologyName</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="p">,</span>
+                 <span class="n">minDepth</span><span class="p">,</span> <span class="n">maxDepth</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
+<span class="sd">        ``parentTask``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped</span>
+
+<span class="sd">        refYearClimatolgyTask : ``RefYearMpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology from the first year to be</span>
+<span class="sd">            remapped and then subtracted from the main climatology</span>
+
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+
+<span class="sd">        climatologyName : str</span>
+<span class="sd">            A name that describes the climatology (e.g. a short version of</span>
+<span class="sd">            the important field(s) in the climatology) used to name the</span>
+<span class="sd">            subdirectories for each stage of the climatology</span>
+
+<span class="sd">        variableList : list of str</span>
+<span class="sd">            A list of variable names in ``timeSeriesStatsMonthly`` to be</span>
+<span class="sd">            included in the climatologies</span>
+
+<span class="sd">        seasons : list of str, optional</span>
+<span class="sd">            A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
+<span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">            climatologies are needed.</span>
+
+<span class="sd">        comparisonGridNames : list of {&#39;latlon&#39;, &#39;antarctic&#39;}</span>
+<span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
+
+<span class="sd">        minDepth, maxDepth : float</span>
+<span class="sd">            The minimum and maximum depths for integration</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;remapMpasClimatology_</span><span class="si">{:g}</span><span class="s1">-</span><span class="si">{:g}</span><span class="s1">m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">minDepth</span><span class="p">),</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">maxDepth</span><span class="p">))</span>
+        <span class="c1"># call the constructor from the base class</span>
+        <span class="c1"># (RemapMpasClimatologySubtask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasOHCClimatology</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">climatologyName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span> <span class="o">=</span> <span class="n">refYearClimatolgyTask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">refYearClimatolgyTask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minDepth</span> <span class="o">=</span> <span class="n">minDepth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span> <span class="o">=</span> <span class="n">maxDepth</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IOError :</span>
+<span class="sd">            If a restart file is not available from which to read mesh</span>
+<span class="sd">            information or if no history files are available from which to</span>
+<span class="sd">            compute the climatology in the desired time range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the base class</span>
+        <span class="c1"># (RemapMpasClimatologySubtask), which will set up remappers and add</span>
+        <span class="c1"># variables to mpasClimatologyTask</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasOHCClimatology</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="c1"># don&#39;t add the variables and seasons to mpasClimatologyTask until</span>
+        <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
+                                                 <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mask the melt rates using ``landIceMask`` and rescale it to m/yr</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
+        <span class="n">refFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+        <span class="n">refYearClimo</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">refFileName</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">refYearClimo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="n">refYearClimo</span> <span class="o">=</span> <span class="n">refYearClimo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">refOHC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">refYearClimo</span><span class="p">)</span>
+
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;deltaOHC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohc</span> <span class="o">-</span> <span class="n">refOHC</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GJ m$^{-2}$&#39;</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;Anomaly from year </span><span class="si">{}</span><span class="s1"> in ocean heat content&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refYearClimatolgyTask</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span>
+
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
+
+    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
+<span class="sd">        climatology data sets.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># specific heat [J/(kg*degC)]</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+        <span class="c1"># [kg/m3]</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+
+        <span class="n">unitsScalefactor</span> <span class="o">=</span> <span class="mf">1e-9</span>
+
+        <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+
+        <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">dsRestart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+
+        <span class="n">vertIndex</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)})</span>
+
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+
+        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertIndex</span> <span class="o">&lt;</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+                 <span class="n">zMid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minDepth</span><span class="p">,</span>
+                 <span class="n">zMid</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxDepth</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
+            <span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+            <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+
+        <span class="n">ohc</span> <span class="o">=</span> <span class="n">unitsScalefactor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">layerThickness</span> <span class="o">*</span> <span class="n">temperature</span>
+        <span class="n">ohc</span> <span class="o">=</span> <span class="n">ohc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ohc</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
