@@ -2,7 +2,7 @@
  config_ocean_run_mode = 'forward'
 /
 &time_management
- config_calendar_type = 'gregorian_noleap'
+ config_calendar_type = 'noleap'
  config_do_restart = .true.
  config_restart_timestamp_name = 'rpointer.ocn'
  config_start_time = 'file'

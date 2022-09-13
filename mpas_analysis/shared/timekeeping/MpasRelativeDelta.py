@@ -31,7 +31,7 @@ class MpasRelativeDelta(relativedelta):
 
     def __init__(self, dt1=None, dt2=None, years=0, months=0, days=0,
                  hours=0, minutes=0, seconds=0, calendar='gregorian'):
-        if calendar not in ['gregorian', 'gregorian_noleap']:
+        if calendar not in ['gregorian', 'noleap', 'gregorian_noleap']:
             raise ValueError('Unsupported MPAs calendar {}'.format(calendar))
         self.calendar = calendar
         super(MpasRelativeDelta, self).__init__(dt1=dt1, dt2=dt2, years=years,
@@ -79,7 +79,7 @@ class MpasRelativeDelta(relativedelta):
 
         if self.calendar == 'gregorian':
             daysInMonth = monthrange(year, month)[1]
-        elif self.calendar == 'gregorian_noleap':
+        elif self.calendar in ['noleap', 'gregorian_noleap']:
             # use year 0001, which is not a leapyear
             daysInMonth = monthrange(1, month)[1]
 
@@ -87,7 +87,7 @@ class MpasRelativeDelta(relativedelta):
         repl = {"year": year, "month": month, "day": day}
 
         days = self.days
-        if self.calendar == 'gregorian_noleap' and isleap(year):
+        if self.calendar in ['noleap', 'gregorian_noleap'] and isleap(year):
             if month == 2 and day + days >= 29:
                 # skip forward over the leap day
                 days += 1

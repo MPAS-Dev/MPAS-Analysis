@@ -44,7 +44,7 @@ def open_multifile_dataset(fileNames, calendar,
     fileNames : list of strings
         A lsit of file paths to read
 
-    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optional
@@ -181,7 +181,7 @@ def preprocess(ds, calendar, simulationStartTime, timeVariableName,
         The data set containing an MPAS time variable to be used to build
         an xarray time coordinate.
 
-    calendar : {``'gregorian'``, ``'gregorian_noleap'``}
+    calendar : {'gregorian', 'noleap'}
         The name of one of the calendars supported by MPAS cores
 
     simulationStartTime : string, optinal
@@ -376,7 +376,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         determine the value of the time coordinate.  In such cases,
         inTimeVariableName is typically {['xtime_start', 'xtime_end']}.
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {'gregorian', 'noleap'}
         The name of one of the calendars supported by MPAS cores
 
 

@@ -35,7 +35,7 @@ def open_mpas_dataset(fileName, calendar,
     fileName : str
         File path to read
 
-    calendar : {``'gregorian'``, ``'gregorian_noleap'``}, optional
+    calendar : {``'gregorian'``, ``'noleap'``}, optional
         The name of one of the calendars supported by MPAS cores
 
     timeVariableNames : str or list of 2 str, optional
@@ -120,7 +120,7 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         inTimeVariableName is typically
         ``['xtime_startMonthly', 'xtime_endMonthly']``.
 
-    calendar : {'gregorian', 'gregorian_noleap'}
+    calendar : {'gregorian', 'noleap'}
         The name of one of the calendars supported by MPAS cores
 
     outTimeVariableName : str
