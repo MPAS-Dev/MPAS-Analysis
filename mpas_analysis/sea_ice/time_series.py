@@ -525,7 +525,7 @@ class TimeSeriesSeaIce(AnalysisTask):
             length of dsToReplicate plus the time between the first two time
             values (typically one year total).
 
-        calendar : {'gregorian', 'gregorian_noleap'}
+        calendar : {'gregorian', 'noleap'}
             The name of one of the calendars supported by MPAS cores
 
         Returns:

@@ -69,7 +69,7 @@ class TestNamelist(TestCase):
         files = self.sf.readpath('output',
                                  startDate='0001-01-02',
                                  endDate='0001-12-30',
-                                 calendar='gregorian_noleap')
+                                 calendar='noleap')
         expectedFiles = []
         for date in ['0001-01-02', '0001-02-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
@@ -78,7 +78,7 @@ class TestNamelist(TestCase):
 
         files = self.sf.readpath('output',
                                  startDate='0001-01-02',
-                                 calendar='gregorian_noleap')
+                                 calendar='noleap')
         expectedFiles = []
         for date in ['0001-01-02', '0001-02-01', '0002-01-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
@@ -87,7 +87,7 @@ class TestNamelist(TestCase):
 
         files = self.sf.readpath('output',
                                  endDate='0001-12-30',
-                                 calendar='gregorian_noleap')
+                                 calendar='noleap')
         expectedFiles = []
         for date in ['0001-01-01', '0001-01-02', '0001-02-01']:
             expectedFiles.append('{}/output/output.{}_00.00.00.nc'
@@ -97,7 +97,7 @@ class TestNamelist(TestCase):
         files = self.sf.readpath('restart',
                                  startDate='0001-01-01',
                                  endDate='0001-12-31',
-                                 calendar='gregorian_noleap')
+                                 calendar='noleap')
         expectedFiles = []
         for seconds in ['00010', '00020']:
             expectedFiles.append('{}/restarts/restart.0001-01-01_{}.nc'
@@ -111,6 +111,6 @@ class TestNamelist(TestCase):
         files = self.sf.readpath('mesh',
                                  startDate='0001-01-01',
                                  endDate='0001-12-31',
-                                 calendar='gregorian_noleap')
+                                 calendar='noleap')
         expectedFiles = ['{}/mesh.nc'.format(self.sf.streamsdir)]
         self.assertEqual(files, expectedFiles)

@@ -147,7 +147,7 @@ def compute_monthly_climatology(ds, calendar=None, maskVaries=True):
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01 or ``month`` coordinate
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
@@ -201,7 +201,7 @@ def compute_climatology(ds, monthValues, calendar=None,
     monthValues : int or array-like of ints
         A single month or an array of months to be averaged together
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``month`` from ``Time`` coordinate, so must be supplied if
         ``ds`` does not already have a ``month`` coordinate or data array
@@ -242,7 +242,7 @@ def add_years_months_days_in_month(ds, calendar=None):
     """
     Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.
     The number of days in each month of ``ds`` is computed either using the
-    ``startTime`` and ``endTime`` if available or assuming ``gregorian_noleap``
+    ``startTime`` and ``endTime`` if available or assuming ``noleap``
     calendar and ignoring leap years.  ``year`` and ``month`` are computed
     accounting correctly for the the calendar.
 
@@ -252,7 +252,7 @@ def add_years_months_days_in_month(ds, calendar=None):
         A data set with a ``Time`` coordinate expressed as days since
         0001-01-01
 
-    calendar : {'gregorian', 'gregorian_noleap'}, optional
+    calendar : {'gregorian', 'noleap'}, optional
         The name of one of the calendars supported by MPAS cores, used to
         determine ``year`` and ``month`` from ``Time`` coordinate
 

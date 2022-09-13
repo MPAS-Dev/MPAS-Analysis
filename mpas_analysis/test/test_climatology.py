@@ -197,7 +197,7 @@ class TestClimatology(TestCase):
 
     def test_compute_climatology(self):
         config = self.setup_config()
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         ds = self.open_test_ds(config, calendar)
 
         assert('month' not in ds.coords.keys())
@@ -237,7 +237,7 @@ class TestClimatology(TestCase):
 
     def test_compute_monthly_climatology(self):
         config = self.setup_config()
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         ds = self.open_test_ds(config, calendar)
 
         monthlyClimatology = compute_monthly_climatology(ds, calendar)

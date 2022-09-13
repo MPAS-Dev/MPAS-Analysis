@@ -29,7 +29,7 @@ class TestMpasXarray(TestCase):
 
     def test_subset_variables(self):
         fileName = str(self.datadir.join('example_jan.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         timestr = ['xtime_start', 'xtime_end']
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
@@ -63,7 +63,7 @@ class TestMpasXarray(TestCase):
 
     def test_iselvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
@@ -93,7 +93,7 @@ class TestMpasXarray(TestCase):
 
     def test_no_units(self):
         fileName = str(self.datadir.join('example_no_units_jan.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
@@ -117,7 +117,7 @@ class TestMpasXarray(TestCase):
 
     def test_bad_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
@@ -138,7 +138,7 @@ class TestMpasXarray(TestCase):
 
     def test_selvals(self):
         fileName = str(self.datadir.join('example_jan.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         simulationStartTime = '0001-01-01'
         timestr = 'time_avg_daysSinceStartOfSim'
         variableList = \
@@ -172,7 +172,7 @@ class TestMpasXarray(TestCase):
 
     def test_remove_repeated_time_index(self):
         fileName = str(self.datadir.join('example_jan*.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         timestr = ['xtime_start', 'xtime_end']
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']

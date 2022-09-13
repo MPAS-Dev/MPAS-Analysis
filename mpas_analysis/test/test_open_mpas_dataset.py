@@ -29,7 +29,7 @@ class TestOpenMpasDataset(TestCase):
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             ds = open_mpas_dataset(
                 fileName=fileName,
                 calendar=calendar,
@@ -43,7 +43,7 @@ class TestOpenMpasDataset(TestCase):
         variableList = \
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             # all dates
             ds = open_mpas_dataset(
                 fileName=fileName,
@@ -76,7 +76,7 @@ class TestOpenMpasDataset(TestCase):
 
     def test_open_process_climatology(self):
         fileName = str(self.datadir.join('timeSeries.nc'))
-        calendar = 'gregorian_noleap'
+        calendar = 'noleap'
         open_mpas_dataset(
             fileName=fileName,
             calendar=calendar,

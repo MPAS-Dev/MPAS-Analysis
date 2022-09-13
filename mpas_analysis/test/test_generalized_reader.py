@@ -56,7 +56,7 @@ class TestGeneralizedReader(TestCase):
                         'refBottomDepth', 'daysSinceStartOfSim']
 
         config = self.setup_config()
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             # preprocess_mpas will use variableMap to map the variable names
             # from their values in the file to the desired values in
             # variableList
@@ -80,7 +80,7 @@ class TestGeneralizedReader(TestCase):
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
         config = self.setup_config()
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             ds = open_multifile_dataset(
                 fileNames=fileName,
                 calendar=calendar,
@@ -97,7 +97,7 @@ class TestGeneralizedReader(TestCase):
             ['time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature']
 
         config = self.setup_config()
-        for calendar in ['gregorian', 'gregorian_noleap']:
+        for calendar in ['gregorian', 'noleap']:
             # all dates
             ds = open_multifile_dataset(
                 fileNames=fileName,

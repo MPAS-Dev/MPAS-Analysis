@@ -328,7 +328,7 @@ class IndexNino34(AnalysisTask):
         regionSST : xarray.DataArray object
            values of SST in the nino region
 
-        calendar: {'gregorian', 'gregorian_noleap'}
+        calendar: {'gregorian', 'noleap'}
             The name of the calendars used in the MPAS run
 
         Returns
