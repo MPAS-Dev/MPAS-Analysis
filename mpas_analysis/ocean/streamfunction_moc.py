@@ -298,7 +298,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                  'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
             variableList = ['timeMonthly_avg_normalVelocity',
-                            'timeMonthly_avg_vertVelocityTop']
+                            'timeMonthly_avg_vertVelocityTop',
+                            'timeMonthly_avg_layerThickness']
 
             # Add the bolus velocity if GM is enabled
             try:
@@ -494,7 +495,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
             return
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-            refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
+            refTopDepth, refLayerThickness, cellsOnEdge = \
+            _load_mesh(self.runStreams)
 
         regionNames = config.getexpression(self.sectionName, 'regionNames')
 
@@ -526,7 +528,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         # rename some variables for convenience
         annualClimatology = annualClimatology.rename(
             {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-             'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+             'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop',
+             'timeMonthly_avg_layerThickness': 'layerThickness'})
 
         if self.includeBolus:
             annualClimatology['avgNormalVelocity'] = \
@@ -551,6 +554,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         horizontalVel = annualClimatology.avgNormalVelocity.values
         verticalVel = annualClimatology.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]
+        layerThickness = annualClimatology.layerThickness.values
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -574,8 +578,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                                 transectEdgeGlobalIDs,
                                                 transectEdgeMaskSigns,
                                                 nVertLevels, dvEdge,
-                                                refLayerThickness,
-                                                horizontalVel)
+                                                horizontalVel,
+                                                layerThickness,
+                                                cellsOnEdge)
 
             regionCellMask = dictRegion[region]['cellMask']
             latBinSize = \
@@ -908,7 +913,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                  'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
             self.variableList = ['timeMonthly_avg_normalVelocity',
-                                 'timeMonthly_avg_vertVelocityTop']
+                                 'timeMonthly_avg_vertVelocityTop',
+                                 'timeMonthly_avg_layerThickness']
 
             # Add the bolus velocity if GM is enabled
             try:
@@ -1158,7 +1164,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             outputDirectory, self.startYear, self.endYear)
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-            refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
+            refTopDepth, refLayerThickness, cellsOnEdge = \
+            _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
 
@@ -1248,7 +1255,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             # rename some variables for convenience
             dsLocal = dsLocal.rename(
                 {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop',
+                 'timeMonthly_avg_layerThickness': 'layerThickness'})
 
             if self.includeBolus:
                 dsLocal['avgNormalVelocity'] = \
@@ -1271,12 +1279,15 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             horizontalVel = dsLocal.avgNormalVelocity.values
             verticalVel = dsLocal.avgVertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
+            layerThickness = dsLocal.layerThickness.values
+
             transportZ = _compute_transport(maxEdgesInTransect,
                                             transectEdgeGlobalIDs,
                                             transectEdgeMaskSigns,
                                             nVertLevels, dvEdge,
-                                            refLayerThickness,
-                                            horizontalVel)
+                                            horizontalVel,
+                                            layerThickness,
+                                            cellsOnEdge)
             mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
             moc[timeIndex, :, :] = mocTop
@@ -1575,6 +1586,7 @@ def _load_mesh(runStreams):
     areaCell = ncFile.variables['areaCell'][:]
     refBottomDepth = ncFile.variables['refBottomDepth'][:]
     latCell = np.rad2deg(ncFile.variables['latCell'][:])
+    cellsOnEdge = ncFile.variables['cellsOnEdge'][:] - 1
     ncFile.close()
     nVertLevels = len(refBottomDepth)
     refTopDepth = np.zeros(nVertLevels + 1)
@@ -1586,7 +1598,7 @@ def _load_mesh(runStreams):
          refBottomDepth[0:nVertLevels - 1])
 
     return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness
+        refTopDepth, refLayerThickness, cellsOnEdge
 
 
 def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
@@ -1629,7 +1641,7 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
 
 def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
                        transectEdgeMaskSigns, nz, dvEdge,
-                       refLayerThickness, horizontalVel):
+                       horizontalVel, layerThickness, cellsOnEdge):
     """compute mass transport across southern transect of ocean basin"""
 
     transportZEdge = np.zeros([nz, maxEdgesInTransect])
@@ -1638,10 +1650,14 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             break
         # subtract 1 because of python 0-indexing
         iEdge = transectEdgeGlobalIDs[i] - 1
+        coe0 = cellsOnEdge[iEdge, 0]
+        coe1 = cellsOnEdge[iEdge, 1]
+        layerThicknessEdge = 0.5*(layerThickness[coe0, :] +
+                                  layerThickness[coe1, :])
         transportZEdge[:, i] = horizontalVel[iEdge, :] * \
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
-            refLayerThickness[np.newaxis, :]
+            layerThicknessEdge[np.newaxis, :]
     transportZ = transportZEdge.sum(axis=1)
     return transportZ
 
