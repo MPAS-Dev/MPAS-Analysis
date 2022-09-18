@@ -98,7 +98,7 @@ language = 'en'
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
-                    'design_docs/template.md']
+                    'design_docs/template.md', 'design_docs/template.rst']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -217,6 +217,8 @@ build_quick_start()
 os.chdir(cwd)
 
 for mdFileName in glob('design_docs/*.md'):
+    if os.path.basename(mdFileName) == 'template.md':
+        continue
     output = m2r2.parse_from_file(mdFileName)
     rstFileName = os.path.splitext(mdFileName)[0]+'.rst'
     with open(rstFileName, 'w') as outFile:

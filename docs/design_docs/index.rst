@@ -11,5 +11,6 @@ Design Documents
    variable_mapping_reorg
    parallel_tasks
    remapper
+   analysis_task_template
    prerequisite_tasks
    eddykineticenergy
