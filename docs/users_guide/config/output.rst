@@ -81,10 +81,10 @@ choice is::
 
 in which case MPAS-Analysis will attempt to run all analysis tasks.  In this
 mode, some tasks may fail with a warning printed to the screen during their
-:py:meth:`~mpas_analysis.shared.analysis_task.AnalysisTask.setup_and_check`
+:py:meth:`~mpas_analysis.shared.AnalysisTask.setup_and_check`
 phase if the simulation was not configured to support that task.  All tasks
 that pass the
-:py:meth:`~mpas_analysis.shared.analysis_task.AnalysisTask.setup_and_check`
+:py:meth:`~mpas_analysis.shared.AnalysisTask.setup_and_check`
 phase will be run.
 
 The next simplest option is to specify a single task name::

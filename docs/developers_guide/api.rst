@@ -38,7 +38,7 @@ Analysis tasks
 Base Class
 ----------
 
-.. currentmodule:: mpas_analysis.shared.analysis_task
+.. currentmodule:: mpas_analysis.shared
 
 .. autosummary::
    :toctree: generated/
