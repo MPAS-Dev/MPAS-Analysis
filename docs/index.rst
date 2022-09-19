@@ -38,6 +38,7 @@ used those components.
 
    tutorials/getting_started
    tutorials/dev_getting_started
+   tutorials/dev_understand_a_task
 
 .. toctree::
    :caption: Authors
