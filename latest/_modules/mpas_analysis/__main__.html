@@ -115,6 +115,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
 
 <span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span><span class="p">,</span> <span class="n">MachineInfo</span>
 
@@ -879,7 +880,21 @@
 
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Detected E3SM supported machine: </span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+
+            <span class="n">possible_machines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">machine_configs</span> <span class="o">=</span> <span class="n">contents</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">machine_configs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.cfg&#39;</span><span class="p">):</span>
+                    <span class="n">possible_machines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">config</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">possible_machines</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">possible_machines</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;We could not find the machine: </span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;Possible machines are:</span><span class="se">\n</span><span class="s1">  </span><span class="si">{</span><span class="n">possible_machines</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis.configuration&#39;</span><span class="p">,</span>
                                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
