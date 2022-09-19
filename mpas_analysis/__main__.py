@@ -30,6 +30,7 @@ import progressbar
 import logging
 import xarray
 import time
+from importlib.resources import contents
 
 from mache import discover_machine, MachineInfo
 
@@ -794,7 +795,21 @@ def main():
 
     if machine is not None:
         print(f'Detected E3SM supported machine: {machine}')
-        config.add_from_package('mache.machines', f'{machine}.cfg')
+        try:
+            config.add_from_package('mache.machines', f'{machine}.cfg')
+        except FileNotFoundError:
+
+            possible_machines = []
+            machine_configs = contents('mache.machines')
+            for config in machine_configs:
+                if config.endswith('.cfg'):
+                    possible_machines.append(os.path.splitext(config)[0])
+
+            possible_machines = '\n  '.join(sorted(possible_machines))
+            raise ValueError(
+                f'We could not find the machine: {machine}.\n'
+                f'Possible machines are:\n  {possible_machines}')
+
         try:
             config.add_from_package('mpas_analysis.configuration',
                                     f'{machine}.cfg')
