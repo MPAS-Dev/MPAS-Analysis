@@ -98,8 +98,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         the name of the gallery in which this plot belongs
 
     depth : {None, float, 'top', 'bot'}
-        Depth at which to perform the comparison, 'top' for the sea surface
-        'bot' for the sea floor
+        Depth at which to perform the comparison, 'top' for the surface
+        'bot' for the base
 
     configSectionName : str
         the name of the section where the color map and range is defined
@@ -190,7 +190,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         # call the constructor from the base class (AnalysisTask)
         super(PlotClimatologyMapSubtask, self).__init__(
             config=config, taskName=taskName, subtaskName=subtaskName,
-            componentName='ocean', tags=tags)
+            componentName=parentTask.componentName, tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
@@ -456,13 +456,25 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                     remappedRefClimatology[self.refFieldName] - \
                     masked.mean()
 
+        if self.componentName == 'ocean':
+            componentName = 'Ocean'
+            componentSubdirectory = 'ocean'
+        elif self.componentName == 'seaIce':
+            componentName = 'Sea Ice'
+            componentSubdirectory = 'sea_ice'
+        else:
+            raise ValueError(f'Unexpected component: {self.componentName}')
+
         if self.comparisonGridName == 'latlon':
-            self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
+            self._plot_latlon(remappedModelClimatology, remappedRefClimatology,
+                              componentName, componentSubdirectory)
         else:
             self._plot_projection(remappedModelClimatology,
-                                  remappedRefClimatology)
+                                  remappedRefClimatology,
+                                  componentName, componentSubdirectory)
 
-    def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
+    def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology,
+                     componentName, componentSubdirectory):
         """ plotting a global lat-lon data set """
 
         season = self.season
@@ -523,8 +535,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         write_image_xml(
             config,
             filePrefix,
-            componentName='Ocean',
-            componentSubdirectory='ocean',
+            componentName=componentName,
+            componentSubdirectory=componentSubdirectory,
             galleryGroup=f'Global {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
             groupLink=f'global_{self.groupLink}',
@@ -534,8 +546,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             imageCaption=caption)
 
     def _plot_projection(self, remappedModelClimatology,
-                         remappedRefClimatology):
-        """ plotting an Arctic or Antarctic data set """
+                         remappedRefClimatology,
+                         componentName, componentSubdirectory):
+        """ plotting a dataset on a projection grid """
 
         season = self.season
         comparisonGridName = self.comparisonGridName
@@ -544,10 +557,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        oceanMask = remappedModelClimatology['validMask'].values
-        self.landMask = np.ma.masked_array(
-            np.ones(oceanMask.shape),
-            mask=np.logical_not(np.isnan(oceanMask)))
+        validMask = remappedModelClimatology['validMask'].values
+        landMask = np.ma.masked_array(
+            np.ones(validMask.shape),
+            mask=np.logical_not(np.isnan(validMask)))
 
         modelOutput = _nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
@@ -598,7 +611,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             config,
             x,
             y,
-            self.landMask,
+            landMask,
             modelOutput,
             refOutput,
             bias,
@@ -620,8 +633,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         write_image_xml(
             config,
             filePrefix,
-            componentName='Ocean',
-            componentSubdirectory='ocean',
+            componentName=componentName,
+            componentSubdirectory=componentSubdirectory,
             galleryGroup=f'{upperGridName} {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
             groupLink=f'{comparisonGridName}_{self.groupLink}',
