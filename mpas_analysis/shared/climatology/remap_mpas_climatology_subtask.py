@@ -340,7 +340,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
 
         Parameters
         ----------
-        climatology : ``xarray.Dataset```
+        climatology : xarray.Dataset
             The MPAS climatology data set that has had a mask added but has
             not yet been remapped
 
@@ -349,7 +349,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
 
         Returns
         -------
-        climatology : ``xarray.Dataset```
+        climatology : xarray.Dataset
             The same data set with any custom fields added or modifications
             made
         """
@@ -366,7 +366,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
 
         Parameters
         ----------
-        climatology : ``xarray.Dataset```
+        climatology : xarray.Dataset
             The MPAS climatology data set that has been remapped
 
         comparisonGridNames : str
@@ -375,9 +375,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         season : str
             The name of the season to be remapped
 
-       Returns
+        Returns
         -------
-        climatology : ``xarray.Dataset```
+        climatology : xarray.Dataset
             The same data set with any custom fields added or modifications
             made
         """
