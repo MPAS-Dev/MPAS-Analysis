@@ -1,0 +1,6 @@
+﻿mpas\_analysis.shared.climatology.RemapMpasClimatologySubtask.run\_task
+=======================================================================
+
+.. currentmodule:: mpas_analysis.shared.climatology
+
+.. automethod:: RemapMpasClimatologySubtask.run_task

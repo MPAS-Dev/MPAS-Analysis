@@ -6,7 +6,7 @@
 MPAS-Analysis
 =============
 
-.. image:: _static/sst_example.png
+.. image:: users_guide/_static/sst_example.png
    :width: 300 px
    :align: center
 
@@ -14,42 +14,38 @@ Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.
 
-User's Guide
-============
 .. toctree::
+   :caption: User's guide
    :maxdepth: 2
 
-   quick_start
-   tutorials
-   configuration
-   analysis_tasks
-   components
-   observations
+   users_guide/quick_start
+   users_guide/configuration
+   users_guide/analysis_tasks
+   users_guide/components
+   users_guide/observations
 
-Developer's Guide
-=================
 .. toctree::
+   :caption: Developer's guide
    :maxdepth: 2
 
-   api
-   design_docs
+   developers_guide/api
 
-Indices and tables
-==================
+   design_docs/index
 
-* :ref:`genindex`
-
-Authors
-=======
 .. toctree::
+   :caption: Tutorials
+   :maxdepth: 1
+
+   tutorials/getting_started
+
+.. toctree::
+   :caption: Authors
    :maxdepth: 1
 
    authors
 
-Versions
-========
 .. toctree::
+   :caption: Versions
    :maxdepth: 1
 
    versions
-

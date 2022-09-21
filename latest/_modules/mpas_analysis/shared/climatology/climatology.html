@@ -38,22 +38,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
-</ul>
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/observations.html">Observations</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/getting_started.html">Getting Started with MPAS-Analysis</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
 </ul>
@@ -119,7 +126,7 @@
     <span class="n">get_comparison_descriptor</span><span class="p">,</span> <span class="n">known_comparison_grids</span>
 
 
-<div class="viewcode-block" id="get_remapper"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper">[docs]</a><span class="k">def</span> <span class="nf">get_remapper</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
+<div class="viewcode-block" id="get_remapper"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper">[docs]</a><span class="k">def</span> <span class="nf">get_remapper</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
                  <span class="n">mappingFilePrefix</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given config options and descriptions of the source and comparison grids,</span>
@@ -219,7 +226,7 @@
     <span class="k">return</span> <span class="n">remapper</span></div>
 
 
-<div class="viewcode-block" id="compute_monthly_climatology"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_monthly_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskVaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_monthly_climatology"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_monthly_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskVaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute monthly climatologies from a data set.  The mean is weighted but</span>
 <span class="sd">    the number of days in each month of the data set, ignoring values masked</span>
@@ -268,7 +275,7 @@
     <span class="k">return</span> <span class="n">monthlyClimatology</span></div>
 
 
-<div class="viewcode-block" id="compute_climatology"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="viewcode-block" id="compute_climatology"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology">[docs]</a><span class="k">def</span> <span class="nf">compute_climatology</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">monthValues</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">maskVaries</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute a monthly, seasonal or annual climatology data set from a data</span>
@@ -323,7 +330,7 @@
     <span class="k">return</span> <span class="n">climatology</span></div>
 
 
-<div class="viewcode-block" id="add_years_months_days_in_month"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month">[docs]</a><span class="k">def</span> <span class="nf">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="add_years_months_days_in_month"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month">[docs]</a><span class="k">def</span> <span class="nf">add_years_months_days_in_month</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Add ``year``, ``month`` and ``daysInMonth`` as data arrays in ``ds``.</span>
 <span class="sd">    The number of days in each month of ``ds`` is computed either using the</span>
@@ -467,7 +474,7 @@
     <span class="k">return</span> <span class="n">remappedClimatology</span>
 
 
-<div class="viewcode-block" id="get_unmasked_mpas_climatology_directory"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="get_unmasked_mpas_climatology_directory"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the directory for an unmasked MPAS climatology produced by ncclimo,</span>
 <span class="sd">    making the directory if it doesn&#39;t already exist</span>
@@ -495,7 +502,7 @@
     <span class="k">return</span> <span class="n">directory</span></div>
 
 
-<div class="viewcode-block" id="get_unmasked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+<div class="viewcode-block" id="get_unmasked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_unmasked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                             <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the file name for an unmasked MPAS climatology produced by ncclimo</span>
@@ -547,7 +554,7 @@
     <span class="k">return</span> <span class="n">fileName</span></div>
 
 
-<div class="viewcode-block" id="get_masked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_masked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+<div class="viewcode-block" id="get_masked_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_masked_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                           <span class="n">climatologyName</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the file name for a masked MPAS climatology</span>
@@ -612,7 +619,7 @@
     <span class="k">return</span> <span class="n">fileName</span></div>
 
 
-<div class="viewcode-block" id="get_remapped_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_remapped_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+<div class="viewcode-block" id="get_remapped_mpas_climatology_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name">[docs]</a><span class="k">def</span> <span class="nf">get_remapped_mpas_climatology_file_name</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                             <span class="n">climatologyName</span><span class="p">,</span>
                                             <span class="n">comparisonGridName</span><span class="p">,</span>
                                             <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>

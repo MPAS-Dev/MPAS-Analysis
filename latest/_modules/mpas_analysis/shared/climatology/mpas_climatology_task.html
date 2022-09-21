@@ -38,22 +38,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../quick_start.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../analysis_tasks.html">Analysis Tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../components.html">MPAS Components and E3SM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../observations.html">Observations</a></li>
-</ul>
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../api.html">API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs.html">Design Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/observations.html">Observations</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/getting_started.html">Getting Started with MPAS-Analysis</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
 </ul>
@@ -118,7 +125,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 
 
-<div class="viewcode-block" id="MpasClimatologyTask"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask">[docs]</a><span class="k">class</span> <span class="nc">MpasClimatologyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasClimatologyTask"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask">[docs]</a><span class="k">class</span> <span class="nc">MpasClimatologyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis tasks for computing climatologies from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly*`` analysis members.</span>
@@ -165,7 +172,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="MpasClimatologyTask.__init__"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasClimatologyTask.__init__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -261,7 +268,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">seasonSubtasks</span><span class="p">[</span><span class="n">season</span><span class="p">]</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">seasonSubtasks</span><span class="p">[</span><span class="n">monthName</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="MpasClimatologyTask.add_variables"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables">[docs]</a>    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasClimatologyTask.add_variables"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables">[docs]</a>    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one or more variables and optionally one or more seasons for which</span>
 <span class="sd">        to compute climatologies.</span>
@@ -451,7 +458,7 @@
 
         <span class="k">return</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span>
 
-<div class="viewcode-block" id="MpasClimatologyTask.get_file_name"><a class="viewcode-back" href="../../../../generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<div class="viewcode-block" id="MpasClimatologyTask.get_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Returns the full path for MPAS climatology file produced by ncclimo.</span>
