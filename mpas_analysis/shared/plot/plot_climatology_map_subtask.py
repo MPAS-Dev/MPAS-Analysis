@@ -200,6 +200,26 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         if secondRemapMpasClimatologySubtask is not None:
             self.run_after(secondRemapMpasClimatologySubtask)
 
+        self.outFileLabel = None
+        self.fieldNameInTitle = None
+        self.mpasFieldName = None
+        self.refFieldName = None
+        self.refTitleLabel = None
+        self.diffTitleLabel = None
+        self.unitsLabel = None
+        self.imageCaption = None
+        self.galleryGroup = None
+        self.groupSubtitle = None
+        self.groupLink = None
+        self.galleryName = None
+        self.configSectionName = None
+        self.thumbnailDescription = None
+        self.startYear = None
+        self.endYear = None
+        self.startDate = None
+        self.endDate = None
+        self.filePrefix = None
+
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
