@@ -89,7 +89,7 @@ class RegionalTSDiagrams(AnalysisTask):
             config=config,
             taskName='regionalTSDiagrams',
             componentName='ocean',
-            tags=['climatology', 'regions', 'publicObs'])
+            tags=['climatology', 'regions', 'publicObs', 'TSDiagrams'])
 
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
