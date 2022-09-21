@@ -135,30 +135,30 @@
 <h1>mpas_analysis.ocean.ClimatologyMapOHCAnomaly<a class="headerlink" href="#mpas-analysis-ocean-climatologymapohcanomaly" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapOHCAnomaly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapOHCAnomaly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refYearClimatolgyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapOHCAnomaly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_year_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="Permalink to this definition">¶</a></dt>
 <dd><p>An analysis task for comparison of the anomaly from a reference year
 (typically the start of the simulation) of ocean heat content (OHC)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
-<li><p><strong>refYearClimatolgyTask</strong> (<code class="docutils literal notranslate"><span class="pre">RefYearMpasClimatologyTask</span></code>) – The task that produced the climatology from the first year to be
+<li><p><strong>mpas_climatology_task</strong> (<a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><em>mpas_analysis.shared.climatology.MpasClimatologyTask</em></a>) – The task that produced the climatology to be remapped and plotted</p></li>
+<li><p><strong>ref_year_climatology_task</strong> (<em>mpas_analysis.shared.climatology.RefYearMpasClimatologyTask</em>) – The task that produced the climatology from the first year to be
 remapped and then subtracted from the main climatology</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refYearClimatolgyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_year_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options</p></li>
-<li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
-<li><p><strong>refYearClimatolgyTask</strong> (<code class="docutils literal notranslate"><span class="pre">RefYearMpasClimatologyTask</span></code>) – The task that produced the climatology from the first year to be
+<li><p><strong>mpas_climatology_task</strong> (<a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><em>mpas_analysis.shared.climatology.MpasClimatologyTask</em></a>) – The task that produced the climatology to be remapped and plotted</p></li>
+<li><p><strong>ref_year_climatology_task</strong> (<em>mpas_analysis.shared.climatology.RefYearMpasClimatologyTask</em>) – The task that produced the climatology from the first year to be
 remapped and then subtracted from the main climatology</p></li>
-<li><p><strong>controlconfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
+<li><p><strong>control_config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
 </ul>
 </dd>
 </dl>
@@ -171,7 +171,7 @@ remapped and then subtracted from the main climatology</p></li>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpasClimatologyTask, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpas_climatology_task, ...)</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
