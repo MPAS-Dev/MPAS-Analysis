@@ -38,7 +38,7 @@ Analysis tasks
 Base Class
 ----------
 
-.. currentmodule:: mpas_analysis.shared.analysis_task
+.. currentmodule:: mpas_analysis.shared
 
 .. autosummary::
    :toctree: generated/
@@ -187,8 +187,13 @@ Climatology
    MpasClimatologyTask.get_file_name
 
    RemapMpasClimatologySubtask
+   RemapMpasClimatologySubtask.setup_and_check
+   RemapMpasClimatologySubtask.run_task
+   RemapMpasClimatologySubtask.add_comparison_grid_descriptor
    RemapMpasClimatologySubtask.get_masked_file_name
    RemapMpasClimatologySubtask.get_remapped_file_name
+   RemapMpasClimatologySubtask.customize_masked_climatology
+   RemapMpasClimatologySubtask.customize_remapped_climatology
 
    RemapObservedClimatologySubtask
    RemapObservedClimatologySubtask.get_observation_descriptor
