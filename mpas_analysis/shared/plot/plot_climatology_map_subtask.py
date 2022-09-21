@@ -176,12 +176,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         if depth is None:
             self.depthSuffix = ''
         else:
-            self.depthSuffix = 'depth_{}'.format(depth)
+            self.depthSuffix = f'depth_{depth}'
 
         if subtaskName is None:
-            subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+            subtaskName = f'plot{season}_{comparisonGridName}'
             if depth is not None:
-                subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
+                subtaskName = f'{subtaskName}_{self.depthSuffix}'
 
         config = parentTask.config
         taskName = parentTask.taskName
@@ -303,15 +303,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             self.fieldNameInTitle = fieldNameInTitle
             self.thumbnailDescription = season
         elif depth == 'top':
-            self.fieldNameInTitle = 'Sea Surface {}'.format(fieldNameInTitle)
-            self.thumbnailDescription = '{} surface'.format(season)
+            self.fieldNameInTitle = f'Sea Surface {fieldNameInTitle}'
+            self.thumbnailDescription = f'{season} surface'
         elif depth == 'bot':
-            self.fieldNameInTitle = 'Sea Floor {}'.format(fieldNameInTitle)
-            self.thumbnailDescription = '{} floor'.format(season)
+            self.fieldNameInTitle = f'Sea Floor {fieldNameInTitle}'
+            self.thumbnailDescription = f'{season} floor'
         else:
-            self.fieldNameInTitle = '{} at z={} m'.format(fieldNameInTitle,
-                                                          depth)
-            self.thumbnailDescription = '{} z={} m'.format(season, depth)
+            self.fieldNameInTitle = f'{fieldNameInTitle} at z={depth} m'
+            self.thumbnailDescription = f'{season} z={depth} m'
 
     def setup_and_check(self):
         """
@@ -344,13 +343,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         prefixPieces.append(mainRunName)
         if self.depth is not None:
             prefixPieces.append(self.depthSuffix)
-        years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
+        years = f'years{self.startYear:04d}-{self.endYear:04d}'
         prefixPieces.extend([self.season, years])
 
         self.filePrefix = '_'.join(prefixPieces)
 
-        self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                    self.filePrefix))
+        self.xmlFileNames.append(
+            f'{self.plotsDirectory}/{self.filePrefix}.xml')
 
     def run_task(self):
         """
@@ -364,9 +363,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         season = self.season
         depth = self.depth
         comparisonGridName = self.comparisonGridName
-        self.logger.info("\nPlotting 2-d maps of {} climatologies for {} on "
-                         "the {} grid...".format(self.fieldNameInTitle,
-                                                 season, comparisonGridName))
+        self.logger.info(
+            f"\nPlotting 2-d maps of {self.fieldNameInTitle} climatologies "
+            f"for {season} on the {comparisonGridName} grid...")
 
         # first read the model climatology
         remappedFileName = \
@@ -377,10 +376,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         if depth is not None:
             if str(depth) not in remappedModelClimatology.depthSlice.values:
-                raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created '
-                               'without depth {}. You will need to delete and '
-                               'regenerate the climatology'.format(depth))
+                raise KeyError(f'The climatology you are attempting to '
+                               f'perform depth slices of was originally '
+                               f'created without depth {depth}. You will need '
+                               f'to delete and regenerate the climatology')
 
             remappedModelClimatology = remappedModelClimatology.sel(
                 depthSlice=str(depth), drop=True)
@@ -413,8 +412,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                                                        'endYear')
             if controlStartYear != self.startYear or \
                     controlEndYear != self.endYear:
-                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                    self.refTitleLabel, controlStartYear, controlEndYear)
+                self.refTitleLabel = \
+                    f'{self.refTitleLabel}\n' \
+                    f'(years {controlStartYear:04d}-{controlEndYear:04d})'
 
         else:
             remappedRefClimatology = None
@@ -430,10 +430,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                 if depthSlice == str(depth):
                     depthIndex = index
             if depthIndex == -1:
-                raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created '
-                               'without depth {}. You will need to delete and '
-                               'regenerate the climatology'.format(depth))
+                raise KeyError(f'The climatology you are attempting to '
+                               f'perform depth slices of was originally '
+                               f'created without depth {depth}. You will need '
+                               f'to delete and regenerate the climatology')
 
             remappedRefClimatology = remappedRefClimatology.isel(
                 depthSlice=depthIndex, drop=True)
@@ -500,10 +500,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             defaultFontSize = None
 
         filePrefix = self.filePrefix
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
-                self.fieldNameInTitle, season, self.startYear,
-                self.endYear)
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
+        title = f'{self.fieldNameInTitle} ({season}, years ' \
+                f'{self.startYear:04d}-{self.endYear:04d})'
         plot_global_comparison(config,
                                lonTarg,
                                latTarg,
@@ -513,22 +512,22 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                                configSectionName,
                                fileout=outFileName,
                                title=title,
-                               modelTitle='{}'.format(mainRunName),
+                               modelTitle=mainRunName,
                                refTitle=self.refTitleLabel,
                                diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel,
                                titleFontSize=titleFontSize,
                                defaultFontSize=defaultFontSize)
 
-        caption = '{} {}'.format(season, self.imageCaption)
+        caption = f'{season} {self.imageCaption}'
         write_image_xml(
             config,
             filePrefix,
             componentName='Ocean',
             componentSubdirectory='ocean',
-            galleryGroup='Global {}'.format(self.galleryGroup),
+            galleryGroup=f'Global {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
-            groupLink='global_{}'.format(self.groupLink),
+            groupLink=f'global_{self.groupLink}',
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
@@ -574,10 +573,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         vertical = aspectRatio > 1.2
 
         filePrefix = self.filePrefix
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
-                self.fieldNameInTitle, season, self.startYear,
-                self.endYear)
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
+        title = f'{self.fieldNameInTitle} ({season}, years ' \
+                f'{self.startYear:04d}-{self.endYear:04d})'
 
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
@@ -608,7 +606,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             colorMapSectionName=configSectionName,
             projectionName=comparisonGridName,
             title=title,
-            modelTitle='{}'.format(mainRunName),
+            modelTitle=mainRunName,
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
@@ -624,10 +622,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             filePrefix,
             componentName='Ocean',
             componentSubdirectory='ocean',
-            galleryGroup='{} {}'.format(upperGridName,
-                                        self.galleryGroup),
+            galleryGroup=f'{upperGridName} {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
-            groupLink='{}_{}'.format(comparisonGridName, self.groupLink),
+            groupLink=f'{comparisonGridName}_{self.groupLink}',
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
