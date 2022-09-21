@@ -20,8 +20,7 @@ from mpas_analysis.shared.io.utility import build_obs_path
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from mpas_analysis.ocean.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 
 class ClimatologyMapSST(AnalysisTask):

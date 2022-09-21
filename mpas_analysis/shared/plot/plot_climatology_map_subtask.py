@@ -18,7 +18,8 @@ observations.
 
 import xarray as xr
 import numpy as np
-import string
+from string import capwords
+
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import plot_global_comparison, \
@@ -30,8 +31,6 @@ from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
-
-from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):
@@ -141,7 +140,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             A second subtask for remapping another MPAS climatology to plot
             in the second panel and compare with in the third panel
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         depth : {float, 'top', 'bot'}, optional
@@ -452,7 +451,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        modelOutput = nans_to_numpy_mask(
+        modelOutput = _nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
         lon = remappedModelClimatology['lon'].values
@@ -464,7 +463,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             refOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
+            refOutput = _nans_to_numpy_mask(
                 remappedRefClimatology[self.refFieldName].values)
 
             bias = modelOutput - refOutput
@@ -531,14 +530,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             np.ones(oceanMask.shape),
             mask=np.logical_not(np.isnan(oceanMask)))
 
-        modelOutput = nans_to_numpy_mask(
+        modelOutput = _nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
         if remappedRefClimatology is None:
             refOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
+            refOutput = _nans_to_numpy_mask(
                 remappedRefClimatology[self.refFieldName].values)
 
             bias = modelOutput - refOutput
@@ -598,8 +597,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             defaultFontSize=defaultFontSize,
             vertical=vertical)
 
-        upperGridName = string.capwords(comparisonGridName.replace('_', ' '))
-        caption = '{} {}'.format(season, self.imageCaption)
+        upperGridName = capwords(comparisonGridName.replace('_', ' '))
+        caption = f'{season} {self.imageCaption}'
         write_image_xml(
             config,
             filePrefix,
@@ -613,3 +612,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
+
+
+def _nans_to_numpy_mask(field):
+    """
+    Convert a numpy array with NaNs to a masked numpy array
+    """
+    field = np.ma.masked_array(
+        field, np.isnan(field))
+    return field
