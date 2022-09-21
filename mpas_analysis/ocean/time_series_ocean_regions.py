@@ -878,7 +878,19 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
-        cellMask = dsMask.regionCellMasks == 1
+        if 'regionMasks' in dsMask:
+            # this is the name used by the mask creation tool in mpas_tools
+            maskVar = 'regionMasks'
+        elif 'regionCellMasks' in dsMask:
+            # this is the name used in the old mask creation tool in
+            # mpas-analysis
+            maskVar = 'regionCellMasks'
+        else:
+            raise ValueError(f'The file {regionMaskFileName} doesn\'t '
+                             f'contain a mask variable: regionMasks or '
+                             f'regionCellMasks')
+
+        cellMask = dsMask[maskVar] == 1
 
         if config.has_option(sectionName, 'zmin'):
             zmin = config.getfloat(sectionName, 'zmin')
