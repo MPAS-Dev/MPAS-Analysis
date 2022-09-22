@@ -324,7 +324,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
             if self.includeSubmesoscale:
                 variableList.extend(
                     ['timeMonthly_avg_normalMLEvelocity',
-                     'timeMonthly_avg_vertMLEVelocityTop'])
+                     'timeMonthly_avg_vertMLEBolusVelocityTop'])
 
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
@@ -547,7 +547,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
             annualClimatology['avgVertVelocityTop'] = \
                 annualClimatology['avgVertVelocityTop'] + \
-                annualClimatology['timeMonthly_avg_vertMLEVelocityTop']
+                annualClimatology['timeMonthly_avg_vertMLEBolusVelocityTop']
 
         # Convert to numpy arrays
         # (can result in a memory error for large array size)
@@ -940,7 +940,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             if self.includeSubmesoscale:
                 self.variableList.extend(
                     ['timeMonthly_avg_normalMLEvelocity',
-                     'timeMonthly_avg_vertMLEVelocityTop'])
+                     'timeMonthly_avg_vertMLEBolusVelocityTop'])
 
     def run_task(self):
         """
@@ -1274,7 +1274,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
                 dsLocal['avgVertVelocityTop'] = \
                     dsLocal['avgVertVelocityTop'] + \
-                    dsLocal['timeMonthly_avg_vertMLEVelocityTop']
+                    dsLocal['timeMonthly_avg_vertMLEBolusVelocityTop']
 
             horizontalVel = dsLocal.avgNormalVelocity.values
             verticalVel = dsLocal.avgVertVelocityTop.values
