@@ -253,6 +253,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
         parentTask.add_subtask(self)
 
+        self.includeBolus = None
+        self.includeSubmesoscale = None
+
     def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
@@ -295,7 +298,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                  'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
             variableList = ['timeMonthly_avg_normalVelocity',
-                            'timeMonthly_avg_vertVelocityTop']
+                            'timeMonthly_avg_vertVelocityTop',
+                            'timeMonthly_avg_layerThickness']
 
             # Add the bolus velocity if GM is enabled
             try:
@@ -305,10 +309,23 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                 # the old name
                 self.includeBolus = self.namelist.getbool(
                     'config_use_standardgm')
+            try:
+                self.includeSubmesoscale = \
+                    self.namelist.getbool('config_submesoscale_enable')
+            except KeyError:
+                # an old run without submesoscale
+                self.includeSubmesoscale = False
+
             if self.includeBolus:
                 variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
                      'timeMonthly_avg_vertGMBolusVelocityTop'])
+
+            if self.includeSubmesoscale:
+                variableList.extend(
+                    ['timeMonthly_avg_normalMLEvelocity',
+                     'timeMonthly_avg_vertMLEBolusVelocityTop'])
+
 
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=['ANN'])
@@ -478,7 +495,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
             return
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-            refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
+            refTopDepth, refLayerThickness, cellsOnEdge = \
+            _load_mesh(self.runStreams)
 
         regionNames = config.getexpression(self.sectionName, 'regionNames')
 
@@ -507,25 +525,36 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         if 'Time' in annualClimatology.dims:
             annualClimatology = annualClimatology.isel(Time=0)
 
+        # rename some variables for convenience
+        annualClimatology = annualClimatology.rename(
+            {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+             'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop',
+             'timeMonthly_avg_layerThickness': 'layerThickness'})
+
         if self.includeBolus:
             annualClimatology['avgNormalVelocity'] = \
-                annualClimatology['timeMonthly_avg_normalVelocity'] + \
+                annualClimatology['avgNormalVelocity'] + \
                 annualClimatology['timeMonthly_avg_normalGMBolusVelocity']
 
             annualClimatology['avgVertVelocityTop'] = \
-                annualClimatology['timeMonthly_avg_vertVelocityTop'] + \
+                annualClimatology['avgVertVelocityTop'] + \
                 annualClimatology['timeMonthly_avg_vertGMBolusVelocityTop']
-        else:
-            # rename some variables for convenience
-            annualClimatology = annualClimatology.rename(
-                {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+        if self.includeSubmesoscale:
+            annualClimatology['avgNormalVelocity'] = \
+                annualClimatology['avgNormalVelocity'] + \
+                annualClimatology['timeMonthly_avg_normalMLEvelocity']
+
+            annualClimatology['avgVertVelocityTop'] = \
+                annualClimatology['avgVertVelocityTop'] + \
+                annualClimatology['timeMonthly_avg_vertMLEBolusVelocityTop']
 
         # Convert to numpy arrays
         # (can result in a memory error for large array size)
         horizontalVel = annualClimatology.avgNormalVelocity.values
         verticalVel = annualClimatology.avgVertVelocityTop.values
         velArea = verticalVel * areaCell[:, np.newaxis]
+        layerThickness = annualClimatology.layerThickness.values
 
         # Create dictionary for MOC climatology (NB: need this form
         # in order to convert it to xarray dataset later in the script)
@@ -549,8 +578,9 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                                 transectEdgeGlobalIDs,
                                                 transectEdgeMaskSigns,
                                                 nVertLevels, dvEdge,
-                                                refLayerThickness,
-                                                horizontalVel)
+                                                horizontalVel,
+                                                layerThickness,
+                                                cellsOnEdge)
 
             regionCellMask = dictRegion[region]['cellMask']
             latBinSize = \
@@ -843,6 +873,9 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
         self.startYear = startYear
         self.endYear = endYear
 
+        self.includeBolus = None
+        self.includeSubmesoscale = None
+
     def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
@@ -880,7 +913,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                  'timeMonthly_avg_mocStreamvalLatAndDepthRegion']
         else:
             self.variableList = ['timeMonthly_avg_normalVelocity',
-                                 'timeMonthly_avg_vertVelocityTop']
+                                 'timeMonthly_avg_vertVelocityTop',
+                                 'timeMonthly_avg_layerThickness']
 
             # Add the bolus velocity if GM is enabled
             try:
@@ -890,10 +924,23 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 # the old name
                 self.includeBolus = self.namelist.getbool(
                     'config_use_standardgm')
+
+            try:
+                self.includeSubmesoscale = \
+                    self.namelist.getbool('config_submesoscale_enable')
+            except KeyError:
+                # an old run without submesoscale
+                self.includeSubmesoscale = False
+
             if self.includeBolus:
                 self.variableList.extend(
                     ['timeMonthly_avg_normalGMBolusVelocity',
                      'timeMonthly_avg_vertGMBolusVelocityTop'])
+
+            if self.includeSubmesoscale:
+                self.variableList.extend(
+                    ['timeMonthly_avg_normalMLEvelocity',
+                     'timeMonthly_avg_vertMLEBolusVelocityTop'])
 
     def run_task(self):
         """
@@ -935,8 +982,6 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
         outputFileName = '{}/mocTimeSeries_{:04d}-{:04d}.nc'.format(
             outputDirectory, self.startYear, self.endYear)
 
-        streamName = 'timeSeriesStatsMonthlyOutput'
-
         # Get bin latitudes and index of 26.5N
         binBoundaryMocStreamfunction = None
         # first try timeSeriesStatsMonthly for bin boundaries, then try
@@ -973,6 +1018,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                              'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFiles))
+        moc = None
+        refTopDepth = None
         times = np.zeros(len(inputFiles))
         computed = np.zeros(len(inputFiles), bool)
 
@@ -988,6 +1035,12 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
                 dsMOCIn.load()
 
+                if moc is None:
+                    sizes = dsMOCIn.sizes
+                    moc = np.zeros((len(inputFiles), sizes['depth'],
+                                    sizes['lat']))
+                    refTopDepth = dsMOCIn.depth.values
+
                 # first, copy all computed data
                 for inIndex in range(dsMOCIn.dims['Time']):
 
@@ -998,6 +1051,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                     outIndex = np.where(mask)[0][0]
 
                     mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                    moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
                     times[outIndex] = dsMOCIn.Time[inIndex]
                     computed[outIndex] = True
 
@@ -1029,28 +1083,63 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             mocTop = mocVar[indRegion, :, :].values
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
+            if moc is None:
+                sizes = dsLocal.sizes
+                moc = np.zeros((len(inputFiles), sizes['nVertLevels']+1,
+                                len(binBoundaryMocStreamfunction)))
+                try:
+                    restartFile = self.runStreams.readpath('restart')[0]
+                except ValueError:
+                    raise IOError('No MPAS-O restart file found: need at '
+                                  'least one restart file for MOC calculation')
+                with xr.open_dataset(restartFile) as dsRestart:
+                    refBottomDepth = dsRestart.refBottomDepth.values
+                nVertLevels = len(refBottomDepth)
+                refTopDepth = np.zeros(nVertLevels + 1)
+                refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
+
+            moc[timeIndex, 0:-1, :] = mocTop
+
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'
 
-        dictonary = {'dims': ['Time'],
-                     'coords': {'Time':
-                                {'dims': ('Time'),
-                                 'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}},
-                                'year':
-                                {'dims': ('Time'),
-                                 'data': years,
-                                 'attrs': {'units': 'year'}},
-                                'month':
-                                {'dims': ('Time'),
-                                 'data': months,
-                                 'attrs': {'units': 'month'}}},
-                     'data_vars': {'mocAtlantic26':
-                                   {'dims': ('Time'),
-                                    'data': mocRegion,
-                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
-                                              'description': description}}}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
+        descriptionAtl = 'Atlantic MOC streamfunction'
+
+        dictionary = {
+            'dims': ['Time', 'depth', 'lat'],
+            'coords': {
+                'Time': {
+                    'dims': ('Time',),
+                    'data': times,
+                    'attrs': {'units': 'days since 0001-01-01'}},
+                'year': {
+                    'dims': ('Time',),
+                    'data': years,
+                    'attrs': {'units': 'year'}},
+                'month': {
+                    'dims': ('Time',),
+                    'data': months,
+                    'attrs': {'units': 'month'}},
+                'lat': {
+                    'dims': ('lat',),
+                    'data': binBoundaryMocStreamfunction,
+                    'attrs': {'units': 'degrees north'}},
+                'depth': {
+                    'dims': ('depth',),
+                    'data': refTopDepth,
+                    'attrs': {'units': 'meters'}}},
+            'data_vars': {
+                'mocAtlantic26': {
+                    'dims': ('Time',),
+                    'data': mocRegion,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': description}},
+                'mocAtlantic': {
+                    'dims': ('Time', 'depth', 'lat'),
+                    'data': moc,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': descriptionAtl}}}}
+        dsMOCTimeSeries = xr.Dataset.from_dict(dictionary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
 
     def _compute_moc_time_series_postprocess(self):
@@ -1075,7 +1164,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             outputDirectory, self.startYear, self.endYear)
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-            refTopDepth, refLayerThickness = _load_mesh(self.runStreams)
+            refTopDepth, refLayerThickness, cellsOnEdge = \
+            _load_mesh(self.runStreams)
 
         mpasMeshName = config.get('input', 'mpasMeshName')
 
@@ -1110,6 +1200,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                              'timeSeriesStatsMonthlyOutput')
 
         mocRegion = np.zeros(len(inputFiles))
+        moc = np.zeros((len(inputFiles), nVertLevels+1, len(latBins)))
         times = np.zeros(len(inputFiles))
         computed = np.zeros(len(inputFiles), bool)
 
@@ -1135,6 +1226,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                     outIndex = np.where(mask)[0][0]
 
                     mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                    moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
                     times[outIndex] = dsMOCIn.Time[inIndex]
                     computed[outIndex] = True
 
@@ -1160,55 +1252,87 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
                                                                date.month))
 
+            # rename some variables for convenience
+            dsLocal = dsLocal.rename(
+                {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
+                 'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop',
+                 'timeMonthly_avg_layerThickness': 'layerThickness'})
+
             if self.includeBolus:
                 dsLocal['avgNormalVelocity'] = \
-                    dsLocal['timeMonthly_avg_normalVelocity'] + \
+                    dsLocal['avgNormalVelocity'] + \
                     dsLocal['timeMonthly_avg_normalGMBolusVelocity']
 
                 dsLocal['avgVertVelocityTop'] = \
-                    dsLocal['timeMonthly_avg_vertVelocityTop'] + \
+                    dsLocal['avgVertVelocityTop'] + \
                     dsLocal['timeMonthly_avg_vertGMBolusVelocityTop']
-            else:
-                # rename some variables for convenience
-                dsLocal = dsLocal.rename(
-                    {'timeMonthly_avg_normalVelocity': 'avgNormalVelocity',
-                     'timeMonthly_avg_vertVelocityTop': 'avgVertVelocityTop'})
+
+            if self.includeSubmesoscale:
+                dsLocal['avgNormalVelocity'] = \
+                    dsLocal['avgNormalVelocity'] + \
+                    dsLocal['timeMonthly_avg_normalMLEvelocity']
+
+                dsLocal['avgVertVelocityTop'] = \
+                    dsLocal['avgVertVelocityTop'] + \
+                    dsLocal['timeMonthly_avg_vertMLEBolusVelocityTop']
 
             horizontalVel = dsLocal.avgNormalVelocity.values
             verticalVel = dsLocal.avgVertVelocityTop.values
             velArea = verticalVel * areaCell[:, np.newaxis]
+            layerThickness = dsLocal.layerThickness.values
+
             transportZ = _compute_transport(maxEdgesInTransect,
                                             transectEdgeGlobalIDs,
                                             transectEdgeMaskSigns,
                                             nVertLevels, dvEdge,
-                                            refLayerThickness,
-                                            horizontalVel)
+                                            horizontalVel,
+                                            layerThickness,
+                                            cellsOnEdge)
             mocTop = _compute_moc(latAtlantic, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
+            moc[timeIndex, :, :] = mocTop
             mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'
 
-        dictonary = {'dims': ['Time'],
-                     'coords': {'Time':
-                                {'dims': ('Time'),
-                                 'data': times,
-                                 'attrs': {'units': 'days since 0001-01-01'}},
-                                'year':
-                                {'dims': ('Time'),
-                                 'data': years,
-                                 'attrs': {'units': 'year'}},
-                                'month':
-                                {'dims': ('Time'),
-                                 'data': months,
-                                 'attrs': {'units': 'month'}}},
-                     'data_vars': {'mocAtlantic26':
-                                   {'dims': ('Time'),
-                                    'data': mocRegion,
-                                    'attrs': {'units': 'Sv (10^6 m^3/s)',
-                                              'description': description}}}}
-        dsMOCTimeSeries = xr.Dataset.from_dict(dictonary)
+        descriptionAtl = 'Atlantic MOC streamfunction'
+
+        dictionary = {
+            'dims': ['Time', 'depth', 'lat'],
+            'coords': {
+                'Time': {
+                    'dims': ('Time',),
+                    'data': times,
+                    'attrs': {'units': 'days since 0001-01-01'}},
+                'year': {
+                    'dims': ('Time',),
+                    'data': years,
+                    'attrs': {'units': 'year'}},
+                'month': {
+                    'dims': ('Time',),
+                    'data': months,
+                    'attrs': {'units': 'month'}},
+                'lat': {
+                    'dims': ('lat',),
+                    'data': latAtlantic,
+                    'attrs': {'units': 'degrees north'}},
+                'depth': {
+                    'dims': ('depth',),
+                    'data': refTopDepth,
+                    'attrs': {'units': 'meters'}}},
+            'data_vars': {
+                'mocAtlantic26': {
+                    'dims': ('Time',),
+                    'data': mocRegion,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': description}},
+                'mocAtlantic': {
+                    'dims': ('Time', 'depth', 'lat'),
+                    'data': moc,
+                    'attrs': {'units': 'Sv (10^6 m^3/s)',
+                              'description': descriptionAtl}}}}
+        dsMOCTimeSeries = xr.Dataset.from_dict(dictionary)
         write_netcdf(dsMOCTimeSeries, outputFileName)
 
 
@@ -1462,6 +1586,7 @@ def _load_mesh(runStreams):
     areaCell = ncFile.variables['areaCell'][:]
     refBottomDepth = ncFile.variables['refBottomDepth'][:]
     latCell = np.rad2deg(ncFile.variables['latCell'][:])
+    cellsOnEdge = ncFile.variables['cellsOnEdge'][:] - 1
     ncFile.close()
     nVertLevels = len(refBottomDepth)
     refTopDepth = np.zeros(nVertLevels + 1)
@@ -1473,7 +1598,7 @@ def _load_mesh(runStreams):
          refBottomDepth[0:nVertLevels - 1])
 
     return dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
-        refTopDepth, refLayerThickness
+        refTopDepth, refLayerThickness, cellsOnEdge
 
 
 def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
@@ -1516,7 +1641,7 @@ def _build_region_mask_dict(regionMaskFile, regionNames, mpasMeshName, logger):
 
 def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
                        transectEdgeMaskSigns, nz, dvEdge,
-                       refLayerThickness, horizontalVel):
+                       horizontalVel, layerThickness, cellsOnEdge):
     """compute mass transport across southern transect of ocean basin"""
 
     transportZEdge = np.zeros([nz, maxEdgesInTransect])
@@ -1525,10 +1650,14 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             break
         # subtract 1 because of python 0-indexing
         iEdge = transectEdgeGlobalIDs[i] - 1
+        coe0 = cellsOnEdge[iEdge, 0]
+        coe1 = cellsOnEdge[iEdge, 1]
+        layerThicknessEdge = 0.5*(layerThickness[coe0, :] +
+                                  layerThickness[coe1, :])
         transportZEdge[:, i] = horizontalVel[iEdge, :] * \
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
-            refLayerThickness[np.newaxis, :]
+            layerThicknessEdge[np.newaxis, :]
     transportZ = transportZEdge.sum(axis=1)
     return transportZ
 
@@ -1538,7 +1667,8 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
     """compute meridionally integrated MOC streamfunction"""
 
     mocTop = np.zeros([np.size(latBins), nz + 1])
-    mocTop[0, range(1, nz + 1)] = transportZ.cumsum()
+    mocSouthBottomUp = - transportZ[::-1].cumsum()
+    mocTop[0, 0:nz] = mocSouthBottomUp[::-1]
     for iLat in range(1, np.size(latBins)):
         indlat = np.logical_and(np.logical_and(
             regionCellMask == 1, latCell >= latBins[iLat - 1]),
