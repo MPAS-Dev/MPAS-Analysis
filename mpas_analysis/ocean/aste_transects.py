@@ -28,15 +28,15 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf
 
 
-class SoseTransects(AnalysisTask):
+class AsteTransects(AnalysisTask):
     """
-    Plot model output at Antarctic transects and compare it against SOSE
-    state estimate data
+    Plot model output at Arctic transects and compare it against ASTE
+    reanalysis data
     """
 
     # Authors
     # -------
-    # Xylar Asay-Davis
+    # Milena Veneziani, Kat Smith, Alice Barthel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         """
@@ -57,13 +57,13 @@ class SoseTransects(AnalysisTask):
         """
         # Authors
         # -------
-        # Xylar Asay-Davis
+        # Milena Veneziani, Kat Smith, Alice Barthel, Xylar Asay-Davis
 
-        tags = ['climatology', 'transect', 'sose', 'publicObs', 'antarctic']
+        tags = ['climatology', 'transect', 'aste', 'publicObs', 'arctic']
 
         # call the constructor from the base class (AnalysisTask)
         super(SoseTransects, self).__init__(
-            config=config, taskName='soseTransects',
+            config=config, taskName='asteTransects',
             componentName='ocean',
             tags=tags)
 
@@ -87,6 +87,7 @@ class SoseTransects(AnalysisTask):
         longitudes = sorted(config.getexpression(sectionName, 'longitudes',
                                                  use_numpyfunc=True))
 
+        # MV: need to change the 'obs' information in here:
         fields = \
             [{'prefix': 'temperature',
               'mpas': 'timeMonthly_avg_activeTracers_temperature',
@@ -134,22 +135,24 @@ class SoseTransects(AnalysisTask):
         fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
 
+        # MV: not sure if we want the velocity magnitude, but leaving this here
+        # because it will be helpful for plotting the cross-velocities later on
         variableList = [field['mpas'] for field in fields
                         if field['mpas'] != 'velMag']
 
-        transectCollectionName = 'SOSE_transects'
+        transectCollectionName = 'ASTE_transects'
         if horizontalResolution not in ['obs', 'mpas']:
             transectCollectionName = '{}_{}km'.format(transectCollectionName,
                                                       horizontalResolution)
 
-        transectsObservations = SoseTransectsObservations(
+        transectsObservations = AsteTransectsObservations(
             config, horizontalResolution,
             transectCollectionName, fields)
 
         computeTransectsSubtask = ComputeTransectsWithVelMag(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='SOSE_transects',
+            climatologyName='ASTE_transects',
             transectCollectionName=transectCollectionName,
             variableList=variableList,
             seasons=seasons,
@@ -160,9 +163,9 @@ class SoseTransects(AnalysisTask):
         plotObs = controlConfig is None
         if plotObs:
 
-            refTitleLabel = 'State Estimate (SOSE)'
+            refTitleLabel = 'Arctic reanalysis (ASTE)'
 
-            diffTitleLabel = 'Model - State Estimate'
+            diffTitleLabel = 'Model - Reanalysis'
 
         else:
             controlRunName = controlConfig.get('runs', 'mainRunName')
@@ -177,7 +180,7 @@ class SoseTransects(AnalysisTask):
                 transectName = 'lon_{}'.format(lon)
 
                 for season in seasons:
-                    outFileLabel = 'SOSE_{}_'.format(fieldPrefix)
+                    outFileLabel = 'ASTE_{}_'.format(fieldPrefix)
                     if plotObs:
                         refFieldName = field['obsFieldName']
                     else:
@@ -202,20 +205,21 @@ class SoseTransects(AnalysisTask):
                         unitsLabel=field['units'],
                         imageCaption='{} {}'.format(fieldNameInTytle,
                                                     season),
-                        galleryGroup='SOSE Transects',
+                        galleryGroup='ASTE Transects',
                         groupSubtitle=None,
-                        groupLink='sose_transects',
+                        groupLink='aste_transects',
                         galleryName=field['titleName'],
-                        configSectionName='sose{}Transects'.format(
+                        configSectionName='aste{}Transects'.format(
                             fieldPrefixUpper),
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
 
 
-class SoseTransectsObservations(TransectsObservations):
+# MV: the following class will need to be adapted for the ASTE data
+class AsteTransectsObservations(TransectsObservations):
     """
-    A class for loading and manipulating SOSE transect data
+    A class for loading and manipulating ASTE transect data
 
     Attributes
     ----------
@@ -259,7 +263,7 @@ class SoseTransectsObservations(TransectsObservations):
         obsFileNames = None
 
         # call the constructor from the base class (TransectsObservations)
-        super(SoseTransectsObservations, self).__init__(
+        super(AsteTransectsObservations, self).__init__(
             config, obsFileNames, horizontalResolution,
             transectCollectionName)
 
