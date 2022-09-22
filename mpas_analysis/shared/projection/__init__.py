@@ -14,7 +14,7 @@ import cartopy
 
 
 known_comparison_grids = ['latlon', 'antarctic', 'arctic', 'north_atlantic',
-                          'north_pacific']
+                          'north_pacific', 'subpolar_north_atlantic']
 
 
 def get_pyproj_projection(comparison_grid_name):
@@ -24,7 +24,7 @@ def get_pyproj_projection(comparison_grid_name):
     Parameters
     ----------
     comparison_grid_name : {'antarctic', 'arctic', 'north_atlantic',
-                            'north_pacific'}
+                            'north_pacific', 'subpolar_north_atlantic'}
         The name of the projection comparison grid to use for remapping
 
     Returns
@@ -63,6 +63,9 @@ def get_pyproj_projection(comparison_grid_name):
     elif comparison_grid_name == 'north_pacific':
         projection = pyproj.Proj('+proj=lcc +lon_0=180 +lat_0=40 +lat_1=34 '
                                  '+lat_2=46 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
+    elif comparison_grid_name == 'subpolar_north_atlantic':
+        projection = pyproj.Proj('+proj=lcc +lon_0=-40 +lat_0=54 +lat_1=40 '
+                                 '+lat_2=68 +x_0=0.0 +y_0=0.0 +ellps=WGS84')
     else:
         raise ValueError(f'We missed one of the known comparison grids: '
                          f'{comparison_grid_name}')
@@ -77,7 +80,7 @@ def get_cartopy_projection(comparison_grid_name):
     Parameters
     ----------
     comparison_grid_name : {'antarctic', 'arctic', 'north_atlantic',
-                            'north_pacific'}
+                            'north_pacific', 'subpolar_north_atlantic'}
         The name of the projection comparison grid to use for remapping
 
     Returns
@@ -117,8 +120,12 @@ def get_cartopy_projection(comparison_grid_name):
             standard_parallels=(39., 51.))
     elif comparison_grid_name == 'north_pacific':
         projection = cartopy.crs.LambertConformal(
-            central_latitude=40., central_longitude=180.,
+            central_latitude=54., central_longitude=-40.,
             standard_parallels=(34., 46.))
+    elif comparison_grid_name == 'subpolar_north_atlantic':
+        projection = cartopy.crs.LambertConformal(
+            central_latitude=54., central_longitude=-40.,
+            standard_parallels=(40,68))
     else:
         raise ValueError(f'We missed one of the known comparison grids: '
                          f'{comparison_grid_name}')
