@@ -8,13 +8,6 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-"""
-An analysis subtasks for plotting comparison of 2D model fields against
-observations.
-"""
-# Authors
-# -------
-# Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 import xarray as xr
 import numpy as np
@@ -46,15 +39,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     comparisonGridName : str
         The name of the comparison grid to plot.
 
-    remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+    remapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
         The subtask for remapping the MPAS climatology that this subtask
         will plot
 
-    remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
+    remapObsClimatologySubtask : mpas_analysis.shared.climatology.RemapObservedClimatologySubtask
         The subtask for remapping the observational climatology that this
         subtask will plot
 
-    secondRemapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+    secondRemapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
         A second subtask for remapping another MPAS climatology to plot
         in the second panel and compare with in the third panel
 
@@ -104,9 +97,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     configSectionName : str
         the name of the section where the color map and range is defined
     """
-    # Authors
-    # -------
-    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
@@ -118,7 +108,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         Parameters
         ----------
-        parentTask :  ``AnalysisTask``
+        parentTask :  mpas_analysis.shared.AnalysisTask
             The parent (master) task for this subtask
 
         season : str
@@ -128,15 +118,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         comparisonGridName : str
             The name of the comparison grid to plot.
 
-        remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+        remapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
             The subtask for remapping the MPAS climatology that this subtask
             will plot
 
-        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``, optional
+        remapObsClimatologySubtask : mpas_analysis.shared.climatology.RemapObservedClimatologySubtask, optional
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        secondRemapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``, optional
+        secondRemapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask, optional
             A second subtask for remapping another MPAS climatology to plot
             in the second panel and compare with in the third panel
 
@@ -159,9 +149,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             ``plot<season>_<comparisonGridName>`` with a suffix indicating the
             depth being sliced (if any)
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         self.season = season
         self.depth = depth
@@ -273,9 +260,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             the name of the section where the color map and range is defined,
             default is the name of the task
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
@@ -316,9 +300,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -356,9 +337,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD
         observations or a control run
         """
-        # Authors
-        # -------
-        # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
         season = self.season
         depth = self.depth
