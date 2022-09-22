@@ -31,6 +31,7 @@ from mpas_analysis.ocean.time_series_ohc_anomaly import TimeSeriesOHCAnomaly
 from mpas_analysis.ocean.time_series_ssh_anomaly import TimeSeriesSSHAnomaly
 
 from mpas_analysis.ocean.time_series_sst import TimeSeriesSST
+from mpas_analysis.ocean.histogram_ssh import HistogramSSH
 from mpas_analysis.ocean.index_nino34 import IndexNino34
 from mpas_analysis.ocean.streamfunction_moc import StreamfunctionMOC
 from mpas_analysis.ocean.meridional_heat_transport import \
