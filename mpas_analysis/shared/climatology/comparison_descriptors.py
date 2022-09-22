@@ -34,7 +34,7 @@ def get_comparison_descriptor(config, comparison_grid_name):
         Contains configuration options
 
     comparison_grid_name : {'latlon', 'antarctic', 'arctic', 'north_atlantic',
-                            'north_pacific'}
+                            'north_pacific', 'subpolar_north_atlantic'}
         The name of the comparison grid to use for remapping.
 
     Raises
@@ -121,12 +121,14 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
     option_suffixes = {'antarctic': 'AntarcticStereo',
                        'arctic': 'ArcticStereo',
                        'north_atlantic': 'NorthAtlantic',
-                       'north_pacific': 'NorthPacific'}
+                       'north_pacific': 'NorthPacific',
+                       'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
 
     grid_suffixes = {'antarctic': 'Antarctic_stereo',
                      'arctic': 'Arctic_stereo',
                      'north_atlantic': 'North_Atlantic',
-                     'north_pacific': 'North_Pacific'}
+                     'north_pacific': 'North_Pacific',
+                     'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
 
     if comparison_grid_name not in option_suffixes:
         raise ValueError(f'{comparison_grid_name} is not one of the supported '
