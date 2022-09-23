@@ -110,7 +110,8 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
     Returns
     -------
     descriptor : pyremap.ProjectionGridDescriptor
-        A descriptor of the Arctic comparison grid
+        A descriptor of the comparison grid
+        (eg. - Arctic, North Atlantic)
     """
     # Authors
     # -------
@@ -128,7 +129,7 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
                      'arctic': 'Arctic_stereo',
                      'north_atlantic': 'North_Atlantic',
                      'north_pacific': 'North_Pacific',
-                     'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
+                     'subpolar_north_atlantic': 'Subpolar_North_Atlantic'}
 
     if comparison_grid_name not in option_suffixes:
         raise ValueError(f'{comparison_grid_name} is not one of the supported '
