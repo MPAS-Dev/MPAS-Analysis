@@ -81,7 +81,7 @@ class ClimatologyMapBSF(AnalysisTask):
             depth_range_string = \
                 f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
             if np.abs(max_depth) < 5000. :
-                fname_title=f'Depth Integrated Transport Streamfunction {depth_range_string}'
+                fname_title=f'Streamfunction over {depth_range_string}'
                 fname_clim=f'{field_name}_{depth_range_string}'
             else:
                 fname_title=f'Barotropic Streamfunction'
@@ -129,7 +129,7 @@ class ClimatologyMapBSF(AnalysisTask):
                         diffTitleLabel=diff_title_label,
                         unitsLabel='Sv',
                         imageCaption=fname_title,
-                        galleryGroup='Barotropic Streamfunction',
+                        galleryGroup='Horizontal Streamfunction',
                         groupSubtitle=None,
                         groupLink='bsf',
                         galleryName=None)
