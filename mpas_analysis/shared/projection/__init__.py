@@ -120,7 +120,7 @@ def get_cartopy_projection(comparison_grid_name):
             standard_parallels=(39., 51.))
     elif comparison_grid_name == 'north_pacific':
         projection = cartopy.crs.LambertConformal(
-            central_latitude=54., central_longitude=-40.,
+            central_latitude=40., central_longitude=180.,
             standard_parallels=(34., 46.))
     elif comparison_grid_name == 'subpolar_north_atlantic':
         projection = cartopy.crs.LambertConformal(
