@@ -197,7 +197,7 @@ def build_analysis_list(config, controlConfig):
                                         controlConfig))
     analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
 
-    analyses.append(ocean.HistogramSSH(config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+    analyses.append(ocean.OceanHistogram(config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
                                        controlConfig))
     analyses.append(ocean.MeridionalHeatTransport(
         config, oceanClimatologyTasks['avg'], controlConfig))

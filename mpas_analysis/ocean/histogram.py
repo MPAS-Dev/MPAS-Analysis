@@ -26,9 +26,9 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot import histogram_analysis_plot, savefig
 from mpas_analysis.shared.html import write_image_xml
 
-class HistogramSSH(AnalysisTask):
+class OceanHistogram(AnalysisTask):
     """
-    Plots a histogram of the global mean sea surface height.
+    Plots a histogram of a 2-d ocean variable.
 
     Attributes
     ----------
@@ -37,7 +37,7 @@ class HistogramSSH(AnalysisTask):
         (keys), together with shorter, more convenient names (values)
 
     histogramFileName : str
-        The name of the file where the ssh histogram is stored
+        The name of the file where the histogram is stored
 
     controlConfig : mpas_tools.config.MpasConfigParser
         Configuration options for a control run (if one is provided)
@@ -78,22 +78,15 @@ class HistogramSSH(AnalysisTask):
         # first, call the constructor from the base class (AnalysisTask)
         super().__init__(
             config=config,
-            taskName='histogramSSH',
+            taskName='oceanHistogram',
             componentName='ocean',
-            tags=['climatology', 'regions', 'histogram', 'ssh', 'publicObs'])
+            tags=['climatology', 'regions', 'histogram', 'publicObs'])
 
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
 
         #self.histogramFileName = ''
         self.controlConfig = controlConfig
-        #TODO make the filePrefix reflect the regionGroup and regionName
-        self.filePrefix = 'histogram_ssh'
-
-        self.variableDict = {}
-        for var in ['ssh']:
-            key = 'timeMonthly_avg_{}'.format(var)
-            self.variableDict[key] = var
 
     def setup_and_check(self):
         """
@@ -117,33 +110,40 @@ class HistogramSSH(AnalysisTask):
         config = self.config
 
         mainRunName = config.get('runs', 'mainRunName')
+
+        #TODO make the filePrefix reflect the regionGroup and regionName
+        self.filePrefix = f'histogram_{mainRunName}'
+
         regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
         self.seasons = config.getexpression(self.taskName, 'seasons')
-        #TODO add to config file
-        #self.variableList = config.getexpression(self.taskName, 'variableList')
-        self.variableList = ['timeMonthly_avg_ssh']
+        self.variableList = config.getexpression(self.taskName, 'variableList')
 
-        # Add xml file names for each season
-        self.xmlFileNames = []
-        self.filePrefix = f'ssh_histogram_{mainRunName}'
-        for season in self.seasons:
-            self.xmlFileNames.append(f'{self.plotsDirectory}/{self.filePrefix}_{season}.xml')
+        variableList = []
+        self.variableDict = {}
+        for var in self.variableList:
+            key = f'timeMonthly_avg_{var}'
+            variableList.append(key)
+            self.variableDict[key] = var
+
+            # Add xml file names for each season
+            self.xmlFileNames = []
+            for season in self.seasons:
+                self.xmlFileNames.append(f'{self.plotsDirectory}/{self.filePrefix}_{var}_{season}.xml')
 
         # Specify variables and seasons to compute climology over
-        self.mpasClimatologyTask.add_variables(variableList=self.variableList,
+        self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
 
     def run_task(self):
         """
-        Performs histogram analysis of the output of sea-surface height
-        (SSH).
+        Performs histogram analysis of the output of variables in variableList.
         """
         # Authors
         # -------
         # Carolyn Begeman, Adrian Turner, Xylar Asay-Davis
 
-        self.logger.info("\nPlotting histogram of SSH...")
+        self.logger.info("\nPlotting histogram of ocean vars...")
 
         config = self.config
         calendar = self.calendar
@@ -156,8 +156,6 @@ class HistogramSSH(AnalysisTask):
         #endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
 
         mainRunName = config.get('runs', 'mainRunName')
-
-        variableList = ['ssh']
 
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
@@ -176,76 +174,78 @@ class HistogramSSH(AnalysisTask):
 
         for season in seasons:
             #TODO get the filename of the climatology file from the climatology task
-            #TODO determine whether this is actually histogramSSH
             #TODO make sure that the climatology spans the appropriate years
             inFileName = get_unmasked_mpas_climatology_file_name(
                 config, season, self.componentName, op='avg')
             # Use xarray to open climatology dataset
             ds = xarray.open_dataset(inFileName)
-            ds = self._multiply_ssh_by_area(ds)
+            ds = self._multiply_var_by_area(ds, self.variableList)
 
             #TODO add region specification
             #ds.isel(nRegions=self.regionIndex))
-
-            fields = [ds[variableList[0]]]
-            #TODO add depth masking
-
-            if config.has_option('histogramSSH', 'lineColors'):
-                lineColors = [config.get('histogramSSH', 'mainColor')]
+            if config.has_option(self.taskName, 'lineColors'):
+                lineColors = [config.get(self.taskName, 'mainColor')]
             else:
                 lineColors = None
             lineWidths = [3]
             legendText = [mainRunName]
-            #TODO add later
-            #if plotControl:
-            #    fields.append(refData.isel(nRegions=self.regionIndex))
-            #    lineColors.append(config.get('histogram', 'controlColor'))
-            #    lineWidths.append(1.2)
-            #    legendText.append(controlRunName)
-            #TODO make title more informative
+
             title = mainRunName
-            if config.has_option('histogramSSH', 'titleFontSize'):
-                titleFontSize = config.getint('histogramSSH',
+            if config.has_option(self.taskName, 'titleFontSize'):
+                titleFontSize = config.getint(self.taskName,
                                               'titleFontSize')
             else:
                 titleFontSize = None
 
-            if config.has_option('histogramSSH', 'defaultFontSize'):
-                defaultFontSize = config.getint('histogramSSH',
+            if config.has_option(self.taskName, 'defaultFontSize'):
+                defaultFontSize = config.getint(self.taskName,
                                                 'defaultFontSize')
             else:
                 defaultFontSize = None
 
             yLabel = 'normalized Probability Density Function'
-            xLabel = f"{ds.ssh.attrs['long_name']} ({ds.ssh.attrs['units']})"
 
-            histogram_analysis_plot(config, fields, calendar=calendar,
-                                    title=title, xlabel=xLabel, ylabel=yLabel,
-                                    lineColors=lineColors, lineWidths=lineWidths,
-                                    legendText=legendText,
-                                    titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
+            for var in self.variableList:
 
-            #TODO whether this should be plotsDirectory or baseDirectory
-            outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{season}.png'
-            print(f'outFileName={outFileName}')
-            savefig(outFileName, config)
+                fields = [ds[var]]
+                #TODO add depth masking
 
-            #TODO should this be in the outer loop instead?
-            caption = 'Normalized probability density function for SSH climatologies in the {} Region'.format(title)
-            write_image_xml(
-                config=config,
-                filePrefix=f'{self.filePrefix}_{season}',
-                componentName='Ocean',
-                componentSubdirectory='ocean',
-                galleryGroup='Histograms',
-                groupLink='histogramSSH',
-                gallery='SSH Histogram',
-                thumbnailDescription=title,
-                imageDescription=caption,
-                imageCaption=caption)
+                #TODO add later
+                #if plotControl:
+                #    fields.append(refData.isel(nRegions=self.regionIndex))
+                #    lineColors.append(config.get('histogram', 'controlColor'))
+                #    lineWidths.append(1.2)
+                #    legendText.append(controlRunName)
+                #TODO make title more informative
+                xLabel = f"{ds.ssh.attrs['long_name']} ({ds.ssh.attrs['units']})"
+
+                histogram_analysis_plot(config, fields, calendar=calendar,
+                                        title=title, xlabel=xLabel, ylabel=yLabel,
+                                        lineColors=lineColors, lineWidths=lineWidths,
+                                        legendText=legendText,
+                                        titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
+
+                #TODO whether this should be plotsDirectory or baseDirectory
+                outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{season}.png'
+                print(f'outFileName={outFileName}')
+                savefig(outFileName, config)
+
+                #TODO should this be in the outer loop instead?
+                caption = 'Normalized probability density function for SSH climatologies in the {} Region'.format(title)
+                write_image_xml(
+                    config=config,
+                    filePrefix=f'{self.filePrefix}_{var}_{season}',
+                    componentName='Ocean',
+                    componentSubdirectory='ocean',
+                    galleryGroup='Histograms',
+                    groupLink=f'histogram{var}',
+                    gallery=f'{var} Histogram',
+                    thumbnailDescription=title,
+                    imageDescription=caption,
+                    imageCaption=caption)
 
 
-    def _multiply_ssh_by_area(self, ds):
+    def _multiply_var_by_area(self, ds, variableList):
 
         """
         Compute a time series of the global mean water-column thickness.
@@ -263,10 +263,14 @@ class HistogramSSH(AnalysisTask):
         # for convenience, rename the variables to simpler, shorter names
         ds = ds.rename(self.variableDict)
 
-        ds['sshAreaCell'] = \
-            ds['ssh'] / areaCell
-        ds.sshAreaCell.attrs['units'] = 'm^2'
-        ds.sshAreaCell.attrs['description'] = \
-            'Sea-surface height multiplied by the cell area'
+        for varName in variableList:
+            #varName = {i for i in self.variableDict if self.variableDict[i]==var}
+            varAreaName = f'{varName}AreaCell'
+            ds[varAreaName] = ds[varName] / areaCell
+            ds[varAreaName].attrs['units'] = 'm^2'
+            #ds.sshAreaCell.attrs['units'] = 'm^2'
+            #ds.sshAreaCell.attrs['description'] = \
+            ds[varAreaName].attrs['description'] = \
+                f'{varName} multiplied by the cell area'
 
         return ds
