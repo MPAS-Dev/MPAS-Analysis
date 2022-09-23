@@ -108,12 +108,15 @@ def setup_colormap(config, configSectionName, suffix=''):
         lineColor = config.get(configSectionName, option)
     else:
         lineColor = None
-
+    option = 'arrowsOnContour{}'.format(suffix)
+    if config.has_option(configSectionName, option):
+        arrows = config.getboolean(configSectionName, option)
+    else:
+        arrows = None
     return {'colormap': colormap, 'norm': norm, 'levels': levels,
             'ticks': ticks, 'contours': contours, 'lineWidth': lineWidth,
-            'lineColor': lineColor}
-
-
+            'lineColor': lineColor, 'arrows': arrows}
+    
 def register_custom_colormaps():
     name = 'ferret'
     backgroundColor = (0.9, 0.9, 0.9)
