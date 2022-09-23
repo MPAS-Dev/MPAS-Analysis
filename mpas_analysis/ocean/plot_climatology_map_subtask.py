@@ -18,7 +18,7 @@ observations.
 
 import xarray as xr
 import numpy as np
-
+import string
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import plot_global_comparison, \
@@ -598,7 +598,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             defaultFontSize=defaultFontSize,
             vertical=vertical)
 
-        upperGridName = comparisonGridName.replace('_', ' ').capitalize()
+        upperGridName = string.capwords(comparisonGridName.replace('_', ' '))
         caption = '{} {}'.format(season, self.imageCaption)
         write_image_xml(
             config,
