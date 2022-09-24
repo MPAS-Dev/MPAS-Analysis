@@ -350,7 +350,14 @@ class PlotHovmollerSubtask(AnalysisTask):
             assert(np.all(refMask.values == mask.values))
             refField = refField.where(mask, drop=True)
             assert(field.shape == refField.shape)
+            # make sure the start and end time sare the same
+            assert(int(field.Time.values[0]) == int(refField.Time.values[0]))
+            assert(int(field.Time.values[-1]) == int(refField.Time.values[-1]))
+            # we're seeing issues with slightly different times between runs
+            # so let's copy them
+            refField['Time'] = field.Time
             diff = field - refField
+            assert(field.shape == diff.shape)
             refTitle = self.controlConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Control'
 
