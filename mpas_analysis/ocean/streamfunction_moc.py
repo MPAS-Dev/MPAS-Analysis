@@ -1029,7 +1029,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             with open_mpas_dataset(fileName=outputFileName,
                                    calendar=self.calendar,
                                    timeVariableNames=None,
-                                   variableList=['mocAtlantic26'],
+                                   variableList=['mocAtlantic26',
+                                                 'mocAtlantic'],
                                    startDate=self.startDate,
                                    endDate=self.endDate) as dsMOCIn:
 
@@ -1210,7 +1211,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
             with open_mpas_dataset(fileName=outputFileName,
                                    calendar=self.calendar,
                                    timeVariableNames=None,
-                                   variableList=['mocAtlantic26'],
+                                   variableList=['mocAtlantic26',
+                                                 'mocAtlantic'],
                                    startDate=self.startDate,
                                    endDate=self.endDate) as dsMOCIn:
 
