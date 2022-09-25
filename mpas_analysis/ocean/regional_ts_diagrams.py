@@ -1015,7 +1015,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         neutralDensity = sigma0(SA, CT)
         rhoInterval = config.getfloat(sectionName, 'rhoInterval')
-        contours = numpy.arange(24., 29.+rhoInterval, rhoInterval)
+        contours = numpy.arange(23., 29.+rhoInterval, rhoInterval)
 
         diagramType = config.get(sectionName, 'diagramType')
         if diagramType not in ['volumetric', 'scatter']:
