@@ -432,7 +432,7 @@ def update_generate(config, generate):
     generateString = ', '.join(["'{}'".format(element)
                                 for element in generateList])
     generateString = '[{}]'.format(generateString)
-    config.set('output', 'generate', generateString)
+    config.set('output', 'generate', generateString, user=True)
 
 
 def run_analysis(config, analyses):
