@@ -169,11 +169,6 @@ def main():
         else:
             flags = ''
 
-        if machine == 'cori-haswell':
-            parallel_exec = ''
-        else:
-            parallel_exec = 'srun -N 1 -n 1'
-
         with open(os.path.join('suite', 'job_script.bash')) as template_file:
             template_data = template_file.read()
         template = Template(template_data)
@@ -182,8 +177,8 @@ def main():
             use_e3sm_unified=use_e3sm_unified,
             e3sm_unified_script=e3sm_unified_script, conda_env=conda_env,
             machine=machine, flags=flags, config=config_from_job,
-            parallel_exec=parallel_exec, html_base=html_base,
-            out_subdir=out_subdir, out_common_dir=out_common_dir)
+            html_base=html_base, out_subdir=out_subdir,
+            out_common_dir=out_common_dir)
         with open(job, 'w') as job_file:
             job_file.write(job_text)
 
