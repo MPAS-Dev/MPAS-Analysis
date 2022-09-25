@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.io.open_mpas_dataset &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -118,7 +120,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="mpas-analysis-shared-io-open-mpas-dataset">
+  <section id="mpas-analysis-shared-io-open-mpas-dataset">
 <h1>mpas_analysis.shared.io.open_mpas_dataset<a class="headerlink" href="#mpas-analysis-shared-io-open-mpas-dataset" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.io.open_mpas_dataset">
@@ -130,11 +132,11 @@ calendar name.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – File path to read</p></li>
 <li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'noleap'</span></code>}, optional) – The name of one of the calendars supported by MPAS cores</p></li>
-<li><p><strong>timeVariableNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>list of 2 str</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
+<li><p><strong>timeVariableNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>2 str</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code>
 or <code class="docutils literal notranslate"><span class="pre">['xtime_startMonthly',</span> <span class="pre">'xtime_endMonthly']</span></code>), or <code class="docutils literal notranslate"><span class="pre">None</span></code> if
 time does not need to be parsed (and is already in the <code class="docutils literal notranslate"><span class="pre">Time</span></code>
 variable)</p></li>
-<li><p><strong>variableList</strong> (<em>list of strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
 <li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
 <li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.10)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
@@ -153,7 +155,7 @@ time variable is sliced to only include dates within this range.</p></li>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

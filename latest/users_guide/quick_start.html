@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quick Start Guide &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -104,13 +106,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="quick-start-guide">
+  <section id="quick-start-guide">
 <span id="quick-start"></span><h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this heading">¶</a></h1>
 <p>Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.</p>
 <a class="reference external image-reference" href="_static/sst_example.png"><img alt="sea surface temperature" src="../_images/sst_example.png" /></a>
-<div class="section" id="installation-for-users">
+<section id="installation-for-users">
 <h2>Installation for users<a class="headerlink" href="#installation-for-users" title="Permalink to this heading">¶</a></h2>
 <p>MPAS-Analysis is available as an anaconda package via the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
@@ -118,8 +120,8 @@ used those components.</p>
 <span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="installation-for-developers">
+</section>
+<section id="installation-for-developers">
 <h2>Installation for developers<a class="headerlink" href="#installation-for-developers" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>To use the latest version for developers, get the code from:</dt><dd><p><a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">https://github.com/MPAS-Dev/MPAS-Analysis</a></p>
@@ -156,8 +158,8 @@ the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span>
 <code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> packages in their respective branches, and
 these changes will be reflected when refer to the packages or call their
 respective entry points (command-line tools).</p>
-</div>
-<div class="section" id="download-analysis-input-data">
+</section>
+<section id="download-analysis-input-data">
 <h2>Download analysis input data<a class="headerlink" href="#download-analysis-input-data" title="Permalink to this heading">¶</a></h2>
 <p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, download the data that is
 necessary to MPAS-Analysis by running:</p>
@@ -176,8 +178,8 @@ and used to evaluate the model results</p></li>
 <p>Once you have downloaded the analysis data, you will point to its location
 (your equivalent of <code class="docutils literal notranslate"><span class="pre">path/to/mpas_analysis/diagnostics</span></code> above) in the config
 option <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section.</p>
-</div>
-<div class="section" id="list-analysis">
+</section>
+<section id="list-analysis">
 <h2>List Analysis<a class="headerlink" href="#list-analysis" title="Permalink to this heading">¶</a></h2>
 <p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, list the available analysis tasks
 by running:</p>
@@ -187,8 +189,8 @@ by running:</p>
 <p>This lists all tasks and their tags.  These can be used in the <code class="docutils literal notranslate"><span class="pre">generate</span></code>
 command-line option or config option.  See <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code>
 for more details.</p>
-</div>
-<div class="section" id="running-the-analysis">
+</section>
+<section id="running-the-analysis">
 <h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
 <li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code>), copy <code class="docutils literal notranslate"><span class="pre">config.example</span></code>,
@@ -223,8 +225,8 @@ This file will automatically be used for any options you do not include
 in your custom config file.</p></li>
 <li><p>You should <strong>not</strong> modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> directly.</p></li>
 </ul>
-</div>
-<div class="section" id="list-of-mpas-output-files-that-are-needed-by-mpas-analysis">
+</section>
+<section id="list-of-mpas-output-files-that-are-needed-by-mpas-analysis">
 <h2>List of MPAS output files that are needed by MPAS-Analysis:<a class="headerlink" href="#list-of-mpas-output-files-that-are-needed-by-mpas-analysis" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>mpas-o files:</p>
@@ -267,8 +269,8 @@ file)</p></li>
 Also, for older runs mpaso-in will be named:</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">mpas-o_in</span></code></p></li>
 </ul>
-</div>
-<div class="section" id="purge-old-analysis">
+</section>
+<section id="purge-old-analysis">
 <h2>Purge Old Analysis<a class="headerlink" href="#purge-old-analysis" title="Permalink to this heading">¶</a></h2>
 <p>To purge old analysis (delete the whole output directory) before running run
 the analysis, add the <code class="docutils literal notranslate"><span class="pre">--purge</span></code> flag.  If you installed <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> as
@@ -291,8 +293,8 @@ variables and may not save time compared with purging), generating only the
 final website with <code class="docutils literal notranslate"><span class="pre">--html_only</span></code>, and re-running after the simulation has
 progressed to extend time series (however, not recommended for changing the
 bounds on climatologies, see above).</p>
-</div>
-<div class="section" id="running-in-parallel-via-a-queueing-system">
+</section>
+<section id="running-in-parallel-via-a-queueing-system">
 <h2>Running in parallel via a queueing system<a class="headerlink" href="#running-in-parallel-via-a-queueing-system" title="Permalink to this heading">¶</a></h2>
 <p>If you are running from a git repo:</p>
 <ol class="arabic simple">
@@ -314,8 +316,8 @@ finished.</p></li>
 <p>If a job script for your machine is not available, try modifying the default
 job script in <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code> or one of the job scripts for
 another machine to fit your needs.</p>
-</div>
-<div class="section" id="customizing-plots-or-creating-new-ones">
+</section>
+<section id="customizing-plots-or-creating-new-ones">
 <h2>Customizing plots or creating new ones<a class="headerlink" href="#customizing-plots-or-creating-new-ones" title="Permalink to this heading">¶</a></h2>
 <p>There are three main ways to either customize the plots that MPAS-Analysis
 already makes or creating new ones:</p>
@@ -342,8 +344,8 @@ Custom scripts can then utilize these datasets to generate custom plots.</p></li
 </li>
 <li><p>add a new analysis task to MPAS-Analysis (see below).</p></li>
 </ol>
-</div>
-<div class="section" id="instructions-for-creating-a-new-analysis-task">
+</section>
+<section id="instructions-for-creating-a-new-analysis-task">
 <h2>Instructions for creating a new analysis task<a class="headerlink" href="#instructions-for-creating-a-new-analysis-task" title="Permalink to this heading">¶</a></h2>
 <p>Analysis tasks can be found in a directory corresponding to each component,
 e.g., <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean</span></code> for MPAS-Ocean. Shared functionality is contained
@@ -371,8 +373,8 @@ go through the list to make sure each task needs to be generated
 will call <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> on each task (to make sure the appropriate AM is
 on and files are present), and will finally call <code class="docutils literal notranslate"><span class="pre">run</span></code> on each task that is
 to be generated and is set up properly.</p>
-</div>
-<div class="section" id="generating-documentation">
+</section>
+<section id="generating-documentation">
 <h2>Generating Documentation<a class="headerlink" href="#generating-documentation" title="Permalink to this heading">¶</a></h2>
 <p>To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
@@ -387,8 +389,8 @@ to be generated and is set up properly.</p>
 <span class="n">make</span> <span class="n">html</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -136,7 +138,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="mpas-analysis-shared-climatology-remapmpasclimatologysubtask">
+  <section id="mpas-analysis-shared-climatology-remapmpasclimatologysubtask">
 <h1>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask<a class="headerlink" href="#mpas-analysis-shared-climatology-remapmpasclimatologysubtask" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask">
@@ -149,11 +151,11 @@
 <li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
-<li><p><strong>variableList</strong> (<em>list of str</em>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
 included in the climatologies</p></li>
 <li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.10)"><em>dict</em></a>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to extract
 a slice of the MPAS field.</p></li>
-<li><p><strong>seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
+<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 over which the climatology should be computed or [‘none’] if only
 monthly climatologies are needed.</p></li>
 <li><p><strong>comparisonDescriptors</strong> (dict of <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code>) – Descriptors of the comparison grids to use for remapping, with
@@ -181,12 +183,12 @@ dimensions)</p></li>
 <li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
-<li><p><strong>variableList</strong> (<em>list of str</em>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
 included in the climatologies</p></li>
-<li><p><strong>seasons</strong> (<em>list of str</em>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
+<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 to be computed or [‘none’] (not <code class="docutils literal notranslate"><span class="pre">None</span></code>) if only monthly
 climatologies are needed.</p></li>
-<li><p><strong>comparisonGridNames</strong> (<em>list of str</em>) – optional
+<li><p><strong>comparisonGridNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – optional
 The name(s) of the comparison grid to use for remapping.  If none
 is supplied, <cite>add_comparison_descriptor()</cite> must be called to add
 one or more comparison grids.</p></li>
@@ -323,7 +325,7 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 </table>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

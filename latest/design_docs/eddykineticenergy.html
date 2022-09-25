@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Eddy Kinetic Energy Climatology Mapping &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../_static/underscore.js"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -113,20 +115,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="eddy-kinetic-energy-climatology-mapping">
+  <section id="eddy-kinetic-energy-climatology-mapping">
 <h1>Eddy Kinetic Energy Climatology Mapping<a class="headerlink" href="#eddy-kinetic-energy-climatology-mapping" title="Permalink to this heading">¶</a></h1>
 <h2>
 Kevin Rosa <br>
 date: 2018/06/18 <br>
-</h2><div class="section" id="summary">
+</h2><section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading">¶</a></h2>
 <p>The document describes a new feature which will be added to the MPAS-Analysis
 tools package: visualization of surface Eddy Kinetic Energy (EKE).
 The EKE climatology map will function very similarly to other climatological fields (e.g. SSH, SST, etc.).
 The output file will contain three images: the modeled EKE climatology, the observed EKE climatology, and the difference.
 Plotting EKE is particularly important for MPAS-O because one can configure meshes with eddy-permitting regions and would then want to compare the EKE in these regions against observations.</p>
-</div>
-<div class="section" id="requirements">
+</section>
+<section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic simple">
 <li><p>Model output must contain the meridional and zonal components of both <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_velocity*</span></code> and <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_velocity*Squared</span></code>.</p></li>
@@ -145,8 +147,8 @@ Plotting EKE is particularly important for MPAS-O because one can configure mesh
 </ol>
 </li>
 </ol>
-</div>
-<div class="section" id="physics">
+</section>
+<section id="physics">
 <h2>Physics<a class="headerlink" href="#physics" title="Permalink to this heading">¶</a></h2>
 <p>In the ocean, it is convenient to separate the the horizontal current, <em>u</em>,
 into its mean and eddy components:
@@ -157,8 +159,8 @@ into its mean and eddy components:
 the MKE (Wytrki, 1976).
 This eddy energy is important for transporting momentum, heat, mass, and chemical
 constituents of seawater (Robinson, 1983).</p>
-</div>
-<div class="section" id="algorithms">
+</section>
+<section id="algorithms">
 <h2>Algorithms<a class="headerlink" href="#algorithms" title="Permalink to this heading">¶</a></h2>
 <p>Time mean of equation 1: <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" /></a></span></p>
 <p>The model outputs <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" /></a></span>
@@ -169,8 +171,8 @@ so two different EKE equations must be used:</p>
 <li><p><span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" /></a></span></p></li>
 <li><p><span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" /></a></span></p></li>
 </ol>
-</div>
-<div class="section" id="design-and-implementation">
+</section>
+<section id="design-and-implementation">
 <h2>Design and Implementation<a class="headerlink" href="#design-and-implementation" title="Permalink to this heading">¶</a></h2>
 <p>The primary design consideration for this feature is that it integrate
 seamlessly with the rest of the analysis tools.
@@ -194,8 +196,8 @@ template.</p>
 Because of this, the climatology mapping functions for SSH, SST, SSS, and MLD will not serve as a direct template for the EKE formulation in <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/climatology_map_eke.py</span></code>.
 I will try to follow the structure of <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/compute_transects_with_vel_mag.py</span></code> as much as possible.</p>
 <p>It appears that there is a method for plotting velocity magnitudes on the antarctic grid.  Look into ‘climatology_map_sose.py’…</p>
-</div>
-<div class="section" id="testing">
+</section>
+<section id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this heading">¶</a></h2>
 <p>I will test runs of varying durations and resolutions to make sure the EKE plotting is working.  I will also ensure that the following jobs fail:</p>
 <ol class="arabic simple">
@@ -203,8 +205,8 @@ I will try to follow the structure of <code class="docutils literal notranslate"
 <li><p>Request seasonal plots.</p></li>
 <li><p>Test that <code class="docutils literal notranslate"><span class="pre">./download_analysis_data.py</span></code> downloads EKE data.</p></li>
 </ol>
-</div>
-<div class="section" id="bibliography">
+</section>
+<section id="bibliography">
 <h2>Bibliography<a class="headerlink" href="#bibliography" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://latex.codecogs.com/eqneditor/editor.php">https://latex.codecogs.com/eqneditor/editor.php</a></p></li>
@@ -212,8 +214,8 @@ I will try to follow the structure of <code class="docutils literal notranslate"
 <li><p>Laurindo, L. C., Mariano, A. J. &amp; Lumpkin, R. An improved near-surface velocity climatology for the global ocean from drifter observations. Deep Sea Research Part I: Oceanographic Research Papers 124, 73–92 (2017).</p></li>
 <li><p>Wyrtki, K., Magaard, L. &amp; Hager, James. Eddy energy in the oceans. Journal of Geophysical Research 81, 2641–2646</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

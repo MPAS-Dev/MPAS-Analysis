@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>geojsonTransects &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -137,7 +139,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="geojsontransects">
+  <section id="geojsontransects">
 <span id="task-geojsontransects"></span><h1>geojsonTransects<a class="headerlink" href="#geojsontransects" title="Permalink to this heading">¶</a></h1>
 <p>An analysis task for interpolating MPAS fields to transects specified by files
 in <code class="docutils literal notranslate"><span class="pre">geojson</span></code> format..</p>
@@ -146,7 +148,7 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 <span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">geojson</span>
 </pre></div>
 </div>
-<div class="section" id="configuration-options">
+<section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">geojsonTransects</span><span class="p">]</span>
@@ -331,8 +333,8 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="geojson-files">
+</section>
+<section id="geojson-files">
 <h2>Geojson Files<a class="headerlink" href="#geojson-files" title="Permalink to this heading">¶</a></h2>
 <p>This task takes a list of geojson file names (supplied as a python list of
 <code class="docutils literal notranslate"><span class="pre">str</span></code>:</p>
@@ -356,8 +358,8 @@ option:</p>
 </pre></div>
 </div>
 <p>(giving an absolute path if necessary) in your custom config file.</p>
-</div>
-<div class="section" id="fields">
+</section>
+<section id="fields">
 <h2>Fields<a class="headerlink" href="#fields" title="Permalink to this heading">¶</a></h2>
 <p>Since there are no observations associated with geojson transects, you are
 free to choose which MPAS fields you would like to plot.  These fields are
@@ -371,8 +373,8 @@ in plot titles and captions.</p>
 <p>Each field must have a corresponding section in the config file defining its
 color maps.  For example, <code class="docutils literal notranslate"><span class="pre">temperature</span></code> has an associated
 <code class="docutils literal notranslate"><span class="pre">[geojsonTemperatureTransect]</span></code> section.</p>
-</div>
-<div class="section" id="other-options">
+</section>
+<section id="other-options">
 <h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this heading">¶</a></h2>
 <dl class="simple">
 <dt>For details on the remaining configuration options, see:</dt><dd><ul class="simple">
@@ -383,12 +385,12 @@ color maps.  For example, <code class="docutils literal notranslate"><span class
 </ul>
 </dd>
 </dl>
-</div>
-<div class="section" id="example-result">
+</section>
+<section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../../_images/geojson_transect.png"><img alt="../../_images/geojson_transect.png" class="align-center" src="../../_images/geojson_transect.png" style="width: 500px;" /></a>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

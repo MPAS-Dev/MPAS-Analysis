@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.climatology.compute_climatology &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -136,7 +138,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="mpas-analysis-shared-climatology-compute-climatology">
+  <section id="mpas-analysis-shared-climatology-compute-climatology">
 <h1>mpas_analysis.shared.climatology.compute_climatology<a class="headerlink" href="#mpas-analysis-shared-climatology-compute-climatology" title="Permalink to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.climatology.compute_climatology">
@@ -151,7 +153,7 @@ on <code class="docutils literal notranslate"><span class="pre">Time</span></cod
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.6.1.dev0)"><em>xarray.Dataset</em></a><em> or </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2022.6.1.dev0)"><em>xarray.DataArray</em></a>) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
 0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p></li>
-<li><p><strong>monthValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> or </em><em>array-like of ints</em>) – A single month or an array of months to be averaged together</p></li>
+<li><p><strong>monthValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em> or </em><em>array-like</em><em> of </em><em>ints</em>) – A single month or an array of months to be averaged together</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
 <code class="docutils literal notranslate"><span class="pre">ds</span></code> does not already have a <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate or data array</p></li>
@@ -170,7 +172,7 @@ in each month.</p>
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>

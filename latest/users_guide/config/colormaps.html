@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colormaps &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -15,6 +16,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -122,28 +124,30 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="section" id="colormaps">
+  <section id="colormaps">
 <span id="config-colormaps"></span><h1>Colormaps<a class="headerlink" href="#colormaps" title="Permalink to this heading">¶</a></h1>
 <p>Each analysis task that includes plots with colormaps has a series of
 configuration options that can be used to manipulate the colormap.
 MPAS-Analysis supports two types of plots, each of which has an associated
 set of options for configuring its colormap.</p>
-<div class="section" id="supported-colormaps">
+<section id="supported-colormaps">
 <h2>Supported Colormaps<a class="headerlink" href="#supported-colormaps" title="Permalink to this heading">¶</a></h2>
 <p>MPAS-Analysis supports all <a class="reference external" href="https://matplotlib.org/users/colormaps.html">matplotlib colormaps</a>, all <a class="reference external" href="https://matplotlib.org/cmocean/">cmocean colormaps</a>,
 all <a class="reference external" href="http://www.fabiocrameri.ch/colourmaps.php">Scientific Colour Map Suite 3.0</a> colormaps, the selection of key
 <a class="reference external" href="https://sciviscolor.org/home/colormaps/">SciVisColor colormaps</a> and five custom color maps: <code class="docutils literal notranslate"><span class="pre">ferret</span></code>,
 <code class="docutils literal notranslate"><span class="pre">erdc_iceFire_H</span></code>, <code class="docutils literal notranslate"><span class="pre">erdc_iceFire_L</span></code>, <code class="docutils literal notranslate"><span class="pre">BuOr</span></code> and <code class="docutils literal notranslate"><span class="pre">Maximenko</span></code>.</p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../_images/colormaps.png"><img alt="All available colormaps" src="../../_images/colormaps.png" style="width: 720px;" /></a>
-<p class="caption"><span class="caption-text">All available colormaps</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<figcaption>
+<p><span class="caption-text">All available colormaps</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
 <p>To plot all availabe colormpas (as above), run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">plot_colormaps</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="indexed-colormaps">
+</section>
+<section id="indexed-colormaps">
 <h2>Indexed Colormaps<a class="headerlink" href="#indexed-colormaps" title="Permalink to this heading">¶</a></h2>
 <p>Indexed colormaps are used in association with contour plots in MPAS-Analysis.
 The following configuration options are associated with an indexed colormap:</p>
@@ -163,8 +167,8 @@ exception is when a separate shading should be used for values that fall
 outside the range of the contours, in which case the number of colormap indices
 is one more than the number of levels values, and the first and last index
 are used to specify the “under” and “over” color values.</p>
-</div>
-<div class="section" id="continuous-colormaps">
+</section>
+<section id="continuous-colormaps">
 <h2>Continuous Colormaps<a class="headerlink" href="#continuous-colormaps" title="Permalink to this heading">¶</a></h2>
 <p>A continuous colormap is specified with a different set of options:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap for model/observations</span>
@@ -186,8 +190,8 @@ associated dictionary of arguments.  These are:</p>
 </ul>
 </div></blockquote>
 <p>See the associated documentaiton for the arguments to each norm.</p>
-</div>
-<div class="section" id="colormpas-in-three-panel-plots">
+</section>
+<section id="colormpas-in-three-panel-plots">
 <h2>Colormpas in Three Panel Plots<a class="headerlink" href="#colormpas-in-three-panel-plots" title="Permalink to this heading">¶</a></h2>
 <p>Many MPAS-Analysis tasks include a panel for the main model run, another for
 observations or a control run and a third panel for displaying a bias or the
@@ -211,8 +215,8 @@ each.  For example:</p>
 <span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="adding-contour-lines">
+</section>
+<section id="adding-contour-lines">
 <h2>Adding Contour Lines<a class="headerlink" href="#adding-contour-lines" title="Permalink to this heading">¶</a></h2>
 <p>Contour lines can be added to a plot with the following options:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># contour line levels</span>
@@ -228,8 +232,8 @@ specified in points.  The <code class="docutils literal notranslate"><span class
 by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> or a floating point number between 0 and 1 specifying a
 shade of gray.</p>
 <p>Append <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to these options for a 3-panel plot.</p>
-</div>
-<div class="section" id="specifying-colorbar-tick-marks">
+</section>
+<section id="specifying-colorbar-tick-marks">
 <h2>Specifying Colorbar Tick Marks<a class="headerlink" href="#specifying-colorbar-tick-marks" title="Permalink to this heading">¶</a></h2>
 <p>By default, colorbar tick marks are chosen automatically by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.
 To specify tick marks explicitly, use:</p>
@@ -242,8 +246,8 @@ To specify tick marks explicitly, use:</p>
 </pre></div>
 </div>
 <p>Again, append <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to these options for a 3-panel plot.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
