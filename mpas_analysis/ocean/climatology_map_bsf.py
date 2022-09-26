@@ -187,7 +187,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         super().__init__(
             mpas_climatology_task, parent_task, climatology_name,
             variable_list, seasons, comparison_grid_names,
-            subtaskName=subtask_name)
+            subtaskName=subtask_name, vertices=True)
 
         self.min_depth = min_depth
         self.max_depth = max_depth
@@ -223,14 +223,11 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         bsf_vertex = self._compute_barotropic_streamfunction_vertex(
             ds_mesh, climatology)
         logger.info('bsf on vertices computed.')
-        bsf_cell = self._compute_barotropic_streamfunction_cell(
-            ds_mesh, bsf_vertex)
-        logger.info('bsf on cells computed.')
 
-        climatology['barotropicStreamfunction'] = bsf_cell
+        climatology['barotropicStreamfunction'] = bsf_vertex
         climatology.barotropicStreamfunction.attrs['units'] = 'Sv'
         climatology.barotropicStreamfunction.attrs['description'] = \
-            'barotropic streamfunction at cell centers'
+            'barotropic streamfunction at vertices'
 
         climatology = climatology.drop_vars(self.variableList)
 
@@ -276,7 +273,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
     def _compute_barotropic_streamfunction_vertex(self, ds_mesh, ds):
         inner_edges, transport = self._compute_transport(ds_mesh, ds)
-        print('transport computed.')
+        self.logger.info('transport computed.')
 
         nvertices = ds_mesh.sizes['nVertices']
 
@@ -336,41 +333,4 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
                                   dims=( 'nVertices'))
         
         return bsf_vertex
-
-    def _compute_barotropic_streamfunction_cell(self, ds_mesh, bsf_vertex):
-        """
-        Interpolate the barotropic streamfunction from vertices to cells
-        """
-        n_edges_on_cell = ds_mesh.nEdgesOnCell
-        edges_on_cell = ds_mesh.edgesOnCell - 1
-        vertices_on_cell = ds_mesh.verticesOnCell - 1
-        area_edge = 0.25*ds_mesh.dcEdge*ds_mesh.dvEdge
-
-        ncells = ds_mesh.sizes['nCells']
-        max_edges = ds_mesh.sizes['maxEdges']
-
-        area_vert = xr.DataArray(np.zeros((ncells, max_edges)),
-                                 dims=('nCells', 'maxEdges'))
-
-        for ivert in range(max_edges):
-            edge_indices = edges_on_cell.isel(maxEdges=ivert)
-            mask = ivert < n_edges_on_cell
-            area_vert[:, ivert] += 0.5*mask*area_edge.isel(nEdges=edge_indices)
-
-        for ivert in range(max_edges-1):
-            edge_indices = edges_on_cell.isel(maxEdges=ivert+1)
-            mask = ivert+1 < n_edges_on_cell
-            area_vert[:, ivert] += 0.5*mask*area_edge.isel(nEdges=edge_indices)
-            area_vert[:, ivert] += 0.5*mask*area_edge.isel(nEdges=edge_indices)
-
-        edge_indices = edges_on_cell.isel(maxEdges=0)
-        mask = n_edges_on_cell == max_edges
-        area_vert[:, max_edges-1] += \
-            0.5*mask*area_edge.isel(nEdges=edge_indices)
-
-        bsf_cell = \
-            ((area_vert * bsf_vertex[vertices_on_cell]).sum(dim='maxEdges') /
-             area_vert.sum(dim='maxEdges'))
-
-        return bsf_cell
 
