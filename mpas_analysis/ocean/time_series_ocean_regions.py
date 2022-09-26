@@ -129,7 +129,12 @@ class TimeSeriesOceanRegions(AnalysisTask):
             masksSubtask = regionMasksTask.add_mask_subtask(
                 regionGroup=regionGroup)
 
-            regionNames = masksSubtask.expand_region_names(regionNames)
+            try:
+                regionNames = masksSubtask.expand_region_names(regionNames)
+            except FileNotFoundError:
+                # this may happen if we can't create the geojson file to expand
+                # its contents, e.g. if we're just doing mpas_analysis --list
+                regionNames = []
 
             years = list(range(startYear, endYear + 1))
 
