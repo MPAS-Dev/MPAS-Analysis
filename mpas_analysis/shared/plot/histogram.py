@@ -29,7 +29,7 @@ from mpas_analysis.shared.plot.ticks import plot_xtick_format
 from mpas_analysis.shared.plot.title import limit_title
 
 def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
-                            density=True, lineColors=None,
+                            bins=20, range=None, density=True, lineColors=None,
                             lineStyles=None, markers=None, lineWidths=None,
                             legendText=None,
                             titleFontSize=None, axisFontSize=None, defaultFontSize=None,
@@ -107,26 +107,19 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         dpi = config.getint('plot', 'dpi')
 
     fig = plt.figure(figsize=figsize, dpi=dpi)
-    #TODO ensure that this is appropriate for this plot type
     if title is not None:
         if titleFontSize is None:
-            titleFontSize = config.get('plot', 'threePanelTitleFontSize')
+            titleFontSize = config.get('plot', 'titleFontSize')
         title_font = {'size': titleFontSize,
-                      'color': config.get('plot', 'threePanelTitleFontColor'),
-                      'weight': config.get('plot',
-                                           'threePanelTitleFontWeight')}
-    #    suptitle = fig.suptitle(title, y=0.99, **title_font)
-    #else:
-    #    suptitle = None
+                      'color': config.get('plot', 'titleFontColor'),
+                      'weight': config.get('plot', 'titleFontWeight')}
     if axisFontSize is None:
         axisFontSize = config.get('plot', 'axisFontSize')
     axis_font = {'size': axisFontSize}
 
-
     ax = plt.gca()
     labelCount = 0
-    for dsIndex in range(len(dsvalues)):
-        dsvalue = dsvalues[dsIndex]
+    for dsIndex, dsvalue in enumerate(dsvalues):
         if dsvalue is None:
             continue
         if legendText is None:
@@ -153,13 +146,9 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         else:
             linewidth = lineWidths[dsIndex]
 
-        # TODO read varRange from a config file
-        hist_val_range = None
-        # TODO read hist_bins from a config file
-        hist_bins = 20
         hist_values = dsvalue.values.ravel()
         hist_type = 'step'
-        ax.hist(hist_values, range=hist_val_range, bins=hist_bins,
+        ax.hist(hist_values, range=range, bins=bins,
                 linestyle=linestyle, linewidth=linewidth,
                 histtype=hist_type, label=label, density=density)
         if labelCount > 1:

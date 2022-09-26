@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io import open_mpas_dataset
-from mpas_analysis.shared.io.utility import build_config_full_path
+from mpas_analysis.shared.io.utility import build_config_full_path, build_obs_path
 from mpas_analysis.shared.climatology import compute_climatology, \
     get_unmasked_mpas_climatology_file_name
 
@@ -85,8 +85,8 @@ class OceanHistogram(AnalysisTask):
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
 
-        #self.histogramFileName = ''
         self.controlConfig = controlConfig
+
 
     def setup_and_check(self):
         """
@@ -134,6 +134,20 @@ class OceanHistogram(AnalysisTask):
         # Specify variables and seasons to compute climology over
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
+        #TODO fixup
+        if controlConfig is None:
+            if 'ssh' in self.variableList:
+                refTitleLabel = 'Observations (AVISO Dynamic ' \
+                    'Topography, 1993-2010)'
+
+                observationsDirectory = build_obs_path(
+                    config, 'ocean', 'sshSubdirectory')
+
+                obsFileName = \
+                    "{}/zos_AVISO_L4_199210-201012_20180710.nc".format(
+                        observationsDirectory)
+                print(obsFileName)
+
 
     def run_task(self):
         """
@@ -149,12 +163,6 @@ class OceanHistogram(AnalysisTask):
         calendar = self.calendar
         seasons = self.seasons
 
-        #startYear = self.startYear
-        #endYear = self.endYear
-        #TODO determine whether this is needed
-        #startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
-        #endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
-
         mainRunName = config.get('runs', 'mainRunName')
 
         baseDirectory = build_config_full_path(
@@ -169,17 +177,18 @@ class OceanHistogram(AnalysisTask):
         except ValueError:
             raise IOError('No MPAS-O restart file found: need at least one'
                           ' restart file to plot T-S diagrams')
-        #dsRestart = xarray.open_dataset(restartFileName)
-        #dsRestart = dsRestart.isel(Time=0)
+
+        if config.has_option(self.taskName, 'areaVarName'):
+            areaVarName = config.get(self.taskName, 'areaVarName')
+        else:
+            areaVarName = 'areaCell'
 
         for season in seasons:
-            #TODO get the filename of the climatology file from the climatology task
-            #TODO make sure that the climatology spans the appropriate years
             inFileName = get_unmasked_mpas_climatology_file_name(
                 config, season, self.componentName, op='avg')
             # Use xarray to open climatology dataset
             ds = xarray.open_dataset(inFileName)
-            ds = self._multiply_var_by_area(ds, self.variableList)
+            ds = self._multiply_var_by_area(ds, self.variableList, areaVarName=areaVarName)
 
             #TODO add region specification
             #ds.isel(nRegions=self.regionIndex))
@@ -196,19 +205,28 @@ class OceanHistogram(AnalysisTask):
                                               'titleFontSize')
             else:
                 titleFontSize = None
+            if config.has_option(self.taskName, 'titleFontSize'):
+                axisFontSize = config.getint(self.taskName,
+                                             'axisFontSize')
+            else:
+                axisFontSize = None
 
             if config.has_option(self.taskName, 'defaultFontSize'):
                 defaultFontSize = config.getint(self.taskName,
                                                 'defaultFontSize')
             else:
                 defaultFontSize = None
+            if config.has_option(self.taskName, 'bins'):
+                bins = config.getint(self.taskName, 'bins')
+            else:
+                bins = None
 
             yLabel = 'normalized Probability Density Function'
 
             for var in self.variableList:
 
-                fields = [ds[var]]
-                #TODO add depth masking
+                fields = [ds[f'{var}_{areaVarName}']]
+                #Note: if we want to support 3-d variable histograms, we need to add depth masking
 
                 #TODO add later
                 #if plotControl:
@@ -220,14 +238,12 @@ class OceanHistogram(AnalysisTask):
                 xLabel = f"{ds.ssh.attrs['long_name']} ({ds.ssh.attrs['units']})"
 
                 histogram_analysis_plot(config, fields, calendar=calendar,
-                                        title=title, xlabel=xLabel, ylabel=yLabel,
+                                        title=title, xlabel=xLabel, ylabel=yLabel, bins=bins,
                                         lineColors=lineColors, lineWidths=lineWidths,
                                         legendText=legendText,
                                         titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
 
-                #TODO whether this should be plotsDirectory or baseDirectory
                 outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{season}.png'
-                print(f'outFileName={outFileName}')
                 savefig(outFileName, config)
 
                 #TODO should this be in the outer loop instead?
@@ -245,7 +261,7 @@ class OceanHistogram(AnalysisTask):
                     imageCaption=caption)
 
 
-    def _multiply_var_by_area(self, ds, variableList):
+    def _multiply_var_by_area(self, ds, variableList, areaVarName='areaCell', fractionVarName=None):
 
         """
         Compute a time series of the global mean water-column thickness.
@@ -256,20 +272,19 @@ class OceanHistogram(AnalysisTask):
         dsRestart = xarray.open_dataset(restartFileName)
         dsRestart = dsRestart.isel(Time=0)
 
-        #TODO load seaIceArea for sea ice histograms
-        #landIceFraction = dsRestart.landIceFraction.isel(Time=0)
-        areaCell = dsRestart.areaCell
+        areaCell = dsRestart[areaVarName]
+        print(f'shape(areaCell) = {numpy.shape(areaCell.values)}')
 
         # for convenience, rename the variables to simpler, shorter names
         ds = ds.rename(self.variableDict)
 
         for varName in variableList:
-            #varName = {i for i in self.variableDict if self.variableDict[i]==var}
-            varAreaName = f'{varName}AreaCell'
+            varAreaName = f'{varName}_{areaVarName}'
             ds[varAreaName] = ds[varName] / areaCell
+            if fractionVarName is not None:
+                frac = ds[fractionVarName]
+                ds[varAreaName] = ds[varName] * frac
             ds[varAreaName].attrs['units'] = 'm^2'
-            #ds.sshAreaCell.attrs['units'] = 'm^2'
-            #ds.sshAreaCell.attrs['description'] = \
             ds[varAreaName].attrs['description'] = \
                 f'{varName} multiplied by the cell area'
 
