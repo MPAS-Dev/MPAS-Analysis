@@ -222,7 +222,12 @@
             <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
                 <span class="n">regionGroup</span><span class="o">=</span><span class="n">regionGroup</span><span class="p">)</span>
 
-            <span class="n">regionNames</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span><span class="n">regionNames</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">regionNames</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span><span class="n">regionNames</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+                <span class="c1"># this may happen if we can&#39;t create the geojson file to expand</span>
+                <span class="c1"># its contents, e.g. if we&#39;re just doing mpas_analysis --list</span>
+                <span class="n">regionNames</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
 
