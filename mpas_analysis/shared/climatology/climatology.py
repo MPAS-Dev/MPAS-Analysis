@@ -35,7 +35,7 @@ from mpas_analysis.shared.climatology.comparison_descriptors import \
 
 
 def get_remapper(config, sourceDescriptor, comparisonDescriptor,
-                 mappingFilePrefix, method, logger=None):
+                 mappingFilePrefix, method, logger=None, vertices=False):
     """
     Given config options and descriptions of the source and comparison grids,
     returns a ``pyremap.Remapper`` object that can be used to remap from source
@@ -49,10 +49,10 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     config : mpas_tools.config.MpasConfigParser
         Contains configuration options
 
-    sourceDescriptor : ``MeshDescriptor`` subclass object
+    sourceDescriptor : pyremap.MeshDescriptor
         A description of the source mesh or grid
 
-    comparisonDescriptor : ``MeshDescriptor`` subclass object
+    comparisonDescriptor : pyremap.MeshDescriptor
         A description of the comparison grid
 
     mappingFilePrefix : str
@@ -61,12 +61,15 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     method : {'bilinear', 'neareststod', 'conserve'}
         The method of interpolation used.
 
-    logger : ``logging.Logger``, optional
+    logger : logging.Logger, optional
         A logger to which ncclimo output should be redirected
+
+    vertices : bool, optional
+        Whether to remap from vertices, rather than cells
 
     Returns
     -------
-    remapper : ``pyremap.Remapper`` object
+    remapper : pyremap.Remapper
         A remapper that can be used to remap files or data sets from the source
         grid or mesh to the comparison grid.
     """
@@ -79,11 +82,14 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
     if not _matches_comparison(sourceDescriptor, comparisonDescriptor):
         # we need to remap because the grids don't match
 
-        mappingBaseName = '{}_{}_to_{}_{}.nc'.format(
-            mappingFilePrefix,
-            sourceDescriptor.meshName,
-            comparisonDescriptor.meshName,
-            method)
+        if vertices:
+            srcMeshName = f'{sourceDescriptor.meshName}_vertices'
+        else:
+            srcMeshName = sourceDescriptor.meshName
+        destMeshName = comparisonDescriptor.meshName
+
+        mappingBaseName = \
+            f'{mappingFilePrefix}_{srcMeshName}_to_{destMeshName}_{method}.nc'
 
         tryCustom = config.get('diagnostics', 'customDirectory') != 'none'
         if tryCustom:
@@ -92,8 +98,8 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                 config, 'diagnostics', 'mappingSubdirectory',
                 baseDirectoryOption='customDirectory')
 
-            mappingFileName = '{}/{}'.format(mappingSubdirectory,
-                                             mappingBaseName)
+            mappingFileName = f'{mappingSubdirectory}/{mappingBaseName}'
+
         if not tryCustom or not os.path.exists(mappingFileName):
             # second see if mapping files are in the base directory
 
@@ -101,8 +107,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                 config, 'diagnostics', 'mappingSubdirectory',
                 baseDirectoryOption='base_path')
 
-            mappingFileName = '{}/{}'.format(mappingSubdirectory,
-                                             mappingBaseName)
+            mappingFileName = f'{mappingSubdirectory}/{mappingBaseName}'
 
         if not os.path.exists(mappingFileName):
             # we don't have a mapping file yet, so get ready to create one
@@ -111,8 +116,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
                 build_config_full_path(config, 'output',
                                        'mappingSubdirectory')
             make_directories(mappingSubdirectory)
-            mappingFileName = '{}/{}'.format(mappingSubdirectory,
-                                             mappingBaseName)
+            mappingFileName = f'{mappingSubdirectory}/{mappingBaseName}'
 
     remapper = Remapper(sourceDescriptor, comparisonDescriptor,
                         mappingFileName)
