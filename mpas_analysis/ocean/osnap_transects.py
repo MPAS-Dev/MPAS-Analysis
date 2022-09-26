@@ -26,7 +26,7 @@ class OsnapTransects(AnalysisTask):
     """
     # Authors
     # -------
-    # Alice Barthel
+    # Alice Barthel, Xylar Asay-Davis
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
         """
@@ -81,8 +81,8 @@ class OsnapTransects(AnalysisTask):
             config, 'ocean', 'osnapSubdirectory')
 
         origObsFileNames = \
-            {'OSNAP_East': 'OSNAP_East_20220518.nc',
-             'OSNAP_West': 'OSNAP_West_20220518.nc'}
+            {'OSNAP_East': 'OSNAP_East_ANN_20220926.nc',
+             'OSNAP_West': 'OSNAP_West_ANN_20220926.nc'}
 
         obsFileNames = {}
         for transectName in horizontalBounds:
@@ -112,16 +112,6 @@ class OsnapTransects(AnalysisTask):
                  'obs': 'salinity',
                  'titleName': 'Salinity',
                  'units': r'PSU'}}
-#             'potentialDensity':
-#                {'mpas': 'timeMonthly_avg_potentialDensity',
-#                 'obs': 'potentialDensity',
-#                 'titleName': 'Potential Density',
-#                 'units': r'kg m$^{-3}$'},
-#             'potentialDensityContour':
-#                 {'mpas': 'timeMonthly_avg_potentialDensity',
-#                  'obs': 'potentialDensity',
-#                  'titleName': 'Potential Density Contours',
-#                  'units': r'kg m$^{-3}$'}}
 
         transectCollectionName = 'OSNAP_transects'
         if horizontalResolution not in ['obs', 'mpas']:
@@ -158,9 +148,6 @@ class OsnapTransects(AnalysisTask):
 
         fieldNameDict = {'temperature': 'temperatureTransect',
                          'salinity': 'salinityTransect'}
-                         #'potentialDensity': 'potentialDensityTransect',
-                         #'potentialDensityContour':
-                         #    'potentialDensityContourTransect'}
 
         for fieldName in fields:
             for transectName in obsFileNames:
