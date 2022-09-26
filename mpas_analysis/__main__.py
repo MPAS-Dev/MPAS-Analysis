@@ -229,6 +229,9 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.AntshipTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
+    analyses.append(ocean.OsnapTransects(config, oceanClimatologyTasks['avg'],
+                                        controlConfig))
+
     analyses.append(ocean.SoseTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
