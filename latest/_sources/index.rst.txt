@@ -37,6 +37,9 @@ used those components.
    :maxdepth: 1
 
    tutorials/getting_started
+   tutorials/dev_getting_started
+   tutorials/dev_understand_a_task
+   tutorials/dev_add_task
 
 .. toctree::
    :caption: Authors

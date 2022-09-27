@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started with MPAS-Analysis &mdash; MPAS-Analysis latest documentation</title>
+  <title>User: Getting Started &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Main Authors" href="../authors.html" />
+    <link rel="next" title="Developer: Getting Started" href="dev_getting_started.html" />
     <link rel="prev" title="Eddy Kinetic Energy Climatology Mapping" href="../design_docs/eddykineticenergy.html" /> 
 </head>
 
@@ -57,7 +57,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started with MPAS-Analysis</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User: Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-a-conda-environment">1 Setting up a Conda Environment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#installing-miniconda">1.1 Installing Miniconda</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-conda-environment">1.2 Creating a conda environment</a></li>
@@ -67,7 +67,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#downloading-observations">2 Downloading observations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#downloading-an-example-run">3 Downloading an example run</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#configuring-mpas-analysis">4 Configuring MPAS-Analysis</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#run">4.1 [run]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#runs">4.1 [runs]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#execute">4.2 [execute]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#diagnostics">4.3 [diagnostics]</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#input">4.4 [input]</a></li>
@@ -85,6 +85,9 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_add_task.html">Developers: Adding a new analysis task</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
@@ -110,7 +113,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Getting Started with MPAS-Analysis</li>
+      <li>User: Getting Started</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/getting_started.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -120,8 +123,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="getting-started-with-mpas-analysis">
-<span id="tutorial-getting-started"></span><h1>Getting Started with MPAS-Analysis<a class="headerlink" href="#getting-started-with-mpas-analysis" title="Permalink to this heading">¶</a></h1>
+  <section id="user-getting-started">
+<span id="tutorial-getting-started"></span><h1>User: Getting Started<a class="headerlink" href="#user-getting-started" title="Permalink to this heading">¶</a></h1>
 <p>This tutorial walks a new user through the basics of using MPAS-Analysis.</p>
 <section id="setting-up-a-conda-environment">
 <h2>1 Setting up a Conda Environment<a class="headerlink" href="#setting-up-a-conda-environment" title="Permalink to this heading">¶</a></h2>
@@ -296,9 +299,9 @@ to analyze</p></li>
 exception of a few paths that you will need to provide, the config options
 displayed below are the ones appropriate for the example E3SM simulation from
 Section 3.</p>
-<section id="run">
-<h3>4.1 [run]<a class="headerlink" href="#run" title="Permalink to this heading">¶</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">[run]</span></code> section contains options related to which E3SM simulation(s) are
+<section id="runs">
+<h3>4.1 [runs]<a class="headerlink" href="#runs" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section contains options related to which E3SM simulation(s) are
 being analyzed:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span><span class="w"></span>
 <span class="c1">## options related to the run to be analyzed and control runs to be</span><span class="w"></span>
@@ -621,7 +624,7 @@ and how it was configured.</p>
 <a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/examples/QU480">this example output</a>.</p>
 </section>
 <section id="troubleshooting">
-<h2>7 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<span id="tutorial-getting-started-trouble"></span><h2>7 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
 <p>This section briefly describes strategies for diagnosing errors in
 MPAS-Analysis.  This tutorial cannot hope to provide a comprehensive guide to
 troubleshooting these errors.  Please search the documentation, Google the error
@@ -668,7 +671,7 @@ determine the cause of the error.  If not, please include them if you are
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../design_docs/eddykineticenergy.html" class="btn btn-neutral float-left" title="Eddy Kinetic Energy Climatology Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../authors.html" class="btn btn-neutral float-right" title="Main Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="dev_getting_started.html" class="btn btn-neutral float-right" title="Developer: Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
