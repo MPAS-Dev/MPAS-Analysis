@@ -244,6 +244,12 @@ def build_analysis_list(config, controlConfig):
     analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
         config=config, mpas_climatology_task=seaIceClimatolgyTask,
         hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
+        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
+        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        hemisphere='SH', control_config=controlConfig))
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
                                              controlConfig))
