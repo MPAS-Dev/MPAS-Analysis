@@ -225,11 +225,6 @@ class OceanHistogram(AnalysisTask):
         #    raise IOError('No MPAS-O restart file found: need at least one'
         #                  ' restart file to plot T-S diagrams')
 
-        #if config.has_option(self.taskName, 'areaVarName'):
-        #    areaVarName = config.get(self.taskName, 'areaVarName')
-        #else:
-        #    areaVarName = 'areaCell'
-
         #for season in seasons:
         #    inFileName = get_unmasked_mpas_climatology_file_name(
         #        config, season, self.componentName, op='avg')
@@ -306,35 +301,6 @@ class OceanHistogram(AnalysisTask):
                 #    thumbnailDescription=title,
                 #    imageDescription=caption,
                 #    imageCaption=caption)
-
-    def _multiply_var_by_area(self, ds, variableList, areaVarName='areaCell', fractionVarName=None):
-
-        """
-        Compute a time series of the global mean water-column thickness.
-        """
-        restartFileName = self.runStreams.readpath('restart')[0]
-
-        dsRestart = xarray.open_dataset(restartFileName)
-        dsRestart = dsRestart.isel(Time=0)
-
-        areaCell = dsRestart[areaVarName]
-        print(f'shape(areaCell) = {numpy.shape(areaCell.values)}')
-
-        # for convenience, rename the variables to simpler, shorter names
-        ds = ds.rename(self.variableDict)
-
-        for varName in variableList:
-            print(f'multiply {varName} by area')
-            varAreaName = f'{varName}_{areaVarName}'
-            ds[varAreaName] = ds[varName] / areaCell
-            if fractionVarName is not None:
-                frac = ds[fractionVarName]
-                ds[varAreaName] = ds[varName] * frac
-            ds[varAreaName].attrs['units'] = 'm^2'
-            ds[varAreaName].attrs['description'] = \
-                f'{varName} multiplied by the cell area'
-
-        return ds
 
 class PlotRegionHistogramSubtask(AnalysisTask):
     """
@@ -536,10 +502,18 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         # Use xarray to open climatology dataset
         print(f'Open {inFileName}')
         ds = xarray.open_dataset(inFileName)
+        if config.has_option(self.taskName, 'weightByVariable'):
+            weightVarName = config.get(self.taskName, 'weightByVariable')
+        else:
+            weightVarName = 'areaCell'
+        weights = []
+        restartFileName = self.runStreams.readpath('restart')[0]
+        dsRestart = xarray.open_dataset(restartFileName)
+        dsRestart = dsRestart.isel(Time=0)
+        print(f'nCells before masking: {ds.sizes["nCells"]}')
         ds = ds.where(cellMask, drop=True)
+        dsRestart = dsRestart.where(cellMask, drop=True)
 
-        #TODO add region specification
-        #ds.isel(nRegions=self.regionIndex))
         if config.has_option(self.taskName, 'lineColors'):
             lineColors = [config.get(self.taskName, 'mainColor')]
         else:
@@ -589,6 +563,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             #TODO title as attribute or dict of var
             varTitle = varname
             fields = [ds[varname]]
+            weights.append(dsRestart[weightVarName].values)
             xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
             for obsName in self.obsDicts:
                 localObsDict = dict(self.obsDicts[obsName])
@@ -605,8 +580,9 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                     lineColors.append(obsColor)
                 if lineWidths is not None:
                     lineWidths.append([lineWidths[0]])
+                weights.append(None)
             histogram_analysis_plot(config, fields, calendar=calendar,
-                                    title=title, xlabel=xLabel, ylabel=yLabel, bins=bins,
+                                    title=title, xlabel=xLabel, ylabel=yLabel, bins=bins, weights=weights,
                                     lineColors=lineColors, lineWidths=lineWidths,
                                     legendText=legendText,
                                     titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
@@ -628,4 +604,3 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 thumbnailDescription=self.regionName.replace('_', ' '),
                 imageDescription=caption,
                 imageCaption=caption)
-

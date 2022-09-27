@@ -29,7 +29,7 @@ from mpas_analysis.shared.plot.ticks import plot_xtick_format
 from mpas_analysis.shared.plot.title import limit_title
 
 def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
-                            bins=20, range=None, density=True, lineColors=None,
+                            bins=20, range=None, density=True, weights=None, lineColors=None,
                             lineStyles=None, markers=None, lineWidths=None,
                             legendText=None,
                             titleFontSize=None, axisFontSize=None, defaultFontSize=None,
@@ -147,8 +147,9 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
             linewidth = lineWidths[dsIndex]
 
         hist_values = dsvalue.values.ravel()
+        weight = weights[dsIndex]
         hist_type = 'step'
-        ax.hist(hist_values, range=range, bins=bins,
+        ax.hist(hist_values, range=range, bins=bins, weights=weight,
                 linestyle=linestyle, linewidth=linewidth,
                 histtype=hist_type, label=label, density=density)
         if labelCount > 1:
