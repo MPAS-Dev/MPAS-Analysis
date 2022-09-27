@@ -80,7 +80,7 @@ class ClimatologyMapBSF(AnalysisTask):
         for min_depth, max_depth in depth_ranges:
             depth_range_string = \
                 f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
-            if np.abs(max_depth) < 5000. :
+            if np.abs(max_depth) < 6000. :
                 fname_title=f'Streamfunction over {depth_range_string}'
                 fname_clim=f'{field_name}_{depth_range_string}'
             else:
