@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,22 +39,32 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
-</ul>
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
 </ul>
@@ -123,7 +134,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasksSubtask</span>
 
 
-<div class="viewcode-block" id="StreamfunctionMOC"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC">[docs]</a><span class="k">class</span> <span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamfunctionMOC"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC">[docs]</a><span class="k">class</span> <span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation and plotting of model meridional overturning circulation.</span>
 <span class="sd">    Will eventually support:</span>
@@ -137,7 +148,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="StreamfunctionMOC.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="StreamfunctionMOC.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -338,6 +349,9 @@
 
         <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
@@ -380,7 +394,8 @@
                  <span class="s1">&#39;timeMonthly_avg_mocStreamvalLatAndDepthRegion&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span>
+                            <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
             <span class="c1"># Add the bolus velocity if GM is enabled</span>
             <span class="k">try</span><span class="p">:</span>
@@ -390,10 +405,23 @@
                 <span class="c1"># the old name</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span>
                     <span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_submesoscale_enable&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># an old run without submesoscale</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">False</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
                 <span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                     <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;timeMonthly_avg_vertGMBolusVelocityTop&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span><span class="p">:</span>
+                <span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalMLEvelocity&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;timeMonthly_avg_vertMLEBolusVelocityTop&#39;</span><span class="p">])</span>
+
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                                                <span class="n">seasons</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">])</span>
@@ -563,7 +591,8 @@
             <span class="k">return</span>
 
         <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
-            <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+            <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span> <span class="o">=</span> \
+            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
 
         <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
 
@@ -592,25 +621,36 @@
         <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
+        <span class="c1"># rename some variables for convenience</span>
+        <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">:</span> <span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">:</span> <span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">})</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
             <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
                 <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">]</span>
 
             <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
                 <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertGMBolusVelocityTop&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="c1"># rename some variables for convenience</span>
-            <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">:</span> <span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">:</span> <span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span><span class="p">:</span>
+            <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalMLEvelocity&#39;</span><span class="p">]</span>
+
+            <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertMLEBolusVelocityTop&#39;</span><span class="p">]</span>
 
         <span class="c1"># Convert to numpy arrays</span>
         <span class="c1"># (can result in a memory error for large array size)</span>
         <span class="n">horizontalVel</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">avgNormalVelocity</span><span class="o">.</span><span class="n">values</span>
         <span class="n">verticalVel</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">avgVertVelocityTop</span><span class="o">.</span><span class="n">values</span>
         <span class="n">velArea</span> <span class="o">=</span> <span class="n">verticalVel</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+        <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">values</span>
 
         <span class="c1"># Create dictionary for MOC climatology (NB: need this form</span>
         <span class="c1"># in order to convert it to xarray dataset later in the script)</span>
@@ -634,8 +674,9 @@
                                                 <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
                                                 <span class="n">transectEdgeMaskSigns</span><span class="p">,</span>
                                                 <span class="n">nVertLevels</span><span class="p">,</span> <span class="n">dvEdge</span><span class="p">,</span>
-                                                <span class="n">refLayerThickness</span><span class="p">,</span>
-                                                <span class="n">horizontalVel</span><span class="p">)</span>
+                                                <span class="n">horizontalVel</span><span class="p">,</span>
+                                                <span class="n">layerThickness</span><span class="p">,</span>
+                                                <span class="n">cellsOnEdge</span><span class="p">)</span>
 
             <span class="n">regionCellMask</span> <span class="o">=</span> <span class="n">dictRegion</span><span class="p">[</span><span class="n">region</span><span class="p">][</span><span class="s1">&#39;cellMask&#39;</span><span class="p">]</span>
             <span class="n">latBinSize</span> <span class="o">=</span> \
@@ -928,6 +969,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
@@ -965,7 +1009,8 @@
                  <span class="s1">&#39;timeMonthly_avg_mocStreamvalLatAndDepthRegion&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">,</span>
-                                 <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span>
+                                 <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
             <span class="c1"># Add the bolus velocity if GM is enabled</span>
             <span class="k">try</span><span class="p">:</span>
@@ -975,10 +1020,23 @@
                 <span class="c1"># the old name</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span>
                     <span class="s1">&#39;config_use_standardgm&#39;</span><span class="p">)</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getbool</span><span class="p">(</span><span class="s1">&#39;config_submesoscale_enable&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="c1"># an old run without submesoscale</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">False</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
                     <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;timeMonthly_avg_vertGMBolusVelocityTop&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                    <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalMLEvelocity&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;timeMonthly_avg_vertMLEBolusVelocityTop&#39;</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1020,8 +1078,6 @@
         <span class="n">outputFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/mocTimeSeries_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">outputDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
 
-        <span class="n">streamName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span>
-
         <span class="c1"># Get bin latitudes and index of 26.5N</span>
         <span class="n">binBoundaryMocStreamfunction</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># first try timeSeriesStatsMonthly for bin boundaries, then try</span>
@@ -1058,6 +1114,8 @@
                                              <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
 
         <span class="n">mocRegion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
+        <span class="n">moc</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">refTopDepth</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
         <span class="n">computed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
 
@@ -1067,11 +1125,18 @@
             <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outputFileName</span><span class="p">,</span>
                                    <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
                                    <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">],</span>
+                                   <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;mocAtlantic&#39;</span><span class="p">],</span>
                                    <span class="n">startDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
                                    <span class="n">endDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMOCIn</span><span class="p">:</span>
 
                 <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="n">moc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">sizes</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">sizes</span>
+                    <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">],</span>
+                                    <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]))</span>
+                    <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">depth</span><span class="o">.</span><span class="n">values</span>
 
                 <span class="c1"># first, copy all computed data</span>
                 <span class="k">for</span> <span class="n">inIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMOCIn</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]):</span>
@@ -1083,6 +1148,7 @@
                     <span class="n">outIndex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
                     <span class="n">mocRegion</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
+                    <span class="n">moc</span><span class="p">[</span><span class="n">outIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic</span><span class="p">[</span><span class="n">inIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
                     <span class="n">times</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
                     <span class="n">computed</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1114,28 +1180,63 @@
             <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocVar</span><span class="p">[</span><span class="n">indRegion</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
             <span class="n">mocRegion</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">mocTop</span><span class="p">[:,</span> <span class="n">indlat26</span><span class="p">])</span>
 
+            <span class="k">if</span> <span class="n">moc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sizes</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">sizes</span>
+                <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="nb">len</span><span class="p">(</span><span class="n">binBoundaryMocStreamfunction</span><span class="p">)))</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">restartFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at &#39;</span>
+                                  <span class="s1">&#39;least one restart file for MOC calculation&#39;</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsRestart</span><span class="p">:</span>
+                    <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+                <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">refBottomDepth</span><span class="p">)</span>
+                <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">refTopDepth</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nVertLevels</span><span class="p">]</span>
+
+            <span class="n">moc</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span>
+
         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Max MOC Atlantic streamfunction nearest to RAPID &#39;</span> \
             <span class="s1">&#39;Array latitude (26.5N)&#39;</span>
 
-        <span class="n">dictonary</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span>
-                     <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">times</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;days since 0001-01-01&#39;</span><span class="p">}},</span>
-                                <span class="s1">&#39;year&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">}},</span>
-                                <span class="s1">&#39;month&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">months</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">}}},</span>
-                     <span class="s1">&#39;data_vars&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">:</span>
-                                   <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">mocRegion</span><span class="p">,</span>
-                                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">}}}}</span>
-        <span class="n">dsMOCTimeSeries</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictonary</span><span class="p">)</span>
+        <span class="n">descriptionAtl</span> <span class="o">=</span> <span class="s1">&#39;Atlantic MOC streamfunction&#39;</span>
+
+        <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">times</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;days since 0001-01-01&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">months</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lat&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">binBoundaryMocStreamfunction</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;degrees north&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">refTopDepth</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;meters&#39;</span><span class="p">}}},</span>
+            <span class="s1">&#39;data_vars&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">mocRegion</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">}},</span>
+                <span class="s1">&#39;mocAtlantic&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">moc</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">descriptionAtl</span><span class="p">}}}}</span>
+        <span class="n">dsMOCTimeSeries</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMOCTimeSeries</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_moc_time_series_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1160,7 +1261,8 @@
             <span class="n">outputDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
 
         <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
-            <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+            <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span> <span class="o">=</span> \
+            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
 
         <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
 
@@ -1195,6 +1297,7 @@
                                              <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
 
         <span class="n">mocRegion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
+        <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="n">nVertLevels</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">latBins</span><span class="p">)))</span>
         <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
         <span class="n">computed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
 
@@ -1204,7 +1307,8 @@
             <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outputFileName</span><span class="p">,</span>
                                    <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
                                    <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">],</span>
+                                   <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">,</span>
+                                                 <span class="s1">&#39;mocAtlantic&#39;</span><span class="p">],</span>
                                    <span class="n">startDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
                                    <span class="n">endDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMOCIn</span><span class="p">:</span>
 
@@ -1220,6 +1324,7 @@
                     <span class="n">outIndex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
                     <span class="n">mocRegion</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
+                    <span class="n">moc</span><span class="p">[</span><span class="n">outIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic</span><span class="p">[</span><span class="n">inIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
                     <span class="n">times</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
                     <span class="n">computed</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1245,55 +1350,87 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     date: </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
                                                                <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">))</span>
 
+            <span class="c1"># rename some variables for convenience</span>
+            <span class="n">dsLocal</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+                <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">:</span> <span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">:</span> <span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;layerThickness&#39;</span><span class="p">})</span>
+
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span><span class="p">:</span>
                 <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
                     <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">]</span>
 
                 <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
                     <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertGMBolusVelocityTop&#39;</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># rename some variables for convenience</span>
-                <span class="n">dsLocal</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-                    <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">:</span> <span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">:</span> <span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">})</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span><span class="p">:</span>
+                <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgNormalVelocity&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalMLEvelocity&#39;</span><span class="p">]</span>
+
+                <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;avgVertVelocityTop&#39;</span><span class="p">]</span> <span class="o">+</span> \
+                    <span class="n">dsLocal</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertMLEBolusVelocityTop&#39;</span><span class="p">]</span>
 
             <span class="n">horizontalVel</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">avgNormalVelocity</span><span class="o">.</span><span class="n">values</span>
             <span class="n">verticalVel</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">avgVertVelocityTop</span><span class="o">.</span><span class="n">values</span>
             <span class="n">velArea</span> <span class="o">=</span> <span class="n">verticalVel</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+            <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">values</span>
+
             <span class="n">transportZ</span> <span class="o">=</span> <span class="n">_compute_transport</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">,</span>
                                             <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
                                             <span class="n">transectEdgeMaskSigns</span><span class="p">,</span>
                                             <span class="n">nVertLevels</span><span class="p">,</span> <span class="n">dvEdge</span><span class="p">,</span>
-                                            <span class="n">refLayerThickness</span><span class="p">,</span>
-                                            <span class="n">horizontalVel</span><span class="p">)</span>
+                                            <span class="n">horizontalVel</span><span class="p">,</span>
+                                            <span class="n">layerThickness</span><span class="p">,</span>
+                                            <span class="n">cellsOnEdge</span><span class="p">)</span>
             <span class="n">mocTop</span> <span class="o">=</span> <span class="n">_compute_moc</span><span class="p">(</span><span class="n">latAtlantic</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span>
                                   <span class="n">regionCellMask</span><span class="p">,</span> <span class="n">transportZ</span><span class="p">,</span> <span class="n">velArea</span><span class="p">)</span>
+            <span class="n">moc</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span>
             <span class="n">mocRegion</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">mocTop</span><span class="p">[:,</span> <span class="n">indlat26</span><span class="p">])</span>
 
         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Max MOC Atlantic streamfunction nearest to RAPID &#39;</span> \
             <span class="s1">&#39;Array latitude (26.5N)&#39;</span>
 
-        <span class="n">dictonary</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span>
-                     <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">times</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;days since 0001-01-01&#39;</span><span class="p">}},</span>
-                                <span class="s1">&#39;year&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">}},</span>
-                                <span class="s1">&#39;month&#39;</span><span class="p">:</span>
-                                <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                 <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">months</span><span class="p">,</span>
-                                 <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">}}},</span>
-                     <span class="s1">&#39;data_vars&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">:</span>
-                                   <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">),</span>
-                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">mocRegion</span><span class="p">,</span>
-                                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">}}}}</span>
-        <span class="n">dsMOCTimeSeries</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictonary</span><span class="p">)</span>
+        <span class="n">descriptionAtl</span> <span class="o">=</span> <span class="s1">&#39;Atlantic MOC streamfunction&#39;</span>
+
+        <span class="n">dictionary</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;coords&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">times</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;days since 0001-01-01&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;year&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;year&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;month&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">months</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;lat&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">latAtlantic</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;degrees north&#39;</span><span class="p">}},</span>
+                <span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">refTopDepth</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;meters&#39;</span><span class="p">}}},</span>
+            <span class="s1">&#39;data_vars&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;mocAtlantic26&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">mocRegion</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">description</span><span class="p">}},</span>
+                <span class="s1">&#39;mocAtlantic&#39;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">),</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">moc</span><span class="p">,</span>
+                    <span class="s1">&#39;attrs&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;Sv (10^6 m^3/s)&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="n">descriptionAtl</span><span class="p">}}}}</span>
+        <span class="n">dsMOCTimeSeries</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMOCTimeSeries</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
 
@@ -1547,6 +1684,7 @@
     <span class="n">areaCell</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
     <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">][:]</span>
     <span class="n">latCell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;latCell&#39;</span><span class="p">][:])</span>
+    <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">][:]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">ncFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">refBottomDepth</span><span class="p">)</span>
     <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
@@ -1558,7 +1696,7 @@
          <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nVertLevels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
-        <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span>
+        <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span>
 
 
 <span class="k">def</span> <span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
@@ -1601,7 +1739,7 @@
 
 <span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">,</span> <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
                        <span class="n">transectEdgeMaskSigns</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dvEdge</span><span class="p">,</span>
-                       <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">horizontalVel</span><span class="p">):</span>
+                       <span class="n">horizontalVel</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;compute mass transport across southern transect of ocean basin&quot;&quot;&quot;</span>
 
     <span class="n">transportZEdge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">nz</span><span class="p">,</span> <span class="n">maxEdgesInTransect</span><span class="p">])</span>
@@ -1610,10 +1748,14 @@
             <span class="k">break</span>
         <span class="c1"># subtract 1 because of python 0-indexing</span>
         <span class="n">iEdge</span> <span class="o">=</span> <span class="n">transectEdgeGlobalIDs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">coe0</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">coe1</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">layerThicknessEdge</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">[</span><span class="n">coe0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span>
+                                  <span class="n">layerThickness</span><span class="p">[</span><span class="n">coe1</span><span class="p">,</span> <span class="p">:])</span>
         <span class="n">transportZEdge</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">horizontalVel</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> \
             <span class="n">transectEdgeMaskSigns</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
             <span class="n">dvEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
-            <span class="n">refLayerThickness</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">layerThicknessEdge</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
     <span class="n">transportZ</span> <span class="o">=</span> <span class="n">transportZEdge</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">transportZ</span>
 
@@ -1623,7 +1765,8 @@
     <span class="sd">&quot;&quot;&quot;compute meridionally integrated MOC streamfunction&quot;&quot;&quot;</span>
 
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">latBins</span><span class="p">),</span> <span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
-    <span class="n">mocTop</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="n">transportZ</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">mocSouthBottomUp</span> <span class="o">=</span> <span class="o">-</span> <span class="n">transportZ</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+    <span class="n">mocTop</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">nz</span><span class="p">]</span> <span class="o">=</span> <span class="n">mocSouthBottomUp</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">iLat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">latBins</span><span class="p">)):</span>
         <span class="n">indlat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
             <span class="n">regionCellMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">latCell</span> <span class="o">&gt;=</span> <span class="n">latBins</span><span class="p">[</span><span class="n">iLat</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]),</span>

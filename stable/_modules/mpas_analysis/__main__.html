@@ -15,6 +15,7 @@
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -38,22 +39,32 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../quick_start.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../analysis_tasks.html">Analysis Tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../components.html">MPAS Components and E3SM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../observations.html">Observations</a></li>
-</ul>
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../api.html">API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../design_docs.html">Design Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/observations.html">Observations</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
 </ul>
@@ -115,6 +126,7 @@
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">xarray</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">importlib.resources</span> <span class="kn">import</span> <span class="n">contents</span>
 
 <span class="kn">from</span> <span class="nn">mache</span> <span class="kn">import</span> <span class="n">discover_machine</span><span class="p">,</span> <span class="n">MachineInfo</span>
 
@@ -162,7 +174,7 @@
             <span class="n">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks. New tasks should be added here, following</span>
 <span class="sd">    the approach used for existing analysis tasks.</span>
@@ -331,10 +343,53 @@
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
+    <span class="n">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">analyses</span></div>
 
 
-<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check for duplicate taskName and subtaskName in the list of analysis tasks</span>
+<span class="sd">    and their subtasks</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    analyses : list of mpas_analysis.shared.AnalysisTask</span>
+<span class="sd">        A list of all analysis tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_task_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">analysis</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">:</span>
+        <span class="n">mainTaskName</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">taskName</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">fullName</span> <span class="o">=</span> <span class="p">(</span><span class="n">mainTaskName</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fullName</span> <span class="ow">in</span> <span class="n">all_task_names</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;A task named </span><span class="si">{</span><span class="n">mainTaskName</span><span class="si">}</span><span class="s1"> has been added more than once&#39;</span><span class="p">)</span>
+        <span class="n">all_task_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullName</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subtask</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
+            <span class="n">taskName</span> <span class="o">=</span> <span class="n">subtask</span><span class="o">.</span><span class="n">taskName</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="n">subtask</span><span class="o">.</span><span class="n">subtaskName</span>
+            <span class="k">if</span> <span class="n">taskName</span> <span class="o">!=</span> <span class="n">mainTaskName</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;A subtask named </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">subtaskName</span><span class="si">}</span><span class="s1"> has a &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;different task name than its parent task: </span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">mainTaskName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">fullName</span> <span class="o">=</span> <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fullName</span> <span class="ow">in</span> <span class="n">all_task_names</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;A subtask named </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">subtaskName</span><span class="si">}</span><span class="s1"> has been &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;added more than once&#39;</span><span class="p">)</span>
+                <span class="n">all_task_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullName</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">all_errors</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Analysis tasks failed these checks:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">all_errors</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks to run based on the &#39;generate&#39; config</span>
 <span class="sd">    option (or command-line flag) and prerequisites and subtasks of each</span>
@@ -384,7 +439,7 @@
     <span class="k">return</span> <span class="n">analysesToGenerate</span></div>
 
 
-<div class="viewcode-block" id="add_task_and_subtasks"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks">[docs]</a><span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
+<div class="viewcode-block" id="add_task_and_subtasks"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks">[docs]</a><span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
                           <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="sd">&quot;&quot;&quot;</span>
@@ -492,7 +547,7 @@
     <span class="k">return</span> <span class="n">totalFailures</span></div>
 
 
-<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>
+<div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the &#39;generate&#39; config option using a string from the command line.</span>
 
@@ -516,10 +571,10 @@
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">element</span><span class="p">)</span>
                                 <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">generateList</span><span class="p">])</span>
     <span class="n">generateString</span> <span class="o">=</span> <span class="s1">&#39;[</span><span class="si">{}</span><span class="s1">]&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">generateString</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">)</span></div>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">,</span> <span class="n">generateString</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>
+<div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run all the tasks, either in serial or in parallel</span>
 
@@ -704,7 +759,7 @@
             <span class="n">logsDirectory</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+<div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis modules based on the &#39;generate&#39; config option.</span>
 <span class="sd">    New tasks should be added here, following the approach used for existing</span>
@@ -814,7 +869,7 @@
             <span class="n">link_dir</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="n">section</span><span class="p">,</span> <span class="n">option</span><span class="o">=</span><span class="n">option</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../generated/mpas_analysis.__main__.main.html#mpas_analysis.__main__.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.main.html#mpas_analysis.__main__.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Entry point for the main script ``mpas_analysis``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -879,7 +934,21 @@
 
     <span class="k">if</span> <span class="n">machine</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Detected E3SM supported machine: </span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+
+            <span class="n">possible_machines</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">machine_configs</span> <span class="o">=</span> <span class="n">contents</span><span class="p">(</span><span class="s1">&#39;mache.machines&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">config</span> <span class="ow">in</span> <span class="n">machine_configs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.cfg&#39;</span><span class="p">):</span>
+                    <span class="n">possible_machines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">config</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">possible_machines</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">possible_machines</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;We could not find the machine: </span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.</span><span class="se">\n</span><span class="s1">&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;Possible machines are:</span><span class="se">\n</span><span class="s1">  </span><span class="si">{</span><span class="n">possible_machines</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">add_from_package</span><span class="p">(</span><span class="s1">&#39;mpas_analysis.configuration&#39;</span><span class="p">,</span>
                                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">machine</span><span class="si">}</span><span class="s1">.cfg&#39;</span><span class="p">)</span>

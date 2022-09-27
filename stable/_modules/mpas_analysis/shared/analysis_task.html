@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -38,22 +39,32 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../quick_start.html">Quick Start Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../configuration.html">Configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../analysis_tasks.html">Analysis Tasks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../components.html">MPAS Components and E3SM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../observations.html">Observations</a></li>
-</ul>
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../api.html">API reference</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../design_docs.html">Design Documents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
 </ul>
@@ -111,7 +122,7 @@
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span>
 
 
-<div class="viewcode-block" id="AnalysisTask"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.html#mpas_analysis.shared.analysis_task.AnalysisTask">[docs]</a><span class="k">class</span> <span class="nc">AnalysisTask</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask">[docs]</a><span class="k">class</span> <span class="nc">AnalysisTask</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for analysis tasks.</span>
 
@@ -161,8 +172,8 @@
 <span class="sd">    runAfterTasks : list of ``AnalysisTasks``</span>
 <span class="sd">        tasks that must be complete before this task can run</span>
 
-<span class="sd">    subtasks : ``OrderedDict`` of ``AnalysisTasks``</span>
-<span class="sd">        Subtasks of this task, with subtask names as keys</span>
+<span class="sd">    subtasks :  list of mpas_analysis.shared.AnalysisTask</span>
+<span class="sd">        Subtasks of this task</span>
 
 <span class="sd">    xmlFileNames : list of strings</span>
 <span class="sd">        The XML file associated with each plot produced by this analysis, empty</span>
@@ -183,7 +194,7 @@
     <span class="n">SUCCESS</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">FAIL</span> <span class="o">=</span> <span class="mi">5</span>
 
-<div class="viewcode-block" id="AnalysisTask.__init__"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.html#mpas_analysis.shared.analysis_task.AnalysisTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+<div class="viewcode-block" id="AnalysisTask.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
                  <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -253,7 +264,7 @@
         <span class="c1"># even in parallel because it has subprocesses such as Pools</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runDirectly</span> <span class="o">=</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.setup_and_check"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.setup_and_check.html#mpas_analysis.shared.analysis_task.AnalysisTask.setup_and_check">[docs]</a>    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.setup_and_check"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html#mpas_analysis.shared.AnalysisTask.setup_and_check">[docs]</a>    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis (e.g. reading namelists and</span>
 <span class="sd">        streams files).</span>
@@ -316,7 +327,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span>
                                                <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.run_task"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.run_task.html#mpas_analysis.shared.analysis_task.AnalysisTask.run_task">[docs]</a>    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.run_task"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_task.html#mpas_analysis.shared.AnalysisTask.run_task">[docs]</a>    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the analysis.  Each task should override this function to do the</span>
 <span class="sd">        work of computing and/or plotting analysis</span>
@@ -327,7 +338,7 @@
 
         <span class="k">return</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.run_after"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.run_after.html#mpas_analysis.shared.analysis_task.AnalysisTask.run_after">[docs]</a>    <span class="k">def</span> <span class="nf">run_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.run_after"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_after.html#mpas_analysis.shared.AnalysisTask.run_after">[docs]</a>    <span class="k">def</span> <span class="nf">run_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only run this task after the given task has completed.  This allows a</span>
 <span class="sd">        task to be constructed of multiple subtasks, some of which may block</span>
@@ -347,7 +358,7 @@
         <span class="k">if</span> <span class="n">task</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runAfterTasks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">runAfterTasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">task</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.add_subtask"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask.html#mpas_analysis.shared.analysis_task.AnalysisTask.add_subtask">[docs]</a>    <span class="k">def</span> <span class="nf">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subtask</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.add_subtask"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.add_subtask.html#mpas_analysis.shared.AnalysisTask.add_subtask">[docs]</a>    <span class="k">def</span> <span class="nf">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subtask</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a subtask to this tasks.  This task always runs after the subtask</span>
 <span class="sd">        has finished.  However, this task gets set up *before* the subtask,</span>
@@ -366,7 +377,7 @@
         <span class="k">if</span> <span class="n">subtask</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">subtasks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.run"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.run.html#mpas_analysis.shared.analysis_task.AnalysisTask.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeLogFile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.run"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run.html#mpas_analysis.shared.AnalysisTask.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeLogFile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up logging and then runs the analysis task.</span>
 
@@ -429,7 +440,7 @@
         <span class="c1"># writeLogFile==False)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span> <span class="o">=</span> <span class="p">[]</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.check_generate"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.check_generate.html#mpas_analysis.shared.analysis_task.AnalysisTask.check_generate">[docs]</a>    <span class="k">def</span> <span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.check_generate"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_generate.html#mpas_analysis.shared.AnalysisTask.check_generate">[docs]</a>    <span class="k">def</span> <span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if this analysis should be generated, based on the</span>
@@ -495,7 +506,7 @@
 
         <span class="k">return</span> <span class="n">generate</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.check_analysis_enabled"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.check_analysis_enabled.html#mpas_analysis.shared.analysis_task.AnalysisTask.check_analysis_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">check_analysis_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysisOptionName</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="AnalysisTask.check_analysis_enabled"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_analysis_enabled.html#mpas_analysis.shared.AnalysisTask.check_analysis_enabled">[docs]</a>    <span class="k">def</span> <span class="nf">check_analysis_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysisOptionName</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check to make sure a given analysis is turned on, issuing a warning or</span>
@@ -550,7 +561,7 @@
 
         <span class="k">return</span> <span class="n">enabled</span></div>
 
-<div class="viewcode-block" id="AnalysisTask.set_start_end_date"><a class="viewcode-back" href="../../../generated/mpas_analysis.shared.analysis_task.AnalysisTask.set_start_end_date.html#mpas_analysis.shared.analysis_task.AnalysisTask.set_start_end_date">[docs]</a>    <span class="k">def</span> <span class="nf">set_start_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+<div class="viewcode-block" id="AnalysisTask.set_start_end_date"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.set_start_end_date.html#mpas_analysis.shared.AnalysisTask.set_start_end_date">[docs]</a>    <span class="k">def</span> <span class="nf">set_start_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the start and end dates in the ``config`` correspond to the start</span>
 <span class="sd">        and end years in a given category of analysis</span>
