@@ -343,7 +343,50 @@
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
+    <span class="n">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">analyses</span></div>
+
+
+<span class="k">def</span> <span class="nf">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Check for duplicate taskName and subtaskName in the list of analysis tasks</span>
+<span class="sd">    and their subtasks</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    analyses : list of mpas_analysis.shared.AnalysisTask</span>
+<span class="sd">        A list of all analysis tasks</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_task_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">analysis</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">:</span>
+        <span class="n">mainTaskName</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">taskName</span>
+        <span class="k">assert</span><span class="p">(</span><span class="n">analysis</span><span class="o">.</span><span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">fullName</span> <span class="o">=</span> <span class="p">(</span><span class="n">mainTaskName</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fullName</span> <span class="ow">in</span> <span class="n">all_task_names</span><span class="p">:</span>
+            <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;A task named </span><span class="si">{</span><span class="n">mainTaskName</span><span class="si">}</span><span class="s1"> has been added more than once&#39;</span><span class="p">)</span>
+        <span class="n">all_task_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullName</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">subtask</span> <span class="ow">in</span> <span class="n">analysis</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
+            <span class="n">taskName</span> <span class="o">=</span> <span class="n">subtask</span><span class="o">.</span><span class="n">taskName</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="n">subtask</span><span class="o">.</span><span class="n">subtaskName</span>
+            <span class="k">if</span> <span class="n">taskName</span> <span class="o">!=</span> <span class="n">mainTaskName</span><span class="p">:</span>
+                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;A subtask named </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">subtaskName</span><span class="si">}</span><span class="s1"> has a &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;different task name than its parent task: </span><span class="se">\n</span><span class="s1">&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">mainTaskName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">fullName</span> <span class="o">=</span> <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">fullName</span> <span class="ow">in</span> <span class="n">all_task_names</span><span class="p">:</span>
+                    <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;A subtask named </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">subtaskName</span><span class="si">}</span><span class="s1"> has been &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;added more than once&#39;</span><span class="p">)</span>
+                <span class="n">all_task_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fullName</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">all_errors</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">  &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Analysis tasks failed these checks:</span><span class="se">\n</span><span class="s1">&#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">all_errors</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>

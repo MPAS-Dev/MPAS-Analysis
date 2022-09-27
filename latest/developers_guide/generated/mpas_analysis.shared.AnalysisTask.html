@@ -148,7 +148,7 @@ files)</p></li>
 streams other than restart files)</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'gregoraian_noleap'}</em>) – The calendar used in the MPAS run</p></li>
 <li><p><strong>runAfterTasks</strong> (list of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – tasks that must be complete before this task can run</p></li>
-<li><p><strong>subtasks</strong> (<code class="docutils literal notranslate"><span class="pre">OrderedDict</span></code> of <code class="docutils literal notranslate"><span class="pre">AnalysisTasks</span></code>) – Subtasks of this task, with subtask names as keys</p></li>
+<li><p><strong>subtasks</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference internal" href="#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><em>mpas_analysis.shared.AnalysisTask</em></a>) – Subtasks of this task</p></li>
 <li><p><strong>xmlFileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><em>strings</em>) – The XML file associated with each plot produced by this analysis, empty
 if no plots were produced</p></li>
 <li><p><strong>logger</strong> (<code class="docutils literal notranslate"><span class="pre">logging.Logger</span></code>) – A logger for output during the run phase of an analysis task</p></li>
