@@ -95,7 +95,7 @@ class OceanHistogram(AnalysisTask):
         self.filePrefix = f'histogram_{mainRunName}'
 
 
-        obsList = []
+        obsList = config.getexpression(self.taskName, 'obsList')
         #TODO add gridName
         obsDicts = {
             'AVISO': {
@@ -105,7 +105,6 @@ class OceanHistogram(AnalysisTask):
                 'lonVar': 'lon',
                 'latVar': 'lat',
                 'sshVar': 'zos'}}
-
         #variableList = []
         #self.variableDict = {}
         #for var in self.variableList:
@@ -125,12 +124,13 @@ class OceanHistogram(AnalysisTask):
                     obsFileName = build_obs_path(
                         config, component=self.componentName,
                         relativePath=localObsDict['gridFileName'])
-                    print(f'Add mask subtask for {regionGroup}, {obsName}')
+                    print(f'Add mask subtask for {regionGroup}, {obsName}, {localObsDict["gridName"]}')
                     obsMasksSubtask = regionMasksTask.add_mask_subtask(
                         regionGroup, obsFileName=obsFileName,
                         lonVar=localObsDict['lonVar'],
                         latVar=localObsDict['latVar'],
                         meshName=localObsDict['gridName'])
+                    regionNames = obsMasksSubtask.expand_region_names(self.regionNames)
                     obsDicts[obsName]['maskTask'] = obsMasksSubtask
 
                     localObsDict['maskTask'] = obsMasksSubtask
@@ -144,8 +144,9 @@ class OceanHistogram(AnalysisTask):
                         plotRegionSubtask = PlotRegionHistogramSubtask(
                             self, regionGroup, regionName, controlConfig,
                             sectionName, fullSuffix, mpasClimatologyTask,
-                            mpasMasksSubtask, groupObsDicts, localVarDict, season)
+                            mpasMasksSubtask, obsMasksSubtask, groupObsDicts, localVarDict, season)
                         plotRegionSubtask.run_after(mpasMasksSubtask)
+                        plotRegionSubtask.run_after(obsMasksSubtask)
                         self.add_subtask(plotRegionSubtask)
                         print(f'Add regional histogram subtask for {var}, {regionName}, {season}')
 
@@ -375,7 +376,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
     def __init__(self, parentTask, regionGroup, regionName, controlConfig,
                  sectionName, fullSuffix, mpasClimatologyTask,
-                 mpasMasksSubtask, obsDicts, varDicts, season):
+                 mpasMasksSubtask, obsMasksSubtask, obsDicts, varDicts, season):
 
         """
         Construct the analysis task.
@@ -435,6 +436,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         self.controlConfig = controlConfig
         self.mpasClimatologyTask = mpasClimatologyTask
         self.mpasMasksSubtask = mpasMasksSubtask
+        self.obsMasksSubtask = obsMasksSubtask
         self.obsDicts = obsDicts
         self.varDicts = varDicts
         self.season = season
@@ -489,8 +491,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         config = self.config
         sectionName = self.sectionName
 
-        regionMaskFile = self.mpasMasksSubtask.geojsonFileName
-
         self.logger.info('  Make plots...')
 
         calendar = self.calendar
@@ -510,6 +510,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         #    raise IOError('No MPAS-O restart file found: need at least one'
         #                  ' restart file to plot T-S diagrams')
 
+        #regionMaskFile = self.mpasMasksSubtask.geojsonFileName
         regionMaskFileName = self.mpasMasksSubtask.maskFileName
         print(f'Open {regionMaskFileName}')
 
@@ -523,6 +524,15 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         inFileName = get_unmasked_mpas_climatology_file_name(
             config, self.season, self.componentName, op='avg')
+        #TODO: currently does not support len(obsList) > 1
+        if len(self.obsDicts) > 0:
+            obsRegionMaskFileName = self.obsMasksSubtask.maskFileName
+            dsObsRegionMask = xarray.open_dataset(obsRegionMaskFileName)
+            maskRegionNames = decode_strings(dsRegionMask.regionNames)
+            regionIndex = maskRegionNames.index(self.regionName)
+
+            dsObsMask = dsObsRegionMask.isel(nRegions=regionIndex)
+            obsCellMask = dsObsMask.regionMasks == 1
         # Use xarray to open climatology dataset
         print(f'Open {inFileName}')
         ds = xarray.open_dataset(inFileName)
@@ -534,7 +544,19 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             lineColors = [config.get(self.taskName, 'mainColor')]
         else:
             lineColors = None
-        lineWidths = [3]
+        if config.has_option(self.taskName, 'obsColor'):
+            obsColor = config.get_expression(self.taskName, 'obsColor')
+            if lineColors is None:
+                lineColors = ['b']
+        else:
+            if lineColors is not None:
+                obsColor = 'k'
+
+        if config.has_option(self.taskName, 'lineWidths'):
+            lineWidths = [config.get(self.taskName, 'lineWidths')]
+        else:
+            lineWidths = None
+            #lineWidths = [3]
         legendText = [mainRunName]
 
         title = mainRunName
@@ -564,9 +586,25 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         for var in self.varDicts:
 
             varname = f'{self.varDicts[var]}'
+            #TODO title as attribute or dict of var
+            varTitle = varname
             fields = [ds[varname]]
             xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
-
+            for obsName in self.obsDicts:
+                localObsDict = dict(self.obsDicts[obsName])
+                obsFileName = build_obs_path(
+                    config, component=self.componentName,
+                    relativePath=localObsDict['gridFileName'])
+                varnameObs = localObsDict[f'{var}Var']
+                print(f'{var} in obs is {varnameObs}')
+                dsObs = xarray.open_dataset(obsFileName)
+                dsObs = dsObs.where(obsCellMask, drop=True)
+                fields.append(dsObs[varnameObs])
+                legendText.append(obsName)
+                if lineColors is not None:
+                    lineColors.append(obsColor)
+                if lineWidths is not None:
+                    lineWidths.append([lineWidths[0]])
             histogram_analysis_plot(config, fields, calendar=calendar,
                                     title=title, xlabel=xLabel, ylabel=yLabel, bins=bins,
                                     lineColors=lineColors, lineWidths=lineWidths,
@@ -578,16 +616,16 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             savefig(outFileName, config)
 
             #TODO should this be in the outer loop instead?
-            caption = 'Normalized probability density function for SSH climatologies in the {} Region'.format(title)
+            caption = f'Normalized probability density function for SSH climatologies in {self.regionName}'
             write_image_xml(
                 config=config,
                 filePrefix=f'{self.filePrefix}_{var}_{self.regionName}_{self.season}',
                 componentName='Ocean',
                 componentSubdirectory='ocean',
-                galleryGroup='Histograms',
+                galleryGroup=f'{self.regionGroup} Histograms',
                 groupLink=f'histogram{var}',
-                gallery=f'{self.regionGroup} Histograms',
-                thumbnailDescription=title,
+                gallery=varTitle,
+                thumbnailDescription=self.regionName.replace('_', ' '),
                 imageDescription=caption,
                 imageCaption=caption)
 
