@@ -63,6 +63,9 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     density : logical
         if True, normalize the histogram so that the area under the curve is 1
 
+    weights: list of numpy data arrays or NoneType's of length dsvalues
+        the weights corresponding to each entry in dsvalues
+
     lineColors, lineStyles, legendText : list of str, optional
         control line color, style, and corresponding legend
         text.  Default is black, solid line, and no legend.

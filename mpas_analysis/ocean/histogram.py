@@ -168,12 +168,6 @@ class OceanHistogram(AnalysisTask):
         variableList = []
         for var in self.variableList:
             variableList.append(f'timeMonthly_avg_{var}')
-        #    # Add xml file names for each season
-        #    self.xmlFileNames = []
-        #    for season in self.seasons:
-        #        for regionName in self.regionNames:
-        #            print(f'add xml from main: {self.plotsDirectory}/{self.filePrefix}_{var}_{regionName}_{season}.xml')
-        #            self.xmlFileNames.append(f'{self.plotsDirectory}/{self.filePrefix}_{var}_{regionName}_{season}.xml')
 
         # Specify variables and seasons to compute climology over
         print(f'add climatology variables')
@@ -189,105 +183,6 @@ class OceanHistogram(AnalysisTask):
         # -------
         # Carolyn Begeman, Adrian Turner, Xylar Asay-Davis
 
-        #FIXUP do nothing here?
-        print(f'run main task')
-        #self.logger.info("\nPlotting histogram of ocean vars...")
-
-        #config = self.config
-        #calendar = self.calendar
-        #seasons = self.seasons
-
-        #mainRunName = config.get('runs', 'mainRunName')
-
-        #baseDirectory = build_config_full_path(
-        #    config, 'output', 'histogramSubdirectory')
-        #print(f'baseDirectory={baseDirectory}')
-        #print(f'plotsDirectory={self.plotsDirectory}')
-
-        ## the variable mpasFieldName will be added to mpasClimatologyTask
-        ## along with the seasons.
-        #try:
-        #    restartFileName = self.runStreams.readpath('restart')[0]
-        #except ValueError:
-        #    raise IOError('No MPAS-O restart file found: need at least one'
-        #                  ' restart file to plot T-S diagrams')
-
-        #for season in seasons:
-        #    inFileName = get_unmasked_mpas_climatology_file_name(
-        #        config, season, self.componentName, op='avg')
-        #    # Use xarray to open climatology dataset
-        #    ds = xarray.open_dataset(inFileName)
-        #    ds = self._multiply_var_by_area(ds, self.variableList, areaVarName=areaVarName)
-
-        #    #TODO add region specification
-        #    #ds.isel(nRegions=self.regionIndex))
-        #    if config.has_option(self.taskName, 'lineColors'):
-        #        lineColors = [config.get(self.taskName, 'mainColor')]
-        #    else:
-        #        lineColors = None
-        #    lineWidths = [3]
-        #    legendText = [mainRunName]
-
-        #    title = mainRunName
-        #    if config.has_option(self.taskName, 'titleFontSize'):
-        #        titleFontSize = config.getint(self.taskName,
-        #                                      'titleFontSize')
-        #    else:
-        #        titleFontSize = None
-        #    if config.has_option(self.taskName, 'titleFontSize'):
-        #        axisFontSize = config.getint(self.taskName,
-        #                                     'axisFontSize')
-        #    else:
-        #        axisFontSize = None
-
-        #    if config.has_option(self.taskName, 'defaultFontSize'):
-        #        defaultFontSize = config.getint(self.taskName,
-        #                                        'defaultFontSize')
-        #    else:
-        #        defaultFontSize = None
-        #    if config.has_option(self.taskName, 'bins'):
-        #        bins = config.getint(self.taskName, 'bins')
-        #    else:
-        #        bins = None
-
-        #    yLabel = 'normalized Probability Density Function'
-
-        #    for var in self.variableList:
-
-        #        fields = [ds[f'{var}_{areaVarName}']]
-        #        #Note: if we want to support 3-d variable histograms, we need to add depth masking
-
-        #        #TODO add later
-        #        #if plotControl:
-        #        #    fields.append(refData.isel(nRegions=self.regionIndex))
-        #        #    lineColors.append(config.get('histogram', 'controlColor'))
-        #        #    lineWidths.append(1.2)
-        #        #    legendText.append(controlRunName)
-        #        #TODO make title more informative
-        #        xLabel = f"{ds.ssh.attrs['long_name']} ({ds.ssh.attrs['units']})"
-
-                #histogram_analysis_plot(config, fields, calendar=calendar,
-                #                        title=title, xlabel=xLabel, ylabel=yLabel, bins=bins,
-                #                        lineColors=lineColors, lineWidths=lineWidths,
-                #                        legendText=legendText,
-                #                        titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
-
-                #outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{season}.png'
-                #savefig(outFileName, config)
-
-                ##TODO should this be in the outer loop instead?
-                #caption = 'Normalized probability density function for SSH climatologies in the {} Region'.format(title)
-                #write_image_xml(
-                #    config=config,
-                #    filePrefix=f'{self.filePrefix}_{var}_{season}',
-                #    componentName='Ocean',
-                #    componentSubdirectory='ocean',
-                #    galleryGroup='Histograms',
-                #    groupLink=f'histogram{var}',
-                #    gallery=f'{var} Histogram',
-                #    thumbnailDescription=title,
-                #    imageDescription=caption,
-                #    imageCaption=caption)
 
 class PlotRegionHistogramSubtask(AnalysisTask):
     """
@@ -395,6 +290,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         self.season = season
         self.filePrefix = fullSuffix
 
+        #TODO
         #parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         #self.subprocessCount = min(parallelTaskCount,
         #                           self.config.getint(self.taskName,
@@ -455,15 +351,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         print(f'baseDirectory={baseDirectory}')
         print(f'plotsDirectory={self.plotsDirectory}')
 
-        # the variable mpasFieldName will be added to mpasClimatologyTask
-        # along with the seasons.
-        #try:
-        #    restartFileName = self.runStreams.readpath('restart')[0]
-        #except ValueError:
-        #    raise IOError('No MPAS-O restart file found: need at least one'
-        #                  ' restart file to plot T-S diagrams')
-
-        #regionMaskFile = self.mpasMasksSubtask.geojsonFileName
         regionMaskFileName = self.mpasMasksSubtask.maskFileName
         print(f'Open {regionMaskFileName}')
 
@@ -477,6 +364,9 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         inFileName = get_unmasked_mpas_climatology_file_name(
             config, self.season, self.componentName, op='avg')
+
+        #TODO support control run
+
         #TODO: currently does not support len(obsList) > 1
         if len(self.obsDicts) > 0:
             obsRegionMaskFileName = self.obsMasksSubtask.maskFileName
@@ -486,8 +376,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
             dsObsMask = dsObsRegionMask.isel(nRegions=regionIndex)
             obsCellMask = dsObsMask.regionMasks == 1
-        # Use xarray to open climatology dataset
-        print(f'Open {inFileName}')
         ds = xarray.open_dataset(inFileName)
         if config.has_option(self.taskName, 'weightByVariable'):
             weightVarName = config.get(self.taskName, 'weightByVariable')
@@ -497,7 +385,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         restartFileName = self.runStreams.readpath('restart')[0]
         dsRestart = xarray.open_dataset(restartFileName)
         dsRestart = dsRestart.isel(Time=0)
-        print(f'nCells before masking: {ds.sizes["nCells"]}')
         ds = ds.where(cellMask, drop=True)
         dsRestart = dsRestart.where(cellMask, drop=True)
 
@@ -517,7 +404,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             lineWidths = [config.get(self.taskName, 'lineWidths')]
         else:
             lineWidths = None
-            #lineWidths = [3]
         legendText = [mainRunName]
 
         title = mainRunName
@@ -547,8 +433,10 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         for var in self.varList:
 
             varname = f'timeMonthly_avg_{var}'
+
             #TODO title as attribute or dict of var
             varTitle = var
+
             fields = [ds[varname]]
             weights.append(dsRestart[weightVarName].values)
             xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
@@ -574,11 +462,9 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                                     legendText=legendText,
                                     titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
 
-            #fixup 
             outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.png'
             savefig(outFileName, config)
 
-            #TODO should this be in the outer loop instead?
             caption = f'Normalized probability density function for SSH climatologies in {self.regionName}'
             write_image_xml(
                 config=config,
