@@ -67,7 +67,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
             componentName='seaIce',
             tags=tags)        
 
-        # self.mpas_climatology_task = mpas_climatology_task
+        self.mpas_climatology_task = mpas_climatology_task
 
         section_name = self.taskName
 
@@ -208,6 +208,9 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
         super().__init__(
             mpas_climatology_task, parent_task, climatology_name,
             variable_list, seasons, comparison_grid_names)
+
+        self.mpas_climatology_task = mpas_climatology_task
+        self.variable_list = variable_list
 
     def setup_and_check(self):
         """
