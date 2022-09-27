@@ -104,13 +104,8 @@ class OceanHistogram(AnalysisTask):
                 'gridFileName': 'SSH/zos_AVISO_L4_199210-201012_20180710.nc',
                 'lonVar': 'lon',
                 'latVar': 'lat',
-                'sshVar': 'zos'}}
-        #variableList = []
-        #self.variableDict = {}
-        #for var in self.variableList:
-        #    key = f'timeMonthly_avg_{var}'
-        #    variableList.append(key)
-        #    self.variableDict[key] = var
+                'sshVar': 'zos',
+                'pressureAdjustedSSHVar': 'zos'}}
 
         for regionGroup in self.regionGroups:
             groupObsDicts = {}
@@ -135,20 +130,18 @@ class OceanHistogram(AnalysisTask):
 
                     localObsDict['maskTask'] = obsMasksSubtask
                     groupObsDicts[obsName] = localObsDict
-            for var in self.variableList:
-                localVarDict = dict({var: f'timeMonthly_avg_{var}'})
-                for regionName in regionNames:
-                    sectionName = None
-                    fullSuffix = self.filePrefix
-                    for season in self.seasons:
-                        plotRegionSubtask = PlotRegionHistogramSubtask(
-                            self, regionGroup, regionName, controlConfig,
-                            sectionName, fullSuffix, mpasClimatologyTask,
-                            mpasMasksSubtask, obsMasksSubtask, groupObsDicts, localVarDict, season)
-                        plotRegionSubtask.run_after(mpasMasksSubtask)
-                        plotRegionSubtask.run_after(obsMasksSubtask)
-                        self.add_subtask(plotRegionSubtask)
-                        print(f'Add regional histogram subtask for {var}, {regionName}, {season}')
+            for regionName in regionNames:
+                sectionName = None
+                fullSuffix = self.filePrefix
+                for season in self.seasons:
+                    plotRegionSubtask = PlotRegionHistogramSubtask(
+                        self, regionGroup, regionName, controlConfig,
+                        sectionName, fullSuffix, mpasClimatologyTask,
+                        mpasMasksSubtask, obsMasksSubtask, groupObsDicts, self.variableList, season)
+                    plotRegionSubtask.run_after(mpasMasksSubtask)
+                    plotRegionSubtask.run_after(obsMasksSubtask)
+                    self.add_subtask(plotRegionSubtask)
+                    print(f'Add regional histogram subtask for {regionName}, {season}')
 
     def setup_and_check(self):
         """
@@ -172,15 +165,9 @@ class OceanHistogram(AnalysisTask):
         config = self.config
 
         regionGroups = config.getexpression(self.taskName, 'regionGroups')
-
         variableList = []
-        self.variableDict = {}
         for var in self.variableList:
-            key = f'timeMonthly_avg_{var}'
-            variableList.append(key)
-            self.variableDict[key] = var
-
-        #for var in self.variableList:
+            variableList.append(f'timeMonthly_avg_{var}')
         #    # Add xml file names for each season
         #    self.xmlFileNames = []
         #    for season in self.seasons:
@@ -330,8 +317,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
     obsDicts : dict of dicts
         Information on the observations to compare against
 
-    varDicts : dict of dicts
-        Information on the variables to plot
+    varList: list of str
+        list of variables to plot
 
     season : str
         The season to compute the climatology for
@@ -342,7 +329,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
     def __init__(self, parentTask, regionGroup, regionName, controlConfig,
                  sectionName, fullSuffix, mpasClimatologyTask,
-                 mpasMasksSubtask, obsMasksSubtask, obsDicts, varDicts, season):
+                 mpasMasksSubtask, obsMasksSubtask, obsDicts, varList, season):
 
         """
         Construct the analysis task.
@@ -404,7 +391,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsMasksSubtask = obsMasksSubtask
         self.obsDicts = obsDicts
-        self.varDicts = varDicts
+        self.varList = varList
         self.season = season
         self.filePrefix = fullSuffix
 
@@ -436,7 +423,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         super(PlotRegionHistogramSubtask, self).setup_and_check()
 
         self.xmlFileNames = []
-        for var in self.varDicts:
+        for var in self.varList:
             print(f'add xml from subtask: {self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.xml')
             # Add xml file names for each season
             self.xmlFileNames.append(f'{self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.xml')
@@ -557,11 +544,11 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         yLabel = 'normalized Probability Density Function'
 
-        for var in self.varDicts:
+        for var in self.varList:
 
-            varname = f'{self.varDicts[var]}'
+            varname = f'timeMonthly_avg_{var}'
             #TODO title as attribute or dict of var
-            varTitle = varname
+            varTitle = var
             fields = [ds[varname]]
             weights.append(dsRestart[weightVarName].values)
             xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
