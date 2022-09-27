@@ -247,7 +247,50 @@ def build_analysis_list(config, controlConfig):
         config=config, mpasClimatologyTask=seaIceClimatolgyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
+    check_for_duplicate_names(analyses)
+
     return analyses
+
+
+def check_for_duplicate_names(analyses):
+    """
+    Check for duplicate taskName and subtaskName in the list of analysis tasks
+    and their subtasks
+
+    Parameters
+    ----------
+    analyses : list of mpas_analysis.shared.AnalysisTask
+        A list of all analysis tasks
+    """
+    all_task_names = []
+    errors = []
+    for analysis in analyses:
+        mainTaskName = analysis.taskName
+        assert(analysis.subtaskName is None)
+        fullName = (mainTaskName, None)
+        if fullName in all_task_names:
+            errors.append(
+                f'A task named {mainTaskName} has been added more than once')
+        all_task_names.append(fullName)
+        for subtask in analysis.subtasks:
+            taskName = subtask.taskName
+            subtaskName = subtask.subtaskName
+            if taskName != mainTaskName:
+                errors.append(
+                    f'A subtask named {taskName}: {subtaskName} has a '
+                    f'different task name than its parent task: \n'
+                    f'  {mainTaskName}')
+                fullName = (taskName, subtaskName)
+                if fullName in all_task_names:
+                    errors.append(
+                        f'A subtask named {taskName}: {subtaskName} has been '
+                        f'added more than once')
+                all_task_names.append(fullName)
+
+    if len(errors) > 0:
+        all_errors = '\n  '.join(errors)
+        raise ValueError(f'Analysis tasks failed these checks:\n'
+                         f'  {all_errors}')
 
 
 def determine_analyses_to_generate(analyses, verbose):
