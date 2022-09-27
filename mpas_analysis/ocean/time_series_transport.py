@@ -60,7 +60,7 @@ class TimeSeriesTransport(AnalysisTask):
         # Xylar Asay-Davis
 
         # first, call the constructor from the base class (AnalysisTask)
-        super(TimeSeriesTransport, self).__init__(
+        super().__init__(
             config=config,
             taskName='timeSeriesTransport',
             componentName='ocean',
@@ -69,41 +69,45 @@ class TimeSeriesTransport(AnalysisTask):
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
 
+        transportGroups = config.getexpression('timeSeriesTransport', 'transportGroups')
+
         years = [year for year in range(startYear, endYear + 1)]
+        for transportGroup in transportGroups:
+            groupSuffix = transportGroup.replace(' ', '')
+            transectsToPlot = config.getexpression(f'timeSeries{groupSuffix}',
+                                                   'transectsToPlot')
+            if len(transectsToPlot) == 0:
+                return
 
-        transectsToPlot = config.getexpression('timeSeriesTransport',
-                                               'transectsToPlot')
-        if len(transectsToPlot) == 0:
-            return
+            masksSubtask = ComputeTransectMasksSubtask(
+                parentTask=self, transectGroup=transportGroup)
 
-        masksSubtask = ComputeTransectMasksSubtask(
-            parentTask=self, transectGroup='Transport Transects')
+            transectsToPlot = masksSubtask.expand_transect_names(transectsToPlot)
+            transportTransectFileName = masksSubtask.geojsonFileName
 
-        transectsToPlot = masksSubtask.expand_transect_names(transectsToPlot)
-        transportTransectFileName = masksSubtask.geojsonFileName
+            self.add_subtask(masksSubtask)
 
-        self.add_subtask(masksSubtask)
+            # in the end, we'll combine all the time series into one, but we
+            # create this task first so it's easier to tell it to run after all
+            # the compute tasks
+            combineSubtask = CombineTransportSubtask(
+                self, startYears=years, endYears=years, groupSuffix=groupSuffix)
 
-        # in the end, we'll combine all the time series into one, but we
-        # create this task first so it's easier to tell it to run after all
-        # the compute tasks
-        combineSubtask = CombineTransportSubtask(
-            self, startYears=years, endYears=years)
+            # run one subtask per year
+            for year in years:
+                computeSubtask = ComputeTransportSubtask(
+                    self, startYear=year, endYear=year, masksSubtask=masksSubtask,
+                    transectsToPlot=transectsToPlot, groupSuffix=groupSuffix)
+                self.add_subtask(computeSubtask)
+                computeSubtask.run_after(masksSubtask)
+                combineSubtask.run_after(computeSubtask)
 
-        # run one subtask per year
-        for year in years:
-            computeSubtask = ComputeTransportSubtask(
-                self, startYear=year, endYear=year, masksSubtask=masksSubtask,
-                transectsToPlot=transectsToPlot)
-            self.add_subtask(computeSubtask)
-            computeSubtask.run_after(masksSubtask)
-            combineSubtask.run_after(computeSubtask)
-
-        for index, transect in enumerate(transectsToPlot):
-            plotTransportSubtask = PlotTransportSubtask(
-                self, transect, index, controlConfig, transportTransectFileName)
-            plotTransportSubtask.run_after(combineSubtask)
-            self.add_subtask(plotTransportSubtask)
+            for index, transect in enumerate(transectsToPlot):
+                plotTransportSubtask = PlotTransportSubtask(
+                    self, transect, index, controlConfig, transportTransectFileName,
+                    transportGroup)
+                plotTransportSubtask.run_after(combineSubtask)
+                self.add_subtask(plotTransportSubtask)
 
 
 class ComputeTransportSubtask(AnalysisTask):
@@ -120,6 +124,9 @@ class ComputeTransportSubtask(AnalysisTask):
 
     transectsToPlot : list of str
         A list of transects to plot
+    
+    groupSuffix : str
+        standard transects vs Arctic transects
     """
 
     # Authors
@@ -127,7 +134,7 @@ class ComputeTransportSubtask(AnalysisTask):
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, startYear, endYear,
-                 masksSubtask, transectsToPlot):
+                 masksSubtask, transectsToPlot, groupSuffix):
         """
         Construct the analysis task.
 
@@ -145,21 +152,23 @@ class ComputeTransportSubtask(AnalysisTask):
 
         transectsToPlot : list of str
             A list of transects to plot
+
+        groupSuffix : str
+            standard transects vs Arctic transects
         """
         # Authors
         # -------
         # Xylar Asay-Davis
-
+        subtaskName = f'compute{groupSuffix}_{startYear:04d}-{endYear:04d}' 
         # first, call the constructor from the base class (AnalysisTask)
-        super(ComputeTransportSubtask, self).__init__(
+        super().__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeTransport_{:04d}-{:04d}'.format(startYear,
-                                                                endYear))
-
-        self.subprocessCount = self.config.getint('timeSeriesTransport',
+            subtaskName=subtaskName)
+        
+        self.subprocessCount = self.config.getint(f'timeSeries{groupSuffix}',
                                                   'subprocessCount')
         self.startYear = startYear
         self.endYear = endYear
@@ -169,6 +178,7 @@ class ComputeTransportSubtask(AnalysisTask):
 
         self.transectsToPlot = transectsToPlot
         self.restartFileName = None
+        self.groupSuffix = groupSuffix
 
     def setup_and_check(self):
         """
@@ -227,8 +237,7 @@ class ComputeTransportSubtask(AnalysisTask):
         except OSError:
             pass
 
-        outFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
-            outputDirectory, self.startYear, self.endYear)
+        outFileName = f'{outputDirectory}/{self.groupSuffix}_{self.startYear:04d}-{self.endYear:04d}.nc'
 
         inputFiles = sorted(self.historyStreams.readpath(
             'timeSeriesStatsMonthlyOutput', startDate=startDate,
@@ -389,7 +398,7 @@ class CombineTransportSubtask(AnalysisTask):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, parentTask, startYears, endYears):
+    def __init__(self, parentTask, startYears, endYears, groupSuffix):
         """
         Construct the analysis task.
 
@@ -401,21 +410,25 @@ class CombineTransportSubtask(AnalysisTask):
         startYears, endYears : list of int
             The beginning and end of each time series to combine
 
+        groupSuffix : str
+            standard transects vs Arctic transects
+
         """
         # Authors
         # -------
         # Xylar Asay-Davis
-
+     
         # first, call the constructor from the base class (AnalysisTask)
         super(CombineTransportSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='combineTimeSeries')
-
+            subtaskName=f'combine{groupSuffix}TimeSeries')
+        #print(self.taskName, self.subtaskName)
         self.startYears = startYears
         self.endYears = endYears
+        self.groupSuffix = groupSuffix
 
     def run_task(self):
         """
@@ -424,19 +437,17 @@ class CombineTransportSubtask(AnalysisTask):
         # Authors
         # -------
         # Xylar Asay-Davis
-
+        groupSuffix = self.groupSuffix
         outputDirectory = '{}/transport/'.format(
             build_config_full_path(self.config, 'output',
                                    'timeseriesSubdirectory'))
+        outFileName = f'{outputDirectory}/{groupSuffix}_{self.startYears[0]:04d}-{self.endYears[-1]:04d}.nc'
 
-        outFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
-            outputDirectory, self.startYears[0], self.endYears[-1])
 
         if not os.path.exists(outFileName):
             inFileNames = []
             for startYear, endYear in zip(self.startYears, self.endYears):
-                inFileName = '{}/transport_{:04d}-{:04d}.nc'.format(
-                    outputDirectory, startYear, endYear)
+                inFileName = f'{outputDirectory}/{groupSuffix}_{startYear:04d}-{endYear:04d}.nc'
                 inFileNames.append(inFileName)
 
             ds = xarray.open_mfdataset(inFileNames, combine='nested',
@@ -460,6 +471,10 @@ class PlotTransportSubtask(AnalysisTask):
     controlConfig : mpas_tools.config.MpasConfigParser
         The configuration options for the control run (if any)
 
+    transportGroup : str (with spaces)
+        standard transects (``Transport Transects``)
+        vs Arctic transects (``Arctic Transport Transects``)
+        
     """
 
     # Authors
@@ -467,7 +482,7 @@ class PlotTransportSubtask(AnalysisTask):
     # Xylar Asay-Davis, Stephen Price
 
     def __init__(self, parentTask, transect, transectIndex, controlConfig,
-                 transportTransectFileName):
+                 transportTransectFileName, transportGroup):
 
         """
         Construct the analysis task.
@@ -486,23 +501,29 @@ class PlotTransportSubtask(AnalysisTask):
 
         controlconfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
+
+        transportGroup : str (with spaces)
+            standard transects (``Transport Transects``)
+            vs Arctic transects (``Arctic Transport Transects``)
         """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         # first, call the constructor from the base class (AnalysisTask)
+        transectKey = transect.replace(' ', '_')
         super(PlotTransportSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='plotTransport_{}'.format(transect.replace(' ', '_')))
+            subtaskName=f'plotTransport_{transectKey}')
 
         self.transportTransectFileName = transportTransectFileName
         self.transect = transect
         self.transectIndex = transectIndex
         self.controlConfig = controlConfig
+        self.transportGroup = transportGroup
 
     def setup_and_check(self):
         """
@@ -580,7 +601,8 @@ class PlotTransportSubtask(AnalysisTask):
         plotControl = self.controlConfig is not None
 
         mainRunName = config.get('runs', 'mainRunName')
-        movingAveragePoints = config.getint('timeSeriesTransport',
+        groupSuffix = self.transportGroup.replace(' ','')
+        movingAveragePoints = config.getint(f'timeSeries{groupSuffix}',
                                             'movingAveragePoints')
 
         self.logger.info('  Plotting...')
@@ -661,7 +683,8 @@ class PlotTransportSubtask(AnalysisTask):
             groupLink='transporttime',
             thumbnailDescription=thumbnailDescription,
             imageDescription=caption,
-            imageCaption=caption)
+            imageCaption=caption,
+            gallery=self.transportGroup)
 
     def _load_transport(self, config):
         """
@@ -670,15 +693,13 @@ class PlotTransportSubtask(AnalysisTask):
         # Authors
         # -------
         # Xylar Asay-Davis
-
+        groupSuffix = self.transportGroup.replace(' ', '')
         baseDirectory = build_config_full_path(
             config, 'output', 'timeSeriesSubdirectory')
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
-
-        inFileName = '{}/transport/transport_{:04d}-{:04d}.nc'.format(
-            baseDirectory, startYear, endYear)
+        inFileName = f'{baseDirectory}/transport/{groupSuffix}_{startYear:04d}-{endYear:04d}.nc'
 
         dsIn = xarray.open_dataset(inFileName)
         transport = dsIn.transport.isel(nTransects=self.transectIndex)
