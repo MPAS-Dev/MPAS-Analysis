@@ -7,7 +7,7 @@
 #
 
 import xarray as xr
-from pyremap import LatLonGridDescriptor
+from pyremap import LatLon2DGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -52,9 +52,9 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
         # -------
         # Darin Comeau, Xylar Asay-Davis
 
-        task_name = 'climatologyMapSeaIceProduction{}'.format(hemisphere)
+        task_name = f'climatologyMapSeaIceProduction{hemisphere}'
 
-        field_name = 'SeaIceProduction'
+        field_name = 'seaIceProduction'
 
         tags = ['climatology', 'horizontalMap', field_name, 'publicObs']
         if hemisphere == 'NH':
@@ -64,8 +64,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
         # call the constructor from the base class (AnalysisTask)
         super().__init__(config=config, taskName=task_name,
-            componentName='seaIce',
-            tags=tags)        
+            componentName='seaIce', tags=tags)
 
         self.mpas_climatology_task = mpas_climatology_task
 
@@ -97,7 +96,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
         remap_climatology_subtask = RemapMpasSeaIceProductionClimatology(
             mpas_climatology_task=mpas_climatology_task,
             parent_task=self,
-            climatology_name='{}{}'.format(field_name, hemisphere),
+            climatology_name=f'{field_name}{hemisphere}',
             variable_list=variable_list,
             comparison_grid_names=comparison_grid_names,
             seasons=seasons)
@@ -105,28 +104,33 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
         self.add_subtask(remap_climatology_subtask)
 
         if control_config is None:
-            ref_title_label = 'Observations (Haumann)'
-            gallery_name = 'Observations: Haumann'
-            diff_title_label = 'Model - Observations'
-            field_name = 'SeaIceProduction'
-            obs_file_name = build_obs_path(
-                    config, 'seaIce',
-                    relativePathOption='production{}'.format(
-                        hemisphere),
-                    relativePathSection=section_name)
+            # DC: currently only have observations for Southern Ocean
+            if hemisphere == 'SH':
+                ref_title_label = 'Observations (Haumann)'
+                gallery_name = 'Observations: Haumann'
+                diff_title_label = 'Model - Observations'
+                obs_file_name = build_obs_path(
+                        config, 'seaIce',
+                        relativePathOption=f'production{hemisphere}',
+                        relativePathSection=section_name)
 
-            remap_observations_subtask = RemapHaumannProductionClimatology(
-                parentTask=self, seasons=seasons,
-                fileName=obs_file_name,
-                outFilePrefix='{}{}'.format(field_name,
-                                            hemisphere),
-                comparisonGridNames=comparison_grid_names)
-            self.add_subtask(remap_observations_subtask)
+                remap_observations_subtask = RemapHaumannProductionClimatology(
+                    parentTask=self, seasons=seasons,
+                    fileName=obs_file_name,
+                    outFilePrefix=f'{field_name}{hemisphere}',
+                    comparisonGridNames=comparison_grid_names)
+                self.add_subtask(remap_observations_subtask)
+            else:
+                remap_observations_subtask = None
+                gallery_name = None
+                ref_title_label = None
+                ref_field_name = None
+                diff_title_label = 'Model - Observations'
 
         else:
             control_run_name = control_config.get('runs', 'mainRunName')
             gallery_name = None
-            ref_title_label = 'Control: {}'.format(controlRunName)
+            ref_title_label = f'Control: {control_run_name}'
             field_name = field_name
             diff_title_label = 'Main - Control'
 
@@ -134,16 +138,12 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
         for season in seasons:
             for comparison_grid_name in comparison_grid_names:
-                # # make a new subtask for this season and comparison grid
+                # # make a new subtask for this season and comparison grid # DC: needed?
                 # subtask_name = f'plot{field_name}_{season}_{comparison_grid_name}'
-                
-                image_description = \
-                    '{} Climatology Map of {}-Hemisphere Sea Ice ' \
-                    'Production.'.format(season, hemisphere_long)
+                image_description = f'{season} Climatology Map of \
+                                    {hemisphere_long}-Hemisphere Sea Ice'
                 image_caption = image_description
-                gallery_group = \
-                    '{}-Hemisphere Sea Ice Production'.format(
-                        hemisphere_long)
+                gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Production'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     self, hemisphere, season, comparison_grid_name,
@@ -151,18 +151,18 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel='seaice_production{}'.format(hemisphere),
+                    outFileLabel=f'seaice_production{hemisphere}',
                     fieldNameInTitle='Sea Ice Production',
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'm yr^-1',
+                    unitsLabel=r'm yr$^{-1}$',
                     imageDescription=image_description,
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
-                    groupLink='{}_production'.format(hemisphere.lower()),
+                    groupLink=f'{hemisphere.lower()}_production',
                     galleryName=gallery_name,
                     maskValue=None)
 
@@ -245,11 +245,11 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
 
         production = self._compute_production(climatology)
 
-        climatology['SeaIceProduction'] = production
-        climatology.production.attrs['units'] = 'm y^-1'
+        climatology['seaIceProduction'] = production
+        climatology.seaIceProduction.attrs['units'] = 'm y^-1'
         climatology = climatology.drop_vars(self.variable_list)
 
-        return climatology                                                     
+        return climatology
 
     def _compute_production(self, climatology):
         """
@@ -297,9 +297,9 @@ class RemapHaumannProductionClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='latitude',
-                                                  lonVarName='longitude')
+        obsDescriptor = LatLon2DGridDescriptor.read(fileName=fileName,
+                                                    latVarName='lat',
+                                                    lonVarName='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
@@ -322,9 +322,9 @@ class RemapHaumannProductionClimatology(RemapObservedClimatologySubtask):
         # Darin Comeau, Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs = dsObs.rename({'freezing': 'SeaIceProduction', 'time': 'Time', 'lat': 'latitude', 'lon': 'longitude'})
+        dsObs = dsObs.rename({'freezing': 'seaIceProduction', 'time': 'Time'})
         # dsObs.coords['month'] = dsObs['Time.month']
         # dsObs.coords['year'] = dsObs['Time.year']
-        dsObs = dsObs.transpose('Time', 'latitude', 'longitude')
+        dsObs = dsObs.transpose('Time', 'y', 'x')
 
         return dsObs
