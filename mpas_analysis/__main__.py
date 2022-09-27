@@ -30,6 +30,7 @@ import progressbar
 import logging
 import xarray
 import time
+from importlib.resources import contents
 
 from mache import discover_machine, MachineInfo
 
@@ -246,7 +247,50 @@ def build_analysis_list(config, controlConfig):
         config=config, mpasClimatologyTask=seaIceClimatolgyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
+    check_for_duplicate_names(analyses)
+
     return analyses
+
+
+def check_for_duplicate_names(analyses):
+    """
+    Check for duplicate taskName and subtaskName in the list of analysis tasks
+    and their subtasks
+
+    Parameters
+    ----------
+    analyses : list of mpas_analysis.shared.AnalysisTask
+        A list of all analysis tasks
+    """
+    all_task_names = []
+    errors = []
+    for analysis in analyses:
+        mainTaskName = analysis.taskName
+        assert(analysis.subtaskName is None)
+        fullName = (mainTaskName, None)
+        if fullName in all_task_names:
+            errors.append(
+                f'A task named {mainTaskName} has been added more than once')
+        all_task_names.append(fullName)
+        for subtask in analysis.subtasks:
+            taskName = subtask.taskName
+            subtaskName = subtask.subtaskName
+            if taskName != mainTaskName:
+                errors.append(
+                    f'A subtask named {taskName}: {subtaskName} has a '
+                    f'different task name than its parent task: \n'
+                    f'  {mainTaskName}')
+                fullName = (taskName, subtaskName)
+                if fullName in all_task_names:
+                    errors.append(
+                        f'A subtask named {taskName}: {subtaskName} has been '
+                        f'added more than once')
+                all_task_names.append(fullName)
+
+    if len(errors) > 0:
+        all_errors = '\n  '.join(errors)
+        raise ValueError(f'Analysis tasks failed these checks:\n'
+                         f'  {all_errors}')
 
 
 def determine_analyses_to_generate(analyses, verbose):
@@ -431,7 +475,7 @@ def update_generate(config, generate):
     generateString = ', '.join(["'{}'".format(element)
                                 for element in generateList])
     generateString = '[{}]'.format(generateString)
-    config.set('output', 'generate', generateString)
+    config.set('output', 'generate', generateString, user=True)
 
 
 def run_analysis(config, analyses):
@@ -794,7 +838,21 @@ def main():
 
     if machine is not None:
         print(f'Detected E3SM supported machine: {machine}')
-        config.add_from_package('mache.machines', f'{machine}.cfg')
+        try:
+            config.add_from_package('mache.machines', f'{machine}.cfg')
+        except FileNotFoundError:
+
+            possible_machines = []
+            machine_configs = contents('mache.machines')
+            for config in machine_configs:
+                if config.endswith('.cfg'):
+                    possible_machines.append(os.path.splitext(config)[0])
+
+            possible_machines = '\n  '.join(sorted(possible_machines))
+            raise ValueError(
+                f'We could not find the machine: {machine}.\n'
+                f'Possible machines are:\n  {possible_machines}')
+
         try:
             config.add_from_package('mpas_analysis.configuration',
                                     f'{machine}.cfg')

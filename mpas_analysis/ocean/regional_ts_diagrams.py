@@ -170,7 +170,12 @@ class RegionalTSDiagrams(AnalysisTask):
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
                 regionGroup=regionGroup)
 
-            regionNames = mpasMasksSubtask.expand_region_names(regionNames)
+            try:
+                regionNames = mpasMasksSubtask.expand_region_names(regionNames)
+            except FileNotFoundError:
+                # this may happen if we can't create the geojson file to expand
+                # its contents, e.g. if we're just doing mpas_analysis --list
+                regionNames = []
 
             obsList = config.getexpression(sectionName, 'obs')
             groupObsDicts = {}

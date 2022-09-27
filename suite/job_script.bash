@@ -23,11 +23,11 @@ echo env: {{ conda_env }}
 echo configs: {{ flags }} {{ config }}
 
 
-{{ parallel_exec }} mpas_analysis --list
-{{ parallel_exec }} mpas_analysis --plot_colormaps
-{{ parallel_exec }} mpas_analysis --setup_only {{ flags }} {{ config }}
-{{ parallel_exec }} mpas_analysis --purge {{ flags }} {{ config }} --verbose
-{{ parallel_exec }} mpas_analysis --html_only {{ flags }} {{ config }}
+mpas_analysis --list
+mpas_analysis --plot_colormaps
+mpas_analysis --setup_only {{ flags }} {{ config }}
+mpas_analysis --purge {{ flags }} {{ config }} --verbose
+mpas_analysis --html_only {{ flags }} {{ config }}
 
 chmod ugo+rx {{ html_base }}/{{ out_common_dir }}
 chmod -R ugo+rX {{ html_base }}/{{ out_subdir }}

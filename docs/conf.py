@@ -92,13 +92,13 @@ else:
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
-                    'design_docs/template.md']
+                    'design_docs/template.md', 'design_docs/template.rst']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = 'sphinx'
@@ -131,7 +131,7 @@ if not on_rtd:  # only import and set the theme if we're building docs locally
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+# html_static_path = ['_static']
 
 
 # -- Options for HTMLHelp output ------------------------------------------
@@ -201,19 +201,27 @@ intersphinx_mapping = {
         ('http://mpas-dev.github.io/MPAS-Tools/stable/', None)}
 
 
+cwd = os.getcwd()
+os.chdir('users_guide')
+
 # Build some custom rst files
-xmlFileName = '../mpas_analysis/obs/observational_datasets.xml'
+xmlFileName = '../../mpas_analysis/obs/observational_datasets.xml'
 for component in ['ocean', 'seaice']:
-    build_rst_table_from_xml(xmlFileName, '{}_obs_table.rst'.format(component),
+    build_rst_table_from_xml(xmlFileName,
+                             f'{component}_obs_table.rst',
                              component)
 
 build_obs_pages_from_xml(xmlFileName)
 build_quick_start()
 
+os.chdir(cwd)
+
 for mdFileName in glob('design_docs/*.md'):
+    if os.path.basename(mdFileName) == 'template.md':
+        continue
     output = m2r2.parse_from_file(mdFileName)
     rstFileName = os.path.splitext(mdFileName)[0]+'.rst'
-    outFile = open(rstFileName, 'w')
-    outFile.write(output)
+    with open(rstFileName, 'w') as outFile:
+        outFile.write(output)
 
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'

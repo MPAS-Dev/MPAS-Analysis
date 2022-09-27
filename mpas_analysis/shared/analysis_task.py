@@ -76,8 +76,8 @@ class AnalysisTask(Process):
     runAfterTasks : list of ``AnalysisTasks``
         tasks that must be complete before this task can run
 
-    subtasks : ``OrderedDict`` of ``AnalysisTasks``
-        Subtasks of this task, with subtask names as keys
+    subtasks :  list of mpas_analysis.shared.AnalysisTask
+        Subtasks of this task
 
     xmlFileNames : list of strings
         The XML file associated with each plot produced by this analysis, empty

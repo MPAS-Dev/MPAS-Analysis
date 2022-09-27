@@ -262,7 +262,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
                 remappedFileName = self.get_remapped_file_name(
                     season, comparisonGridName=self.transectCollectionName)
 
-                ds = xr.open_dataset(remappedFileName)
+                ds = xr.open_dataset(remappedFileName, decode_times=False)
                 transectNames = list(obsDatasets.keys())
                 for transectIndex, transectName in enumerate(transectNames):
                     self.logger.info('  {}'.format(transectName))
