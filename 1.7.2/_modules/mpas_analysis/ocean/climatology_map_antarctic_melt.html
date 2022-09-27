@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.climatology_map_antarctic_melt &mdash; MPAS-Analysis 1.7.2 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.ocean.climatology_map_antarctic_melt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.climatology_map_antarctic_melt</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">dask</span>
+<span class="kn">from</span> <span class="nn">multiprocessing.pool</span> <span class="kn">import</span> <span class="n">ThreadPool</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">ProjectionGridDescriptor</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> \
+    <span class="n">build_config_full_path</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+    <span class="n">RemapObservedClimatologySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.projection</span> <span class="kn">import</span> <span class="n">get_pyproj_projection</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.climatology</span> <span class="kn">import</span> \
+    <span class="n">get_masked_mpas_climatology_file_name</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapAntarcticMelt"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html#mpas_analysis.ocean.ClimatologyMapAntarcticMelt">[docs]</a><span class="k">class</span> <span class="nc">ClimatologyMapAntarcticMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of Antarctic melt rates against</span>
+<span class="sd">    observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="ClimatologyMapAntarcticMelt.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html#mpas_analysis.ocean.ClimatologyMapAntarcticMelt.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
+<span class="sd">            A task for computing region masks</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options for a control run</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapAntarcticMelt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapAntarcticMelt&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span>
+                  <span class="s1">&#39;landIceCavities&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="n">makeTables</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;makeTables&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">makeTables</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="n">tableSubtask</span> <span class="o">=</span> <span class="n">AntarcticMeltTableSubtask</span><span class="p">(</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                    <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                    <span class="n">regionMasksTask</span><span class="o">=</span><span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">tableSubtask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="c1"># the variable &#39;timeMonthly_avg_landIceFreshwaterFlux&#39; will be added to</span>
+        <span class="c1"># mpasClimatologyTask along with the seasons.</span>
+        <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasAntarcticMeltClimatology</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+            <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">refTitleLabel</span> <span class="o">=</span> \
+                <span class="s1">&#39;Observations (Rignot et al, 2013)&#39;</span>
+
+            <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;meltSubdirectory&#39;</span><span class="p">)</span>
+
+            <span class="n">obsFileName</span> <span class="o">=</span> \
+                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_&#39;</span> \
+                <span class="s1">&#39;Antarctic_stereo.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">)</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;meltRignot&#39;</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: Rignot et al. (2013)&#39;</span>
+
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedAntarcticMeltClimatology</span><span class="p">(</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;melt&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                    <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m a$^{-1}$&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Antarctic Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;antarctic_melt&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the base class</span>
+        <span class="c1"># (AnalysisTask), which will perform some common setup</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapAntarcticMelt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="n">landIceFluxMode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config_land_ice_flux_mode&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">landIceFluxMode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="s1">&#39;coupled&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;*** climatologyMapMeltAntarctic requires &#39;</span>
+                             <span class="s1">&#39;config_land_ice_flux_mode </span><span class="se">\n</span><span class="s1">&#39;</span>
+                             <span class="s1">&#39;    to be standalone or coupled.  Otherwise, no &#39;</span>
+                             <span class="s1">&#39;melt rates are available </span><span class="se">\n</span><span class="s1">&#39;</span>
+                             <span class="s1">&#39;    for plotting.&#39;</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">RemapMpasAntarcticMeltClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for remapping climatologies of Antarctic melt rates and adding</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    landIceMask : xarray.DataArray</span>
+<span class="sd">        A mask indicating where there is land ice on the ocean grid (thus,</span>
+<span class="sd">        where melt rates are valid)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute climatologies of melt rates from E3SM/MPAS output</span>
+
+<span class="sd">        This function has been overridden to load ``landIceMask`` from a</span>
+<span class="sd">        restart file for later use in masking the melt rate.  It then simply</span>
+<span class="sd">        calls the run function from</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, load the land-ice mask from the restart file</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="p">[[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]]</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">&gt;</span> <span class="mf">0.</span>
+
+        <span class="c1"># then, call run from the base class (RemapMpasClimatologySubtask),</span>
+        <span class="c1"># which will perform the main function of the task</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasAntarcticMeltClimatology</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">run_task</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Mask the melt rates using ``landIceMask`` and rescale it to m/yr</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># scale the field to m/yr from kg/m^2/s and mask out non-land-ice areas</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span> <span class="o">*</span> \
+            <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
+
+
+<span class="k">class</span> <span class="nc">RemapObservedAntarcticMeltClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for reading and remapping Antarctic melt-rate observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get a MeshDescriptor for the observation grid</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name describing the source grid</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
+<span class="sd">            The descriptor for the observation grid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># create a descriptor of the observation grid using the x/y polar</span>
+        <span class="c1"># stereographic coordinates</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">)</span>
+        <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
+            <span class="n">projection</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">xVarName</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">yVarName</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obsDescriptor</span>
+
+    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        read in the data sets for observations, and possibly rename some</span>
+<span class="sd">        variables and dimensions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dsObs : ``xarray.Dataset``</span>
+<span class="sd">            The observational dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># Load MLD observational data</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dsObs</span>
+
+
+<span class="k">class</span> <span class="nc">AntarcticMeltTableSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                 <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask :  ``ClimatologyMapAntarcticMelt``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+
+<span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
+<span class="sd">            A task for computing region masks</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">        subtaskName : str, optional</span>
+<span class="sd">            The name of the subtask</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;table</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AntarcticMeltTableSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="n">parentTask</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">season</span> <span class="o">=</span> <span class="n">season</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
+            <span class="n">regionGroup</span><span class="o">=</span><span class="s1">&#39;Ice Shelves&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iceShelfMasksFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes and plots table of Antarctic sub-ice-shelf melt rates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing Antarctic melt rate table...&quot;</span><span class="p">)</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+        <span class="n">iceShelvesInTable</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                 <span class="s1">&#39;iceShelvesInTable&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iceShelvesInTable</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">iceShelvesInTable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span>
+            <span class="n">iceShelvesInTable</span><span class="p">)</span>
+
+        <span class="n">meltRateFileName</span> <span class="o">=</span> <span class="n">get_masked_mpas_climatology_file_name</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;antarcticMeltTable&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">meltRateFileName</span><span class="p">):</span>
+            <span class="k">with</span> <span class="n">dask</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">schedular</span><span class="o">=</span><span class="s1">&#39;threads&#39;</span><span class="p">,</span>
+                                 <span class="n">pool</span><span class="o">=</span><span class="n">ThreadPool</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
+
+                <span class="c1"># Load data:</span>
+                <span class="n">inFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+                <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
+                <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
+                <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">freshwaterFlux</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                    <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">freshwaterFlux</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+                <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+
+                <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">regionMaskFileName</span><span class="p">)</span>
+
+                <span class="c1"># figure out the indices of the regions to plot</span>
+                <span class="n">regionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+
+                <span class="n">regionIndices</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">iceShelf</span> <span class="ow">in</span> <span class="n">iceShelvesInTable</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">iceShelf</span> <span class="o">==</span> <span class="n">regionName</span><span class="p">:</span>
+                            <span class="n">regionIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+                            <span class="k">break</span>
+
+                <span class="c1"># select only those regions we want to plot</span>
+                <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndices</span><span class="p">)</span>
+                <span class="n">cellMasks</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+
+                <span class="n">restartFileName</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
+                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+
+                <span class="c1"># convert from kg/s to kg/yr</span>
+                <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \
+                    <span class="p">(</span><span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span> <span class="o">*</span> <span class="n">freshwaterFlux</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+                <span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+                <span class="n">totalArea</span> <span class="o">=</span> \
+                    <span class="p">(</span><span class="n">landIceFraction</span> <span class="o">*</span> <span class="n">cellMasks</span> <span class="o">*</span> <span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+
+                <span class="c1"># from kg/m^2/yr to m/yr</span>
+                <span class="n">meltRates</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span><span class="p">)</span> <span class="o">*</span>
+                             <span class="p">(</span><span class="n">totalMeltFlux</span> <span class="o">/</span> <span class="n">totalArea</span><span class="p">))</span>
+                <span class="n">meltRates</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+
+                <span class="c1"># convert from kg/yr to GT/yr</span>
+                <span class="n">totalMeltFlux</span> <span class="o">/=</span> <span class="n">constants</span><span class="o">.</span><span class="n">kg_per_GT</span>
+
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+                <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;totalMeltFlux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalMeltFlux</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GT a$^{-1}$&#39;</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="s1">&#39;Total melt flux summed over each ice shelf or region&#39;</span>
+                <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;meltRates&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meltRates</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m a$^{-1}$&#39;</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="s1">&#39;Melt rate averaged over each ice shelf or region&#39;</span>
+
+                <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="o">*</span><span class="n">totalArea</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;km$^2$&#39;</span>
+                <span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="s1">&#39;Region or ice shelf area&#39;</span>
+
+                <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span>
+
+                <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">meltRateFileName</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meltRateFileName</span><span class="p">)</span>
+
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">fieldNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Region&#39;</span><span class="p">,</span> <span class="s1">&#39;Area&#39;</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">]</span>
+
+        <span class="n">controlConfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span>
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">controlFileName</span> <span class="o">=</span> <span class="n">get_masked_mpas_climatology_file_name</span><span class="p">(</span>
+                <span class="n">controlConfig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;antarcticMeltTable&#39;</span><span class="p">)</span>
+            <span class="n">dsControl</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">controlFileName</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">fieldNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dsControl</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+
+        <span class="n">outDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMelt/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;tablesSubdirectory&#39;</span><span class="p">))</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="n">tableFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMeltRateTable_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">,</span>
+                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tableFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldNames</span><span class="p">)</span>
+
+            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Region&#39;</span><span class="p">:</span> <span class="n">regionName</span><span class="p">,</span>
+                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                       <span class="n">mainRunName</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
+                <span class="k">if</span> <span class="n">dsControl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">controlRunName</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dsControl</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="n">tableFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMeltFluxTable_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">,</span>
+                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tableFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldNames</span><span class="p">)</span>
+
+            <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
+                <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Region&#39;</span><span class="p">:</span> <span class="n">regionName</span><span class="p">,</span>
+                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                       <span class="n">mainRunName</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
+                <span class="k">if</span> <span class="n">dsControl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">controlRunName</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dsControl</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

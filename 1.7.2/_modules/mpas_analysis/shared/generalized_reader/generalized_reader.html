@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.generalized_reader.generalized_reader &mdash; MPAS-Analysis 1.7.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.shared.generalized_reader.generalized_reader</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.generalized_reader.generalized_reader</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility functions for importing MPAS files into xarray. These functions extend</span>
+<span class="sd">the capabilities of mpas_xarray to include mapping variable names from MPAS</span>
+<span class="sd">names to MPAS-Analysis generalized names and support for slicing to given</span>
+<span class="sd">start and end dates.</span>
+
+<span class="sd">open_multifile_dataset : opens a data set, maps variable names, preprocess</span>
+<span class="sd">    the data set removes repeated time indices, and slices the time coordinate</span>
+<span class="sd">    to lie between desired start and end dates.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span> <span class="nn">resource</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray</span> <span class="kn">import</span> <span class="n">mpas_xarray</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> \
+    <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">days_to_datetime</span>
+
+
+<div class="viewcode-block" id="open_multifile_dataset"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset">[docs]</a><span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                           <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                           <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                           <span class="n">chunking</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
+<span class="sd">    calendar name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    fileNames : list of strings</span>
+<span class="sd">        A lsit of file paths to read</span>
+
+<span class="sd">    calendar : {``&#39;gregorian&#39;``, ``&#39;noleap&#39;``}, optional</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores</span>
+
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Contains configuration options</span>
+
+<span class="sd">    simulationStartTime : string, optional</span>
+<span class="sd">        The start date of the simulation, used to convert from time variables</span>
+<span class="sd">        expressed as days since the start of the simulation to days since the</span>
+<span class="sd">        reference date. ``simulationStartTime`` takes one of the following</span>
+<span class="sd">        forms::</span>
+
+<span class="sd">            0001-01-01</span>
+<span class="sd">            0001-01-01 00:00:00</span>
+
+<span class="sd">        ``simulationStartTime`` is only required if the MPAS time variable</span>
+<span class="sd">        (identified by ``timeVariableName``) is a number of days since the</span>
+<span class="sd">        start of the simulation.</span>
+
+<span class="sd">    timeVariableName : string, optional</span>
+<span class="sd">        The name of the time variable (typically ``&#39;Time&#39;`` if using a</span>
+<span class="sd">        ``variableMap`` or ``&#39;xtime&#39;`` if not using a ``variableMap``)</span>
+
+<span class="sd">    variableList : list of strings, optional</span>
+<span class="sd">        If present, a list of variables to be included in the data set</span>
+
+<span class="sd">    selValues : dict, optional</span>
+<span class="sd">        A dictionary of coordinate names (keys) and values or arrays of</span>
+<span class="sd">        values used to slice the variales in the data set.  See</span>
+<span class="sd">        ``xarray.DataSet.sel()`` for details on how this dictonary is used.</span>
+<span class="sd">        An example::</span>
+
+<span class="sd">            selectCorrdValues = {&#39;cellLon&#39;: 180.0}</span>
+
+<span class="sd">    iselValues : dict, optional</span>
+<span class="sd">        A dictionary of coordinate names (keys) and indices, slices or</span>
+<span class="sd">        arrays of indices used to slice the variales in the data set.  See</span>
+<span class="sd">        ``xarray.DataSet.isel()`` for details on how this dictonary is used.</span>
+<span class="sd">        An example::</span>
+
+<span class="sd">            iselValues = {&#39;nVertLevels&#39;: slice(0, 3),</span>
+<span class="sd">                          &#39;nCells&#39;: cellIDs}</span>
+
+<span class="sd">    variableMap : dict, optional</span>
+<span class="sd">        A dictionary with keys that are variable names used by</span>
+<span class="sd">        MPAS-Analysis and values that are lists of possible names for the same</span>
+<span class="sd">        variable in the MPAS dycore that produced the data set (which may</span>
+<span class="sd">        differ between versions).</span>
+
+<span class="sd">    startDate, endDate : string or datetime.datetime, optional</span>
+<span class="sd">        If present, the first and last dates to be used in the data set.  The</span>
+<span class="sd">        time variable is sliced to only include dates within this range.</span>
+
+<span class="sd">    chunking : None, int, True, dict, optional</span>
+<span class="sd">        If integer is present, applies maximum chunk size from config file</span>
+<span class="sd">        value ``maxChunkSize``, otherwise if None do not perform chunking.  If</span>
+<span class="sd">        True, use automated chunking using default config value</span>
+<span class="sd">        ``maxChunkSize``. If chunking is a dict use dictionary values for</span>
+<span class="sd">        chunking.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds : ``xarray.Dataset``</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If the time variable has an unsupported type (not a date string,</span>
+<span class="sd">        a floating-pont number of days since the start of the simulation</span>
+<span class="sd">        or a ``numpy.datatime64`` object).</span>
+
+<span class="sd">    ValueError</span>
+<span class="sd">        If the time variable is not found in the data set or if the time</span>
+<span class="sd">        variable is a number of days since the start of the simulation but</span>
+<span class="sd">        simulationStartTime is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram</span>
+
+    <span class="n">preprocess_partial</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_preprocess</span><span class="p">,</span>
+                                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                 <span class="n">simulationStartTime</span><span class="o">=</span><span class="n">simulationStartTime</span><span class="p">,</span>
+                                 <span class="n">timeVariableName</span><span class="o">=</span><span class="n">timeVariableName</span><span class="p">,</span>
+                                 <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                                 <span class="n">selValues</span><span class="o">=</span><span class="n">selValues</span><span class="p">,</span>
+                                 <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">,</span>
+                                 <span class="n">variableMap</span><span class="o">=</span><span class="n">variableMap</span><span class="p">,</span>
+                                 <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                                 <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span>
+                               <span class="n">preprocess</span><span class="o">=</span><span class="n">preprocess_partial</span><span class="p">,</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
+                               <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                               <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">startDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">endDate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">startDate</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                                                  <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">endDate</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span>
+                                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+
+    <span class="c1"># select only the data in the specified range of dates</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The data set contains no Time entries between &#39;</span>
+                         <span class="s1">&#39;dates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                             <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">),</span>
+                             <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)))</span>
+    <span class="c1"># process chunking</span>
+    <span class="k">if</span> <span class="n">chunking</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="c1"># limit chunk size to prevent memory error</span>
+        <span class="n">chunking</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;maxChunkSize&#39;</span><span class="p">)</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds</span></div>
+
+
+<span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
+                <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">,</span>
+                <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs variable remapping, then calls mpas_xarray.preprocess, to</span>
+<span class="sd">    perform the remainder of preprocessing.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : xarray.DataSet object</span>
+<span class="sd">        The data set containing an MPAS time variable to be used to build</span>
+<span class="sd">        an xarray time coordinate and with variable names to be</span>
+<span class="sd">        substituted.</span>
+
+<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores</span>
+
+<span class="sd">        The name of the time variable (typically &#39;Time&#39; if using a variableMap</span>
+<span class="sd">        or &#39;xtime&#39; if not using a variableMap)</span>
+
+<span class="sd">    simulationStartTime : string</span>
+<span class="sd">        The start date of the simulation, used to convert from time variables</span>
+<span class="sd">        expressed as days since the start of the simulation to days since the</span>
+<span class="sd">        reference date. `simulationStartTime` takes one of the following</span>
+<span class="sd">        forms::</span>
+
+<span class="sd">            0001-01-01</span>
+<span class="sd">            0001-01-01 00:00:00</span>
+
+<span class="sd">        simulationStartTime is only required if the MPAS time variable</span>
+<span class="sd">        (identified by time_variable_name) is a number of days since the</span>
+<span class="sd">        start of the simulation.</span>
+
+<span class="sd">    timeVariableName : string</span>
+<span class="sd">        The name of the time variable (typically &#39;Time&#39; if using a variable_map</span>
+<span class="sd">        or &#39;xtime&#39; if not using a variable_map)</span>
+
+<span class="sd">    variableList : list of strings</span>
+<span class="sd">        If present, a list of variables to be included in the data set</span>
+
+<span class="sd">    selValues : dict</span>
+<span class="sd">        A dictionary of coordinate names (keys) and values or arrays of</span>
+<span class="sd">        values used to slice the variales in the data set.  See</span>
+<span class="sd">        xarray.DataSet.sel() for details on how this dictonary is used.</span>
+<span class="sd">        An example::</span>
+
+<span class="sd">            selectCorrdValues = {&#39;cellLon&#39;: 180.0}</span>
+
+<span class="sd">    iselValues : dict</span>
+<span class="sd">        A dictionary of coordinate names (keys) and indices, slices or</span>
+<span class="sd">        arrays of indices used to slice the variales in the data set.  See</span>
+<span class="sd">        xarray.DataSet.isel() for details on how this dictonary is used.</span>
+<span class="sd">        An example::</span>
+
+<span class="sd">            iselValues = {&#39;nVertLevels&#39;: slice(0, 3),</span>
+<span class="sd">                          &#39;nCells&#39;: cellIDs}</span>
+
+<span class="sd">    variableMap : dict</span>
+<span class="sd">        A dictionary with keys that are variable names used by</span>
+<span class="sd">        MPAS-Analysis and values that are lists of possible names for the same</span>
+<span class="sd">        variable in the MPAS dycore that produced the data set (which may</span>
+<span class="sd">        differ between versions).</span>
+
+<span class="sd">    startDate, endDate : string or datetime.datetime</span>
+<span class="sd">        If present, the first and last dates to be used in the data set.  The</span>
+<span class="sd">        time variable is sliced to only include dates within this range.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds : xarray.DataSet object</span>
+<span class="sd">        A copy of the data set with the time coordinate set and which</span>
+<span class="sd">        has been sliced.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis, Phillip J. Wolfram</span>
+
+    <span class="n">submap</span> <span class="o">=</span> <span class="n">variableMap</span>
+
+    <span class="c1"># time_variable_names is a special case so we take it out of the map</span>
+    <span class="c1"># and handle it manually (adding a new variable rather than renaming</span>
+    <span class="c1"># an existing one)</span>
+    <span class="k">if</span> <span class="n">variableMap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">timeVariableName</span> <span class="ow">in</span> <span class="n">variableMap</span><span class="p">:</span>
+        <span class="c1"># make a copy of variableMap and remove timeVariableName</span>
+        <span class="n">submap</span> <span class="o">=</span> <span class="n">variableMap</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">submap</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">timeVariableName</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># temporarily change the time variable name</span>
+        <span class="n">timeVariableName</span> <span class="o">=</span> \
+            <span class="n">_map_variable_name</span><span class="p">(</span><span class="n">timeVariableName</span><span class="p">,</span>
+                               <span class="n">ds</span><span class="p">,</span>
+                               <span class="n">variableMap</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">submap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">_rename_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">submap</span><span class="p">)</span>
+
+    <span class="c1"># now that the variables are mapped, do the normal preprocessing in</span>
+    <span class="c1"># mpas_xarray</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">mpas_xarray</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span>
+                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                <span class="n">simulationStartTime</span><span class="o">=</span><span class="n">simulationStartTime</span><span class="p">,</span>
+                                <span class="n">timeVariableName</span><span class="o">=</span><span class="n">timeVariableName</span><span class="p">,</span>
+                                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                                <span class="n">selValues</span><span class="o">=</span><span class="n">selValues</span><span class="p">,</span>
+                                <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds</span>
+
+
+<span class="k">def</span> <span class="nf">_map_variable_name</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a `variableName` in a `variableMap` and an xarray `ds`,</span>
+<span class="sd">    return the name of the the first variable in `variableMap[variableName]`</span>
+<span class="sd">    that is found in ds.</span>
+
+<span class="sd">    variableMap is a dictionary with keys that are variable names used by</span>
+<span class="sd">    MPAS-Analysis and values that are lists of possible names for the same</span>
+<span class="sd">    variable in the MPAS dycore that produced the data set (which may differ</span>
+<span class="sd">    between versions).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    variableName : string</span>
+<span class="sd">        Name of a variable in `varriableMap`</span>
+
+<span class="sd">    ds : `xarray.DataSet` object</span>
+<span class="sd">        A data set in which the mapped variable name should be found</span>
+
+<span class="sd">    variableMap : dict</span>
+<span class="sd">        A dictionary with keys that are variable names used by</span>
+<span class="sd">        MPAS-Analysis and values that are lists of possible names for the same</span>
+<span class="sd">        variable in the MPAS dycore that produced the data set (which may</span>
+<span class="sd">        differ between versions).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    mappedVariableName : The corresponding variable name to `variableName`</span>
+<span class="sd">        found in `ds`.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If none of the possible variable names in `variableMap[variableName]`</span>
+<span class="sd">        can be found in `ds`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">possibleVariables</span> <span class="o">=</span> <span class="n">variableMap</span><span class="p">[</span><span class="n">variableName</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">possibleVariables</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
+            <span class="n">allFound</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">subvariable</span> <span class="ow">in</span> <span class="n">variable</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">subvariable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">allFound</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+            <span class="k">if</span> <span class="n">allFound</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">variable</span>
+
+        <span class="k">elif</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">return</span> <span class="n">variable</span>
+
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Variable </span><span class="si">{}</span><span class="s1"> could not be mapped. None of the &#39;</span>
+                     <span class="s1">&#39;possible mapping variables </span><span class="si">{}</span><span class="se">\n</span><span class="s1"> match any of the &#39;</span>
+                     <span class="s1">&#39;variables in </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                         <span class="n">variableName</span><span class="p">,</span> <span class="n">possibleVariables</span><span class="p">,</span>
+                         <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+
+<span class="k">def</span> <span class="nf">_rename_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given an `xarray.DataSet` object `ds` and a dictionary mapping</span>
+<span class="sd">    variable names `variableMap`, returns a new data set in which variables</span>
+<span class="sd">    from `ds` with names equal to values in `variableMap` are renamed</span>
+<span class="sd">    to the corresponding key in `variableMap`.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : `xarray.DataSet` object</span>
+<span class="sd">        A data set in which the mapped variable names should be renamed</span>
+
+<span class="sd">    variableMap : dict</span>
+<span class="sd">        A dictionary with keys that are variable names used by</span>
+<span class="sd">        MPAS-Analysis and values that are lists of possible names for the same</span>
+<span class="sd">        variable in the MPAS dycore that produced the data set (which may</span>
+<span class="sd">        differ between versions).</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    outDataSEt : A new `xarray.DataSet` object with the variable renamed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">renameDict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">datasetVariable</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">mapVariable</span> <span class="ow">in</span> <span class="n">variableMap</span><span class="p">:</span>
+            <span class="n">renameList</span> <span class="o">=</span> <span class="n">variableMap</span><span class="p">[</span><span class="n">mapVariable</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">datasetVariable</span> <span class="ow">in</span> <span class="n">renameList</span><span class="p">:</span>
+                <span class="n">renameDict</span><span class="p">[</span><span class="n">datasetVariable</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapVariable</span>
+                <span class="k">break</span>
+
+    <span class="k">return</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">renameDict</span><span class="p">)</span>
+
+
+<span class="c1"># vim: ai ts=4 sts=4 et sw=4 ft=python</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.plot.vertical_section &mdash; MPAS-Analysis 1.7.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.shared.plot.vertical_section</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.plot.vertical_section</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Funcitons for plotting vertical sections, both alone and as comparisons between</span>
+<span class="sd">runs or with observations</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.tri</span> <span class="kn">import</span> <span class="n">Triangulation</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">date_to_days</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">setup_colormap</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
+
+
+<div class="viewcode-block" id="plot_vertical_section_comparison"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span>
+        <span class="n">modelArray</span><span class="p">,</span>
+        <span class="n">refArray</span><span class="p">,</span>
+        <span class="n">diffArray</span><span class="p">,</span>
+        <span class="n">colorMapSectionName</span><span class="p">,</span>
+        <span class="n">xCoords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zCoord</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">triangulation_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineModel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineModel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineRef</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineRef</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutlineDiff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutlineDiff</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">colorbarLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xlabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">modelTitle</span><span class="o">=</span><span class="s1">&#39;Model&#39;</span><span class="p">,</span>
+        <span class="n">refTitle</span><span class="o">=</span><span class="s1">&#39;Observations&#39;</span><span class="p">,</span>
+        <span class="n">diffTitle</span><span class="o">=</span><span class="s1">&#39;Model-Observations&#39;</span><span class="p">,</span>
+        <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">plotTitleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+        <span class="n">lineColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+        <span class="n">contourColormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">backgroundColor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+        <span class="n">outlineValid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">numUpperTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">xCoordIsTime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
+        <span class="n">compareAsContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">comparisonContourLineWidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">resultSuffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
+        <span class="n">diffSuffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots vertical section plots in a three-panel format, comparing model data</span>
+<span class="sd">    (in modelArray) to some reference dataset (in refArray), which can be</span>
+<span class="sd">    either observations or an alternative model, and also presenting the</span>
+<span class="sd">    difference plot of the two.  If refArray is None, then only one panel</span>
+<span class="sd">    is plotted, displaying the model data.</span>
+
+<span class="sd">    If compareAsContours is true, the contours of modelArray and refArray are</span>
+<span class="sd">    plotted on a single plot.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : instance of ConfigParser</span>
+<span class="sd">        the configuration, containing a [plot] section with options that</span>
+<span class="sd">        control plotting</span>
+
+<span class="sd">    modelArray, refArray : xarray.DataArray</span>
+<span class="sd">        model and observational or control run data sets</span>
+
+<span class="sd">    diffArray : float array</span>
+<span class="sd">        difference between modelArray and refArray</span>
+
+<span class="sd">    xCoords : xarray.DataArray or list of xarray.DataArray, optional</span>
+<span class="sd">       The x coordinate(s) for the model, ref and diff arrays.  Optional second</span>
+<span class="sd">       and third entries will be used for a second and third x axis above the</span>
+<span class="sd">       plot.  The typical use for the second and third axis is for transects,</span>
+<span class="sd">       for which the primary x axis represents distance along a transect, and</span>
+<span class="sd">       the second and third x axes are used to display the corresponding</span>
+<span class="sd">       latitudes and longitudes.</span>
+
+<span class="sd">    zCoord : xarray.DataArray, optional</span>
+<span class="sd">        The z coordinates for the model, ref and diff arrays</span>
+
+<span class="sd">    triangulation_args : dict, optional</span>
+<span class="sd">        A dict of arguments to create a matplotlib.tri.Triangulation of the</span>
+<span class="sd">        transect that does not rely on it being on a logically rectangular grid.</span>
+<span class="sd">        The arguments rather than the triangulation itself are passed because</span>
+<span class="sd">        multiple triangulations with different masks are needed internally and</span>
+<span class="sd">        there is not an obvious mechanism for copying an existing triangulation.</span>
+<span class="sd">        If this option is provided, ``xCoords`` is only used for tick marks if</span>
+<span class="sd">        more than one x axis is requested, and ``zCoord`` will be ignored.</span>
+
+<span class="sd">    xOutlineModel, zOutlineModel : numpy.ndarray, optional</span>
+<span class="sd">        pairs of points defining line segments that are used to outline the</span>
+<span class="sd">        valid region of the mesh for the model panel if ``outlineValid = True``</span>
+<span class="sd">        and ``triangulation_args`` is not ``None``</span>
+
+<span class="sd">    xOutlineRef, zOutlineRef : numpy.ndarray, optional</span>
+<span class="sd">        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference</span>
+<span class="sd">        panel</span>
+
+<span class="sd">    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional</span>
+<span class="sd">        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference</span>
+<span class="sd">        panel</span>
+
+<span class="sd">    colorMapSectionName : str</span>
+<span class="sd">        section name in ``config`` where color map info can be found.</span>
+
+<span class="sd">    colorbarLabel : str, optional</span>
+<span class="sd">        the label for the colorbar.  If compareAsContours and labelContours are</span>
+<span class="sd">        both True, colorbarLabel is used as follows (typically in order to</span>
+<span class="sd">        indicate the units that are associated with the contour labels):</span>
+<span class="sd">        if refArray is None, the colorbarLabel string is parenthetically</span>
+<span class="sd">        appended to the plot title;  if refArray is not None, it is</span>
+<span class="sd">        parenthetically appended to the legend entries of the contour</span>
+<span class="sd">        comparison plot.</span>
+
+<span class="sd">    xlabels : str or list of str, optional</span>
+<span class="sd">        labels of x-axes.  Labels correspond to entries in ``xCoords``.</span>
+
+<span class="sd">    ylabel : str, optional</span>
+<span class="sd">        label of y-axis</span>
+
+<span class="sd">    title : str, optional</span>
+<span class="sd">        the subtitle of the plot</span>
+
+<span class="sd">    modelTitle : str, optional</span>
+<span class="sd">        title of the model panel</span>
+
+<span class="sd">    refTitle : str, optional</span>
+<span class="sd">        title of the observations or control run panel</span>
+
+<span class="sd">    diffTitle : str, optional</span>
+<span class="sd">        title of the difference (bias) panel</span>
+
+<span class="sd">    titleFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
+
+<span class="sd">    plotTitleFontSize : int, optional</span>
+<span class="sd">        size of the title font for the individual plots</span>
+
+<span class="sd">    axisFontSize : int, optional</span>
+<span class="sd">        size of the axis font</span>
+
+<span class="sd">    figsize : tuple of float, optional</span>
+<span class="sd">        the size of the figure in inches</span>
+
+<span class="sd">    dpi : int, optional</span>
+<span class="sd">        the number of dots per inch of the figure, taken from section ``plot``</span>
+<span class="sd">        option ``dpi`` in the config file by default</span>
+
+<span class="sd">    lineWidth : float, optional</span>
+<span class="sd">        the line width of contour lines (if specified)</span>
+
+<span class="sd">    lineStyle : str, optional</span>
+<span class="sd">        the line style of contour lines (if specified); this applies to the</span>
+<span class="sd">        contour lines on heatmaps and to the contour lines of the model field</span>
+<span class="sd">        on contour comparison plots (the line style of the contour lines of</span>
+<span class="sd">        the reference field on contour comparison plots is set using the</span>
+<span class="sd">        contourComparisonLineStyle argument).</span>
+
+<span class="sd">    lineColor : str, optional</span>
+<span class="sd">        the color of contour lines (if specified); this applies to the</span>
+<span class="sd">        contour lines on heatmaps and to the contour lines of the model field</span>
+<span class="sd">        on contour comparison plots (the line color of the contour lines of</span>
+<span class="sd">        the reference field on contour comparison plots is set using the</span>
+<span class="sd">        contourComparisonLineColor argument).</span>
+
+<span class="sd">    backgroundColor : str, optional</span>
+<span class="sd">        the background color for the plot outside the limits of ``xCoord`` and</span>
+<span class="sd">        ``zCoord``.</span>
+
+<span class="sd">    invalidColor : str, optional</span>
+<span class="sd">        the color for invalid values (NaNs and masked areas will be</span>
+<span class="sd">        shown in this color)</span>
+
+<span class="sd">    outlineValid : bool, optional</span>
+<span class="sd">        whether to outline the boundary between the valid an invalid regions</span>
+<span class="sd">        with a black contour</span>
+
+<span class="sd">    xLim : float array, optional</span>
+<span class="sd">        x range of plot</span>
+
+<span class="sd">    yLim : float array, optional</span>
+<span class="sd">        y range of plot</span>
+
+<span class="sd">    numUpperTicks : the approximate number of ticks to use on the upper x axis</span>
+<span class="sd">        or axes (these are the second and third x axes, which are placed above</span>
+<span class="sd">        the plot if they have been requested by specifying the secondXAxisData</span>
+<span class="sd">        or thirdXAxisData arrays above)</span>
+
+<span class="sd">    upperXAxisTickLabelPrecision : the number of decimal places (to the right</span>
+<span class="sd">        of the decimal point) to use for values at upper axis ticks.  This</span>
+<span class="sd">        value can be adjusted (in concert with numUpperTicks) to avoid problems</span>
+<span class="sd">        with overlapping numbers along the upper axis.</span>
+
+<span class="sd">    invertYAxis : logical, optional</span>
+<span class="sd">        if True, invert Y axis</span>
+
+<span class="sd">    xCoordIsTime : logical, optional</span>
+<span class="sd">        if True, format the x axis for time (this applies only to the primary</span>
+<span class="sd">        x axis, not to the optional second or third x axes)</span>
+
+<span class="sd">    movingAveragePoints : int, optional</span>
+<span class="sd">        the number of points over which to perform a moving average</span>
+<span class="sd">        NOTE: this option is mostly intended for use when xCoordIsTime is True,</span>
+<span class="sd">        although it will work with other data as well.  Also, the moving</span>
+<span class="sd">        average calculation is based on number of points, not actual x axis</span>
+<span class="sd">        values, so for best results, the values in the xArray should be equally</span>
+<span class="sd">        spaced.</span>
+
+<span class="sd">    firstYearXTicks : int, optional</span>
+<span class="sd">        The year of the first tick on the x axis.  By default, the first time</span>
+<span class="sd">        entry is the first tick.</span>
+
+<span class="sd">    yearStrideXTicks : int, optional</span>
+<span class="sd">        The number of years between x ticks. By default, the stride is chosen</span>
+<span class="sd">        automatically to have ``maxXTicks`` tick marks or fewer.</span>
+
+<span class="sd">    maxXTicks : int, optional</span>
+<span class="sd">        the maximum number of tick marks that will be allowed along the primary</span>
+<span class="sd">        x axis.  This may need to be adjusted depending on the figure size and</span>
+<span class="sd">        aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True</span>
+
+<span class="sd">    calendar : str, optional</span>
+<span class="sd">        the calendar to use for formatting the time axis</span>
+<span class="sd">        NOTE:  calendar is only used if xCoordIsTime is True</span>
+
+<span class="sd">    compareAsContours : bool, optional</span>
+<span class="sd">       if compareAsContours is True, instead of creating a three panel plot</span>
+<span class="sd">       showing modelArray, refArray, and their difference, the function will</span>
+<span class="sd">       plot the contours of modelArray and refArray on a single plot (unless</span>
+<span class="sd">       refArray is None, in which case only the contours of modelArray will be</span>
+<span class="sd">       plotted on the single panel plot).</span>
+
+<span class="sd">    comparisonContourLineWidth : float, optional</span>
+<span class="sd">        the line width of contour lines of the comparisonFieldName field on</span>
+<span class="sd">        a contour comparison plot</span>
+
+<span class="sd">    comparisonContourLineStyle : str, optional</span>
+<span class="sd">        the line style of contour lines of the reference field on a contour</span>
+<span class="sd">        comparison plot</span>
+
+<span class="sd">    comparisonContourLineColor : str, optional</span>
+<span class="sd">        the line color of contour lines of the reference field on a contour</span>
+<span class="sd">        comparison plot</span>
+
+<span class="sd">    labelContours : bool, optional</span>
+<span class="sd">        whether or not to label contour lines (if specified) with their values</span>
+
+<span class="sd">    contourLabelPrecision : int, optional</span>
+<span class="sd">        the precision (in terms of number of figures to the right of the</span>
+<span class="sd">        decimal point) of contour labels</span>
+
+<span class="sd">    resultSuffix : str, optional</span>
+<span class="sd">        a suffix added to the config options related to colormap information</span>
+<span class="sd">        for the main and control fields</span>
+
+<span class="sd">    diffSuffix : str, optional</span>
+<span class="sd">        a suffix added to the config options related to colormap information</span>
+<span class="sd">        for the difference field</span>
+
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : ``matplotlib.figure.Figure``</span>
+<span class="sd">        The figure that was plotted</span>
+
+<span class="sd">    axes : list of ``matplotlib.axes.Axes``</span>
+<span class="sd">        The subplots</span>
+
+<span class="sd">    suptitle : ``matplotlib.text.Text``</span>
+<span class="sd">        The super-title</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Greg Streletz, Xylar Asay-Davis, Milena Veneziani</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xCoords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">xCoords</span> <span class="o">=</span> <span class="p">[</span><span class="n">xCoords</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xlabels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="n">xlabels</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">compareAsContours</span><span class="p">:</span>
+        <span class="n">singlePanel</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">singlePanel</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1"># set up figure</span>
+    <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># set the defaults, depending on if we have 1 or 3 panels, and</span>
+        <span class="c1"># depending on how many x axes are to be displayed on the plots</span>
+        <span class="k">if</span> <span class="n">singlePanel</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">compareAsContours</span> <span class="ow">and</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> \
+                    <span class="n">contourColormap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># no color bar but there is a legend at the bottom</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># color bar and legend</span>
+                <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;threePanelTitleFontSize&#39;</span><span class="p">)</span>
+        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                      <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;threePanelTitleFontColor&#39;</span><span class="p">),</span>
+                      <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;threePanelTitleFontWeight&#39;</span><span class="p">)}</span>
+        <span class="n">suptitle</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">suptitle</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">plotTitleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plotTitleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;threePanelPlotTitleFontSize&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">singlePanel</span><span class="p">:</span>
+            <span class="n">titleY</span> <span class="o">=</span> <span class="mf">1.64</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleY</span> <span class="o">=</span> <span class="mf">1.34</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">titleY</span> <span class="o">=</span> <span class="mf">1.20</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">titleY</span> <span class="o">=</span> <span class="mf">1.06</span>
+
+    <span class="k">if</span> <span class="n">axisFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;threePanelAxisFontSize&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">singlePanel</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">compareAsContours</span> <span class="ow">or</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">modelTitle</span>
+        <span class="n">contourComparisonField</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">comparisonFieldName</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">originalFieldName</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">contourComparisonField</span> <span class="o">=</span> <span class="n">refArray</span>
+        <span class="n">comparisonFieldName</span> <span class="o">=</span> <span class="n">refTitle</span>
+        <span class="n">originalFieldName</span> <span class="o">=</span> <span class="n">modelTitle</span>
+
+    <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_vertical_section</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span>
+        <span class="n">modelArray</span><span class="p">,</span>
+        <span class="n">colorMapSectionName</span><span class="p">,</span>
+        <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
+        <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
+        <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
+        <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineModel</span><span class="p">,</span>
+        <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineModel</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
+        <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="n">xlabels</span><span class="o">=</span><span class="n">xlabels</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
+        <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
+        <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
+        <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
+        <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span>
+        <span class="n">lineWidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">,</span>
+        <span class="n">lineStyle</span><span class="o">=</span><span class="n">lineStyle</span><span class="p">,</span>
+        <span class="n">lineColor</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span>
+        <span class="n">contourColormap</span><span class="o">=</span><span class="n">contourColormap</span><span class="p">,</span>
+        <span class="n">numUpperTicks</span><span class="o">=</span><span class="n">numUpperTicks</span><span class="p">,</span>
+        <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="n">upperXAxisTickLabelPrecision</span><span class="p">,</span>
+        <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
+        <span class="n">xCoordIsTime</span><span class="o">=</span><span class="n">xCoordIsTime</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
+        <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
+        <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
+        <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+        <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
+        <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
+        <span class="n">plotAsContours</span><span class="o">=</span><span class="n">compareAsContours</span><span class="p">,</span>
+        <span class="n">contourComparisonField</span><span class="o">=</span><span class="n">contourComparisonField</span><span class="p">,</span>
+        <span class="n">comparisonFieldName</span><span class="o">=</span><span class="n">comparisonFieldName</span><span class="p">,</span>
+        <span class="n">originalFieldName</span><span class="o">=</span><span class="n">originalFieldName</span><span class="p">,</span>
+        <span class="n">comparisonContourLineWidth</span><span class="o">=</span><span class="n">comparisonContourLineWidth</span><span class="p">,</span>
+        <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="n">comparisonContourLineStyle</span><span class="p">,</span>
+        <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="n">comparisonContourLineColor</span><span class="p">,</span>
+        <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
+
+    <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">singlePanel</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_vertical_section</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
+            <span class="n">refArray</span><span class="p">,</span>
+            <span class="n">colorMapSectionName</span><span class="p">,</span>
+            <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
+            <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
+            <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
+            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineRef</span><span class="p">,</span>
+            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineRef</span><span class="p">,</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="n">resultSuffix</span><span class="p">,</span>
+            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span>
+            <span class="n">xlabels</span><span class="o">=</span><span class="n">xlabels</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
+            <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
+            <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
+            <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span>
+            <span class="n">lineWidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">,</span>
+            <span class="n">lineStyle</span><span class="o">=</span><span class="n">lineStyle</span><span class="p">,</span>
+            <span class="n">lineColor</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span>
+            <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="n">upperXAxisTickLabelPrecision</span><span class="p">,</span>
+            <span class="n">numUpperTicks</span><span class="o">=</span><span class="n">numUpperTicks</span><span class="p">,</span>
+            <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
+            <span class="n">xCoordIsTime</span><span class="o">=</span><span class="n">xCoordIsTime</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
+            <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
+            <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
+            <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
+            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+            <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+            <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
+            <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
+            <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
+            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
+
+        <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_vertical_section</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span>
+            <span class="n">diffArray</span><span class="p">,</span>
+            <span class="n">colorMapSectionName</span><span class="p">,</span>
+            <span class="n">xCoords</span><span class="o">=</span><span class="n">xCoords</span><span class="p">,</span>
+            <span class="n">zCoord</span><span class="o">=</span><span class="n">zCoord</span><span class="p">,</span>
+            <span class="n">triangulation_args</span><span class="o">=</span><span class="n">triangulation_args</span><span class="p">,</span>
+            <span class="n">xOutline</span><span class="o">=</span><span class="n">xOutlineDiff</span><span class="p">,</span>
+            <span class="n">zOutline</span><span class="o">=</span><span class="n">zOutlineDiff</span><span class="p">,</span>
+            <span class="n">suffix</span><span class="o">=</span><span class="n">diffSuffix</span><span class="p">,</span>
+            <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span>
+            <span class="n">xlabels</span><span class="o">=</span><span class="n">xlabels</span><span class="p">,</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="n">ylabel</span><span class="p">,</span>
+            <span class="n">figsize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">titleFontSize</span><span class="o">=</span><span class="n">plotTitleFontSize</span><span class="p">,</span>
+            <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
+            <span class="n">titleY</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span>
+            <span class="n">axisFontSize</span><span class="o">=</span><span class="n">axisFontSize</span><span class="p">,</span>
+            <span class="n">xLim</span><span class="o">=</span><span class="n">xLim</span><span class="p">,</span>
+            <span class="n">yLim</span><span class="o">=</span><span class="n">yLim</span><span class="p">,</span>
+            <span class="n">lineWidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">,</span>
+            <span class="n">lineStyle</span><span class="o">=</span><span class="n">lineStyle</span><span class="p">,</span>
+            <span class="n">lineColor</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span>
+            <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="n">upperXAxisTickLabelPrecision</span><span class="p">,</span>
+            <span class="n">numUpperTicks</span><span class="o">=</span><span class="n">numUpperTicks</span><span class="p">,</span>
+            <span class="n">invertYAxis</span><span class="o">=</span><span class="n">invertYAxis</span><span class="p">,</span>
+            <span class="n">xCoordIsTime</span><span class="o">=</span><span class="n">xCoordIsTime</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
+            <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span>
+            <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">,</span>
+            <span class="n">maxXTicks</span><span class="o">=</span><span class="n">maxXTicks</span><span class="p">,</span>
+            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+            <span class="n">backgroundColor</span><span class="o">=</span><span class="n">backgroundColor</span><span class="p">,</span>
+            <span class="n">invalidColor</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">,</span>
+            <span class="n">outlineValid</span><span class="o">=</span><span class="n">outlineValid</span><span class="p">,</span>
+            <span class="n">labelContours</span><span class="o">=</span><span class="n">labelContours</span><span class="p">,</span>
+            <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="n">contourLabelPrecision</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
+
+        <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">singlePanel</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">h_pad</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">suptitle</span></div>
+
+
+<div class="viewcode-block" id="plot_vertical_section"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section">[docs]</a><span class="k">def</span> <span class="nf">plot_vertical_section</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">,</span>
+        <span class="n">colorMapSectionName</span><span class="p">,</span>
+        <span class="n">xCoords</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zCoord</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">triangulation_args</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xOutline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">zOutline</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="n">colorbarLabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xlabels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+        <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">titleY</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">lineStyle</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">,</span>
+        <span class="n">lineColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+        <span class="n">contourColormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">backgroundColor</span><span class="o">=</span><span class="s1">&#39;grey&#39;</span><span class="p">,</span>
+        <span class="n">invalidColor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+        <span class="n">outlineValid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">numUpperTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">upperXAxisTickLabelPrecision</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">xCoordIsTime</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
+        <span class="n">plotAsContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">contourComparisonField</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonFieldName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">originalFieldName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonContourLineWidth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonContourLineStyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">comparisonContourLineColor</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a data set as a x distance (latitude, longitude,</span>
+<span class="sd">    or spherical distance) vs depth map (vertical section).</span>
+
+<span class="sd">    Or, if xCoordIsTime is True, plots data set on a vertical</span>
+<span class="sd">    Hovmoller plot (depth vs. time).</span>
+
+<span class="sd">    Typically, the ``field`` data are plotted using a heatmap, but if</span>
+<span class="sd">    ``contourComparisonField`` is not None, then contours of both</span>
+<span class="sd">    ``field`` and ``contourComparisonField`` are plotted instead.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : instance of ConfigParser</span>
+<span class="sd">        the configuration, containing a [plot] section with options that</span>
+<span class="sd">        control plotting</span>
+
+<span class="sd">    field : xarray.DataArray</span>
+<span class="sd">        field array to plot.  For contour plots, ``xCoords`` and ``zCoords``</span>
+<span class="sd">        should broadcast to the same shape as ``field``.  For heatmap plots,</span>
+<span class="sd">        ``xCoords`` and ``zCoords`` are the corners of the plot.  If they</span>
+<span class="sd">        broadcast to the same shape as ``field``, ``field`` will be bilinearly</span>
+<span class="sd">        interpolated to center values for each plot cell.  If the coordinates</span>
+<span class="sd">        have one extra element in each direction than ``field``, ``field`` is</span>
+<span class="sd">        assumed to contain cell values and no interpolation is performed.</span>
+
+<span class="sd">    colorMapSectionName : str</span>
+<span class="sd">        section name in ``config`` where color map info can be found.</span>
+
+<span class="sd">    xCoords : xarray.DataArray or list of xarray.DataArray, optional</span>
+<span class="sd">       The x coordinate(s) for the ``field``.  Optional second</span>
+<span class="sd">       and third entries will be used for a second and third x axis above the</span>
+<span class="sd">       plot.  The typical use for the second and third axis is for transects,</span>
+<span class="sd">       for which the primary x axis represents distance along a transect, and</span>
+<span class="sd">       the second and third x axes are used to display the corresponding</span>
+<span class="sd">       latitudes and longitudes.</span>
+
+<span class="sd">    zCoord : xarray.DataArray, optional</span>
+<span class="sd">        The z coordinates for the ``field``</span>
+
+<span class="sd">    triangulation_args : dict, optional</span>
+<span class="sd">        A dict of arguments to create a matplotlib.tri.Triangulation of the</span>
+<span class="sd">        transect that does not rely on it being on a logically rectangular grid.</span>
+<span class="sd">        The arguments rather than the triangulation itself are passed because</span>
+<span class="sd">        multiple triangulations with different masks are needed internally and</span>
+<span class="sd">        there is not an obvious mechanism for copying an existing triangulation.</span>
+<span class="sd">        If this option is provided, ``xCoords`` is only used for tick marks if</span>
+<span class="sd">        more than one x axis is requested, and ``zCoord`` will be ignored.</span>
+
+<span class="sd">    xOutline, zOutline : numpy.ndarray, optional</span>
+<span class="sd">        pairs of points defining line segments that are used to outline the</span>
+<span class="sd">        valid region of the mesh if ``outlineValid = True`` and</span>
+<span class="sd">        ``triangulation_args`` is not ``None``</span>
+
+
+
+<span class="sd">    suffix : str, optional</span>
+<span class="sd">        the suffix used for colorbar config options</span>
+
+<span class="sd">    colorbarLabel : str, optional</span>
+<span class="sd">        the label for the colorbar.  If plotAsContours and labelContours are</span>
+<span class="sd">        both True, colorbarLabel is used as follows (typically in order to</span>
+<span class="sd">        indicate the units that are associated with the contour labels):</span>
+<span class="sd">        if ``contourComparisonField`` is None, the ``colorbarLabel`` string is</span>
+<span class="sd">        parenthetically appended to the plot title;  if</span>
+<span class="sd">        ``contourComparisonField`` is not None, it is parenthetically appended</span>
+<span class="sd">        to the legend entries of the contour comparison plot.</span>
+
+<span class="sd">    title : str, optional</span>
+<span class="sd">        title of plot</span>
+
+<span class="sd">    xlabels : str or list of str, optional</span>
+<span class="sd">        labels of x-axes.  Labels correspond to entries in ``xCoords``.</span>
+
+<span class="sd">    ylabel : str, optional</span>
+<span class="sd">        label of y-axis</span>
+
+<span class="sd">    figsize : tuple of float, optional</span>
+<span class="sd">        size of the figure in inches, or None if the current figure should</span>
+<span class="sd">        be used (e.g. if this is a subplot)</span>
+
+<span class="sd">    dpi : int, optional</span>
+<span class="sd">        the number of dots per inch of the figure, taken from section ``plot``</span>
+<span class="sd">        option ``dpi`` in the config file by default</span>
+
+<span class="sd">    titleFontSize : int, optional</span>
+<span class="sd">        size of the title font</span>
+
+<span class="sd">    defaultFontSize : int, optional</span>
+<span class="sd">        the size of text other than the title</span>
+
+<span class="sd">    titleY : float, optional</span>
+<span class="sd">        the y value to use for placing the plot title</span>
+
+<span class="sd">    axisFontSize : int, optional</span>
+<span class="sd">        size of the axis font</span>
+
+<span class="sd">    xLim : float array, optional</span>
+<span class="sd">        x range of plot</span>
+
+<span class="sd">    yLim : float array, optional</span>
+<span class="sd">        y range of plot</span>
+
+<span class="sd">    lineWidth : float, optional</span>
+<span class="sd">        the line width of contour lines (if specified)</span>
+
+<span class="sd">    lineStyle : str, optional</span>
+<span class="sd">        the line style of contour lines (if specified); this applies to the</span>
+<span class="sd">        style of contour lines of fieldArray (the style of the contour lines</span>
+<span class="sd">        of contourComparisonField is set using</span>
+<span class="sd">        contourComparisonLineStyle).</span>
+
+<span class="sd">    lineColor : str, optional</span>
+<span class="sd">        the color of contour lines (if specified); this applies to the</span>
+<span class="sd">        contour lines of fieldArray (the color of the contour lines of</span>
+<span class="sd">        contourComparisonField is set using contourComparisonLineColor</span>
+
+<span class="sd">    backgroundColor : str, optional</span>
+<span class="sd">        the background color for the plot outside the limits of ``xCoord`` and</span>
+<span class="sd">        ``zCoord``.</span>
+
+<span class="sd">    invalidColor : str, optional</span>
+<span class="sd">        the color for invalid values (NaNs and masked areas will be</span>
+<span class="sd">        shown in this color)</span>
+
+<span class="sd">    outlineValid : bool, optional</span>
+<span class="sd">        whether to outline the boundary between the valid an invalid regions</span>
+<span class="sd">        with a black contour</span>
+
+<span class="sd">    numUpperTicks :  int, optional</span>
+<span class="sd">        the approximate number of ticks to use on the upper x axis</span>
+<span class="sd">        or axes (these are the second and third x axes, which are placed above</span>
+<span class="sd">        the plot if they have been requested by specifying the secondXAxisData</span>
+<span class="sd">        or thirdXAxisData arrays above)</span>
+
+<span class="sd">    upperXAxisTickLabelPrecision : int, optional</span>
+<span class="sd">        the number of decimal places (to the right</span>
+<span class="sd">        of the decimal point) to use for values at upper axis ticks.  This</span>
+<span class="sd">        value can be adjusted (in concert with numUpperTicks) to avoid problems</span>
+<span class="sd">        with overlapping numbers along the upper axis.</span>
+
+<span class="sd">    invertYAxis : logical, optional</span>
+<span class="sd">        if True, invert Y axis</span>
+
+<span class="sd">    xCoordIsTime : logical, optional</span>
+<span class="sd">        if True, format the x axis for time (this applies only to the primary</span>
+<span class="sd">        x axis, not to the optional second or third x axes)</span>
+
+<span class="sd">    movingAveragePoints : int, optional</span>
+<span class="sd">        the number of points over which to perform a moving average</span>
+<span class="sd">        NOTE: this option is mostly intended for use when ``xCoordIsTime`` is</span>
+<span class="sd">        True, although it will work with other data as well.  Also, the moving</span>
+<span class="sd">        average calculation is based on number of points, not actual x axis</span>
+<span class="sd">        values, so for best results, the values in the first entry in</span>
+<span class="sd">        ``xCoords`` should be equally spaced.</span>
+
+<span class="sd">    firstYearXTicks : int, optional</span>
+<span class="sd">        The year of the first tick on the x axis.  By default, the first time</span>
+<span class="sd">        entry is the first tick.</span>
+
+<span class="sd">    yearStrideXTicks : int, optional</span>
+<span class="sd">        The number of years between x ticks. By default, the stride is chosen</span>
+<span class="sd">        automatically to have ``maxXTicks`` tick marks or fewer.</span>
+
+<span class="sd">    maxXTicks : int, optional</span>
+<span class="sd">        the maximum number of tick marks that will be allowed along the primary</span>
+<span class="sd">        x axis.  This may need to be adjusted depending on the figure size and</span>
+<span class="sd">        aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True</span>
+
+<span class="sd">    calendar : str, optional</span>
+<span class="sd">        the calendar to use for formatting the time axis</span>
+<span class="sd">        NOTE:  calendar is only used if xCoordIsTime is True</span>
+
+<span class="sd">    plotAsContours : bool, optional</span>
+<span class="sd">        if plotAsContours is True, instead of plotting ``field`` as a</span>
+<span class="sd">        heatmap, the function will plot only the contours of ``field``.  In</span>
+<span class="sd">        addition, if contourComparisonField is not None, the contours</span>
+<span class="sd">        of this field will be plotted on the same plot.  The selection of</span>
+<span class="sd">        contour levels is still determined as for the contours on the heatmap</span>
+<span class="sd">        plots, via the &#39;contours&#39; entry in ``colorMapSectionName``.</span>
+
+<span class="sd">    contourComparisonField : float array, optional</span>
+<span class="sd">        a comparison ``field`` array (typically observational data or results</span>
+<span class="sd">        from another simulation run), assumed to be of the same shape as</span>
+<span class="sd">        ``field``. If ``plotAsContours`` is ``True`` and</span>
+<span class="sd">        ``countourComparisonFieldArray`` is not ``None``, then contours of both</span>
+<span class="sd">        ``field`` and ``contourComparisonField`` will be plotted in order to</span>
+<span class="sd">        enable a comparison of the two fields on the same plot.</span>
+
+<span class="sd">    comparisonFieldName : str, optional</span>
+<span class="sd">        the name for the comparison field.  If contourComparisonField is</span>
+<span class="sd">        None, this parameter is ignored.</span>
+
+<span class="sd">    originalFieldName : str, optional</span>
+<span class="sd">        the name for the ``field`` field (for the purposes of labeling the</span>
+<span class="sd">        contours on a contour comparison plot).  If contourComparisonField</span>
+<span class="sd">        is None, this parameter is ignored.</span>
+
+<span class="sd">    comparisonContourLineWidth : float, optional</span>
+<span class="sd">        the line width of contour lines of the comparisonFieldName field on</span>
+<span class="sd">        a contour comparison plot</span>
+
+<span class="sd">    comparisonContourLineStyle : str, optional</span>
+<span class="sd">        the line style of contour lines of the comparisonFieldName field on</span>
+<span class="sd">        a contour comparison plot</span>
+
+<span class="sd">    comparisonContourLineColor : str, optional</span>
+<span class="sd">        the line color of contour lines of the comparisonFieldName field on</span>
+<span class="sd">        a contour comparison plot</span>
+
+<span class="sd">    labelContours : bool, optional</span>
+<span class="sd">        whether or not to label contour lines (if specified) with their values</span>
+
+<span class="sd">    contourLabelPrecision : int, optional</span>
+<span class="sd">        the precision (in terms of number of figures to the right of the</span>
+<span class="sd">        decimal point) of contour labels</span>
+
+<span class="sd">    maxTitleLength : int, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    fig : ``matplotlib.figure.Figure``</span>
+<span class="sd">        The figure that was plotted</span>
+
+<span class="sd">    ax : ``matplotlib.axes.Axes``</span>
+<span class="sd">        The subplot</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz</span>
+
+    <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">xCoords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xCoords</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">xCoords</span> <span class="o">=</span> <span class="p">[</span><span class="n">xCoords</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">xlabels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">xlabels</span> <span class="o">=</span> <span class="p">[</span><span class="n">xlabels</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xlabels</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Expected the same number of xCoords and xlabels&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">triangulation_args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">xCoords</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zCoord</span><span class="p">)</span>
+        <span class="n">dims_in_field</span> <span class="o">=</span> <span class="nb">all</span><span class="p">([</span><span class="n">dim</span> <span class="ow">in</span> <span class="n">field</span><span class="o">.</span><span class="n">dims</span> <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">dims_in_field</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">*</span><span class="n">field</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">*</span><span class="n">field</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">xsize</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="n">fieldsize</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sizes</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">xsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fieldsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">xsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fieldsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="n">xsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">fieldsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">xsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">fieldsize</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Sizes of coords </span><span class="si">{}</span><span class="s1">x</span><span class="si">{}</span><span class="s1"> and field </span><span class="si">{}</span><span class="s1">x</span><span class="si">{}</span><span class="s1"> not &#39;</span>
+                                 <span class="s1">&#39;compatible.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">xsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xsize</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                                                      <span class="n">fieldsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                      <span class="n">fieldsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="c1"># compute moving averages with respect to the x dimension</span>
+        <span class="k">if</span> <span class="n">movingAveragePoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">movingAveragePoints</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
+                                  <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
+                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
+                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">_get_triangulation</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+            <span class="n">maskedComparisonTriangulation</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_get_triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maskedComparisonTriangulation</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+        <span class="c1"># if any node of a triangle is masked, the triangle is masked</span>
+        <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">triMask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">triangulation_args</span><span class="p">)</span>
+        <span class="n">mask_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">triangulation_args</span><span class="p">)</span>
+        <span class="n">mask_args</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triMask</span>
+        <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">mask_args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">contourComparisonField</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+            <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">triMask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">mask_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">triangulation_args</span><span class="p">)</span>
+            <span class="n">mask_args</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triMask</span>
+            <span class="n">maskedComparisonTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">mask_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maskedComparisonTriangulation</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># set up figure</span>
+    <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">figsize</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+
+    <span class="n">colormapDict</span> <span class="o">=</span> <span class="n">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">colorMapSectionName</span><span class="p">,</span>
+                                  <span class="n">suffix</span><span class="o">=</span><span class="n">suffix</span><span class="p">)</span>
+
+    <span class="c1"># fill the unmasked region with the invalid color so it will show through</span>
+    <span class="c1"># any masked regions</span>
+    <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                    <span class="n">colors</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">plotAsContours</span><span class="p">:</span>
+        <span class="c1"># display a heatmap of fieldArray</span>
+        <span class="n">fieldMasked</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
+                                       <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                       <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                       <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
+                                         <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                         <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                         <span class="n">levels</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">],</span>
+                                         <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span>
+                            <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
+                            <span class="n">spacing</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+                            <span class="n">aspect</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                            <span class="n">ticks</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">colorbarLabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># display a white heatmap to get a white background for non-land</span>
+        <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                        <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">backgroundColor</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">outlineValid</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">xOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">zOutline</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># also outline the domain if provided</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xOutline</span><span class="p">,</span> <span class="n">zOutline</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># do a contour to outline the boundary between valid and invalid</span>
+            <span class="c1"># values</span>
+            <span class="n">landMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">values</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">landMask</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0001</span><span class="p">],</span>
+                           <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># plot contours, if they were requested</span>
+    <span class="n">contourLevels</span> <span class="o">=</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;contours&#39;</span><span class="p">]</span>
+    <span class="n">fmt_string</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">cs1</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">cs2</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">if</span> <span class="n">contourLevels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">contourLevels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># automatic calculation of contour levels</span>
+            <span class="n">contourLevels</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+        <span class="n">fieldMasked</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+        <span class="n">cs1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
+                             <span class="n">levels</span><span class="o">=</span><span class="n">contourLevels</span><span class="p">,</span>
+                             <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span>
+                             <span class="n">linestyles</span><span class="o">=</span><span class="n">lineStyle</span><span class="p">,</span>
+                             <span class="n">linewidths</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">,</span>
+                             <span class="n">cmap</span><span class="o">=</span><span class="n">contourColormap</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">labelContours</span><span class="p">:</span>
+            <span class="n">fmt_string</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%%</span><span class="s2">1.</span><span class="si">%d</span><span class="s2">f&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">contourLabelPrecision</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">cs1</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt_string</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">comparisonContourLineWidth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">comparisonContourLineWidth</span> <span class="o">=</span> <span class="n">lineWidth</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">contourComparisonField</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
+            <span class="n">fieldMasked</span> <span class="o">=</span> <span class="n">contourComparisonField</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+            <span class="n">cs2</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontour</span><span class="p">(</span><span class="n">maskedComparisonTriangulation</span><span class="p">,</span>
+                                 <span class="n">fieldMasked</span><span class="p">,</span>
+                                 <span class="n">levels</span><span class="o">=</span><span class="n">contourLevels</span><span class="p">,</span>
+                                 <span class="n">colors</span><span class="o">=</span><span class="n">comparisonContourLineColor</span><span class="p">,</span>
+                                 <span class="n">linestyles</span><span class="o">=</span><span class="n">comparisonContourLineStyle</span><span class="p">,</span>
+                                 <span class="n">linewidths</span><span class="o">=</span><span class="n">comparisonContourLineWidth</span><span class="p">,</span>
+                                 <span class="n">cmap</span><span class="o">=</span><span class="n">contourColormap</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">labelContours</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">cs2</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt_string</span><span class="p">)</span>
+
+    <span class="n">plotLegend</span> <span class="o">=</span> <span class="p">(((</span><span class="n">lineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                    <span class="n">comparisonContourLineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+                   <span class="p">(</span><span class="n">lineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                    <span class="n">comparisonContourLineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">and</span>
+                  <span class="p">(</span><span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">plotLegend</span><span class="p">:</span>
+        <span class="n">h1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cs1</span><span class="o">.</span><span class="n">legend_elements</span><span class="p">()</span>
+        <span class="n">h2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cs2</span><span class="o">.</span><span class="n">legend_elements</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">labelContours</span><span class="p">:</span>
+            <span class="n">originalFieldName</span> <span class="o">=</span> <span class="n">originalFieldName</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">colorbarLabel</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+            <span class="n">comparisonFieldName</span> <span class="o">=</span> <span class="p">(</span><span class="n">comparisonFieldName</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span>
+                                   <span class="n">colorbarLabel</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">h1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">h2</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="n">originalFieldName</span><span class="p">,</span> <span class="n">comparisonFieldName</span><span class="p">],</span>
+                  <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper center&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">),</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">labelContours</span> \
+                <span class="ow">and</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span>
+                                <span class="n">maxTitleLength</span> <span class="o">-</span> <span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)))</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">title</span> <span class="o">+</span> <span class="s2">&quot; (&quot;</span> <span class="o">+</span> <span class="n">colorbarLabel</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                      <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
+                      <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">titleY</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">titleY</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">axisFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">axisFontSize</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">xlabels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">invertYAxis</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">xLim</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xLim</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">yLim</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">yLim</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">xCoords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">xCoordIsTime</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">firstYearXTicks</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">minDays</span> <span class="o">=</span> <span class="n">xCoords</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">minDays</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
+        <span class="n">maxDays</span> <span class="o">=</span> <span class="n">xCoords</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">plot_xtick_format</span><span class="p">(</span><span class="n">calendar</span><span class="p">,</span> <span class="n">minDays</span><span class="p">,</span> <span class="n">maxDays</span><span class="p">,</span> <span class="n">maxXTicks</span><span class="p">,</span>
+                          <span class="n">yearStride</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">contourLevels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">contourColormap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbar1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cs1</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">.05</span><span class="p">,</span>
+                                 <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
+                                 <span class="n">spacing</span><span class="o">=</span><span class="s1">&#39;proportional&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">colorbarLabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cbar1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)</span>
+
+    <span class="c1"># add a second x-axis scale, if it was requested</span>
+    <span class="k">if</span> <span class="n">xCoords</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twiny</span><span class="p">()</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">backgroundColor</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">xlabels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+        <span class="n">xlimits</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlimits</span><span class="p">)</span>
+        <span class="n">formatString</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">xticks</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">numUpperTicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">xticks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xlimits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xlimits</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">numUpperTicks</span><span class="p">)</span>
+            <span class="n">tickValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xticks</span><span class="p">,</span> <span class="n">xCoords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">xCoords</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span>
+            <span class="n">formatString</span> <span class="o">=</span> <span class="s2">&quot;{{0:.</span><span class="si">{:d}</span><span class="s2">f}}</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">upperXAxisTickLabelPrecision</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\degree$&#39;</span><span class="p">)</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="n">formatString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                                 <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">tickValues</span><span class="p">])</span>
+
+        <span class="c1"># add a third x-axis scale, if it was requested</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xCoords</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">ax3</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twiny</span><span class="p">()</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">backgroundColor</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabels</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">xlimits</span><span class="p">)</span>
+            <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xticks</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">numUpperTicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">tickValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xticks</span><span class="p">,</span> <span class="n">xCoords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+                                       <span class="n">xCoords</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                <span class="n">ax3</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="n">formatString</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">tickValues</span><span class="p">])</span>
+                <span class="n">ax3</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_position</span><span class="p">((</span><span class="s1">&#39;outward&#39;</span><span class="p">,</span> <span class="mi">36</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;divide each quad in the x/y mesh into 2 triangles&quot;&quot;&quot;</span>
+
+    <span class="n">nx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">ny</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">nTriangles</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+                          <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">mask</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]))</span>
+    <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="n">triMask</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="n">triMask</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">triMask</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">triMask</span> <span class="o">=</span> <span class="n">triMask</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="n">xIndices</span><span class="p">,</span> <span class="n">yIndices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nx</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ny</span><span class="p">),</span>
+                                     <span class="n">indexing</span><span class="o">=</span><span class="s1">&#39;ij&#39;</span><span class="p">)</span>
+
+    <span class="n">tris</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># upper triangles:</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">xIndices</span> <span class="o">+</span> <span class="n">yIndices</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">xIndices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">yIndices</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">xIndices</span> <span class="o">+</span> <span class="n">yIndices</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="c1"># lower triangle</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">xIndices</span> <span class="o">+</span> <span class="n">yIndices</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">xIndices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">yIndices</span>
+    <span class="n">tris</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">ny</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">xIndices</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">yIndices</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="n">tris</span> <span class="o">=</span> <span class="n">tris</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">nTriangles</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+    <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">triangles</span><span class="o">=</span><span class="n">tris</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">triMask</span><span class="p">)</span>
+    <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">triangles</span><span class="o">=</span><span class="n">tris</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">unmaskedTriangulation</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

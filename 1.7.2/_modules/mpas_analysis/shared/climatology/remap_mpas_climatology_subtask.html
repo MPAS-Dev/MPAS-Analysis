@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.climatology.remap_mpas_climatology_subtask &mdash; MPAS-Analysis 1.7.2 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.7.2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+      <li>mpas_analysis.shared.climatology.remap_mpas_climatology_subtask</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.climatology.remap_mpas_climatology_subtask</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasMeshDescriptor</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+    <span class="n">make_directories</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.climatology</span> <span class="kn">import</span> <span class="n">get_remapper</span><span class="p">,</span> \
+    <span class="n">get_masked_mpas_climatology_file_name</span><span class="p">,</span> \
+    <span class="n">get_remapped_mpas_climatology_file_name</span><span class="p">,</span> \
+    <span class="n">get_climatology_op_directory</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span> <span class="kn">import</span> \
+    <span class="n">get_comparison_descriptor</span>
+
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask">[docs]</a><span class="k">class</span> <span class="nc">RemapMpasClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis tasks for computing climatologies from output from the</span>
+<span class="sd">    ``timeSeriesStatsMonthly`` analysis member.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    climatologyName :  str</span>
+<span class="sd">        A name that describes the climatology (e.g. a short version of</span>
+<span class="sd">        the important field(s) in the climatology) used to name the</span>
+<span class="sd">        subdirectories for each stage of the climatology</span>
+
+<span class="sd">    variableList : list of str</span>
+<span class="sd">        A list of variable names in ``timeSeriesStatsMonthly`` to be</span>
+<span class="sd">        included in the climatologies</span>
+
+<span class="sd">    iselValues : dict</span>
+<span class="sd">        A dictionary of dimensions and indices (or ``None``) used to extract</span>
+<span class="sd">        a slice of the MPAS field.</span>
+
+<span class="sd">    seasons : list of str</span>
+<span class="sd">        A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
+<span class="sd">        over which the climatology should be computed or [&#39;none&#39;] if only</span>
+<span class="sd">        monthly climatologies are needed.</span>
+
+<span class="sd">    comparisonDescriptors : dict of ``MeshDescriptor``</span>
+<span class="sd">        Descriptors of the comparison grids to use for remapping, with</span>
+<span class="sd">        grid names as the keys.</span>
+
+<span class="sd">    restartFileName : str</span>
+<span class="sd">        If ``comparisonGridName`` is not ``None``, the name of a restart</span>
+<span class="sd">        file from which the MPAS mesh can be read.</span>
+
+<span class="sd">    useNcremap : bool, optional</span>
+<span class="sd">        Whether to use ncremap to do the remapping (the other option being</span>
+<span class="sd">        an internal python code that handles more grid types and extra</span>
+<span class="sd">        dimensions)</span>
+
+<span class="sd">    op : {&#39;avg&#39;, &#39;min&#39;, &#39;max&#39;}</span>
+<span class="sd">         operator for monthly stats</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.__init__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">climatologyName</span><span class="p">,</span>
+                 <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapMpasClimatology&#39;</span><span class="p">,</span>
+                 <span class="n">useNcremap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
+<span class="sd">        ``parentTask``.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped</span>
+
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+
+<span class="sd">        climatologyName : str</span>
+<span class="sd">            A name that describes the climatology (e.g. a short version of</span>
+<span class="sd">            the important field(s) in the climatology) used to name the</span>
+<span class="sd">            subdirectories for each stage of the climatology</span>
+
+<span class="sd">        variableList : list of str</span>
+<span class="sd">            A list of variable names in ``timeSeriesStatsMonthly`` to be</span>
+<span class="sd">            included in the climatologies</span>
+
+<span class="sd">        seasons : list of str</span>
+<span class="sd">            A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
+<span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">            climatologies are needed.</span>
+
+<span class="sd">        comparisonGridNames : list of str</span>
+<span class="sd">            optional</span>
+<span class="sd">            The name(s) of the comparison grid to use for remapping.  If none</span>
+<span class="sd">            is supplied, `add_comparison_descriptor()` must be called to add</span>
+<span class="sd">            one or more comparison grids.</span>
+
+<span class="sd">        iselValues : dict, optional</span>
+<span class="sd">            A dictionary of dimensions and indices (or ``None``) used to</span>
+<span class="sd">            extract a slice of the MPAS field(s).</span>
+
+<span class="sd">        subtaskName : str, optional</span>
+<span class="sd">            The name of the subtask</span>
+
+<span class="sd">        useNcremap : bool, optional</span>
+<span class="sd">            Whether to use ncremap to do the remapping (the other option being</span>
+<span class="sd">            an internal python code that handles more grid types and extra</span>
+<span class="sd">            dimensions).  This defaults to the config option ``useNcremap``</span>
+<span class="sd">            if it is not explicitly given.  If a comparison grid other than</span>
+<span class="sd">            ``latlon`` is given, ncremap is not supported so this flag is set</span>
+<span class="sd">            to ``False``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">]</span>
+
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="n">variableList</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span> <span class="o">=</span> <span class="n">seasons</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="n">comparisonGridNames</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+                <span class="n">comparisonDescriptor</span> <span class="o">=</span> <span class="n">get_comparison_descriptor</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">comparisonDescriptor</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span> <span class="o">=</span> <span class="n">iselValues</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span> <span class="o">=</span> <span class="n">climatologyName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">op</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">op</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
+
+        <span class="n">parentTask</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1"># this is a stopgap until MPAS implements the _FillValue attribute</span>
+        <span class="c1"># correctly</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fillValue</span> <span class="o">=</span> <span class="o">-</span><span class="mf">9.99999979021476795361e+33</span>
+
+        <span class="k">if</span> <span class="n">useNcremap</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span>
+                                                     <span class="s1">&#39;useNcremap&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span> <span class="o">=</span> <span class="n">useNcremap</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.setup_and_check"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check">[docs]</a>    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IOError :</span>
+<span class="sd">            If a restart file is not available from which to read mesh</span>
+<span class="sd">            information or if no history files are available from which to</span>
+<span class="sd">            compute the climatology in the desired time range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#     self.runDirectory , self.historyDirectory, self.plotsDirectory,</span>
+        <span class="c1">#     self.namelist, self.runStreams, self.historyStreams,</span>
+        <span class="c1">#     self.calendar</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS restart file found: need at least one &#39;</span>
+                          <span class="s1">&#39;restart file to perform remapping of &#39;</span>
+                          <span class="s1">&#39;climatologies.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># we set up the remapper here because ESFM_RegridWeightGen seems to</span>
+        <span class="c1"># have trouble if it runs in another process (or in several at once)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_remappers</span><span class="p">()</span>
+
+        <span class="c1"># don&#39;t add the variables and seasons to mpasClimatologyTask until</span>
+        <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
+
+        <span class="c1"># make the mapping directory, because doing so within each process</span>
+        <span class="c1"># seems to be giving ESMF_RegridWeightGen some trouble</span>
+        <span class="n">mappingSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                                     <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.run_task"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task">[docs]</a>    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the requested climatologies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Remapping climatology </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">))</span>
+
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">]</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">iselValues</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span><span class="p">)</span>
+        <span class="c1"># select only Time=0 and possibly only the desired vertical</span>
+        <span class="c1"># slice</span>
+        <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="n">iselValues</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mask_climatologies</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
+
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
+
+                <span class="n">maskedClimatologyFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masked_file_name</span><span class="p">(</span>
+                    <span class="n">season</span><span class="p">)</span>
+
+                <span class="n">remappedFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_remapped_file_name</span><span class="p">(</span>
+                    <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">remappedFileName</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_remap</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">maskedClimatologyFileName</span><span class="p">,</span>
+                                <span class="n">outFileName</span><span class="o">=</span><span class="n">remappedFileName</span><span class="p">,</span>
+                                <span class="n">remapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">],</span>
+                                <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
+                                <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.add_comparison_grid_descriptor"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor">[docs]</a>    <span class="k">def</span> <span class="nf">add_comparison_grid_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+                                       <span class="n">comparisonDescriptor</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Add a custom grid descriptor (something other than &#39;latlon&#39;,</span>
+<span class="sd">        &#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;, or &#39;north_pacific&#39;).</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        comparisonGridName : str</span>
+<span class="sd">            The name of the comparison grid</span>
+
+<span class="sd">        comparisonDescriptor : ``MeshDescriptor``</span>
+<span class="sd">            A descriptor of the comparison grid to use for</span>
+<span class="sd">            remapping</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">comparisonDescriptor</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_masked_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_masked_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given config options, the name of a field and a string identifying the</span>
+<span class="sd">        months in a seasonal climatology, returns the full path for MPAS</span>
+<span class="sd">        climatology files before and after remapping.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        season : str</span>
+<span class="sd">            One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            The path to the climatology file for the specified season.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fileName</span> <span class="o">=</span> <span class="n">get_masked_mpas_climatology_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+                                                         <span class="n">season</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fileName</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.get_remapped_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_remapped_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Given config options, the name of a field and a string identifying the</span>
+<span class="sd">        months in a seasonal climatology, returns the full path for MPAS</span>
+<span class="sd">        climatology files before and after remapping.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        season : str</span>
+<span class="sd">            One of the seasons in ``constants.monthDictionary``</span>
+
+<span class="sd">        comparisonGridName : str</span>
+<span class="sd">            The name of the comparison grid to use for remapping.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            The path to the climatology file for the specified season.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">fileName</span> <span class="o">=</span> <span class="n">get_remapped_mpas_climatology_file_name</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
+            <span class="n">comparisonGridName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fileName</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.customize_masked_climatology"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology">[docs]</a>    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this function to customize the climatology during the masking</span>
+<span class="sd">        phase (before remapping)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            The MPAS climatology data set that has had a mask added but has</span>
+<span class="sd">            not yet been remapped</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            The same data set with any custom fields added or modifications</span>
+<span class="sd">            made</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="k">return</span> <span class="n">climatology</span></div>
+
+<div class="viewcode-block" id="RemapMpasClimatologySubtask.customize_remapped_climatology"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology">[docs]</a>    <span class="k">def</span> <span class="nf">customize_remapped_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">comparisonGridNames</span><span class="p">,</span>
+                                       <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Override this function to customize the climatology after remapping</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            The MPAS climatology data set that has been remapped</span>
+
+<span class="sd">        comparisonGridNames : str</span>
+<span class="sd">            The name of the comparison grid to use for remapping.</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be remapped</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            The same data set with any custom fields added or modifications</span>
+<span class="sd">            made</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="k">return</span> <span class="n">climatology</span></div>
+
+    <span class="k">def</span> <span class="nf">_setup_remappers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set up the remappers for remapping from the MPAS to the comparison</span>
+<span class="sd">        grids.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+
+        <span class="c1"># make reamppers</span>
+        <span class="n">mappingFilePrefix</span> <span class="o">=</span> <span class="s1">&#39;map&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
+            <span class="n">comparisonDescriptor</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+            <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span>
+                                                          <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">mpasDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_remapper</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="o">=</span><span class="n">mpasDescriptor</span><span class="p">,</span>
+                <span class="n">comparisonDescriptor</span><span class="o">=</span><span class="n">comparisonDescriptor</span><span class="p">,</span>
+                <span class="n">mappingFilePrefix</span><span class="o">=</span><span class="n">mappingFilePrefix</span><span class="p">,</span>
+                <span class="n">method</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasInterpolationMethod&#39;</span><span class="p">),</span>
+                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_setup_file_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a dictionary of file names and directories for this climatology</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">climatologyBaseDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                                                <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span>
+
+        <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+
+        <span class="n">comparisonFullMeshNames</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
+            <span class="n">comparisonDescriptor</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
+            <span class="n">comparisonFullMeshNames</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="s1">&#39;masked&#39;</span>
+            <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">season</span><span class="p">,</span> <span class="n">stage</span><span class="p">))</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="s1">&#39;remapped&#39;</span>
+            <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
+                <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">season</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputDirs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_outputFiles</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">season</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="s1">&#39;remapped&#39;</span><span class="p">:</span>
+                <span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+            <span class="n">stageDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">climatologyBaseDirectory</span><span class="p">,</span> <span class="n">stage</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">stage</span> <span class="o">==</span> <span class="s1">&#39;masked&#39;</span><span class="p">:</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">stageDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
+                    <span class="n">mpasMeshName</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">stage</span> <span class="o">==</span> <span class="s1">&#39;remapped&#39;</span><span class="p">:</span>
+                <span class="n">directory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">stageDirectory</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">climatologyName</span><span class="p">,</span>
+                    <span class="n">mpasMeshName</span><span class="p">,</span>
+                    <span class="n">comparisonFullMeshNames</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">])</span>
+
+            <span class="n">make_directories</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span>
+
+            <span class="n">monthValues</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">monthDictionary</span><span class="p">[</span><span class="n">season</span><span class="p">])</span>
+            <span class="n">startMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">endMonth</span> <span class="o">=</span> <span class="n">monthValues</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}{:02d}</span><span class="s1">_</span><span class="si">{:04d}{:02d}</span><span class="s1">_climo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="n">startMonth</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">endYear</span><span class="p">,</span> <span class="n">endMonth</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">constants</span><span class="o">.</span><span class="n">abrevMonthNames</span><span class="p">:</span>
+                <span class="n">season</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">monthValues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">directory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">ncclimoModel</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span>
+                <span class="n">suffix</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_outputDirs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">directory</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_outputFiles</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>
+
+    <span class="k">def</span> <span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For each season, creates a masked version of the climatology</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        dsMask : ``xarray.Dataset`` object</span>
+<span class="sd">            A data set (from the first input file) that can be used to</span>
+<span class="sd">            determine the mask in MPAS output files.</span>
+
+<span class="sd">        Author</span>
+<span class="sd">        ------</span>
+<span class="sd">        Xylar Asay-Davis</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">climatologyFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+
+        <span class="n">maskedClimatologyFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_masked_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">maskedClimatologyFileName</span><span class="p">):</span>
+            <span class="c1"># slice and mask the data set</span>
+            <span class="n">climatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">)</span>
+            <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">]</span>
+            <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">climatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                <span class="n">iselValues</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">iselValues</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iselValues</span><span class="p">)</span>
+            <span class="c1"># select only Time=0 and possibly only the desired vertical</span>
+            <span class="c1"># slice</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">iselValues</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="n">iselValues</span><span class="p">)</span>
+
+            <span class="c1"># add valid mask as a variable, useful for remapping later</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;validMask&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">climatology</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]),</span>
+                             <span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+            <span class="c1"># mask the data set</span>
+            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
+                <span class="n">climatology</span><span class="p">[</span><span class="n">variableName</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">climatology</span><span class="p">[</span><span class="n">variableName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                        <span class="n">dsMask</span><span class="p">[</span><span class="n">variableName</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fillValue</span><span class="p">)</span>
+
+            <span class="c1"># customize (if this function has been overridden)</span>
+            <span class="n">climatology</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">customize_masked_climatology</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span>
+                                                            <span class="n">season</span><span class="p">)</span>
+
+            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span> <span class="n">maskedClimatologyFileName</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span> <span class="n">remapper</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+               <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs remapping either using ``ncremap`` or the native python code,</span>
+<span class="sd">        depending on the requested setting and the comparison grid</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        inFileName : str</span>
+<span class="sd">            The name of the input file to be remapped.</span>
+
+<span class="sd">        outFileName : str</span>
+<span class="sd">            The name of the output file to which the remapped data set should</span>
+<span class="sd">            be written.</span>
+
+<span class="sd">        remapper : ``pyremap.Remapper`` object</span>
+<span class="sd">            A remapper that can be used to remap files or data sets to a</span>
+<span class="sd">            comparison grid.</span>
+
+<span class="sd">        comparisonGridNames : str</span>
+<span class="sd">            The name of the comparison grid to use for remapping.</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be remapped</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="k">if</span> <span class="n">remapper</span><span class="o">.</span><span class="n">mappingFileName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># no remapping is needed</span>
+            <span class="k">return</span>
+
+        <span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+            <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;renormalizationThreshold&#39;</span><span class="p">)</span>
+
+        <span class="n">parallel_exec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;ncremapParallelExec&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">parallel_exec</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span><span class="p">:</span>
+            <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
+                                <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
+                                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
+                                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+                                <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
+
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">climatologyDataSet</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
+
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span><span class="n">climatologyDataSet</span><span class="p">,</span>
+                                                 <span class="n">renormalizationThreshold</span><span class="p">)</span>
+
+        <span class="c1"># customize (if this function has been overridden)</span>
+        <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">customize_remapped_climatology</span><span class="p">(</span>
+            <span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">season</span><span class="p">)</span>
+
+        <span class="n">write_netcdf</span><span class="p">(</span><span class="n">remappedClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
