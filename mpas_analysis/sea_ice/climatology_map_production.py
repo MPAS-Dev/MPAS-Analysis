@@ -105,7 +105,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
         if control_config is None:
             # DC: currently only have observations for Southern Ocean
-            if hemisphere == 'SH':
+            if hemisphere == 'PH':
                 ref_title_label = 'Observations (Haumann)'
                 gallery_name = 'Observations: Haumann'
                 diff_title_label = 'Model - Observations'
@@ -141,7 +141,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
                 # # make a new subtask for this season and comparison grid # DC: needed?
                 # subtask_name = f'plot{field_name}_{season}_{comparison_grid_name}'
                 image_description = f'{season} Climatology Map of \
-                                    {hemisphere_long}-Hemisphere Sea Ice'
+                                    {hemisphere_long}-Hemisphere Sea Ice Production'
                 image_caption = image_description
                 gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Production'
                 # make a new subtask for this season and comparison grid
