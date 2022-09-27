@@ -554,10 +554,10 @@ def plot_projection_comparison(
         return arrows
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor,arrows):
+                   lineWidth, lineColor, arrows):
 
         title = limit_title(title, maxTitleLength)
-        ax.set_title(title,**plottitle_font)
+        ax.set_title(title, **plottitle_font)
 
         ax.set_extent(extent, crs=projection)
 
@@ -634,7 +634,6 @@ def plot_projection_comparison(
     else:
         figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
-    aspectratio = figsize[0]/figsize[1]
     latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
     lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
 
