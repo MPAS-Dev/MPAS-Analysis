@@ -104,73 +104,73 @@ def build_analysis_list(config, controlConfig):
     analyses = []
 
     # Ocean Analyses
-    oceanClimatolgyTasks = {}
+    oceanClimatologyTasks = {}
     for op in ['avg', 'min', 'max']:
-        oceanClimatolgyTasks[op] = MpasClimatologyTask(config=config,
-                                                       componentName='ocean',
-                                                       op=op)
+        oceanClimatologyTasks[op] = MpasClimatologyTask(config=config,
+                                                        componentName='ocean',
+                                                        op=op)
     oceanTimeSeriesTask = MpasTimeSeriesTask(config=config,
                                              componentName='ocean')
     oceanIndexTask = MpasTimeSeriesTask(config=config,
                                         componentName='ocean',
                                         section='index')
 
-    oceanRefYearClimatolgyTask = RefYearMpasClimatologyTask(
+    oceanRefYearClimatologyTask = RefYearMpasClimatologyTask(
         config=config, componentName='ocean')
 
     oceanRegionMasksTask = ComputeRegionMasks(config=config,
                                               conponentName='ocean')
 
-    for op in oceanClimatolgyTasks:
-        analyses.append(oceanClimatolgyTasks[op])
-    analyses.append(oceanRefYearClimatolgyTask)
+    for op in oceanClimatologyTasks:
+        analyses.append(oceanClimatologyTasks[op])
+    analyses.append(oceanRefYearClimatologyTask)
 
     analyses.append(ocean.ClimatologyMapMLD(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
 
     analyses.append(ocean.ClimatologyMapMLDMinMax(config,
-                                                  oceanClimatolgyTasks,
+                                                  oceanClimatologyTasks,
                                                   controlConfig))
 
     analyses.append(ocean.ClimatologyMapSST(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapSSS(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapSSH(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapEKE(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
-        config, oceanClimatolgyTasks['avg'], oceanRefYearClimatolgyTask,
+        config, oceanClimatologyTasks['avg'], oceanRefYearClimatologyTask,
         controlConfig))
 
     analyses.append(ocean.ClimatologyMapSose(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapWoa(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapBGC(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
 
     analyses.append(ocean.ClimatologyMapArgoTemperature(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
     analyses.append(ocean.ClimatologyMapArgoSalinity(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapSchmidtko(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
 
     analyses.append(ocean.ClimatologyMapAntarcticMelt(
-        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
 
     analyses.append(ocean.RegionalTSDiagrams(
-        config, oceanClimatolgyTasks['avg'], oceanRegionMasksTask,
+        config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
 
     analyses.append(ocean.TimeSeriesAntarcticMelt(config, oceanTimeSeriesTask,
@@ -195,20 +195,20 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
 
     analyses.append(ocean.MeridionalHeatTransport(
-        config, oceanClimatolgyTasks['avg'], controlConfig))
+        config, oceanClimatologyTasks['avg'], controlConfig))
 
     analyses.append(ocean.StreamfunctionMOC(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.IndexNino34(config, oceanIndexTask, controlConfig))
 
-    analyses.append(ocean.WoceTransects(config, oceanClimatolgyTasks['avg'],
+    analyses.append(ocean.WoceTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.SoseTransects(config, oceanClimatolgyTasks['avg'],
+    analyses.append(ocean.SoseTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.GeojsonTransects(config, oceanClimatolgyTasks['avg'],
+    analyses.append(ocean.GeojsonTransects(config, oceanClimatologyTasks['avg'],
                                            controlConfig))
 
     oceanRegionalProfiles = ocean.OceanRegionalProfiles(
@@ -219,23 +219,23 @@ def build_analysis_list(config, controlConfig):
         config, oceanRegionMasksTask, oceanRegionalProfiles, controlConfig))
 
     # Sea Ice Analyses
-    seaIceClimatolgyTask = MpasClimatologyTask(config=config,
-                                               componentName='seaIce')
+    seaIceClimatologyTask = MpasClimatologyTask(config=config,
+                                                componentName='seaIce')
     seaIceTimeSeriesTask = MpasTimeSeriesTask(config=config,
                                               componentName='seaIce')
 
-    analyses.append(seaIceClimatolgyTask)
+    analyses.append(seaIceClimatologyTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='NH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
-        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
-        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(seaIceTimeSeriesTask)
 
@@ -244,7 +244,7 @@ def build_analysis_list(config, controlConfig):
 
     # Iceberg Analyses
     analyses.append(sea_ice.ClimatologyMapIcebergConc(
-        config=config, mpasClimatologyTask=seaIceClimatolgyTask,
+        config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
     check_for_duplicate_names(analyses)
@@ -386,7 +386,7 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                            analysisTask.fullTaskName))
         return totalFailures
 
-    # for each anlaysis task, check if we want to generate this task
+    # for each analysis task, check if we want to generate this task
     # and if the analysis task has a valid configuration
     taskTitle = analysisTask.printTaskName
     if callCheckGenerate and not analysisTask.check_generate():
