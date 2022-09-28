@@ -322,9 +322,9 @@ class RemapHaumannProductionClimatology(RemapObservedClimatologySubtask):
         # Darin Comeau, Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs = dsObs.rename({'freezing': 'seaIceProduction', 'time': 'Time'})
-        # dsObs.coords['month'] = dsObs['Time.month']
-        # dsObs.coords['year'] = dsObs['Time.year']
-        dsObs = dsObs.transpose('Time', 'y', 'x')
+        dsObs = dsObs.isel(time=0)
+        dsObs = dsObs.rename({'freezing': 'seaIceProduction'})
+        dsObs['seaIceProduction'] = -dsObs.seaIceProduction
+        dsObs = dsObs.transpose('y', 'x')
 
         return dsObs

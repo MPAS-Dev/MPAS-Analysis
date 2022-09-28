@@ -322,9 +322,8 @@ class RemapHaumannMeltingClimatology(RemapObservedClimatologySubtask):
         # Darin Comeau, Xylar Asay-Davis
 
         dsObs = xr.open_dataset(fileName)
-        dsObs = dsObs.rename({'melting': 'seaIceMelting', 'time': 'Time'})
-        # dsObs.coords['month'] = dsObs['Time.month']
-        # dsObs.coords['year'] = dsObs['Time.year']
-        dsObs = dsObs.transpose('Time', 'y', 'x')
+        dsObs = dsObs.isel(time=0)
+        dsObs = dsObs.rename({'melting': 'seaIceMelting'})
+        dsObs = dsObs.transpose('y', 'x')
 
         return dsObs
