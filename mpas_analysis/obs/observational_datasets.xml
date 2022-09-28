@@ -1627,6 +1627,78 @@
     </nameInDocs>
   </observation>
 
+  <observation>
+    <name>
+      Sea ice production and transport: Haumann et al 2016
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      This data set provides estimates of annual freshwater fluxes related to sea-ice formation from ocean freezing
+      and snow-ice formation, sea-ice melting, lateral transport of sea ice in the Southern Ocean over the period
+      1982 to 2008. It is derived from a mass balance calculation of local sea-ice volume change and divergence
+      from satellite data and sea-ice reconstructions. The mass balance is calculated on a daily basis and fluxes are
+      then integrated over the entire year, where a year is defined from March to February of the next year (i.e.
+      from March 1982 to February 2009). This approach combines multiple products of sea-ice concentration
+      (Cavalieri &amp; Parkinson, 2008; Comiso, 1986; Meier et al., 2013), sea-ice thickness (Kurtz &amp; Markus, 2012;
+      Massonnet et al., 2013; Worby et al., 2008), and sea-ice drift (Fowler et al., 2013; Kwok 2005; Schwegmann
+      et al., 2011). For a detailed description of the method see Haumann et al. (2016). The data set is derived to
+      estimate large-scale (regional to basin-scale) fluxes on an annual basis. Our confidence is reduced on a grid
+      cell basis, such as for single coastal polynyas, where the method and underlying data induce large, unknown
+      uncertainties.
+    </description>
+    <source>
+      [EnviDat](http://dx.doi.org/10.16904/8)
+    </source>
+    <releasePolicy>
+      This data set is free to use for any non-commercial purpose at the risk of the user'
+      and the authors do not take any liability on the use of the data set. The authors
+      assembled the data set carefully and assessed accuracy, errors, and uncertainties.
+      Please contact the authors if you find any issues.
+    </releasePolicy>
+    <references>
+      [Haumann et al (2016), data](https://doi.org/10.16904/8)
+      [Haumann et al (2016), paper](https://doi.org/10.1038/nature19101)
+    </references>
+    <bibtex>
+      @article{haumann2016antarctic,
+      title={Antarctic sea-ice freshwater fluxes associated with freezing, transport, and melting},
+      author={Haumann, Alexander and Gruber, Nicolas and M{\"u}nnich, Matthias and Frenger, Ivy and Kern, Stefan},
+      year={2016},
+      doi={10.16904/8},
+      publisher={ETH Z{\"u}rich}
+      }
+      @article{haumann2016sea,
+      title={Sea-ice transport driving Southern Ocean salinity and its recent trends},
+      author={Haumann, F Alexander and Gruber, Nicolas and M{\"u}nnich, Matthias and Frenger, Ivy and Kern, Stefan},
+      journal={Nature},
+      volume={537},
+      number={7618},
+      pages={89--92},
+      year={2016},
+      doi={10.1038/nature19101}
+      publisher={Nature Publishing Group}
+      }
+    </bibtex>
+    <dataUrls>
+      -https://data.up.ethz.ch/shared/AnIceFlux/AnIceFlux_v01.pdf
+    </dataUrls>
+    <preprocessing>
+      none
+    </preprocessing>
+    <tasks>
+      - climatologyMapSeaIceProductionSH
+      - climatologyMapSeaIceMeltingSH
+    </tasks>
+    <subdirectory>
+      SeaIce/Haumann
+    </subdirectory>
+    <nameInDocs>
+      aniceflux
+    </nameInDocs>
+  </observation>
+
   <!-- ICEBERGS -->
 
   <observation>
