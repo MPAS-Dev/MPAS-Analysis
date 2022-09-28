@@ -103,43 +103,41 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
 
         self.add_subtask(remap_climatology_subtask)
 
-        if control_config is None:
-            # DC: currently only have observations for Southern Ocean
-            if hemisphere == 'SH':
-                ref_title_label = 'Observations (Haumann)'
-                gallery_name = 'Observations: Haumann'
-                diff_title_label = 'Model - Observations'
-                obs_file_name = build_obs_path(
-                        config, 'seaIce',
-                        relativePathOption=f'melting{hemisphere}',
-                        relativePathSection=section_name)
-
-                remap_observations_subtask = RemapHaumannMeltingClimatology(
-                    parentTask=self, seasons=seasons,
-                    fileName=obs_file_name,
-                    outFilePrefix=f'{field_name}{hemisphere}',
-                    comparisonGridNames=comparison_grid_names)
-                self.add_subtask(remap_observations_subtask)
-            else:
-                remap_observations_subtask = None
-                gallery_name = None
-                ref_title_label = None
-                ref_field_name = None
-                diff_title_label = 'Model - Observations'
-
-        else:
-            control_run_name = control_config.get('runs', 'mainRunName')
-            gallery_name = None
-            ref_title_label = f'Control: {control_run_name}'
-            field_name = field_name
-            diff_title_label = 'Main - Control'
-
-            remap_observations_subtask = None
-
         for season in seasons:
             for comparison_grid_name in comparison_grid_names:
-                # # make a new subtask for this season and comparison grid # DC: needed?
-                # subtask_name = f'plot{field_name}_{season}_{comparison_grid_name}'
+
+                if control_config is None:
+                    if hemisphere == 'SH' and season == 'ANN':
+                        ref_title_label = 'Observations (Haumann)'
+                        gallery_name = 'Observations: Haumann'
+                        diff_title_label = 'Model - Observations'
+                        obs_file_name = build_obs_path(
+                                config, 'seaIce',
+                                relativePathOption=f'melting{hemisphere}',
+                                relativePathSection=section_name)
+
+                        remap_observations_subtask = RemapHaumannMeltingClimatology(
+                            parentTask=self, seasons=seasons,
+                            fileName=obs_file_name,
+                            outFilePrefix=f'{field_name}{hemisphere}',
+                            comparisonGridNames=comparison_grid_names)
+                        self.add_subtask(remap_observations_subtask)
+                    else:
+                        remap_observations_subtask = None
+                        gallery_name = None
+                        ref_title_label = None
+                        ref_field_name = None
+                        diff_title_label = 'Model - Observations'
+
+                else:
+                    control_run_name = control_config.get('runs', 'mainRunName')
+                    gallery_name = None
+                    ref_title_label = f'Control: {control_run_name}'
+                    field_name = field_name
+                    diff_title_label = 'Main - Control'
+
+                    remap_observations_subtask = None
+
                 image_description = f'{season} Climatology Map of \
                                     {hemisphere_long}-Hemisphere Sea Ice Melting'
                 image_caption = image_description
