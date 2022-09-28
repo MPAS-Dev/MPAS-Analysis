@@ -105,7 +105,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
         if control_config is None:
             # DC: currently only have observations for Southern Ocean
-            if hemisphere == 'PH':
+            if hemisphere == 'SH':
                 ref_title_label = 'Observations (Haumann)'
                 gallery_name = 'Observations: Haumann'
                 diff_title_label = 'Model - Observations'
