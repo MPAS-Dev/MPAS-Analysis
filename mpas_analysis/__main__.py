@@ -88,7 +88,7 @@ def build_analysis_list(config, controlConfig):
     config : mpas_tools.config.MpasConfigParser
         contains config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : mpas_tools.config.MpasConfigParser or None
         contains config options for a control run, or ``None`` if no config
         file for a control run was specified
 
@@ -727,7 +727,30 @@ def purge_output(config):
                         shutil.rmtree(directory)
 
 
-def symlink_main_run(config):
+def build_config(user_config_file, shared_configs, machine_info):
+    """
+    Create a config parser from a user config file (either main or control)
+    and a set of shared config file, also adding the username to the web_portal
+    section
+    """
+    if not os.path.exists(user_config_file):
+        raise OSError(f'A config file {user_config_file} was specified but '
+                      f'the file does not exist')
+    config = MpasConfigParser()
+    for config_file in shared_configs:
+        if config_file.endswith('.py'):
+            # we'll skip config options set in python files
+            continue
+        config.add_from_file(config_file)
+    config.add_user_config(user_config_file)
+
+    if machine_info is not None:
+        config.set('web_portal', 'username', machine_info.username)
+
+    return config
+
+
+def symlink_main_run(config, shared_configs, machine_info):
     """
     Create symlinks to the climatology and time-series directories for the
     main run that has already been computed so we don't have to recompute
@@ -735,30 +758,26 @@ def symlink_main_run(config):
     """
 
     def link_dir(section, option):
-        destDirectory = build_config_full_path(config=config, section='output',
-                                               relativePathOption=option,
-                                               relativePathSection=section)
-        if not os.path.exists(destDirectory):
+        dest_directory = build_config_full_path(config=config,
+                                                section='output',
+                                                relativePathOption=option,
+                                                relativePathSection=section)
+        if not os.path.exists(dest_directory):
 
-            sourceDirectory = build_config_full_path(
-                config=mainConfig, section='output',
+            source_directory = build_config_full_path(
+                config=main_config, section='output',
                 relativePathOption=option, relativePathSection=section)
 
-            if os.path.exists(sourceDirectory):
+            if os.path.exists(source_directory):
 
-                destBase, _ = os.path.split(destDirectory)
+                dest_base = os.path.split(dest_directory)[0]
 
-                make_directories(destBase)
+                make_directories(dest_base)
 
-                os.symlink(sourceDirectory, destDirectory)
+                os.symlink(source_directory, dest_directory)
 
-    mainConfigFile = config.get('runs', 'mainRunConfigFile')
-    if not os.path.exists(mainConfigFile):
-        raise OSError('A main config file {} was specified but the '
-                      'file does not exist'.format(mainConfigFile))
-    mainConfig = MpasConfigParser()
-    mainConfig.add_from_package('mpas_analysis', 'default.cfg')
-    mainConfig.add_user_config(mainConfigFile)
+    main_config_file = config.get('runs', 'mainRunConfigFile')
+    main_config = build_config(main_config_file, shared_configs, machine_info)
 
     for subdirectory in ['mpasClimatology', 'timeSeries', 'mapping', 'mask',
                          'profiles']:
@@ -870,6 +889,8 @@ def main():
         # set the username so we can use it in the htmlSubdirectory
         machine_info = MachineInfo(machine=machine)
         config.set('web_portal', 'username', machine_info.username)
+    else:
+        machine_info = None
 
     shared_configs = config.list_files()
 
@@ -900,17 +921,8 @@ def main():
 
     if config.has_option('runs', 'controlRunConfigFile'):
         control_config_file = config.get('runs', 'controlRunConfigFile')
-        if not os.path.exists(control_config_file):
-            raise OSError('A control config file {} was specified but the '
-                          'file does not exist'.format(control_config_file))
-
-        control_config = MpasConfigParser()
-        for config_file in shared_configs:
-            if config_file.endswith('.py'):
-                # we'll skip config options set in python files
-                continue
-            control_config.add_from_file(config_file)
-        control_config.add_user_config(control_config_file)
+        control_config = build_config(control_config_file, shared_configs,
+                                      machine_info)
 
         # replace the log directory so log files get written to this run's
         # log directory, not the control run's
@@ -929,7 +941,7 @@ def main():
         purge_output(config)
 
     if config.has_option('runs', 'mainRunConfigFile'):
-        symlink_main_run(config)
+        symlink_main_run(config, shared_configs, machine_info)
 
     if args.generate:
         update_generate(config, args.generate)
@@ -954,10 +966,15 @@ def main():
 
     start_time = time.time()
 
+    custom_config_files = list(args.config_file)
+    for option in ['controlRunConfigFile', 'mainRunConfigFile']:
+        if config.has_option('runs', option):
+            custom_config_files.append(config.get('runs', option))
+
     html_base_directory = build_config_full_path(config, 'output',
                                                  'htmlSubdirectory')
     make_directories(html_base_directory)
-    for config_filename in args.config_file:
+    for config_filename in custom_config_files:
         config_filename = os.path.abspath(config_filename)
         print(f'copying {config_filename} to HTML dir.')
         basename = os.path.basename(config_filename)
@@ -979,7 +996,7 @@ def main():
         print('Total run time: {}:{:02d}:{:05.2f}'.format(h, m, s))
 
     if not args.setup_only:
-        generate_html(config, analyses, control_config, args.config_file)
+        generate_html(config, analyses, control_config, custom_config_files)
 
 
 if __name__ == "__main__":
