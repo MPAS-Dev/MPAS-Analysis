@@ -99,6 +99,7 @@ class OceanHistogram(AnalysisTask):
         if not os.path.exists(baseDirectory):
             make_directories(baseDirectory)
 
+        #TODO make sure hist directory purges
         #TODO test other seasons
         obsList = config.getexpression(self.taskName, 'obsList')
         obsDicts = {
@@ -177,8 +178,6 @@ class OceanHistogram(AnalysisTask):
         for var in self.variableList:
             variableList.append(f'timeMonthly_avg_{var}')
 
-        # Specify variables and seasons to compute climology over
-        print(f'add climatology variables')
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
 
@@ -246,16 +245,14 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         print(f'Save {newRegionMaskFileName}')
         write_netcdf(dsMask, newRegionMaskFileName)
 
-        if os.path.exists(weightsFileName):
-            self.logger.info(f'{weightsFileName} exists')
-            return
-
         dsWeights = xarray.Dataset()
         for var in self.varList:
             varname = f'timeMonthly_avg_{var}'
+            print(f'save weights for {varname}')
             dsWeights[f'{varname}_weight'] = dsRestart[weightVarName].where(cellMask, drop=True)
             print(f'shape(weightVar) = {numpy.shape(dsRestart[weightVarName].values)}')
             print(f'shape(cellMask) = {numpy.shape(cellMask.values)}')
+        print(f'Save {weightsFileName}')
         write_netcdf(dsWeights, weightsFileName)
 
 class PlotRegionHistogramSubtask(AnalysisTask):
@@ -490,7 +487,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             lineWidths = [config.get(self.taskName, 'lineWidths')]
         else:
             lineWidths = None
-        legendText = [mainRunName]
 
         title = mainRunName
         if config.has_option(self.taskName, 'titleFontSize'):
@@ -518,6 +514,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         fields = []
         weights = []
+        legendText = []
         for var in self.varList:
 
             varname = f'timeMonthly_avg_{var}'
@@ -526,7 +523,9 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             varTitle = var
 
             fields.append(ds[varname])
+            print(dsWeights.keys())
             weights.append(dsWeights[f'{varname}_weight'].values)
+            legendText.append(mainRunName)
             print(f'Main: {numpy.shape(fields[-1].values)}, {numpy.shape(weights[-1])}')
             xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
             for obsName in self.obsDicts:
@@ -568,7 +567,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.png'
             savefig(outFileName, config)
 
-            caption = f'Normalized probability density function for SSH climatologies in {self.regionName}'
+            caption = f'Normalized probability density function for SSH climatologies in {self.regionName.replace("_", " ")}'
             write_image_xml(
                 config=config,
                 filePrefix=f'{self.filePrefix}_{var}_{self.regionName}_{self.season}',
@@ -577,6 +576,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 galleryGroup=f'{self.regionGroup} Histograms',
                 groupLink=f'histogram{var}',
                 gallery=varTitle,
-                thumbnailDescription=self.regionName.replace('_', ' '),
+                thumbnailDescription=f'self.regionName.replace("_", " ") {season}',
                 imageDescription=caption,
                 imageCaption=caption)
