@@ -18,13 +18,15 @@ import matplotlib.pyplot as plt
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
-from mpas_analysis.shared.io.utility import build_config_full_path, build_obs_path, make_directories, decode_strings
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    build_obs_path, make_directories, decode_strings
 from mpas_analysis.shared.climatology import compute_climatology, \
     get_unmasked_mpas_climatology_file_name
 
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot import histogram_analysis_plot, savefig
 from mpas_analysis.shared.html import write_image_xml
+
 
 class OceanHistogram(AnalysisTask):
     """
@@ -49,7 +51,8 @@ class OceanHistogram(AnalysisTask):
     # -------
     # Xylar Asay-Davis
 
-    def __init__(self, config, mpasClimatologyTask, regionMasksTask, controlConfig=None):
+    def __init__(self, config, mpasClimatologyTask, regionMasksTask,
+                 controlConfig=None):
 
         """
         Construct the analysis task.
@@ -99,8 +102,6 @@ class OceanHistogram(AnalysisTask):
         if not os.path.exists(baseDirectory):
             make_directories(baseDirectory)
 
-        #TODO make sure hist directory purges
-        #TODO test other seasons
         obsList = config.getexpression(self.taskName, 'obsList')
         obsDicts = {
             'AVISO': {
@@ -114,43 +115,49 @@ class OceanHistogram(AnalysisTask):
 
         for regionGroup in self.regionGroups:
             groupObsDicts = {}
-            print(f'Add mask subtask for {regionGroup}, MPAS')
             mpasMasksSubtask = regionMasksTask.add_mask_subtask(
                 regionGroup=regionGroup)
-            regionNames = mpasMasksSubtask.expand_region_names(self.regionNames)
-            #TODO support multiple obs
+            regionNames = mpasMasksSubtask.expand_region_names(
+                self.regionNames)
+
+            # Add mask subtasks for observations and prep groupObsDicts
+            # groupObsDicts is a subsetted version of localObsDicts with an
+            # additional attribute for the maskTask
             for obsName in obsList:
                 localObsDict = dict(obsDicts[obsName])
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
-                print(f'Add mask subtask for {regionGroup}, {obsName}, {localObsDict["gridName"]}')
                 obsMasksSubtask = regionMasksTask.add_mask_subtask(
                     regionGroup, obsFileName=obsFileName,
                     lonVar=localObsDict['lonVar'],
                     latVar=localObsDict['latVar'],
                     meshName=localObsDict['gridName'])
-                regionNames = obsMasksSubtask.expand_region_names(self.regionNames)
-                obsDicts[obsName]['maskTask'] = obsMasksSubtask
-
                 localObsDict['maskTask'] = obsMasksSubtask
                 groupObsDicts[obsName] = localObsDict
+
             for regionName in regionNames:
                 sectionName = None
+
+                # Compute weights for histogram
+                # TODO make sure that we're not doing unnecessary work when no
+                # weights are used
                 computeWeightsSubtask = ComputeHistogramWeightsSubtask(
                     self, regionGroup, regionName, mpasMasksSubtask,
                     self.filePrefix, self.variableList)
                 self.add_subtask(computeWeightsSubtask)
 
                 for season in self.seasons:
+
+                    # Generate histogram plots
                     plotRegionSubtask = PlotRegionHistogramSubtask(
                         self, regionGroup, regionName, controlConfig,
                         sectionName, self.filePrefix, mpasClimatologyTask,
-                        mpasMasksSubtask, obsMasksSubtask, groupObsDicts, self.variableList, season)
+                        mpasMasksSubtask, obsMasksSubtask, groupObsDicts,
+                        self.variableList, season)
                     plotRegionSubtask.run_after(mpasMasksSubtask)
                     plotRegionSubtask.run_after(obsMasksSubtask)
                     self.add_subtask(plotRegionSubtask)
-                    print(f'Add regional histogram subtask for {regionName}, {season}')
 
     def setup_and_check(self):
         """
@@ -161,19 +168,13 @@ class OceanHistogram(AnalysisTask):
         OSError
             If files are not present
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
         #   self.inDirectory, self.plotsDirectory, self.namelist, self.streams
         #   self.calendar
         super().setup_and_check()
 
-        config = self.config
-
-        regionGroups = config.getexpression(self.taskName, 'regionGroups')
+        # Add variables and seasons to climatology task
         variableList = []
         for var in self.variableList:
             variableList.append(f'timeMonthly_avg_{var}')
@@ -181,25 +182,23 @@ class OceanHistogram(AnalysisTask):
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
 
-
     def run_task(self):
         """
         Performs histogram analysis of the output of variables in variableList.
         """
-        # Authors
-        # -------
-        # Carolyn Begeman, Adrian Turner, Xylar Asay-Davis
-
+        # Nothing to do here
 
 class ComputeHistogramWeightsSubtask(AnalysisTask):
     """
+    Fetches weight variables from MPAS output files for each variable in variableList.
         fullSuffix : str
             The regionGroup and regionName combined and modified to be
             appropriate as a task or file suffix
 
     """
-    def __init__(self, parentTask, regionGroup, regionName, mpasMasksSubtask, fullSuffix, varList):
-        print(f'Initialize weights{fullSuffix} subtask')
+    def __init__(self, parentTask, regionGroup, regionName, mpasMasksSubtask,
+                 fullSuffix, varList):
+
         super(ComputeHistogramWeightsSubtask, self).__init__(
             config=parentTask.config,
             taskName=parentTask.taskName,
@@ -213,30 +212,29 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         self.varList = varList
 
     def setup_and_check(self):
-        print(f'Setup weights{self.filePrefix} subtask')
+
         super(ComputeHistogramWeightsSubtask, self).setup_and_check()
 
     def run_task(self):
 
-        print(f'Run weights{self.filePrefix} subtask')
         config = self.config
+        # TODO move this check earlier. If unspecified, no weight
         if config.has_option(self.taskName, 'weightByVariable'):
             weightVarName = config.get(self.taskName, 'weightByVariable')
         else:
-            weightVarName = 'areaCell'
+            weightVarName = None
 
-        #TODO replace plotsDirectory with something more appropriate
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
-        weightsFileName = f'{baseDirectory}/{self.filePrefix}_{self.regionName}_weights.nc'
-        self.logger.info(f'weightsFileName is {weightsFileName} in compute')
+        weightsFileName = \
+            f'{baseDirectory}/{self.filePrefix}_{self.regionName}_weights.nc'
         restartFileName = self.runStreams.readpath('restart')[0]
         dsRestart = xarray.open_dataset(restartFileName)
         dsRestart = dsRestart.isel(Time=0)
 
-        newRegionMaskFileName = f'{baseDirectory}/{self.filePrefix}_{self.regionName}_mask.nc'
+        newRegionMaskFileName = \
+            f'{baseDirectory}/{self.filePrefix}_{self.regionName}_mask.nc'
         regionMaskFileName = self.mpasMasksSubtask.maskFileName
-        print(f'Open {regionMaskFileName}')
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
         maskRegionNames = decode_strings(dsRegionMask.regionNames)
         regionIndex = maskRegionNames.index(self.regionName)
@@ -248,12 +246,10 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         dsWeights = xarray.Dataset()
         for var in self.varList:
             varname = f'timeMonthly_avg_{var}'
-            print(f'save weights for {varname}')
-            dsWeights[f'{varname}_weight'] = dsRestart[weightVarName].where(cellMask, drop=True)
-            print(f'shape(weightVar) = {numpy.shape(dsRestart[weightVarName].values)}')
-            print(f'shape(cellMask) = {numpy.shape(cellMask.values)}')
-        print(f'Save {weightsFileName}')
+            dsWeights[f'{varname}_weight'] = dsRestart[weightVarName].where(
+                cellMask, drop=True)
         write_netcdf(dsWeights, weightsFileName)
+
 
 class PlotRegionHistogramSubtask(AnalysisTask):
     """
@@ -391,11 +387,9 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         self.xmlFileNames = []
         for var in self.varList:
-            print(f'add xml from subtask: {self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.xml')
-            # Add xml file names for each season
-            self.xmlFileNames.append(f'{self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.xml')
-
-        print(f'end subtask setup and check')
+            self.xmlFileNames.append(
+                f'{self.plotsDirectory}/{self.filePrefix}_{var}_'
+                f'{self.regionName}_{self.season}.xml')
 
     def run_task(self):
         """
@@ -419,11 +413,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
-        print(f'baseDirectory={baseDirectory}')
-        print(f'plotsDirectory={self.plotsDirectory}')
 
         regionMaskFileName = self.mpasMasksSubtask.maskFileName
-        print(f'Open {regionMaskFileName}')
 
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
 
@@ -450,24 +441,25 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
-        weightsFileName = f'{baseDirectory}/{self.filePrefix}_{self.regionName}_weights.nc'
-        print(f'Open weights {weightsFileName}')
+        weightsFileName = \
+            f'{baseDirectory}/{self.filePrefix}_{self.regionName}_' \
+            'weights.nc'
         dsWeights = xarray.open_dataset(weightsFileName)
 
-        #TODO support control run
         if self.controlConfig is not None:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
-            # TODO
             controlFileName = get_unmasked_mpas_climatology_file_name(
                 self.controlConfig, self.season, self.componentName, op='avg')
-            print(f'Open control {controlFileName}')
             dsControl = xarray.open_dataset(controlFileName)
             baseDirectory = build_config_full_path(
                 self.controlConfig, 'output', 'histogramSubdirectory')
-            controlWeightsFileName = f'{baseDirectory}/histogram_{controlRunName}_{self.regionName}_weights.nc'
-            controlRegionMaskFileName = f'{baseDirectory}/histogram_{controlRunName}_{self.regionName}_mask.nc'
-            print(f'Open control weights {controlWeightsFileName}')
-            dsControlRegionMasks = xarray.open_dataset(controlRegionMaskFileName)
+            controlWeightsFileName = \
+                f'{baseDirectory}/histogram_{controlRunName}_' \
+                f'{self.regionName}_weights.nc'
+            controlRegionMaskFileName = f'{baseDirectory}/histogram_' \
+                f'{controlRunName}_{self.regionName}_mask.nc'
+            dsControlRegionMasks = xarray.open_dataset(
+                controlRegionMaskFileName)
             dsControlWeights = xarray.open_dataset(controlWeightsFileName)
             controlCellMask = dsControlRegionMasks.regionCellMasks == 1
 
@@ -512,10 +504,11 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         yLabel = 'normalized Probability Density Function'
 
-        fields = []
-        weights = []
-        legendText = []
         for var in self.varList:
+
+            fields = []
+            weights = []
+            legendText = []
 
             varname = f'timeMonthly_avg_{var}'
 
@@ -523,19 +516,19 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             varTitle = var
 
             fields.append(ds[varname])
-            print(dsWeights.keys())
             weights.append(dsWeights[f'{varname}_weight'].values)
             legendText.append(mainRunName)
-            print(f'Main: {numpy.shape(fields[-1].values)}, {numpy.shape(weights[-1])}')
-            xLabel = f"{ds[varname].attrs['long_name']} ({ds[varname].attrs['units']})"
+            xLabel = f"{ds[varname].attrs['long_name']} " \
+                     f"({ds[varname].attrs['units']})"
             for obsName in self.obsDicts:
                 localObsDict = dict(self.obsDicts[obsName])
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=localObsDict['gridFileName'])
-                #TODO check whether this works
                 if f'{var}Var' not in localObsDict.keys():
-                    self.logger.warn(f'{var}Var is not present in {obsName}, skipping {obsName}')
+                    self.logger.warn(
+                        f'{var}Var is not present in {obsName}, skipping '
+                        f'{obsName}')
                     continue
                 varnameObs = localObsDict[f'{var}Var']
                 dsObs = xarray.open_dataset(obsFileName)
@@ -548,7 +541,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                     lineWidths.append([lineWidths[0]])
                 weights.append(None)
             if self.controlConfig is not None:
-                fields.append(dsControl[varname].where(controlCellMask, drop=True))
+                fields.append(dsControl[varname].where(controlCellMask,
+                                                       drop=True))
                 controlRunName = self.controlConfig.get('runs', 'mainRunName')
                 legendText.append('Control')
                 title = f'{title} vs. {controlRunName}'
@@ -557,25 +551,32 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 if lineWidths is not None:
                     lineWidths.append([lineWidths[0]])
                 weights.append(dsControlWeights[f'{varname}_weight'].values)
-                print(f'Control: {numpy.shape(fields[-1].values)}, {numpy.shape(weights[-1])}')
             histogram_analysis_plot(config, fields, calendar=calendar,
-                                    title=title, xlabel=xLabel, ylabel=yLabel, bins=bins, weights=weights,
-                                    lineColors=lineColors, lineWidths=lineWidths,
+                                    title=title, xlabel=xLabel, ylabel=yLabel,
+                                    bins=bins, weights=weights,
+                                    lineColors=lineColors,
+                                    lineWidths=lineWidths,
                                     legendText=legendText,
-                                    titleFontSize=titleFontSize, defaultFontSize=defaultFontSize)
+                                    titleFontSize=titleFontSize,
+                                    defaultFontSize=defaultFontSize)
 
-            outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_{self.regionName}_{self.season}.png'
+            outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_' \
+                          f'{self.regionName}_{self.season}.png'
             savefig(outFileName, config)
 
-            caption = f'Normalized probability density function for SSH climatologies in {self.regionName.replace("_", " ")}'
+            caption = f'Normalized probability density function for SSH ' \
+                      f'climatologies in {self.regionName.replace("_", " ")}'
+
             write_image_xml(
                 config=config,
-                filePrefix=f'{self.filePrefix}_{var}_{self.regionName}_{self.season}',
+                filePrefix=f'{self.filePrefix}_{var}_{self.regionName}_'
+                           f'{self.season}',
                 componentName='Ocean',
                 componentSubdirectory='ocean',
                 galleryGroup=f'{self.regionGroup} Histograms',
                 groupLink=f'histogram{var}',
                 gallery=varTitle,
-                thumbnailDescription=f'self.regionName.replace("_", " ") {season}',
+                thumbnailDescription=f'{self.regionName.replace("_", " ")} '
+                                     f'{self.season}',
                 imageDescription=caption,
                 imageCaption=caption)

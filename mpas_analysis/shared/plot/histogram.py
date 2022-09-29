@@ -28,14 +28,14 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot.ticks import plot_xtick_format
 from mpas_analysis.shared.plot.title import limit_title
 
+
 def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
-                            bins=20, range=None, density=True, weights=None, lineColors=None,
-                            lineStyles=None, markers=None, lineWidths=None,
-                            legendText=None,
-                            titleFontSize=None, axisFontSize=None, defaultFontSize=None,
-                            figsize=(12, 6), dpi=None,
-                            legendLocation='upper right',
-                            maxTitleLength=90):
+                            bins=20, range=None, density=True, weights=None,
+                            lineColors=None, lineStyles=None, markers=None,
+                            lineWidths=None, legendText=None,
+                            titleFontSize=None, axisFontSize=None,
+                            defaultFontSize=None, figsize=(12, 6), dpi=None,
+                            legendLocation='upper right', maxTitleLength=90):
 
     """
     Plots the list of histogram data sets.
@@ -47,8 +47,7 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         control plotting
 
     dsvalues : list of xarray DataSets
-        the data set(s) to be plotted. For area or volume quantities, multiply by the
-        respective area or volume before inputting. Datasets should already be sliced
+        the data set(s) to be plotted. Datasets should already be sliced
         within the time range specified in the config file.
 
     title : str
