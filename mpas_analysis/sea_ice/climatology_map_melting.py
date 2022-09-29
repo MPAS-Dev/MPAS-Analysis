@@ -109,7 +109,7 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                 if control_config is None:
                     if hemisphere == 'SH' and season == 'ANN':
                         ref_title_label = 'Observations (AnIceFlux)'
-                        gallery_name = 'Observations: AnIceFlux'
+                        gallery_name = None
                         diff_title_label = 'Model - Observations'
                         obs_file_name = build_obs_path(
                                 config, 'seaIce',
