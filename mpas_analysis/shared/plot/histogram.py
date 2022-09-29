@@ -29,7 +29,7 @@ from mpas_analysis.shared.plot.ticks import plot_xtick_format
 from mpas_analysis.shared.plot.title import limit_title
 
 
-def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
+def histogram_analysis_plot(config, dsValues, calendar, title, xLabel, yLabel,
                             bins=20, range=None, density=True, weights=None,
                             lineColors=None, lineStyles=None, markers=None,
                             lineWidths=None, legendText=None,
@@ -46,14 +46,14 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
         the configuration, containing a [plot] section with options that
         control plotting
 
-    dsvalues : list of xarray DataSets
+    dsValues : list of xarray DataSets
         the data set(s) to be plotted. Datasets should already be sliced
         within the time range specified in the config file.
 
     title : str
         the title of the plot
 
-    xlabel, ylabel : str
+    xLabel, yLabel : str
         axis labels
 
     calendar : str
@@ -62,8 +62,8 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     density : logical
         if True, normalize the histogram so that the area under the curve is 1
 
-    weights: list of numpy data arrays or NoneType's of length dsvalues
-        the weights corresponding to each entry in dsvalues
+    weights: list of numpy data arrays or NoneType's of length dsValues
+        the weights corresponding to each entry in dsValues
 
     lineColors, lineStyles, legendText : list of str, optional
         control line color, style, and corresponding legend
@@ -120,49 +120,49 @@ def histogram_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     axis_font = {'size': axisFontSize}
 
     ax = plt.gca()
-    labelCount = 0
-    for dsIndex, dsvalue in enumerate(dsvalues):
-        if dsvalue is None:
+    label_count = 0
+    for ds_index, ds_value in enumerate(dsValues):
+        if ds_value is None:
             continue
         if legendText is None:
             label = None
         else:
-            label = legendText[dsIndex]
+            label = legendText[ds_index]
             if label is not None:
                 label = limit_title(label, maxTitleLength)
-            labelCount += 1
+            label_count += 1
         if lineColors is None:
             color = 'k'
         else:
-            color = lineColors[dsIndex]
+            color = lineColors[ds_index]
         if lineStyles is None:
-            linestyle = '-'
+            line_style = '-'
         else:
-            linestyle = lineStyles[dsIndex]
+            line_style = lineStyles[ds_index]
         if markers is None:
             marker = None
         else:
             marker = markers[dsIndex]
         if lineWidths is None:
-            linewidth = 1.
+            line_width = 1.
         else:
-            linewidth = lineWidths[dsIndex]
+            line_width = lineWidths[ds_index]
 
-        hist_values = dsvalue.values.ravel()
-        weight = weights[dsIndex]
+        hist_values = ds_value.values.ravel()
+        weight = weights[ds_index]
         hist_type = 'step'
         ax.hist(hist_values, range=range, bins=bins, weights=weight,
-                linestyle=linestyle, linewidth=linewidth,
+                linestyle=line_style, linewidth=line_width,
                 histtype=hist_type, label=label, density=density)
-        if labelCount > 1:
+        if label_count > 1:
             plt.legend(loc=legendLocation)
 
     if title is not None:
         title = limit_title(title, maxTitleLength)
         plt.title(title, **title_font)
-    if xlabel is not None:
-        plt.xlabel(xlabel, **axis_font)
-    if ylabel is not None:
-        plt.ylabel(ylabel, **axis_font)
+    if xLabel is not None:
+        plt.xlabel(xLabel, **axis_font)
+    if yLabel is not None:
+        plt.ylabel(yLabel, **axis_font)
 
     return fig
