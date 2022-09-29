@@ -108,15 +108,15 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
 
                 if control_config is None:
                     if hemisphere == 'SH' and season == 'ANN':
-                        ref_title_label = 'Observations (Haumann)'
-                        gallery_name = 'Observations: Haumann'
+                        ref_title_label = 'Observations (AnIceFlux)'
+                        gallery_name = 'Observations: AnIceFlux'
                         diff_title_label = 'Model - Observations'
                         obs_file_name = build_obs_path(
                                 config, 'seaIce',
                                 relativePathOption=f'melting{hemisphere}',
                                 relativePathSection=section_name)
 
-                        remap_observations_subtask = RemapHaumannMeltingClimatology(
+                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(
                             parentTask=self, seasons=seasons,
                             fileName=obs_file_name,
                             outFilePrefix=f'{field_name}{hemisphere}',
@@ -266,9 +266,9 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
         melting = (basal + surface + lateral) * units_scale_factor
         return melting
 
-class RemapHaumannMeltingClimatology(RemapObservedClimatologySubtask):
+class RemapAnIceFluxMeltingClimatology(RemapObservedClimatologySubtask):
     """
-    A subtask for reading and remapping sea ice melting from Haumann
+    A subtask for reading and remapping sea ice melting from AnIceFlux
     observations
     """
     # Authors

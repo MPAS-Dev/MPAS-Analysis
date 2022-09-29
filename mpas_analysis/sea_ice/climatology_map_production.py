@@ -108,15 +108,15 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
                 if control_config is None:
                     if hemisphere == 'SH' and season == 'ANN':
-                        ref_title_label = 'Observations (Haumann)'
-                        gallery_name = 'Observations: Haumann'
+                        ref_title_label = 'Observations (AnIceFlux)'
+                        gallery_name = 'Observations: AnIceFlux'
                         diff_title_label = 'Model - Observations'
                         obs_file_name = build_obs_path(
                                 config, 'seaIce',
                                 relativePathOption=f'production{hemisphere}',
                                 relativePathSection=section_name)
 
-                        remap_observations_subtask = RemapHaumannProductionClimatology(
+                        remap_observations_subtask = RemapAnIceFluxProductionClimatology(
                             parentTask=self, seasons=seasons,
                             fileName=obs_file_name,
                             outFilePrefix=f'{field_name}{hemisphere}',
@@ -266,9 +266,9 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
         production = (congelation + frazil + snowice) * units_scale_factor
         return production
 
-class RemapHaumannProductionClimatology(RemapObservedClimatologySubtask):
+class RemapAnIceFluxProductionClimatology(RemapObservedClimatologySubtask):
     """
-    A subtask for reading and remapping sea ice production from Haumann
+    A subtask for reading and remapping sea ice production from AnIceFlux
     observations
     """
     # Authors
