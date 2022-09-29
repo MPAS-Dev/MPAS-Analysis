@@ -20,6 +20,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 import matplotlib.ticker as mticker
+import matplotlib.patches as mpatches
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
@@ -124,7 +125,7 @@ def plot_polar_comparison(
     # Xylar Asay-Davis, Milena Veneziani
 
     def do_subplot(ax, field, title, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
         """
         Make a subplot within the figure.
         """
@@ -333,7 +334,7 @@ def plot_global_comparison(
     # Xylar Asay-Davis, Milena Veneziani
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
 
         ax.set_extent(extent, crs=projection)
 
@@ -369,9 +370,11 @@ def plot_global_comparison(
                          bbox_to_anchor=(0.08, 0., 1, 1),
                          bbox_transform=ax.transAxes, borderpad=0)
 
-        cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
+        cbar = plt.colorbar(plotHandle, cax=cax)
         cbar.set_label(cbarlabel)
-
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
     matplotlib.rc('font', size=defaultFontSize)
@@ -519,12 +522,42 @@ def plot_projection_comparison(
     # Authors
     # -------
     # Xylar Asay-Davis
+    def add_arrow_to_line2D(ax, path, arrow_spacing=8e5,arrow_width=1.5e4):
+        """
+        https://stackoverflow.com/a/27637925/7728169
+        Add arrows to a matplotlib.lines.Line2D at selected locations.
+        Parameters:
+	-----------
+	axes:
+	line: list of 1 Line2D object as returned by plot command
+	arrow_spacing: distance in m between arrows
+
+	Returns:
+	--------
+	arrows: list of arrows
+	"""
+        v = path.vertices
+        x = v[:, 0]
+        y = v[:, 1]
+        arrows = []
+        s = np.cumsum(np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2))
+        indices = np.searchsorted(s, arrow_spacing*np.arange(1,
+            int(s[-1]/arrow_spacing)))
+        for n in indices:
+            dx = np.mean(x[n-2:n]) - x[n]
+            dy = np.mean(y[n-2:n]) - y[n]
+            p = mpatches.FancyArrow(
+                x[n], y[n], dx, dy, length_includes_head=False, 
+                width=arrow_width, facecolor='k')
+            ax.add_patch(p)
+            arrows.append(p)
+        return arrows
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
 
         title = limit_title(title, maxTitleLength)
-        ax.set_title(title, y=1.06, **plottitle_font)
+        ax.set_title(title, **plottitle_font)
 
         ax.set_extent(extent, crs=projection)
 
@@ -560,9 +593,13 @@ def plot_projection_comparison(
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
             x_center = 0.5*(x[0:-1] + x[1:])
             y_center = 0.5*(y[0:-1] + y[1:])
-            ax.contour(x_center, y_center, array, levels=contours,
-                       colors=lineColor, linewidths=lineWidth)
-
+            cs = ax.contour(x_center, y_center, array, levels=contours,
+                            colors=lineColor, linewidths=lineWidth)
+            # add arrows to streamlines
+            if arrows is not None:
+                for collection in cs.collections:
+                    for path in collection.get_paths():
+                        add_arrow_to_line2D(ax, path)
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
@@ -597,7 +634,6 @@ def plot_projection_comparison(
     else:
         figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
-
     latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
     lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
 

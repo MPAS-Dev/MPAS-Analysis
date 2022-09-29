@@ -268,7 +268,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                                        comparisonDescriptor):
         """
         Add a custom grid descriptor (something other than 'latlon',
-        'antarctic', 'arctic', 'north_atlantic', or 'north_pacific').
+        'antarctic', 'arctic', 'north_atlantic', or 'north_pacific',
+         or 'subpolar_north_atlantic').
 
         Parameters
         ----------

@@ -5,6 +5,8 @@ from mpas_analysis.ocean.climatology_map_mld_min_max import \
 from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
 from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
 from mpas_analysis.ocean.climatology_map_eke import ClimatologyMapEKE
+from mpas_analysis.ocean.climatology_map_bsf import \
+    ClimatologyMapBSF
 from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
     ClimatologyMapOHCAnomaly
 from mpas_analysis.ocean.climatology_map_bgc import ClimatologyMapBGC
