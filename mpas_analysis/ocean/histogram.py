@@ -95,6 +95,11 @@ class OceanHistogram(AnalysisTask):
         self.regionNames = config.getexpression(self.taskName, 'regionNames')
         self.seasons = config.getexpression(self.taskName, 'seasons')
         self.variableList = config.getexpression(self.taskName, 'variableList')
+        if config.has_option(self.taskName, 'weightList'):
+            self.weightList = config.getexpression(self.taskName, 'weightList')
+        else:
+            self.weightList = None
+
         self.filePrefix = f'histogram_{mainRunName}'
 
         baseDirectory = build_config_full_path(
@@ -140,12 +145,11 @@ class OceanHistogram(AnalysisTask):
                 sectionName = None
 
                 # Compute weights for histogram
-                # TODO make sure that we're not doing unnecessary work when no
-                # weights are used
-                computeWeightsSubtask = ComputeHistogramWeightsSubtask(
-                    self, regionGroup, regionName, mpasMasksSubtask,
-                    self.filePrefix, self.variableList)
-                self.add_subtask(computeWeightsSubtask)
+                if self.weightList is not None:
+                    computeWeightsSubtask = ComputeHistogramWeightsSubtask(
+                        self, regionGroup, regionName, mpasMasksSubtask,
+                        self.filePrefix, self.variableList, self.weightList)
+                    self.add_subtask(computeWeightsSubtask)
 
                 for season in self.seasons:
 
@@ -154,7 +158,7 @@ class OceanHistogram(AnalysisTask):
                         self, regionGroup, regionName, controlConfig,
                         sectionName, self.filePrefix, mpasClimatologyTask,
                         mpasMasksSubtask, obsMasksSubtask, groupObsDicts,
-                        self.variableList, season)
+                        self.variableList, self.weightList, season)
                     plotRegionSubtask.run_after(mpasMasksSubtask)
                     plotRegionSubtask.run_after(obsMasksSubtask)
                     self.add_subtask(plotRegionSubtask)
@@ -182,6 +186,11 @@ class OceanHistogram(AnalysisTask):
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
 
+        if self.weightList is not None:
+            if len(self.weightList) != len(self.variableList):
+                self.logger.error('Histogram weightList is not the same '
+                                  'length as variableList')
+
     def run_task(self):
         """
         Performs histogram analysis of the output of variables in variableList.
@@ -197,7 +206,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
 
     """
     def __init__(self, parentTask, regionGroup, regionName, mpasMasksSubtask,
-                 fullSuffix, varList):
+                 fullSuffix, varList, weightList):
 
         super(ComputeHistogramWeightsSubtask, self).__init__(
             config=parentTask.config,
@@ -210,6 +219,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         self.regionName = regionName
         self.filePrefix = fullSuffix
         self.varList = varList
+        self.weightList = weightList
 
     def setup_and_check(self):
 
@@ -218,11 +228,6 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
     def run_task(self):
 
         config = self.config
-        # TODO move this check earlier. If unspecified, no weight
-        if config.has_option(self.taskName, 'weightByVariable'):
-            weightVarName = config.get(self.taskName, 'weightByVariable')
-        else:
-            weightVarName = None
 
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
@@ -244,10 +249,15 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         write_netcdf(dsMask, newRegionMaskFileName)
 
         dsWeights = xarray.Dataset()
-        for var in self.varList:
-            varname = f'timeMonthly_avg_{var}'
-            dsWeights[f'{varname}_weight'] = dsRestart[weightVarName].where(
-                cellMask, drop=True)
+        for index, var in enumerate(self.varList):
+            weightVarName = self.weightList[index]
+            if weightVarName in dsRestart.keys():
+                varname = f'timeMonthly_avg_{var}'
+                dsWeights[f'{varname}_weight'] = dsRestart[weightVarName].where(
+                    cellMask, drop=True)
+            else:
+                self.logger.warn(f'Weight variable {weightVarName} is not in '
+                                 f'the restart file, skipping')
         write_netcdf(dsWeights, weightsFileName)
 
 
@@ -290,8 +300,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, regionGroup, regionName, controlConfig,
-                 sectionName, fullSuffix, mpasClimatologyTask,
-                 mpasMasksSubtask, obsMasksSubtask, obsDicts, varList, season):
+                 sectionName, fullSuffix, mpasClimatologyTask, mpasMasksSubtask,
+                 obsMasksSubtask, obsDicts, varList, weightList, season):
 
         """
         Construct the analysis task.
@@ -353,7 +363,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         self.mpasMasksSubtask = mpasMasksSubtask
         self.obsMasksSubtask = obsMasksSubtask
         self.obsDicts = obsDicts
-        self.varList = varList
+        self.variableList = varList
+        self.weightList = weightList
         self.season = season
         self.filePrefix = fullSuffix
 
@@ -386,7 +397,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         super(PlotRegionHistogramSubtask, self).setup_and_check()
 
         self.xmlFileNames = []
-        for var in self.varList:
+        for var in self.variableList:
             self.xmlFileNames.append(
                 f'{self.plotsDirectory}/{self.filePrefix}_{var}_'
                 f'{self.regionName}_{self.season}.xml')
@@ -399,13 +410,11 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        self.logger.info("\nPlotting histogram for {}"
-                         "...".format(self.regionName))
+        self.logger.info(f"\nPlotting {self.season} histograms for "
+                         f"{self.regionName}")
 
         config = self.config
         sectionName = self.sectionName
-
-        self.logger.info('  Make plots...')
 
         calendar = self.calendar
 
@@ -441,10 +450,11 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
-        weightsFileName = \
-            f'{baseDirectory}/{self.filePrefix}_{self.regionName}_' \
-            'weights.nc'
-        dsWeights = xarray.open_dataset(weightsFileName)
+        if self.weightList is not None:
+            weightsFileName = \
+                f'{baseDirectory}/{self.filePrefix}_{self.regionName}_' \
+                'weights.nc'
+            dsWeights = xarray.open_dataset(weightsFileName)
 
         if self.controlConfig is not None:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
@@ -453,15 +463,16 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             dsControl = xarray.open_dataset(controlFileName)
             baseDirectory = build_config_full_path(
                 self.controlConfig, 'output', 'histogramSubdirectory')
-            controlWeightsFileName = \
-                f'{baseDirectory}/histogram_{controlRunName}_' \
-                f'{self.regionName}_weights.nc'
             controlRegionMaskFileName = f'{baseDirectory}/histogram_' \
                 f'{controlRunName}_{self.regionName}_mask.nc'
             dsControlRegionMasks = xarray.open_dataset(
                 controlRegionMaskFileName)
-            dsControlWeights = xarray.open_dataset(controlWeightsFileName)
             controlCellMask = dsControlRegionMasks.regionCellMasks == 1
+            if self.weightList is not None:
+                controlWeightsFileName = \
+                    f'{baseDirectory}/histogram_{controlRunName}_' \
+                    f'{self.regionName}_weights.nc'
+                dsControlWeights = xarray.open_dataset(controlWeightsFileName)
 
         if config.has_option(self.taskName, 'lineColors'):
             lineColors = [config.get(self.taskName, 'mainColor')]
@@ -504,7 +515,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
         yLabel = 'normalized Probability Density Function'
 
-        for var in self.varList:
+        for index, var in enumerate(self.variableList):
 
             fields = []
             weights = []
@@ -512,14 +523,27 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
             varname = f'timeMonthly_avg_{var}'
 
+            caption = f'Normalized probability density function for {var} ' \
+                      f'climatologies in {self.regionName.replace("_", " ")}'
+
             #TODO title as attribute or dict of var
             varTitle = var
 
             fields.append(ds[varname])
-            weights.append(dsWeights[f'{varname}_weight'].values)
+            if self.weightList is not None:
+                if f'{varname}_weight' in dsWeights.keys():
+                    weights.append(dsWeights[f'{varname}_weight'].values)
+                    caption = f'{caption} weighted by {self.weightList[index]}'
+                else:
+                    weights.append(None)
+            else:
+                weights.append(None)
+
             legendText.append(mainRunName)
+
             xLabel = f"{ds[varname].attrs['long_name']} " \
                      f"({ds[varname].attrs['units']})"
+
             for obsName in self.obsDicts:
                 localObsDict = dict(self.obsDicts[obsName])
                 obsFileName = build_obs_path(
@@ -563,9 +587,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             outFileName = f'{self.plotsDirectory}/{self.filePrefix}_{var}_' \
                           f'{self.regionName}_{self.season}.png'
             savefig(outFileName, config)
-
-            caption = f'Normalized probability density function for SSH ' \
-                      f'climatologies in {self.regionName.replace("_", " ")}'
 
             write_image_xml(
                 config=config,
