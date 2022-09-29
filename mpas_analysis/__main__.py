@@ -146,7 +146,7 @@ def build_analysis_list(config, controlConfig):
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapBSF(config,
-                                            oceanClimatolgyTasks['avg'],
+                                            oceanClimatologyTasks['avg'],
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapOHCAnomaly(
         config, oceanClimatologyTasks['avg'], oceanRefYearClimatologyTask,
