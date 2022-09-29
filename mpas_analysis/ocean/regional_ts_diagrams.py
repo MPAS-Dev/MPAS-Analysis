@@ -89,7 +89,7 @@ class RegionalTSDiagrams(AnalysisTask):
             config=config,
             taskName='regionalTSDiagrams',
             componentName='ocean',
-            tags=['climatology', 'regions', 'publicObs'])
+            tags=['climatology', 'regions', 'publicObs', 'TSDiagrams'])
 
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
@@ -1020,7 +1020,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         neutralDensity = sigma0(SA, CT)
         rhoInterval = config.getfloat(sectionName, 'rhoInterval')
-        contours = numpy.arange(24., 29.+rhoInterval, rhoInterval)
+        contours = numpy.arange(23., 29.+rhoInterval, rhoInterval)
 
         diagramType = config.get(sectionName, 'diagramType')
         if diagramType not in ['volumetric', 'scatter']:
