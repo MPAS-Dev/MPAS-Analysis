@@ -979,7 +979,19 @@
 
         <span class="n">dsMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
 
-        <span class="n">cellMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="s1">&#39;regionMasks&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
+            <span class="c1"># this is the name used by the mask creation tool in mpas_tools</span>
+            <span class="n">maskVar</span> <span class="o">=</span> <span class="s1">&#39;regionMasks&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;regionCellMasks&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
+            <span class="c1"># this is the name used in the old mask creation tool in</span>
+            <span class="c1"># mpas-analysis</span>
+            <span class="n">maskVar</span> <span class="o">=</span> <span class="s1">&#39;regionCellMasks&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The file </span><span class="si">{</span><span class="n">regionMaskFileName</span><span class="si">}</span><span class="s1"> doesn</span><span class="se">\&#39;</span><span class="s1">t &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;contain a mask variable: regionMasks or &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;regionCellMasks&#39;</span><span class="p">)</span>
+
+        <span class="n">cellMask</span> <span class="o">=</span> <span class="n">dsMask</span><span class="p">[</span><span class="n">maskVar</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">):</span>
             <span class="n">zmin</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">)</span>
