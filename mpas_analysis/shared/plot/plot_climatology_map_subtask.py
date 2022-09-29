@@ -80,14 +80,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     galleryGroup : str
         the name of the group of galleries in which this plot belongs
 
-    groupSubtitle : str
+    groupSubtitle : str or None
         the subtitle of the group in which this plot belongs (or blank
         if none)
 
     groupLink : str
         a short name (with no spaces) for the link to the gallery group
 
-    galleryName : str
+    galleryName : str or None
         the name of the gallery in which this plot belongs
 
     depth : {None, float, 'top', 'bot'}
@@ -96,6 +96,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
     configSectionName : str
         the name of the section where the color map and range is defined
+
+    maskValue : float or None
+        a value to mask out in plots
     """
 
     def __init__(self, parentTask, season, comparisonGridName,
@@ -206,12 +209,13 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.startDate = None
         self.endDate = None
         self.filePrefix = None
+        self.maskValue = None
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
-                      configSectionName=None):
+                      configSectionName=None, maskValue=None):
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -243,22 +247,25 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         galleryGroup : str
             the name of the group of galleries in which this plot belongs
 
-        groupSubtitle : str
+        groupSubtitle : str or None
             the subtitle of the group in which this plot belongs (or blank
             if none)
 
         groupLink : str
             a short name (with no spaces) for the link to the gallery group
 
-        galleryName : str
+        galleryName : str or None
             the name of the gallery in which this plot belongs
 
         diffTitleLabel : str, optional
             the title of the difference subplot
 
-        configSectionName : str, optional
+        configSectionName : str or None, optional
             the name of the section where the color map and range is defined,
             default is the name of the task
+
+        maskValue : float or None, optional
+            a value to mask out in plots
         """
 
         self.outFileLabel = outFileLabel
@@ -275,6 +282,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
+        self.maskValue = maskValue
 
         if configSectionName is None:
             self.configSectionName = self.taskName
@@ -478,6 +486,19 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
             bias = modelOutput - refOutput
 
+            # mask with maskValue only after taking the diff
+            if self.maskValue is not None:
+                mask = np.logical_or(refOutput.mask,
+                                     refOutput == self.maskValue)
+                refOutput = np.ma.masked_array(refOutput, mask)
+                bias = np.ma.masked_array(bias, mask)
+
+        # mask with maskValue only after taking the diff
+        if self.maskValue is not None:
+            mask = np.logical_or(modelOutput.mask,
+                                 modelOutput == self.maskValue)
+            modelOutput = np.ma.masked_array(modelOutput, mask)
+
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
         else:
@@ -551,6 +572,19 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                 remappedRefClimatology[self.refFieldName].values)
 
             bias = modelOutput - refOutput
+
+            # mask with maskValue only after taking the diff
+            if self.maskValue is not None:
+                mask = np.logical_or(refOutput.mask,
+                                     refOutput == self.maskValue)
+                refOutput = np.ma.masked_array(refOutput, mask)
+                bias = np.ma.masked_array(bias, mask)
+
+        # mask with maskValue only after taking the diff
+        if self.maskValue is not None:
+            mask = np.logical_or(modelOutput.mask,
+                                 modelOutput == self.maskValue)
+            modelOutput = np.ma.masked_array(modelOutput, mask)
 
         comparisonDescriptor = get_comparison_descriptor(
             config, comparisonGridName)
