@@ -204,12 +204,15 @@
         <span class="n">lineColor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lineColor</span> <span class="o">=</span> <span class="kc">None</span>
-
+    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;arrowsOnContour</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="n">arrows</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">arrows</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;colormap&#39;</span><span class="p">:</span> <span class="n">colormap</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span>
             <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="n">ticks</span><span class="p">,</span> <span class="s1">&#39;contours&#39;</span><span class="p">:</span> <span class="n">contours</span><span class="p">,</span> <span class="s1">&#39;lineWidth&#39;</span><span class="p">:</span> <span class="n">lineWidth</span><span class="p">,</span>
-            <span class="s1">&#39;lineColor&#39;</span><span class="p">:</span> <span class="n">lineColor</span><span class="p">}</span></div>
-
-
+            <span class="s1">&#39;lineColor&#39;</span><span class="p">:</span> <span class="n">lineColor</span><span class="p">,</span> <span class="s1">&#39;arrows&#39;</span><span class="p">:</span> <span class="n">arrows</span><span class="p">}</span></div>
+    
 <span class="k">def</span> <span class="nf">register_custom_colormaps</span><span class="p">():</span>
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;ferret&#39;</span>
     <span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span>

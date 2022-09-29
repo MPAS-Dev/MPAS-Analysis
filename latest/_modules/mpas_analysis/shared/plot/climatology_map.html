@@ -116,6 +116,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">cols</span>
 <span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1.inset_locator</span> <span class="kn">import</span> <span class="n">inset_axes</span>
@@ -220,7 +221,7 @@
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
     <span class="k">def</span> <span class="nf">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">):</span>
+                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a subplot within the figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -429,7 +430,7 @@
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
     <span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">):</span>
+                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
 
@@ -465,9 +466,11 @@
                          <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                          <span class="n">bbox_transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">ticks</span><span class="p">,</span> <span class="n">boundaries</span><span class="o">=</span><span class="n">ticks</span><span class="p">)</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">)</span>
         <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">cbarlabel</span><span class="p">)</span>
-
+        <span class="k">if</span> <span class="n">ticks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+            <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
     <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
@@ -615,12 +618,42 @@
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
+    <span class="k">def</span> <span class="nf">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">8e5</span><span class="p">,</span><span class="n">arrow_width</span><span class="o">=</span><span class="mf">1.5e4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        https://stackoverflow.com/a/27637925/7728169</span>
+<span class="sd">        Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">	-----------</span>
+<span class="sd">	axes:</span>
+<span class="sd">	line: list of 1 Line2D object as returned by plot command</span>
+<span class="sd">	arrow_spacing: distance in m between arrows</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	--------</span>
+<span class="sd">	arrows: list of arrows</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">vertices</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">arrows</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">arrow_spacing</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">n</span><span class="p">])</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">n</span><span class="p">])</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">FancyArrow</span><span class="p">(</span>
+                <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> 
+                <span class="n">width</span><span class="o">=</span><span class="n">arrow_width</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+            <span class="n">arrows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">arrows</span>
 
     <span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">):</span>
+                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
 
         <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.06</span><span class="p">,</span> <span class="o">**</span><span class="n">plottitle_font</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">plottitle_font</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
 
@@ -656,9 +689,13 @@
             <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;contour.negative_linestyle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
             <span class="n">x_center</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
             <span class="n">y_center</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-            <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x_center</span><span class="p">,</span> <span class="n">y_center</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">contours</span><span class="p">,</span>
-                       <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
-
+            <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x_center</span><span class="p">,</span> <span class="n">y_center</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">contours</span><span class="p">,</span>
+                            <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
+            <span class="c1"># add arrows to streamlines</span>
+            <span class="k">if</span> <span class="n">arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
+                        <span class="n">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
         <span class="c1"># create an axes on the right side of ax. The width of cax will be 5%</span>
         <span class="c1"># of ax and the padding between cax and ax will be fixed at 0.05 inch.</span>
         <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
@@ -693,7 +730,6 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelHorizFigSize&#39;</span><span class="p">)</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">131</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">133</span><span class="p">]</span>
-
     <span class="n">latLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;latLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">lonLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;lonLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 

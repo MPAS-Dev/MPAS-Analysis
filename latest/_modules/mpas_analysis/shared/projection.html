@@ -110,7 +110,7 @@
 
 
 <span class="n">known_comparison_grids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">]</span>
+                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="get_pyproj_projection"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection">[docs]</a><span class="k">def</span> <span class="nf">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
@@ -120,7 +120,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    comparison_grid_name : {&#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;,</span>
-<span class="sd">                            &#39;north_pacific&#39;}</span>
+<span class="sd">                            &#39;north_pacific&#39;, &#39;subpolar_north_atlantic&#39;}</span>
 <span class="sd">        The name of the projection comparison grid to use for remapping</span>
 
 <span class="sd">    Returns</span>
@@ -159,6 +159,9 @@
     <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=180 +lat_0=40 +lat_1=34 &#39;</span>
                                  <span class="s1">&#39;+lat_2=46 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=-40 +lat_0=54 +lat_1=40 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=68 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We missed one of the known comparison grids: &#39;</span>
                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -173,7 +176,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    comparison_grid_name : {&#39;antarctic&#39;, &#39;arctic&#39;, &#39;north_atlantic&#39;,</span>
-<span class="sd">                            &#39;north_pacific&#39;}</span>
+<span class="sd">                            &#39;north_pacific&#39;, &#39;subpolar_north_atlantic&#39;}</span>
 <span class="sd">        The name of the projection comparison grid to use for remapping</span>
 
 <span class="sd">    Returns</span>
@@ -215,6 +218,10 @@
         <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">(</span>
             <span class="n">central_latitude</span><span class="o">=</span><span class="mf">40.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">180.</span><span class="p">,</span>
             <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">34.</span><span class="p">,</span> <span class="mf">46.</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=</span><span class="mf">54.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=-</span><span class="mf">40.</span><span class="p">,</span>
+            <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">40.</span><span class="p">,</span> <span class="mf">68.</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We missed one of the known comparison grids: &#39;</span>
                          <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
