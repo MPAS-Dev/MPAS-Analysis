@@ -97,8 +97,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     configSectionName : str
         the name of the section where the color map and range is defined
 
-    maskValue : float or None
-        a value to mask out in plots
+    maskMinThreshold : float or None
+        a value below which the field is mask out in plots
+
+    maskMaxThreshold : float or None
+        a value above which the field is mask out in plots
     """
 
     def __init__(self, parentTask, season, comparisonGridName,
@@ -209,13 +212,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.startDate = None
         self.endDate = None
         self.filePrefix = None
-        self.maskValue = None
+        self.maskMinThreshold = None
+        self.maskMaxThreshold = None
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
-                      configSectionName=None, maskValue=None):
+                      configSectionName=None, maskMinThreshold=None,
+                      maskMaxThreshold=None):
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -264,8 +269,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             the name of the section where the color map and range is defined,
             default is the name of the task
 
-        maskValue : float or None, optional
-            a value to mask out in plots
+        maskMinThreshold : float or None, optional
+            a value below which the field is mask out in plots
+
+        maskMaxThreshold : float or None, optional
+            a value above which the field is mask out in plots
         """
 
         self.outFileLabel = outFileLabel
@@ -282,7 +290,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
-        self.maskValue = maskValue
+        self.maskMinThreshold = maskMinThreshold
+        self.maskMaxThreshold = maskMaxThreshold
 
         if configSectionName is None:
             self.configSectionName = self.taskName
@@ -486,18 +495,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
             bias = modelOutput - refOutput
 
-            # mask with maskValue only after taking the diff
-            if self.maskValue is not None:
-                mask = np.logical_or(refOutput.mask,
-                                     refOutput == self.maskValue)
-                refOutput = np.ma.masked_array(refOutput, mask)
-                bias = np.ma.masked_array(bias, mask)
+            # mask with thresholds only after taking the diff
+            refOutput = self._mask_with_thresholds(refOutput)
 
-        # mask with maskValue only after taking the diff
-        if self.maskValue is not None:
-            mask = np.logical_or(modelOutput.mask,
-                                 modelOutput == self.maskValue)
-            modelOutput = np.ma.masked_array(modelOutput, mask)
+        modelOutput = self._mask_with_thresholds(modelOutput)
 
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
@@ -574,17 +575,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             bias = modelOutput - refOutput
 
             # mask with maskValue only after taking the diff
-            if self.maskValue is not None:
-                mask = np.logical_or(refOutput.mask,
-                                     refOutput == self.maskValue)
-                refOutput = np.ma.masked_array(refOutput, mask)
-                bias = np.ma.masked_array(bias, mask)
+            refOutput = self._mask_with_thresholds(refOutput)
 
-        # mask with maskValue only after taking the diff
-        if self.maskValue is not None:
-            mask = np.logical_or(modelOutput.mask,
-                                 modelOutput == self.maskValue)
-            modelOutput = np.ma.masked_array(modelOutput, mask)
+        modelOutput = self._mask_with_thresholds(modelOutput)
 
         comparisonDescriptor = get_comparison_descriptor(
             config, comparisonGridName)
@@ -654,6 +647,18 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
+
+    def _mask_with_thresholds(self, field):
+        if self.maskMinThreshold is not None or \
+                self.maskMaxThreshold is not None:
+            mask = field.mask
+            if self.maskMinThreshold is not None:
+                mask = np.logical_or(mask, field <= self.maskMinThreshold)
+            if self.maskMaxThreshold is not None:
+                mask = np.logical_or(mask, field >= self.maskMaxThreshold)
+            field = np.ma.masked_array(field, mask)
+
+        return field
 
 
 def _nans_to_numpy_mask(field):

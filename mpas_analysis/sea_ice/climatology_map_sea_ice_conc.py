@@ -112,8 +112,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         else:
             self._add_ref_tasks(seasons, comparisonGridNames, hemisphere,
                                 hemisphereLong, remapClimatologySubtask,
-                                controlConfig, mpasFieldName,
-                                fieldName, iselValues)
+                                controlConfig, mpasFieldName)
 
     def _add_obs_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
@@ -121,6 +120,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         config = self.config
         obsFieldName = 'seaIceConc'
         sectionName = self.taskName
+
+        minConcentration = config.getfloat(self.taskName, 'minConcentration')
 
         observationPrefixes = config.getexpression(sectionName,
                                                    'observationPrefixes')
@@ -181,15 +182,17 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                         groupSubtitle=None,
                         groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName='Observations: SSM/I {}'.format(
-                            prefix))
+                            prefix),
+                        maskMinThreshold=minConcentration)
 
                     self.add_subtask(subtask)
 
     def _add_ref_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
-                       controlConfig, mpasFieldName, fieldName,
-                       iselValues):
+                       controlConfig, mpasFieldName):
 
+        minConcentration = self.config.getfloat(self.taskName,
+                                                'minConcentration')
         controlRunName = controlConfig.get('runs', 'mainRunName')
         galleryName = None
         refTitleLabel = 'Control: {}'.format(controlRunName)
@@ -224,7 +227,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                     galleryGroup=galleryGroup,
                     groupSubtitle=None,
                     groupLink='{}_conc'.format(hemisphere.lower()),
-                    galleryName=galleryName)
+                    galleryName=galleryName,
+                    maskMinThreshold=minConcentration)
 
                 self.add_subtask(subtask)
 
