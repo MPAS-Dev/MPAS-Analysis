@@ -503,8 +503,9 @@ def run_analysis(config, analyses):
                                            'logsSubdirectory')
 
     mainRunName = config.get('runs', 'mainRunName')
+    maxTitleLength = config.getint('plot', 'maxTitleLength')
 
-    if len(mainRunName) > 55:
+    if len(mainRunName) > maxTitleLength:
         print('Warning: The main run name is quite long and will be '
               'truncated in some plots: \n{}\n\n'.format(mainRunName))
 

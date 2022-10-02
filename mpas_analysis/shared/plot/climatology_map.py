@@ -55,7 +55,7 @@ def plot_polar_comparison(
         figsize=None,
         dpi=None,
         vertical=False,
-        maxTitleLength=60):
+        maxTitleLength=None):
     """
     Plots a data set around either the north or south pole.
 
@@ -116,9 +116,10 @@ def plot_polar_comparison(
         whether the subplots should be stacked vertically rather than
         horizontally
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
     """
     # Authors
     # -------
@@ -178,6 +179,9 @@ def plot_polar_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -266,7 +270,7 @@ def plot_global_comparison(
         dpi=None,
         lineWidth=1,
         lineColor='black',
-        maxTitleLength=60):
+        maxTitleLength=None):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -325,9 +329,10 @@ def plot_global_comparison(
     lineColor : str, optional
         the color of contour lines (if specified)
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
     """
     # Authors
     # -------
@@ -375,6 +380,10 @@ def plot_global_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
+
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
     matplotlib.rc('font', size=defaultFontSize)
@@ -454,7 +463,7 @@ def plot_projection_comparison(
         cartopyGridFontSize=None,
         defaultFontSize=None,
         vertical=False,
-        maxTitleLength=55):
+        maxTitleLength=None):
     """
     Plots a data set as a projection map.
 
@@ -515,9 +524,10 @@ def plot_projection_comparison(
         available via
         :py:func:`mpas_analysis.shared.projection.get_cartopy_projection()`.
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
     """
     # Authors
     # -------
@@ -602,6 +612,9 @@ def plot_projection_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
