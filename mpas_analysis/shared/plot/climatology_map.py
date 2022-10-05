@@ -270,7 +270,8 @@ def plot_global_comparison(
         dpi=None,
         lineWidth=1,
         lineColor='black',
-        maxTitleLength=None):
+        maxTitleLength=None,
+        extend='both'):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -333,6 +334,10 @@ def plot_global_comparison(
         the maximum number of characters in the title, beyond which it is
         truncated with a trailing ellipsis.  The default is from the
         ``maxTitleLength`` config option.
+
+    extend : {'neither', 'both', 'min', 'max'}, optional
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
     # Authors
     # -------
@@ -361,7 +366,7 @@ def plot_global_comparison(
                                        zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(Lons, Lats, array, cmap=colormap,
-                                     norm=norm, levels=levels, extend='both',
+                                     norm=norm, levels=levels, extend=extend,
                                      transform=projection, zorder=1)
 
         _add_land_lakes_coastline(ax)
@@ -463,7 +468,8 @@ def plot_projection_comparison(
         cartopyGridFontSize=None,
         defaultFontSize=None,
         vertical=False,
-        maxTitleLength=None):
+        maxTitleLength=None,
+        extend='both'):
     """
     Plots a data set as a projection map.
 
@@ -528,6 +534,10 @@ def plot_projection_comparison(
         the maximum number of characters in the title, beyond which it is
         truncated with a trailing ellipsis.  The default is from the
         ``maxTitleLength`` config option.
+
+    extend : {'neither', 'both', 'min', 'max'}, optional
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
     # Authors
     # -------
@@ -580,7 +590,7 @@ def plot_projection_comparison(
                                        rasterized=True)
         else:
             plotHandle = ax.contourf(xCenter, yCenter, array, cmap=colormap,
-                                     norm=norm, levels=levels, extend='both')
+                                     norm=norm, levels=levels, extend=extend)
 
         if useCartopyCoastline:
             _add_land_lakes_coastline(ax, ice_shelves=False)

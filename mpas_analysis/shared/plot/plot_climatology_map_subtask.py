@@ -102,6 +102,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
     maskMaxThreshold : float or None
         a value above which the field is mask out in plots
+
+    extend : {'neither', 'both', 'min', 'max'}
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
 
     def __init__(self, parentTask, season, comparisonGridName,
@@ -214,13 +218,14 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.filePrefix = None
         self.maskMinThreshold = None
         self.maskMaxThreshold = None
+        self.extend = 'both'
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
                       configSectionName=None, maskMinThreshold=None,
-                      maskMaxThreshold=None):
+                      maskMaxThreshold=None, extend=None):
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -274,6 +279,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         maskMaxThreshold : float or None, optional
             a value above which the field is mask out in plots
+
+        extend : {'neither', 'both', 'min', 'max'}, optional
+            Determines the ``contourf``-coloring of values that are outside the
+            range of the levels provided if using an indexed colormap.
         """
 
         self.outFileLabel = outFileLabel
@@ -312,6 +321,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         else:
             self.fieldNameInTitle = f'{fieldNameInTitle} at z={depth} m'
             self.thumbnailDescription = f'{season} z={depth} m'
+
+        if extend is not None:
+            self.extend = extend
 
     def setup_and_check(self):
         """
@@ -529,7 +541,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                                diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel,
                                titleFontSize=titleFontSize,
-                               defaultFontSize=defaultFontSize)
+                               defaultFontSize=defaultFontSize,
+                               extend=self.extend)
 
         caption = f'{season} {self.imageCaption}'
         write_image_xml(
@@ -631,7 +644,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             titleFontSize=titleFontSize,
             cartopyGridFontSize=cartopyGridFontSize,
             defaultFontSize=defaultFontSize,
-            vertical=vertical)
+            vertical=vertical,
+            extend=self.extend)
 
         upperGridName = capwords(comparisonGridName.replace('_', ' '))
         caption = f'{season} {self.imageCaption}'

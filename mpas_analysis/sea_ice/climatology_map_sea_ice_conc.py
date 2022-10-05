@@ -183,7 +183,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                         groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName='Observations: SSM/I {}'.format(
                             prefix),
-                        maskMinThreshold=minConcentration)
+                        maskMinThreshold=minConcentration,
+                        extend='neither')
 
                     self.add_subtask(subtask)
 
@@ -228,7 +229,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                     groupSubtitle=None,
                     groupLink='{}_conc'.format(hemisphere.lower()),
                     galleryName=galleryName,
-                    maskMinThreshold=minConcentration)
+                    maskMinThreshold=minConcentration,
+                    extend='neither')
 
                 self.add_subtask(subtask)
 
