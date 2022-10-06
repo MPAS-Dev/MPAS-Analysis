@@ -126,13 +126,16 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         if makeTables:
             #for regionGroup in regionGroups:
+            fieldListTable = config.getExpression(sectionName, 'fieldList')
+            fieldListTable.append('iceFraction')
+            fieldsTable = [field for field in fields if field['prefix'] in fieldListTable]
             for season in seasons:
                 tableSubtask = WavesTableSubtask(
                     parentTask=self,
                     mpasClimatologyTask=mpasClimatologyTask,
                     controlConfig=controlConfig,
                     regionMasksTask=regionMasksTask,
-                    fields=fields,
+                    fields=fieldsTable,
                     season=season) 
                 self.add_subtask(tableSubtask)
 
@@ -490,6 +493,8 @@ class WavesTableSubtask(AnalysisTask):
                 ds = xr.Dataset()
                 for field in self.fields:
                     mpasFieldName = field['mpas']
+                    if mpasFieldName == 'timeMonthly_avg_iceFraction':
+                        continue
                     var = dsIn[mpasFieldName]
                     if 'Time' in var.dims:
                         var = var.isel(Time=0)
@@ -567,6 +572,9 @@ class WavesTableSubtask(AnalysisTask):
 
         for field in self.fields:
 
+            if  field['mpas'] == 'timeMonthly_avg_iceFraction':
+              continue
+
             tableFileName = '{}/wavesTable_{}_{}.csv'.format(outDirectory,
                                                              field['prefix'],
                                                              self.season)
@@ -639,9 +647,16 @@ class WavesTableSubtask(AnalysisTask):
                 if field['mpas'] == 'timeMonthly_avg_peakWaveFrequency':
                     maskedVar = (cellMasks*(1.0/ds[field['prefix']])).compute()
                     varRange=(0.0,15.0)
+                    bins = 15
+
                 else: 
                     maskedVar = (cellMasks*ds[field['prefix']]).compute()
-                    varRange=(0.0,10.0)
+                    varRange=(0.0,8.0)
+                    bins = 16
+
+                if field['mpas'] == 'timeMonthly_avg_iceFraction':
+                    varRange=(0.0,1.0)
+                    bins = 8
 
             for index, regionName in enumerate(regionNames):
                 print('   '+regionName)
@@ -649,7 +664,7 @@ class WavesTableSubtask(AnalysisTask):
                 fig = plt.figure()
                 ax = fig.add_subplot(1,1,1)        
                 values = maskedVar.isel(nRegions=index).values.ravel()
-                ax.hist(values,range=varRange,bins=20,density=True)
+                ax.hist(values,range=varRange,bins=bins,density=True)
                 ax.set_title(regionName+' mean:'+'{:4.2f}'.format(np.nanmean(values)))
                 ax.set_ylabel('Probability density')
                 ax.set_xlabel(field['units'])
