@@ -16,7 +16,7 @@ import csv
 import xarray as xr
 import dask
 from multiprocessing.pool import ThreadPool
-from pyremap import ProjectionGridDescriptor
+from pyremap import LatLonGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -35,6 +35,8 @@ from mpas_analysis.shared.constants import constants
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
+import datetime
 
 
 class ClimatologyMapWaves(AnalysisTask):  # {{{
@@ -73,15 +75,17 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
         fields = [{'prefix': 'significantWaveHeight',
                    'mpas': 'timeMonthly_avg_significantWaveHeight',
                    'units': r'm',
-                   'titleName': 'Significant Wave Height'},
+                   'titleName': 'Significant Wave Height',
+                   'era5' : 'swh'},
                   {'prefix': 'peakWaveFrequency',
                    'mpas': 'timeMonthly_avg_peakWaveFrequency',
                    'units': r's',
-                   'titleName': 'Peak Wave Period'},
-                  #{'prefix': 'peakWavePeriod',
-                  # 'mpas': 'timeMonthly_avg_peakWavePeriod',
-                  # 'units': r's',
-                  # 'titleName': 'Peak Wave Period'},
+                   'titleName': 'Peak Wave Period',
+                   'era5' : 'pp1d'},
+                  {'prefix': 'iceFraction',
+                   'mpas': 'timeMonthly_avg_iceFraction',
+                   'units': r'',
+                   'titleName': 'Ice Fraction'},
                    ]
 
         # call the constructor from the base class (AnalysisTask)
@@ -109,9 +113,13 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                              'of comparison grids'.format(sectionName))
 
         fieldList = config.getExpression(sectionName, 'fieldList')
-        fields = [field for field in fields if field['prefix'] in fieldList]
+        fieldsRequested = [field for field in fields if field['prefix'] in fieldList]
 
-        variableList = [field['mpas'] for field in fields] 
+        variableListMpas = [field['mpas'] for field in fieldsRequested] 
+        variableListObs  = [field['era5'] for field in fieldsRequested] 
+
+        climStartYear = config.getint(sectionName, 'obsStartYear')
+        climEndYear = config.getint(sectionName, 'obsEndYear')
 
         makeTables = config.getboolean(sectionName, 'makeTables')
         
@@ -136,29 +144,45 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName='wave',
-            variableList=variableList,
+            variableList=variableListMpas,
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=None)
 
+        if controlConfig is None:
+            observationsDirectory = build_obs_path(
+                config, 'ocean', '{}Subdirectory'.format('wave'))
+            obsFileName = "{}/ERA5_1950_1978_new.nc".format(observationsDirectory)
 
-        for field in fields:
+            remapObservationsSubtask = RemapObservedWaveClimatology(
+                parentTask=self, seasons=seasons, fileName=obsFileName,
+                outFilePrefix='wave',
+                comparisonGridNames=comparisonGridNames,
+                variableList=variableListObs)
+
+        else:
+            remapObservationsSubtask = None
+
+
+
+        for field in fieldsRequested:
 
             fieldPrefix = field['prefix']
-            refFieldName = field['mpas']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
             configSectionName = '{}{}'.format(self.taskName, upperFieldPrefix)
 
             if controlConfig is None:
 
-                galleryName = field['titleName']
-                refTitleLabel = None 
+                refTitleLabel = "Observations (ERA 5) {:04d}-{:04d}".format(
+                    climStartYear, climEndYear)
+                refFieldName = field['era5']
                 diffTitleLabel = None 
 
             else:
                 controlRunName = controlConfig.get('runs', 'mainRunName')
                 refTitleLabel = f'{field["titleName"]} (Control: {controlRunName})'
                 diffTitleLabel = 'Main - Control'
+                refFieldName = field['mpas']
 
             outFileLabel = '{}Wave'.format(fieldPrefix)
 
@@ -175,6 +199,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                         season=season,
                         comparisonGridName=comparisonGridName,
                         remapMpasClimatologySubtask=remapClimatologySubtask,
+                        remapObsClimatologySubtask=remapObservationsSubtask,
                         controlConfig=controlConfig,
                         subtaskName=subtaskName)
 
@@ -236,6 +261,123 @@ class RemapMpasWavesClimatology(RemapMpasClimatologySubtask): # {{{
     # }}}
 
 
+class RemapObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
+    """
+    A subtask for reading and remapping waves observations
+    """
+    # Authors
+    # -------
+    # Steven Brus, Xylar Asay-Davis
+    def __init__(self, parentTask, seasons, fileName, outFilePrefix,
+                 variableList,
+                 comparisonGridNames=['latlon'],
+                 subtaskName='remapObservations'):
+        # {{{
+        '''
+        Construct one analysis subtask for each plot (i.e. each season and
+        comparison grid) and a subtask for computing climatologies.
+
+        Parameters
+        ----------
+        parentTask :  ``AnalysisTask``
+            The parent (master) task for this subtask
+
+        seasons : list of str
+           A list of seasons (keys in ``constants.monthDictionary``) over
+           which the climatology should be computed.
+
+        fileName : str
+            The name of the observation file
+
+        outFilePrefix : str
+            The prefix in front of output files and mapping files, typically
+            the name of the field being remapped
+
+        variableList : list
+            List of observational variables to remap
+
+        comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'},
+            optional
+            The name(s) of the comparison grid to use for remapping.
+
+        subtaskName : str, optional
+            The name of the subtask
+        '''
+        # Authors
+        # -------
+        # Steven Brus
+
+        self.variableList = variableList
+
+        # call the constructor from the base class (AnalysisTask)
+        super().__init__(parentTask, seasons, fileName, outFilePrefix,
+                         comparisonGridNames=['latlon'],
+                         subtaskName='remapObservations')
+        # }}}
+
+    def get_observation_descriptor(self, fileName):  # {{{
+        '''
+        get a MeshDescriptor for the observation grid
+
+        Parameters
+        ----------
+        fileName : str
+            observation file name describing the source grid
+
+        Returns
+        -------
+        obsDescriptor : ``MeshDescriptor``
+            The descriptor for the observation grid
+        '''
+        # Authors
+        # -------
+        # Steven Brus 
+
+        # create a descriptor of the observation grid using the lat/lon
+        # coordinates
+        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
+                                                  latVarName='lat',
+                                                  lonVarName='lon')
+        return obsDescriptor  # }}}
+
+    def build_observational_dataset(self, fileName):  # {{{
+        '''
+        read in the data sets for observations, and possibly rename some
+        variables and dimensions
+
+        Parameters
+        ----------
+        fileName : str
+            observation file name
+
+        Returns
+        -------
+        dsObs : ``xarray.Dataset``
+            The observational dataset
+        '''
+        # Authors
+        # -------
+        # Steven Brus
+
+        sectionName = self.taskName
+        climStartYear = self.config.getint(sectionName, 'obsStartYear')
+        climEndYear = self.config.getint(sectionName, 'obsEndYear')
+        timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
+        timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
+
+        dsObs = xr.open_dataset(fileName, decode_times=False)
+        units, reference_date = dsObs.time.attrs['units'].split('since')
+        dsObs['time'] = pd.date_range(start=reference_date, periods=dsObs.sizes['time'], freq='MS')
+        dsObs = dsObs.rename({'time': 'Time'})
+        dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
+        dsObs.coords['month'] = dsObs['Time.month']
+        dsObs.coords['year'] = dsObs['Time.year']
+
+        dsObs = dsObs[self.variableList]
+
+        return dsObs  # }}}
+
+    # }}}
 
 
 class WavesTableSubtask(AnalysisTask):
