@@ -522,32 +522,23 @@ def plot_projection_comparison(
     # Authors
     # -------
     # Xylar Asay-Davis
-    def add_arrow_to_line2D(ax, path, arrow_spacing=8e5,arrow_width=1.5e4):
+    def add_arrow_to_line_2d(ax, path, arrow_spacing=8e5, arrow_width=1.5e4):
         """
         https://stackoverflow.com/a/27637925/7728169
         Add arrows to a matplotlib.lines.Line2D at selected locations.
-        Parameters:
-	-----------
-	axes:
-	line: list of 1 Line2D object as returned by plot command
-	arrow_spacing: distance in m between arrows
-
-	Returns:
-	--------
-	arrows: list of arrows
-	"""
+        """
         v = path.vertices
         x = v[:, 0]
         y = v[:, 1]
         arrows = []
         s = np.cumsum(np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2))
-        indices = np.searchsorted(s, arrow_spacing*np.arange(1,
-            int(s[-1]/arrow_spacing)))
+        indices = np.searchsorted(
+            s, arrow_spacing*np.arange(1, int(s[-1]/arrow_spacing)))
         for n in indices:
             dx = np.mean(x[n-2:n]) - x[n]
             dy = np.mean(y[n-2:n]) - y[n]
             p = mpatches.FancyArrow(
-                x[n], y[n], dx, dy, length_includes_head=False, 
+                x[n], y[n], dx, dy, length_includes_head=False,
                 width=arrow_width, facecolor='k')
             ax.add_patch(p)
             arrows.append(p)
@@ -599,7 +590,7 @@ def plot_projection_comparison(
             if arrows is not None:
                 for collection in cs.collections:
                     for path in collection.get_paths():
-                        add_arrow_to_line2D(ax, path)
+                        add_arrow_to_line_2d(ax, path)
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)

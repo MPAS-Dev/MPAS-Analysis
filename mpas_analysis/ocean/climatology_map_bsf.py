@@ -8,7 +8,6 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-from dataclasses import field
 import xarray as xr
 import numpy as np
 import scipy.sparse
@@ -20,9 +19,10 @@ from mpas_analysis.ocean.plot_climatology_map_subtask import \
     PlotClimatologyMapSubtask
 from mpas_analysis.ocean.utility import compute_zmid
 
+
 class ClimatologyMapBSF(AnalysisTask):
     """
-    An analysis task for computing and plotting maps of the Barotropic / 
+    An analysis task for computing and plotting maps of the Barotropic /
     Subpolar Gyre streamfunction (BSF / SPGSF)
 
     Attributes
@@ -80,12 +80,12 @@ class ClimatologyMapBSF(AnalysisTask):
         for min_depth, max_depth in depth_ranges:
             depth_range_string = \
                 f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
-            if np.abs(max_depth) < 6000. :
-                fname_title=f'Streamfunction over {depth_range_string}'
-                fname_clim=f'{field_name}_{depth_range_string}'
+            if np.abs(max_depth) < 6000.:
+                fname_title = f'Streamfunction over {depth_range_string}'
+                fname_clim = f'{field_name}_{depth_range_string}'
             else:
-                fname_title=f'Barotropic Streamfunction'
-                fname_clim=field_name
+                fname_title = f'Barotropic Streamfunction'
+                fname_clim = field_name
 
             remap_climatology_subtask = RemapMpasBSFClimatology(
                 mpas_climatology_task=mpas_climatology_task,
@@ -142,7 +142,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
     A subtask for computing climatologies of the barotropic /subpolar gyre
     streamfunction from climatologies of normal velocity and layer thickness
     """
-    def __init__(self, mpas_climatology_task,parent_task, 
+    def __init__(self, mpas_climatology_task, parent_task,
                  climatology_name, variable_list, seasons,
                  comparison_grid_names, min_depth, max_depth):
 
@@ -191,7 +191,6 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         self.min_depth = min_depth
         self.max_depth = max_depth
-
 
     def customize_masked_climatology(self, climatology, season):
         """
@@ -245,7 +244,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         cell0 = cells_on_edge.isel(nEdges=inner_edges, TWO=0)
         cell1 = cells_on_edge.isel(nEdges=inner_edges, TWO=1)
         n_vert_levels = ds.sizes['nVertLevels']
-        
+
         vert_index = xr.DataArray.from_dict(
             {'dims': ('nVertLevels',), 'data': np.arange(n_vert_levels)})
         z_mid = compute_zmid(ds_mesh.bottomDepth, ds_mesh.maxLevelCell-1,
@@ -314,10 +313,9 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         indices[1, 2*n_inner_edges + ind] = boundary_vertices
         data[2*n_inner_edges + ind] = 1.
 
-        
         rhs = np.zeros(n_inner_edges+n_boundary_vertices, dtype=float)
 
-           # convert to Sv
+        # convert to Sv
         ind = np.arange(n_inner_edges)
         rhs[ind] = 1e-6*transport
 
@@ -330,7 +328,6 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         solution = scipy.sparse.linalg.lsqr(matrix, rhs)
         bsf_vertex = xr.DataArray(-solution[0],
-                                  dims=( 'nVertices'))
-        
-        return bsf_vertex
+                                  dims=('nVertices',))
 
+        return bsf_vertex
