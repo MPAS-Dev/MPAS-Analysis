@@ -717,7 +717,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
             dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+                [obsDict['latVar'], obsDict['lonVar']])
+            if 'nCells' in dsRegionMask.data_vars:
+                dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
@@ -747,7 +749,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
             ds = ds.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+                [obsDict['latVar'], obsDict['lonVar']])
+            if 'nCells' in dsRegionMask.data_vars:
+               ds = ds.drop_vars(['nCells'])
 
             ds = ds.where(cellMask, drop=True)
 
