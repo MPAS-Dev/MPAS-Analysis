@@ -103,8 +103,6 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask</a></li>
-<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html">mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</a></li>
 </ul>
@@ -199,6 +197,8 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#projection">Projection</a><ul>
@@ -447,20 +447,6 @@ the documentation.</p>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask" title="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComputeAnomalySubtask</span></code></a>(parentTask, ...[, ...])</p></td>
 <td><p>A subtask for computing anomalies of moving averages and writing them out.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="autosummary longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code></a>(parentTask, ...[, ...])</p></td>
-<td><p>An analysis task for plotting 2D model fields against observations.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask.set_plot_info</span></code></a>(...)</p></td>
-<td><p>Store attributes related to plots, plot file names and HTML output.</p></td>
 </tr>
 </tbody>
 </table>
@@ -791,6 +777,12 @@ the documentation.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html#mpas_analysis.shared.plot.add_inset" title="mpas_analysis.shared.plot.add_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inset</span></code></a>(fig, fc[, latlonbuffer, ...])</p></td>
 <td><p>Plots an inset map showing the location of a transect or polygon.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code></a>(parentTask, ...[, ...])</p></td>
+<td><p>An analysis task for plotting 2D model fields against observations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask.set_plot_info</span></code></a>(...)</p></td>
+<td><p>Store attributes related to plots, plot file names and HTML output.</p></td>
 </tr>
 </tbody>
 </table>

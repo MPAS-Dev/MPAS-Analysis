@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.plot.ticks.plot_xtick_format &mdash; MPAS-Analysis latest documentation</title>
+  <title>mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="mpas_analysis.shared.plot.add_inset" href="mpas_analysis.shared.plot.add_inset.html" />
-    <link rel="prev" title="mpas_analysis.shared.plot.colormap.setup_colormap" href="mpas_analysis.shared.plot.colormap.setup_colormap.html" /> 
+    <link rel="next" title="mpas_analysis.shared.projection.get_pyproj_projection" href="mpas_analysis.shared.projection.get_pyproj_projection.html" />
+    <link rel="prev" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask" href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -71,10 +71,10 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_vertical_section_comparison.html">mpas_analysis.shared.plot.plot_vertical_section_comparison</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.plot_vertical_section.html">mpas_analysis.shared.plot.plot_vertical_section</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
@@ -119,9 +119,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>mpas_analysis.shared.plot.ticks.plot_xtick_format</li>
+      <li>mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -129,22 +129,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mpas-analysis-shared-plot-ticks-plot-xtick-format">
-<h1>mpas_analysis.shared.plot.ticks.plot_xtick_format<a class="headerlink" href="#mpas-analysis-shared-plot-ticks-plot-xtick-format" title="Permalink to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="mpas_analysis.shared.plot.ticks.plot_xtick_format">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.plot.ticks.</span></span><span class="sig-name descname"><span class="pre">plot_xtick_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minDays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxDays</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxXTicks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yearStride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/plot/ticks.html#plot_xtick_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.plot.ticks.plot_xtick_format" title="Permalink to this definition">¶</a></dt>
-<dd><p>Formats tick labels and positions along the x-axis for time series
-/ index plots</p>
+  <section id="mpas-analysis-shared-plot-plotclimatologymapsubtask-set-plot-info">
+<h1>mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info<a class="headerlink" href="#mpas-analysis-shared-plot-plotclimatologymapsubtask-set-plot-info" title="Permalink to this heading">¶</a></h1>
+<dl class="py method">
+<dt class="sig sig-object py" id="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info">
+<span class="sig-prename descclassname"><span class="pre">PlotClimatologyMapSubtask.</span></span><span class="sig-name descname"><span class="pre">set_plot_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outFileLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fieldNameInTitle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasFieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refFieldName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refTitleLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unitsLabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imageCaption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galleryGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupSubtitle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groupLink</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">galleryName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffTitleLabel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Model</span> <span class="pre">-</span> <span class="pre">Observations'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configSectionName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maskMinThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maskMaxThreshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/plot/plot_climatology_map_subtask.html#PlotClimatologyMapSubtask.set_plot_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store attributes related to plots, plot file names and HTML output.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
-<li><p><strong>minDays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – start time for labels</p></li>
-<li><p><strong>maxDays</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a>) – end time for labels</p></li>
-<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – the maximum number of tick marks to display, used to sub-sample ticks
-if there are too many</p></li>
-<li><p><strong>yearStride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – the number of years to skip over between ticks</p></li>
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>refFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The name of the variable to use from the observations or reference
+file</p></li>
+<li><p><strong>refTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the title of the observations or reference subplot</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
+screen</p></li>
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – the subtitle of the group in which this plot belongs (or blank
+if none)</p></li>
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
+<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the name of the section where the color map and range is defined,
+default is the name of the task</p></li>
+<li><p><strong>maskMinThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value below which the field is mask out in plots</p></li>
+<li><p><strong>maskMaxThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.10)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value above which the field is mask out in plots</p></li>
+<li><p><strong>extend</strong> (<em>{'neither'</em><em>, </em><em>'both'</em><em>, </em><em>'min'</em><em>, </em><em>'max'}</em><em>, </em><em>optional</em>) – Determines the <code class="docutils literal notranslate"><span class="pre">contourf</span></code>-coloring of values that are outside the
+range of the levels provided if using an indexed colormap.</p></li>
 </ul>
 </dd>
 </dl>
@@ -156,8 +170,8 @@ if there are too many</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mpas_analysis.shared.plot.colormap.setup_colormap.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.plot.colormap.setup_colormap" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mpas_analysis.shared.plot.add_inset.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.plot.add_inset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.shared.projection.get_pyproj_projection.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.projection.get_pyproj_projection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

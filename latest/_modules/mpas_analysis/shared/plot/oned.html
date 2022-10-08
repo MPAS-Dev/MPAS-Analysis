@@ -130,7 +130,7 @@
             <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">invertYAxis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span>
+            <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">axisFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -184,9 +184,10 @@
 <span class="sd">    invertYAxis : logical, optional</span>
 <span class="sd">        if True, invert Y axis</span>
 
-<span class="sd">    maxTitleLength : int, optional</span>
-<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
-<span class="sd">        they are truncated with a trailing ellipsis</span>
+<span class="sd">    maxTitleLength : int or None, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis.  The default is from the</span>
+<span class="sd">        ``maxTitleLength`` config option.</span>
 
 <span class="sd">    titleFontSize : int, optional</span>
 <span class="sd">        size of the title font</span>
@@ -200,6 +201,9 @@
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Mark Petersen, Milena Veneziani, Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="n">maxTitleLength</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>

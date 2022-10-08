@@ -496,7 +496,7 @@ and one “season”: the full year, <code class="docutils literal notranslate">
 have the same <code class="docutils literal notranslate"><span class="pre">taskName</span></code> and <code class="docutils literal notranslate"><span class="pre">subtaskName</span></code>, MPAS-Analysis will only run
 the last one and the task manager may become confused.</p>
 <p>Then, we create a <code class="docutils literal notranslate"><span class="pre">subtask</span></code> object that is an instance of the
-<a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code></a>
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code>
 class.  This class is shared between several ocean analysis tasks for plotting
 climatologies as horizontal maps.  It can plot just MPAS output, remapped to
 one or more comparison grids and averaged over one or more seasons.  It can
@@ -509,8 +509,8 @@ there are no observations available for comparison
 options describing the other analysis run.  If not, <code class="docutils literal notranslate"><span class="pre">control_config</span></code> is
 <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
 <p>Next, We call the
-<a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-meth docutils literal notranslate"><span class="pre">set_plot_info()</span></code></a>
-method of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html#mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code></a>
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">set_plot_info()</span></code>
+method of <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code>
 to provide things like the title and units for the plot and the field to plot.
 We also provide information needed for the final analysis web page such as the
 name of the gallery group.  (We do not provide a gallery name within the
