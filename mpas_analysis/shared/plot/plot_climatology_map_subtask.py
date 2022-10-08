@@ -8,17 +8,11 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
-"""
-An analysis subtasks for plotting comparison of 2D model fields against
-observations.
-"""
-# Authors
-# -------
-# Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
 import xarray as xr
 import numpy as np
-import string
+from string import capwords
+
 from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import plot_global_comparison, \
@@ -30,8 +24,6 @@ from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
-
-from mpas_analysis.ocean.utility import nans_to_numpy_mask
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):
@@ -47,15 +39,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     comparisonGridName : str
         The name of the comparison grid to plot.
 
-    remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+    remapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
         The subtask for remapping the MPAS climatology that this subtask
         will plot
 
-    remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``
+    remapObsClimatologySubtask : mpas_analysis.shared.climatology.RemapObservedClimatologySubtask
         The subtask for remapping the observational climatology that this
         subtask will plot
 
-    secondRemapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+    secondRemapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
         A second subtask for remapping another MPAS climatology to plot
         in the second panel and compare with in the third panel
 
@@ -88,26 +80,33 @@ class PlotClimatologyMapSubtask(AnalysisTask):
     galleryGroup : str
         the name of the group of galleries in which this plot belongs
 
-    groupSubtitle : str
+    groupSubtitle : str or None
         the subtitle of the group in which this plot belongs (or blank
         if none)
 
     groupLink : str
         a short name (with no spaces) for the link to the gallery group
 
-    galleryName : str
+    galleryName : str or None
         the name of the gallery in which this plot belongs
 
     depth : {None, float, 'top', 'bot'}
-        Depth at which to perform the comparison, 'top' for the sea surface
-        'bot' for the sea floor
+        Depth at which to perform the comparison, 'top' for the surface
+        'bot' for the base
 
     configSectionName : str
         the name of the section where the color map and range is defined
+
+    maskMinThreshold : float or None
+        a value below which the field is mask out in plots
+
+    maskMaxThreshold : float or None
+        a value above which the field is mask out in plots
+
+    extend : {'neither', 'both', 'min', 'max'}
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
-    # Authors
-    # -------
-    # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
     def __init__(self, parentTask, season, comparisonGridName,
                  remapMpasClimatologySubtask, remapObsClimatologySubtask=None,
@@ -119,7 +118,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         Parameters
         ----------
-        parentTask :  ``AnalysisTask``
+        parentTask :  mpas_analysis.shared.AnalysisTask
             The parent (master) task for this subtask
 
         season : str
@@ -129,19 +128,19 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         comparisonGridName : str
             The name of the comparison grid to plot.
 
-        remapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``
+        remapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask
             The subtask for remapping the MPAS climatology that this subtask
             will plot
 
-        remapObsClimatologySubtask : ``RemapObservedClimatologySubtask``, optional
+        remapObsClimatologySubtask : mpas_analysis.shared.climatology.RemapObservedClimatologySubtask, optional
             The subtask for remapping the observational climatology that this
             subtask will plot
 
-        secondRemapMpasClimatologySubtask : ``RemapMpasClimatologySubtask``, optional
+        secondRemapMpasClimatologySubtask : mpas_analysis.shared.climatology.RemapMpasClimatologySubtask, optional
             A second subtask for remapping another MPAS climatology to plot
             in the second panel and compare with in the third panel
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
 
         depth : {float, 'top', 'bot'}, optional
@@ -160,9 +159,6 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             ``plot<season>_<comparisonGridName>`` with a suffix indicating the
             depth being sliced (if any)
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         self.season = season
         self.depth = depth
@@ -177,12 +173,12 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         if depth is None:
             self.depthSuffix = ''
         else:
-            self.depthSuffix = 'depth_{}'.format(depth)
+            self.depthSuffix = f'depth_{depth}'
 
         if subtaskName is None:
-            subtaskName = 'plot{}_{}'.format(season, comparisonGridName)
+            subtaskName = f'plot{season}_{comparisonGridName}'
             if depth is not None:
-                subtaskName = '{}_{}'.format(subtaskName, self.depthSuffix)
+                subtaskName = f'{subtaskName}_{self.depthSuffix}'
 
         config = parentTask.config
         taskName = parentTask.taskName
@@ -191,7 +187,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         # call the constructor from the base class (AnalysisTask)
         super(PlotClimatologyMapSubtask, self).__init__(
             config=config, taskName=taskName, subtaskName=subtaskName,
-            componentName='ocean', tags=tags)
+            componentName=parentTask.componentName, tags=tags)
 
         # this task should not run until the remapping subtasks are done, since
         # it relies on data from those subtasks
@@ -201,11 +197,35 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         if secondRemapMpasClimatologySubtask is not None:
             self.run_after(secondRemapMpasClimatologySubtask)
 
+        self.outFileLabel = None
+        self.fieldNameInTitle = None
+        self.mpasFieldName = None
+        self.refFieldName = None
+        self.refTitleLabel = None
+        self.diffTitleLabel = None
+        self.unitsLabel = None
+        self.imageCaption = None
+        self.galleryGroup = None
+        self.groupSubtitle = None
+        self.groupLink = None
+        self.galleryName = None
+        self.configSectionName = None
+        self.thumbnailDescription = None
+        self.startYear = None
+        self.endYear = None
+        self.startDate = None
+        self.endDate = None
+        self.filePrefix = None
+        self.maskMinThreshold = None
+        self.maskMaxThreshold = None
+        self.extend = 'both'
+
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
-                      configSectionName=None):
+                      configSectionName=None, maskMinThreshold=None,
+                      maskMaxThreshold=None, extend=None):
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -237,26 +257,33 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         galleryGroup : str
             the name of the group of galleries in which this plot belongs
 
-        groupSubtitle : str
+        groupSubtitle : str or None
             the subtitle of the group in which this plot belongs (or blank
             if none)
 
         groupLink : str
             a short name (with no spaces) for the link to the gallery group
 
-        galleryName : str
+        galleryName : str or None
             the name of the gallery in which this plot belongs
 
         diffTitleLabel : str, optional
             the title of the difference subplot
 
-        configSectionName : str, optional
+        configSectionName : str or None, optional
             the name of the section where the color map and range is defined,
             default is the name of the task
+
+        maskMinThreshold : float or None, optional
+            a value below which the field is mask out in plots
+
+        maskMaxThreshold : float or None, optional
+            a value above which the field is mask out in plots
+
+        extend : {'neither', 'both', 'min', 'max'}, optional
+            Determines the ``contourf``-coloring of values that are outside the
+            range of the levels provided if using an indexed colormap.
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         self.outFileLabel = outFileLabel
         self.fieldNameInTitle = fieldNameInTitle
@@ -272,6 +299,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.groupSubtitle = groupSubtitle
         self.groupLink = groupLink
         self.galleryName = galleryName
+        self.maskMinThreshold = maskMinThreshold
+        self.maskMaxThreshold = maskMaxThreshold
 
         if configSectionName is None:
             self.configSectionName = self.taskName
@@ -284,23 +313,22 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             self.fieldNameInTitle = fieldNameInTitle
             self.thumbnailDescription = season
         elif depth == 'top':
-            self.fieldNameInTitle = 'Sea Surface {}'.format(fieldNameInTitle)
-            self.thumbnailDescription = '{} surface'.format(season)
+            self.fieldNameInTitle = f'Sea Surface {fieldNameInTitle}'
+            self.thumbnailDescription = f'{season} surface'
         elif depth == 'bot':
-            self.fieldNameInTitle = 'Sea Floor {}'.format(fieldNameInTitle)
-            self.thumbnailDescription = '{} floor'.format(season)
+            self.fieldNameInTitle = f'Sea Floor {fieldNameInTitle}'
+            self.thumbnailDescription = f'{season} floor'
         else:
-            self.fieldNameInTitle = '{} at z={} m'.format(fieldNameInTitle,
-                                                          depth)
-            self.thumbnailDescription = '{} z={} m'.format(season, depth)
+            self.fieldNameInTitle = f'{fieldNameInTitle} at z={depth} m'
+            self.thumbnailDescription = f'{season} z={depth} m'
+
+        if extend is not None:
+            self.extend = extend
 
     def setup_and_check(self):
         """
         Perform steps to set up the analysis and check for errors in the setup.
         """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
 
         # first, call setup_and_check from the base class (AnalysisTask),
         # which will perform some common setup, including storing:
@@ -325,29 +353,26 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         prefixPieces.append(mainRunName)
         if self.depth is not None:
             prefixPieces.append(self.depthSuffix)
-        years = 'years{:04d}-{:04d}'.format(self.startYear, self.endYear)
+        years = f'years{self.startYear:04d}-{self.endYear:04d}'
         prefixPieces.extend([self.season, years])
 
         self.filePrefix = '_'.join(prefixPieces)
 
-        self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
-                                                    self.filePrefix))
+        self.xmlFileNames.append(
+            f'{self.plotsDirectory}/{self.filePrefix}.xml')
 
     def run_task(self):
         """
         Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD
         observations or a control run
         """
-        # Authors
-        # -------
-        # Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani
 
         season = self.season
         depth = self.depth
         comparisonGridName = self.comparisonGridName
-        self.logger.info("\nPlotting 2-d maps of {} climatologies for {} on "
-                         "the {} grid...".format(self.fieldNameInTitle,
-                                                 season, comparisonGridName))
+        self.logger.info(
+            f"\nPlotting 2-d maps of {self.fieldNameInTitle} climatologies "
+            f"for {season} on the {comparisonGridName} grid...")
 
         # first read the model climatology
         remappedFileName = \
@@ -358,10 +383,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         if depth is not None:
             if str(depth) not in remappedModelClimatology.depthSlice.values:
-                raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created '
-                               'without depth {}. You will need to delete and '
-                               'regenerate the climatology'.format(depth))
+                raise KeyError(f'The climatology you are attempting to '
+                               f'perform depth slices of was originally '
+                               f'created without depth {depth}. You will need '
+                               f'to delete and regenerate the climatology')
 
             remappedModelClimatology = remappedModelClimatology.sel(
                 depthSlice=str(depth), drop=True)
@@ -394,8 +419,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                                                        'endYear')
             if controlStartYear != self.startYear or \
                     controlEndYear != self.endYear:
-                self.refTitleLabel = '{}\n(years {:04d}-{:04d})'.format(
-                    self.refTitleLabel, controlStartYear, controlEndYear)
+                self.refTitleLabel = \
+                    f'{self.refTitleLabel}\n' \
+                    f'(years {controlStartYear:04d}-{controlEndYear:04d})'
 
         else:
             remappedRefClimatology = None
@@ -411,10 +437,10 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                 if depthSlice == str(depth):
                     depthIndex = index
             if depthIndex == -1:
-                raise KeyError('The climatology you are attempting to perform '
-                               'depth slices of was originally created '
-                               'without depth {}. You will need to delete and '
-                               'regenerate the climatology'.format(depth))
+                raise KeyError(f'The climatology you are attempting to '
+                               f'perform depth slices of was originally '
+                               f'created without depth {depth}. You will need '
+                               f'to delete and regenerate the climatology')
 
             remappedRefClimatology = remappedRefClimatology.isel(
                 depthSlice=depthIndex, drop=True)
@@ -437,13 +463,25 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                     remappedRefClimatology[self.refFieldName] - \
                     masked.mean()
 
+        if self.componentName == 'ocean':
+            componentName = 'Ocean'
+            componentSubdirectory = 'ocean'
+        elif self.componentName == 'seaIce':
+            componentName = 'Sea Ice'
+            componentSubdirectory = 'sea_ice'
+        else:
+            raise ValueError(f'Unexpected component: {self.componentName}')
+
         if self.comparisonGridName == 'latlon':
-            self._plot_latlon(remappedModelClimatology, remappedRefClimatology)
+            self._plot_latlon(remappedModelClimatology, remappedRefClimatology,
+                              componentName, componentSubdirectory)
         else:
             self._plot_projection(remappedModelClimatology,
-                                  remappedRefClimatology)
+                                  remappedRefClimatology,
+                                  componentName, componentSubdirectory)
 
-    def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology):
+    def _plot_latlon(self, remappedModelClimatology, remappedRefClimatology,
+                     componentName, componentSubdirectory):
         """ plotting a global lat-lon data set """
 
         season = self.season
@@ -452,7 +490,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        modelOutput = nans_to_numpy_mask(
+        modelOutput = _nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
         lon = remappedModelClimatology['lon'].values
@@ -464,10 +502,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             refOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
+            refOutput = _nans_to_numpy_mask(
                 remappedRefClimatology[self.refFieldName].values)
 
             bias = modelOutput - refOutput
+
+            # mask with thresholds only after taking the diff
+            refOutput = self._mask_with_thresholds(refOutput)
+
+        modelOutput = self._mask_with_thresholds(modelOutput)
 
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
@@ -481,10 +524,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             defaultFontSize = None
 
         filePrefix = self.filePrefix
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
-                self.fieldNameInTitle, season, self.startYear,
-                self.endYear)
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
+        title = f'{self.fieldNameInTitle} ({season}, years ' \
+                f'{self.startYear:04d}-{self.endYear:04d})'
         plot_global_comparison(config,
                                lonTarg,
                                latTarg,
@@ -494,30 +536,32 @@ class PlotClimatologyMapSubtask(AnalysisTask):
                                configSectionName,
                                fileout=outFileName,
                                title=title,
-                               modelTitle='{}'.format(mainRunName),
+                               modelTitle=mainRunName,
                                refTitle=self.refTitleLabel,
                                diffTitle=self.diffTitleLabel,
                                cbarlabel=self.unitsLabel,
                                titleFontSize=titleFontSize,
-                               defaultFontSize=defaultFontSize)
+                               defaultFontSize=defaultFontSize,
+                               extend=self.extend)
 
-        caption = '{} {}'.format(season, self.imageCaption)
+        caption = f'{season} {self.imageCaption}'
         write_image_xml(
             config,
             filePrefix,
-            componentName='Ocean',
-            componentSubdirectory='ocean',
-            galleryGroup='Global {}'.format(self.galleryGroup),
+            componentName=componentName,
+            componentSubdirectory=componentSubdirectory,
+            galleryGroup=f'Global {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
-            groupLink='global_{}'.format(self.groupLink),
+            groupLink=f'global_{self.groupLink}',
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
 
     def _plot_projection(self, remappedModelClimatology,
-                         remappedRefClimatology):
-        """ plotting an Arctic or Antarctic data set """
+                         remappedRefClimatology,
+                         componentName, componentSubdirectory):
+        """ plotting a dataset on a projection grid """
 
         season = self.season
         comparisonGridName = self.comparisonGridName
@@ -526,22 +570,27 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        oceanMask = remappedModelClimatology['validMask'].values
-        self.landMask = np.ma.masked_array(
-            np.ones(oceanMask.shape),
-            mask=np.logical_not(np.isnan(oceanMask)))
+        validMask = remappedModelClimatology['validMask'].values
+        landMask = np.ma.masked_array(
+            np.ones(validMask.shape),
+            mask=np.logical_not(np.isnan(validMask)))
 
-        modelOutput = nans_to_numpy_mask(
+        modelOutput = _nans_to_numpy_mask(
             remappedModelClimatology[self.mpasFieldName].values)
 
         if remappedRefClimatology is None:
             refOutput = None
             bias = None
         else:
-            refOutput = nans_to_numpy_mask(
+            refOutput = _nans_to_numpy_mask(
                 remappedRefClimatology[self.refFieldName].values)
 
             bias = modelOutput - refOutput
+
+            # mask with maskValue only after taking the diff
+            refOutput = self._mask_with_thresholds(refOutput)
+
+        modelOutput = self._mask_with_thresholds(modelOutput)
 
         comparisonDescriptor = get_comparison_descriptor(
             config, comparisonGridName)
@@ -555,10 +604,9 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         vertical = aspectRatio > 1.2
 
         filePrefix = self.filePrefix
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
-        title = '{} ({}, years {:04d}-{:04d})'.format(
-                self.fieldNameInTitle, season, self.startYear,
-                self.endYear)
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
+        title = f'{self.fieldNameInTitle} ({season}, years ' \
+                f'{self.startYear:04d}-{self.endYear:04d})'
 
         if config.has_option(configSectionName, 'titleFontSize'):
             titleFontSize = config.getint(configSectionName, 'titleFontSize')
@@ -581,7 +629,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             config,
             x,
             y,
-            self.landMask,
+            landMask,
             modelOutput,
             refOutput,
             bias,
@@ -589,27 +637,48 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             colorMapSectionName=configSectionName,
             projectionName=comparisonGridName,
             title=title,
-            modelTitle='{}'.format(mainRunName),
+            modelTitle=mainRunName,
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             cbarlabel=self.unitsLabel,
             titleFontSize=titleFontSize,
             cartopyGridFontSize=cartopyGridFontSize,
             defaultFontSize=defaultFontSize,
-            vertical=vertical)
+            vertical=vertical,
+            extend=self.extend)
 
-        upperGridName = string.capwords(comparisonGridName.replace('_', ' '))
-        caption = '{} {}'.format(season, self.imageCaption)
+        upperGridName = capwords(comparisonGridName.replace('_', ' '))
+        caption = f'{season} {self.imageCaption}'
         write_image_xml(
             config,
             filePrefix,
-            componentName='Ocean',
-            componentSubdirectory='ocean',
-            galleryGroup='{} {}'.format(upperGridName,
-                                        self.galleryGroup),
+            componentName=componentName,
+            componentSubdirectory=componentSubdirectory,
+            galleryGroup=f'{upperGridName} {self.galleryGroup}',
             groupSubtitle=self.groupSubtitle,
-            groupLink='{}_{}'.format(comparisonGridName, self.groupLink),
+            groupLink=f'{comparisonGridName}_{self.groupLink}',
             gallery=self.galleryName,
             thumbnailDescription=self.thumbnailDescription,
             imageDescription=caption,
             imageCaption=caption)
+
+    def _mask_with_thresholds(self, field):
+        if self.maskMinThreshold is not None or \
+                self.maskMaxThreshold is not None:
+            mask = field.mask
+            if self.maskMinThreshold is not None:
+                mask = np.logical_or(mask, field <= self.maskMinThreshold)
+            if self.maskMaxThreshold is not None:
+                mask = np.logical_or(mask, field >= self.maskMaxThreshold)
+            field = np.ma.masked_array(field, mask)
+
+        return field
+
+
+def _nans_to_numpy_mask(field):
+    """
+    Convert a numpy array with NaNs to a masked numpy array
+    """
+    field = np.ma.masked_array(
+        field, np.isnan(field))
+    return field

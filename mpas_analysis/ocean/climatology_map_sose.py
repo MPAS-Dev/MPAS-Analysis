@@ -24,8 +24,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
 from mpas_analysis.ocean.remap_depth_slices_subtask import \
     RemapDepthSlicesSubtask
-from mpas_analysis.ocean.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.ocean.remap_sose_climatology import RemapSoseClimatology
 
 from mpas_analysis.shared.io.utility import build_obs_path

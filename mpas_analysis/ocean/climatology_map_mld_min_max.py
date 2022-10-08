@@ -12,8 +12,7 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from mpas_analysis.ocean.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 
 class ClimatologyMapMLDMinMax(AnalysisTask):

@@ -27,8 +27,7 @@ from mpas_analysis.shared.projection import get_pyproj_projection
 from mpas_analysis.shared.climatology.climatology import \
     get_masked_mpas_climatology_file_name
 
-from mpas_analysis.ocean.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.constants import constants
 

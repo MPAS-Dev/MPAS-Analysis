@@ -84,7 +84,7 @@ def plot_vertical_section_comparison(
         contourLabelPrecision=1,
         resultSuffix='Result',
         diffSuffix='Difference',
-        maxTitleLength=70):
+        maxTitleLength=None):
     """
     Plots vertical section plots in a three-panel format, comparing model data
     (in modelArray) to some reference dataset (in refArray), which can be
@@ -300,9 +300,10 @@ def plot_vertical_section_comparison(
         a suffix added to the config options related to colormap information
         for the difference field
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
 
     Returns
     -------
@@ -318,6 +319,9 @@ def plot_vertical_section_comparison(
     # Authors
     # -------
     # Greg Streletz, Xylar Asay-Davis, Milena Veneziani
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -594,7 +598,7 @@ def plot_vertical_section(
         comparisonContourLineColor=None,
         labelContours=False,
         contourLabelPrecision=1,
-        maxTitleLength=70):
+        maxTitleLength=None):
     """
     Plots a data set as a x distance (latitude, longitude,
     or spherical distance) vs depth map (vertical section).
@@ -812,9 +816,10 @@ def plot_vertical_section(
         the precision (in terms of number of figures to the right of the
         decimal point) of contour labels
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
 
     Returns
     -------
@@ -827,6 +832,9 @@ def plot_vertical_section(
     # Authors
     # -------
     # Milena Veneziani, Mark Petersen, Xylar Asay-Davis, Greg Streletz
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')

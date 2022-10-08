@@ -13,8 +13,7 @@ import numpy as np
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
-from mpas_analysis.ocean.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.ocean.utility import compute_zmid
 
 

@@ -38,7 +38,7 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
                              firstYearXTicks=None, yearStrideXTicks=None,
                              maxXTicks=20, obsMean=None, obsUncertainty=None,
                              obsLegend=None, legendLocation='lower left',
-                             maxTitleLength=90):
+                             maxTitleLength=None):
     """
     Plots the list of time series data sets.
 
@@ -113,9 +113,10 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     legendLocation : str, optional
         The location of the legend (see ``pyplot.legend()`` for details)
 
-    maxTitleLength : int, optional
-        the maximum number of characters in the title and legend, beyond which
-        they are truncated with a trailing ellipsis
+    maxTitleLength : int or None, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
 
     Returns
     -------
@@ -125,6 +126,9 @@ def timeseries_analysis_plot(config, dsvalues, calendar, title, xlabel, ylabel,
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani, Stephen Price
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -260,7 +264,7 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
                                    lineWidths=None, legendText=None,
                                    titleFontSize=None, defaultFontSize=None,
                                    figsize=(15, 6), dpi=None,
-                                   maxTitleLength=90):
+                                   maxTitleLength=None):
     """
     Plots the list of time series data sets on a polar plot.
 
@@ -299,9 +303,10 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
         the number of dots per inch of the figure, taken from section ``plot``
         option ``dpi`` in the config file by default
 
-    maxTitleLength : int, optional
-        the maximum number of characters in the title and legend, beyond which
-        they are truncated with a trailing ellipsis
+    maxTitleLength : int or None, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
 
     Returns
     -------
@@ -311,6 +316,9 @@ def timeseries_analysis_plot_polar(config, dsvalues, title,
     # Authors
     # -------
     # Adrian K. Turner, Xylar Asay-Davis
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')

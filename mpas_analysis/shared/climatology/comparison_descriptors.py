@@ -121,12 +121,16 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     option_suffixes = {'antarctic': 'AntarcticStereo',
                        'arctic': 'ArcticStereo',
+                       'antarctic_extended': 'AntarcticExtended',
+                       'arctic_extended': 'ArcticExtended',
                        'north_atlantic': 'NorthAtlantic',
                        'north_pacific': 'NorthPacific',
                        'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
 
     grid_suffixes = {'antarctic': 'Antarctic_stereo',
                      'arctic': 'Arctic_stereo',
+                     'antarctic_extended': 'Antarctic_stereo',
+                     'arctic_extended': 'Arctic_stereo',
                      'north_atlantic': 'North_Atlantic',
                      'north_pacific': 'North_Pacific',
                      'subpolar_north_atlantic': 'Subpolar_North_Atlantic'}

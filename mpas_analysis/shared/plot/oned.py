@@ -34,7 +34,7 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
             xLim=None,
             yLim=None,
             invertYAxis=False,
-            maxTitleLength=80,
+            maxTitleLength=None,
             titleFontSize=None,
             axisFontSize=None,
             defaultFontSize=None):
@@ -88,9 +88,10 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     invertYAxis : logical, optional
         if True, invert Y axis
 
-    maxTitleLength : int, optional
-        the maximum number of characters in the title and legend, beyond which
-        they are truncated with a trailing ellipsis
+    maxTitleLength : int or None, optional
+        the maximum number of characters in the title, beyond which it is
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
 
     titleFontSize : int, optional
         size of the title font
@@ -104,6 +105,9 @@ def plot_1D(config, xArrays, fieldArrays, errArrays,
     # Authors
     # -------
     # Mark Petersen, Milena Veneziani, Xylar Asay-Davis
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')

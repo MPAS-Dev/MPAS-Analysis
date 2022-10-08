@@ -62,12 +62,3 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):
     zMid = zLayerBot + 0.5 * layerThickness
 
     return zMid
-
-
-def nans_to_numpy_mask(field):
-    """
-    Convert a numpy array with NaNs to a masked numpy array
-    """
-    field = numpy.ma.masked_array(
-        field, numpy.isnan(field))
-    return field
