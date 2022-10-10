@@ -77,8 +77,6 @@ class OceanHistogram(AnalysisTask):
         else:
             self.weightList = None
 
-        self.filePrefix = f'histogram_{mainRunName}'
-
         baseDirectory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
         if not os.path.exists(baseDirectory):
@@ -102,6 +100,9 @@ class OceanHistogram(AnalysisTask):
             regionNames = mpasMasksSubtask.expand_region_names(
                 self.regionNames)
 
+            regionGroupSuffix = regionGroup.replace(' ', '_')
+            filePrefix = f'histogram_{regionGroupSuffix}'
+
             # Add mask subtasks for observations and prep groupObsDicts
             # groupObsDicts is a subsetted version of localObsDicts with an
             # additional attribute for the maskTask
@@ -124,7 +125,7 @@ class OceanHistogram(AnalysisTask):
                 # Compute weights for histogram
                 if self.weightList is not None:
                     computeWeightsSubtask = ComputeHistogramWeightsSubtask(
-                        self, regionName, mpasMasksSubtask, self.filePrefix,
+                        self, regionName, mpasMasksSubtask, filePrefix,
                         self.variableList, self.weightList)
                     self.add_subtask(computeWeightsSubtask)
 
@@ -133,7 +134,7 @@ class OceanHistogram(AnalysisTask):
                     # Generate histogram plots
                     plotRegionSubtask = PlotRegionHistogramSubtask(
                         self, regionGroup, regionName, controlConfig,
-                        sectionName, self.filePrefix, mpasClimatologyTask,
+                        sectionName, filePrefix, mpasClimatologyTask,
                         mpasMasksSubtask, obsMasksSubtask, groupObsDicts,
                         self.variableList, self.weightList, season)
                     plotRegionSubtask.run_after(mpasMasksSubtask)
@@ -218,7 +219,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName=f'weights_{regionGroupSuffix}_{regionName}')
+            subtaskName=f'weights_{fullSuffix}_{regionName}')
 
         self.mpasMasksSubtask = mpasMasksSubtask
         self.regionName = regionName
@@ -357,7 +358,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName=f'plot_{regionGroupSuffix}_{regionName}_{season}')
+            subtaskName=f'plot_{fullSuffix}_{regionName}_{season}')
 
         self.run_after(mpasClimatologyTask)
         self.regionGroup = regionGroup
