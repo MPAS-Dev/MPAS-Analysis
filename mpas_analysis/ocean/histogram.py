@@ -138,6 +138,7 @@ class OceanHistogram(AnalysisTask):
                         self.variableList, self.weightList, season)
                     plotRegionSubtask.run_after(mpasMasksSubtask)
                     plotRegionSubtask.run_after(obsMasksSubtask)
+                    plotRegionSubtask.run_after(computeWeightsSubtask)
                     self.add_subtask(plotRegionSubtask)
 
     def setup_and_check(self):
@@ -217,7 +218,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName=f'weights{fullSuffix}_{regionName}')
+            subtaskName=f'weights_{regionGroupSuffix}_{regionName}')
 
         self.mpasMasksSubtask = mpasMasksSubtask
         self.regionName = regionName
@@ -356,7 +357,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName=f'plot{fullSuffix}_{regionName}_{season}')
+            subtaskName=f'plot_{regionGroupSuffix}_{regionName}_{season}')
 
         self.run_after(mpasClimatologyTask)
         self.regionGroup = regionGroup
