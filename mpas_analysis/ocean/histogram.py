@@ -480,7 +480,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         else:
             lineWidths = None
 
-        title = main_run_name
         if config.has_option(self.taskName, 'titleFontSize'):
             titleFontSize = config.getint(self.taskName,
                                           'titleFontSize')
@@ -512,8 +511,11 @@ class PlotRegionHistogramSubtask(AnalysisTask):
 
             var_name = f'timeMonthly_avg_{var}'
 
-            caption = f'Normalized probability density function for {var} ' \
-                      f'climatologies in {self.regionName.replace("_", " ")}'
+            title = f'{self.regionName.replace("_", " ")}, {self.season}'
+
+            caption = f'Normalized probability density function for ' \
+                      f'{self.season} {var} climatologies in ' \
+                      f'{self.regionName.replace("_", " ")}'
 
             # Note: consider modifying this for more professional headings
             varTitle = var
@@ -559,7 +561,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 control_run_name = self.controlConfig.get('runs',
                                                           'mainRunName')
                 legendText.append(control_run_name)
-                title = f'Main vs. Control'
                 if lineColors is not None:
                     lineColors.append(obsColor)
                 if lineWidths is not None:
