@@ -24,9 +24,7 @@ def get_pyproj_projection(comparison_grid_name):
 
     Parameters
     ----------
-    comparison_grid_name : {'antarctic', 'arctic', 'antarctic_extended',
-                            'arctic_extended', 'north_atlantic',
-                            'north_pacific', 'subpolar_north_atlantic'}
+    comparison_grid_name : str
         The name of the projection comparison grid to use for remapping
 
     Returns
@@ -81,9 +79,7 @@ def get_cartopy_projection(comparison_grid_name):
 
     Parameters
     ----------
-    comparison_grid_name : {'antarctic', 'arctic', 'antarctic_extended',
-                            'arctic_extended', 'north_atlantic',
-                            'north_pacific', 'subpolar_north_atlantic'}
+    comparison_grid_name : str
         The name of the projection comparison grid to use for remapping
 
     Returns
