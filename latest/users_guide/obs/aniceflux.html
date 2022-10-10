@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE) &mdash; MPAS-Analysis latest documentation</title>
+  <title>Sea ice production and transport: Haumann et al 2016 &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Antarctic melt rates and fluxes" href="rignot_melt.html" />
-    <link rel="prev" title="Roemmich-Gilson Argo Climatology" href="roemmich_gilson_argo.html" /> 
+    <link rel="next" title="Iceberg Concentration: Altiberg" href="altiberg.html" />
+    <link rel="prev" title="PIOMAS Arctic Sea Ice Volume Reanalysis" href="piomass_ice_volume.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -59,14 +59,7 @@
 <li class="toctree-l3"><a class="reference internal" href="argo_mld.html">Argo Mixed Layer Depth (MLD) climatology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="trenberth_mht.html">Meridional Heat Transport (MHT)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
@@ -82,7 +75,14 @@
 <li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
 <li class="toctree-l3"><a class="reference internal" href="icesat_thickness.html">IceSat Ice Thickness</a></li>
 <li class="toctree-l3"><a class="reference internal" href="piomass_ice_volume.html">PIOMAS Arctic Sea Ice Volume Reanalysis</a></li>
-<li class="toctree-l3"><a class="reference internal" href="aniceflux.html">Sea ice production and transport: Haumann et al 2016</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Sea ice production and transport: Haumann et al 2016</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="altiberg.html">Iceberg Concentration: Altiberg</a></li>
 </ul>
 </li>
@@ -126,9 +126,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../observations.html">Observations</a> &raquo;</li>
-      <li>2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</li>
+      <li>Sea ice production and transport: Haumann et al 2016</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/obs/sose.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/obs/aniceflux.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -136,40 +136,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="climatology-from-sose-the-southern-ocean-state-estimate-sose">
-<span id="sose"></span><h1>2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)<a class="headerlink" href="#climatology-from-sose-the-southern-ocean-state-estimate-sose" title="Permalink to this heading">¶</a></h1>
+  <section id="sea-ice-production-and-transport-haumann-et-al-2016">
+<span id="aniceflux"></span><h1>Sea ice production and transport: Haumann et al 2016<a class="headerlink" href="#sea-ice-production-and-transport-haumann-et-al-2016" title="Permalink to this heading">¶</a></h1>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
-<p>Monthly potential temperature, salinity velocity components and neutral
-density output from the Southern Ocean State Estimate (SOSE) covering
-years 2005-2010</p>
+<p>This data set provides estimates of annual freshwater fluxes related to sea-ice formation from ocean freezing
+and snow-ice formation, sea-ice melting, lateral transport of sea ice in the Southern Ocean over the period
+1982 to 2008. It is derived from a mass balance calculation of local sea-ice volume change and divergence
+from satellite data and sea-ice reconstructions. The mass balance is calculated on a daily basis and fluxes are
+then integrated over the entire year, where a year is defined from March to February of the next year (i.e.
+from March 1982 to February 2009). This approach combines multiple products of sea-ice concentration
+(Cavalieri &amp; Parkinson, 2008; Comiso, 1986; Meier et al., 2013), sea-ice thickness (Kurtz &amp; Markus, 2012;
+Massonnet et al., 2013; Worby et al., 2008), and sea-ice drift (Fowler et al., 2013; Kwok 2005; Schwegmann
+et al., 2011). For a detailed description of the method see Haumann et al. (2016). The data set is derived to
+estimate large-scale (regional to basin-scale) fluxes on an annual basis. Our confidence is reduced on a grid
+cell basis, such as for single coastal polynyas, where the method and underlying data induce large, unknown
+uncertainties.</p>
 </section>
 <section id="source">
 <h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference external" href="http://sose.ucsd.edu/sose_stateestimation_data_05to10.html">SOSE Website at UCSD</a></p>
+<p><a class="reference external" href="https://www.envidat.ch/dataset/10-16904-8">EnviDat</a></p>
 </section>
 <section id="release-policy">
 <h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference external" href="http://sose.ucsd.edu/sose_stateestimation_disclaimer.html">Conditions of use</a>: The data on
-these webpages are made freely available for scientific, bona fide,
-not-for-profit research only. If your use of the data is different (e.g.
-commercial), you must contact the data providers and receive written
-permission for your use of the data prior to any such use. The user must
-acknowledge SOSE data in all products or publications that use them, e.g.
-by including the following written note: “Computational resources for the
-SOSE were provided by NSF XSEDE resource grant OCE130007.” An appropriate
-citation should also be made.</p>
+<p>This data set is free to use for any non-commercial purpose at the risk of the user’
+and the authors do not take any liability on the use of the data set. The authors
+assembled the data set carefully and assessed accuracy, errors, and uncertainties.
+Please contact the authors if you find any issues.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference external" href="http://doi.org/10.1175/2009JPO4236.1">Mazloff et al. (2010)</a></p>
-<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SOSE/obs.bib">bibtex file</a></p>
+<p><a class="reference external" href="https://doi.org/10.16904/8">Haumann et al (2016), data</a>
+<a class="reference external" href="https://doi.org/10.1038/nature19101">Haumann et al (2016), paper</a></p>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/Haumann/obs.bib">bibtex file</a></p>
 </section>
 <section id="mpas-analysis-tasks">
 <h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../tasks/climatologyMapSose.html#task-climatologymapsose"><span class="std std-ref">climatologyMapSose</span></a></p></li>
-<li><p><a class="reference internal" href="../tasks/soseTransects.html#task-sosetransects"><span class="std std-ref">soseTransects</span></a></p></li>
+<li><p><span class="xref std std-ref">task_climatologyMapSeaIceProductionSH</span></p></li>
+<li><p><span class="xref std std-ref">task_climatologyMapSeaIceMeltingSH</span></p></li>
 </ul>
 </section>
 </section>
@@ -178,8 +183,8 @@ citation should also be made.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="roemmich_gilson_argo.html" class="btn btn-neutral float-left" title="Roemmich-Gilson Argo Climatology" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="rignot_melt.html" class="btn btn-neutral float-right" title="Antarctic melt rates and fluxes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="piomass_ice_volume.html" class="btn btn-neutral float-left" title="PIOMAS Arctic Sea Ice Volume Reanalysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="altiberg.html" class="btn btn-neutral float-right" title="Iceberg Concentration: Altiberg" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
