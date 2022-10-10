@@ -265,8 +265,8 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
                 ds_weights[f'{var_name}_weight'] = \
                     ds_restart[weight_var_name].where(cell_mask, drop=True)
             else:
-                self.logger.warn(f'Weight variable {weight_var_name} is not in '
-                                 f'the restart file, skipping')
+                self.logger.warn(f'Weight variable {weight_var_name} is not '
+                                 f'in the restart file, skipping')
 
         weights_filename = \
             f'{base_directory}/{self.filePrefix}_{self.regionName}_weights.nc'
@@ -460,7 +460,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 control_weights_filename = \
                     f'{base_directory}/histogram_{control_run_name}_' \
                     f'{self.regionName}_weights.nc'
-                ds_control_weights = xarray.open_dataset(control_weights_filename)
+                ds_control_weights = xarray.open_dataset(
+                    control_weights_filename)
 
         if config.has_option(self.taskName, 'lineColors'):
             lineColors = [config.get(self.taskName, 'mainColor')]
@@ -555,7 +556,8 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             if self.controlConfig is not None:
                 fields.append(ds_control[var_name].where(control_cell_mask,
                                                          drop=True))
-                control_run_name = self.controlConfig.get('runs', 'mainRunName')
+                control_run_name = self.controlConfig.get('runs',
+                                                          'mainRunName')
                 legendText.append(control_run_name)
                 title = f'Main vs. Control'
                 if lineColors is not None:
@@ -573,7 +575,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                                     defaultFontSize=defaultFontSize)
 
             out_filename = f'{self.plotsDirectory}/{self.filePrefix}_{var}_' \
-                          f'{self.regionName}_{self.season}.png'
+                           f'{self.regionName}_{self.season}.png'
             savefig(out_filename, config)
 
             write_image_xml(
