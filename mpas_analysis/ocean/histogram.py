@@ -451,15 +451,14 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             ds_control = xarray.open_dataset(control_filename)
             base_directory = build_config_full_path(
                 self.controlConfig, 'output', 'histogramSubdirectory')
-            control_region_mask_filename = f'{base_directory}/histogram_' \
-                f'{control_run_name}_{self.regionName}_mask.nc'
+            control_region_mask_filename = \
+                f'{base_directory}/{self.filePrefix}_{self.regionName}_mask.nc'
             ds_control_region_masks = xarray.open_dataset(
                 control_region_mask_filename)
             control_cell_mask = ds_control_region_masks.regionCellMasks == 1
             if self.weightList is not None:
-                control_weights_filename = \
-                    f'{base_directory}/histogram_{control_run_name}_' \
-                    f'{self.regionName}_weights.nc'
+                control_weights_filename = f'{base_directory}/' \
+                    f'{self.filePrefix}_{self.regionName}_weights.nc'
                 ds_control_weights = xarray.open_dataset(
                     control_weights_filename)
 
