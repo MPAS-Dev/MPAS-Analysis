@@ -35,6 +35,7 @@ Analysis Tasks
    tasks/geojsonTransects
    tasks/oceanRegionalProfiles
    tasks/regionalTSDiagrams
+   tasks/oceanHistogram
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH

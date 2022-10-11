@@ -35,17 +35,17 @@ web page.
 Region Groups
 -------------
 
-Currently, seven analysis tasks (:ref:`task_climatologyMapAntarcticMelt`,
+Currently, eight analysis tasks (:ref:`task_climatologyMapAntarcticMelt`,
 :ref:`task_hovmollerOceanRegions`, :ref:`task_oceanRegionalProfiles`,
 :ref:`task_regionalTSDiagrams`, :ref:`task_streamfunctionMOC`,
-:ref:`task_timeSeriesAntarcticMelt`, and :ref:`task_timeSeriesOceanRegions`)
-use masks that define regions in an MPAS mesh as part of their analysis.  Most
-of these region group are defined in
+:ref:`task_oceanHistogram`, :ref:`task_timeSeriesAntarcticMelt`, and
+:ref:`task_timeSeriesOceanRegions`) use masks that define regions in an MPAS
+mesh as part of their analysis.  Most of these region group are defined in
 :py:func:`geometric_features.aggregation.get_aggregator_by_name()`.
-Several tasks (:ref:`task_hovmollerOceanRegions`,
+Several tasks (:ref:`task_hovmollerOceanRegions`, :ref:`task_oceanHistogram`,
 :ref:`task_oceanRegionalProfiles`, :ref:`task_regionalTSDiagrams`, and
 :ref:`task_timeSeriesOceanRegions`) can use any of the defined region groups.
-Currently, available region groups are: ``Antarctic Regions``,
+Currently, available region groups are: ``Artic Ocean Regions``, ``Antarctic Regions``,
 ``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
 
 The option ``regionMaskSubdirectory`` in the ``[diagnostics]`` section specifies
