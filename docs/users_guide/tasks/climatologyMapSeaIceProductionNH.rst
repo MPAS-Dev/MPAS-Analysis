@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceProductionNH:
 
 climatologyMapSeaIceProductionNH
-==========================
+================================
 
 An analysis task for plotting maps of Arctic sea ice production.
 

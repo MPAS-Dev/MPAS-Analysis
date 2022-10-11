@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceProductionSH:
 
 climatologyMapSeaIceProductionSH
-==========================
+================================
 
 An analysis task for plotting maps of Antarctic sea ice production against
 observations.

@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceMeltingNH:
 
 climatologyMapSeaIceMeltingNH
-==========================
+=============================
 
 An analysis task for plotting maps of Arctic sea ice melting.
 

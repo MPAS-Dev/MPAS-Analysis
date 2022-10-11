@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceMeltingSH:
 
 climatologyMapSeaIceMeltingSH
-==========================
+=============================
 
 An analysis task for plotting maps of Antarctic sea ice melting against
 observations.
