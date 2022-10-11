@@ -259,7 +259,6 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         write_netcdf(ds_mask, new_region_mask_filename)
 
         if self.weightList is not None:
-            print(self.weightList)
             ds_weights = xarray.Dataset()
             # Fetch the weight variables and mask them for each region
             for index, var in enumerate(self.variableList):
@@ -465,29 +464,30 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 ds_control_weights = xarray.open_dataset(
                     control_weights_filename)
 
-        if config.has_option(self.taskName, 'lineColors'):
-            lineColors = [config.get(self.taskName, 'mainColor')]
+        if config.has_option(self.taskName, 'mainColor'):
+            mainColor = config.get(self.taskName, 'mainColor')
         else:
-            lineColors = None
+            mainColor = 'C0'
         if config.has_option(self.taskName, 'obsColor'):
-            obsColor = config.get_expression(self.taskName, 'obsColor')
-            if lineColors is None:
-                lineColors = ['b']
+            obsColor = config.get(self.taskName, 'obsColor')
         else:
-            if lineColors is not None:
-                obsColor = 'k'
+            obsColor = 'C1'
+        if config.has_option(self.taskName, 'controlColor'):
+            controlColor = config.get(self.taskName, 'controlColor')
+        else:
+            controlColor = 'C2'
 
-        if config.has_option(self.taskName, 'lineWidths'):
-            lineWidths = [config.get(self.taskName, 'lineWidths')]
+        if config.has_option(self.taskName, 'lineWidth'):
+            lineWidth = config.getfloat(self.taskName, 'lineWidth')
         else:
-            lineWidths = None
+            lineWidth = None
 
         if config.has_option(self.taskName, 'titleFontSize'):
             titleFontSize = config.getint(self.taskName,
                                           'titleFontSize')
         else:
             titleFontSize = None
-        if config.has_option(self.taskName, 'titleFontSize'):
+        if config.has_option(self.taskName, 'axisFontSize'):
             axisFontSize = config.getint(self.taskName,
                                          'axisFontSize')
         else:
@@ -510,6 +510,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             fields = []
             weights = []
             legendText = []
+            lineColors = []
 
             var_name = f'timeMonthly_avg_{var}'
 
@@ -533,6 +534,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 weights.append(None)
 
             legendText.append(main_run_name)
+            lineColors.append(mainColor)
 
             xLabel = f"{ds[var_name].attrs['long_name']} " \
                      f"({ds[var_name].attrs['units']})"
@@ -552,10 +554,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 ds_obs = ds_obs.where(obs_cell_mask, drop=True)
                 fields.append(ds_obs[obs_var_name])
                 legendText.append(obs_name)
-                if lineColors is not None:
-                    lineColors.append(obsColor)
-                if lineWidths is not None:
-                    lineWidths.append([lineWidths[0]])
+                lineColors.append(obsColor)
                 weights.append(None)
             if self.controlConfig is not None:
                 fields.append(ds_control[var_name].where(control_cell_mask,
@@ -563,11 +562,14 @@ class PlotRegionHistogramSubtask(AnalysisTask):
                 control_run_name = self.controlConfig.get('runs',
                                                           'mainRunName')
                 legendText.append(control_run_name)
-                if lineColors is not None:
-                    lineColors.append(obsColor)
-                if lineWidths is not None:
-                    lineWidths.append([lineWidths[0]])
+                lineColors.append(controlColor)
                 weights.append(ds_control_weights[f'{var_name}_weight'].values)
+
+            if lineWidth is not None:
+                lineWidths = [lineWidth for i in fields]
+            else:
+                lineWidths = None
+
             histogram_analysis_plot(config, fields, calendar=calendar,
                                     title=title, xLabel=xLabel, yLabel=yLabel,
                                     bins=bins, weights=weights,

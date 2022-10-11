@@ -152,7 +152,7 @@ def histogram_analysis_plot(config, dsValues, calendar, title, xLabel, yLabel,
         weight = weights[ds_index]
         hist_type = 'step'
         ax.hist(hist_values, range=range, bins=bins, weights=weight,
-                linestyle=line_style, linewidth=line_width,
+                color=color, linestyle=line_style, linewidth=line_width,
                 histtype=hist_type, label=label, density=density)
         if label_count > 1:
             plt.legend(loc=legendLocation)
