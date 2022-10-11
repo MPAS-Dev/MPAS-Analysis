@@ -379,17 +379,16 @@ to be generated and is set up properly.</p>
 </section>
 <section id="generating-documentation">
 <h2>Generating Documentation<a class="headerlink" href="#generating-documentation" title="Permalink to this heading">¶</a></h2>
-<p>To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
-<span class="n">conda</span> <span class="n">remove</span> <span class="o">-</span><span class="n">y</span> <span class="o">--</span><span class="nb">all</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span>
-<span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">docs</span><span class="o">/</span><span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
-<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span> <span class="n">mock</span> <span class="n">pillow</span> <span class="n">sphinx</span> <span class="n">sphinx_rtd_theme</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
-<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="n">build</span> <span class="n">dist</span> <span class="n">mpas_analysis</span><span class="o">.</span><span class="n">egg</span><span class="o">-</span><span class="n">info</span>
-<span class="n">cd</span> <span class="n">docs</span>
+<p>Create a development environment as described above in “Installation for
+developers”.  Then run:
+To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
 <span class="n">make</span> <span class="n">clean</span>
 <span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>The results can be viewed in your web browser by opening:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 </section>
