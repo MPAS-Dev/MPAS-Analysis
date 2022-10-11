@@ -28,7 +28,7 @@ used those components.
 
 ## Documentation
 
-[https://mpas-dev.github.io/MPAS-Analysis/stable/](https://mpas-dev.github.io/MPAS-Analysis/stable/)
+[https://mpas-dev.github.io/MPAS-Analysis/latest/](https://mpas-dev.github.io/MPAS-Analysis/latest/)
 
 ## Installation for users
 
@@ -290,16 +290,15 @@ to be generated and is set up properly.
 
 ## Generating Documentation
 
+Create a development environment as described above in "Installation for 
+developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```
-conda config --add channels conda-forge
-conda remove -y --all -n mpas-analysis-docs
-conda env create -f docs/environment.yml
-conda install -y -n mpas-analysis-docs mock pillow sphinx sphinx_rtd_theme
-conda activate mpas-analysis-docs
-pip install .
-rm -rf build dist mpas_analysis.egg-info
 cd docs
 make clean
 make html
+```
+The results can be viewed in your web browser by opening:
+```
+_build/html/index.html
 ```
