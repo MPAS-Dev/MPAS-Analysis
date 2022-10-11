@@ -433,7 +433,6 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         in_filename = get_unmasked_mpas_climatology_file_name(
             config, self.season, self.componentName, op='avg')
         ds = xarray.open_dataset(in_filename)
-        ds = ds.where(cell_mask, drop=True)
 
         base_directory = build_config_full_path(
             config, 'output', 'histogramSubdirectory')
@@ -519,7 +518,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
             # Note: consider modifying this for more professional headings
             varTitle = var
 
-            fields.append(ds[var_name])
+            fields.append(ds[var_name].where(cell_mask, drop=True))
             if self.weightList is not None:
                 if f'{var_name}_weight' in ds_weights.keys():
                     weights.append(ds_weights[f'{var_name}_weight'].values)
