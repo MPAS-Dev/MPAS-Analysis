@@ -42,4 +42,9 @@ Analysis Tasks
    tasks/climatologyMapSeaIceThickSH
    tasks/timeSeriesSeaIceAreaVol
 
+   tasks/climatologyMapSeaIceProductionNH
+   tasks/climatologyMapSeaIceMeltingNH
+   tasks/climatologyMapSeaIceProductionSH
+   tasks/climatologyMapSeaIceMeltingSH
+
    tasks/climatologyMapIcebergConcSH
