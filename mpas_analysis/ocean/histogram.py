@@ -74,6 +74,11 @@ class OceanHistogram(AnalysisTask):
         self.variableList = config.getexpression(self.taskName, 'variableList')
         if config.has_option(self.taskName, 'weightList'):
             self.weightList = config.getexpression(self.taskName, 'weightList')
+            if not self.weightList:
+                self.weightList = None
+            elif len(self.weightList) != len(self.variableList):
+                raise ValueError('Histogram weightList is not the same '
+                                 'length as variableList')
         else:
             self.weightList = None
 
@@ -139,7 +144,8 @@ class OceanHistogram(AnalysisTask):
                         self.variableList, self.weightList, season)
                     plotRegionSubtask.run_after(mpasMasksSubtask)
                     plotRegionSubtask.run_after(obsMasksSubtask)
-                    plotRegionSubtask.run_after(computeWeightsSubtask)
+                    if self.weightList is not None:
+                        plotRegionSubtask.run_after(computeWeightsSubtask)
                     self.add_subtask(plotRegionSubtask)
 
     def setup_and_check(self):
@@ -165,10 +171,6 @@ class OceanHistogram(AnalysisTask):
         self.mpasClimatologyTask.add_variables(variableList=variableList,
                                                seasons=self.seasons)
 
-        if self.weightList is not None:
-            if len(self.weightList) != len(self.variableList):
-                raise ValueError('Histogram weightList is not the same '
-                                 'length as variableList')
         if len(self.obsList) > 1:
             raise ValueError('Histogram analysis does not currently support'
                              'more than one observational product')
@@ -256,17 +258,19 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
             f'{base_directory}/{self.filePrefix}_{self.regionName}_mask.nc'
         write_netcdf(ds_mask, new_region_mask_filename)
 
-        ds_weights = xarray.Dataset()
-        # Fetch the weight variables and mask them for each region
-        for index, var in enumerate(self.variableList):
-            weight_var_name = self.weightList[index]
-            if weight_var_name in ds_restart.keys():
-                var_name = f'timeMonthly_avg_{var}'
-                ds_weights[f'{var_name}_weight'] = \
-                    ds_restart[weight_var_name].where(cell_mask, drop=True)
-            else:
-                self.logger.warn(f'Weight variable {weight_var_name} is not '
-                                 f'in the restart file, skipping')
+        if self.weightList is not None:
+            print(self.weightList)
+            ds_weights = xarray.Dataset()
+            # Fetch the weight variables and mask them for each region
+            for index, var in enumerate(self.variableList):
+                weight_var_name = self.weightList[index]
+                if weight_var_name in ds_restart.keys():
+                    var_name = f'timeMonthly_avg_{var}'
+                    ds_weights[f'{var_name}_weight'] = \
+                        ds_restart[weight_var_name].where(cell_mask, drop=True)
+                else:
+                    self.logger.warn(f'Weight variable {weight_var_name} is '
+                                     f'not in the restart file, skipping')
 
         weights_filename = \
             f'{base_directory}/{self.filePrefix}_{self.regionName}_weights.nc'
