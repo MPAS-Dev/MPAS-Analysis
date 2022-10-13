@@ -197,6 +197,9 @@ def build_analysis_list(config, controlConfig):
                                         controlConfig))
     analyses.append(ocean.TimeSeriesTransport(config, controlConfig))
 
+    analyses.append(ocean.OceanHistogram(config, oceanClimatologyTasks['avg'],
+                                         oceanRegionMasksTask,
+                                         controlConfig))
     analyses.append(ocean.MeridionalHeatTransport(
         config, oceanClimatologyTasks['avg'], controlConfig))
 
@@ -211,7 +214,8 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.SoseTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.GeojsonTransects(config, oceanClimatologyTasks['avg'],
+    analyses.append(ocean.GeojsonTransects(config,
+                                           oceanClimatologyTasks['avg'],
                                            controlConfig))
 
     oceanRegionalProfiles = ocean.OceanRegionalProfiles(
@@ -242,16 +246,16 @@ def build_analysis_list(config, controlConfig):
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(seaIceTimeSeriesTask)
     analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
-        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
-        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
-        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
-        config=config, mpas_climatology_task=seaIceClimatolgyTask,
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
 
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
@@ -715,7 +719,8 @@ def purge_output(config):
               'No purge necessary.'.format(outputDirectory))
     else:
         for subdirectory in ['plots', 'logs', 'mpasClimatology', 'mapping',
-                             'timeSeries', 'html', 'mask', 'profiles']:
+                             'timeSeries', 'html', 'mask', 'profiles',
+                             'histogram']:
             option = '{}Subdirectory'.format(subdirectory)
             directory = build_config_full_path(
                 config=config, section='output',
