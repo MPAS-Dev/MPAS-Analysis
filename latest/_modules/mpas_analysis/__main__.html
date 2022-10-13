@@ -293,6 +293,9 @@
                                         <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">TimeSeriesTransport</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">))</span>
 
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OceanHistogram</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+                                         <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+                                         <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">MeridionalHeatTransport</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">controlConfig</span><span class="p">))</span>
 
@@ -307,7 +310,8 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">SoseTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                         <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">GeojsonTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">GeojsonTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                           <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                            <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">oceanRegionalProfiles</span> <span class="o">=</span> <span class="n">ocean</span><span class="o">.</span><span class="n">OceanRegionalProfiles</span><span class="p">(</span>
@@ -338,16 +342,16 @@
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seaIceTimeSeriesTask</span><span class="p">)</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sea_ice</span><span class="o">.</span><span class="n">ClimatologyMapSeaIceProduction</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatologyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sea_ice</span><span class="o">.</span><span class="n">ClimatologyMapSeaIceProduction</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatologyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sea_ice</span><span class="o">.</span><span class="n">ClimatologyMapSeaIceMelting</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatologyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sea_ice</span><span class="o">.</span><span class="n">ClimatologyMapSeaIceMelting</span><span class="p">(</span>
-        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatolgyTask</span><span class="p">,</span>
+        <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">seaIceClimatologyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sea_ice</span><span class="o">.</span><span class="n">TimeSeriesSeaIce</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">seaIceTimeSeriesTask</span><span class="p">,</span>
@@ -811,7 +815,8 @@
               <span class="s1">&#39;No purge necessary.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">subdirectory</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;logs&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasClimatology&#39;</span><span class="p">,</span> <span class="s1">&#39;mapping&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="s1">&#39;profiles&#39;</span><span class="p">]:</span>
+                             <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;html&#39;</span><span class="p">,</span> <span class="s1">&#39;mask&#39;</span><span class="p">,</span> <span class="s1">&#39;profiles&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;histogram&#39;</span><span class="p">]:</span>
             <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Subdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">subdirectory</span><span class="p">)</span>
             <span class="n">directory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>

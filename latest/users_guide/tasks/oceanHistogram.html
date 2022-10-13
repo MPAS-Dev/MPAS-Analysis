@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>climatologyMapArgoSalinity &mdash; MPAS-Analysis latest documentation</title>
+  <title>oceanHistogram &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,8 +20,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="climatologyMapWoa" href="climatologyMapWoa.html" />
-    <link rel="prev" title="climatologyMapArgoTemperature" href="climatologyMapArgoTemperature.html" /> 
+    <link rel="next" title="climatologyMapSeaIceConcNH" href="climatologyMapSeaIceConcNH.html" />
+    <link rel="prev" title="regionalTSDiagrams" href="regionalTSDiagrams.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -57,12 +57,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapArgoSalinity</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
@@ -82,7 +77,18 @@
 <li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
-<li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">oceanHistogram</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-groups">Region Groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-names">Region Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variable-list">Variable List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#weight-list">Weight List</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bins">Bins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-config-options">Other Config Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
@@ -135,9 +141,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="../analysis_tasks.html">Analysis Tasks</a> &raquo;</li>
-      <li>climatologyMapArgoSalinity</li>
+      <li>oceanHistogram</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/tasks/climatologyMapArgoSalinity.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/tasks/oceanHistogram.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -145,73 +151,114 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="climatologymapargosalinity">
-<span id="task-climatologymapargosalinity"></span><h1>climatologyMapArgoSalinity<a class="headerlink" href="#climatologymapargosalinity" title="Permalink to this heading">¶</a></h1>
-<p>An analysis task for comparing salinity at various depths against
-Argo observations.</p>
+  <section id="oceanhistogram">
+<span id="task-oceanhistogram"></span><h1>oceanHistogram<a class="headerlink" href="#oceanhistogram" title="Permalink to this heading">¶</a></h1>
+<p>An analysis task for plotting histograms of 2-d variables of climatologies
+in ocean regions.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">argo</span><span class="p">,</span> <span class="n">salinity</span><span class="p">,</span> <span class="n">publicObs</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">histogram</span><span class="p">,</span> <span class="n">regions</span><span class="p">,</span> <span class="n">publicObs</span>
 </pre></div>
 </div>
 <section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapArgoSalinity</span><span class="p">]</span>
-<span class="c1">## options related to plotting climatology maps of Global</span>
-<span class="c1">## salinity at various levels against</span>
-<span class="c1">## reference model results and the Roemmich-Gilson Argo Climatology</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanHistogram]</span><span class="w"></span>
+<span class="c1">## options related to plotting histograms of climatologies of 2-d ocean</span><span class="w"></span>
+<span class="c1">## variables</span><span class="w"></span>
 
-<span class="c1"># comparison grid(s)</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
+<span class="c1"># list of variables to plot</span><span class="w"></span>
+<span class="na">variableList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
 
-<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
-<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">,</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span><span class="s1">&#39;JAS&#39;</span><span class="p">]</span>
+<span class="c1"># list of observations to compare against</span><span class="w"></span>
+<span class="na">obsList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;AVISO&#39;]</span><span class="w"></span>
 
-<span class="c1"># list of depths in meters (positive up) at which to analyze, &#39;top&#39; for the</span>
-<span class="c1"># sea surface.  Argo data is only available above -2000 m</span>
-<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="o">-</span><span class="mi">1500</span><span class="p">]</span>
+<span class="c1"># list of ocean variables by which to weight variables in variable list</span><span class="w"></span>
+<span class="na">weightList</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
 
-<span class="c1"># colormap for model/observations</span>
-<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">39.0</span><span class="p">}</span>
-<span class="c1"># place the ticks automatically by default</span>
-<span class="c1"># colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)</span>
+<span class="c1"># list of regions to plot from the region list in [regions] below</span><span class="w"></span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;]</span><span class="w"></span>
 
-<span class="c1"># colormap for differences</span>
-<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
-<span class="c1"># place the ticks automatically by default</span>
-<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)</span>
+<span class="c1"># list of region names within the region group listed above</span><span class="w"></span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
+
+<span class="c1"># Seasons to conduct analysis over</span><span class="w"></span>
+<span class="c1"># Note: start and end year will be inherited from climatology section</span><span class="w"></span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span><span class="w"></span>
+
+<span class="c1"># Number of histogram bins</span><span class="w"></span>
+<span class="na">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">40</span><span class="w"></span>
 </pre></div>
 </div>
-<dl class="simple">
-<dt>For more details, see:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
-<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
-<li><p><a class="reference internal" href="../config/comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
-</ul>
-</dd>
-</dl>
-<p>The option <code class="docutils literal notranslate"><span class="pre">depths</span></code> is a list of (approximate) depths at which to sample
-the salinity field.  A value of <code class="docutils literal notranslate"><span class="pre">'top'</span></code> indicates the sea
-surface (or the ice-ocean interface under ice shelves) while a value of
-<code class="docutils literal notranslate"><span class="pre">'bot'</span></code> indicates the seafloor.</p>
+</section>
+<section id="region-groups">
+<h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
+<p>A list of groups of regions, each of which will get its own gallery on
+the resulting analysis web page.  See <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for
+more information on the available region groups.  By default,
+the only region group is <code class="docutils literal notranslate"><span class="pre">'Ocean</span> <span class="pre">Basins'</span></code>.</p>
+</section>
+<section id="region-names">
+<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the
+regions in the geojson file.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these
+are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span><span class="w"></span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, they are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;, &quot;Arctic_Basin&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;, &quot;Global Ocean&quot;,</span><span class="w"></span>
+<span class="w"> </span><span class="na">&quot;Global Ocean 65N to 65S&quot;, &quot;Global Ocean 15S to 15N&quot;]</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="variable-list">
+<h2>Variable List<a class="headerlink" href="#variable-list" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">variableList</span></code> option determines the variables to plot. Currently, only
+2-d variables are supported but we envision extending to 3-d variables in the
+near future. The variables are to be listed according to their registry names, with <code class="docutils literal notranslate"><span class="pre">timeMontly_avg_</span></code> prepended in the code.</p>
 </section>
 <section id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference internal" href="../obs/roemmich_gilson_argo.html#roemmich-gilson-argo"><span class="std std-ref">Roemmich-Gilson Argo Climatology</span></a></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">obsList</span></code> option contains a list of the names of observational data sets.
+Currently, “AVISO” is the only data set available, but we anticipate adding
+several additional data sets in the near future.</p>
+<p><a class="reference internal" href="../obs/aviso_ssh.html#aviso-ssh"><span class="std std-ref">AVISO Absolute Dynamic Topography</span></a></p>
+</section>
+<section id="weight-list">
+<h2>Weight List<a class="headerlink" href="#weight-list" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">weightList</span></code> option determines the variables to normalize by in plotting
+the histogram. This is an optional feature. If used, <code class="docutils literal notranslate"><span class="pre">weightList</span></code> should be
+of the same length as <code class="docutils literal notranslate"><span class="pre">variableList</span></code>. We currently only support for 2-d
+variables that are the same size as their corresponding variables in
+<code class="docutils literal notranslate"><span class="pre">variableList</span></code> and that are present in the restart file. For example, we use
+<code class="docutils literal notranslate"><span class="pre">areaCell</span></code> to weight cell-centered variables such as <code class="docutils literal notranslate"><span class="pre">ssh</span></code>.</p>
+</section>
+<section id="bins">
+<h2>Bins<a class="headerlink" href="#bins" title="Permalink to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">bins</span></code> sets the number of bins to include in the histogram.</p>
+</section>
+<section id="other-config-options">
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this heading">¶</a></h2>
+<p>Other config options include <code class="docutils literal notranslate"><span class="pre">lineWidth</span></code>, <code class="docutils literal notranslate"><span class="pre">mainColor</span></code>, <code class="docutils literal notranslate"><span class="pre">obsColor</span></code>,
+<code class="docutils literal notranslate"><span class="pre">controlColor</span></code>, <code class="docutils literal notranslate"><span class="pre">titleFontSize</span></code>, <code class="docutils literal notranslate"><span class="pre">defaultFontSize</span></code>. For more details on
+the remaining config options, see</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+</ul>
+</div></blockquote>
 </section>
 <section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/clim_argo_salin.png"><img alt="../../_images/clim_argo_salin.png" class="align-center" src="../../_images/clim_argo_salin.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../_images/histogram_ssh_aviso_atl.png"><img alt="../../_images/histogram_ssh_aviso_atl.png" class="align-center" src="../../_images/histogram_ssh_aviso_atl.png" style="width: 500px;" /></a>
 </section>
 </section>
 
@@ -219,8 +266,8 @@ surface (or the ice-ocean interface under ice shelves) while a value of
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="climatologyMapArgoTemperature.html" class="btn btn-neutral float-left" title="climatologyMapArgoTemperature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="climatologyMapWoa.html" class="btn btn-neutral float-right" title="climatologyMapWoa" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="regionalTSDiagrams.html" class="btn btn-neutral float-left" title="regionalTSDiagrams" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="climatologyMapSeaIceConcNH.html" class="btn btn-neutral float-right" title="climatologyMapSeaIceConcNH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
