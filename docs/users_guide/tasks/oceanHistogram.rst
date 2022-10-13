@@ -109,8 +109,7 @@ Other Config Options
 
 Other config options include ``lineWidth``, ``mainColor``, ``obsColor``,
 ``controlColor``, ``titleFontSize``, ``defaultFontSize``. For more details on
-the remaining config options, see
- * :ref:`config_seasons`
+the remaining config options, see :ref:`config_seasons`.
 
 Example Result
 --------------
