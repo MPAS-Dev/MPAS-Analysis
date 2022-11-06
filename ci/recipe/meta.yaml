@@ -27,6 +27,7 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
+    - esmf >=8.0.0,<8.3.0
     - esmf=*=nompi_*
     - f90nml
     - geometric_features >=0.5.0
