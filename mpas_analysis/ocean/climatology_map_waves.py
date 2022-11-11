@@ -25,7 +25,7 @@ from mpas_analysis.shared.io.utility import build_obs_path, decode_strings, \
 from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
-    RemapObservedClimatologySubtask, get_antarctic_stereographic_projection
+    RemapObservedClimatologySubtask
 from mpas_analysis.shared.climatology.climatology import \
     get_masked_mpas_climatology_file_name
 
@@ -35,7 +35,6 @@ from mpas_analysis.shared.constants import constants
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 import datetime
 
 
@@ -76,8 +75,9 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                    'mpas': 'timeMonthly_avg_significantWaveHeight',
                    'units': r'm',
                    'titleName': 'Significant Wave Height',
-                   'era5' : 'swh'},
-                  {'prefix': 'peakWaveFrequency',
+                   'era5' : 'swh',
+                   'ss_cci': 'swh_mean'},
+                  {'prefix': 'peakWavePeriod',
                    'mpas': 'timeMonthly_avg_peakWaveFrequency',
                    'units': r's',
                    'titleName': 'Peak Wave Period',
@@ -97,26 +97,27 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
         sectionName = self.taskName
 
         # read in what seasons we want to plot
-        seasons = config.getExpression(sectionName, 'seasons')
+        seasons = config.getexpression(sectionName, 'seasons')
 
-        regionGroups = config.getExpression(sectionName, 'regionGroups')
+        regionGroups = config.getexpression(sectionName, 'regionGroups')
 
         if len(seasons) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of seasons'.format(sectionName))
 
-        comparisonGridNames = config.getExpression(sectionName,
+        comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
             raise ValueError('config section {} does not contain valid list '
                              'of comparison grids'.format(sectionName))
 
-        fieldList = config.getExpression(sectionName, 'fieldList')
+        fieldList = config.getexpression(sectionName, 'fieldList')
         fieldsRequested = [field for field in fields if field['prefix'] in fieldList]
 
         variableListMpas = [field['mpas'] for field in fieldsRequested] 
         variableListObs  = [field['era5'] for field in fieldsRequested] 
+        #variableListObs  = [field['ss_cci'] for field in fieldsRequested] 
 
         climStartYear = config.getint(sectionName, 'obsStartYear')
         climEndYear = config.getint(sectionName, 'obsEndYear')
@@ -126,7 +127,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         if makeTables:
             #for regionGroup in regionGroups:
-            fieldListTable = config.getExpression(sectionName, 'fieldList')
+            fieldListTable = config.getexpression(sectionName, 'fieldList')
             fieldListTable.append('iceFraction')
             fieldsTable = [field for field in fields if field['prefix'] in fieldListTable]
             for season in seasons:
@@ -142,7 +143,6 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         # the variableList variables  will be added to
         # mpasClimatologyTask along with the seasons.
-        #remapClimatologySubtask = RemapMpasClimatologySubtask(
         remapClimatologySubtask = RemapMpasWavesClimatology(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
@@ -155,7 +155,8 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
         if controlConfig is None:
             observationsDirectory = build_obs_path(
                 config, 'ocean', '{}Subdirectory'.format('wave'))
-            obsFileName = "{}/ERA5_1950_1978_new.nc".format(observationsDirectory)
+            obsFileName = "{}/ERA5_Monthly_1959-2021.nc".format(observationsDirectory)
+            #obsFileName = "{}/SS_CCI_1991_2018.nc".format(observationsDirectory)
 
             remapObservationsSubtask = RemapObservedWaveClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
@@ -179,6 +180,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                 refTitleLabel = "Observations (ERA 5) {:04d}-{:04d}".format(
                     climStartYear, climEndYear)
                 refFieldName = field['era5']
+                #refFieldName = field['ss_cci']
                 diffTitleLabel = None 
 
             else:
@@ -210,16 +212,14 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                     subtask.set_plot_info(
                         outFileLabel=outFileLabel,
                         fieldNameInTitle=field['titleName'],
-                        mpasFieldName=field['mpas'],
+                        mpasFieldName=field['prefix'],
                         refFieldName=refFieldName,
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=field['units'],
                         imageCaption=field['titleName'],
-                        #galleryGroup=field['titleName'],
                         galleryGroup='waves',
                         groupSubtitle=None,
-                        #groupLink='{}Waves'.format(fieldPrefix),
                         groupLink='waves',
                         galleryName=field['titleName'],
                         configSectionName=configSectionName)
@@ -252,11 +252,42 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
 
 class RemapMpasWavesClimatology(RemapMpasClimatologySubtask): # {{{
-
+    """
+    A subtask for reading and remapping wave climatology
+    """
+    # Authors
+    # -------
+    # Steven Brus, Xylar Asay-Davis
 
     def customize_masked_climatology(self, climatology, season):  # {{{
+        """
+        Convert peak freqency to peak period 
 
-        climatology['timeMonthly_avg_peakWaveFrequency'] = 1.0/climatology['timeMonthly_avg_peakWaveFrequency']
+        The descriptor for the observation grid
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+        the climatology data set
+
+        season : str
+        The name of the season to be masked
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+        the modified climatology data set
+        """
+        # Authors
+        # -------
+        # Steven Brus
+        # Xylar Asay-Davis
+
+
+        if 'timeMonthly_avg_peakWaveFrequency' in climatology:
+            climatology['peakWavePeriod'] = 1.0/climatology['timeMonthly_avg_peakWaveFrequency']
+
+        if 'timeMonthly_avg_significantWaveHeight' in climatology:
+            climatology['significantWaveHeight'] = climatology['timeMonthly_avg_significantWaveHeight']
 
         return climatology
 
@@ -271,6 +302,7 @@ class RemapObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
     # Authors
     # -------
     # Steven Brus, Xylar Asay-Davis
+
     def __init__(self, parentTask, seasons, fileName, outFilePrefix,
                  variableList,
                  comparisonGridNames=['latlon'],
@@ -339,8 +371,8 @@ class RemapObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+                                                  latVarName='latitude',
+                                                  lonVarName='longitude')
         return obsDescriptor  # }}}
 
     def build_observational_dataset(self, fileName):  # {{{
@@ -368,9 +400,7 @@ class RemapObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
         timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 
-        dsObs = xr.open_dataset(fileName, decode_times=False)
-        units, reference_date = dsObs.time.attrs['units'].split('since')
-        dsObs['time'] = pd.date_range(start=reference_date, periods=dsObs.sizes['time'], freq='MS')
+        dsObs = xr.open_dataset(fileName)
         dsObs = dsObs.rename({'time': 'Time'})
         dsObs = dsObs.sel(Time=slice(timeStart, timeEnd))
         dsObs.coords['month'] = dsObs['Time.month']
@@ -384,6 +414,13 @@ class RemapObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
 
 
 class WavesTableSubtask(AnalysisTask):
+    """
+    A subtask for creating wave region tables
+    """
+    # Authors
+    # -------
+    # Steven Brus, Xylar Asay-Davis
+
     def __init__(self, parentTask, mpasClimatologyTask, controlConfig,
                  regionMasksTask, season, fields, subtaskName=None):  # {{{
         """
@@ -457,7 +494,7 @@ class WavesTableSubtask(AnalysisTask):
         config = self.config
 
         sectionName = self.taskName
-        #regionsInTable = config.getExpression(sectionName,
+        #regionsInTable = config.getexpression(sectionName,
         #                                      'regionsInTable')
         #if len(regionsInTable) == 0:
         #    return
@@ -572,11 +609,14 @@ class WavesTableSubtask(AnalysisTask):
 
         for field in self.fields:
 
+            prefix = field['prefix']
+            mpas = field['mpas']
+            
             if  field['mpas'] == 'timeMonthly_avg_iceFraction':
               continue
 
             tableFileName = '{}/wavesTable_{}_{}.csv'.format(outDirectory,
-                                                             field['prefix'],
+                                                             prefix,
                                                              self.season)
 
             with open(tableFileName, 'w', newline='') as csvfile:
@@ -584,16 +624,15 @@ class WavesTableSubtask(AnalysisTask):
   
                 writer.writeheader()
                 for index, regionName in enumerate(regionNames):
-                    if field['mpas'] == 'timeMonthly_avg_peakWaveFrequency':
-                        var = 1.0/ds[field['mpas']][index].values
-                    else:
-                        var = ds[field['mpas']][index].values
+                    var = ds[mpas][index].values
+                    if mpas == 'timeMonthly_avg_peakWaveFrequency':
+                        var = 1.0/var
                     row = {'Region': regionName,
                            'Area': '{}'.format(ds.area[index].values),
                            mainRunName: '{}'.format(var)}
                     if dsControl is not None:
                         row[controlRunName] = \
-                            '{}'.format(dsControl[field['mpas']][index].values)
+                            '{}'.format(dsControl[mpas][index].values)
                     writer.writerow(row)
 
         ##### Histograms ##### 
@@ -603,11 +642,7 @@ class WavesTableSubtask(AnalysisTask):
         startYear = int(config.get('climatology','startYear'))
         endYear = int(config.get('climatology','endYear'))
 
-        seasonMonths = {'ANN':[1,2,3,4,5,6,7,8,9,10,11,12], 
-                        'JFM':[1,2,3],
-                        'JAS':[7,8,9]}
-
-        months = seasonMonths[self.season]
+        months = constants.monthDictionary[self.season]
 
         filePrefix = baseDirectory+'/'+runSubdirectory+'/'+mainRunName+'.mpaso.waveOutput.'
         files = []
