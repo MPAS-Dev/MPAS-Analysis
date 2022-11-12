@@ -108,9 +108,9 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                                 if 'ss_cci' in field]
 
         era5ObsStartYear = config.getint(sectionName, 'era5ObsStartYear')
-        era5ObsEndYear = config.getint(sectionName, 'era5EndYear')
+        era5ObsEndYear = config.getint(sectionName, 'era5ObsEndYear')
         SscciObsStartYear = config.getint(sectionName, 'SscciObsStartYear')
-        SscciObsEndYear = config.getint(sectionName, 'Sscci5EndYear')
+        SscciObsEndYear = config.getint(sectionName, 'SscciObsEndYear')
 
         # the variableList variables  will be added to
         # mpasClimatologyTask along with the seasons.
@@ -168,13 +168,13 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                         remapObservationsSubtask = \
                             remapEraObservationsSubtask
                         refTitleLabel = f'{obs_type} ({obs.upper()})' \
-                                        '{era5ObsStartYear}-{era5ObsEndYear}'
+                                        f'{era5ObsStartYear}-{era5ObsEndYear}'
                     elif obs == 'ss_cci':
                         obs_type = 'Observations'
                         remapObservationsSubtask = \
                             remapSscciObservationsSubtask
                         refTitleLabel = f'{obs_type} ({obs.upper()})' \
-                                        '{SscciObsStartYear}-{SscciObsEndYear}'
+                                        f'{SscciObsStartYear}-{SscciObsEndYear}'
 
                 else:
                     controlRunName = controlConfig.get('runs', 'mainRunName')
@@ -189,7 +189,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                     for season in seasons:
 
                         subtaskName = f'plot{upperFieldPrefix}_{season}_' \
-                                      '{comparisonGridName}_{obs}'
+                                      f'{comparisonGridName}_{obs}'
 
                         # make a new subtask for this
                         # season and comparison grid
