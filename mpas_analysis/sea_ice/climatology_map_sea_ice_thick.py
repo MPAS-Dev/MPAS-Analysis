@@ -149,7 +149,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
                     comparisonGridName=comparisonGridName,
                     remapMpasClimatologySubtask=remapClimatologySubtask,
                     remapObsClimatologySubtask=remapObservationsSubtask,
-                    subtaskName=subtaskName)
+                    subtaskName=subtaskName,
+                    controlConfig=controlConfig)
 
                 subtask.set_plot_info(
                     outFileLabel=f'icethick{hemisphere}',
