@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start Guide &mdash; MPAS-Analysis 1.8.0rc2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Configuration" href="configuration.html" />
+    <link rel="prev" title="MPAS-Analysis" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.8.0rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation-for-users">Installation for users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-for-developers">Installation for developers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-analysis-input-data">Download analysis input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-analysis">List Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-analysis">Running the analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#list-of-mpas-output-files-that-are-needed-by-mpas-analysis">List of MPAS output files that are needed by MPAS-Analysis:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#purge-old-analysis">Purge Old Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-in-parallel-via-a-queueing-system">Running in parallel via a queueing system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#customizing-plots-or-creating-new-ones">Customizing plots or creating new ones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instructions-for-creating-a-new-analysis-task">Instructions for creating a new analysis task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-documentation">Generating Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Quick Start Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/users_guide/quick_start.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-guide">
+<span id="quick-start"></span><h1>Quick Start Guide<a class="headerlink" href="#quick-start-guide" title="Permalink to this heading">¶</a></h1>
+<p>Analysis for simulations produced with Model for Prediction Across Scales
+(MPAS) components and the Energy Exascale Earth System Model (E3SM), which
+used those components.</p>
+<a class="reference external image-reference" href="_static/sst_example.png"><img alt="sea surface temperature" src="../_images/sst_example.png" /></a>
+<section id="installation-for-users">
+<h2>Installation for users<a class="headerlink" href="#installation-for-users" title="Permalink to this heading">¶</a></h2>
+<p>MPAS-Analysis is available as an anaconda package via the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
+<span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span>
+</pre></div>
+</div>
+</section>
+<section id="installation-for-developers">
+<h2>Installation for developers<a class="headerlink" href="#installation-for-developers" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>To use the latest version for developers, get the code from:</dt><dd><p><a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">https://github.com/MPAS-Dev/MPAS-Analysis</a></p>
+</dd>
+</dl>
+<p>Then, you will need to set up a conda environment from the MPAS-Analysis repo.
+This environment will include the required dependencies for the development
+branch from <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code> and will install the <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package into
+the conda environment in a way that points directly to the local branch (so
+changes you make to the code directly affect <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the conda
+environment):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda create -y -n mpas_dev --file dev-spec.txt
+conda activate mpas_dev
+python -m pip install -e .
+</pre></div>
+</div>
+<p>If you are developing another conda package at the same time (this is common
+for MPAS-Tools or geometric_features), you should first comment out the other
+package in <code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code>.  Then, you can install both packages in the same
+development environment, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt <span class="se">\</span>
+    --file analysis/MPAS-Analysis/dev-spec.txt
+conda activate mpas_dev
+<span class="nb">cd</span> tools/MPAS-Tools/conda_package
+python -m pip install -e .
+<span class="nb">cd</span> ../../../analysis/MPAS-Analysis
+python -m pip install -e .
+</pre></div>
+</div>
+<p>Obviously, the paths to the repos may be different in your local clones.  With
+the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as defined above, you can make changes to both
+<code class="docutils literal notranslate"><span class="pre">mpas_tools</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> packages in their respective branches, and
+these changes will be reflected when refer to the packages or call their
+respective entry points (command-line tools).</p>
+</section>
+<section id="download-analysis-input-data">
+<h2>Download analysis input data<a class="headerlink" href="#download-analysis-input-data" title="Permalink to this heading">¶</a></h2>
+<p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, download the data that is
+necessary to MPAS-Analysis by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">download_analysis_data</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">mpas_analysis</span><span class="o">/</span><span class="n">diagnostics</span>
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">/path/to/mpas_analysis/diagnostics</span></code> is the main folder that will contain
+two subdirectories:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>, which includes mapping and region mask files for
+standard resolution MPAS meshes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">observations</span></code>, which includes the pre-processed observations listed in the
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/latest/observations.html">Observations table</a>
+and used to evaluate the model results</p></li>
+</ul>
+<p>Once you have downloaded the analysis data, you will point to its location
+(your equivalent of <code class="docutils literal notranslate"><span class="pre">path/to/mpas_analysis/diagnostics</span></code> above) in the config
+option <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section.</p>
+</section>
+<section id="list-analysis">
+<h2>List Analysis<a class="headerlink" href="#list-analysis" title="Permalink to this heading">¶</a></h2>
+<p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, list the available analysis tasks
+by running:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="nb">list</span>
+</pre></div>
+</div>
+<p>This lists all tasks and their tags.  These can be used in the <code class="docutils literal notranslate"><span class="pre">generate</span></code>
+command-line option or config option.  See <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code>
+for more details.</p>
+</section>
+<section id="running-the-analysis">
+<h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code>), copy <code class="docutils literal notranslate"><span class="pre">config.example</span></code>,
+or copy one of the example files in the <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory (if using a
+git repo) or download one from the
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">example configs directory</a>.</p></li>
+<li><p>Either modify config options in your new file or copy and modify config
+options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> (in a git repo) or directly
+from GitHub:
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg">default.cfg</a>.</p></li>
+<li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
+first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> and then replace that
+configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
+<li><p>If you want to run a subset of the analysis, you can either set the
+<code class="docutils literal notranslate"><span class="pre">generate</span></code> option under <code class="docutils literal notranslate"><span class="pre">[output]</span></code> in your config file or use the
+<code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag on the command line.  See the comments in
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> for more details on this option.</p>
+<p><strong>Requirements for custom config files:</strong></p>
+</li>
+</ol>
+<ul class="simple">
+<li><p>At minimum you should set <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> under <code class="docutils literal notranslate"><span class="pre">[output]</span></code> to the folder
+where output is stored.  <strong>NOTE</strong> this value should be a unique
+directory for each run being analyzed.  If multiple runs are analyzed in
+the same directory, cached results from a previous analysis will not be
+updated correctly.</p></li>
+<li><p>Any options you copy into the config file <strong>must</strong> include the
+appropriate section header (e.g. ‘[run]’ or ‘[output]’)</p></li>
+<li><p>You do not need to copy all options from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code>.
+This file will automatically be used for any options you do not include
+in your custom config file.</p></li>
+<li><p>You should <strong>not</strong> modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> directly.</p></li>
+</ul>
+</section>
+<section id="list-of-mpas-output-files-that-are-needed-by-mpas-analysis">
+<h2>List of MPAS output files that are needed by MPAS-Analysis:<a class="headerlink" href="#list-of-mpas-output-files-that-are-needed-by-mpas-analysis" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>mpas-o files:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpaso.hist.am.timeSeriesStatsMonthly.*.nc</span></code> (Note: since OHC
+anomalies are computed wrt the first year of the simulation,
+if OHC diagnostics is activated, the analysis will need the
+first full year of <code class="docutils literal notranslate"><span class="pre">mpaso.hist.am.timeSeriesStatsMonthly.*.nc</span></code>
+files, no matter what <code class="docutils literal notranslate"><span class="pre">[timeSeries]/startYear</span></code> and
+<code class="docutils literal notranslate"><span class="pre">[timeSeries]/endYear</span></code>  are. This is especially important to know if
+short term archiving is used in the run to analyze: in that case, set
+<code class="docutils literal notranslate"><span class="pre">[input]/runSubdirectory</span></code>, <code class="docutils literal notranslate"><span class="pre">[input]/oceanHistorySubdirectory</span></code> and
+<code class="docutils literal notranslate"><span class="pre">[input]/seaIceHistorySubdirectory</span></code> to the appropriate run and archive
+directories and choose <code class="docutils literal notranslate"><span class="pre">[timeSeries]/startYear</span></code> and
+<code class="docutils literal notranslate"><span class="pre">[timeSeries]/endYear</span></code> to include only data that have been short-term
+archived).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpaso.hist.am.meridionalHeatTransport.0001-03-01.nc</span></code> (or any
+<code class="docutils literal notranslate"><span class="pre">hist.am.meridionalHeatTransport</span></code> file)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpaso.rst.0002-01-01_00000.nc</span></code> (or any other mpas-o restart file)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpaso_in</span></code></p></li>
+</ul>
+</li>
+<li><p>mpas-seaice files:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpasseaice.hist.am.timeSeriesStatsMonthly.*.nc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpasseaice.rst.0002-01-01_00000.nc</span></code> (or any other mpas-seaice restart
+file)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">streams.seaice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpassi_in</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>Note: for older runs, mpas-seaice files will be named:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mpascice.hist.am.timeSeriesStatsMonthly.*.nc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpascice.rst.0002-01-01_00000.nc</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">streams.cice</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas-cice_in</span></code>
+Also, for older runs mpaso-in will be named:</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas-o_in</span></code></p></li>
+</ul>
+</section>
+<section id="purge-old-analysis">
+<h2>Purge Old Analysis<a class="headerlink" href="#purge-old-analysis" title="Permalink to this heading">¶</a></h2>
+<p>To purge old analysis (delete the whole output directory) before running run
+the analysis, add the <code class="docutils literal notranslate"><span class="pre">--purge</span></code> flag.  If you installed <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> as
+a package, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">purge</span> <span class="o">&lt;</span><span class="n">config</span><span class="o">.</span><span class="n">file</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>All of the subdirectories listed in <code class="docutils literal notranslate"><span class="pre">output</span></code> will be deleted along with the
+climatology subdirectories in <code class="docutils literal notranslate"><span class="pre">oceanObservations</span></code> and <code class="docutils literal notranslate"><span class="pre">seaIceObservations</span></code>.</p>
+<p>It is a good policy to use the purge flag for most changes to the config file,
+for example, updating the start and/or end years of climatologies (and
+sometimes time series), changing the resolution of a comparison grid, renaming
+the run, changing the seasons over which climatologies are computed for a given
+task, updating the code to the latest version.</p>
+<p>Cases where it is reasonable not to purge would be, for example, changing
+options that only affect plotting (color map, ticks, ranges, font sizes, etc.),
+rerunning with a different set of tasks specified by the <code class="docutils literal notranslate"><span class="pre">generate</span></code> option
+(though this will often cause climatologies to be re-computed with new
+variables and may not save time compared with purging), generating only the
+final website with <code class="docutils literal notranslate"><span class="pre">--html_only</span></code>, and re-running after the simulation has
+progressed to extend time series (however, not recommended for changing the
+bounds on climatologies, see above).</p>
+</section>
+<section id="running-in-parallel-via-a-queueing-system">
+<h2>Running in parallel via a queueing system<a class="headerlink" href="#running-in-parallel-via-a-queueing-system" title="Permalink to this heading">¶</a></h2>
+<p>If you are running from a git repo:</p>
+<ol class="arabic simple">
+<li><p>If you are running from a git repo, copy the appropriate job script file
+from <code class="docutils literal notranslate"><span class="pre">configs/&lt;machine_name&gt;</span></code> to the root directory (or another directory
+if preferred). The default script, <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code>, is
+appropriate for a laptop or desktop computer with multiple cores.</p></li>
+<li><p>If using the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> conda package, download the job script and/or
+sample config file from the
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">example configs directory</a>.</p></li>
+<li><p>Modify the number of parallel tasks, the run name, the output directory
+and the path to the config file for the run.</p></li>
+<li><p>Note: the number of parallel tasks can be anything between 1 and the
+number of analysis tasks to be performed.  If there are more tasks than
+parallel tasks, later tasks will simply wait until earlier tasks have
+finished.</p></li>
+<li><p>Submit the job using the modified job script</p></li>
+</ol>
+<p>If a job script for your machine is not available, try modifying the default
+job script in <code class="docutils literal notranslate"><span class="pre">configs/job_script.default.bash</span></code> or one of the job scripts for
+another machine to fit your needs.</p>
+</section>
+<section id="customizing-plots-or-creating-new-ones">
+<h2>Customizing plots or creating new ones<a class="headerlink" href="#customizing-plots-or-creating-new-ones" title="Permalink to this heading">¶</a></h2>
+<p>There are three main ways to either customize the plots that MPAS-Analysis
+already makes or creating new ones:</p>
+<ol class="arabic simple">
+<li><p>customize the config file. Some features, such as colormaps and colorbar
+limits for color shaded plot or depth ranges for ocean region time series,
+can be customized: look at <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> for available
+customization for each analysis task.</p></li>
+<li><p>read in the analysis data computed by MPAS-Analysis into custom scripts. When
+running MPAS-Analysis with the purpose of generating both climatologies
+and time series, the following data sets are generated:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/unmasked_[mpasMeshName]</span></code>: MPAS-Ocean
+and MPAS-seaice climatologies on the native grid.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/remapped</span></code>: remapped climatologies
+for each chosen task (climatology files are stored in different
+subdirectories according to the task name).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/obs</span></code>: observational climatologies.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/mocStreamfunction_years[startYear]-[endYear].nc</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/clim/mpas/avg/meridionalHeatTransport_years[startYear]-[endYear].nc</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[baseDirectory]/timeseries</span></code>: various time series data.
+Custom scripts can then utilize these datasets to generate custom plots.</p></li>
+</ul>
+</li>
+<li><p>add a new analysis task to MPAS-Analysis (see below).</p></li>
+</ol>
+</section>
+<section id="instructions-for-creating-a-new-analysis-task">
+<h2>Instructions for creating a new analysis task<a class="headerlink" href="#instructions-for-creating-a-new-analysis-task" title="Permalink to this heading">¶</a></h2>
+<p>Analysis tasks can be found in a directory corresponding to each component,
+e.g., <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean</span></code> for MPAS-Ocean. Shared functionality is contained
+within the <code class="docutils literal notranslate"><span class="pre">mpas_analysis/shared</span></code> directory.</p>
+<ol class="arabic simple">
+<li><p>create a new task by <code class="docutils literal notranslate"><span class="pre">copying</span> <span class="pre">mpas_analysis/analysis_task_template.py</span></code> to
+the appropriate folder (<code class="docutils literal notranslate"><span class="pre">ocean</span></code>, <code class="docutils literal notranslate"><span class="pre">sea_ice</span></code>, etc.) and modifying it as
+described in the template.  Take a look at
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis/shared/analysis_task.py</span></code> for additional guidance.</p></li>
+<li><p>note, no changes need to be made to <code class="docutils literal notranslate"><span class="pre">mpas_analysis/shared/analysis_task.py</span></code></p></li>
+<li><p>modify <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> (and possibly any machine-specific
+config files in <code class="docutils literal notranslate"><span class="pre">configs/&lt;machine&gt;</span></code>)</p></li>
+<li><p>import new analysis task in <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code></p></li>
+<li><p>add new analysis task to <code class="docutils literal notranslate"><span class="pre">mpas_analysis/__main__.py</span></code> under
+<code class="docutils literal notranslate"><span class="pre">build_analysis_list</span></code>, see below.</p></li>
+</ol>
+<p>A new analysis task can be added with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">&lt;</span><span class="n">component</span><span class="o">&gt;.</span><span class="n">MyTask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">myArg</span><span class="o">=</span><span class="s1">&#39;argValue&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>This will add a new object of the <code class="docutils literal notranslate"><span class="pre">MyTask</span></code> class to a list of analysis tasks
+created in <code class="docutils literal notranslate"><span class="pre">build_analysis_list</span></code>.  Later on in <code class="docutils literal notranslate"><span class="pre">run_analysis</span></code>, it will first
+go through the list to make sure each task needs to be generated
+(by calling <code class="docutils literal notranslate"><span class="pre">check_generate</span></code>, which is defined in <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>), then,
+will call <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> on each task (to make sure the appropriate AM is
+on and files are present), and will finally call <code class="docutils literal notranslate"><span class="pre">run</span></code> on each task that is
+to be generated and is set up properly.</p>
+</section>
+<section id="generating-documentation">
+<h2>Generating Documentation<a class="headerlink" href="#generating-documentation" title="Permalink to this heading">¶</a></h2>
+<p>Create a development environment as described above in “Installation for
+developers”.  Then run:
+To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
+<span class="n">make</span> <span class="n">clean</span>
+<span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>The results can be viewed in your web browser by opening:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="MPAS-Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="configuration.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

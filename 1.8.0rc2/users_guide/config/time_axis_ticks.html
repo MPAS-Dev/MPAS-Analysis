@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time-Axis Tick Marks &mdash; MPAS-Analysis 1.8.0rc2 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Output Grids for Transects" href="transects.html" />
+    <link rel="prev" title="Moving Average" href="moving_average.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.8.0rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
+      <li class="breadcrumb-item active">Time-Axis Tick Marks</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/config/time_axis_ticks.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="time-axis-tick-marks">
+<span id="config-time-axis-ticks"></span><h1>Time-Axis Tick Marks<a class="headerlink" href="#time-axis-tick-marks" title="Permalink to this heading">¶</a></h1>
+<p>By default tick marks on the time (x) axis are determined automatically by
+<code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.  You can explicitly control them by setting a first year and
+a stride (skip) in years.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p>will place the first tick mark at simulation year 2 and will give a tick mark
+every 2 years.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="moving_average.html" class="btn btn-neutral float-left" title="Moving Average" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="transects.html" class="btn btn-neutral float-right" title="Output Grids for Transects" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
