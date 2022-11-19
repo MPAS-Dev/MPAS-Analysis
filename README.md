@@ -116,7 +116,7 @@ for more details.
 
 ## Running the analysis
 
-  1. Create and empty config file (say `config.myrun`), copy `config.example`,
+  1. Create and empty config file (say `myrun.cfg`), copy `example.cfg`,
      or copy one of the example files in the `configs` directory (if using a
      git repo) or download one from the
      [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
@@ -125,9 +125,9 @@ for more details.
      from GitHub:
      [default.cfg](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg).
   3. If you installed the `mpas-analysis` package, run:
-     `mpas_analysis config.myrun`.  This will read the configuration
+     `mpas_analysis myrun.cfg`.  This will read the configuration
      first from `mpas_analysis/default.cfg` and then replace that
-     configuraiton with any changes from from `config.myrun`
+     configuraiton with any changes from from `myrun.cfg`
   4. If you want to run a subset of the analysis, you can either set the
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in

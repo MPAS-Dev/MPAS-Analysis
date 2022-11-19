@@ -151,10 +151,10 @@ Finally, we note that the ``generate`` option in the configuration file can
 be overridden by specifying the ``--generate`` option on the command line::
 
   mpas_analysis --generate=all_publicObs,no_index,no_climatologyMapSST \
-      config.my_run
+      my_run.cfg
 
 This example would override whatever ``generate`` option was specified in
-``config.my_run`` with a directive to generate only tasks that support the
+``my_run.cfg`` with a directive to generate only tasks that support the
 publicly available observations, skipping those using climate indices (e.g.
 El Ni |n~| o 3.4) and also skipping ``climatologyMapSST``.
 
