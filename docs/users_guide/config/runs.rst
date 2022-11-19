@@ -71,7 +71,7 @@ Once the analysis has been run on the control run, a comparison is made by
 uncommenting ``controlRunConfigFile`` and specifying the path to the
 configuration file use in this analysis, e.g.::
 
-  controlRunConfigFile = config.control_run
+  controlRunConfigFile = control_run.cfg
 
 If analysis has already been run on the "main" run in a "main vs ref"
 comparison, some time can be saved in performing the comparison
@@ -101,6 +101,6 @@ Specify the path to the configuration file use in "main" analysis by
 uncommenting the option and providing a relative or absolute path to the
 config file::
 
-  mainRunConfigFile = config.main_run
+  mainRunConfigFile = main_run.cfg
 
 

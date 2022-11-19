@@ -525,7 +525,7 @@ def run_analysis(config, analyses):
         print('Warning: The main run name is quite long and will be '
               'truncated in some plots: \n{}\n\n'.format(mainRunName))
 
-    configFileName = '{}/config.{}'.format(logsDirectory, mainRunName)
+    configFileName = '{}/complete.{}.cfg'.format(logsDirectory, mainRunName)
 
     configFile = open(configFileName, 'w')
     config.write(configFile)
