@@ -196,7 +196,7 @@ for more details.</p>
 <section id="running-the-analysis">
 <h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
-<li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code>), copy <code class="docutils literal notranslate"><span class="pre">config.example</span></code>,
+<li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code>), copy <code class="docutils literal notranslate"><span class="pre">example.cfg</span></code>,
 or copy one of the example files in the <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory (if using a
 git repo) or download one from the
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">example configs directory</a>.</p></li>
@@ -205,9 +205,9 @@ options from <code class="docutils literal notranslate"><span class="pre">mpas_a
 from GitHub:
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg">default.cfg</a>.</p></li>
 <li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
-<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">myrun.cfg</span></code>.  This will read the configuration
 first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> and then replace that
-configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
+configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code></p></li>
 <li><p>If you want to run a subset of the analysis, you can either set the
 <code class="docutils literal notranslate"><span class="pre">generate</span></code> option under <code class="docutils literal notranslate"><span class="pre">[output]</span></code> in your config file or use the
 <code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag on the command line.  See the comments in

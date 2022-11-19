@@ -621,7 +621,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: The main run name is quite long and will be &#39;</span>
               <span class="s1">&#39;truncated in some plots: </span><span class="se">\n</span><span class="si">{}</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">))</span>
 
-    <span class="n">configFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/config.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">)</span>
+    <span class="n">configFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/complete.</span><span class="si">{}</span><span class="s1">.cfg&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">)</span>
 
     <span class="n">configFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">configFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">configFile</span><span class="p">)</span>
