@@ -14,8 +14,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
@@ -138,14 +137,15 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
 
                     remap_observations_subtask = None
 
-                image_description = f'{season} Climatology Map of \
-                                    {hemisphere_long}-Hemisphere Sea Ice Melting'
-                image_caption = image_description
+                image_caption = f'{season} Climatology Map of ' \
+                                f'{hemisphere_long}-Hemisphere Sea Ice Melting'
                 gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Melting'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
-                    self, hemisphere, season, comparison_grid_name,
-                    remap_climatology_subtask, remap_observations_subtask,
+                    parentTask=self, season=season,
+                    comparisonGridName=comparison_grid_name,
+                    remapMpasClimatologySubtask=remap_climatology_subtask,
+                    remapObsClimatologySubtask=remap_observations_subtask,
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
@@ -156,13 +156,12 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
                     unitsLabel=r'm yr$^{-1}$',
-                    imageDescription=image_description,
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
                     groupLink=f'{hemisphere.lower()}_melting',
                     galleryName=gallery_name,
-                    maskValue=None)
+                    extend='max')
 
                 self.add_subtask(subtask)
 
