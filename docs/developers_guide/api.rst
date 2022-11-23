@@ -118,14 +118,6 @@ Sea ice tasks
    TimeSeriesSeaIce
    ClimatologyMapIcebergConc
 
-.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
-
-.. autosummary::
-   :toctree: generated/
-
-   PlotClimatologyMapSubtask
-   PlotClimatologyMapSubtask.set_plot_info
-
 
 Shared modules
 ==============
