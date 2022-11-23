@@ -22,6 +22,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
 from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
+from mpas_analysis.shared.interpolation.utility import add_periodic_lon
 
 import datetime
 
@@ -211,10 +212,10 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=field['units'],
                             imageCaption=field['titleName'],
-                            galleryGroup='waves',
+                            galleryGroup='Waves',
                             groupSubtitle=None,
                             groupLink='waves',
-                            galleryName=f"{field['titleName']}"
+                            galleryName=f"{field['titleName']} "
                                         f'({obs.upper()} {obs_type})',
                             configSectionName=configSectionName)
 
@@ -325,7 +326,7 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         variableList : list
             List of observational variables to remap
 
-        comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'},
+        comparisonGridNames : list of str,
             optional
             The name(s) of the comparison grid to use for remapping.
 
@@ -340,7 +341,7 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
 
         # call the constructor from the base class (AnalysisTask)
         super().__init__(parentTask, seasons, fileName, outFilePrefix,
-                         comparisonGridNames=['latlon'],
+                         comparisonGridNames=comparisonGridNames,
                          subtaskName=subtaskName)
         # }}}
 
@@ -360,11 +361,12 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Steven Brus
+        # Steven Brus, Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
+        dsObs = self.build_observational_dataset(fileName)
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='latitude',
                                                   lonVarName='longitude')
         return obsDescriptor  # }}}
@@ -386,7 +388,7 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Steven Brus
+        # Steven Brus, Xylar Asay-Davis
 
         sectionName = self.taskName
         climStartYear = self.config.getint(sectionName, 'era5ObsStartYear')
@@ -401,6 +403,9 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.coords['year'] = dsObs['Time.year']
 
         dsObs = dsObs[self.variableList]
+
+        degrees = 'degree' in dsObs.longitude.units
+        dsObs = add_periodic_lon(ds=dsObs, lonDim='longitude', degrees=degrees)
 
         return dsObs  # }}}
 
@@ -442,7 +447,7 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         variableList : list
             List of observational variables to remap
 
-        comparisonGridNames : list of {'latlon', 'antarctic', 'arctic'},
+        comparisonGridNames : list of str,
             optional
             The name(s) of the comparison grid to use for remapping.
 
@@ -451,13 +456,13 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Steven Brus
+        # Steven Brus, Xylar Asay-Davis
 
         self.variableList = variableList
 
         # call the constructor from the base class (AnalysisTask)
         super().__init__(parentTask, seasons, fileName, outFilePrefix,
-                         comparisonGridNames=['latlon'],
+                         comparisonGridNames=comparisonGridNames,
                          subtaskName=subtaskName)
         # }}}
 
@@ -477,11 +482,12 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Steven Brus
+        # Steven Brus, Xylar Asay-Davis
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
+        dsObs = self.build_observational_dataset(fileName)
+        obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
                                                   latVarName='lat',
                                                   lonVarName='lon')
         return obsDescriptor  # }}}
@@ -503,7 +509,7 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         '''
         # Authors
         # -------
-        # Steven Brus
+        # Steven Brus, Xylar Asay-Davis
 
         sectionName = self.taskName
         climStartYear = self.config.getint(sectionName, 'SscciObsStartYear')
@@ -518,6 +524,9 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         dsObs.coords['year'] = dsObs['Time.year']
 
         dsObs = dsObs[self.variableList]
+
+        degrees = 'degree' in dsObs.lon.units
+        dsObs = add_periodic_lon(ds=dsObs, lonDim='lon', degrees=degrees)
 
         return dsObs  # }}}
 
