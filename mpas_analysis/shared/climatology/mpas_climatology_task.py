@@ -700,7 +700,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
                     os.path.basename(climatologyFileName)))
 
                 ds = ds.where(ds.month == month, drop=True)
-                ds = ds.mean(dim='Time')
+                ds = ds.mean(dim='Time', keep_attrs=True)
                 ds.compute(num_workers=self.subprocessCount)
                 write_netcdf(ds, climatologyFileName)
         else:
@@ -720,7 +720,13 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
                                        decode_cf=False, decode_times=False,
                                        preprocess=_preprocess) as ds:
                 ds.coords['weight'] = ('weight', weights)
-                ds = ((ds.weight * ds).sum(dim='weight') /
-                      ds.weight.sum(dim='weight'))
-                ds.compute(num_workers=self.subprocessCount)
-                write_netcdf(ds, outFileName)
+                dsNew = ((ds.weight * ds).sum(dim='weight') /
+                         ds.weight.sum(dim='weight'))
+                for varName in ds.data_vars:
+                    attrs = ds[varName].attrs
+                    # _FillValue causes trouble
+                    attrs.pop('_FillValue', None)
+                    dsNew[varName].attrs = attrs
+
+                dsNew.compute(num_workers=self.subprocessCount)
+                write_netcdf(dsNew, outFileName)
