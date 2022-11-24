@@ -100,10 +100,11 @@ def main():
 
     if mesh == 'QU480':
         generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke',\n" \
-                   "            'no_landIceCavities']"
+                   "            'no_landIceCavities', 'no_waves']"
         end_year = '5'
     elif mesh == 'oQU240wLI':
-        generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke']"
+        generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', " \
+                   "'no_waves']"
         end_year = '8'
     else:
         raise ValueError(f'Unexpected mesh: {mesh}')
