@@ -6,7 +6,7 @@ set -e
 branch=test_e3sm_unified
 
 # test building the docs
-py=3.9
+py=3.10
 machine=${E3SMU_MACHINE}
 
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --clean
