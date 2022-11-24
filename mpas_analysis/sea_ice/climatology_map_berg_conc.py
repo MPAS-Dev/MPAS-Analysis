@@ -14,8 +14,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
@@ -132,18 +131,19 @@ class ClimatologyMapIcebergConc(AnalysisTask):
         for season in seasons:
             for comparisonGridName in comparisonGridNames:
 
-                imageDescription = \
+                imageCaption = \
                     '{} Climatology Map of {}-Hemisphere Iceberg ' \
                     'Concentration.'.format(season, hemisphereLong)
-                imageCaption = imageDescription
                 galleryGroup = \
                     '{}-Hemisphere Iceberg Concentration'.format(
                         hemisphereLong)
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
-                    self, hemisphere, season, comparisonGridName,
-                    remapClimatologySubtask, remapObservationsSubtask,
-                    controlConfig)
+                    parentTask=self, season=season,
+                    comparisonGridName=comparisonGridName,
+                    remapMpasClimatologySubtask=remapClimatologySubtask,
+                    remapObsClimatologySubtask=remapObservationsSubtask,
+                    controlConfig=controlConfig)
 
                 subtask.set_plot_info(
                     outFileLabel='bergconc{}'.format(hemisphere),
@@ -153,13 +153,12 @@ class ClimatologyMapIcebergConc(AnalysisTask):
                     refTitleLabel=refTitleLabel,
                     diffTitleLabel=diffTitleLabel,
                     unitsLabel=r'fraction',
-                    imageDescription=imageDescription,
                     imageCaption=imageCaption,
                     galleryGroup=galleryGroup,
                     groupSubtitle=None,
                     groupLink='{}_conc'.format(hemisphere.lower()),
                     galleryName=galleryName,
-                    maskValue=None)
+                    extend='neither')
 
                 self.add_subtask(subtask)
 
