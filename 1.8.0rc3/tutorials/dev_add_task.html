@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis 1.8.0rc3 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Main Authors" href="../authors.html" />
+    <link rel="prev" title="Developers: Understanding an analysis task" href="dev_understand_a_task.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.8.0rc3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Developers: Adding a new analysis task</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#getting-started">1. Getting started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-reference-scripts">2. The reference scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#selecting-an-existing-task-to-copy">3. Selecting an existing task to copy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#developing-the-task">4. Developing the task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#climatologymapbsf-class">4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#constructor">4.2 Constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setup-and-check-method">4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#developing-a-subtask">5. Developing a subtask</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#remapmpasbsfclimatology-class">5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1">3.2 Constructor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#customize-masked-climatology-method">5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#config-options">6. Config options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adding-the-task">7. Adding the task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-full-code-for-posterity">8. The full code for posterity</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Developers: Adding a new analysis task</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/dev_add_task.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="developers-adding-a-new-analysis-task">
+<span id="tutorial-dev-add-task"></span><h1>Developers: Adding a new analysis task<a class="headerlink" href="#developers-adding-a-new-analysis-task" title="Permalink to this heading">¶</a></h1>
+<p>This tutorial walks a new developer through the basics of creating a new
+analysis task in MPAS-Analysis.  It is a common practice to find an existing
+analysis task that is as close as possible to the new analysis, and to copy
+that existing task as a template for the new task.  That is the strategy we
+will demonstrate here.</p>
+<p>To provide a real example, we will show how we copy and modify an analysis
+task used to compute the anomaly in ocean heat content
+(<a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>) to instead compute
+the barotropic streamfunction (BSF).</p>
+<p>For computing the BSF itself, we will make use of a script that was developed
+outside of MPAS-Analysis for this purpose.  This is also a common development
+technique: first develop the analysis as a script or
+<a class="reference external" href="https://jupyter.org/">jupyter notebook</a>. Nearly always, the scripts or
+notebooks include hard-coded paths and are otherwise not easily applied to new
+simulations without considerable effort. This is the motivation for adapting
+the code to MPAS-Analysis.</p>
+<section id="getting-started">
+<h2>1. Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<p>To begin, please follow the <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a> tutorial, which
+will help you through the basics of creating a fork of MPAS-Analysis,
+cloning it onto the machine(s) where you will do your development, making
+a worktree for the feature you will develop, creating a conda environment for
+testing your new MPAS-Analysis development, and running MPAS-Analysis.</p>
+<p>Then, please follow the <a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task"><span class="std std-ref">Developers: Understanding an analysis task</span></a>.  This will give
+you a tour of the <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>
+analysis task that we will use as a starting point for developing a new task.</p>
+</section>
+<section id="the-reference-scripts">
+<h2>2. The reference scripts<a class="headerlink" href="#the-reference-scripts" title="Permalink to this heading">¶</a></h2>
+<p>I have two scripts I used in the past to compute the barotropic streamfunction
+and write it out, and then to plot it.  These scripts yanked out some code
+from MPAS-Analysis so there are a few similarities but there’s a lot of work
+to do.</p>
+<p>Here’s the script for computing the BSF:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">]]</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;lonCell&#39;</span><span class="p">,</span> <span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;lonVertex&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;latVertex&#39;</span><span class="p">]]</span>
+    <span class="n">dsMesh</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="n">out_filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">bsfVertex</span> <span class="o">=</span> <span class="n">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bsf on vertices computed.&#39;</span><span class="p">)</span>
+    <span class="n">bsfCell</span> <span class="o">=</span> <span class="n">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;bsf on cells computed.&#39;</span><span class="p">)</span>
+    <span class="n">dsBSF</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+    <span class="n">dsBSF</span><span class="p">[</span><span class="s1">&#39;bsfVertex&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bsfVertex</span>
+    <span class="n">dsBSF</span><span class="o">.</span><span class="n">bsfVertex</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
+    <span class="n">dsBSF</span><span class="o">.</span><span class="n">bsfVertex</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;barotropic streamfunction &#39;</span> \
+        <span class="s1">&#39;on vertices&#39;</span>
+    <span class="n">dsBSF</span><span class="p">[</span><span class="s1">&#39;bsfCell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bsfCell</span>
+    <span class="n">dsBSF</span><span class="o">.</span><span class="n">bsfCell</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
+    <span class="n">dsBSF</span><span class="o">.</span><span class="n">bsfCell</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;barotropic streamfunction &#39;</span> \
+        <span class="s1">&#39;on cells&#39;</span>
+    <span class="n">dsBSF</span> <span class="o">=</span> <span class="n">dsBSF</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="p">:</span>
+        <span class="n">dsBSF</span><span class="p">[</span><span class="n">var</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+    <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsBSF</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+
+    <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">innerEdges</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+                                   <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># convert from boolean mask to indices</span>
+    <span class="n">innerEdges</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">innerEdges</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">cell0</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">innerEdges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cell1</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">innerEdges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
+    <span class="n">normalVelocity</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">innerEdges</span><span class="p">)</span>
+
+    <span class="n">layerThicknessEdge</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell0</span><span class="p">)</span> <span class="o">+</span>
+                              <span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell1</span><span class="p">))</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span><span class="p">[</span><span class="n">innerEdges</span><span class="p">]</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="n">layerThicknessEdge</span> <span class="o">*</span> <span class="n">normalVelocity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+
+    <span class="c1"># ds = xarray.Dataset()</span>
+    <span class="c1"># ds[&#39;transport&#39;] = transport</span>
+    <span class="c1"># ds[&#39;innerEdges&#39;] = (&#39;nEdges&#39;, innerEdges)</span>
+    <span class="c1"># write_netcdf(ds, &#39;transport.nc&#39;)</span>
+
+    <span class="k">return</span> <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="n">_compute_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
+
+    <span class="n">nVertices</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertices&#39;</span><span class="p">]</span>
+    <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+
+    <span class="n">cellsOnVertex</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnVertex</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">verticesOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">isBoundaryCOV</span> <span class="o">=</span> <span class="n">cellsOnVertex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">boundaryVertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">isBoundaryCOV</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                        <span class="n">isBoundaryCOV</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">boundaryVertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">boundaryVertices</span><span class="p">,</span>
+                                        <span class="n">isBoundaryCOV</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># convert from boolean mask to indices</span>
+    <span class="n">boundaryVertices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">boundaryVertices</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">nBoundaryVertices</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">boundaryVertices</span><span class="p">)</span>
+    <span class="n">nInnerEdges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">innerEdges</span><span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">nInnerEdges</span><span class="o">+</span><span class="n">nBoundaryVertices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">nInnerEdges</span><span class="o">+</span><span class="n">nBoundaryVertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># The difference between the streamfunction at vertices on an inner edge</span>
+    <span class="c1"># should be equal to the transport</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">verticesOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">innerEdges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">verticesOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">innerEdges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nInnerEdges</span><span class="p">)</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+
+    <span class="c1"># the streamfunction should be zero at all boundary vertices</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nBoundaryVertices</span><span class="p">)</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">nInnerEdges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">nInnerEdges</span> <span class="o">+</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">nInnerEdges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundaryVertices</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">nInnerEdges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">bsfVertex</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nTime</span><span class="p">,</span> <span class="n">nVertices</span><span class="p">)),</span>
+                                 <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
+        <span class="n">rhs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nInnerEdges</span><span class="o">+</span><span class="n">nBoundaryVertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># convert to Sv</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nInnerEdges</span><span class="p">)</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="o">*</span><span class="n">transport</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tIndex</span><span class="p">)</span>
+
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nBoundaryVertices</span><span class="p">)</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">nInnerEdges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="n">M</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">),</span>
+                                    <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">nInnerEdges</span><span class="o">+</span><span class="n">nBoundaryVertices</span><span class="p">,</span>
+                                           <span class="n">nVertices</span><span class="p">))</span>
+
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lsqr</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+
+        <span class="n">bsfVertex</span><span class="p">[</span><span class="n">tIndex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">solution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">bsfVertex</span>
+
+
+<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>
+    <span class="n">edgesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">edgesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">verticesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">verticesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">areaEdge</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">dcEdge</span><span class="o">*</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span>
+
+    <span class="n">nCells</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">maxEdges</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">]</span>
+
+    <span class="n">areaVert</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nCells</span><span class="p">,</span> <span class="n">maxEdges</span><span class="p">)),</span>
+                                <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">iVert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxEdges</span><span class="p">):</span>
+        <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgesOnCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">iVert</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">iVert</span> <span class="o">&lt;</span> <span class="n">nEdgesOnCell</span>
+        <span class="n">areaVert</span><span class="p">[:,</span> <span class="n">iVert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">areaEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">iVert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgesOnCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">iVert</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">iVert</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">nEdgesOnCell</span>
+        <span class="n">areaVert</span><span class="p">[:,</span> <span class="n">iVert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">areaEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+
+    <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">edgesOnCell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">nEdgesOnCell</span> <span class="o">==</span> <span class="n">maxEdges</span>
+    <span class="n">areaVert</span><span class="p">[:,</span> <span class="n">maxEdges</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">areaEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
+
+    <span class="n">bsfCell</span> <span class="o">=</span> <span class="p">((</span><span class="n">areaVert</span> <span class="o">*</span> <span class="n">bsfVertex</span><span class="p">[:,</span> <span class="n">verticesOnCell</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">)</span> <span class="o">/</span>
+               <span class="n">areaVert</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">bsfCell</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>And here’s the one for plotting it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">cols</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+<span class="kn">import</span> <span class="nn">cmocean</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+<span class="kn">import</span> <span class="nn">pyproj</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">ProjectionGridDescriptor</span>
+
+
+<span class="k">def</span> <span class="nf">get_antarctic_stereographic_projection</span><span class="p">():</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a projection for an Antarctic steregraphic comparison grid</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    projection : ``pyproj.Proj`` object</span>
+<span class="sd">        The projection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 &#39;</span>
+                             <span class="s1">&#39;+k_0=1.0 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">projection</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">get_fris_stereographic_comparison_descriptor</span><span class="p">():</span>  <span class="c1"># {{{</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a descriptor of a region of a polar stereographic grid centered on the</span>
+<span class="sd">    Filchner-Ronne Ice Shelf, used for remapping and determining the grid name</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    descriptor : ``ProjectionGridDescriptor`` object</span>
+<span class="sd">        A descriptor of the FRIS comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.6e6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5e6</span><span class="p">,</span> <span class="mi">1101</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">1.1e6</span><span class="p">,</span> <span class="mi">1101</span><span class="p">)</span>
+    <span class="n">Lx</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">Ly</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">projection</span> <span class="o">=</span> <span class="n">get_antarctic_stereographic_projection</span><span class="p">()</span>
+
+    <span class="n">meshName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">x</span><span class="si">{}</span><span class="s1">km_</span><span class="si">{}</span><span class="s1">km_FRIS_stereo&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+    <span class="n">descriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">projection</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">meshName</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">descriptor</span>  <span class="c1"># }}}</span>
+
+
+<span class="k">def</span> <span class="nf">add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+    <span class="n">land_50m</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
+            <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">lakes_50m</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
+            <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;lakes&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span>
+            <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">land_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">lakes_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">100e3</span><span class="p">,):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    https://stackoverflow.com/a/27637925/7728169</span>
+<span class="sd">    Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    axes:</span>
+<span class="sd">    line: list of 1 Line2D object as returned by plot command</span>
+<span class="sd">    arrow_spacing: distance in m between arrows</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    arrows: list of arrows</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">vertices</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">v</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">v</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">arrows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">arrow_spacing</span><span class="p">)))</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">n</span><span class="p">])</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">:</span><span class="n">n</span><span class="p">])</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="p">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">FancyArrow</span><span class="p">(</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">length_includes_head</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">4e3</span><span class="p">,</span>
+            <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">arrows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">arrows</span>
+
+
+<span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">plot_pdf</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves the current plot to a file, then closes it.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename : str</span>
+<span class="sd">        the file name to be written</span>
+<span class="sd">    config :  mpas_analysis.configuration.MpasAnalysisConfigParser</span>
+<span class="sd">        Configuration options</span>
+<span class="sd">    tight : bool, optional</span>
+<span class="sd">        whether to tightly crop the figure</span>
+<span class="sd">    pad_inches : float, optional</span>
+<span class="sd">        The boarder around the image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="n">tight</span><span class="p">:</span>
+        <span class="n">bbox_inches</span> <span class="o">=</span> <span class="s1">&#39;tight&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">bbox_inches</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">plot_pdf</span><span class="p">:</span>
+        <span class="n">pdf_filename</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.pdf&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">filenames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdf_filename</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="s1">&#39;figure&#39;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="n">bbox_inches</span><span class="p">,</span>
+                    <span class="n">pad_inches</span><span class="o">=</span><span class="n">pad_inches</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="n">descriptor</span> <span class="o">=</span> <span class="n">get_fris_stereographic_comparison_descriptor</span><span class="p">()</span>
+
+<span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Stereographic</span><span class="p">(</span>
+    <span class="n">central_latitude</span><span class="o">=-</span><span class="mf">90.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="n">true_scale_latitude</span><span class="o">=-</span><span class="mf">71.0</span><span class="p">)</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">xCorner</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">yCorner</span>
+
+<span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+
+<span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">],</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;control (yrs 51-60)&#39;</span><span class="p">,</span> <span class="s1">&#39;control (yrs 111-120)&#39;</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">yrs</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;0051-0060&#39;</span><span class="p">,</span> <span class="s1">&#39;0111-0120&#39;</span><span class="p">]):</span>
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;control/bsf_</span><span class="si">{}</span><span class="s1">_1100.0x1100.0km_1.0km_&#39;</span> \
+               <span class="s1">&#39;FRIS_stereo_patch.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">yrs</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">bsf</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">bsfVertex</span>
+        <span class="n">bsf</span> <span class="o">=</span> <span class="n">bsf</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">bsf</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1">#u = 1e6*(bsf[2:, 1:-1] - bsf[:-2, 1:-1])/dy</span>
+    <span class="c1">#v = -1e6*(bsf[1:-1, 2:] - bsf[1:-1, :-2])/dx</span>
+
+    <span class="c1">#x = 0.5*(x[1:-2] + x[2:-1])</span>
+    <span class="c1">#y = 0.5*(y[1:-2] + y[2:-1])</span>
+
+    <span class="n">xc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">yc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="o">+</span><span class="n">index</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.06</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+
+    <span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
+                      <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">xlocator</span> <span class="o">=</span> <span class="n">mticker</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">180.</span><span class="p">,</span> <span class="mf">181.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">))</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">ylocator</span> <span class="o">=</span> <span class="n">mticker</span><span class="o">.</span><span class="n">FixedLocator</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">88.</span><span class="p">,</span> <span class="mf">81.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">))</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">rotate_labels</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">x_inline</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">y_inline</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">xformatter</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">gridliner</span><span class="o">.</span><span class="n">LONGITUDE_FORMATTER</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">yformatter</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">mpl</span><span class="o">.</span><span class="n">gridliner</span><span class="o">.</span><span class="n">LATITUDE_FORMATTER</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">left_labels</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">gl</span><span class="o">.</span><span class="n">right_labels</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">SymLogNorm</span><span class="p">(</span><span class="n">linthresh</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">linscale</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mf">10.</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">10.</span><span class="p">)</span>
+    <span class="n">ticks</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">]</span>
+
+    <span class="n">levels</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+
+    <span class="n">handle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">bsf</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;cmo.curl&#39;</span><span class="p">,</span>
+                            <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">cs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xc</span><span class="p">,</span> <span class="n">yc</span><span class="p">,</span> <span class="n">bsf</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
+            <span class="n">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+
+    <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;5%&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                              <span class="n">axes_class</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;Barotropic streamfunction (Sv)&#39;</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">ticks</span><span class="p">)</span>
+        <span class="n">cbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span> <span class="k">for</span> <span class="n">tick</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Here’s a plot that I think was produced with this code (but I’m not 100% sure).</p>
+<a class="reference internal image-reference" href="../_images/bsf.png"><img alt="../_images/bsf.png" class="align-center" src="../_images/bsf.png" style="width: 903px;" /></a>
+</section>
+<section id="selecting-an-existing-task-to-copy">
+<h2>3. Selecting an existing task to copy<a class="headerlink" href="#selecting-an-existing-task-to-copy" title="Permalink to this heading">¶</a></h2>
+<p>I selected <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a> as the
+analysis task that was closest to what I envision for a new
+<code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> task.  Here were my thoughts:</p>
+<ul class="simple">
+<li><p>Both OHC and BSF plot 2D fields (as opposed to some of the analysis like
+WOA, Argo and SOSE that work with 3D temperature, salinity and sometimes
+other fields).</p></li>
+<li><p>Neither OHC nor BSF have observations to compare with.</p></li>
+<li><p>Both OHC and BSF require computing a new field, rather than directly using
+output from MPAS-Ocean.</p></li>
+</ul>
+<p>On the other hand, there are some major differences between the 2 that will
+mean my job isn’t a simple substitution:</p>
+<ul class="simple">
+<li><p>While OHC is computed over different depth ranges, we do not want that for
+the BSF analysis.</p></li>
+<li><p>We will eventually want some “fancier” plotting for the BSF that draws
+streamlines with arrows.  That’s not currently available in any MPAS-Analysis
+tasks.</p></li>
+<li><p>OHC involves computing an anomaly, but that isn’t anything we need for BSF.</p></li>
+</ul>
+<p>Even so, <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a> seems like
+a reasonable starting point.</p>
+</section>
+<section id="developing-the-task">
+<h2>4. Developing the task<a class="headerlink" href="#developing-the-task" title="Permalink to this heading">¶</a></h2>
+<p>I’ll start just by making a new worktree, then copying the “template” analysis
+task to the new name:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git worktree add ../add_climatology_map_bsf
+<span class="nb">cd</span> ../add_climatology_map_bsf
+cp mpas_analysis/ocean/climatology_map_ohc_anomaly.py mpas_analysis/ocean/climatology_map_bsf.py
+</pre></div>
+</div>
+<p>Then, I’ll open this new worktree in PyCharm.  (You can, of course, use
+whatever editor you like.)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pycharm-community .
+</pre></div>
+</div>
+<p>I’ll create or recreate my <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as in
+<a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a>, and then make sure to at least do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate mpas_dev
+python -m pip install -e .
+</pre></div>
+</div>
+</section>
+<section id="climatologymapbsf-class">
+<h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Permalink to this heading">¶</a></h2>
+<p>In the editor, I rename the class from <code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code> to
+<code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> and task name from <code class="docutils literal notranslate"><span class="pre">climatologyMapOHCAnomaly</span></code> to
+<code class="docutils literal notranslate"><span class="pre">climatologyMapBSF</span></code>.</p>
+<p>Then, I update the docstring right away because otherwise I’ll forget!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
+<span class="sd">    streamfunction (BSF)</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">        The task that produced the climatology to be remapped and plotted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>I keep the <code class="docutils literal notranslate"><span class="pre">mpas_climatology_task</span></code> attribute because I’m going to need a
+climatology of the velocity field and layer thicknesses that I will get from
+that task, but I know I won’t need the <code class="docutils literal notranslate"><span class="pre">ref_year_climatology_task</span></code> attribute
+so I get rid of it.</p>
+<section id="constructor">
+<h3>4.2 Constructor<a class="headerlink" href="#constructor" title="Permalink to this heading">¶</a></h3>
+<p>Then, I move on to the constructor.  The main things I need to do besides
+renaming the task are:</p>
+<ul class="simple">
+<li><p>rename the field I’m processing to <code class="docutils literal notranslate"><span class="pre">barotropicStreamfunction</span></code>.</p></li>
+<li><p>clean up the <code class="docutils literal notranslate"><span class="pre">tags</span></code> a little bit (change <code class="docutils literal notranslate"><span class="pre">anomaly</span></code> to <code class="docutils literal notranslate"><span class="pre">streamfunction</span></code>).</p></li>
+<li><p>get rid of <code class="docutils literal notranslate"><span class="pre">ref_year_climatology_task</span></code> since I’m not computing anomalies.</p></li>
+<li><p>get rid of <code class="docutils literal notranslate"><span class="pre">depth_range</span></code> because I’m using only the full ocean column.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">     Construct the analysis task.</span>
+
+<span class="sd">     Parameters</span>
+<span class="sd">     ----------</span>
+<span class="sd">     config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">         Configuration options</span>
+
+<span class="sd">     mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">         The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">     control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">         Configuration options for a control run (if any)</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+
+     <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;barotropicStreamfunction&#39;</span>
+     <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapBSF&#39;</span><span class="p">,</span>
+                      <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+                      <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
+                            <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;streamfunction&#39;</span><span class="p">])</span>
+
+     <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
+
+     <span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+     <span class="c1"># read in what seasons we want to plot</span>
+     <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+
+     <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
+                                                  <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                          <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, I need to update the <code class="docutils literal notranslate"><span class="pre">mpas_field_name</span></code> (which I can choose since I’m
+computing the field here, it’s not something produced by MPAS-Ocean).  And then
+I need to specify the fields from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> data
+that I will use in the computation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_field_name</span> <span class="o">=</span> <span class="n">field_name</span>
+
+<span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In the next block of code, I:</p>
+<ul class="simple">
+<li><p>get rid of the for-loop over depth ranges and unindent the code that was in
+it.</p></li>
+<li><p>rename <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> (we will
+get to this in section 5)</p></li>
+<li><p>make my best guess about the arguments I do and don’t need for the
+constructor of <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code></p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasBSFClimatology</span><span class="p">(</span>
+    <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
+    <span class="n">parent_task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">climatology_name</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
+    <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+    <span class="n">comparison_grid_names</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
+    <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">)</span>
+
+<span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remap_climatology_subtask</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>In the remainder of the constructor, I</p>
+<ul class="simple">
+<li><p>update things like the name of the field being plotted and the units</p></li>
+<li><p>continue to get rid of things related to depth range</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">out_file_label</span> <span class="o">=</span> <span class="n">field_name</span>
+<span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+    <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">ref_field_name</span> <span class="o">=</span> <span class="n">mpas_field_name</span>
+    <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+<span class="k">for</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="n">comparison_grid_names</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+        <span class="c1"># make a new subtask for this season and comparison grid</span>
+        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">,</span>
+            <span class="n">remap_climatology_subtask</span><span class="p">,</span> <span class="n">remap_observations_subtask</span><span class="p">,</span>
+            <span class="n">controlConfig</span><span class="o">=</span><span class="n">control_config</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtask_name</span><span class="p">)</span>
+
+        <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+            <span class="n">outFileLabel</span><span class="o">=</span><span class="n">out_file_label</span><span class="p">,</span>
+            <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpas_field_name</span><span class="p">,</span>
+            <span class="n">refFieldName</span><span class="o">=</span><span class="n">ref_field_name</span><span class="p">,</span>
+            <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
+            <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
+            <span class="n">unitsLabel</span><span class="o">=</span><span class="s1">&#39;Sv&#39;</span><span class="p">,</span>
+            <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+            <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;bsf&#39;</span><span class="p">,</span>
+            <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This will result in a “gallery” on the web page called “Barotropic
+Streamfunction” with a single image in it.  That seems a little silly but
+we’ll change that later if we feel the need.</p>
+</section>
+<section id="setup-and-check-method">
+<h3>4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Permalink to this heading">¶</a></h3>
+<p>In the OHC analysis task, we needed to check if the reference year for the
+anomaly and the climatology year were different from one another.  We don’t
+need this check for the BSF because we’re not computing an anomaly here.  So
+we can get rid of the <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method entirely and the version
+from <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> (the superclass) will be called automatically.</p>
+<p>At this point, I commit my changes even though I’m less than halfway done.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git add mpas_analysis/ocean/climatology_map_bsf.py
+git commit
+</pre></div>
+</div>
+<p>I can always do</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit --amend mpas_analysis/ocean/climatology_map_bsf.py
+</pre></div>
+</div>
+<p>to keep adding changes to my commit as I go.</p>
+</section>
+</section>
+<section id="developing-a-subtask">
+<h2>5. Developing a subtask<a class="headerlink" href="#developing-a-subtask" title="Permalink to this heading">¶</a></h2>
+<p>Similarly to how <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> computes the ocean heat content,
+we need a class for computing the barotropic streamfunction before we remap
+to the comparison grid.  In general, it is important to perform computations
+on the native MPAS mesh before remapping to the comparison grid but in the
+case of the barotropic streamfunction, this is especially true.  Any attempt
+to compute this analysis directly on the comparison grid (e.g. using remapped,
+reconstructed velocity components) would be woefully inaccurate.</p>
+<section id="remapmpasbsfclimatology-class">
+<h3>5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class<a class="headerlink" href="#remapmpasbsfclimatology-class" title="Permalink to this heading">¶</a></h3>
+<p>We start by renaming the class from <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to
+<code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code>, updating the docstring, removing the unneeded
+attributes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
+<span class="sd">    from climatologies of normal velocity and layer thickness</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>3.2 Constructor<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<p>I started by taking out all of the unneeded parameters from the constructor.
+What I was left with was simply a call to the constructor of the superclass
+<a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.
+In such a case, there is no point in overriding the constructor.  We should
+simply leave the constructor for the superclass.  The main difference is that
+I had switched away from mixed capitalization in the
+<code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to conform to the PEP8 style guide.  The superclass
+still uses mixed case so we will have to change the call in
+<code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> just a little:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasBSFClimatology</span><span class="p">(</span>
+    <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
+    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+    <span class="n">climatologyName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
+    <span class="n">variableList</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+    <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
+    <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<p>The same turns out to be true of <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code>.  As soon as I get rid
+of everything we no longer need in the BSF version, all I am left with is a
+call to the superclass’ version, and in that case we might as well get rid of
+the method entirely.</p>
+</section>
+<section id="customize-masked-climatology-method">
+<h3>5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Permalink to this heading">¶</a></h3>
+<p>Finally, we’ve gotten to the part where the real work will take place!</p>
+<p>The sub task will run in the same way as described in
+<a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task-subtask-run-task"><span class="std std-ref">3.4 run_task() method</span></a> of the
+<a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task"><span class="std std-ref">Developers: Understanding an analysis task</span></a> tutorial.  In the process, the
+<code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method will get called and that’s our chance
+to make some changes.</p>
+<p>Before writing that method, first, I copy the 3 helper functions
+<code class="docutils literal notranslate"><span class="pre">_compute_transport()</span></code>, <code class="docutils literal notranslate"><span class="pre">_compute_barotropic_streamfunction_vertex()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">_compute_barotropic_streamfunction_cell()</span></code> from my example script.  Other
+than making them methods instead of functions and cleaning up the syntax a bit
+so they conform to the PEP8 style guide, I leave them unchanged:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+
+    <span class="n">cells_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+                                 <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># convert from boolean mask to indices</span>
+    <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">inner_edges</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">cell0</span> <span class="o">=</span> <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">cell1</span> <span class="o">=</span> <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
+    <span class="n">normal_velocity</span> <span class="o">=</span> \
+        <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">)</span>
+
+    <span class="n">layer_thickness_edge</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">layer_thickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell0</span><span class="p">)</span> <span class="o">+</span>
+                                <span class="n">layer_thickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell1</span><span class="p">))</span>
+    <span class="n">transport</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span><span class="p">[</span><span class="n">inner_edges</span><span class="p">]</span> <span class="o">*</span> \
+        <span class="p">(</span><span class="n">layer_thickness_edge</span> <span class="o">*</span> <span class="n">normal_velocity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span>
+
+<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_transport</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
+
+    <span class="n">nvertices</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertices&#39;</span><span class="p">]</span>
+    <span class="n">ntime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+
+    <span class="n">cells_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnVertex</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">vertices_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">is_boundary_cov</span> <span class="o">=</span> <span class="n">cells_on_vertex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                      <span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="p">,</span>
+                                      <span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+    <span class="c1"># convert from boolean mask to indices</span>
+    <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+    <span class="n">n_boundary_vertices</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="p">)</span>
+    <span class="n">n_inner_edges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inner_edges</span><span class="p">)</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># The difference between the streamfunction at vertices on an inner</span>
+    <span class="c1"># edge should be equal to the transport</span>
+    <span class="n">v0</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="p">)</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+
+    <span class="c1"># the streamfunction should be zero at all boundary vertices</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_boundary_vertices</span><span class="p">)</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span>
+    <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundary_vertices</span>
+    <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+    <span class="n">bsf_vertex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntime</span><span class="p">,</span> <span class="n">nvertices</span><span class="p">)),</span>
+                              <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">tindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ntime</span><span class="p">):</span>
+        <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># convert to Sv</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="p">)</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="o">*</span><span class="n">transport</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tindex</span><span class="p">)</span>
+
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_boundary_vertices</span><span class="p">)</span>
+        <span class="n">rhs</span><span class="p">[</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="n">matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">),</span>
+            <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">nvertices</span><span class="p">))</span>
+
+        <span class="n">solution</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lsqr</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+
+        <span class="n">bsf_vertex</span><span class="p">[</span><span class="n">tindex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">solution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">bsf_vertex</span>
+
+<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>
+    <span class="n">edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">edgesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">vertices_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">area_edge</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">dcEdge</span><span class="o">*</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span>
+
+    <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+    <span class="n">max_edges</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">]</span>
+
+    <span class="n">area_vert</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncells</span><span class="p">,</span> <span class="n">max_edges</span><span class="p">)),</span>
+                             <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">ivert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_edges</span><span class="p">):</span>
+        <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">ivert</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">ivert</span> <span class="o">&lt;</span> <span class="n">n_edges_on_cell</span>
+        <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">ivert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">ivert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_edges</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">ivert</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">ivert</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n_edges_on_cell</span>
+        <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">ivert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+    <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">n_edges_on_cell</span> <span class="o">==</span> <span class="n">max_edges</span>
+    <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">max_edges</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> \
+        <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+    <span class="n">bsf_cell</span> <span class="o">=</span> \
+        <span class="p">((</span><span class="n">area_vert</span> <span class="o">*</span> <span class="n">bsf_vertex</span><span class="p">[:,</span> <span class="n">vertices_on_cell</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">)</span> <span class="o">/</span>
+         <span class="n">area_vert</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">bsf_cell</span>
+</pre></div>
+</div>
+<p>I also add some missing imports and delete an unused one at the top:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+</pre></div>
+</div>
+<p>Finally, I substitute the functionality of the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function in my
+script into the <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> function:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
+<span class="sd">    and layer thickness fields.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    climatology : xarray.Dataset</span>
+<span class="sd">        the climatology data set</span>
+
+<span class="sd">    season : str</span>
+<span class="sd">        The name of the season to be masked</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    climatology : xarray.Dataset</span>
+<span class="sd">        the modified climatology data set</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">]]</span>
+    <span class="n">ds_mesh</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+    <span class="n">bsf_vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span>
+        <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">climatology</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;bsf on vertices computed.&#39;</span><span class="p">)</span>
+    <span class="n">bsf_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_barotropic_streamfunction_cell</span><span class="p">(</span>
+        <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;bsf on cells computed.&#39;</span><span class="p">)</span>
+
+    <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="n">bsf_cell</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">)</span>
+    <span class="n">climatology</span><span class="o">.</span><span class="n">barotropicStreamfunction</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
+    <span class="n">climatology</span><span class="o">.</span><span class="n">barotropicStreamfunction</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="s1">&#39;barotropic streamfunction at cell centers&#39;</span>
+
+    <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">climatology</span>
+</pre></div>
+</div>
+<p>We get mesh variables from a restart file to make the xarray dataset
+<code class="docutils literal notranslate"><span class="pre">ds_mesh</span></code>.  These are passed on to the helper functions.</p>
+<p>We use <code class="docutils literal notranslate"><span class="pre">logger.info()</span></code> instead of <code class="docutils literal notranslate"><span class="pre">print()</span></code> so the output goes to a log
+file.  (This isn’t strictly necessary since MPAS-Analysis also hijacks the
+<code class="docutils literal notranslate"><span class="pre">print()</span></code> function to make sure its output goes to log files, but it makes
+clearer what we expect and also opens up the opportunity to use
+<code class="docutils literal notranslate"><span class="pre">logger.debug()</span></code>, <code class="docutils literal notranslate"><span class="pre">logger.warn()</span></code> and <code class="docutils literal notranslate"><span class="pre">logger.error()</span></code> where appropriate.</p>
+<p>There isn’t a way to store the barotropic streamfunction on vertices in the
+climatology, as was done in the original script, because the remapping code is
+expecting data only at cell centers.</p>
+<p>Before we return the modified climatology, we drop the normal velocity and
+layer thickness from the data set, since they were only needed to help us
+compute the BSF.</p>
+</section>
+</section>
+<section id="config-options">
+<h2>6. Config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<p>We’re not quite done yet.  We need to set some config options for the analysis
+task that the <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code>
+subtask is expecting.  Again, an easy starting point is to copy the
+<code class="docutils literal notranslate"><span class="pre">[climatologyMapOHCAnomaly]</span></code> section of the <code class="docutils literal notranslate"><span class="pre">default.cfg</span></code> file into a new
+<code class="docutils literal notranslate"><span class="pre">[climatologyMapBSF]</span></code> section, and then delete the things we don’t need,
+and finally make a few modifications so the color map and data range is more
+similar to the plot script I used above:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapBSF]</span><span class="w"></span>
+<span class="c1">## options related to plotting horizontally remapped climatologies of</span><span class="w"></span>
+<span class="c1">## the barotropic streamfunction (BSF) against control model results</span><span class="w"></span>
+<span class="c1">## (if available)</span><span class="w"></span>
+
+<span class="c1"># colormap for model/observations</span><span class="w"></span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.curl</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># color indices into colormapName for filled contours</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10., &#39;vmax&#39;: 10.}</span><span class="w"></span>
+<span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3., 10.]</span><span class="w"></span>
+
+<span class="c1"># colormap for differences</span><span class="w"></span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.balance</span><span class="w"></span>
+<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
+<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
+<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10.,</span><span class="w"></span>
+<span class="w">                      </span><span class="na">&#39;vmax&#39;: 10.}</span><span class="w"></span>
+<span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3.,</span><span class="w"></span>
+<span class="w">                           </span><span class="na">10.]</span><span class="w"></span>
+
+<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span><span class="w"></span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span><span class="w"></span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span><span class="w"></span>
+
+<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span><span class="w"></span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span><span class="w"></span>
+</pre></div>
+</div>
+</section>
+<section id="adding-the-task">
+<h2>7. Adding the task<a class="headerlink" href="#adding-the-task" title="Permalink to this heading">¶</a></h2>
+<p>There is one last step required to add this task to MPAS-Analysis.  You should
+add the task to the <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code> so it is a little
+easier to import the task.  Try to add it near similar tasks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_eke</span> <span class="kn">import</span> <span class="n">ClimatologyMapEKE</span>
+<span class="hll">  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_bsf</span> <span class="kn">import</span> \
+</span><span class="hll">      <span class="n">ClimatologyMapBSF</span>
+</span>  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_ohc_anomaly</span> <span class="kn">import</span> \
+      <span class="n">ClimatologyMapOHCAnomaly</span>
+</pre></div>
+</div>
+<p>Then, add the task in <code class="docutils literal notranslate"><span class="pre">mpas_analysis/__main__.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapEKE</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                          <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+                                          <span class="n">controlConfig</span><span class="p">))</span>
+<span class="hll">  <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapBSF</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+</span><span class="hll">                                          <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+</span><span class="hll">                                          <span class="n">controlConfig</span><span class="p">))</span>
+</span>  <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapOHCAnomaly</span><span class="p">(</span>
+      <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatolgyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">oceanRefYearClimatolgyTask</span><span class="p">,</span>
+      <span class="n">controlConfig</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>A quick way to check if the task has been added correctly is to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis --list
+</pre></div>
+</div>
+<p>You should see the new task in the list of tasks.</p>
+</section>
+<section id="the-full-code-for-posterity">
+<h2>8. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Permalink to this heading">¶</a></h2>
+<p>Since the <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> analysis task is not in MPAS-Analysis yet and
+since it may have evolved by the time it gets added, here is the full code as
+described in this tutorial:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+    <span class="n">PlotClimatologyMapSubtask</span>
+
+
+<span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
+<span class="sd">    streamfunction (BSF)</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">        The task that produced the climatology to be remapped and plotted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;barotropicStreamfunction&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapBSF&#39;</span><span class="p">,</span>
+                         <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+                         <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
+                               <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;streamfunction&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
+
+        <span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+
+        <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
+                                                     <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+
+        <span class="n">mpas_field_name</span> <span class="o">=</span> <span class="n">field_name</span>
+
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+
+        <span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasBSFClimatology</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remap_climatology_subtask</span><span class="p">)</span>
+
+        <span class="n">out_file_label</span> <span class="o">=</span> <span class="n">field_name</span>
+        <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">ref_field_name</span> <span class="o">=</span> <span class="n">mpas_field_name</span>
+            <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="n">comparison_grid_names</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span>
+
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">,</span>
+                    <span class="n">remap_climatology_subtask</span><span class="p">,</span> <span class="n">remap_observations_subtask</span><span class="p">,</span>
+                    <span class="n">controlConfig</span><span class="o">=</span><span class="n">control_config</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtask_name</span><span class="p">)</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="n">out_file_label</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpas_field_name</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">ref_field_name</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="s1">&#39;Sv&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Barotropic Streamfunction&#39;</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;bsf&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
+<span class="sd">    from climatologies of normal velocity and layer thickness</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
+<span class="sd">        and layer thickness fields.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">]]</span>
+        <span class="n">ds_mesh</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+        <span class="n">bsf_vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span>
+            <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">climatology</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;bsf on vertices computed.&#39;</span><span class="p">)</span>
+        <span class="n">bsf_cell</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_barotropic_streamfunction_cell</span><span class="p">(</span>
+            <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;bsf on cells computed.&#39;</span><span class="p">)</span>
+
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;barotropicStreamfunction&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">bsf_cell</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">)</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">barotropicStreamfunction</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">barotropicStreamfunction</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="s1">&#39;barotropic streamfunction at cell centers&#39;</span>
+
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
+
+    <span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+
+        <span class="n">cells_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
+                                     <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># convert from boolean mask to indices</span>
+        <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">inner_edges</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">cell0</span> <span class="o">=</span> <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">cell1</span> <span class="o">=</span> <span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
+        <span class="n">normal_velocity</span> <span class="o">=</span> \
+            <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">)</span>
+
+        <span class="n">layer_thickness_edge</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">layer_thickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell0</span><span class="p">)</span> <span class="o">+</span>
+                                    <span class="n">layer_thickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">cell1</span><span class="p">))</span>
+        <span class="n">transport</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span><span class="p">[</span><span class="n">inner_edges</span><span class="p">]</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="n">layer_thickness_edge</span> <span class="o">*</span> <span class="n">normal_velocity</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span>
+
+    <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+        <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_transport</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
+
+        <span class="n">nvertices</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertices&#39;</span><span class="p">]</span>
+        <span class="n">ntime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+
+        <span class="n">cells_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnVertex</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">vertices_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">is_boundary_cov</span> <span class="o">=</span> <span class="n">cells_on_vertex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                                          <span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="p">,</span>
+                                          <span class="n">is_boundary_cov</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">vertexDegree</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+        <span class="c1"># convert from boolean mask to indices</span>
+        <span class="n">boundary_vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flatnonzero</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="n">n_boundary_vertices</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">boundary_vertices</span><span class="p">)</span>
+        <span class="n">n_inner_edges</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inner_edges</span><span class="p">)</span>
+
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="c1"># The difference between the streamfunction at vertices on an inner</span>
+        <span class="c1"># edge should be equal to the transport</span>
+        <span class="n">v0</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">inner_edges</span><span class="p">,</span> <span class="n">TWO</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="p">)</span>
+        <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+        <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">v1</span>
+        <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">ind</span>
+        <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v0</span>
+        <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">ind</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span>
+
+        <span class="c1"># the streamfunction should be zero at all boundary vertices</span>
+        <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_boundary_vertices</span><span class="p">)</span>
+        <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span>
+        <span class="n">indices</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">boundary_vertices</span>
+        <span class="n">data</span><span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+
+        <span class="n">bsf_vertex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntime</span><span class="p">,</span> <span class="n">nvertices</span><span class="p">)),</span>
+                                  <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertices&#39;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">tindex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ntime</span><span class="p">):</span>
+            <span class="n">rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+            <span class="c1"># convert to Sv</span>
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="p">)</span>
+            <span class="n">rhs</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span><span class="o">*</span><span class="n">transport</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">tindex</span><span class="p">)</span>
+
+            <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_boundary_vertices</span><span class="p">)</span>
+            <span class="n">rhs</span><span class="p">[</span><span class="n">n_inner_edges</span> <span class="o">+</span> <span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+            <span class="n">matrix</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">indices</span><span class="p">),</span>
+                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">n_inner_edges</span><span class="o">+</span><span class="n">n_boundary_vertices</span><span class="p">,</span> <span class="n">nvertices</span><span class="p">))</span>
+
+            <span class="n">solution</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lsqr</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">rhs</span><span class="p">)</span>
+
+            <span class="n">bsf_vertex</span><span class="p">[</span><span class="n">tindex</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">solution</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">bsf_vertex</span>
+
+    <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Interpolate the barotropic streamfunction from vertices to cells</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>
+        <span class="n">edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">edgesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">vertices_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnCell</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">area_edge</span> <span class="o">=</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">dcEdge</span><span class="o">*</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">dvEdge</span>
+
+        <span class="n">ncells</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nCells&#39;</span><span class="p">]</span>
+        <span class="n">max_edges</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">]</span>
+
+        <span class="n">area_vert</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ncells</span><span class="p">,</span> <span class="n">max_edges</span><span class="p">)),</span>
+                                 <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">ivert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_edges</span><span class="p">):</span>
+            <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">ivert</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">ivert</span> <span class="o">&lt;</span> <span class="n">n_edges_on_cell</span>
+            <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">ivert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">ivert</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_edges</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="n">ivert</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">ivert</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">n_edges_on_cell</span>
+            <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">ivert</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+        <span class="n">edge_indices</span> <span class="o">=</span> <span class="n">edges_on_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">maxEdges</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">n_edges_on_cell</span> <span class="o">==</span> <span class="n">max_edges</span>
+        <span class="n">area_vert</span><span class="p">[:,</span> <span class="n">max_edges</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> \
+            <span class="mf">0.5</span><span class="o">*</span><span class="n">mask</span><span class="o">*</span><span class="n">area_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edge_indices</span><span class="p">)</span>
+
+        <span class="n">bsf_cell</span> <span class="o">=</span> \
+            <span class="p">((</span><span class="n">area_vert</span> <span class="o">*</span> <span class="n">bsf_vertex</span><span class="p">[:,</span> <span class="n">vertices_on_cell</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">)</span> <span class="o">/</span>
+             <span class="n">area_vert</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;maxEdges&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">bsf_cell</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dev_understand_a_task.html" class="btn btn-neutral float-left" title="Developers: Understanding an analysis task" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../authors.html" class="btn btn-neutral float-right" title="Main Authors" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
