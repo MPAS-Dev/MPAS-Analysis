@@ -110,8 +110,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.sea_ice.plot_climatology_map_subtask</span> <span class="kn">import</span> \
-    <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
 
@@ -228,18 +227,19 @@
         <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
 
-                <span class="n">imageDescription</span> <span class="o">=</span> \
+                <span class="n">imageCaption</span> <span class="o">=</span> \
                     <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> Climatology Map of </span><span class="si">{}</span><span class="s1">-Hemisphere Iceberg &#39;</span> \
                     <span class="s1">&#39;Concentration.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="n">hemisphereLong</span><span class="p">)</span>
-                <span class="n">imageCaption</span> <span class="o">=</span> <span class="n">imageDescription</span>
                 <span class="n">galleryGroup</span> <span class="o">=</span> \
                     <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">-Hemisphere Iceberg Concentration&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="n">hemisphereLong</span><span class="p">)</span>
                 <span class="c1"># make a new subtask for this season and comparison grid</span>
                 <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
-                    <span class="n">remapClimatologySubtask</span><span class="p">,</span> <span class="n">remapObservationsSubtask</span><span class="p">,</span>
-                    <span class="n">controlConfig</span><span class="p">)</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
+                    <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparisonGridName</span><span class="p">,</span>
+                    <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                    <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="n">remapObservationsSubtask</span><span class="p">,</span>
+                    <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
 
                 <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                     <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;bergconc</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="p">),</span>
@@ -249,13 +249,12 @@
                     <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                     <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
                     <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;fraction&#39;</span><span class="p">,</span>
-                    <span class="n">imageDescription</span><span class="o">=</span><span class="n">imageDescription</span><span class="p">,</span>
                     <span class="n">imageCaption</span><span class="o">=</span><span class="n">imageCaption</span><span class="p">,</span>
                     <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_conc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()),</span>
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
-                    <span class="n">maskValue</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;neither&#39;</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div></div>
 
