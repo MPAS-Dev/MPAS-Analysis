@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.projection &mdash; MPAS-Analysis 1.8.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                1.8.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.projection</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.shared.projection</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+
+<span class="kn">import</span> <span class="nn">pyproj</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+
+
+<span class="n">known_comparison_grids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="get_pyproj_projection"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection">[docs]</a><span class="k">def</span> <span class="nf">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the projection from the comparison_grid_name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comparison_grid_name : str</span>
+<span class="sd">        The name of the projection comparison grid to use for remapping</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    projection : pyproj.Proj</span>
+<span class="sd">        The projection</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If comparison_grid_name does not describe a known comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+    <span class="c1"># Milena Veneziani</span>
+    <span class="c1"># Yohei Takano</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_comparison_grids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Unknown comparison grid type </span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
+            <span class="s1">&#39;+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 &#39;</span>
+            <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
+            <span class="s1">&#39;+proj=stere +lat_ts=75.0 +lat_0=90 +lon_0=0.0  +k_0=1.0 &#39;</span>
+            <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=-45 +lat_0=45 +lat_1=39 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=51 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=180 +lat_0=40 +lat_1=34 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=46 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span><span class="s1">&#39;+proj=lcc +lon_0=-40 +lat_0=54 +lat_1=40 &#39;</span>
+                                 <span class="s1">&#39;+lat_2=68 +x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We missed one of the known comparison grids: &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">projection</span></div>
+
+
+<div class="viewcode-block" id="get_cartopy_projection"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.projection.get_cartopy_projection.html#mpas_analysis.shared.projection.get_cartopy_projection">[docs]</a><span class="k">def</span> <span class="nf">get_cartopy_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the projection from the comparison_grid_name.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    comparison_grid_name : str</span>
+<span class="sd">        The name of the projection comparison grid to use for remapping</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    projection : cartopy.crs.Projection</span>
+<span class="sd">        The projection</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If comparison_grid_name does not describe a known comparison grid</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+    <span class="c1"># Milena Veneziani</span>
+    <span class="c1"># Yohei Takano</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">known_comparison_grids</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Unknown comparison grid type </span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Stereographic</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=-</span><span class="mf">90.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">true_scale_latitude</span><span class="o">=-</span><span class="mf">71.0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">]:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Stereographic</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=</span><span class="mf">90.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+            <span class="n">true_scale_latitude</span><span class="o">=</span><span class="mf">75.0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=</span><span class="mf">45.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=-</span><span class="mf">45.</span><span class="p">,</span>
+            <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">39.</span><span class="p">,</span> <span class="mf">51.</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=</span><span class="mf">40.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">180.</span><span class="p">,</span>
+            <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">34.</span><span class="p">,</span> <span class="mf">46.</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span>
+        <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">LambertConformal</span><span class="p">(</span>
+            <span class="n">central_latitude</span><span class="o">=</span><span class="mf">54.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=-</span><span class="mf">40.</span><span class="p">,</span>
+            <span class="n">standard_parallels</span><span class="o">=</span><span class="p">(</span><span class="mf">40.</span><span class="p">,</span> <span class="mf">68.</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;We missed one of the known comparison grids: &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">projection</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
