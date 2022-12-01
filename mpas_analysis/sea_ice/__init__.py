@@ -5,3 +5,7 @@ from mpas_analysis.sea_ice.climatology_map_sea_ice_thick import \
 from mpas_analysis.sea_ice.time_series import TimeSeriesSeaIce
 from mpas_analysis.sea_ice.climatology_map_berg_conc import \
     ClimatologyMapIcebergConc
+from mpas_analysis.sea_ice.climatology_map_production import \
+    ClimatologyMapSeaIceProduction
+from mpas_analysis.sea_ice.climatology_map_melting import \
+    ClimatologyMapSeaIceMelting

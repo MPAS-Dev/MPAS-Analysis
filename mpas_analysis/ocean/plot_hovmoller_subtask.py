@@ -290,8 +290,6 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         # drop any NaN values, because this causes issues with rolling averages
         mask = field.notnull().all(dim='Time')
-        field = field.where(mask, drop=True)
-        z = z.where(mask, drop=True)
 
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
@@ -324,6 +322,8 @@ class PlotHovmollerSubtask(AnalysisTask):
             diff = None
             refTitle = None
             diffTitle = None
+            z = z.where(mask, drop=True)
+            field = field.where(mask, drop=True)
         else:
             controlConfig = self.controlConfig
             dsRef = xr.open_dataset(self.controlFileName)
@@ -347,9 +347,12 @@ class PlotHovmollerSubtask(AnalysisTask):
             # drop any NaN values, because this causes issues with rolling
             # averages
             refMask = refField.notnull().all(dim='Time')
-            assert(np.all(refMask.values == mask.values))
+            # if the masks differ, we want only locations where both are valid
+            mask = np.logical_and(mask, refMask)
+            z = z.where(mask, drop=True)
+            field = field.where(mask, drop=True)
             refField = refField.where(mask, drop=True)
-            assert(field.shape == refField.shape)
+            assert (field.shape == refField.shape)
             # make sure the start and end time sare the same
             assert(int(field.Time.values[0]) == int(refField.Time.values[0]))
             assert(int(field.Time.values[-1]) == int(refField.Time.values[-1]))
@@ -357,7 +360,7 @@ class PlotHovmollerSubtask(AnalysisTask):
             # so let's copy them
             refField['Time'] = field.Time
             diff = field - refField
-            assert(field.shape == diff.shape)
+            assert (field.shape == diff.shape)
             refTitle = self.controlConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Control'
 

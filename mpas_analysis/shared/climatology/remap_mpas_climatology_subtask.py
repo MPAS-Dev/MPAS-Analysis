@@ -72,6 +72,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
     op : {'avg', 'min', 'max'}
          operator for monthly stats
 
+    vertices : bool
+        Whether to remap from vertices, rather than cells
     """
 
     # Authors
@@ -81,7 +83,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, comparisonGridNames=None,
                  iselValues=None, subtaskName='remapMpasClimatology',
-                 useNcremap=None):
+                 useNcremap=None, vertices=False):
 
         """
         Construct the analysis task and adds it as a subtask of the
@@ -130,6 +132,9 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             if it is not explicitly given.  If a comparison grid other than
             ``latlon`` is given, ncremap is not supported so this flag is set
             to ``False``.
+
+        vertices : bool, optional
+            Whether to remap from vertices, rather than cells
         """
         # Authors
         # -------
@@ -173,6 +178,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                                                      'useNcremap')
         else:
             self.useNcremap = useNcremap
+
+        self.vertices = vertices
 
     def setup_and_check(self):
         """
@@ -261,7 +268,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                                        comparisonDescriptor):
         """
         Add a custom grid descriptor (something other than 'latlon',
-        'antarctic', 'arctic', 'north_atlantic', or 'north_pacific').
+        'antarctic', 'arctic', 'north_atlantic', or 'north_pacific',
+        or 'subpolar_north_atlantic').
 
         Parameters
         ----------
@@ -405,9 +413,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             comparisonDescriptor = \
                 self.comparisonDescriptors[comparisonGridName]
             self.comparisonGridName = comparisonDescriptor.meshName
+            meshName = config.get('input', 'mpasMeshName')
             mpasDescriptor = MpasMeshDescriptor(
-                self.restartFileName, meshName=config.get('input',
-                                                          'mpasMeshName'))
+                self.restartFileName, meshName=meshName,
+                vertices=self.vertices)
             self.mpasMeshName = mpasDescriptor.meshName
 
             self.remappers[comparisonGridName] = get_remapper(
@@ -415,7 +424,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                 comparisonDescriptor=comparisonDescriptor,
                 mappingFilePrefix=mappingFilePrefix,
                 method=config.get('climatology', 'mpasInterpolationMethod'),
-                logger=self.logger)
+                logger=self.logger, vertices=self.vertices)
 
     def _setup_file_names(self):
         """
@@ -523,10 +532,6 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             if len(iselValues.keys()) > 0:
                 climatology = climatology.isel(**iselValues)
 
-            # add valid mask as a variable, useful for remapping later
-            climatology['validMask'] = \
-                xr.DataArray(numpy.ones(climatology.sizes['nCells']),
-                             dims=['nCells'])
             # mask the data set
             for variableName in self.variableList:
                 climatology[variableName] = \
@@ -536,6 +541,15 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             # customize (if this function has been overridden)
             climatology = self.customize_masked_climatology(climatology,
                                                             season)
+
+            if self.vertices:
+                dim = 'nVertices'
+            else:
+                dim = 'nCells'
+            # add valid mask as a variable, useful for remapping later
+            climatology['validMask'] = \
+                xr.DataArray(numpy.ones(climatology.sizes[dim]),
+                             dims=[dim])
 
             write_netcdf(climatology, maskedClimatologyFileName)
 

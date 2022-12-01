@@ -20,6 +20,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 import matplotlib.ticker as mticker
+import matplotlib.patches as mpatches
 import numpy as np
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
@@ -54,7 +55,7 @@ def plot_polar_comparison(
         figsize=None,
         dpi=None,
         vertical=False,
-        maxTitleLength=60):
+        maxTitleLength=None):
     """
     Plots a data set around either the north or south pole.
 
@@ -115,16 +116,17 @@ def plot_polar_comparison(
         whether the subplots should be stacked vertically rather than
         horizontally
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
     def do_subplot(ax, field, title, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
         """
         Make a subplot within the figure.
         """
@@ -177,6 +179,9 @@ def plot_polar_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -265,7 +270,8 @@ def plot_global_comparison(
         dpi=None,
         lineWidth=1,
         lineColor='black',
-        maxTitleLength=60):
+        maxTitleLength=None,
+        extend='both'):
     """
     Plots a data set as a longitude/latitude map.
 
@@ -324,16 +330,21 @@ def plot_global_comparison(
     lineColor : str, optional
         the color of contour lines (if specified)
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
+
+    extend : {'neither', 'both', 'min', 'max'}, optional
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
     # Authors
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
 
         ax.set_extent(extent, crs=projection)
 
@@ -355,7 +366,7 @@ def plot_global_comparison(
                                        zorder=1, rasterized=True)
         else:
             plotHandle = ax.contourf(Lons, Lats, array, cmap=colormap,
-                                     norm=norm, levels=levels, extend='both',
+                                     norm=norm, levels=levels, extend=extend,
                                      transform=projection, zorder=1)
 
         _add_land_lakes_coastline(ax)
@@ -369,8 +380,14 @@ def plot_global_comparison(
                          bbox_to_anchor=(0.08, 0., 1, 1),
                          bbox_transform=ax.transAxes, borderpad=0)
 
-        cbar = plt.colorbar(plotHandle, cax=cax, ticks=ticks, boundaries=ticks)
+        cbar = plt.colorbar(plotHandle, cax=cax)
         cbar.set_label(cbarlabel)
+        if ticks is not None:
+            cbar.set_ticks(ticks)
+            cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -451,7 +468,8 @@ def plot_projection_comparison(
         cartopyGridFontSize=None,
         defaultFontSize=None,
         vertical=False,
-        maxTitleLength=55):
+        maxTitleLength=None,
+        extend='both'):
     """
     Plots a data set as a projection map.
 
@@ -512,19 +530,45 @@ def plot_projection_comparison(
         available via
         :py:func:`mpas_analysis.shared.projection.get_cartopy_projection()`.
 
-    maxTitleLength : int, optional
+    maxTitleLength : int or None, optional
         the maximum number of characters in the title, beyond which it is
-        truncated with a trailing ellipsis
+        truncated with a trailing ellipsis.  The default is from the
+        ``maxTitleLength`` config option.
+
+    extend : {'neither', 'both', 'min', 'max'}, optional
+        Determines the ``contourf``-coloring of values that are outside the
+        range of the levels provided if using an indexed colormap.
     """
     # Authors
     # -------
     # Xylar Asay-Davis
+    def add_arrow_to_line_2d(ax, path, arrow_spacing=8e5, arrow_width=1.5e4):
+        """
+        https://stackoverflow.com/a/27637925/7728169
+        Add arrows to a matplotlib.lines.Line2D at selected locations.
+        """
+        v = path.vertices
+        x = v[:, 0]
+        y = v[:, 1]
+        arrows = []
+        s = np.cumsum(np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2))
+        indices = np.searchsorted(
+            s, arrow_spacing*np.arange(1, int(s[-1]/arrow_spacing)))
+        for n in indices:
+            dx = np.mean(x[n-2:n]) - x[n]
+            dy = np.mean(y[n-2:n]) - y[n]
+            p = mpatches.FancyArrow(
+                x[n], y[n], dx, dy, length_includes_head=False,
+                width=arrow_width, facecolor='k')
+            ax.add_patch(p)
+            arrows.append(p)
+        return arrows
 
     def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor):
+                   lineWidth, lineColor, arrows):
 
         title = limit_title(title, maxTitleLength)
-        ax.set_title(title, y=1.06, **plottitle_font)
+        ax.set_title(title, **plottitle_font)
 
         ax.set_extent(extent, crs=projection)
 
@@ -546,7 +590,7 @@ def plot_projection_comparison(
                                        rasterized=True)
         else:
             plotHandle = ax.contourf(xCenter, yCenter, array, cmap=colormap,
-                                     norm=norm, levels=levels, extend='both')
+                                     norm=norm, levels=levels, extend=extend)
 
         if useCartopyCoastline:
             _add_land_lakes_coastline(ax, ice_shelves=False)
@@ -560,9 +604,13 @@ def plot_projection_comparison(
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
             x_center = 0.5*(x[0:-1] + x[1:])
             y_center = 0.5*(y[0:-1] + y[1:])
-            ax.contour(x_center, y_center, array, levels=contours,
-                       colors=lineColor, linewidths=lineWidth)
-
+            cs = ax.contour(x_center, y_center, array, levels=contours,
+                            colors=lineColor, linewidths=lineWidth)
+            # add arrows to streamlines
+            if arrows is not None:
+                for collection in cs.collections:
+                    for path in collection.get_paths():
+                        add_arrow_to_line_2d(ax, path)
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
@@ -574,6 +622,9 @@ def plot_projection_comparison(
         if ticks is not None:
             cbar.set_ticks(ticks)
             cbar.set_ticklabels(['{}'.format(tick) for tick in ticks])
+
+    if maxTitleLength is None:
+        maxTitleLength = config.getint('plot', 'maxTitleLength')
 
     if defaultFontSize is None:
         defaultFontSize = config.getint('plot', 'defaultFontSize')
@@ -597,7 +648,6 @@ def plot_projection_comparison(
     else:
         figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
-
     latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
     lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
 

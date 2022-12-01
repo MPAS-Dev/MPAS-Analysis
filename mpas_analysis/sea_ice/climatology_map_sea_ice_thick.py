@@ -17,8 +17,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
@@ -48,14 +47,14 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
         # -------
         # Xylar Asay-Davis
 
-        taskName = 'climatologyMapSeaIceThick{}'.format(hemisphere)
+        taskName = f'climatologyMapSeaIceThick{hemisphere}'
 
         fieldName = 'seaIceThick'
 
@@ -85,22 +84,22 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
         seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of seasons'.format(sectionName))
+            raise ValueError(f'config section {sectionName} does not contain '
+                             f'a valid list of seasons')
 
         comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
 
         if len(comparisonGridNames) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of comparison grids'.format(sectionName))
+            raise ValueError(f'config section {sectionName} does not contain '
+                             f'a valid list of comparison grids')
 
         # the variable self.mpasFieldName will be added to mpasClimatologyTask
         # along with the seasons.
         remapClimatologySubtask = RemapMpasClimatologySubtask(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='{}{}'.format(fieldName, hemisphere),
+            climatologyName=f'{fieldName}{hemisphere}',
             variableList=[mpasFieldName],
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
@@ -114,60 +113,60 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
         else:
             controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Control: {}'.format(controlRunName)
+            refTitleLabel = f'Control: {controlRunName}'
             refFieldName = mpasFieldName
             diffTitleLabel = 'Main - Control'
-
-            remapObservationsSubtask = None
 
         for season in seasons:
             if controlConfig is None:
                 obsFileName = build_obs_path(
                     config, 'seaIce',
-                    relativePathOption='thickness{}_{}'.format(hemisphere,
-                                                               season),
+                    relativePathOption=f'thickness{hemisphere}_{season}',
                     relativePathSection=sectionName)
 
                 remapObservationsSubtask = RemapObservedThickClimatology(
                     parentTask=self, seasons=[season],
                     fileName=obsFileName,
-                    outFilePrefix='{}{}_{}'.format(refFieldName,
-                                                   hemisphere,
-                                                   season),
+                    outFilePrefix=f'{refFieldName}{hemisphere}_{season}',
                     comparisonGridNames=comparisonGridNames,
-                    subtaskName='remapObservations{}'.format(season))
+                    subtaskName=f'remapObservations{season}')
                 self.add_subtask(remapObservationsSubtask)
+            else:
+                remapObservationsSubtask = None
 
             for comparisonGridName in comparisonGridNames:
 
-                imageDescription = \
-                    '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
-                    'Thickness.'.format(season, hemisphereLong)
-                imageCaption = imageDescription
+                imageCaption = \
+                    f'Climatology Map of {hemisphereLong}-Hemisphere ' \
+                    f'Sea-Ice Thickness.'
                 galleryGroup = \
-                    '{}-Hemisphere Sea-Ice Thickness'.format(
-                        hemisphereLong)
+                    f'{hemisphereLong}-Hemisphere Sea-Ice Thickness'
                 # make a new subtask for this season and comparison grid
+                subtaskName = f'plot{season}_{comparisonGridName}'
+
                 subtask = PlotClimatologyMapSubtask(
-                    self, hemisphere, season, comparisonGridName,
-                    remapClimatologySubtask, remapObservationsSubtask,
-                    controlConfig)
+                    parentTask=self, season=season,
+                    comparisonGridName=comparisonGridName,
+                    remapMpasClimatologySubtask=remapClimatologySubtask,
+                    remapObsClimatologySubtask=remapObservationsSubtask,
+                    subtaskName=subtaskName,
+                    controlConfig=controlConfig)
 
                 subtask.set_plot_info(
-                    outFileLabel='icethick{}'.format(hemisphere),
+                    outFileLabel=f'icethick{hemisphere}',
                     fieldNameInTitle='Sea ice thickness',
                     mpasFieldName=mpasFieldName,
                     refFieldName=refFieldName,
                     refTitleLabel=refTitleLabel,
                     diffTitleLabel=diffTitleLabel,
                     unitsLabel=r'm',
-                    imageDescription=imageDescription,
                     imageCaption=imageCaption,
                     galleryGroup=galleryGroup,
                     groupSubtitle=None,
-                    groupLink='{}_thick'.format(hemisphere.lower()),
+                    groupLink=f'{hemisphere.lower()}_thick',
                     galleryName=galleryName,
-                    maskValue=0)
+                    maskMinThreshold=0,
+                    extend='neither')
 
                 self.add_subtask(subtask)
 

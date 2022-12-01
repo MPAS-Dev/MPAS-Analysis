@@ -17,8 +17,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
 
-from mpas_analysis.sea_ice.plot_climatology_map_subtask import \
-    PlotClimatologyMapSubtask
+from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
@@ -113,8 +112,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         else:
             self._add_ref_tasks(seasons, comparisonGridNames, hemisphere,
                                 hemisphereLong, remapClimatologySubtask,
-                                controlConfig, mpasFieldName,
-                                fieldName, iselValues)
+                                controlConfig, mpasFieldName)
 
     def _add_obs_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
@@ -122,6 +120,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         config = self.config
         obsFieldName = 'seaIceConc'
         sectionName = self.taskName
+
+        minConcentration = config.getfloat(self.taskName, 'minConcentration')
 
         observationPrefixes = config.getexpression(sectionName,
                                                    'observationPrefixes')
@@ -148,8 +148,8 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                 for comparisonGridName in comparisonGridNames:
 
                     imageDescription = \
-                        '{} Climatology Map of {}-Hemisphere Sea-Ice ' \
-                        'Concentration'.format(season, hemisphereLong)
+                        'Climatology Map of {}-Hemisphere Sea-Ice ' \
+                        'Concentration'.format(hemisphereLong)
                     imageCaption = \
                         '{}. <br> Observations: SSM/I {}'.format(
                             imageDescription, prefix)
@@ -158,11 +158,15 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                             hemisphereLong)
                     # make a new subtask for this season and comparison
                     # grid
+
+                    subtaskName = f'plot{season}_{comparisonGridName}_{prefix}'
+
                     subtask = PlotClimatologyMapSubtask(
-                        self, hemisphere, season, comparisonGridName,
-                        remapClimatologySubtask,
+                        parentTask=self, season=season,
+                        comparisonGridName=comparisonGridName,
+                        remapMpasClimatologySubtask=remapClimatologySubtask,
                         remapObsClimatologySubtask=remapObservationsSubtask,
-                        subtaskSuffix=prefix)
+                        subtaskName=subtaskName)
 
                     subtask.set_plot_info(
                         outFileLabel='iceconc{}{}'.format(prefix,
@@ -173,21 +177,23 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                         refTitleLabel=observationTitleLabel,
                         diffTitleLabel='Model - Observations',
                         unitsLabel=r'fraction',
-                        imageDescription=imageDescription,
                         imageCaption=imageCaption,
                         galleryGroup=galleryGroup,
                         groupSubtitle=None,
                         groupLink='{}_conc'.format(hemisphere.lower()),
                         galleryName='Observations: SSM/I {}'.format(
-                            prefix))
+                            prefix),
+                        maskMinThreshold=minConcentration,
+                        extend='neither')
 
                     self.add_subtask(subtask)
 
     def _add_ref_tasks(self, seasons, comparisonGridNames, hemisphere,
                        hemisphereLong, remapClimatologySubtask,
-                       controlConfig, mpasFieldName, fieldName,
-                       iselValues):
+                       controlConfig, mpasFieldName):
 
+        minConcentration = self.config.getfloat(self.taskName,
+                                                'minConcentration')
         controlRunName = controlConfig.get('runs', 'mainRunName')
         galleryName = None
         refTitleLabel = 'Control: {}'.format(controlRunName)
@@ -205,8 +211,10 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                 # make a new subtask for this season and comparison
                 # grid
                 subtask = PlotClimatologyMapSubtask(
-                    self, hemisphere, season, comparisonGridName,
-                    remapClimatologySubtask, controlConfig=controlConfig)
+                    parentTask=self, season=season,
+                    comparisonGridName=comparisonGridName,
+                    remapMpasClimatologySubtask=remapClimatologySubtask,
+                    controlConfig=controlConfig)
 
                 subtask.set_plot_info(
                     outFileLabel='iceconc{}'.format(hemisphere),
@@ -216,12 +224,13 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                     refTitleLabel=refTitleLabel,
                     diffTitleLabel='Main - Control',
                     unitsLabel=r'fraction',
-                    imageDescription=imageDescription,
                     imageCaption=imageCaption,
                     galleryGroup=galleryGroup,
                     groupSubtitle=None,
                     groupLink='{}_conc'.format(hemisphere.lower()),
-                    galleryName=galleryName)
+                    galleryName=galleryName,
+                    maskMinThreshold=minConcentration,
+                    extend='neither')
 
                 self.add_subtask(subtask)
 

@@ -89,7 +89,7 @@ class RegionalTSDiagrams(AnalysisTask):
             config=config,
             taskName='regionalTSDiagrams',
             componentName='ocean',
-            tags=['climatology', 'regions', 'publicObs'])
+            tags=['climatology', 'regions', 'publicObs', 'TSDiagrams'])
 
         self.run_after(mpasClimatologyTask)
         self.mpasClimatologyTask = mpasClimatologyTask
@@ -717,7 +717,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
             dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+                [obsDict['latVar'], obsDict['lonVar']])
+            if 'nCells' in dsRegionMask.data_vars:
+                dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
@@ -747,7 +749,9 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
             ds = ds.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+                [obsDict['latVar'], obsDict['lonVar']])
+            if 'nCells' in dsRegionMask.data_vars:
+               ds = ds.drop_vars(['nCells'])
 
             ds = ds.where(cellMask, drop=True)
 
@@ -1020,7 +1024,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
 
         neutralDensity = sigma0(SA, CT)
         rhoInterval = config.getfloat(sectionName, 'rhoInterval')
-        contours = numpy.arange(24., 29.+rhoInterval, rhoInterval)
+        contours = numpy.arange(23., 29.+rhoInterval, rhoInterval)
 
         diagramType = config.get(sectionName, 'diagramType')
         if diagramType not in ['volumetric', 'scatter']:

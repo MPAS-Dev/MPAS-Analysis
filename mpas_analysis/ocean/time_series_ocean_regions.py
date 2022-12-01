@@ -876,14 +876,28 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             xarray.open_dataset(regionMaskFileName).stack(
                     nCells=(obsDict['latVar'], obsDict['lonVar']))
         dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
-            [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+            [obsDict['latVar'], obsDict['lonVar']])
+        if 'nCells' in dsRegionMask.data_vars:
+            dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
 
         maskRegionNames = decode_strings(dsRegionMask.regionNames)
         regionIndex = maskRegionNames.index(self.regionName)
 
         dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
-        cellMask = dsMask.regionCellMasks == 1
+        if 'regionMasks' in dsMask:
+            # this is the name used by the mask creation tool in mpas_tools
+            maskVar = 'regionMasks'
+        elif 'regionCellMasks' in dsMask:
+            # this is the name used in the old mask creation tool in
+            # mpas-analysis
+            maskVar = 'regionCellMasks'
+        else:
+            raise ValueError(f'The file {regionMaskFileName} doesn\'t '
+                             f'contain a mask variable: regionMasks or '
+                             f'regionCellMasks')
+
+        cellMask = dsMask[maskVar] == 1
 
         if config.has_option(sectionName, 'zmin'):
             zmin = config.getfloat(sectionName, 'zmin')
@@ -961,7 +975,9 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             dsMonth = dsMonth.stack(nCells=(obsDict['latVar'],
                                             obsDict['lonVar']))
             dsMonth = dsMonth.reset_index('nCells').drop_vars(
-                [obsDict['latVar'], obsDict['lonVar'], 'nCells'])
+                [obsDict['latVar'], obsDict['lonVar']])
+            if 'nCells' in dsMonth.data_vars:
+                dsMonth = dsMonth.drop_vars(['nCells'])
 
             dsMonth = dsMonth.where(cellMask, drop=True)
 

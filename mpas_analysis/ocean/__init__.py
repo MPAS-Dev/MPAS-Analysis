@@ -5,6 +5,8 @@ from mpas_analysis.ocean.climatology_map_mld_min_max import \
 from mpas_analysis.ocean.climatology_map_sss import ClimatologyMapSSS
 from mpas_analysis.ocean.climatology_map_ssh import ClimatologyMapSSH
 from mpas_analysis.ocean.climatology_map_eke import ClimatologyMapEKE
+from mpas_analysis.ocean.climatology_map_bsf import \
+    ClimatologyMapBSF
 from mpas_analysis.ocean.climatology_map_ohc_anomaly import \
     ClimatologyMapOHCAnomaly
 from mpas_analysis.ocean.climatology_map_bgc import ClimatologyMapBGC
@@ -29,6 +31,7 @@ from mpas_analysis.ocean.time_series_ohc_anomaly import TimeSeriesOHCAnomaly
 from mpas_analysis.ocean.time_series_ssh_anomaly import TimeSeriesSSHAnomaly
 
 from mpas_analysis.ocean.time_series_sst import TimeSeriesSST
+from mpas_analysis.ocean.histogram import OceanHistogram
 from mpas_analysis.ocean.index_nino34 import IndexNino34
 from mpas_analysis.ocean.streamfunction_moc import StreamfunctionMOC
 from mpas_analysis.ocean.meridional_heat_transport import \

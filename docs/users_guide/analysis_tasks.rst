@@ -35,11 +35,17 @@ Analysis Tasks
    tasks/geojsonTransects
    tasks/oceanRegionalProfiles
    tasks/regionalTSDiagrams
+   tasks/oceanHistogram
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH
    tasks/climatologyMapSeaIceConcSH
    tasks/climatologyMapSeaIceThickSH
    tasks/timeSeriesSeaIceAreaVol
+
+   tasks/climatologyMapSeaIceProductionNH
+   tasks/climatologyMapSeaIceMeltingNH
+   tasks/climatologyMapSeaIceProductionSH
+   tasks/climatologyMapSeaIceMeltingSH
 
    tasks/climatologyMapIcebergConcSH

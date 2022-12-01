@@ -28,7 +28,7 @@ used those components.
 
 ## Documentation
 
-[https://mpas-dev.github.io/MPAS-Analysis/stable/](https://mpas-dev.github.io/MPAS-Analysis/stable/)
+[https://mpas-dev.github.io/MPAS-Analysis/latest/](https://mpas-dev.github.io/MPAS-Analysis/latest/)
 
 ## Installation for users
 
@@ -116,7 +116,7 @@ for more details.
 
 ## Running the analysis
 
-  1. Create and empty config file (say `config.myrun`), copy `config.example`,
+  1. Create and empty config file (say `myrun.cfg`), copy `example.cfg`,
      or copy one of the example files in the `configs` directory (if using a
      git repo) or download one from the
      [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
@@ -125,9 +125,9 @@ for more details.
      from GitHub:
      [default.cfg](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg).
   3. If you installed the `mpas-analysis` package, run:
-     `mpas_analysis config.myrun`.  This will read the configuration
+     `mpas_analysis myrun.cfg`.  This will read the configuration
      first from `mpas_analysis/default.cfg` and then replace that
-     configuraiton with any changes from from `config.myrun`
+     configuraiton with any changes from from `myrun.cfg`
   4. If you want to run a subset of the analysis, you can either set the
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
@@ -290,16 +290,15 @@ to be generated and is set up properly.
 
 ## Generating Documentation
 
+Create a development environment as described above in "Installation for 
+developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```
-conda config --add channels conda-forge
-conda remove -y --all -n mpas-analysis-docs
-conda env create -f docs/environment.yml
-conda install -y -n mpas-analysis-docs mock pillow sphinx sphinx_rtd_theme
-conda activate mpas-analysis-docs
-pip install .
-rm -rf build dist mpas_analysis.egg-info
 cd docs
 make clean
 make html
+```
+The results can be viewed in your web browser by opening:
+```
+_build/html/index.html
 ```

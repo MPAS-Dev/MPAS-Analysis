@@ -304,8 +304,8 @@ class MainPage(object):
                                             "templates/config.png")
         copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
 
-        with open('{}/config.complete.{}'.format(htmlBaseDirectory,
-                                                 runName), 'w') as configFile:
+        with open('{}/complete.{}.cfg'.format(htmlBaseDirectory,
+                                              runName), 'w') as configFile:
             self.config.write(configFile)
 
 

@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
 import xarray as xr
 import numpy as np
+import scipy.sparse
+import scipy.sparse.linalg
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
@@ -17,23 +19,18 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.ocean.utility import compute_zmid
 
 
-class ClimatologyMapOHCAnomaly(AnalysisTask):
+class ClimatologyMapBSF(AnalysisTask):
     """
-    An analysis task for comparison of the anomaly from a reference year
-    (typically the start of the simulation) of ocean heat content (OHC)
+    An analysis task for computing and plotting maps of the Barotropic /
+    Subpolar Gyre streamfunction (BSF / SPGSF)
 
     Attributes
     ----------
     mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
         The task that produced the climatology to be remapped and plotted
-
-    ref_year_climatology_task : mpas_analysis.shared.climatology.RefYearMpasClimatologyTask
-        The task that produced the climatology from the first year to be
-        remapped and then subtracted from the main climatology
     """
 
-    def __init__(self, config, mpas_climatology_task,
-                 ref_year_climatology_task, control_config=None):
+    def __init__(self, config, mpas_climatology_task, control_config=None):
         """
         Construct the analysis task.
 
@@ -45,29 +42,25 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
             The task that produced the climatology to be remapped and plotted
 
-        ref_year_climatology_task : mpas_analysis.shared.climatology.RefYearMpasClimatologyTask
-            The task that produced the climatology from the first year to be
-            remapped and then subtracted from the main climatology
-
         control_config : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
-
-        field_name = 'deltaOHC'
+        field_name = 'barotropicStreamfunction'
         # call the constructor from the base class (AnalysisTask)
-        super().__init__(config=config, taskName='climatologyMapOHCAnomaly',
+        super().__init__(config=config, taskName='climatologyMapBSF',
                          componentName='ocean',
                          tags=['climatology', 'horizontalMap', field_name,
-                               'publicObs', 'anomaly'])
+                               'publicObs', 'streamfunction'])
 
         self.mpas_climatology_task = mpas_climatology_task
-        self.ref_year_climatology_task = ref_year_climatology_task
 
         section_name = self.taskName
 
         # read in what seasons we want to plot
         seasons = config.getexpression(section_name, 'seasons')
-
+        depth_ranges = config.getexpression(section_name,
+                                            'depthRanges',
+                                            use_numpyfunc=True)
         if len(seasons) == 0:
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of seasons')
@@ -79,23 +72,24 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
-                                            'depthRanges',
-                                            use_numpyfunc=True)
+        mpas_field_name = field_name
 
-        mpas_field_name = 'deltaOHC'
-
-        variable_list = ['timeMonthly_avg_activeTracers_temperature',
+        variable_list = ['timeMonthly_avg_normalVelocity',
                          'timeMonthly_avg_layerThickness']
-
         for min_depth, max_depth in depth_ranges:
             depth_range_string = \
                 f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
-            remap_climatology_subtask = RemapMpasOHCClimatology(
+            if np.abs(max_depth) < 6000.:
+                fname_title = f'Streamfunction over {depth_range_string}'
+                fname_clim = f'{field_name}_{depth_range_string}'
+            else:
+                fname_title = f'Barotropic Streamfunction'
+                fname_clim = field_name
+
+            remap_climatology_subtask = RemapMpasBSFClimatology(
                 mpas_climatology_task=mpas_climatology_task,
-                ref_year_climatology_task=ref_year_climatology_task,
                 parent_task=self,
-                climatology_name=f'{field_name}_{depth_range_string}',
+                climatology_name=fname_clim,
                 variable_list=variable_list,
                 comparison_grid_names=comparison_grid_names,
                 seasons=seasons,
@@ -104,7 +98,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
 
             self.add_subtask(remap_climatology_subtask)
 
-            out_file_label = f'deltaOHC_{depth_range_string}'
+            out_file_label = fname_clim
             remap_observations_subtask = None
             if control_config is None:
                 ref_title_label = None
@@ -116,7 +110,6 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
                 ref_title_label = f'Control: {control_run_name}'
                 ref_field_name = mpas_field_name
                 diff_title_label = 'Main - Control'
-
             for comparison_grid_name in comparison_grid_names:
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
@@ -126,66 +119,30 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
                         self, season, comparison_grid_name,
                         remap_climatology_subtask, remap_observations_subtask,
                         controlConfig=control_config, subtaskName=subtask_name)
-
                     subtask.set_plot_info(
                         outFileLabel=out_file_label,
-                        fieldNameInTitle=f'$\\Delta$OHC over {depth_range_string}',
+                        fieldNameInTitle=fname_title,
                         mpasFieldName=mpas_field_name,
                         refFieldName=ref_field_name,
                         refTitleLabel=ref_title_label,
                         diffTitleLabel=diff_title_label,
-                        unitsLabel=r'GJ m$^{-2}$',
-                        imageCaption=f'Anomaly in Ocean Heat Content over {depth_range_string}',
-                        galleryGroup='OHC Anomaly',
+                        unitsLabel='Sv',
+                        imageCaption=fname_title,
+                        galleryGroup='Horizontal Streamfunction',
                         groupSubtitle=None,
-                        groupLink='ohc_anom',
+                        groupLink='bsf',
                         galleryName=None)
 
                     self.add_subtask(subtask)
 
-    def setup_and_check(self):
-        """
-        Checks whether analysis is being performed only on the reference year,
-        in which case the analysis will not be meaningful.
 
-        Raises
-        ------
-        ValueError: if attempting to analyze only the reference year
-        """
-
-        # first, call setup_and_check from the base class (AnalysisTask),
-        # which will perform some common setup, including storing:
-        #     self.runDirectory , self.historyDirectory, self.plotsDirectory,
-        #     self.namelist, self.runStreams, self.historyStreams,
-        #     self.calendar
-        super().setup_and_check()
-
-        start_year, end_year = self.mpas_climatology_task.get_start_and_end()
-        ref_start_year, ref_end_year = \
-            self.ref_year_climatology_task.get_start_and_end()
-
-        if (start_year == ref_start_year) and (end_year == ref_end_year):
-            raise ValueError('OHC Anomaly is not meaningful and will not work '
-                             'when climatology and ref year are the same.')
-
-
-class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
+class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of ocean heat content from
-    climatologies of temperature
-
-    Attributes
-    ----------
-    ref_year_climatology_task : mpas_analysis.shared.climatology.RefYearMpasClimatologyTask
-        The task that produced the climatology from the first year to be
-        remapped and then subtracted from the main climatology
-
-    min_depth, max_depth : float
-        The minimum and maximum depths for integration
+    A subtask for computing climatologies of the barotropic /subpolar gyre
+    streamfunction from climatologies of normal velocity and layer thickness
     """
-
-    def __init__(self, mpas_climatology_task, ref_year_climatology_task,
-                 parent_task, climatology_name, variable_list, seasons,
+    def __init__(self, mpas_climatology_task, parent_task,
+                 climatology_name, variable_list, seasons,
                  comparison_grid_names, min_depth, max_depth):
 
         """
@@ -196,10 +153,6 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         ----------
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
             The task that produced the climatology to be remapped
-
-        ref_year_climatology_task : mpas_analysis.shared.climatology.RefYearMpasClimatologyTask
-            The task that produced the climatology from the first year to be
-            remapped and then subtracted from the main climatology
 
         parent_task :  mpas_analysis.shared.AnalysisTask
             The parent task, used to get the ``taskName``, ``config`` and
@@ -233,31 +186,14 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         super().__init__(
             mpas_climatology_task, parent_task, climatology_name,
             variable_list, seasons, comparison_grid_names,
-            subtaskName=subtask_name)
+            subtaskName=subtask_name, vertices=True)
 
-        self.ref_year_climatology_task = ref_year_climatology_task
-        self.run_after(ref_year_climatology_task)
         self.min_depth = min_depth
         self.max_depth = max_depth
 
-    def setup_and_check(self):
-        """
-        Perform steps to set up the analysis and check for errors in the setup.
-        """
-
-        # first, call setup_and_check from the base class
-        # (RemapMpasClimatologySubtask), which will set up remappers and add
-        # variables to mpas_climatology_task
-        super().setup_and_check()
-
-        # don't add the variables and seasons to mpas_climatology_task until
-        # we're sure this subtask is supposed to run
-        self.ref_year_climatology_task.add_variables(self.variableList,
-                                                     self.seasons)
-
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the ocean heat content (OHC) anomaly from the temperature
+        Compute the masked climatology from the normal velocity
         and layer thickness fields.
 
         Parameters
@@ -273,56 +209,124 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         climatology : xarray.Dataset
             the modified climatology data set
         """
+        logger = self.logger
 
-        ohc = self._compute_ohc(climatology)
-        ref_file_name = self.ref_year_climatology_task.get_file_name(season)
-        ref_year_climo = xr.open_dataset(ref_file_name)
-        if 'Time' in ref_year_climo.dims:
-            ref_year_climo = ref_year_climo.isel(Time=0)
-        ref_ohc = self._compute_ohc(ref_year_climo)
+        ds_mesh = xr.open_dataset(self.restartFileName)
+        ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
+                           'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
+                           'dcEdge', 'dvEdge', 'bottomDepth', 'layerThickness',
+                           'maxLevelCell']]
+        ds_mesh = ds_mesh.isel(Time=0)
+        ds_mesh.load()
+        bsf_vertex = self._compute_barotropic_streamfunction_vertex(
+            ds_mesh, climatology)
+        logger.info('bsf on vertices computed.')
 
-        climatology['deltaOHC'] = ohc - ref_ohc
-        climatology.deltaOHC.attrs['units'] = 'GJ m^-2'
-        start_year = self.ref_year_climatology_task.startYear
-        climatology.deltaOHC.attrs['description'] = \
-            f'Anomaly from year {start_year} in ocean heat content'
+        climatology['barotropicStreamfunction'] = bsf_vertex
+        climatology.barotropicStreamfunction.attrs['units'] = 'Sv'
+        climatology.barotropicStreamfunction.attrs['description'] = \
+            'barotropic streamfunction at vertices'
+
         climatology = climatology.drop_vars(self.variableList)
 
         return climatology
 
-    def _compute_ohc(self, climatology):
-        """
-        Compute the OHC from the temperature and layer thicknesses in a given
-        climatology data sets.
-        """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+    def _compute_transport(self, ds_mesh, ds):
 
-        # specific heat [J/(kg*degC)]
-        cp = self.namelist.getfloat('config_specific_heat_sea_water')
-        # [kg/m3]
-        rho = self.namelist.getfloat('config_density0')
+        cells_on_edge = ds_mesh.cellsOnEdge - 1
+        inner_edges = np.logical_and(cells_on_edge.isel(TWO=0) >= 0,
+                                     cells_on_edge.isel(TWO=1) >= 0)
 
-        units_scale_factor = 1e-9
+        # convert from boolean mask to indices
+        inner_edges = np.flatnonzero(inner_edges.values)
 
-        n_vert_levels = ds_restart.sizes['nVertLevels']
-
-        z_mid = compute_zmid(ds_restart.bottomDepth, ds_restart.maxLevelCell-1,
-                             ds_restart.layerThickness)
+        cell0 = cells_on_edge.isel(nEdges=inner_edges, TWO=0)
+        cell1 = cells_on_edge.isel(nEdges=inner_edges, TWO=1)
+        n_vert_levels = ds.sizes['nVertLevels']
 
         vert_index = xr.DataArray.from_dict(
             {'dims': ('nVertLevels',), 'data': np.arange(n_vert_levels)})
-
-        temperature = climatology['timeMonthly_avg_activeTracers_temperature']
-        layer_thickness = climatology['timeMonthly_avg_layerThickness']
-
-        masks = [vert_index < ds_restart.maxLevelCell,
-                 z_mid <= self.min_depth,
-                 z_mid >= self.max_depth]
+        z_mid = compute_zmid(ds_mesh.bottomDepth, ds_mesh.maxLevelCell-1,
+                             ds_mesh.layerThickness)
+        z_mid_edge = 0.5*(z_mid.isel(nCells=cell0) +
+                          z_mid.isel(nCells=cell1))
+        normal_velocity = \
+            ds.timeMonthly_avg_normalVelocity.isel(nEdges=inner_edges)
+        layer_thickness = ds.timeMonthly_avg_layerThickness
+        layer_thickness_edge = 0.5*(layer_thickness.isel(nCells=cell0) +
+                                    layer_thickness.isel(nCells=cell1))
+        mask_bottom = (vert_index < ds_mesh.maxLevelCell).T
+        mask_bottom_edge = 0.5*(mask_bottom.isel(nCells=cell0) +
+                                mask_bottom.isel(nCells=cell1))
+        masks = [mask_bottom_edge,
+                 z_mid_edge <= self.min_depth,
+                 z_mid_edge >= self.max_depth]
         for mask in masks:
-            temperature = temperature.where(mask)
-            layer_thickness = layer_thickness.where(mask)
+            normal_velocity = normal_velocity.where(mask)
+            layer_thickness_edge = layer_thickness_edge.where(mask)
+        transport = ds_mesh.dvEdge[inner_edges] * \
+            (layer_thickness_edge * normal_velocity).sum(dim='nVertLevels')
 
-        ohc = units_scale_factor * rho * cp * layer_thickness * temperature
-        ohc = ohc.sum(dim='nVertLevels')
-        return ohc
+        return inner_edges, transport
+
+    def _compute_barotropic_streamfunction_vertex(self, ds_mesh, ds):
+        inner_edges, transport = self._compute_transport(ds_mesh, ds)
+        self.logger.info('transport computed.')
+
+        nvertices = ds_mesh.sizes['nVertices']
+
+        cells_on_vertex = ds_mesh.cellsOnVertex - 1
+        vertices_on_edge = ds_mesh.verticesOnEdge - 1
+        is_boundary_cov = cells_on_vertex == -1
+        boundary_vertices = np.logical_or(is_boundary_cov.isel(vertexDegree=0),
+                                          is_boundary_cov.isel(vertexDegree=1))
+        boundary_vertices = np.logical_or(boundary_vertices,
+                                          is_boundary_cov.isel(vertexDegree=2))
+
+        # convert from boolean mask to indices
+        boundary_vertices = np.flatnonzero(boundary_vertices.values)
+
+        n_boundary_vertices = len(boundary_vertices)
+        n_inner_edges = len(inner_edges)
+
+        indices = np.zeros((2, 2*n_inner_edges+n_boundary_vertices), dtype=int)
+        data = np.zeros(2*n_inner_edges+n_boundary_vertices, dtype=float)
+
+        # The difference between the streamfunction at vertices on an inner
+        # edge should be equal to the transport
+        v0 = vertices_on_edge.isel(nEdges=inner_edges, TWO=0).values
+        v1 = vertices_on_edge.isel(nEdges=inner_edges, TWO=1).values
+
+        ind = np.arange(n_inner_edges)
+        indices[0, 2*ind] = ind
+        indices[1, 2*ind] = v1
+        data[2*ind] = 1.
+
+        indices[0, 2*ind+1] = ind
+        indices[1, 2*ind+1] = v0
+        data[2*ind+1] = -1.
+
+        # the streamfunction should be zero at all boundary vertices
+        ind = np.arange(n_boundary_vertices)
+        indices[0, 2*n_inner_edges + ind] = n_inner_edges + ind
+        indices[1, 2*n_inner_edges + ind] = boundary_vertices
+        data[2*n_inner_edges + ind] = 1.
+
+        rhs = np.zeros(n_inner_edges+n_boundary_vertices, dtype=float)
+
+        # convert to Sv
+        ind = np.arange(n_inner_edges)
+        rhs[ind] = 1e-6*transport
+
+        ind = np.arange(n_boundary_vertices)
+        rhs[n_inner_edges + ind] = 0.
+
+        matrix = scipy.sparse.csr_matrix(
+            (data, indices),
+            shape=(n_inner_edges+n_boundary_vertices, nvertices))
+
+        solution = scipy.sparse.linalg.lsqr(matrix, rhs)
+        bsf_vertex = xr.DataArray(-solution[0],
+                                  dims=('nVertices',))
+
+        return bsf_vertex

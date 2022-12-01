@@ -21,52 +21,61 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python38:
-        python.version: '3.8'
       Python39:
         python.version: '3.9'
       Python310:
         python.version: '3.10'
+      Python311:
+        python.version: '3.11'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
     displayName: Add conda to PATH
 
   - bash: |
+      set -e
+      eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build
-    displayName: Create Anaconda build environment
+      conda install --yes "conda<22.11.0" conda-build mamba boa
+    displayName: Update conda base environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda build -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
+      conda activate
+      # workaround based on recent failures
+      rm /usr/share/miniconda/pkgs/cache/*.json
+      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
     displayName: Build MPAS-Analysis
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda create --yes --quiet --name test -c ${CONDA_PREFIX}/conda-bld/ \
+      conda activate
+      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis pytest
-    displayName: Create Anaconda test environment
+    displayName: Create Anaconda mpas environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate test
+      conda activate mpas
       pytest --pyargs mpas_analysis
     displayName: pytest
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
+      conda activate
+      mamba create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
           tabulate m2r2 "mistune<2"
-    condition: eq(variables['python.version'], '3.9')
+    condition: eq(variables['python.version'], '3.10')
     displayName: Create Anaconda docs environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
       conda activate docs
 
@@ -128,7 +137,7 @@ jobs:
         fi
         popd || exit 1
       fi
-    condition: eq(variables['python.version'], '3.9')
+    condition: eq(variables['python.version'], '3.10')
     displayName: build and deploy docs
 
 - job:
@@ -137,38 +146,45 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python39:
-        python.version: '3.9'
+      Python310:
+        python.version: '3.10'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
     displayName: Add conda to PATH
 
   - bash: |
+      set -e
+      eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build
-    displayName: Create Anaconda build environment
+      conda install --yes python=$PYTHON_VERSION "conda<22.11.0" conda-build mamba boa
+    displayName: Update conda base environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda build -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
+      conda activate
+      # workaround based on recent failures
+      rm /usr/share/miniconda/pkgs/cache/*.json
+      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
     displayName: Build MPAS-Analysis
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda create --yes --quiet --name test -c ${CONDA_PREFIX}/conda-bld/ \
+      conda activate
+      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
            python=$PYTHON_VERSION mpas-analysis pytest
-      conda activate test
+      conda activate mpas
       pip install git+https://github.com/pydata/xarray.git
 
-    displayName: Create Anaconda test environment
+    displayName: Create Anaconda mpas environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate test
+      conda activate mpas
       pytest --pyargs mpas_analysis
     displayName: pytest
 
@@ -178,12 +194,12 @@ jobs:
     vmImage: 'macOS-latest'
   strategy:
     matrix:
-      Python38:
-        python.version: '3.8'
       Python39:
         python.version: '3.9'
       Python310:
         python.version: '3.10'
+      Python311:
+        python.version: '3.11'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -193,26 +209,31 @@ jobs:
     displayName: Fix permissions
 
   - bash: |
+      set -e
+      eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda create --yes --quiet --name build python=$PYTHON_VERSION conda conda-build
-    displayName: Create Anaconda build environment
+      conda install --yes "conda<22.11.0" conda-build mamba boa
+    displayName: Update conda base environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda build -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
+      conda activate
+      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
     displayName: Build MPAS-Analysis
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate build
-      conda create --yes --quiet --name test -c ${CONDA_PREFIX}/conda-bld/ \
+      conda activate
+      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis pytest
-    displayName: Create Anaconda test environment
+    displayName: Create Anaconda mpas environment
 
   - bash: |
+      set -e
       eval "$(conda shell.bash hook)"
-      conda activate test
+      conda activate mpas
       pytest --pyargs mpas_analysis
     displayName: pytest

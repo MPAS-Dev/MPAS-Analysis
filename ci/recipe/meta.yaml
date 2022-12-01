@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.7.2" %}
+{% set version = "1.8.0" %}
 
 package:
   name: {{ name|lower }}
@@ -27,6 +27,7 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
+    - esmf >=8.0.0,<8.3.0
     - esmf=*=nompi_*
     - f90nml
     - geometric_features >=0.5.0
