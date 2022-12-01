@@ -82,9 +82,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>mpas_analysis.ocean.plot_hovmoller_subtask</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.plot_hovmoller_subtask</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -386,8 +386,6 @@
 
         <span class="c1"># drop any NaN values, because this causes issues with rolling averages</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (years)&#39;</span>
         <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Depth (m)&#39;</span>
@@ -420,6 +418,8 @@
             <span class="n">diff</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">refTitle</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">diffTitle</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">controlConfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span>
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlFileName</span><span class="p">)</span>
@@ -443,9 +443,12 @@
             <span class="c1"># drop any NaN values, because this causes issues with rolling</span>
             <span class="c1"># averages</span>
             <span class="n">refMask</span> <span class="o">=</span> <span class="n">refField</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-            <span class="k">assert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">refMask</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="c1"># if the masks differ, we want only locations where both are valid</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">refMask</span><span class="p">)</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">refField</span> <span class="o">=</span> <span class="n">refField</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">assert</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">refField</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">refField</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="c1"># make sure the start and end time sare the same</span>
             <span class="k">assert</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
             <span class="k">assert</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
@@ -453,7 +456,7 @@
             <span class="c1"># so let&#39;s copy them</span>
             <span class="n">refField</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">Time</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">field</span> <span class="o">-</span> <span class="n">refField</span>
-            <span class="k">assert</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">diff</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">diff</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
             <span class="n">refTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
             <span class="n">diffTitle</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 

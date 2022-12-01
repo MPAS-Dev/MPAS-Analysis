@@ -111,9 +111,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../configuration.html">Configuration</a> &raquo;</li>
-      <li>Output</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
+      <li class="breadcrumb-item active">Output</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/users_guide/config/output.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -260,11 +260,11 @@ either climatologies or time series, you could use:</p>
 <p>Finally, we note that the <code class="docutils literal notranslate"><span class="pre">generate</span></code> option in the configuration file can
 be overridden by specifying the <code class="docutils literal notranslate"><span class="pre">--generate</span></code> option on the command line:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">generate</span><span class="o">=</span><span class="n">all_publicObs</span><span class="p">,</span><span class="n">no_index</span><span class="p">,</span><span class="n">no_climatologyMapSST</span> \
-    <span class="n">config</span><span class="o">.</span><span class="n">my_run</span>
+    <span class="n">my_run</span><span class="o">.</span><span class="n">cfg</span>
 </pre></div>
 </div>
 <p>This example would override whatever <code class="docutils literal notranslate"><span class="pre">generate</span></code> option was specified in
-<code class="docutils literal notranslate"><span class="pre">config.my_run</span></code> with a directive to generate only tasks that support the
+<code class="docutils literal notranslate"><span class="pre">my_run.cfg</span></code> with a directive to generate only tasks that support the
 publicly available observations, skipping those using climate indices (e.g.
 El Niño 3.4) and also skipping <code class="docutils literal notranslate"><span class="pre">climatologyMapSST</span></code>.</p>
 </section>

@@ -98,8 +98,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Quick Start Guide</li>
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Quick Start Guide</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/users_guide/quick_start.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -196,7 +196,7 @@ for more details.</p>
 <section id="running-the-analysis">
 <h2>Running the analysis<a class="headerlink" href="#running-the-analysis" title="Permalink to this heading">¶</a></h2>
 <ol class="arabic">
-<li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code>), copy <code class="docutils literal notranslate"><span class="pre">config.example</span></code>,
+<li><p>Create and empty config file (say <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code>), copy <code class="docutils literal notranslate"><span class="pre">example.cfg</span></code>,
 or copy one of the example files in the <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory (if using a
 git repo) or download one from the
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs">example configs directory</a>.</p></li>
@@ -205,9 +205,9 @@ options from <code class="docutils literal notranslate"><span class="pre">mpas_a
 from GitHub:
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg">default.cfg</a>.</p></li>
 <li><p>If you installed the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package, run:
-<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">config.myrun</span></code>.  This will read the configuration
+<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span> <span class="pre">myrun.cfg</span></code>.  This will read the configuration
 first from <code class="docutils literal notranslate"><span class="pre">mpas_analysis/default.cfg</span></code> and then replace that
-configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">config.myrun</span></code></p></li>
+configuraiton with any changes from from <code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code></p></li>
 <li><p>If you want to run a subset of the analysis, you can either set the
 <code class="docutils literal notranslate"><span class="pre">generate</span></code> option under <code class="docutils literal notranslate"><span class="pre">[output]</span></code> in your config file or use the
 <code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag on the command line.  See the comments in
@@ -379,17 +379,16 @@ to be generated and is set up properly.</p>
 </section>
 <section id="generating-documentation">
 <h2>Generating Documentation<a class="headerlink" href="#generating-documentation" title="Permalink to this heading">¶</a></h2>
-<p>To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">config</span> <span class="o">--</span><span class="n">add</span> <span class="n">channels</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span>
-<span class="n">conda</span> <span class="n">remove</span> <span class="o">-</span><span class="n">y</span> <span class="o">--</span><span class="nb">all</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span>
-<span class="n">conda</span> <span class="n">env</span> <span class="n">create</span> <span class="o">-</span><span class="n">f</span> <span class="n">docs</span><span class="o">/</span><span class="n">environment</span><span class="o">.</span><span class="n">yml</span>
-<span class="n">conda</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="o">-</span><span class="n">n</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span> <span class="n">mock</span> <span class="n">pillow</span> <span class="n">sphinx</span> <span class="n">sphinx_rtd_theme</span>
-<span class="n">conda</span> <span class="n">activate</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">-</span><span class="n">docs</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="o">.</span>
-<span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="n">build</span> <span class="n">dist</span> <span class="n">mpas_analysis</span><span class="o">.</span><span class="n">egg</span><span class="o">-</span><span class="n">info</span>
-<span class="n">cd</span> <span class="n">docs</span>
+<p>Create a development environment as described above in “Installation for
+developers”.  Then run:
+To generate the <code class="docutils literal notranslate"><span class="pre">sphinx</span></code> documentation, run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">docs</span>
 <span class="n">make</span> <span class="n">clean</span>
 <span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>The results can be viewed in your web browser by opening:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_build</span><span class="o">/</span><span class="n">html</span><span class="o">/</span><span class="n">index</span><span class="o">.</span><span class="n">html</span>
 </pre></div>
 </div>
 </section>

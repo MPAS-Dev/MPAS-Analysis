@@ -109,9 +109,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>mpas_analysis.shared.time_series.cache_time_series</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.time_series.cache_time_series</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/developers_guide/generated/mpas_analysis.shared.time_series.cache_time_series.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -141,11 +141,11 @@ will be extracted or computed.</p></li>
 <code class="docutils literal notranslate"><span class="pre">timesInDataSet</span></code> to be computed, and <code class="docutils literal notranslate"><span class="pre">firstCall</span></code>, indicating
 whether this is the first call to the funciton (useful for printing
 progress information).</p></li>
-<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
+<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
 stored</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
-<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
+<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
 output the file frequently.  If not, there will be needless overhead
 in caching the file too frequently.</p></li>

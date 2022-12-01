@@ -20,7 +20,7 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" />
+    <link rel="next" title="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" href="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html" />
     <link rel="prev" title="mpas_analysis.ocean.TimeSeriesTransport" href="mpas_analysis.ocean.TimeSeriesTransport.html" /> 
 </head>
 
@@ -80,8 +80,6 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.set_plot_info</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html">mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</a></li>
 </ul>
@@ -124,9 +122,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../api.html">API reference</a> &raquo;</li>
-      <li>mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/developers_guide/generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -146,10 +144,10 @@
 <dt class="field-odd">Variables</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>mpasTimeSeriesTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code>) – The task that extracts the time series from MPAS monthly output</p></li>
-<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file name (usually without full path) where the resulting
+<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The file name (usually without full path) where the resulting
 data set should be written</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Variables to be included in the data set</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The number of points (months) used in the moving average used to
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Variables to be included in the data set</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of points (months) used in the moving average used to
 smooth the data set</p></li>
 <li><p><strong>alter_dataset</strong> (<em>function</em>) – A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
 <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> for manipulating the data set (e.g. adding a new
@@ -168,12 +166,12 @@ also performed on any new variables added to the data set.</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task of which this is a subtask</p></li>
 <li><p><strong>mpasTimeSeriesTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code>) – The task that extracts the time series from MPAS monthly output</p></li>
-<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – The file name (usually without full path) where the resulting
+<li><p><strong>outFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The file name (usually without full path) where the resulting
 data set should be written</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.10)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a>) – Variables to be included in the data set</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.10)"><em>int</em></a>) – The number of points (months) used in the moving average used to
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Variables to be included in the data set</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The number of points (months) used in the moving average used to
 smooth the data set</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.10)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
 <li><p><strong>alter_dataset</strong> (<em>function</em>) – A function that takes an <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> and returns an
 <code class="docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> for manipulating the data set (e.g. adding a new
 variable computed from others).  This operation is performed before
@@ -295,7 +293,7 @@ are also performed on any new variables added to the data set.</p></li>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mpas_analysis.ocean.TimeSeriesTransport.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.TimeSeriesTransport" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.plot_climatology_map_subtask.PlotClimatologyMapSubtask" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

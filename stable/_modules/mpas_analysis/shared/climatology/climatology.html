@@ -82,9 +82,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>mpas_analysis.shared.climatology.climatology</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.climatology.climatology</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -131,7 +131,7 @@
 
 
 <div class="viewcode-block" id="get_remapper"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper">[docs]</a><span class="k">def</span> <span class="nf">get_remapper</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
-                 <span class="n">mappingFilePrefix</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                 <span class="n">mappingFilePrefix</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">vertices</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given config options and descriptions of the source and comparison grids,</span>
 <span class="sd">    returns a ``pyremap.Remapper`` object that can be used to remap from source</span>
@@ -145,10 +145,10 @@
 <span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        Contains configuration options</span>
 
-<span class="sd">    sourceDescriptor : ``MeshDescriptor`` subclass object</span>
+<span class="sd">    sourceDescriptor : pyremap.MeshDescriptor</span>
 <span class="sd">        A description of the source mesh or grid</span>
 
-<span class="sd">    comparisonDescriptor : ``MeshDescriptor`` subclass object</span>
+<span class="sd">    comparisonDescriptor : pyremap.MeshDescriptor</span>
 <span class="sd">        A description of the comparison grid</span>
 
 <span class="sd">    mappingFilePrefix : str</span>
@@ -157,12 +157,15 @@
 <span class="sd">    method : {&#39;bilinear&#39;, &#39;neareststod&#39;, &#39;conserve&#39;}</span>
 <span class="sd">        The method of interpolation used.</span>
 
-<span class="sd">    logger : ``logging.Logger``, optional</span>
+<span class="sd">    logger : logging.Logger, optional</span>
 <span class="sd">        A logger to which ncclimo output should be redirected</span>
+
+<span class="sd">    vertices : bool, optional</span>
+<span class="sd">        Whether to remap from vertices, rather than cells</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    remapper : ``pyremap.Remapper`` object</span>
+<span class="sd">    remapper : pyremap.Remapper</span>
 <span class="sd">        A remapper that can be used to remap files or data sets from the source</span>
 <span class="sd">        grid or mesh to the comparison grid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -175,11 +178,14 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">_matches_comparison</span><span class="p">(</span><span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">):</span>
         <span class="c1"># we need to remap because the grids don&#39;t match</span>
 
-        <span class="n">mappingBaseName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_to_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">mappingFilePrefix</span><span class="p">,</span>
-            <span class="n">sourceDescriptor</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span>
-            <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span>
-            <span class="n">method</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vertices</span><span class="p">:</span>
+            <span class="n">srcMeshName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sourceDescriptor</span><span class="o">.</span><span class="n">meshName</span><span class="si">}</span><span class="s1">_vertices&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">srcMeshName</span> <span class="o">=</span> <span class="n">sourceDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+        <span class="n">destMeshName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+
+        <span class="n">mappingBaseName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mappingFilePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">srcMeshName</span><span class="si">}</span><span class="s1">_to_</span><span class="si">{</span><span class="n">destMeshName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
         <span class="n">tryCustom</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span>
         <span class="k">if</span> <span class="n">tryCustom</span><span class="p">:</span>
@@ -188,8 +194,8 @@
                 <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">,</span>
                 <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span>
 
-            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
-                                             <span class="n">mappingBaseName</span><span class="p">)</span>
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mappingSubdirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mappingBaseName</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">tryCustom</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mappingFileName</span><span class="p">):</span>
             <span class="c1"># second see if mapping files are in the base directory</span>
 
@@ -197,8 +203,7 @@
                 <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">,</span>
                 <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;base_path&#39;</span><span class="p">)</span>
 
-            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
-                                             <span class="n">mappingBaseName</span><span class="p">)</span>
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mappingSubdirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mappingBaseName</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">mappingFileName</span><span class="p">):</span>
             <span class="c1"># we don&#39;t have a mapping file yet, so get ready to create one</span>
@@ -207,8 +212,7 @@
                 <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                        <span class="s1">&#39;mappingSubdirectory&#39;</span><span class="p">)</span>
             <span class="n">make_directories</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">)</span>
-            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mappingSubdirectory</span><span class="p">,</span>
-                                             <span class="n">mappingBaseName</span><span class="p">)</span>
+            <span class="n">mappingFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mappingSubdirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">mappingBaseName</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="n">remapper</span> <span class="o">=</span> <span class="n">Remapper</span><span class="p">(</span><span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">comparisonDescriptor</span><span class="p">,</span>
                         <span class="n">mappingFileName</span><span class="p">)</span>

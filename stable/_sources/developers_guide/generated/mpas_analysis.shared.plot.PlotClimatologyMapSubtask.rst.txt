@@ -1,7 +1,7 @@
-﻿mpas\_analysis.sea\_ice.plot\_climatology\_map\_subtask.PlotClimatologyMapSubtask
-=================================================================================
+﻿mpas\_analysis.shared.plot.PlotClimatologyMapSubtask
+====================================================
 
-.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
+.. currentmodule:: mpas_analysis.shared.plot
 
 .. autoclass:: PlotClimatologyMapSubtask
 

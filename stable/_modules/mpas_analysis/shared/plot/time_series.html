@@ -82,9 +82,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-      <li>mpas_analysis.shared.plot.time_series</li>
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.plot.time_series</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -134,7 +134,7 @@
                              <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">obsMean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obsUncertainty</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">obsLegend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendLocation</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span>
-                             <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
+                             <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the list of time series data sets.</span>
 
@@ -209,9 +209,10 @@
 <span class="sd">    legendLocation : str, optional</span>
 <span class="sd">        The location of the legend (see ``pyplot.legend()`` for details)</span>
 
-<span class="sd">    maxTitleLength : int, optional</span>
-<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
-<span class="sd">        they are truncated with a trailing ellipsis</span>
+<span class="sd">    maxTitleLength : int or None, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis.  The default is from the</span>
+<span class="sd">        ``maxTitleLength`` config option.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -221,6 +222,9 @@
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Stephen Price</span>
+
+    <span class="k">if</span> <span class="n">maxTitleLength</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
@@ -356,7 +360,7 @@
                                    <span class="n">lineWidths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendText</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">maxTitleLength</span><span class="o">=</span><span class="mi">90</span><span class="p">):</span>
+                                   <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the list of time series data sets on a polar plot.</span>
 
@@ -395,9 +399,10 @@
 <span class="sd">        the number of dots per inch of the figure, taken from section ``plot``</span>
 <span class="sd">        option ``dpi`` in the config file by default</span>
 
-<span class="sd">    maxTitleLength : int, optional</span>
-<span class="sd">        the maximum number of characters in the title and legend, beyond which</span>
-<span class="sd">        they are truncated with a trailing ellipsis</span>
+<span class="sd">    maxTitleLength : int or None, optional</span>
+<span class="sd">        the maximum number of characters in the title, beyond which it is</span>
+<span class="sd">        truncated with a trailing ellipsis.  The default is from the</span>
+<span class="sd">        ``maxTitleLength`` config option.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -407,6 +412,9 @@
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Adrian K. Turner, Xylar Asay-Davis</span>
+
+    <span class="k">if</span> <span class="n">maxTitleLength</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>

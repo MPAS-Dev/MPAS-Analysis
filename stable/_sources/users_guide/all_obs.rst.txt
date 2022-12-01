@@ -24,4 +24,5 @@
    obs/ssmi_ice_area.rst
    obs/icesat_thickness.rst
    obs/piomass_ice_volume.rst
+   obs/aniceflux.rst
    obs/altiberg.rst

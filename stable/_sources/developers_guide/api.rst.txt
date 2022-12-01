@@ -90,14 +90,6 @@ Ocean tasks
 
    ComputeAnomalySubtask
 
-.. currentmodule:: mpas_analysis.ocean.plot_climatology_map_subtask
-
-.. autosummary::
-   :toctree: generated/
-
-   PlotClimatologyMapSubtask
-   PlotClimatologyMapSubtask.set_plot_info
-
 .. currentmodule:: mpas_analysis.ocean.plot_depth_integrated_time_series_subtask
 
 .. autosummary::
@@ -125,14 +117,6 @@ Sea ice tasks
    ClimatologyMapSeaIceThick
    TimeSeriesSeaIce
    ClimatologyMapIcebergConc
-
-.. currentmodule:: mpas_analysis.sea_ice.plot_climatology_map_subtask
-
-.. autosummary::
-   :toctree: generated/
-
-   PlotClimatologyMapSubtask
-   PlotClimatologyMapSubtask.set_plot_info
 
 
 Shared modules
@@ -266,6 +250,10 @@ Plotting
    colormap.setup_colormap
    ticks.plot_xtick_format
    add_inset
+
+   PlotClimatologyMapSubtask
+   PlotClimatologyMapSubtask.set_plot_info
+
 
 
 Projection

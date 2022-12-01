@@ -109,7 +109,7 @@ Running the analysis
 --------------------
 
 
-#. Create and empty config file (say ``config.myrun``\ ), copy ``config.example``\ ,
+#. Create and empty config file (say ``myrun.cfg``\ ), copy ``example.cfg``\ ,
    or copy one of the example files in the ``configs`` directory (if using a
    git repo) or download one from the
    `example configs directory <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs>`_.
@@ -118,9 +118,9 @@ Running the analysis
    from GitHub:
    `default.cfg <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg>`_.
 #. If you installed the ``mpas-analysis`` package, run:
-   ``mpas_analysis config.myrun``.  This will read the configuration
+   ``mpas_analysis myrun.cfg``.  This will read the configuration
    first from ``mpas_analysis/default.cfg`` and then replace that
-   configuraiton with any changes from from ``config.myrun``
+   configuraiton with any changes from from ``myrun.cfg``
 #. 
    If you want to run a subset of the analysis, you can either set the
    ``generate`` option under ``[output]`` in your config file or use the
@@ -302,17 +302,18 @@ to be generated and is set up properly.
 Generating Documentation
 ------------------------
 
+Create a development environment as described above in "Installation for 
+developers".  Then run:
 To generate the ``sphinx`` documentation, run:
 
 .. code-block::
 
-   conda config --add channels conda-forge
-   conda remove -y --all -n mpas-analysis-docs
-   conda env create -f docs/environment.yml
-   conda install -y -n mpas-analysis-docs mock pillow sphinx sphinx_rtd_theme
-   conda activate mpas-analysis-docs
-   pip install .
-   rm -rf build dist mpas_analysis.egg-info
    cd docs
    make clean
    make html
+
+The results can be viewed in your web browser by opening:
+
+.. code-block::
+
+   _build/html/index.html

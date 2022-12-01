@@ -111,9 +111,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../configuration.html">Configuration</a> &raquo;</li>
-      <li>Regions</li>
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
+      <li class="breadcrumb-item active">Regions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/users_guide/config/regions.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -151,17 +151,17 @@ web page.</p>
 </section>
 <section id="region-groups">
 <span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
-<p>Currently, seven analysis tasks (<a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a>,
+<p>Currently, eight analysis tasks (<a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a>,
 <a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>,
 <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, <a class="reference internal" href="../tasks/streamfunctionMOC.html#task-streamfunctionmoc"><span class="std std-ref">streamfunctionMOC</span></a>,
-<a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>)
-use masks that define regions in an MPAS mesh as part of their analysis.  Most
-of these region group are defined in
+<a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>, <a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and
+<a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) use masks that define regions in an MPAS
+mesh as part of their analysis.  Most of these region group are defined in
 <a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.7.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
-Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>,
+Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>,
 <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.
-Currently, available region groups are: <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>,
+Currently, available region groups are: <code class="docutils literal notranslate"><span class="pre">Artic</span> <span class="pre">Ocean</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>,
 <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
 <p>The option <code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section specifies
 the path to cached mask files for these region groups, typically
