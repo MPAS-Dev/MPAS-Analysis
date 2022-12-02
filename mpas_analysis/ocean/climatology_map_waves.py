@@ -153,7 +153,8 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
             configSectionName = f'{self.taskName}{upperFieldPrefix}'
 
-            if field['prefix'] == 'significantWaveHeight':
+            if (field['prefix'] == 'significantWaveHeight') \
+                    and (controlConfig is None):
                 obs_names = ['era5', 'ss_cci']
             else:
                 obs_names = ['era5']
@@ -177,12 +178,16 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                         refTitleLabel = f'{obs_type} ({obs.upper()})' \
                                         f'{SscciObsStartYear}-{SscciObsEndYear}'
 
+                    galleryName = f"{field['titleName']} " \
+                                  f"({obs.upper()} {obs_type})"
+
                 else:
                     controlRunName = controlConfig.get('runs', 'mainRunName')
                     refTitleLabel = f'{field["titleName"]}' \
                                     f'(Control: {controlRunName})'
                     diffTitleLabel = 'Main - Control'
-                    refFieldName = field['mpas']
+                    refFieldName = field['prefix']
+                    galleryName = field['titleName']
 
                 outFileLabel = f'{fieldPrefix}Wave{obs}'
 
@@ -215,8 +220,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                             galleryGroup='Waves',
                             groupSubtitle=None,
                             groupLink='waves',
-                            galleryName=f"{field['titleName']} "
-                                        f'({obs.upper()} {obs_type})',
+                            galleryName=galleryName,
                             configSectionName=configSectionName)
 
                         self.add_subtask(subtask)
