@@ -126,7 +126,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         if controlConfig is None:
             observationsDirectory = build_obs_path(
-                config, 'ocean', 'waveSubdirectory')
+                config, 'ocean', 'era5Subdirectory')
 
             obsFileName = f'{observationsDirectory}/ERA5_Monthly_1959-2021.nc'
             remapEraObservationsSubtask = RemapEra5ObservedWaveClimatology(
@@ -135,6 +135,9 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                 comparisonGridNames=comparisonGridNames,
                 variableList=variableListEraObs,
                 subtaskName='remapEraObservations')
+
+            observationsDirectory = build_obs_path(
+                config, 'ocean', 'sscciSubdirectory')
 
             obsFileName = f'{observationsDirectory}/SS_CCI_1991_2018.nc'
             remapSscciObservationsSubtask = RemapSscciObservedWaveClimatology(
