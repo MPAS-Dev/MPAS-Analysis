@@ -37,7 +37,7 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda install --yes "conda<22.11.0" conda-build mamba boa
+      conda install --yes "conda!=22.11.0" conda-build mamba boa
     displayName: Update conda base environment
 
   - bash: |
@@ -158,7 +158,7 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda install --yes python=$PYTHON_VERSION "conda<22.11.0" conda-build mamba boa
+      conda install --yes python=$PYTHON_VERSION "conda!=22.11.0" conda-build mamba boa
     displayName: Update conda base environment
 
   - bash: |
@@ -213,7 +213,7 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda install --yes "conda<22.11.0" conda-build mamba boa
+      conda install --yes "conda!=22.11.0" conda-build mamba boa
     displayName: Update conda base environment
 
   - bash: |
