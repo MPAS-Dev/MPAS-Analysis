@@ -61,6 +61,9 @@ observations/Ocean/ARGO/README.md
 observations/Ocean/EKE/obs.bib
 observations/Ocean/EKE/README.md
 observations/Ocean/EKE/drifter_variance_20180804.nc
+observations/Ocean/ERA5/ERA5_Monthly_1959-2021.nc 
+observations/Ocean/ERA5/obs.bib
+observations/Ocean/ERA5/README.md
 observations/Ocean/SSH/obs.bib
 observations/Ocean/SSH/README.md
 observations/Ocean/SSH/zos_AVISO_L4_199210-201012_20180710.nc
@@ -109,6 +112,9 @@ observations/Ocean/Nino/ERS_SSTv4/README.md
 observations/Ocean/MLD/obs.bib
 observations/Ocean/MLD/holtetalley_mld_climatology_20180710.nc
 observations/Ocean/MLD/README.md
+observations/Ocean/SSCCI/obs.bib
+observations/Ocean/SSCCI/README.md
+observations/Ocean/SSCCI/SS_CCI_1991_2018.nc
 observations/Ocean/SSS/obs.bib
 observations/Ocean/SSS/Aquarius_V3_SSS_Monthly_20180710.nc
 observations/Ocean/SSS/README.md
