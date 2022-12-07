@@ -49,3 +49,5 @@ Analysis Tasks
    tasks/climatologyMapSeaIceMeltingSH
 
    tasks/climatologyMapIcebergConcSH
+
+   tasks/climatologyMapWaves
