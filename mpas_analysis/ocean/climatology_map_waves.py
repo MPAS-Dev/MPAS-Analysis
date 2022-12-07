@@ -110,8 +110,8 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
 
         era5ObsStartYear = config.getint(sectionName, 'era5ObsStartYear')
         era5ObsEndYear = config.getint(sectionName, 'era5ObsEndYear')
-        SscciObsStartYear = config.getint(sectionName, 'SscciObsStartYear')
-        SscciObsEndYear = config.getint(sectionName, 'SscciObsEndYear')
+        sscciObsStartYear = config.getint(sectionName, 'sscciObsStartYear')
+        sscciObsEndYear = config.getint(sectionName, 'sscciObsEndYear')
 
         # the variableList variables  will be added to
         # mpasClimatologyTask along with the seasons.
@@ -179,7 +179,7 @@ class ClimatologyMapWaves(AnalysisTask):  # {{{
                         remapObservationsSubtask = \
                             remapSscciObservationsSubtask
                         refTitleLabel = f'{obs_type} ({obs.upper()})' \
-                                        f'{SscciObsStartYear}-{SscciObsEndYear}'
+                                        f'{sscciObsStartYear}-{sscciObsEndYear}'
 
                     galleryName = f"{field['titleName']} " \
                                   f"({obs.upper()} {obs_type})"
@@ -519,8 +519,8 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         # Steven Brus, Xylar Asay-Davis
 
         sectionName = self.taskName
-        climStartYear = self.config.getint(sectionName, 'SscciObsStartYear')
-        climEndYear = self.config.getint(sectionName, 'SscciObsEndYear')
+        climStartYear = self.config.getint(sectionName, 'sscciObsStartYear')
+        climEndYear = self.config.getint(sectionName, 'sscciObsEndYear')
         timeStart = datetime.datetime(year=climStartYear, month=1, day=1)
         timeEnd = datetime.datetime(year=climEndYear, month=12, day=31)
 
