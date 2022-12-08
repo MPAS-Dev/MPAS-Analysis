@@ -1291,7 +1291,7 @@
       Ocean/ERA5
     </subdirectory>
     <nameInDocs>
-      era5waves
+      era5_waves
     </nameInDocs>
   </observation>
 
@@ -1361,7 +1361,7 @@
       Ocean/SSCCI
     </subdirectory>
     <nameInDocs>
-      sscciwaves
+      sscci_waves
     </nameInDocs>
   </observation>
 

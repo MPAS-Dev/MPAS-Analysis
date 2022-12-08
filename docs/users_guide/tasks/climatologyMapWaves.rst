@@ -1,7 +1,7 @@
 .. _task_climatologyMapWaves:
 
 climatologyMapWaves
-=================
+===================
 
 An analysis task for comparison of global maps of wave quantities
 (significant wave height and peak period) against observations.
