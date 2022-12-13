@@ -29,7 +29,7 @@ python-dateutil
 requests
 scipy
 setuptools
-shapely
+shapely>=1.8.0,<2.0.0
 xarray>=0.14.1
 
 # Development
