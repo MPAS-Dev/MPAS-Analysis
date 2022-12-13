@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Reanalysis: ERA5 &mdash; MPAS-Analysis latest documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative" href="sscci_waves.html" />
+    <link rel="prev" title="Surface Current Variance from Drifter Data" href="drifter_eke.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+          </a>
+              <div class="version">
+                latest
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../observations.html">Observations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#ocean-observations">Ocean Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#sea-ice-observations">Sea Ice Observations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observations.html#details-on-each-data-set">Details on Each Data Set</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="hadley_center_sst.html">SST merged Hadley Center-NOAA/OI data set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aquarius_sss.html">SSS from NASA Aquarius satellite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa18_t_s.html">WOA18 Temperature and Salinity Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aviso_ssh.html">AVISO Absolute Dynamic Topography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="argo_mld.html">Argo Mixed Layer Depth (MLD) climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trenberth_mht.html">Meridional Heat Transport (MHT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woce.html">WOCE sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa.html">World Ocean Atlas v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="landschuetzer-som-ffn.html">Landschuetzerv2016 SOM-FFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Wave Reanalysis: ERA5</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sscci_waves.html">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
+<li class="toctree-l3"><a class="reference internal" href="icesat_thickness.html">IceSat Ice Thickness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piomass_ice_volume.html">PIOMAS Arctic Sea Ice Volume Reanalysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aniceflux.html">Sea ice production and transport: Haumann et al 2016</a></li>
+<li class="toctree-l3"><a class="reference internal" href="altiberg.html">Iceberg Concentration: Altiberg</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
+      <li class="breadcrumb-item active">Wave Reanalysis: ERA5</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/obs/era5_waves.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="wave-reanalysis-era5">
+<span id="era5-waves"></span><h1>Wave Reanalysis: ERA5<a class="headerlink" href="#wave-reanalysis-era5" title="Permalink to this heading">¶</a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<p>ERA5 is the fifth generation ECMWF reanalysis for the global climate and weather for the past 4 to 7 decades.
+Currently data is available from 1950, with Climate Data Store entries for 1950-1978 (preliminary back extension)
+and from 1959 onwards (final release plus timely updates, this page). ERA5 replaces the ERA-Interim reanalysis.</p>
+<p>Reanalysis combines model data with observations from across the world into a globally complete and
+consistent dataset using the laws of physics. This principle, called data assimilation, is based on
+the method used by numerical weather prediction centres, where every so many hours (12 hours at ECMWF)
+a previous forecast is combined with newly available observations in an optimal way to produce a new
+best estimate of the state of the atmosphere, called analysis, from which an updated, improved forecast is issued.
+Reanalysis works in the same way, but at reduced resolution to allow for the provision of a dataset
+spanning back several decades. Reanalysis does not have the constraint of issuing timely forecasts,
+so there is more time to collect observations, and when going further back in time, to allow for the
+ingestion of improved versions of the original observations, which all benefit the quality of the reanalysis product.</p>
+<p>ERA5 provides hourly estimates for a large number of atmospheric, ocean-wave and land-surface quantities.
+An uncertainty estimate is sampled by an underlying 10-member ensemble at three-hourly intervals.
+Ensemble mean and spread have been pre-computed for convenience.
+Such uncertainty estimates are closely related to the information content of the available
+observing system which has evolved considerably over time. They also indicate flow-dependent sensitive areas.
+To facilitate many climate applications, monthly-mean averages have been pre-calculated too,
+though monthly means are not available for the ensemble mean and spread.</p>
+<p>ERA5 is updated daily with a latency of about 5 days (monthly means are available around the 6th of each month).
+In case that serious flaws are detected in this early release (called ERA5T), this data could be different
+from the final release 2 to 3 months later. In case that this occurs users are notified.</p>
+<p>The data set presented here is a regridded subset of the full ERA5 data set on native resolution.
+It is online on spinning disk, which should ensure fast and easy access.
+It should satisfy the requirements for most common applications.</p>
+<p>An overview of all ERA5 datasets can be found in this <a class="reference external" href="https://confluence.ecmwf.int/display/CKB/The+family+of+ERA5+datasets">article</a>.
+Information on access to ERA5 data on native resolution is provided in these <a class="reference external" href="https://confluence.ecmwf.int/display/CKB/How+to+download+ERA5">guidelines</a>.</p>
+<p>Data has been regridded to a regular lat-lon grid of 0.25 degrees for the reanalysis and
+0.5 degrees for the uncertainty estimate (0.5 and 1 degree respectively for ocean waves).
+There are four main sub sets: hourly and monthly products, both on pressure levels
+(upper air fields) and single levels (atmospheric, ocean-wave and land surface quantities).</p>
+<p>The present entry is “ERA5 monthly mean data on single levels from 1959 to present”.</p>
+</section>
+<section id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
+<p><a class="reference external" href="https://doi.org/10.24381/cds.f17050d7">Copernicus Climate Data Store</a></p>
+</section>
+<section id="release-policy">
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
+<p>Access to Copernicus Products is given for any purpose in so far as it is lawful, whereas use
+may include, but is not limited to: reproduction; distribution; communication to the public;
+adaptation, modification and combination with other data and information; or any
+combination of the foregoing. <a class="reference external" href="https://cds.climate.copernicus.eu/api/v2/terms/static/licence-to-use-copernicus-products.pdf">Licence Agreement</a></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.3803">Hersback et al. 2020</a></p></li>
+</ul>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/ERA5/obs.bib">bibtex file</a></p>
+</section>
+<section id="mpas-analysis-tasks">
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../tasks/climatologyMapWaves.html#task-climatologymapwaves"><span class="std std-ref">climatologyMapWaves</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="drifter_eke.html" class="btn btn-neutral float-left" title="Surface Current Variance from Drifter Data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="sscci_waves.html" class="btn btn-neutral float-right" title="Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -362,6 +362,11 @@
         <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">seaIceClimatologyTask</span><span class="p">,</span>
         <span class="n">hemisphere</span><span class="o">=</span><span class="s1">&#39;SH&#39;</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">))</span>
 
+    <span class="c1"># Wave Analyses</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapWaves</span><span class="p">(</span>
+        <span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span> <span class="n">oceanRegionMasksTask</span><span class="p">,</span>
+        <span class="n">controlConfig</span><span class="p">))</span>
+
     <span class="n">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">analyses</span></div>
