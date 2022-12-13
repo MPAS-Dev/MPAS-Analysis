@@ -33,7 +33,7 @@ install_requires = \
      'requests',
      'scipy',
      'setuptools',
-     'shapely',
+     'shapely>=1.8.0,<2.0.0',
      'six',
      'xarray>=0.14.1']
 
