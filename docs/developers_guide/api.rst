@@ -72,6 +72,7 @@ Ocean tasks
    ClimatologyMapSose
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
+   ClimatologyMapWaves
    IndexNino34
    MeridionalHeatTransport
    StreamfunctionMOC

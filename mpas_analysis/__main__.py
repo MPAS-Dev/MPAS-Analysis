@@ -266,6 +266,11 @@ def build_analysis_list(config, controlConfig):
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
 
+    # Wave Analyses
+    analyses.append(ocean.ClimatologyMapWaves(
+        config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
+
     check_for_duplicate_names(analyses)
 
     return analyses
