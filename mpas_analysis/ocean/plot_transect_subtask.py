@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 An analysis subtasks for plotting comparison of a model transect against
 observations or reference data.
@@ -116,7 +116,7 @@ class PlotTransectSubtask(AnalysisTask):
         Parameters
         ----------
         parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
+            The parent (main) task for this subtask
 
         season : str
             A season (key in ``shared.constants.monthDictionary``) to be

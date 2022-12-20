@@ -1110,7 +1110,7 @@ described in this tutorial:
     #
     # Additional copyright and license information can be found in the LICENSE file
     # distributed with this code, or at
-    # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+    # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
     import xarray as xr
     import numpy as np
     import scipy.sparse

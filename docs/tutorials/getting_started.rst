@@ -632,13 +632,13 @@ determine the cause of the error.  If not, please include them if you are
 
 .. _`Miniconda3 installer`: https://docs.conda.io/en/latest/miniconda.html
 .. _`conda-forge channel`: https://conda-forge.org/
-.. _`config file`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/master/configs
+.. _`config file`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs
 .. _`Ultra-low-res ocean and sea-ice dataset`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/test_output/20200305.A_WCYCL1850.ne4_oQU480.anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil.ocean_seaice.tar.gz
-.. _`full list of files`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/obs/analysis_input_files
+.. _`full list of files`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/obs/analysis_input_files
 .. _`diagnostics web server`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/
-.. _`default config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg
-.. _`example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example.cfg
-.. _`E3SM example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/example_e3sm.cfg
+.. _`default config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/default.cfg
+.. _`example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example.cfg
+.. _`E3SM example config file`: https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example_e3sm.cfg
 .. _`ncclimo`: http://nco.sourceforge.net/nco.html#ncclimo-netCDF-Climatology-Generator
 .. _`this example output`: https://mpas-dev.github.io/MPAS-Analysis/examples/QU480
 .. _`posting an issue`: https://github.com/MPAS-Dev/MPAS-Analysis/issues

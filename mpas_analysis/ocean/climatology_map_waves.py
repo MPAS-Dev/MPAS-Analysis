@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
@@ -317,7 +317,7 @@ class RemapEra5ObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         Parameters
         ----------
         parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
+            The parent (main) task for this subtask
 
         seasons : list of str
            A list of seasons (keys in ``constants.monthDictionary``) over
@@ -438,7 +438,7 @@ class RemapSscciObservedWaveClimatology(RemapObservedClimatologySubtask):  # {{{
         Parameters
         ----------
         parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
+            The parent (main) task for this subtask
 
         seasons : list of str
            A list of seasons (keys in ``constants.monthDictionary``) over

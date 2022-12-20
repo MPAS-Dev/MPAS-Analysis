@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Funcitons for plotting vertical sections, both alone and as comparisons between
 runs or with observations

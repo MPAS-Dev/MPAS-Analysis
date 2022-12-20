@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Analysis tasks for comparing Polar (and global) climatology maps against
 WOA18 climatological data.
@@ -276,7 +276,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         Parameters
         ----------
         parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
+            The parent (main) task for this subtask
 
         seasons : list of str
            A list of seasons (keys in ``constants.monthDictionary``) over

@@ -27,9 +27,9 @@ do
     conda deactivate
 done
 
-# create another env for testing xarray master branch
+# create another env for testing xarray main branch
 py=${main_py}
-env=test_mpas_analysis_xarray_master
+env=test_mpas_analysis_xarray_main
 mamba create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
 conda activate ${env}
@@ -54,7 +54,7 @@ machine=$(python -c "from mache import discover_machine; print(discover_machine(
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r no_polar_regions -b ${branch} --no_polar_regions
 ./suite/setup.py -p ${py} -r mesh_rename -b ${branch}
-./suite/setup.py -p ${py} -r xarray_master -b ${branch} -e test_mpas_analysis_xarray_master
+./suite/setup.py -p ${py} -r xarray_main -b ${branch} -e test_mpas_analysis_xarray_main
 conda deactivate
 
 py=${alt_py}
@@ -76,7 +76,7 @@ sbatch --dependency=afterok:${RES##* } job_script.bash --kill-on-invalid-dep=yes
 cd ..
 
 for run in main_py${alt_py} wc_defaults no_ncclimo no_polar_regions \
-    mesh_rename xarray_master
+    mesh_rename xarray_main
 do
     cd ${run}
     echo ${run}

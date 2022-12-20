@@ -2,7 +2,7 @@
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
   tags:
     include:
@@ -11,7 +11,7 @@ trigger:
 pr:
   branches:
     include:
-    - master
+    - main
     - develop
 
 jobs:
@@ -93,7 +93,7 @@ jobs:
       if [[ "$(Build.SourceBranch)" == "refs/heads/develop" ]]; then
         export DOCS_VERSION="latest"
         deploy=True
-      elif [[ "$(Build.SourceBranch)" == "refs/heads/master" ]]; then
+      elif [[ "$(Build.SourceBranch)" == "refs/heads/main" ]]; then
         export DOCS_VERSION="stable"
         deploy=True
       elif [[ "$(Build.SourceBranch)" == refs/tags/* ]]; then
@@ -141,7 +141,7 @@ jobs:
     displayName: build and deploy docs
 
 - job:
-  displayName: xarray-master
+  displayName: xarray-main
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
