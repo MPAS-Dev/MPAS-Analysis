@@ -213,4 +213,4 @@ Example Result
    :width: 500 px
    :align: center
 
-.. _`antarctic_ocean_regions`: https://github.com/MPAS-Dev/geometric_features/tree/master/feature_creation_scripts/antarctic_ocean_regions
+.. _`antarctic_ocean_regions`: https://github.com/MPAS-Dev/geometric_features/tree/main/feature_creation_scripts/antarctic_ocean_regions

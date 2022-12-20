@@ -357,7 +357,7 @@ We configure MPAS-Analysis is with Python ``cfg`` (also called ``ini``) files:
    [execute]
    ...
 
-The `default config file <https://github.com/MPAS-Dev/MPAS-Analysis/blob/master/mpas_analysis/default.cfg>`_
+The `default config file <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/default.cfg>`_
 contains thousands of config options, which gives a lot of flexibility to
 MPAS-Analysis but can be more than bit overwhelming to new users and
 developers.
