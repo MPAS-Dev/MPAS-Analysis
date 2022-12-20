@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Utility functions for importing MPAS files into xarray. These functions extend
 the capabilities of mpas_xarray to include mapping variable names from MPAS
