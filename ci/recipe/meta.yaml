@@ -30,12 +30,12 @@ requirements:
     - esmf >=8.0.0,<8.3.0
     - esmf=*=nompi_*
     - f90nml
-    - geometric_features >=0.5.0
+    - geometric_features >=1.0.0
     - gsw
     - lxml
     - mache >=1.11.0
     - matplotlib-base >=3.0.2
-    - mpas_tools >=0.14.0
+    - mpas_tools >=0.16.0
     - nco >=4.8.1
     - netcdf4
     - numpy
@@ -48,7 +48,7 @@ requirements:
     - requests
     - scipy
     - setuptools
-    - shapely>=1.8.0,<2.0.0
+    - shapely >=2.0,<3.0
     - xarray >=0.14.1
 
 test:
