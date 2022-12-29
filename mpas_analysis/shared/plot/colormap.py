@@ -19,7 +19,8 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as cols
 import numpy as np
 from matplotlib.colors import LinearSegmentedColormap
-import xml.etree.ElementTree as ET
+import matplotlib
+from xml.etree import ElementTree
 import configparser
 import cmocean
 import pkg_resources
@@ -116,7 +117,8 @@ def setup_colormap(config, configSectionName, suffix=''):
     return {'colormap': colormap, 'norm': norm, 'levels': levels,
             'ticks': ticks, 'contours': contours, 'lineWidth': lineWidth,
             'lineColor': lineColor, 'arrows': arrows}
-    
+
+
 def register_custom_colormaps():
     name = 'ferret'
     backgroundColor = (0.9, 0.9, 0.9)
@@ -331,7 +333,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     colormap : srt
         new colormap
 
-    norm : ``mapplotlib.colors.Normalize``
+    norm : matplotlib.colors.Normalize
         the norm used to normalize the colormap
 
     ticks : array of float
@@ -365,10 +367,10 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
         ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
             use_numpyfunc=True)
-    except(configparser.NoOptionError):
+    except configparser.NoOptionError:
         ticks = None
 
-    return (colormap, norm, ticks)
+    return colormap, norm, ticks
 
 
 def _setup_indexed_colormap(config, configSectionName, suffix=''):
@@ -387,14 +389,12 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     suffix: str, optional
         suffix of colormap related options
 
-    colorMapType
-
     Returns
     -------
     colormap : srt
         new colormap
 
-    norm : ``mapplotlib.colors.Normalize``
+    norm : matplotlib.colors.Normalize
         the norm used to normalize the colormap
 
     ticks : array of float
@@ -415,7 +415,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
         levels = config.getexpression(
             configSectionName, 'colorbarLevels{}'.format(suffix),
             use_numpyfunc=True)
-    except(configparser.NoOptionError):
+    except configparser.NoOptionError:
         levels = None
 
     if levels is not None:
@@ -442,16 +442,16 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
         ticks = config.getexpression(
             configSectionName, 'colorbarTicks{}'.format(suffix),
             use_numpyfunc=True)
-    except(configparser.NoOptionError):
+    except configparser.NoOptionError:
         ticks = levels
 
-    return (colormap, norm, levels, ticks)
+    return colormap, norm, levels, ticks
 
 
 def _read_xml_colormap(xmlFile, map_name):
     """Read in an XML colormap"""
 
-    xml = ET.parse(xmlFile)
+    xml = ElementTree.parse(xmlFile)
 
     root = xml.getroot()
     colormap = root.findall('ColorMap')
@@ -471,9 +471,9 @@ def _read_xml_colormap(xmlFile, map_name):
 
 
 def _register_colormap_and_reverse(map_name, cmap):
-    if map_name not in plt.colormaps():
-        plt.register_cmap(map_name, cmap)
-        plt.register_cmap('{}_r'.format(map_name), cmap.reversed())
+    if map_name not in matplotlib.colormaps:
+        matplotlib.colormaps.register(cmap, name=map_name)
+        matplotlib.colormaps.register(cmap.reversed(), name=f'{map_name}_r')
 
 
 def _plot_color_gradients():
