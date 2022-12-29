@@ -146,10 +146,9 @@ def add_inset(fig, fc, latlonbuffer=45., polarbuffer=5., width=1.0,
                                  edgecolor='blue', facecolor='blue', alpha=0.4,
                                  linewidth=1.)
         elif geomtype in ['Point', 'MultiPoint']:
-            inset.add_geometries((shape,), crs=ccrs.PlateCarree(),
-                                 edgecolor='none', facecolor='none', alpha=1.,
-                                 markersize=3., markeredgecolor='k',
-                                 markerfacecolor='k')
+            point_x, point_y = shape.xy
+            inset.scatter(point_x, point_y, s=9, color='k',
+                          transform=ccrs.PlateCarree(), edgecolors='face')
         else:
             inset.add_geometries((shape,), crs=ccrs.PlateCarree(),
                                  edgecolor='k', facecolor='none', alpha=1.,
