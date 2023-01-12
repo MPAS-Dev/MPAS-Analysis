@@ -1,36 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>mpas_analysis.shared.climatology.mpas_climatology_task &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -38,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
@@ -69,30 +118,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">MPAS-Analysis</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">mpas_analysis.shared.climatology.mpas_climatology_task</li>
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.shared.climatology.mpas_climatology_task</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for mpas_analysis.shared.climatology.mpas_climatology_task</h1><div class="highlight"><pre>
 <span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
 <span class="c1">#</span>
@@ -130,7 +218,7 @@
 
 
 <div class="viewcode-block" id="MpasClimatologyTask"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask">[docs]</a><span class="k">class</span> <span class="nc">MpasClimatologyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis tasks for computing climatologies from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly*`` analysis members.</span>
 
@@ -177,7 +265,7 @@
     <span class="c1"># Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="MpasClimatologyTask.__init__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -273,7 +361,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">seasonSubtasks</span><span class="p">[</span><span class="n">monthName</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="MpasClimatologyTask.add_variables"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables">[docs]</a>    <span class="k">def</span> <span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one or more variables and optionally one or more seasons for which</span>
 <span class="sd">        to compute climatologies.</span>
 
@@ -331,7 +419,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">monthNames</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
@@ -387,7 +475,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested climatologies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -441,7 +529,7 @@
                 <span class="n">outDirectory</span><span class="o">=</span><span class="n">climatologyDirectory</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_start_and_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the start and end years and dates for the climatology.  This</span>
 <span class="sd">        function is provided to allow a custom method for setting the start</span>
 <span class="sd">        and end years of the climatology.  By default, they are read from the</span>
@@ -463,7 +551,7 @@
         <span class="k">return</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span>
 
 <div class="viewcode-block" id="MpasClimatologyTask.get_file_name"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        Returns the full path for MPAS climatology file produced by ncclimo.</span>
 
@@ -486,7 +574,7 @@
                                                        <span class="bp">self</span><span class="o">.</span><span class="n">op</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_create_symlinks</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create symlinks to monthly mean files so they have the expected file</span>
 <span class="sd">        naming convention for ncclimo.</span>
 
@@ -529,7 +617,7 @@
     <span class="k">def</span> <span class="nf">_compute_climatologies_with_ncclimo</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inDirectory</span><span class="p">,</span> <span class="n">outDirectory</span><span class="p">,</span>
                                             <span class="n">remapper</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                             <span class="n">remappedDirectory</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses ncclimo to compute monthly, seasonal and/or annual climatologies.</span>
 
 <span class="sd">        Parameters</span>
@@ -635,7 +723,7 @@
 
 
 <span class="k">class</span> <span class="nc">MpasClimatologySeasonSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis subtasks for computing climatologies from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly`` analysis member for a single month or season.</span>
 
@@ -654,7 +742,7 @@
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -698,7 +786,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;daskThreads&#39;</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested climatologies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -745,7 +833,7 @@
 
     <span class="k">def</span> <span class="nf">_compute_climatologies_with_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inDirectory</span><span class="p">,</span> <span class="n">outDirectory</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses xarray to compute seasonal and/or annual climatologies.</span>
 
 <span class="sd">        Parameters</span>
@@ -829,30 +917,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
-  </div>
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

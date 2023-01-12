@@ -1,36 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>mpas_analysis.__main__ &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
         <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../_static/doctools.js"></script>
         <script src="../../_static/sphinx_highlight.js"></script>
-    <script src="../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -38,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start Guide</a></li>
@@ -69,30 +118,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../index.html">MPAS-Analysis</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">mpas_analysis.__main__</li>
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.__main__</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for mpas_analysis.__main__</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
@@ -156,7 +244,7 @@
 
 
 <span class="k">def</span> <span class="nf">update_time_bounds_in_config</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Updates the start and end year (and associated full date) for</span>
 <span class="sd">    climatologies, time series and climate indices based on the files that are</span>
 <span class="sd">    actually available.</span>
@@ -175,7 +263,7 @@
 
 
 <div class="viewcode-block" id="build_analysis_list"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list">[docs]</a><span class="k">def</span> <span class="nf">build_analysis_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks. New tasks should be added here, following</span>
 <span class="sd">    the approach used for existing analysis tasks.</span>
 
@@ -373,7 +461,7 @@
 
 
 <span class="k">def</span> <span class="nf">check_for_duplicate_names</span><span class="p">(</span><span class="n">analyses</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Check for duplicate taskName and subtaskName in the list of analysis tasks</span>
 <span class="sd">    and their subtasks</span>
 
@@ -414,7 +502,7 @@
 
 
 <div class="viewcode-block" id="determine_analyses_to_generate"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate">[docs]</a><span class="k">def</span> <span class="nf">determine_analyses_to_generate</span><span class="p">(</span><span class="n">analyses</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis tasks to run based on the &#39;generate&#39; config</span>
 <span class="sd">    option (or command-line flag) and prerequisites and subtasks of each</span>
 <span class="sd">    requested task.  Each task&#39;s ``setup_and_check`` method is called in the</span>
@@ -466,7 +554,7 @@
 <div class="viewcode-block" id="add_task_and_subtasks"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks">[docs]</a><span class="k">def</span> <span class="nf">add_task_and_subtasks</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span> <span class="n">verbose</span><span class="p">,</span>
                           <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    If a task has been requested through the generate config option or</span>
 <span class="sd">    if it is a prerequisite of a requested task, add it to the dictionary of</span>
 <span class="sd">    tasks to generate.</span>
@@ -572,7 +660,7 @@
 
 
 <div class="viewcode-block" id="update_generate"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate">[docs]</a><span class="k">def</span> <span class="nf">update_generate</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">generate</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the &#39;generate&#39; config option using a string from the command line.</span>
 
 <span class="sd">    Parameters</span>
@@ -599,7 +687,7 @@
 
 
 <div class="viewcode-block" id="run_analysis"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis">[docs]</a><span class="k">def</span> <span class="nf">run_analysis</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run all the tasks, either in serial or in parallel</span>
 
 <span class="sd">    Parameters</span>
@@ -785,7 +873,7 @@
 
 
 <div class="viewcode-block" id="wait_for_task"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task">[docs]</a><span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">runningTasks</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Build a list of analysis modules based on the &#39;generate&#39; config option.</span>
 <span class="sd">    New tasks should be added here, following the approach used for existing</span>
 <span class="sd">    analysis tasks.</span>
@@ -850,7 +938,7 @@
 
 
 <span class="k">def</span> <span class="nf">build_config</span><span class="p">(</span><span class="n">user_config_file</span><span class="p">,</span> <span class="n">shared_configs</span><span class="p">,</span> <span class="n">machine_info</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create a config parser from a user config file (either main or control)</span>
 <span class="sd">    and a set of shared config file, also adding the username to the web_portal</span>
 <span class="sd">    section</span>
@@ -873,7 +961,7 @@
 
 
 <span class="k">def</span> <span class="nf">symlink_main_run</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">shared_configs</span><span class="p">,</span> <span class="n">machine_info</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Create symlinks to the climatology and time-series directories for the</span>
 <span class="sd">    main run that has already been computed so we don&#39;t have to recompute</span>
 <span class="sd">    the analysis.</span>
@@ -915,7 +1003,7 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../developers_guide/generated/mpas_analysis.__main__.main.html#mpas_analysis.__main__.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Entry point for the main script ``mpas_analysis``</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -1126,30 +1214,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
-  </div>
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

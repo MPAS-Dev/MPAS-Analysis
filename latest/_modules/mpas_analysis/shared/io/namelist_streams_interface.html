@@ -1,36 +1,74 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>mpas_analysis.shared.io.namelist_streams_interface &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
         <script src="../../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -38,7 +76,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../users_guide/quick_start.html">Quick Start Guide</a></li>
@@ -69,30 +118,69 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../versions.html">Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../../../../index.html">MPAS-Analysis</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">mpas_analysis.shared.io.namelist_streams_interface</li>
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>mpas_analysis.shared.io.namelist_streams_interface</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <h1>Source code for mpas_analysis.shared.io.namelist_streams_interface</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="c1"># This software is open source software available under the BSD-3 license.</span>
@@ -125,7 +213,7 @@
 
 
 <div class="viewcode-block" id="convert_namelist_to_dict"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict">[docs]</a><span class="k">def</span> <span class="nf">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a namelist file to key-value pairs in dictionary.</span>
 
 <span class="sd">    Parameters</span>
@@ -161,7 +249,7 @@
 
 
 <span class="k">class</span> <span class="nc">NameList</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for fortran manipulation of namelist files, provides</span>
 <span class="sd">    read and write functionality</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -172,7 +260,7 @@
 
     <span class="c1"># constructor</span>
 <div class="viewcode-block" id="NameList.__init__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the namelist file</span>
 
 <span class="sd">        Parameters</span>
@@ -201,7 +289,7 @@
 
     <span class="c1"># note following accessors do not do type casting</span>
 <div class="viewcode-block" id="NameList.__getattr__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__">[docs]</a>    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for dot noation, e.g., nml.field</span>
 
 <span class="sd">        Parameters</span>
@@ -222,7 +310,7 @@
 
     <span class="c1"># provide accessor for dictionary notation (returns string)</span>
 <div class="viewcode-block" id="NameList.__getitem__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__">[docs]</a>    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for bracket notation, e.g., nml[&#39;field&#39;]</span>
 
 <span class="sd">        Parameters</span>
@@ -244,7 +332,7 @@
     <span class="c1"># provide accessors for get, getint, getfloat, getbool with appropriate</span>
     <span class="c1"># casting for comparable behavior with config files #{{{</span>
 <div class="viewcode-block" id="NameList.get"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -264,7 +352,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nml</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span></div>
 
 <div class="viewcode-block" id="NameList.getint"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getint">[docs]</a>    <span class="k">def</span> <span class="nf">getint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the integer value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -284,7 +372,7 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nml</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span></div>
 
 <div class="viewcode-block" id="NameList.getfloat"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat">[docs]</a>    <span class="k">def</span> <span class="nf">getfloat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the float value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -304,7 +392,7 @@
         <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nml</span><span class="p">[</span><span class="n">key</span><span class="o">.</span><span class="n">lower</span><span class="p">()])</span></div>
 
 <div class="viewcode-block" id="NameList.getbool"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool">[docs]</a>    <span class="k">def</span> <span class="nf">getbool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the boolean value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -326,7 +414,7 @@
         <span class="k">return</span> <span class="n">value</span></div>
 
     <span class="k">def</span> <span class="nf">find_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleOptions</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If one (or more) of the names in ``possibleOptions`` is an option in</span>
 <span class="sd">        this namelist file, returns the first match.</span>
 
@@ -359,7 +447,7 @@
 
 
 <span class="k">class</span> <span class="nc">StreamsFile</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to read in streams configuration file, provdies</span>
 <span class="sd">    read and write functionality</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -369,7 +457,7 @@
     <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
 <div class="viewcode-block" id="StreamsFile.__init__"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the streams file.</span>
 
 <span class="sd">        Parameters</span>
@@ -404,7 +492,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">streamsdir</span> <span class="o">=</span> <span class="n">streamsdir</span></div>
 
 <div class="viewcode-block" id="StreamsFile.read"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read">[docs]</a>    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">,</span> <span class="n">attribname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
 <span class="sd">        Parameters</span>
@@ -433,7 +521,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">read_datetime_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
 <span class="sd">        Parameters</span>
@@ -468,7 +556,7 @@
 
 <div class="viewcode-block" id="StreamsFile.readpath"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath">[docs]</a>    <span class="k">def</span> <span class="nf">readpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given the name of a stream and optionally start and end dates and a</span>
 <span class="sd">        calendar type, returns a list of files that match the file template in</span>
 <span class="sd">        the stream.</span>
@@ -572,7 +660,7 @@
         <span class="k">return</span> <span class="n">outFileList</span></div>
 
 <div class="viewcode-block" id="StreamsFile.has_stream"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream">[docs]</a>    <span class="k">def</span> <span class="nf">has_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Does the stream file have the given stream?</span>
 
 <span class="sd">        Returns True if the streams file has a stream with the given</span>
@@ -600,7 +688,7 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="StreamsFile.find_stream"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream">[docs]</a>    <span class="k">def</span> <span class="nf">find_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleStreams</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If one (or more) of the names in ``possibleStreams`` is an stream in</span>
 <span class="sd">        this streams file, returns the first match.</span>
 
@@ -633,30 +721,46 @@
 </pre></div>
 
            </div>
+           
           </div>
           <footer>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
-  </div>
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

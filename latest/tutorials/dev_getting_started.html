@@ -1,39 +1,77 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Developer: Getting Started &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
-    <script src="../_static/js/theme.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developers: Understanding an analysis task" href="dev_understand_a_task.html" />
     <link rel="prev" title="User: Getting Started" href="getting_started.html" /> 
 </head>
 
-<body class="wy-body-for-nav"> 
+<body class="wy-body-for-nav">
+
+   
   <div class="wy-grid-for-nav">
+    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
+          
+
+          
             <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+          
+
+          
           </a>
+
+          
+            
+            
               <div class="version">
                 latest
               </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -41,7 +79,18 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
               <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
@@ -105,30 +154,71 @@
 <li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
+            
+          
         </div>
+        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">MPAS-Analysis</a>
+        
       </nav>
 
+
       <div class="wy-nav-content">
+        
         <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Developer: Getting Started</li>
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>Developer: Getting Started</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
+        
+          
             <a href="../_sources/tutorials/dev_getting_started.rst.txt" rel="nofollow"> View page source</a>
+          
+        
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-             
+            
   <section id="developer-getting-started">
 <span id="tutorial-dev-getting-started"></span><h1>Developer: Getting Started<a class="headerlink" href="#developer-getting-started" title="Permalink to this heading">¶</a></h1>
 <p>This mini-tutorial is meant as the starting point for other tutorials for
@@ -160,17 +250,17 @@ development.  Instructions can be found
 <p>It will be convenient to have some basic configuration for <code class="docutils literal notranslate"><span class="pre">git</span></code> taken care
 of before we clone the repository.  Here are some recommended config options
 to set.  Edit your <code class="docutils literal notranslate"><span class="pre">~/.gitconfig</span></code> (create it if it doesn’t exist).</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[user]</span><span class="w"></span>
-<span class="w">        </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Xylar Asay-Davis</span><span class="w"></span>
-<span class="w">        </span><span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xylarstorm@gmail.com</span><span class="w"></span>
-<span class="k">[core]</span><span class="w"></span>
-<span class="w">        </span><span class="na">editor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">vim</span><span class="w"></span>
-<span class="k">[color]</span><span class="w"></span>
-<span class="w">        </span><span class="na">ui</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
-<span class="k">[alias]</span><span class="w"></span>
-<span class="w">        </span><span class="na">logg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">log --graph --oneline --decorate</span><span class="w"></span>
-<span class="k">[rebase]</span><span class="w"></span>
-<span class="w">        </span><span class="na">autosquash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[user]</span>
+<span class="w">        </span><span class="na">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Xylar Asay-Davis</span>
+<span class="w">        </span><span class="na">email</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">xylarstorm@gmail.com</span>
+<span class="k">[core]</span>
+<span class="w">        </span><span class="na">editor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">vim</span>
+<span class="k">[color]</span>
+<span class="w">        </span><span class="na">ui</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
+<span class="k">[alias]</span>
+<span class="w">        </span><span class="na">logg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">log --graph --oneline --decorate</span>
+<span class="k">[rebase]</span>
+<span class="w">        </span><span class="na">autosquash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">true</span>
 </pre></div>
 </div>
 <p>Obviously, change <code class="docutils literal notranslate"><span class="pre">[user]</span></code> config options to appropriate values for you.
@@ -188,7 +278,7 @@ appropriate for this approach.</p>
 <p class="admonition-title">Note</p>
 <p>If you are on a machine with an old version of <code class="docutils literal notranslate"><span class="pre">git</span></code>, you may need to
 add:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module load git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>module<span class="w"> </span>load<span class="w"> </span>git
 </pre></div>
 </div>
 <p>to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code>.  You want a pretty recent version of <code class="docutils literal notranslate"><span class="pre">git</span></code> so you
@@ -198,18 +288,18 @@ have the <code class="docutils literal notranslate"><span class="pre">git</span>
 for keeping code.  This should not be on a “scratch” or other temporary drive
 on an HPC machine.  The base directory should be named <code class="docutils literal notranslate"><span class="pre">MPAS-Analysis</span></code>,
 <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> or something similar.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mkdir mpas-analysis
-$ <span class="nb">cd</span> mpas-analysis
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>mpas-analysis
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>mpas-analysis
 </pre></div>
 </div>
 <p>Within the base directory, clone the main repository into a directory called
 <code class="docutils literal notranslate"><span class="pre">develop</span></code> (the default branch is the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:MPAS-Dev/MPAS-Analysis.git develop
-$ <span class="nb">cd</span> develop
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/MPAS-Analysis.git<span class="w"> </span>develop
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>develop
 </pre></div>
 </div>
 <p>Add your fork as a “remote”:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git remote add &lt;username&gt;/MPAS-Analysis git@github.com:&lt;username&gt;/MPAS-Analysis.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;/MPAS-Analysis<span class="w"> </span>git@github.com:&lt;username&gt;/MPAS-Analysis.git
 </pre></div>
 </div>
 <p>Make sure to replace <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> with your GitHub username.</p>
@@ -220,20 +310,20 @@ $ <span class="nb">cd</span> develop
 within your base directory (e.g. <code class="docutils literal notranslate"><span class="pre">mpas-analysis/develop</span></code>).  Then, “fetch” and
 changes that might have happened on the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch so you are using
 the latest version as a starting point:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git fetch --all -p
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>--all<span class="w"> </span>-p
 </pre></div>
 </div>
 <p>This will fetch all branches from both the main repository and your fork.  It
 will also prune (<code class="docutils literal notranslate"><span class="pre">-p</span></code>) any branches you might have deleted.</p>
 <p>Then, make a worktree for developing your new feature:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ git worktree add ../add_my_fancy_task
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../add_my_fancy_task
 </pre></div>
 </div>
 <p>The last argument (<code class="docutils literal notranslate"><span class="pre">add_my_fancy_task</span></code> in this example) is both the name of
 a directory within the base directory (<code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>) and the name of the
 branch you will be developing.</p>
 <p>Go into that directory to do your development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ../add_my_fancy_task
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../add_my_fancy_task
 </pre></div>
 </div>
 </section>
@@ -258,7 +348,7 @@ that we otherwise need to do manually.</p>
 <p>First download the
 <a class="reference external" href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge installer</a>
 for your operating system, then run it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ /bin/bash Mambaforge-Linux-x86_64.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Mambaforge-Linux-x86_64.sh
 </pre></div>
 </div>
 <div class="admonition note">
@@ -298,8 +388,8 @@ where you will also be using other conda environments, most notably
 E3SM-Unified (which has its own Miniconda installation).  If you do not run
 conda init, you have to manually activate <code class="docutils literal notranslate"><span class="pre">conda</span></code> whenever you need it.
 For <code class="docutils literal notranslate"><span class="pre">bash</span></code> and similar shells, this is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> ~/mambaforge/etc/profile.d/conda.sh
-$ conda activate
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/mambaforge/etc/profile.d/conda.sh
+$<span class="w"> </span>conda<span class="w"> </span>activate
 </pre></div>
 </div>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or related shells, this becomes:</p>
@@ -309,7 +399,7 @@ $ conda activate
 </div>
 <p>You may wish to create an alias in your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.cshrc</span></code> to make
 this easier.  For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span> <span class="nv">init_conda</span><span class="o">=</span><span class="s2">&quot;source ~/mambaforge/etc/profile.d/conda.sh; conda activate&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">init_conda</span><span class="o">=</span><span class="s2">&quot;source ~/mambaforge/etc/profile.d/conda.sh; conda activate&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -318,12 +408,12 @@ this easier.  For example:</p>
 <p>If you installed Miniconda, rather than Mambaforge, you will need to add the
 <a class="reference external" href="https://conda-forge.org/">conda-forge channel</a> and make sure it always takes
 precedence for packages available on that channel:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda config --add channels conda-forge
-$ conda config --set channel_priority strict
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
 </pre></div>
 </div>
 <p>Then, you will need to install the <code class="docutils literal notranslate"><span class="pre">mamba</span></code> package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda install -y mamba
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mamba
 </pre></div>
 </div>
 <p>If you installed Mambaforge, these steps will happen automatically.</p>
@@ -333,7 +423,7 @@ $ conda config --set channel_priority strict
 <p>You can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> and install the
 dependencies that MPAS-Analysis needs by running the following in the worktree
 where you are doing your development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mamba create -y -n mpas_dev --file dev-spec.txt <span class="s2">&quot;esmf=*=nompi_*&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mamba<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt<span class="w"> </span><span class="s2">&quot;esmf=*=nompi_*&quot;</span>
 </pre></div>
 </div>
 <p>The last argument is only needed on HPC machines because the conda version of
@@ -341,8 +431,8 @@ MPI doesn’t work properly on these machines.  You can omit it if you’re
 setting up the conda environment on your laptop.</p>
 <p>Then, you can activate the environment and install MPAS-Analysis in “edit”
 mode by running:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ conda activate mpas_dev
-$ python -m pip install -e .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
+$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>In this mode, any edits you make to the code in the worktree will be available
@@ -352,7 +442,7 @@ it will know about the changes.</p>
 <p class="admonition-title">Note</p>
 <p>If you add or remove files in the code, you will need to re-install
 MPAS-Analysis in the conda environment by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install -e .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </div>
@@ -361,8 +451,8 @@ MPAS-Analysis in the conda environment by rerunning</p>
 <span id="tutorial-dev-get-started-activ-env"></span><h3>4.4 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h3>
 <p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
 environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">source</span> ~/mambaforge/etc/profile.d/conda.sh
-$ conda activate mpas_dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/mambaforge/etc/profile.d/conda.sh
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
 </pre></div>
 </div>
 <p>or for <code class="docutils literal notranslate"><span class="pre">csh</span></code>:</p>
@@ -380,7 +470,7 @@ alias for this step if you defined one.</p>
 process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment.  If you know that
 the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>,
 You can just reinstall <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> itself by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m pip install -e .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>in the new worktree.  If you forget this step, you will find that changes you
@@ -408,12 +498,12 @@ need to follow steps 2-6 of the <a class="reference internal" href="getting_star
 <section id="configuring-mpas-analysis">
 <h3>7.1 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Permalink to this heading">¶</a></h3>
 <p>We configure MPAS-Analysis is with Python <code class="docutils literal notranslate"><span class="pre">cfg</span></code> (also called <code class="docutils literal notranslate"><span class="pre">ini</span></code>) files:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span><span class="w"></span>
-<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span><span class="w"></span>
-<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">runName</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">runName</span>
 
-<span class="k">[execute]</span><span class="w"></span>
-<span class="na">...</span><span class="w"></span>
+<span class="k">[execute]</span>
+<span class="na">...</span>
 </pre></div>
 </div>
 <p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/default.cfg">default config file</a>
@@ -446,12 +536,12 @@ the QU480 MPAS mesh.</p>
 <h4>7.1.1 [runs]<a class="headerlink" href="#runs" title="Permalink to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section contains options related to which E3SM simulation(s) are
 being analyzed:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span><span class="w"></span>
-<span class="c1">## options related to the run to be analyzed and control runs to be</span><span class="w"></span>
-<span class="c1">## compared against</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
+<span class="c1">## options related to the run to be analyzed and control runs to be</span>
+<span class="c1">## compared against</span>
 
-<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span><span class="w"></span>
-<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">A_WCYCL1850.ne4_oQU480.anvil</span><span class="w"></span>
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">A_WCYCL1850.ne4_oQU480.anvil</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">mainRunName</span></code> can be any useful name that will appear at the top of each
@@ -468,17 +558,17 @@ the most part, you can let MPAS-Analysis take care of this on supported
 machines.  The exception is that, in a development conda environment, you will
 be using a version of ESMF that cannot run in parallel so you will need the
 following:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
-<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+<span class="c1">## options related to executing parallel tasks</span>
 
-<span class="c1"># the number of MPI tasks to use in creating mapping files (1 means tasks run in</span><span class="w"></span>
-<span class="c1"># serial, the default)</span><span class="w"></span>
-<span class="na">mapMpiTasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># the number of MPI tasks to use in creating mapping files (1 means tasks run in</span>
+<span class="c1"># serial, the default)</span>
+<span class="na">mapMpiTasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
-<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span><span class="w"></span>
-<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or in</span><span class="w"></span>
-<span class="c1"># serial but with a command)</span><span class="w"></span>
-<span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span><span class="w"></span>
+<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span>
+<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or in</span>
+<span class="c1"># serial but with a command)</span>
+<span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 </pre></div>
 </div>
 <p>If you are running into trouble with MPAS-Analysis, such as running out of
@@ -488,33 +578,33 @@ memory, you may want to explore other config options from this section.</p>
 <h4>7.1.3 [input]<a class="headerlink" href="#input" title="Permalink to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section provides paths to the E3SM simulation data and the name
 of the MPAS-Ocean and MPAS-Seaice mesh.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span><span class="w"></span>
-<span class="c1">## options related to reading in the results to be analyzed</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span>
+<span class="c1">## options related to reading in the results to be analyzed</span>
 
-<span class="c1"># directory containing model results</span><span class="w"></span>
-<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/ac.xylar/acme_scratch/anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil</span><span class="w"></span>
+<span class="c1"># directory containing model results</span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/ac.xylar/acme_scratch/anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil</span>
 
-<span class="c1"># Note: an absolute path can be supplied for any of these subdirectories.</span><span class="w"></span>
-<span class="c1"># A relative path is assumed to be relative to baseDirectory.</span><span class="w"></span>
-<span class="c1"># In this example, results are assumed to be in &lt;baseDirecory&gt;/run</span><span class="w"></span>
+<span class="c1"># Note: an absolute path can be supplied for any of these subdirectories.</span>
+<span class="c1"># A relative path is assumed to be relative to baseDirectory.</span>
+<span class="c1"># In this example, results are assumed to be in &lt;baseDirecory&gt;/run</span>
 
-<span class="c1"># subdirectory containing restart files</span><span class="w"></span>
-<span class="na">runSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run</span><span class="w"></span>
-<span class="c1"># subdirectory for ocean history files</span><span class="w"></span>
-<span class="na">oceanHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ocn/hist</span><span class="w"></span>
-<span class="c1"># subdirectory for sea ice history files</span><span class="w"></span>
-<span class="na">seaIceHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ice/hist</span><span class="w"></span>
+<span class="c1"># subdirectory containing restart files</span>
+<span class="na">runSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run</span>
+<span class="c1"># subdirectory for ocean history files</span>
+<span class="na">oceanHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ocn/hist</span>
+<span class="c1"># subdirectory for sea ice history files</span>
+<span class="na">seaIceHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ice/hist</span>
 
-<span class="c1"># names of namelist and streams files, either a path relative to baseDirectory</span><span class="w"></span>
-<span class="c1"># or an absolute path.</span><span class="w"></span>
-<span class="na">oceanNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpaso_in</span><span class="w"></span>
-<span class="na">oceanStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.ocean</span><span class="w"></span>
-<span class="na">seaIceNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpassi_in</span><span class="w"></span>
-<span class="na">seaIceStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.seaice</span><span class="w"></span>
+<span class="c1"># names of namelist and streams files, either a path relative to baseDirectory</span>
+<span class="c1"># or an absolute path.</span>
+<span class="na">oceanNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpaso_in</span>
+<span class="na">oceanStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.ocean</span>
+<span class="na">seaIceNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpassi_in</span>
+<span class="na">seaIceStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.seaice</span>
 
-<span class="c1"># name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,</span><span class="w"></span>
-<span class="c1"># ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)</span><span class="w"></span>
-<span class="na">mpasMeshName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">oQU480</span><span class="w"></span>
+<span class="c1"># name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,</span>
+<span class="c1"># ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)</span>
+<span class="na">mpasMeshName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">oQU480</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the path for the E3SM simulation. Here are paths to
@@ -562,48 +652,48 @@ the <code class="docutils literal notranslate"><span class="pre">run</span></cod
 <p>The <code class="docutils literal notranslate"><span class="pre">[output]</span></code> section provides a path where the output from the analysis run
 will be written, the option to output the results web pages to another
 location, and a list of analysis to be generated (or explicitly skipped).</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[output]</span><span class="w"></span>
-<span class="c1">## options related to writing out plots, intermediate cached data sets, logs,</span><span class="w"></span>
-<span class="c1">## etc.</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[output]</span>
+<span class="c1">## options related to writing out plots, intermediate cached data sets, logs,</span>
+<span class="c1">## etc.</span>
 
-<span class="c1"># The subdirectory for the analysis and output on the web portal</span><span class="w"></span>
-<span class="na">subdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${runs:mainRunName}/clim_${climatology:startYear}-${climatology:endYear}_ts_${timeSeries:startYear}-${timeSeries:endYear}</span><span class="w"></span>
+<span class="c1"># The subdirectory for the analysis and output on the web portal</span>
+<span class="na">subdir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${runs:mainRunName}/clim_${climatology:startYear}-${climatology:endYear}_ts_${timeSeries:startYear}-${timeSeries:endYear}</span>
 
-<span class="c1"># directory where analysis should be written</span><span class="w"></span>
-<span class="c1"># NOTE: This directory path must be specific to each test case.</span><span class="w"></span>
-<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/${web_portal:username}/analysis/${output:subdir}</span><span class="w"></span>
+<span class="c1"># directory where analysis should be written</span>
+<span class="c1"># NOTE: This directory path must be specific to each test case.</span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/lcrc/group/e3sm/${web_portal:username}/analysis/${output:subdir}</span>
 
-<span class="c1"># provide an absolute path to put HTML in an alternative location (e.g. a web</span><span class="w"></span>
-<span class="c1"># portal)</span><span class="w"></span>
-<span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${web_portal:base_path}/${web_portal:username}/analysis/${output:subdir}</span><span class="w"></span>
+<span class="c1"># provide an absolute path to put HTML in an alternative location (e.g. a web</span>
+<span class="c1"># portal)</span>
+<span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">${web_portal:base_path}/${web_portal:username}/analysis/${output:subdir}</span>
 
-<span class="c1"># a list of analyses to generate.  Valid names can be seen by running:</span><span class="w"></span>
-<span class="c1">#   mpas_analysis --list</span><span class="w"></span>
-<span class="c1"># This command also lists tags for each analysis.</span><span class="w"></span>
-<span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span><span class="w"></span>
-<span class="c1"># These include:</span><span class="w"></span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span><span class="w"></span>
-<span class="c1">#                      public server (the default)</span><span class="w"></span>
-<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span><span class="w"></span>
-<span class="c1">#                        or &#39;seaIce&#39;) will be run</span><span class="w"></span>
-<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span><span class="w"></span>
-<span class="c1">#                                       with this tag will be run, and all</span><span class="w"></span>
-<span class="c1">#                                       analysis for other components or</span><span class="w"></span>
-<span class="c1">#                                       without the tag will be skipped</span><span class="w"></span>
-<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span><span class="w"></span>
-<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span><span class="w"></span>
-<span class="c1">#                                   tasks from the given component or with</span><span class="w"></span>
-<span class="c1">#                                   the given tag.  Do</span><span class="w"></span>
-<span class="c1">#                                      mpas_analysis --list</span><span class="w"></span>
-<span class="c1">#                                   to list all task names and their tags</span><span class="w"></span>
-<span class="c1"># an equivalent syntax can be used on the command line to override this</span><span class="w"></span>
-<span class="c1"># option:</span><span class="w"></span>
-<span class="c1">#    mpas_analysis analysis.cfg --generate \</span><span class="w"></span>
-<span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span><span class="w"></span>
-<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;, &#39;no_BGC&#39;, &#39;no_icebergs&#39;, &#39;no_index&#39;, &#39;no_eke&#39;,</span><span class="w"></span>
-<span class="w">            </span><span class="na">&#39;no_landIceCavities&#39;]</span><span class="w"></span>
+<span class="c1"># a list of analyses to generate.  Valid names can be seen by running:</span>
+<span class="c1">#   mpas_analysis --list</span>
+<span class="c1"># This command also lists tags for each analysis.</span>
+<span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
+<span class="c1"># These include:</span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
+<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span>
+<span class="c1">#                      public server (the default)</span>
+<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
+<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
+<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
+<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
+<span class="c1">#                                       with this tag will be run, and all</span>
+<span class="c1">#                                       analysis for other components or</span>
+<span class="c1">#                                       without the tag will be skipped</span>
+<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
+<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
+<span class="c1">#                                   tasks from the given component or with</span>
+<span class="c1">#                                   the given tag.  Do</span>
+<span class="c1">#                                      mpas_analysis --list</span>
+<span class="c1">#                                   to list all task names and their tags</span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
+<span class="c1"># option:</span>
+<span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
+<span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;, &#39;no_BGC&#39;, &#39;no_icebergs&#39;, &#39;no_index&#39;, &#39;no_eke&#39;,</span>
+<span class="w">            </span><span class="na">&#39;no_landIceCavities&#39;]</span>
 </pre></div>
 </div>
 <p>In this example, I have made liberal use of
@@ -630,7 +720,7 @@ web portal so you will want to just manually replace the part of the
 example above.</p>
 <p>You will need to just put the web output in an <code class="docutils literal notranslate"><span class="pre">html</span></code> subdirectory within
 the analysis output:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">html</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">html</span>
 </pre></div>
 </div>
 <p>and copy this from the supercomputer to your laptop to view it in your
@@ -647,39 +737,39 @@ available in this run and one (the El Niño climate index) is not useful.</p>
 <p>These options determine the start and end years of climatologies (time averages
 over a particular month, season or the full year), time series or the El Niño
 climate index.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatology]</span><span class="w"></span>
-<span class="c1">## options related to producing climatologies, typically to compare against</span><span class="w"></span>
-<span class="c1">## observations and previous runs</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatology]</span>
+<span class="c1">## options related to producing climatologies, typically to compare against</span>
+<span class="c1">## observations and previous runs</span>
 
-<span class="c1"># the first year over which to average climatalogies</span><span class="w"></span>
-<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span><span class="w"></span>
-<span class="c1"># the last year over which to average climatalogies</span><span class="w"></span>
-<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
+<span class="c1"># the first year over which to average climatalogies</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># the last year over which to average climatalogies</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 
-<span class="k">[timeSeries]</span><span class="w"></span>
-<span class="c1">## options related to producing time series plots, often to compare against</span><span class="w"></span>
-<span class="c1">## observations and previous runs</span><span class="w"></span>
+<span class="k">[timeSeries]</span>
+<span class="c1">## options related to producing time series plots, often to compare against</span>
+<span class="c1">## observations and previous runs</span>
 
-<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span><span class="w"></span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span><span class="w"></span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span><span class="w"></span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span><span class="w"></span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span><span class="w"></span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span><span class="w"></span>
-<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
-<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
+<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 
-<span class="k">[index]</span><span class="w"></span>
-<span class="c1">## options related to producing nino index.</span><span class="w"></span>
+<span class="k">[index]</span>
+<span class="c1">## options related to producing nino index.</span>
 
-<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span><span class="w"></span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span><span class="w"></span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span><span class="w"></span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span><span class="w"></span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span><span class="w"></span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span><span class="w"></span>
-<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
-<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span><span class="w"></span>
+<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 </pre></div>
 </div>
 <p>For each of these, options a full year of data must exist for that year to
@@ -699,7 +789,7 @@ conda environment as in <a class="reference internal" href="#tutorial-dev-get-st
 <p>On many file systems, MPAS-Analysis and other python-based software that used
 NetCDF files based on the HDF5 file structure can experience file access errors
 unless the following environment variable is set as follows in bash:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
 </pre></div>
 </div>
 <p>or under csh:</p>
@@ -707,7 +797,7 @@ unless the following environment variable is set as follows in bash:</p>
 </pre></div>
 </div>
 <p>Then, running MPAS-Analysis is as simple as:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mpas_analysis -m &lt;machine&gt; myrun.cfg
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>-m<span class="w"> </span>&lt;machine&gt;<span class="w"> </span>myrun.cfg
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the machine (all lowercase).  We treat
@@ -757,7 +847,7 @@ uses to compare with observations. Since MPAS-Analysis didn’t know about that
 for this mesh on the fly.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> command-line tool has several more options you can
 explore with</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ mpas_analysis --help
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>--help
 </pre></div>
 </div>
 <p>These include listing the available analysis tasks and their tags, purging a
@@ -779,7 +869,7 @@ e.g.:</p>
 <p class="admonition-title">Note</p>
 <p>On Cori, you will need to change the permissions so you can see the
 webpage online:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ chmod -R ugo+rX /global/cfs/cdirs/e3sm/www/&lt;username&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>chmod<span class="w"> </span>-R<span class="w"> </span>ugo+rX<span class="w"> </span>/global/cfs/cdirs/e3sm/www/&lt;username&gt;
 </pre></div>
 </div>
 <p>where <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> is your Cori username.</p>
@@ -801,33 +891,50 @@ and how it was configured.</p>
 
 
            </div>
+           
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="getting_started.html" class="btn btn-neutral float-left" title="User: Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
         <a href="dev_understand_a_task.html" class="btn btn-neutral float-right" title="Developers: Understanding an analysis task" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="getting_started.html" class="btn btn-neutral float-left" title="User: Getting Started" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
-  </div>
+    <p>
+        &#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
         </div>
       </div>
+
     </section>
+
   </div>
-  <script>
+  
+
+  <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
