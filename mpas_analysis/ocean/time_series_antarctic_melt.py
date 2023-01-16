@@ -557,7 +557,7 @@ class PlotMeltSubtask(AnalysisTask):
             obsFileName = '{}/{}'.format(observationsDirectory,
                                          obsFileNameDict[obsName])
             obsDict[obsName] = {}
-            obsFile = csv.reader(open(obsFileName, 'rU'))
+            obsFile = csv.reader(open(obsFileName, 'r'))
             next(obsFile, None)  # skip the header line
             for line in obsFile:  # some later useful values commented out
                 shelfName = line[0]
