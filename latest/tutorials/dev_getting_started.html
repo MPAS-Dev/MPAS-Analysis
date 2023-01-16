@@ -614,7 +614,7 @@ some very low resolution simulations you can use on various supported machines:<
 <span class="o">/</span><span class="n">lcrc</span><span class="o">/</span><span class="n">group</span><span class="o">/</span><span class="n">e3sm</span><span class="o">/</span><span class="n">ac</span><span class="o">.</span><span class="n">xylar</span><span class="o">/</span><span class="n">acme_scratch</span><span class="o">/</span><span class="n">anvil</span><span class="o">/</span><span class="mf">20201025.</span><span class="n">GMPAS</span><span class="o">-</span><span class="n">IAF</span><span class="o">.</span><span class="n">T62_oQU240wLI</span><span class="o">.</span><span class="n">anvil</span>
 </pre></div>
 </div>
-<p>Cori:</p>
+<p>Cori and Perlmutter:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/</span><span class="k">global</span><span class="o">/</span><span class="n">cfs</span><span class="o">/</span><span class="n">cdirs</span><span class="o">/</span><span class="n">e3sm</span><span class="o">/</span><span class="n">xylar</span><span class="o">/</span><span class="mf">20200305.</span><span class="n">A_WCYCL1850</span><span class="o">.</span><span class="n">ne4_oQU480</span><span class="o">.</span><span class="n">anvil</span>
 </pre></div>
 </div>
@@ -714,7 +714,7 @@ subdirectory used for analysis output.  You can modify the path as needed to
 match your own preferred workflow.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>On some E3SM supported machines like Badger and Chicoma, there is no
+<p>On some E3SM supported machines like Chicoma, there is no
 web portal so you will want to just manually replace the part of the
 <code class="docutils literal notranslate"><span class="pre">basePath</span></code> given by <code class="docutils literal notranslate"><span class="pre">/lcrc/group/e3sm/${web_portal:username}</span></code> in the
 example above.</p>
@@ -800,9 +800,10 @@ unless the following environment variable is set as follows in bash:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>-m<span class="w"> </span>&lt;machine&gt;<span class="w"> </span>myrun.cfg
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the machine (all lowercase).  We treat
-<code class="docutils literal notranslate"><span class="pre">cori-haswell</span></code> and <code class="docutils literal notranslate"><span class="pre">cori-knl</span></code> as separate machines (and we strongly
-recommend that you use only <code class="docutils literal notranslate"><span class="pre">cori-haswell</span></code>).</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;machine&gt;</span></code> is the name of the machine (all lowercase).  On Cori, we
+only support the Haswell nodes (so the machine name is <code class="docutils literal notranslate"><span class="pre">cori-haswell</span></code>).  For
+now, we only support CPU nodes on Perlmutter (<code class="docutils literal notranslate"><span class="pre">pm-cpu</span></code>) and Chicoma
+(<code class="docutils literal notranslate"><span class="pre">chicoma-cpu</span></code>).</p>
 <p>Typical output is the analysis is running correctly looks something like:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ mpas_analysis -m anvil myrun.cfg
 Detected E3SM supported machine: anvil
@@ -867,12 +868,12 @@ e.g.:</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>On Cori, you will need to change the permissions so you can see the
-webpage online:</p>
+<p>On Cori and Perlmutter, you will need to change the permissions so you can
+see the webpage online:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>chmod<span class="w"> </span>-R<span class="w"> </span>ugo+rX<span class="w"> </span>/global/cfs/cdirs/e3sm/www/&lt;username&gt;
 </pre></div>
 </div>
-<p>where <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> is your Cori username.</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> is your NERSC username.</p>
 </div>
 <p>If the web page is incomplete, it presumably means there was an error during
 the analysis run, since the web page is generated as the final step.  Check

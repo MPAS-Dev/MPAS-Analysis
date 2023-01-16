@@ -480,7 +480,7 @@ Anvil or Chrysalis:
     /lcrc/group/e3sm/ac.xylar/acme_scratch/anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil
     /lcrc/group/e3sm/ac.xylar/acme_scratch/anvil/20201025.GMPAS-IAF.T62_oQU240wLI.anvil
 
-Cori:
+Cori and Perlmutter:
 
 .. code-block::
 
@@ -597,7 +597,7 @@ match your own preferred workflow.
 
 .. note::
 
-    On some E3SM supported machines like Badger and Chicoma, there is no
+    On some E3SM supported machines like Chicoma, there is no
     web portal so you will want to just manually replace the part of the
     ``basePath`` given by ``/lcrc/group/e3sm/${web_portal:username}`` in the
     example above.
@@ -700,9 +700,10 @@ Then, running MPAS-Analysis is as simple as:
 
     $ mpas_analysis -m <machine> myrun.cfg
 
-where ``<machine>`` is the name of the machine (all lowercase).  We treat
-``cori-haswell`` and ``cori-knl`` as separate machines (and we strongly
-recommend that you use only ``cori-haswell``).
+where ``<machine>`` is the name of the machine (all lowercase).  On Cori, we
+only support the Haswell nodes (so the machine name is ``cori-haswell``).  For
+now, we only support CPU nodes on Perlmutter (``pm-cpu``) and Chicoma
+(``chicoma-cpu``).
 
 Typical output is the analysis is running correctly looks something like:
 
@@ -777,14 +778,14 @@ e.g.:
 
 .. note::
 
-    On Cori, you will need to change the permissions so you can see the
-    webpage online:
+    On Cori and Perlmutter, you will need to change the permissions so you can
+    see the webpage online:
 
     .. code-block:: bash
 
         $ chmod -R ugo+rX /global/cfs/cdirs/e3sm/www/<username>
 
-    where ``<username>`` is your Cori username.
+    where ``<username>`` is your NERSC username.
 
 If the web page is incomplete, it presumably means there was an error during
 the analysis run, since the web page is generated as the final step.  Check

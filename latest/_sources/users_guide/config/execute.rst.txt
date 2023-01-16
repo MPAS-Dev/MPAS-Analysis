@@ -110,11 +110,11 @@ for calls to ``ncremap`` from E3SM-Unified on compute nodes:
 
     ncremapParallelExec = srun
 
-E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:
+E3SM supported machines with system MPI support in E3SM-Unified 1.8.1:
 
 * Anvil
 
-* Badger
+* Chicoma
 
 * Chrysalis
 
@@ -122,13 +122,9 @@ E3SM supported machines with system MPI support in E3SM-Unified 1.5.0:
 
 * Cori-Haswell
 
-* Grizzly
+* Perlmutter
 
 These machines do **not** have MPI support in E3SM-Unified:
-
-* Cori-KNL
-
-* Cooley
 
 * Andes
 
@@ -143,7 +139,7 @@ Parallel Mask Creation
 
 Tasks that involve :ref:`config_region_groups` can generate the masks for each
 region in the group on the fly.  This is done with the mask generation
-command-line tools form MPAS-Tools (see 
+command-line tools form MPAS-Tools (see
 `Mask Creation with Python Multiprocessing <http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#mask-creation-with-pthon-multiprocessing>`_),
 which support 3 modes of parallelism: "spawn", "fork" and "forkserver". For
 technical details on these modes, see
