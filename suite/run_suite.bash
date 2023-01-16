@@ -5,8 +5,8 @@ set -e
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
 
-main_py=3.10
-alt_py=3.9
+main_py=3.11
+alt_py=3.10
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
