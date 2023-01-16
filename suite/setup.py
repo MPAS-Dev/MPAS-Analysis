@@ -65,6 +65,12 @@ def main():
         output_base = f'{scratch}/analysis_testing'
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
+    elif machine == 'pm-cpu':
+        input_base = '/global/cfs/cdirs/e3sm/xylar'
+        scratch = os.environ['SCRATCH']
+        output_base = f'{scratch}/analysis_testing'
+        simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
+        mesh = 'QU480'
     elif machine == 'compy':
         input_base = '/compyfs/asay932/analysis_testing/test_output'
         output_base = f'/compyfs/{username}/analysis_testing'

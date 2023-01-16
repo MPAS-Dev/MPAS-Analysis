@@ -21,7 +21,7 @@ do
     env=test_mpas_analysis_py${py}
     mamba create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
         mock sphinx_rtd_theme "tabulate>=0.8.2" m2r2 "mistune<2" pytest \
-	      "mache>=1.10.0" jinja2
+	      "esmf=*=nompi_*" jinja2
     conda activate ${env}
     pytest
     conda deactivate
