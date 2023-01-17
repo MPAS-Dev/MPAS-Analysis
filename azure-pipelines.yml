@@ -74,7 +74,7 @@ jobs:
       conda activate
       mamba create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
-          tabulate m2r2 "mistune<2"
+          tabulate "m2r2>=0.3.3" "mistune<2"
     condition: eq(variables['python.version'], '3.10')
     displayName: Create Anaconda docs environment
 

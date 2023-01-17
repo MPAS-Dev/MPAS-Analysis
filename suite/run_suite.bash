@@ -5,8 +5,8 @@ set -e
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
 
-main_py=3.10
-alt_py=3.9
+main_py=3.11
+alt_py=3.10
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
@@ -20,8 +20,8 @@ for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
     mamba create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
-        mock sphinx_rtd_theme "tabulate>=0.8.2" m2r2 "mistune<2" pytest \
-	      "esmf=*=nompi_*" jinja2
+        mock sphinx_rtd_theme "tabulate>=0.8.2" "m2r2>=0.3.3" "mistune<2" \
+        pytest "mache>=1.11.0" "esmf=*=nompi_*" jinja2
     conda activate ${env}
     pytest
     conda deactivate
