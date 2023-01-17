@@ -88,10 +88,11 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
         section = config['web_portal']
         base_path = section.get('base_path')
         base_url = section.get('base_url')
-        html_dir = config.get('output', 'htmlSubdirectory')
-        if html_dir.startswith(base_path):
-            url = base_url + html_dir[len(base_path):]
-            print(f'Web page: {url}')
+        if base_path is not None and base_url is not None:
+            html_dir = config.get('output', 'htmlSubdirectory')
+            if html_dir.startswith(base_path):
+                url = base_url + html_dir[len(base_path):]
+                print(f'Web page: {url}')
     if url is None:
         print("Done.")
 
