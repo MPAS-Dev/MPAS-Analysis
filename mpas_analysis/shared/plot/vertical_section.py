@@ -875,11 +875,11 @@ def plot_vertical_section(
         if movingAveragePoints is not None and movingAveragePoints != 1:
             dim = field.dims[0]
             field = field.rolling(dim={dim: movingAveragePoints},
-                                  center=True).mean().dropna(dim)
+                                  center=True).mean().dropna(dim, how='all')
             x = x.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim)
+                          center=True).mean().dropna(dim, how='all')
             y = y.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim)
+                          center=True).mean().dropna(dim, how='all')
 
         mask = field.notnull()
         maskedTriangulation, unmaskedTriangulation = _get_triangulation(
