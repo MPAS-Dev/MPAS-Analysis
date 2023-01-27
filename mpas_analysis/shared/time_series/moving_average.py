@@ -35,7 +35,7 @@ def compute_moving_avg(ds, movingAveragePoints=12):
     # Xylar Asay-Davis
 
     ds = ds.rolling(Time=movingAveragePoints,
-                    center=True).mean().dropna('Time')
+                    center=True).mean().dropna(dim='Time', how='all')
 
     return ds
 
