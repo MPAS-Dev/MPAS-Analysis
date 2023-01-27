@@ -219,7 +219,7 @@
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
-                    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+                    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ds</span></div>
 
