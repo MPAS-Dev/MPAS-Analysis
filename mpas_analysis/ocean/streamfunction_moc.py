@@ -183,13 +183,13 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):
         # -------
         # Xylar Asay-Davis
 
+        if os.path.exists(self.maskAndTransectFileName):
+            return
+
         # call ComputeRegionMasksSubtask.run_task() first
         super().run_task()
 
         config = self.config
-
-        if os.path.exists(self.maskAndTransectFileName):
-            return
 
         dsMesh = xr.open_dataset(self.obsFileName)
         dsMask = xr.open_dataset(self.maskFileName)
