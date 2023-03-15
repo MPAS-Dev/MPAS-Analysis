@@ -9,7 +9,7 @@ export OMP_NUM_THREADS=1
 
 source /lcrc/soft/climate/e3sm-unified/load_latest_e3sm_unified_chrysalis.sh
 # alternatively, you can load your own development environment
-# source ~/miniconda3/etc/profile.d/conda.sh
+# source ~/mambaforge/etc/profile.d/conda.sh
 # conda activate mpas_dev
 # export E3SMU_MACHINE=chrysalis
 
