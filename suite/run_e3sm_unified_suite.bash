@@ -27,7 +27,7 @@ cd ..
 
 cd main_vs_ctrl
 echo main_vs_ctrl
-sbatch --dependency=afterok:${RES##* } job_script.bash --kill-on-invalid-dep=yes
+sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
 for run in wc_defaults no_ncclimo no_polar_regions mesh_rename
