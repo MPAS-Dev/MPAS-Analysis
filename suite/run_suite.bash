@@ -72,11 +72,11 @@ cd ..
 
 cd main_vs_ctrl
 echo main_vs_ctrl
-sbatch --dependency=afterok:${RES##* } job_script.bash --kill-on-invalid-dep=yes
+sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
 for run in main_py${alt_py} wc_defaults no_ncclimo no_polar_regions \
-    mesh_rename xarray_main
+    mesh_rename xarray_main QU480
 do
     cd ${run}
     echo ${run}
@@ -85,15 +85,3 @@ do
 done
 
 cd ..
-
-# only LCRC machines have a separate QU480 run
-if [[ "$machine" == "anvil" || "$machine" == "chrysalis" ]]
-then
-   py=${main_py}
-   conda activate test_mpas_analysis_py${py}
-  ./suite/setup.py -p ${py} -r QU480 -b ${branch}
-  cd ${machine}_test_suite/QU480
-  echo QU480
-  sbatch job_script.bash
-  cd ../..
-fi
