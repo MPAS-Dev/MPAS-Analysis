@@ -582,6 +582,8 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                                 layerThickness,
                                                 cellsOnEdge)
 
+                print(transportZ)
+
             regionCellMask = dictRegion[region]['cellMask']
             latBinSize = \
                 config.getfloat('streamfunctionMOC{}'.format(region),
@@ -596,6 +598,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                     latBinSize)
             mocTop = _compute_moc(latBins, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
+            print(mocTop)
 
             # Store computed MOC to dictionary
             lat[region] = latBins
@@ -1656,11 +1659,13 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
         coe1 = cellsOnEdge[iEdge, 1]
         layerThicknessEdge = 0.5*(layerThickness[coe0, :] +
                                   layerThickness[coe1, :])
+        print(i, layerThicknessEdge)
         transportZEdge[:, i] = horizontalVel[iEdge, :] * \
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
             layerThicknessEdge[np.newaxis, :]
-    transportZ = transportZEdge.sum(axis=1)
+        print(transportZEdge[:, i])
+    transportZ = np.nansum(transportZEdge, axis=1)
     return transportZ
 
 
@@ -1676,7 +1681,7 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
             regionCellMask == 1, latCell >= latBins[iLat - 1]),
             latCell < latBins[iLat])
         mocTop[iLat, :] = mocTop[iLat - 1, :] + \
-            velArea[indlat, :].sum(axis=0)
+            np.nansum(velArea[indlat, :], axis=0)
     # convert m^3/s to Sverdrup
     mocTop = mocTop * m3ps_to_Sv
     mocTop = mocTop.T
