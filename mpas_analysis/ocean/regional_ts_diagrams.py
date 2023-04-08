@@ -605,7 +605,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 raise IOError('No MPAS-O restart file found: need at least one'
                               ' restart file to plot T-S diagrams')
             dsRestart = xarray.open_dataset(restartFileName)
-            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
+            dsRestart = dsRestart.isel(Time=0)
+            if 'landIceMask' in dsRestart:
+                landIceMask = dsRestart.landIceMask
+            else:
+                landIceMask = None
+            dsRestart = dsRestart.chunk(chunk)
 
             regionMaskFileName = self.mpasMasksSubtask.maskFileName
 
@@ -614,13 +619,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
 
-            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
+            dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
             cellMask = dsMask.regionCellMasks == 1
-            if 'landIceMask' in dsRestart:
+            if landIceMask is not None:
                 # only the region outside of ice-shelf cavities
-                cellMask = numpy.logical_and(cellMask,
-                                             dsRestart.landIceMask == 0)
+                cellMask = numpy.logical_and(cellMask, landIceMask == 0)
 
             if config.has_option(sectionName, 'zmin'):
                 zmin = config.getfloat(sectionName, 'zmin')
@@ -714,12 +718,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
             regionMaskFileName = obsDict['maskTask'].maskFileName
 
             dsRegionMask = \
-                xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
+                xarray.open_dataset(regionMaskFileName).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
             dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
             if 'nCells' in dsRegionMask.data_vars:
-                dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
+                dsRegionMask = dsRegionMask.drop_vars(['nCells'])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
@@ -750,7 +754,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
             ds = ds.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
-            if 'nCells' in dsRegionMask.data_vars:
+            if 'nCells' in ds.data_vars:
                ds = ds.drop_vars(['nCells'])
 
             ds = ds.where(cellMask, drop=True)
