@@ -679,6 +679,8 @@
                                                 <span class="n">layerThickness</span><span class="p">,</span>
                                                 <span class="n">cellsOnEdge</span><span class="p">)</span>
 
+                <span class="nb">print</span><span class="p">(</span><span class="n">transportZ</span><span class="p">)</span>
+
             <span class="n">regionCellMask</span> <span class="o">=</span> <span class="n">dictRegion</span><span class="p">[</span><span class="n">region</span><span class="p">][</span><span class="s1">&#39;cellMask&#39;</span><span class="p">]</span>
             <span class="n">latBinSize</span> <span class="o">=</span> \
                 <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;streamfunctionMOC</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">region</span><span class="p">),</span>
@@ -693,6 +695,7 @@
                                     <span class="n">latBinSize</span><span class="p">)</span>
             <span class="n">mocTop</span> <span class="o">=</span> <span class="n">_compute_moc</span><span class="p">(</span><span class="n">latBins</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span>
                                   <span class="n">regionCellMask</span><span class="p">,</span> <span class="n">transportZ</span><span class="p">,</span> <span class="n">velArea</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">mocTop</span><span class="p">)</span>
 
             <span class="c1"># Store computed MOC to dictionary</span>
             <span class="n">lat</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">latBins</span>
@@ -1753,11 +1756,13 @@
         <span class="n">coe1</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
         <span class="n">layerThicknessEdge</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">layerThickness</span><span class="p">[</span><span class="n">coe0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span>
                                   <span class="n">layerThickness</span><span class="p">[</span><span class="n">coe1</span><span class="p">,</span> <span class="p">:])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">layerThicknessEdge</span><span class="p">)</span>
         <span class="n">transportZEdge</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">horizontalVel</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> \
             <span class="n">transectEdgeMaskSigns</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
             <span class="n">dvEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
             <span class="n">layerThicknessEdge</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">transportZ</span> <span class="o">=</span> <span class="n">transportZEdge</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">transportZEdge</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+    <span class="n">transportZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">transportZEdge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">transportZ</span>
 
 
@@ -1773,7 +1778,7 @@
             <span class="n">regionCellMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">latCell</span> <span class="o">&gt;=</span> <span class="n">latBins</span><span class="p">[</span><span class="n">iLat</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]),</span>
             <span class="n">latCell</span> <span class="o">&lt;</span> <span class="n">latBins</span><span class="p">[</span><span class="n">iLat</span><span class="p">])</span>
         <span class="n">mocTop</span><span class="p">[</span><span class="n">iLat</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span><span class="p">[</span><span class="n">iLat</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> \
-            <span class="n">velArea</span><span class="p">[</span><span class="n">indlat</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">velArea</span><span class="p">[</span><span class="n">indlat</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="c1"># convert m^3/s to Sverdrup</span>
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span> <span class="o">*</span> <span class="n">m3ps_to_Sv</span>
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span><span class="o">.</span><span class="n">T</span>
