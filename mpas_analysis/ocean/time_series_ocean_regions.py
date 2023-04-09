@@ -354,8 +354,6 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
                 if 'zminRegions' in dsRegion:
                     zmin = dsRegion.zminRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmin = dsRegion.zmin.values
             else:
                 zmin = config_zmin
@@ -364,8 +362,6 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
                 if 'zmaxRegions' in dsRegion:
                     zmax = dsRegion.zmaxRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmax = dsRegion.zmax.values
             else:
                 zmax = config_zmax
@@ -901,13 +897,17 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         if config.has_option(sectionName, 'zmin'):
             zmin = config.getfloat(sectionName, 'zmin')
-        else:
+        elif 'zminRegions' in dsMask:
             zmin = dsMask.zminRegions.values
+        else:
+            zmin = dsMask.zmin.values
 
         if config.has_option(sectionName, 'zmax'):
             zmax = config.getfloat(sectionName, 'zmax')
-        else:
+        elif 'zmaxRegions' in dsMask:
             zmax = dsMask.zmaxRegions.values
+        else:
+            zmax = dsMask.zmax.values
 
         TVarName = obsDict['TVar']
         SVarName = obsDict['SVar']
