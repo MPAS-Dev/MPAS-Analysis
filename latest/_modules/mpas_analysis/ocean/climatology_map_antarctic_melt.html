@@ -116,7 +116,7 @@
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> \
     <span class="n">build_config_full_path</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
@@ -560,7 +560,7 @@
 
                 <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span>
 
-                <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">meltRateFileName</span><span class="p">)</span>
+                <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">meltRateFileName</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meltRateFileName</span><span class="p">)</span>
 

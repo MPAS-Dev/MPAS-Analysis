@@ -113,7 +113,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">plot_1D</span><span class="p">,</span> <span class="n">savefig</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
@@ -361,7 +361,7 @@
                 <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;meridionalHeatTransportLatZ&#39;</span><span class="p">]</span> <span class="o">/=</span> \
                     <span class="n">refLayerThickness</span>
 
-            <span class="n">write_netcdf</span><span class="p">(</span><span class="n">annualClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">annualClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
         <span class="c1"># **** Plot MHT ****</span>
         <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="mi">70</span>

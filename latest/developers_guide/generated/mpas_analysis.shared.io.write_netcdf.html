@@ -123,26 +123,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mpas-analysis-shared-io-write-netcdf">
-<h1>mpas_analysis.shared.io.write_netcdf<a class="headerlink" href="#mpas-analysis-shared-io-write-netcdf" title="Permalink to this heading">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="mpas_analysis.shared.io.write_netcdf">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.io.</span></span><span class="sig-name descname"><span class="pre">write_netcdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'S1':</span> <span class="pre">'\x00',</span> <span class="pre">'f4':</span> <span class="pre">9.969209968386869e+36,</span> <span class="pre">'f8':</span> <span class="pre">9.969209968386869e+36,</span> <span class="pre">'i1':</span> <span class="pre">-127,</span> <span class="pre">'i2':</span> <span class="pre">-32767,</span> <span class="pre">'i4':</span> <span class="pre">-2147483647,</span> <span class="pre">'i8':</span> <span class="pre">-9223372036854775806,</span> <span class="pre">'u1':</span> <span class="pre">255,</span> <span class="pre">'u2':</span> <span class="pre">65535,</span> <span class="pre">'u4':</span> <span class="pre">4294967295,</span> <span class="pre">'u8':</span> <span class="pre">18446744073709551614}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/io/write_netcdf.html#write_netcdf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.io.write_netcdf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write an xarray data set to a NetCDF file using finite fill values and
-unicode strings</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ds</strong> (<em>xarray.Dataset object</em>) – The xarray data set to be written to a file</p></li>
-<li><p><strong>fileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The fileName to write the data set to</p></li>
-<li><p><strong>fillValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – A dictionary of fill values for each supported data type.  By default,
-this is the dictionary used by the netCDF4 package.  Key entries should
-be of the form ‘f8’ (for float64), ‘i4’ (for int32), etc.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="module-mpas_analysis.shared.io.write_netcdf">
+<span id="mpas-analysis-shared-io-write-netcdf"></span><h1>mpas_analysis.shared.io.write_netcdf<a class="headerlink" href="#module-mpas_analysis.shared.io.write_netcdf" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_netcdf_with_fill</span></code>(ds, fileName[, ...])</p></td>
+<td><p>Write an xarray data set to a NetCDF file using finite fill values and unicode strings</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 

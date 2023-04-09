@@ -122,7 +122,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">get_region_mask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>\
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
 
@@ -1757,7 +1757,7 @@
             <span class="n">transectEdgeMaskSigns</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
             <span class="n">dvEdge</span><span class="p">[</span><span class="n">iEdge</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> \
             <span class="n">layerThicknessEdge</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-    <span class="n">transportZ</span> <span class="o">=</span> <span class="n">transportZEdge</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">transportZ</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">transportZEdge</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">transportZ</span>
 
 
@@ -1773,7 +1773,7 @@
             <span class="n">regionCellMask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">latCell</span> <span class="o">&gt;=</span> <span class="n">latBins</span><span class="p">[</span><span class="n">iLat</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]),</span>
             <span class="n">latCell</span> <span class="o">&lt;</span> <span class="n">latBins</span><span class="p">[</span><span class="n">iLat</span><span class="p">])</span>
         <span class="n">mocTop</span><span class="p">[</span><span class="n">iLat</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span><span class="p">[</span><span class="n">iLat</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">+</span> \
-            <span class="n">velArea</span><span class="p">[</span><span class="n">indlat</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">nansum</span><span class="p">(</span><span class="n">velArea</span><span class="p">[</span><span class="n">indlat</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="c1"># convert m^3/s to Sverdrup</span>
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span> <span class="o">*</span> <span class="n">m3ps_to_Sv</span>
     <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocTop</span><span class="o">.</span><span class="n">T</span>
