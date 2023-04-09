@@ -49,6 +49,7 @@ machine=$(python -c "from mache import discover_machine; print(discover_machine(
 
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --copy_docs --clean
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions
+./suite/setup.py -p ${py} -r moc_am -b ${branch}
 ./suite/setup.py -p ${py} -r no_ncclimo -b ${branch}
 ./suite/setup.py -p ${py} -r ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch}
@@ -59,6 +60,7 @@ conda deactivate
 
 py=${alt_py}
 conda activate test_mpas_analysis_py${py}
+./suite/setup.py -p ${py} -r main -b ${branch}
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch}
 conda deactivate
 
@@ -75,7 +77,7 @@ echo main_vs_ctrl
 sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
-for run in main_py${alt_py} wc_defaults no_ncclimo no_polar_regions \
+for run in main_py${alt_py} wc_defaults moc_am no_ncclimo no_polar_regions \
     mesh_rename xarray_main QU480
 do
     cd ${run}

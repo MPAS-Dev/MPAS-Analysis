@@ -22,7 +22,7 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
     add_inset
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, decode_strings
@@ -383,7 +383,7 @@ class ComputeTransportSubtask(AnalysisTask):
         dsOut['year'].attrs['units'] = 'years'
         dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
 
 class CombineTransportSubtask(AnalysisTask):
@@ -448,7 +448,7 @@ class CombineTransportSubtask(AnalysisTask):
             ds = xarray.open_mfdataset(inFileNames, combine='nested',
                                        concat_dim='Time', decode_times=False)
             ds.load()
-            write_netcdf(ds, outFileName)
+            write_netcdf_with_fill(ds, outFileName)
 
 
 class PlotTransportSubtask(AnalysisTask):

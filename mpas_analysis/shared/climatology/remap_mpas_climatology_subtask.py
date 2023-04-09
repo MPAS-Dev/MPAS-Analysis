@@ -12,6 +12,8 @@
 import xarray as xr
 import numpy
 import os
+
+from mpas_tools.io import write_netcdf
 from pyremap import MpasMeshDescriptor
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
@@ -20,7 +22,7 @@ from mpas_analysis.shared.constants import constants
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.climatology.climatology import get_remapper, \
     get_masked_mpas_climatology_file_name, \
@@ -616,4 +618,4 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         remappedClimatology = self.customize_remapped_climatology(
             remappedClimatology, comparisonGridName, season)
 
-        write_netcdf(remappedClimatology, outFileName)
+        write_netcdf_with_fill(remappedClimatology, outFileName)

@@ -131,7 +131,7 @@ def main():
     config = os.path.join(suite_path, f'{args.run}.cfg')
     config_from_job = os.path.join('..', f'{args.run}.cfg')
 
-    if args.run == 'ctrl':
+    if args.run in ['main', 'ctrl']:
         out_subdir = os.path.join(machine, args.branch, f'main_py{args.python}')
     else:
         out_subdir = os.path.join(machine, args.branch, args.run)
@@ -148,13 +148,13 @@ def main():
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
-    if args.run in ['main_vs_ctrl', 'no_ncclimo', 'wc_defaults']:
+    if args.run in ['main_vs_ctrl', 'moc_am', 'no_ncclimo', 'wc_defaults']:
         # add the run-specific config second
         config_from_job = ' '.join(
             [config_from_job,
              os.path.join('..', '..', 'suite', f'{args.run}.cfg')])
 
-    if args.run != 'ctrl':
+    if args.run not in ['main', 'ctrl']:
         try:
             os.makedirs(os.path.join(suite_path, args.run))
         except FileExistsError:

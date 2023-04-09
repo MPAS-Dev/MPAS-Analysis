@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month, get_region_mask
 
-from mpas_analysis.shared.io import open_mpas_dataset\
+from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
@@ -582,8 +582,6 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                                 layerThickness,
                                                 cellsOnEdge)
 
-                print(transportZ)
-
             regionCellMask = dictRegion[region]['cellMask']
             latBinSize = \
                 config.getfloat('streamfunctionMOC{}'.format(region),
@@ -598,7 +596,6 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
                                     latBinSize)
             mocTop = _compute_moc(latBins, nVertLevels, latCell,
                                   regionCellMask, transportZ, velArea)
-            print(mocTop)
 
             # Store computed MOC to dictionary
             lat[region] = latBins
@@ -1659,12 +1656,10 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
         coe1 = cellsOnEdge[iEdge, 1]
         layerThicknessEdge = 0.5*(layerThickness[coe0, :] +
                                   layerThickness[coe1, :])
-        print(i, layerThicknessEdge)
         transportZEdge[:, i] = horizontalVel[iEdge, :] * \
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
             layerThicknessEdge[np.newaxis, :]
-        print(transportZEdge[:, i])
     transportZ = np.nansum(transportZEdge, axis=1)
     return transportZ
 

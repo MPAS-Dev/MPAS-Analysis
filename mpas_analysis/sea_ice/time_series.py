@@ -25,7 +25,7 @@ from mpas_analysis.shared.timekeeping.MpasRelativeDelta import \
     MpasRelativeDelta
 
 from mpas_analysis.shared.time_series import combine_time_series_with_ncrcat
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -635,6 +635,6 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             dsTimeSeries[hemisphere] = dsAreaSum
 
-            write_netcdf(dsAreaSum, outFileNames[hemisphere])
+            write_netcdf_with_fill(dsAreaSum, outFileNames[hemisphere])
 
         return dsTimeSeries

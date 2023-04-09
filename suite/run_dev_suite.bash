@@ -24,7 +24,9 @@ machine=$(python -c "from mache import discover_machine; print(discover_machine(
 py=3.11
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --copy_docs --clean -e ${env_name}
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions -e ${env_name}
+./suite/setup.py -p ${py} -r moc_am -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r no_ncclimo -b ${branch} -e ${env_name}
+./suite/setup.py -p ${py} -r main -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r ctrl -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r no_polar_regions -b ${branch} --no_polar_regions -e ${env_name}
@@ -45,7 +47,7 @@ echo main_vs_ctrl
 sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
-for run in wc_defaults no_ncclimo no_polar_regions \
+for run in wc_defaults moc_am no_ncclimo no_polar_regions \
     mesh_rename QU480
 do
     cd ${run}

@@ -11,7 +11,9 @@ machine=${E3SMU_MACHINE}
 
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --clean
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions
+./suite/setup.py -p ${py} -r moc_am -b ${branch}
 ./suite/setup.py -p ${py} -r no_ncclimo -b ${branch}
+./suite/setup.py -p ${py} -r main -b ${branch}
 ./suite/setup.py -p ${py} -r ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r no_polar_regions -b ${branch} --no_polar_regions
@@ -30,7 +32,7 @@ echo main_vs_ctrl
 sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
-for run in wc_defaults no_ncclimo no_polar_regions mesh_rename
+for run in wc_defaults moc_am no_ncclimo no_polar_regions mesh_rename
 do
     cd ${run}
     echo ${run}

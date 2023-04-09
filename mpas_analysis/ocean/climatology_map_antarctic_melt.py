@@ -19,7 +19,7 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_obs_path, decode_strings, \
     build_config_full_path
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
     RemapObservedClimatologySubtask
@@ -463,7 +463,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
                 ds['regionNames'] = dsRegionMask.regionNames
 
-                write_netcdf(ds, meltRateFileName)
+                write_netcdf_with_fill(ds, meltRateFileName)
         else:
             ds = xr.open_dataset(meltRateFileName)
 
