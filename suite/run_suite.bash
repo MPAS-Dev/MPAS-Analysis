@@ -60,6 +60,7 @@ conda deactivate
 
 py=${alt_py}
 conda activate test_mpas_analysis_py${py}
+./suite/setup.py -p ${py} -r main -b ${branch}
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch}
 conda deactivate
 

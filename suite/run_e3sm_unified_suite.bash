@@ -13,6 +13,7 @@ machine=${E3SMU_MACHINE}
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions
 ./suite/setup.py -p ${py} -r moc_am -b ${branch}
 ./suite/setup.py -p ${py} -r no_ncclimo -b ${branch}
+./suite/setup.py -p ${py} -r main -b ${branch}
 ./suite/setup.py -p ${py} -r ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch}
 ./suite/setup.py -p ${py} -r no_polar_regions -b ${branch} --no_polar_regions

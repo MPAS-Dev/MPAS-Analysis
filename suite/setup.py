@@ -131,7 +131,7 @@ def main():
     config = os.path.join(suite_path, f'{args.run}.cfg')
     config_from_job = os.path.join('..', f'{args.run}.cfg')
 
-    if args.run == 'ctrl':
+    if args.run in ['main', 'ctrl']:
         out_subdir = os.path.join(machine, args.branch, f'main_py{args.python}')
     else:
         out_subdir = os.path.join(machine, args.branch, args.run)
@@ -154,7 +154,7 @@ def main():
             [config_from_job,
              os.path.join('..', '..', 'suite', f'{args.run}.cfg')])
 
-    if args.run != 'ctrl':
+    if args.run not in ['main', 'ctrl']:
         try:
             os.makedirs(os.path.join(suite_path, args.run))
         except FileExistsError:
