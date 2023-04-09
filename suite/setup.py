@@ -148,7 +148,7 @@ def main():
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
-    if args.run in ['main_vs_ctrl', 'no_ncclimo', 'wc_defaults']:
+    if args.run in ['main_vs_ctrl', 'moc_am', 'no_ncclimo', 'wc_defaults']:
         # add the run-specific config second
         config_from_job = ' '.join(
             [config_from_job,
