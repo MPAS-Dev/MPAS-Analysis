@@ -689,7 +689,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
                                        combine='nested',
                                        concat_dim='Time',
                                        chunks={'nCells': chunkSize},
-                                       decode_cf=False, decode_times=False,
+                                       decode_times=False,
                                        preprocess=_preprocess) as ds:
 
                 ds.coords['year'] = ('Time', years)
@@ -717,7 +717,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
             with xarray.open_mfdataset(fileNames, concat_dim='weight',
                                        combine='nested',
                                        chunks={'nCells': chunkSize},
-                                       decode_cf=False, decode_times=False,
+                                       decode_times=False,
                                        preprocess=_preprocess) as ds:
                 ds.coords['weight'] = ('weight', weights)
                 dsNew = ((ds.weight * ds).sum(dim='weight') /
