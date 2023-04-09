@@ -23,7 +23,7 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
     add_inset
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, build_obs_path, decode_strings
@@ -354,7 +354,7 @@ class ComputeMeltSubtask(AnalysisTask):
         dsOut.meltRates.attrs['description'] = \
             'Melt rate averaged over each ice shelf or region'
 
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
 
 class CombineMeltSubtask(AnalysisTask):
@@ -421,7 +421,7 @@ class CombineMeltSubtask(AnalysisTask):
 
             ds.load()
 
-            write_netcdf(ds, outFileName)
+            write_netcdf_with_fill(ds, outFileName)
 
 
 class PlotMeltSubtask(AnalysisTask):

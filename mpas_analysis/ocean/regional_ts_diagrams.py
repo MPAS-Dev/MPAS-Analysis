@@ -28,7 +28,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.plot import savefig, add_inset
 
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import decode_strings, \
     build_obs_path, build_config_full_path, make_directories
@@ -387,7 +387,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing temp file {}...'.format(temp_file_name))
-            write_netcdf(ds, temp_file_name)
+            write_netcdf_with_fill(ds, temp_file_name)
 
             chunk = {obsDict['latVar']: 400,
                      obsDict['lonVar']: 400}
@@ -414,7 +414,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing temp file {}...'.format(temp_file_name))
-            write_netcdf(ds, temp_file_name)
+            write_netcdf_with_fill(ds, temp_file_name)
             self.logger.info('  Reading back from {}...'.format(temp_file_name))
             ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
@@ -434,7 +434,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing {}...'.format(self.fileName))
-            write_netcdf(ds, self.fileName)
+            write_netcdf_with_fill(ds, self.fileName)
             for file_name in temp_files:
                 self.logger.info('  Deleting temp file {}'.format(file_name))
                 os.remove(file_name)
@@ -692,7 +692,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['z'] = ('nPoints', zMid)
             dsOut['volume'] = ('nPoints', volume)
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
-            write_netcdf(dsOut, outFileName)
+            write_netcdf_with_fill(dsOut, outFileName)
 
         return zmin, zmax
 
@@ -784,7 +784,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['z'] = ('nPoints', z)
             dsOut['volume'] = ('nPoints', volume)
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
-            write_netcdf(dsOut, outFileName)
+            write_netcdf_with_fill(dsOut, outFileName)
 
 
 class PlotRegionTSDiagramSubtask(AnalysisTask):

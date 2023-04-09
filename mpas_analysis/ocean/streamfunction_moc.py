@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month, get_region_mask
 
-from mpas_analysis.shared.io import open_mpas_dataset\
+from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 

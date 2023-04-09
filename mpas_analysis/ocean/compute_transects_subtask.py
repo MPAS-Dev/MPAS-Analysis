@@ -29,7 +29,7 @@ from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask, \
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.ocean.utility import compute_zmid
 
@@ -419,10 +419,10 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
             dsObs = interp_1d(dsObs, inInterpDim='nz', inInterpCoord='z',
                               outInterpDim='nzOut', outInterpCoord='zOut')
             dsObs = dsObs.rename({'nzOut': 'nz'})
-            write_netcdf(dsObs, outObsFileName)
+            write_netcdf_with_fill(dsObs, outObsFileName)
 
         ds = ds.drop_vars(['validMask', 'transectNumber'])
-        write_netcdf(ds, outFileName)
+        write_netcdf_with_fill(ds, outFileName)
 
     def get_mpas_transect_file_name(self, transectName):
         """Get the file name for a masked MPAS transect info"""
@@ -511,9 +511,9 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
                         dim='nHorizWeights')
                     dsMpasTransect['landIceFraction'] = landIceFraction
 
-                # use to_netcdf rather than write_netcdf because integer indices
-                # are getting converted to floats when xarray reads them back
-                # because of _FillValue
+                # use to_netcdf rather than write_netcdf_with_fill because
+                # integer indices are getting converted to floats when xarray
+                # reads them back because of _FillValue
                 dsMpasTransect.to_netcdf(transectInfoFileName)
 
                 dsTransectOnMpas = xr.Dataset(dsMpasTransect)
@@ -666,7 +666,7 @@ class TransectsObservations(object):
                     dsObs.coords[coord] = dsObs[coord]
 
                 dsObs = self._add_distance(dsObs)
-                write_netcdf(dsObs, outFileName)
+                write_netcdf_with_fill(dsObs, outFileName)
             obsDatasets[name] = dsObs
 
         return obsDatasets

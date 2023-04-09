@@ -21,7 +21,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
     add_inset
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     build_obs_path, get_files_year_month, decode_strings, get_region_mask
@@ -385,7 +385,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
         dsOut['zbounds'] = (('nRegions', 'nbounds'), zbounds)
         dsOut['areaCell'] = areaCell
         dsOut['regionNames'] = dsRegionMask.regionNames
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
 
 class ComputeRegionTimeSeriesSubtask(AnalysisTask):
@@ -648,7 +648,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
         dsOut.coords['month'] = (('Time',), months)
         dsOut['month'].attrs['units'] = 'months'
 
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
     def _add_thermal_forcing(self, dsIn, cellMask):
         """ compute the thermal forcing """
@@ -763,7 +763,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
             for var in ['totalArea', 'zbounds']:
                 ds[var] = ds[var].isel(Time=0, drop=True)
 
-            write_netcdf(ds, outFileName)
+            write_netcdf_with_fill(ds, outFileName)
 
 
 class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
@@ -1001,7 +1001,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         dsOut['zbounds'] = ('nBounds', [zmin, zmax])
         dsOut['month'] = ('Time', numpy.array(ds.month.values, dtype=float))
         dsOut['year'] = ('Time', numpy.ones(ds.sizes[tDim]))
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
 
 class PlotRegionTimeSeriesSubtask(AnalysisTask):
