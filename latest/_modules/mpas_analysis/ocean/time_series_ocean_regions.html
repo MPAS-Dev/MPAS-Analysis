@@ -451,8 +451,6 @@
                 <span class="k">if</span> <span class="s1">&#39;zminRegions&#39;</span> <span class="ow">in</span> <span class="n">dsRegion</span><span class="p">:</span>
                     <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">zminRegions</span><span class="o">.</span><span class="n">values</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># the old naming convention, used in some pre-generated</span>
-                    <span class="c1"># mask files</span>
                     <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">zmin</span><span class="o">.</span><span class="n">values</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">zmin</span> <span class="o">=</span> <span class="n">config_zmin</span>
@@ -461,8 +459,6 @@
                 <span class="k">if</span> <span class="s1">&#39;zmaxRegions&#39;</span> <span class="ow">in</span> <span class="n">dsRegion</span><span class="p">:</span>
                     <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">zmaxRegions</span><span class="o">.</span><span class="n">values</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># the old naming convention, used in some pre-generated</span>
-                    <span class="c1"># mask files</span>
                     <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">zmax</span><span class="o">.</span><span class="n">values</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">zmax</span> <span class="o">=</span> <span class="n">config_zmax</span>
@@ -998,13 +994,17 @@
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">):</span>
             <span class="n">zmin</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s1">&#39;zminRegions&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
             <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zminRegions</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zmin</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmin</span><span class="o">.</span><span class="n">values</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmax&#39;</span><span class="p">):</span>
             <span class="n">zmax</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmax&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="s1">&#39;zmaxRegions&#39;</span> <span class="ow">in</span> <span class="n">dsMask</span><span class="p">:</span>
             <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmaxRegions</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zmax</span> <span class="o">=</span> <span class="n">dsMask</span><span class="o">.</span><span class="n">zmax</span><span class="o">.</span><span class="n">values</span>
 
         <span class="n">TVarName</span> <span class="o">=</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;TVar&#39;</span><span class="p">]</span>
         <span class="n">SVarName</span> <span class="o">=</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;SVar&#39;</span><span class="p">]</span>
