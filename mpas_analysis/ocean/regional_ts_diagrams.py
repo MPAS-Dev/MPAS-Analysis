@@ -632,8 +632,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 if 'zminRegions' in dsMask:
                     zmin = dsMask.zminRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmin = dsMask.zmin.values
 
             if config.has_option(sectionName, 'zmax'):
@@ -642,8 +640,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 if 'zmaxRegions' in dsMask:
                     zmax = dsMask.zmaxRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmax = dsMask.zmax.values
 
             inFileName = get_unmasked_mpas_climatology_file_name(

@@ -11,7 +11,7 @@ dask
 esmf >=8.0.0,<8.3.0
 esmf=*=nompi_*
 f90nml
-geometric_features>=1.0.0
+geometric_features>=1.2.0
 gsw
 lxml
 mache >=1.11.0
