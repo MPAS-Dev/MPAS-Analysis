@@ -12,8 +12,8 @@ def build_quick_start():
     replace = {'# MPAS-Analysis': '# Quick Start Guide\n',
                '[![Build Status]': '',
                '[![Documentation Status]': '',
-               '![sea surface temperature](docs/_static/sst_example.png)':
-                   '![sea surface temperature](_static/sst_example.png)\n'}
+               '![sea surface temperature](docs/users_guide/_static/sst_example.png)':
+                   '![sea surface temperature](users_guide/_static/sst_example.png)\n'}
 
     skip = [('## conda-forge', '## Installation')]
     outContent = ''
