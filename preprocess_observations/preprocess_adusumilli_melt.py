@@ -7,7 +7,7 @@ import h5py
 import numpy as np
 import pyproj
 import xarray as xr
-from geometric_features import GeometricFeatures
+from geometric_features import FeatureCollection, GeometricFeatures
 from geometric_features.aggregation import get_aggregator_by_name
 from mpas_tools.cime.constants import constants as cime_constants
 
@@ -96,7 +96,7 @@ def adusumilli_hdf5_to_netcdf(in_filename, out_filename):
     print('done.')
 
 
-def compute_regional_means(in_filename, out_prefix, chunk_size=1000,
+def compute_regional_means(in_filename, out_prefix, chunk_size=50000,
                            core_count=128, multiprocessing_method='spawn'):
     """
     Remap the Adusumilli et al. (2020) melt rates at 1 km resolution to an MPAS
@@ -122,28 +122,12 @@ def compute_regional_means(in_filename, out_prefix, chunk_size=1000,
         The multiprocessing method use for python mask creation ('fork',
         'spawn' or 'forkserver')
     """
-    mask_filename = 'ice_shelf_masks.nc'
     region_group = 'Ice Shelves'
     aggregation_function, prefix, date = \
         get_aggregator_by_name(region_group)
     out_filename = f'{out_prefix}_{prefix}{date}.nc'
-    if not os.path.exists(mask_filename):
-        geojson_filename = f'{prefix}{date}.geojson'
-        gf = GeometricFeatures()
-        fc = aggregation_function(gf)
-        fc.to_geojson(geojson_filename)
-
-        args = ['compute_projection_region_masks',
-                '-i', in_filename,
-                '--lon', 'lon',
-                '--lat', 'lat',
-                '-g', geojson_filename,
-                '-o', mask_filename,
-                '--chunk_size', f'{chunk_size}',
-                '--process_count', f'{core_count}',
-                '--multiprocessing_method', f'{multiprocessing_method}',
-                '--show_progress']
-        subprocess.run(args=args, check=True)
+    mask_files = _compute_masks(in_filename, aggregation_function, chunk_size,
+                                core_count, multiprocessing_method)
 
     ds = xr.open_dataset(in_filename)
     cell_area = ((ds.x.values[1] - ds.x.values[0]) *
@@ -154,16 +138,16 @@ def compute_regional_means(in_filename, out_prefix, chunk_size=1000,
     gt_per_m3 = rho_fw / kg_per_gt
 
     ds_out = xr.Dataset()
-    ds_mask = xr.open_dataset(mask_filename)
-    ds_out['regionNames'] = ds_mask.regionNames
     mean_melt_rate = []
     total_melt_flux = []
     area_melt = []
     melt_rate_uncert = []
     melt_flux_uncert = []
     area_uncert = []
-    for region_index, region_name in enumerate(ds_mask.regionNames.values):
-        region_mask = ds_mask.regionMasks.isel(nRegions=region_index) == 1
+    for region_index, region_name in enumerate(mask_files.keys()):
+        mask_filename = mask_files[region_name]
+        ds_mask = xr.open_dataset(mask_filename)
+        region_mask = ds_mask.regionMasks.isel(nRegions=0) == 1
 
         melt_mean, melt_area = _compute_mean_and_area(
             ds.meltRate.values, region_mask, cell_area)
@@ -180,6 +164,8 @@ def compute_regional_means(in_filename, out_prefix, chunk_size=1000,
         melt_rate_uncert.append(uncert_rms)
         melt_flux_uncert.append(uncert_total)
 
+    ds_out['regionNames'] = ('nRegions', list(mask_files.keys()))
+
     ds_out['meanMeltRate'] = (('nRegions',), mean_melt_rate)
     ds_out.meanMeltRate.attrs['units'] = 'm/yr of freshwater'
     ds_out['meltRateUncertainty'] = (('nRegions',), melt_rate_uncert)
@@ -195,15 +181,6 @@ def compute_regional_means(in_filename, out_prefix, chunk_size=1000,
     ds_out.to_netcdf(out_filename)
 
 
-def _compute_mean_and_area(field, region_mask, cell_area):
-    valid_melt = np.isfinite(field)
-    mask = np.logical_and(region_mask, valid_melt)
-    valid_count = np.count_nonzero(mask)
-    area = cell_area * valid_count
-    field_mean = np.sum(field[mask] * cell_area) / area
-    return field_mean, area
-
-
 def main():
     prefix = 'Adusumilli_2020_iceshelf_melt_rates_2010-2018_v0'
     hdf5_filename = f'{prefix}.h5'
@@ -212,6 +189,49 @@ def main():
     download_adusumilli(hdf5_filename)
     adusumilli_hdf5_to_netcdf(hdf5_filename, netcdf_filename)
     compute_regional_means(netcdf_filename, prefix)
+
+
+def _compute_masks(mesh_filename, aggregation_function, chunk_size, core_count,
+                   multiprocessing_method):
+    gf = GeometricFeatures()
+    fc = aggregation_function(gf)
+    try:
+        os.makedirs('ice_shelf_masks')
+    except FileExistsError:
+        pass
+    files = {}
+    for feature in fc.features:
+        region_name = feature['properties']['name']
+        region_prefix = region_name.replace(' ', '_')
+        region_mask_filename = f'ice_shelf_masks/{region_prefix}.nc'
+        files[region_name] = region_mask_filename
+        if os.path.exists(region_mask_filename):
+            continue
+        fc_region = FeatureCollection(features=[feature])
+        geojson_filename = f'ice_shelf_masks/{region_prefix}.geojson'
+        fc_region.to_geojson(geojson_filename)
+
+        args = ['compute_projection_region_masks',
+                '-i', mesh_filename,
+                '--lon', 'lon',
+                '--lat', 'lat',
+                '-g', geojson_filename,
+                '-o', region_mask_filename,
+                '--chunk_size', f'{chunk_size}',
+                '--process_count', f'{core_count}',
+                '--multiprocessing_method', f'{multiprocessing_method}',
+                '--show_progress']
+        subprocess.run(args=args, check=True)
+    return files
+
+
+def _compute_mean_and_area(field, region_mask, cell_area):
+    valid_melt = np.isfinite(field)
+    mask = np.logical_and(region_mask, valid_melt)
+    valid_count = np.count_nonzero(mask)
+    area = cell_area * valid_count
+    field_mean = np.sum(field[mask] * cell_area) / area
+    return field_mean, area
 
 
 if __name__ == '__main__':
