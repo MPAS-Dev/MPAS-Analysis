@@ -15,6 +15,7 @@ import csv
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -582,8 +583,21 @@ class PlotMeltSubtask(AnalysisTask):
                     'meltRate': meltRate,
                     'meltRateUncertainty': meltRateUncertainty}
                 break
+        regionGroup = 'Ice Shelves'
+        _, prefix, date = get_aggregator_by_name(regionGroup)
 
-        # If areas from obs file used need to be converted from sq km to sq m
+        obsFileName = f'{observationsDirectory}/Adusumilli/Adusumilli_2020_' \
+                      f'iceshelf_melt_rates_2010-2018_v0.20230504.' \
+                      f'{prefix}{date}.nc'
+        with xarray.open_dataset(obsFileName) as ds_adusumilli:
+            region_names = [name.values for name in ds_adusumilli.regionNames]
+            index = region_names.index(self.iceShelf)
+            ds_shelf = ds_adusumilli.isel(nRegions=index)
+            obsDict['Adusumilli et al. (2020)'] = {
+                'meltFlux': ds_shelf.totalMeltFlux.values,
+                'meltFluxUncertainty': ds_shelf.meltFluxUncertainty.values,
+                'meltRate': ds_shelf.meanMeltRate.values,
+                'meltRateUncertainty': ds_shelf.meltRateUncertainty.values}
 
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
