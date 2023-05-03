@@ -57,7 +57,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser
+        controlConfig : mpas_tools.config.MpasConfigParser
             Configuration options for a control run
         """
         # Authors
@@ -81,8 +81,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         seasons = config.getexpression(sectionName, 'seasons')
 
         if len(seasons) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of seasons'.format(sectionName))
+            raise ValueError(f'config section {sectionName} does not contain '
+                             f'valid list of seasons')
 
         comparisonGridNames = config.getexpression(sectionName,
                                                    'comparisonGrids')
@@ -98,8 +98,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
                 self.add_subtask(tableSubtask)
 
         if len(comparisonGridNames) == 0:
-            raise ValueError('config section {} does not contain valid list '
-                             'of comparison grids'.format(sectionName))
+            raise ValueError(f'config section {sectionName} does not contain '
+                             f'valid list of comparison grids')
 
         # the variable 'timeMonthly_avg_landIceFreshwaterFlux' will be added to
         # mpasClimatologyTask along with the seasons.
@@ -121,8 +121,8 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
                 config, 'ocean', 'meltSubdirectory')
 
             obsFileName = \
-                '{}/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_' \
-                'Antarctic_stereo.nc'.format(observationsDirectory)
+                f'{observationsDirectory}/Rignot_2013_melt_rates_' \
+                f'6000.0x6000.0km_10.0km_Antarctic_stereo.nc'
             refFieldName = 'meltRate'
             outFileLabel = 'meltRignot'
             galleryName = 'Observations: Rignot et al. (2013)'
@@ -138,7 +138,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
             remapObservationsSubtask = None
             controlRunName = controlConfig.get('runs', 'mainRunName')
             galleryName = None
-            refTitleLabel = 'Control: {}'.format(controlRunName)
+            refTitleLabel = f'Control: {controlRunName}'
 
             refFieldName = mpasFieldName
             outFileLabel = 'melt'
@@ -329,7 +329,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser
+        controlConfig : mpas_tools.config.MpasConfigParser
             Configuration options for a control run (if any)
 
         regionMasksTask : ``ComputeRegionMasks``
@@ -347,7 +347,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         tags = ['climatology', 'table']
 
         if subtaskName is None:
-            subtaskName = 'table{}'.format(season)
+            subtaskName = f'table{season}'
 
         # call the constructor from the base class (AnalysisTask)
         super(AntarcticMeltTableSubtask, self).__init__(
@@ -357,7 +357,6 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             componentName=parentTask.componentName,
             tags=tags)
 
-        config = parentTask.config
         self.season = season
         self.mpasClimatologyTask = mpasClimatologyTask
         self.controlConfig = controlConfig
@@ -484,16 +483,17 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
         regionNames = decode_strings(ds.regionNames)
 
-        outDirectory = '{}/antarcticMelt/'.format(
-            build_config_full_path(config, 'output', 'tablesSubdirectory'))
+        tableBase = build_config_full_path(config, 'output',
+                                           'tablesSubdirectory')
+        outDirectory = f'{tableBase}/antarcticMelt/'
 
         try:
             os.makedirs(outDirectory)
         except OSError:
             pass
 
-        tableFileName = '{}/antarcticMeltRateTable_{}.csv'.format(outDirectory,
-                                                                  self.season)
+        tableFileName = \
+            f'{outDirectory}/antarcticMeltRateTable_{self.season}.csv'
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
@@ -501,15 +501,15 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             writer.writeheader()
             for index, regionName in enumerate(regionNames):
                 row = {'Region': regionName,
-                       'Area': '{}'.format(ds.area[index].values),
-                       mainRunName: '{}'.format(ds.meltRates[index].values)}
+                       'Area': f'{ds.area[index].values}',
+                       mainRunName: f'{ds.meltRates[index].values}'}
                 if dsControl is not None:
                     row[controlRunName] = \
-                        '{}'.format(dsControl.meltRates[index].values)
+                        f'{dsControl.meltRates[index].values}'
                 writer.writerow(row)
 
-        tableFileName = '{}/antarcticMeltFluxTable_{}.csv'.format(outDirectory,
-                                                                  self.season)
+        tableFileName = \
+            f'{outDirectory}/antarcticMeltFluxTable_{self.season}.csv'
 
         with open(tableFileName, 'w', newline='') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldNames)
@@ -517,9 +517,9 @@ class AntarcticMeltTableSubtask(AnalysisTask):
             writer.writeheader()
             for index, regionName in enumerate(regionNames):
                 row = {'Region': regionName,
-                       'Area': '{}'.format(ds.area[index].values),
-                       mainRunName: '{}'.format(ds.totalMeltFlux[index].values)}
+                       'Area': f'{ds.area[index].values}',
+                       mainRunName: f'{ds.totalMeltFlux[index].values}'}
                 if dsControl is not None:
                     row[controlRunName] = \
-                        '{}'.format(dsControl.totalMeltFlux[index].values)
+                        f'{dsControl.totalMeltFlux[index].values}'
                 writer.writerow(row)
