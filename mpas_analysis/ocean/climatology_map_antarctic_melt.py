@@ -10,6 +10,8 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 import os
 import csv
+
+import numpy as np
 import xarray as xr
 import dask
 from multiprocessing.pool import ThreadPool
@@ -115,17 +117,30 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         if controlConfig is None:
 
             refTitleLabel = \
-                'Observations (Rignot et al, 2013)'
+                'Observations (Adusumilli et al, 2020)'
 
             observationsDirectory = build_obs_path(
                 config, 'ocean', 'meltSubdirectory')
 
+            comparison_res = config.getfloat(
+                'climatology', 'comparisonAntarcticStereoResolution')
+
+            # the maximum available resolution that is not coarser than the
+            # comparison
+            avail_res = np.array([10., 4., 1.])
+            valid = avail_res >= comparison_res
+            if np.count_nonzero(valid) == 0:
+                res = np.amin(avail_res)
+            else:
+                res = np.amax(avail_res[valid])
+
             obsFileName = \
-                f'{observationsDirectory}/Rignot_2013_melt_rates_' \
-                f'6000.0x6000.0km_10.0km_Antarctic_stereo.nc'
+                f'{observationsDirectory}/Adusumilli/Adusumilli_2020_' \
+                f'iceshelf_melt_rates_2010-2018_v0_6000x6000km_{res:g}km_' \
+                f'Antarctic_stereo.20230504.nc'
             refFieldName = 'meltRate'
-            outFileLabel = 'meltRignot'
-            galleryName = 'Observations: Rignot et al. (2013)'
+            outFileLabel = 'meltAdusumilli'
+            galleryName = 'Observations: Adusumilli et al. (2020)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
