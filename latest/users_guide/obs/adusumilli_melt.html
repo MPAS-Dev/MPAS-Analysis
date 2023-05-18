@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WOCE sections &mdash; MPAS-Analysis latest documentation</title>
+  <title>Antarctic melt rates and fluxes &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,8 +17,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="World Ocean Atlas v2" href="woa.html" />
-    <link rel="prev" title="Antarctic Seafloor Temperature and Salinity" href="schmidtko.html" /> 
+    <link rel="next" title="HadISST Nino 3.4 Index" href="hadisst_nino.html" />
+    <link rel="prev" title="Antarctic melt rates and fluxes" href="rignot_melt.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -62,20 +62,18 @@
 <li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="adusumilli_melt.html">Antarctic melt rates and fluxes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
-<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">WOCE sections</a><ul>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Antarctic melt rates and fluxes</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#id1">WOCE</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#cchdo">CCHDO</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woce.html">WOCE sections</a></li>
 <li class="toctree-l3"><a class="reference internal" href="woa.html">World Ocean Atlas v2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="landschuetzer-som-ffn.html">Landschuetzerv2016 SOM-FFN</a></li>
 <li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
@@ -132,9 +130,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
-      <li class="breadcrumb-item active">WOCE sections</li>
+      <li class="breadcrumb-item active">Antarctic melt rates and fluxes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/obs/woce.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/obs/adusumilli_melt.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -142,57 +140,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="woce-sections">
-<span id="woce"></span><h1>WOCE sections<a class="headerlink" href="#woce-sections" title="Permalink to this heading">¶</a></h1>
+  <section id="antarctic-melt-rates-and-fluxes">
+<span id="adusumilli-melt"></span><h1>Antarctic melt rates and fluxes<a class="headerlink" href="#antarctic-melt-rates-and-fluxes" title="Permalink to this heading">¶</a></h1>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
-</section>
-<section id="id1">
-<h2>WOCE<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
-<p>The Hydrographic Programme of the international World Ocean Circulation
-Experiment (WOCE) was a comprehensive global hydrographic survey of
-physical and chemical properties, of unprecedented scope and quality, and
-represents the “state of the oceans” during the 1990s.</p>
-<p>The “Printed Atlas” is a copy of the published volume and contains full
-introductory text. The “Digital Atlas” presents the same graphical
-material, with additional properties and levels, ancillary data sets, and
-bibliographic material for each of the vertical sections.</p>
-</section>
-<section id="cchdo">
-<h2>CCHDO<a class="headerlink" href="#cchdo" title="Permalink to this heading">¶</a></h2>
-<p>The CCHDO’s primary mission is to deliver the highest possible quality
-global CTD and hydrographic data to users. These data are a product of
-decades of observations related to the physical characteristics of ocean
-waters carried out during WOCE, CLIVAR and numerous other oceanographic
-research programs. Whenever possible we provide these data in three
-easy-to-use formats: WHP-Exchange (which we recommend for data
-submissions to the CCHDO), WOCE, and netCDF.
-global Argo and OceanSITES programs.</p>
+<p>Melt rates and melt fluxes from Adusumilli et al. (2020)</p>
 </section>
 <section id="source">
 <h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
-<ul class="simple">
-<li><p><a class="reference external" href="http://woceatlas.ucsd.edu/">WOCE Atlas Website</a></p></li>
-<li><p><a class="reference external" href="https://cchdo.ucsd.edu/">CCHDO</a></p></li>
-</ul>
+<p><a class="reference external" href="https://doi.org/10.6075/J04Q7SHT">Data from: Interannual variations in meltwater input to the Southern Ocean from Antarctic ice shelves</a></p>
 </section>
 <section id="release-policy">
 <h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
-<p>“Public” data may be placed on-line. They may be exchanged between
-investigators as desired. They may or may not be preliminary, and
-especially for preliminary public data users are strongly advised to
-contact the originating investigators regarding the status of updates or
-further data processing. <a class="reference external" href="https://cchdo.ucsd.edu/policy">See Full Policy</a></p>
+<p>Under copyright (US)</p>
+<p>Use: This work is available from the UC San Diego Library. This digital
+copy of the work is intended to support research, teaching, and private
+study.</p>
+<p>Constraint(s) on Use: This work is protected by the U.S. Copyright Law
+(Title 17, U.S.C.). Use of this work beyond that allowed by “fair use”
+or any license applied to this work requires written permission of the
+copyright holder(s). Responsibility for obtaining permissions and any
+use and distribution of this work rests exclusively with the user and
+not the UC San Diego Library. Inquiries can be made to the UC San Diego
+Library program having custody of the work.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference external" href="https://doi.org/10.21976/C6BC78">Orsi and Whitworth (2005)</a></p>
-<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/WOCE/obs.bib">bibtex file</a></p>
+<p><a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a></p>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/Melt/Adusumilli/obs.bib">bibtex file</a></p>
 </section>
 <section id="mpas-analysis-tasks">
 <h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../tasks/woceTransects.html#task-wocetransects"><span class="std std-ref">woceTransects</span></a></p></li>
+<li><p><a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a></p></li>
+<li><p><a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a></p></li>
 </ul>
 </section>
 </section>
@@ -201,8 +182,8 @@ further data processing. <a class="reference external" href="https://cchdo.ucsd.
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="schmidtko.html" class="btn btn-neutral float-left" title="Antarctic Seafloor Temperature and Salinity" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="woa.html" class="btn btn-neutral float-right" title="World Ocean Atlas v2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="rignot_melt.html" class="btn btn-neutral float-left" title="Antarctic melt rates and fluxes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hadisst_nino.html" class="btn btn-neutral float-right" title="HadISST Nino 3.4 Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

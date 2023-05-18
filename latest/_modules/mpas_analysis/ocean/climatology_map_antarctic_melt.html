@@ -107,6 +107,8 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">csv</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">dask</span>
 <span class="kn">from</span> <span class="nn">multiprocessing.pool</span> <span class="kn">import</span> <span class="n">ThreadPool</span>
@@ -154,7 +156,7 @@
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
 <span class="sd">            A task for computing region masks</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options for a control run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -178,8 +180,8 @@
         <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
 
         <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
                                                    <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
@@ -195,8 +197,8 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">tableSubtask</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
         <span class="c1"># the variable &#39;timeMonthly_avg_landIceFreshwaterFlux&#39; will be added to</span>
         <span class="c1"># mpasClimatologyTask along with the seasons.</span>
@@ -212,17 +214,30 @@
         <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="n">refTitleLabel</span> <span class="o">=</span> \
-                <span class="s1">&#39;Observations (Rignot et al, 2013)&#39;</span>
+                <span class="s1">&#39;Observations (Adusumilli et al, 2020)&#39;</span>
 
             <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;meltSubdirectory&#39;</span><span class="p">)</span>
 
+            <span class="n">comparison_res</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
+                <span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;comparisonAntarcticStereoResolution&#39;</span><span class="p">)</span>
+
+            <span class="c1"># the maximum available resolution that is not coarser than the</span>
+            <span class="c1"># comparison</span>
+            <span class="n">avail_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">4.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">avail_res</span> <span class="o">&gt;=</span> <span class="n">comparison_res</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">valid</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">avail_res</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">avail_res</span><span class="p">[</span><span class="n">valid</span><span class="p">])</span>
+
             <span class="n">obsFileName</span> <span class="o">=</span> \
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/Rignot_2013_melt_rates_6000.0x6000.0km_10.0km_&#39;</span> \
-                <span class="s1">&#39;Antarctic_stereo.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/Adusumilli/Adusumilli_2020_&#39;</span> \
+                <span class="sa">f</span><span class="s1">&#39;iceshelf_melt_rates_2010-2018_v0_6000x6000km_</span><span class="si">{</span><span class="n">res</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km_&#39;</span> \
+                <span class="sa">f</span><span class="s1">&#39;Antarctic_stereo.20230504.nc&#39;</span>
             <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
-            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;meltRignot&#39;</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: Rignot et al. (2013)&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;meltAdusumilli&#39;</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: Adusumilli et al. (2020)&#39;</span>
 
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedAntarcticMeltClimatology</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
@@ -235,7 +250,7 @@
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
             <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
 
             <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
             <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;melt&#39;</span>
@@ -426,7 +441,7 @@
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
@@ -444,7 +459,7 @@
         <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;table&#39;</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;table</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;table</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AntarcticMeltTableSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -454,7 +469,6 @@
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
-        <span class="n">config</span> <span class="o">=</span> <span class="n">parentTask</span><span class="o">.</span><span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">season</span> <span class="o">=</span> <span class="n">season</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
@@ -581,16 +595,17 @@
 
         <span class="n">regionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
 
-        <span class="n">outDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMelt/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;tablesSubdirectory&#39;</span><span class="p">))</span>
+        <span class="n">tableBase</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                           <span class="s1">&#39;tablesSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">outDirectory</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">tableBase</span><span class="si">}</span><span class="s1">/antarcticMelt/&#39;</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">tableFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMeltRateTable_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">,</span>
-                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+        <span class="n">tableFileName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outDirectory</span><span class="si">}</span><span class="s1">/antarcticMeltRateTable_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">.csv&#39;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tableFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldNames</span><span class="p">)</span>
@@ -598,15 +613,15 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Region&#39;</span><span class="p">:</span> <span class="n">regionName</span><span class="p">,</span>
-                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
-                       <span class="n">mainRunName</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
+                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                       <span class="n">mainRunName</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
                 <span class="k">if</span> <span class="n">dsControl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">row</span><span class="p">[</span><span class="n">controlRunName</span><span class="p">]</span> <span class="o">=</span> \
-                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dsControl</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dsControl</span><span class="o">.</span><span class="n">meltRates</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 
-        <span class="n">tableFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/antarcticMeltFluxTable_</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outDirectory</span><span class="p">,</span>
-                                                                  <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+        <span class="n">tableFileName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outDirectory</span><span class="si">}</span><span class="s1">/antarcticMeltFluxTable_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">.csv&#39;</span>
 
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tableFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
             <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictWriter</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">fieldnames</span><span class="o">=</span><span class="n">fieldNames</span><span class="p">)</span>
@@ -614,11 +629,11 @@
             <span class="n">writer</span><span class="o">.</span><span class="n">writeheader</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">regionNames</span><span class="p">):</span>
                 <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Region&#39;</span><span class="p">:</span> <span class="n">regionName</span><span class="p">,</span>
-                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
-                       <span class="n">mainRunName</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
+                       <span class="s1">&#39;Area&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">area</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                       <span class="n">mainRunName</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}</span>
                 <span class="k">if</span> <span class="n">dsControl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">row</span><span class="p">[</span><span class="n">controlRunName</span><span class="p">]</span> <span class="o">=</span> \
-                        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dsControl</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dsControl</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
 </pre></div>
 

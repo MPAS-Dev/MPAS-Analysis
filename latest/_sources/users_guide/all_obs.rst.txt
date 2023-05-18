@@ -10,6 +10,7 @@
    obs/roemmich_gilson_argo.rst
    obs/sose.rst
    obs/rignot_melt.rst
+   obs/adusumilli_melt.rst
    obs/hadisst_nino.rst
    obs/ers_sst_nino.rst
    obs/schmidtko.rst
