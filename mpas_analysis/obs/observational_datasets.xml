@@ -574,6 +574,70 @@
 
   <observation>
     <name>
+      Antarctic melt rates and fluxes
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Melt rates and melt fluxes from Adusumilli et al. (2020)
+    </description>
+    <source>
+      [Data from: Interannual variations in meltwater input to the Southern Ocean from Antarctic ice shelves](https://doi.org/10.6075/J04Q7SHT)
+    </source>
+    <releasePolicy>
+      Under copyright (US)
+
+      Use: This work is available from the UC San Diego Library. This digital
+      copy of the work is intended to support research, teaching, and private
+      study.
+
+      Constraint(s) on Use: This work is protected by the U.S. Copyright Law
+      (Title 17, U.S.C.). Use of this work beyond that allowed by "fair use"
+      or any license applied to this work requires written permission of the
+      copyright holder(s). Responsibility for obtaining permissions and any
+      use and distribution of this work rests exclusively with the user and
+      not the UC San Diego Library. Inquiries can be made to the UC San Diego
+      Library program having custody of the work.
+    </releasePolicy>
+    <references>
+      [Adusumilli et al. (2020)](https://doi.org/10.1038/s41561-020-0616-z)
+    </references>
+    <bibtex>
+      @article{Adusumilli2020,
+          title = {Interannual variations in meltwater input to the {Southern} {Ocean} from {Antarctic} ice shelves},
+          copyright = {2020 The Author(s), under exclusive licence to Springer Nature Limited},
+          issn = {1752-0908},
+          url = {https://www.nature.com/articles/s41561-020-0616-z},
+          doi = {10.1038/s41561-020-0616-z},
+          journal = {Nature Geoscience},
+          author = {Adusumilli, Susheel and Fricker, Helen Amanda and Medley,Brooke and Padman, Laurie and Siegfried, Matthew R.},
+          month = aug,
+          year = {2020},
+          note = {Publisher: Nature Publishing Group},
+          pages = {1--5}
+      }
+    </bibtex>
+    <dataUrls>
+      - http://library.ucsd.edu/dc/object/bb0448974g/_3_1.h5
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_adusumilli_melt.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapAntarcticMelt
+      - timeSeriesAntarcticMelt
+    </tasks>
+    <subdirectory>
+      Ocean/Melt/Adusumilli
+    </subdirectory>
+    <nameInDocs>
+      adusumilli_melt
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       HadISST Nino 3.4 Index
     </name>
     <component>
@@ -1215,41 +1279,41 @@
       ERA5 is the fifth generation ECMWF reanalysis for the global climate and weather for the past 4 to 7 decades.
       Currently data is available from 1950, with Climate Data Store entries for 1950-1978 (preliminary back extension)
       and from 1959 onwards (final release plus timely updates, this page). ERA5 replaces the ERA-Interim reanalysis.
-      
-      Reanalysis combines model data with observations from across the world into a globally complete and 
-      consistent dataset using the laws of physics. This principle, called data assimilation, is based on 
+
+      Reanalysis combines model data with observations from across the world into a globally complete and
+      consistent dataset using the laws of physics. This principle, called data assimilation, is based on
       the method used by numerical weather prediction centres, where every so many hours (12 hours at ECMWF)
-      a previous forecast is combined with newly available observations in an optimal way to produce a new 
+      a previous forecast is combined with newly available observations in an optimal way to produce a new
       best estimate of the state of the atmosphere, called analysis, from which an updated, improved forecast is issued.
-      Reanalysis works in the same way, but at reduced resolution to allow for the provision of a dataset 
+      Reanalysis works in the same way, but at reduced resolution to allow for the provision of a dataset
       spanning back several decades. Reanalysis does not have the constraint of issuing timely forecasts,
-      so there is more time to collect observations, and when going further back in time, to allow for the 
+      so there is more time to collect observations, and when going further back in time, to allow for the
       ingestion of improved versions of the original observations, which all benefit the quality of the reanalysis product.
-      
+
       ERA5 provides hourly estimates for a large number of atmospheric, ocean-wave and land-surface quantities.
       An uncertainty estimate is sampled by an underlying 10-member ensemble at three-hourly intervals.
       Ensemble mean and spread have been pre-computed for convenience.
-      Such uncertainty estimates are closely related to the information content of the available 
+      Such uncertainty estimates are closely related to the information content of the available
       observing system which has evolved considerably over time. They also indicate flow-dependent sensitive areas.
       To facilitate many climate applications, monthly-mean averages have been pre-calculated too,
       though monthly means are not available for the ensemble mean and spread.
-      
+
       ERA5 is updated daily with a latency of about 5 days (monthly means are available around the 6th of each month).
       In case that serious flaws are detected in this early release (called ERA5T), this data could be different
       from the final release 2 to 3 months later. In case that this occurs users are notified.
-      
+
       The data set presented here is a regridded subset of the full ERA5 data set on native resolution.
       It is online on spinning disk, which should ensure fast and easy access.
       It should satisfy the requirements for most common applications.
-      
+
       An overview of all ERA5 datasets can be found in this [article](https://confluence.ecmwf.int/display/CKB/The+family+of+ERA5+datasets).
       Information on access to ERA5 data on native resolution is provided in these [guidelines](https://confluence.ecmwf.int/display/CKB/How+to+download+ERA5).
-      
-      Data has been regridded to a regular lat-lon grid of 0.25 degrees for the reanalysis and 
+
+      Data has been regridded to a regular lat-lon grid of 0.25 degrees for the reanalysis and
       0.5 degrees for the uncertainty estimate (0.5 and 1 degree respectively for ocean waves).
       There are four main sub sets: hourly and monthly products, both on pressure levels
       (upper air fields) and single levels (atmospheric, ocean-wave and land surface quantities).
-      
+
       The present entry is "ERA5 monthly mean data on single levels from 1959 to present".
     </description>
     <source>
@@ -1280,7 +1344,7 @@
       }
     </bibtex>
     <dataUrls>
-      - https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form 
+      - https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-single-levels-monthly-means?tab=form
     </dataUrls>
     <preprocessing>
     </preprocessing>
@@ -1303,21 +1367,21 @@
       ocean
     </component>
     <description>
-      The ESA Sea State Climate Change Initiative (CCI) project has produced global merged multi-sensor 
+      The ESA Sea State Climate Change Initiative (CCI) project has produced global merged multi-sensor
       time-series of monthly gridded satellite altimeter significant wave height (referred to as Level 4 (L4) data)
       with a particular focus for use in climate studies.
-      
+
       This dataset contains the Version 1.1 Remote Sensing Sea Surface Height product, gridded over a global
-      regular cylindrical projection (1°x1° resolution), averaging valid and good measurements from all 
+      regular cylindrical projection (1°x1° resolution), averaging valid and good measurements from all
       available altimeters on a monthly basis (using the L2P products also available).
       These L4 products are meant for statistics and visualization.
-      
+
       This first version of the Sea State CCI products is inherited from the GlobWave project,
-      building on experience and existing outputs. It extends and improves the GlobWave products, 
+      building on experience and existing outputs. It extends and improves the GlobWave products,
       which were a post-processing over existing L2 altimeter agency products with additional filtering,
-      corrections and variables. A major improvement consists in a new denoised sea surface height 
+      corrections and variables. A major improvement consists in a new denoised sea surface height
       variable using Empirical Mode Decomposition, which was used as input to these monthly statistical fields.
-      
+
       The altimeter data used in the Sea State CCI dataset v1.1 come from multiple satellite missions
       spanning from 1991 to 2018 (ERS-1, ERS-2, Topex, Envisat, GFO, CryoSat-2, Jason-1, Jason-2, Jason-3, SARAL).
       Many altimeters are bi-frequency (Ku-C or Ku-S) and only measurements in Ku band were used,
@@ -1350,7 +1414,7 @@
       }
     </bibtex>
     <dataUrls>
-      - https://data.ceda.ac.uk/neodc/esacci/sea_state/data/v1.1_release/l4/v1.1 
+      - https://data.ceda.ac.uk/neodc/esacci/sea_state/data/v1.1_release/l4/v1.1
     </dataUrls>
     <preprocessing>
     </preprocessing>

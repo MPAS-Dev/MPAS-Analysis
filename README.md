@@ -5,7 +5,7 @@ Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
 used those components.
 
-![sea surface temperature](docs/_static/sst_example.png)
+![sea surface temperature](docs/users_guide/_static/sst_example.png)
 
 ## conda-forge
 
@@ -127,7 +127,7 @@ for more details.
   3. If you installed the `mpas-analysis` package, run:
      `mpas_analysis myrun.cfg`.  This will read the configuration
      first from `mpas_analysis/default.cfg` and then replace that
-     configuraiton with any changes from from `myrun.cfg`
+     configuration with any changes from from `myrun.cfg`
   4. If you want to run a subset of the analysis, you can either set the
      `generate` option under `[output]` in your config file or use the
      `--generate` flag on the command line.  See the comments in
@@ -178,7 +178,7 @@ Note: for older runs, mpas-seaice files will be named:
   * `mpascice.rst.0002-01-01_00000.nc`
   * `streams.cice`
   * `mpas-cice_in`
-  Also, for older runs mpaso-in will be named:
+  Also, for older runs `mpaso_in` will be named:
   * `mpas-o_in`
 
 
@@ -221,13 +221,13 @@ If you are running from a git repo:
   2. If using the `mpas-analysis` conda package, download the job script and/or
      sample config file from the
      [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
-  2. Modify the number of parallel tasks, the run name, the output directory
+  3. Modify the number of parallel tasks, the run name, the output directory
      and the path to the config file for the run.
-  3. Note: the number of parallel tasks can be anything between 1 and the
+  4. Note: the number of parallel tasks can be anything between 1 and the
      number of analysis tasks to be performed.  If there are more tasks than
      parallel tasks, later tasks will simply wait until earlier tasks have
      finished.
-  4. Submit the job using the modified job script
+  5. Submit the job using the modified job script
 
 
 
