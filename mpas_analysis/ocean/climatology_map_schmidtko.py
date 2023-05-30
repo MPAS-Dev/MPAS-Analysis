@@ -18,6 +18,7 @@ against observations from Schmidtko et al. (2014, DOI: 10.1126/science.1256117)
 
 import xarray as xr
 from pyremap import ProjectionGridDescriptor
+from pyremap.descriptor.utility import interp_extrap_corner
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -248,7 +249,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
 
         Returns
         -------
-        obsDescriptor : ``MeshDescriptor``
+        obs_descriptor : ``MeshDescriptor``
             The descriptor for the observation grid
         """
         # Authors
@@ -258,9 +259,19 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         # create a descriptor of the observation grid using the x/y polar
         # stereographic coordinates
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
-        obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
-        return obsDescriptor
+
+        # Load MLD observational data
+        ds_obs = xr.open_dataset(fileName)
+        # the obs seem to be on a grid with the opposite x/y conventions
+        ds_obs = ds_obs.rename(dict(x='y', y='x'))
+
+        x = ds_obs.x.values
+        y = ds_obs.y.values
+        mesh_name = ds_obs.attrs['meshName']
+
+        obs_descriptor = ProjectionGridDescriptor.create(
+            projection, x=x, y=y, meshName=mesh_name)
+        return obs_descriptor
 
     def build_observational_dataset(self, fileName):
         """
@@ -274,7 +285,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
 
         Returns
         -------
-        dsObs : ``xarray.Dataset``
+        ds_obs : ``xarray.Dataset``
             The observational dataset
         """
         # Authors
@@ -282,11 +293,13 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         # Xylar Asay-Davis
 
         # Load MLD observational data
-        dsObs = xr.open_dataset(fileName)
+        ds_obs = xr.open_dataset(fileName)
+        # the obs seem to be on a grid with the opposite x/y conventions
+        ds_obs = ds_obs.rename(dict(x='y', y='x'))
 
-        field = xr.concat([dsObs[self.fieldName]], dim='depthSlice')
+        field = xr.concat([ds_obs[self.fieldName]], dim='depthSlice')
 
-        dsObs = xr.Dataset(data_vars={self.fieldName: field},
+        ds_obs = xr.Dataset(data_vars={self.fieldName: field},
                            coords={'depthSlice': ['bot']})
 
-        return dsObs
+        return ds_obs
