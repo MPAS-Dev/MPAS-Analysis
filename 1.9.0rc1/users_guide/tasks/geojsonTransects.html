@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>geojsonTransects &mdash; MPAS-Analysis 1.9.0rc1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="oceanRegionalProfiles" href="oceanRegionalProfiles.html" />
+    <link rel="prev" title="soseTransects" href="soseTransects.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.0rc1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">geojsonTransects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#geojson-files">Geojson Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fields">Fields</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-options">Other Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
+      <li class="breadcrumb-item active">geojsonTransects</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/tasks/geojsonTransects.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="geojsontransects">
+<span id="task-geojsontransects"></span><h1>geojsonTransects<a class="headerlink" href="#geojsontransects" title="Permalink to this heading">¶</a></h1>
+<p>An analysis task for interpolating MPAS fields to transects specified by files
+in <code class="docutils literal notranslate"><span class="pre">geojson</span></code> format..</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">geojson</span>
+</pre></div>
+</div>
+<section id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">geojsonTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting model transects at points determined by a</span>
+<span class="c1">## geojson file.  To generate your own geojson file, go to:</span>
+<span class="c1">##   http://geojson.io/</span>
+<span class="c1">## and draw one or more polylines, then add a name to each:</span>
+<span class="c1">##</span>
+<span class="c1">##      &quot;properties&quot;: {</span>
+<span class="c1">##        &quot;name&quot;: &quot;My Favorite Name&quot;</span>
+<span class="c1">##      },</span>
+<span class="c1">## and save the file as GeoJSON (say transects.geojson).  Finally, set the</span>
+<span class="c1">## option:</span>
+<span class="c1">##      geojsonFiles = [&#39;transects.geojson&#39;]</span>
+<span class="c1">## (giving an absolute path if necessary) in your custom config file.</span>
+
+<span class="c1"># a list of geojson files containing lat/lon points in LineStrings to be</span>
+<span class="c1"># plotted.  If relative paths are given, they are relative to the current</span>
+<span class="c1"># working directory.  The files must be listed in quotes, e.g.:</span>
+<span class="c1"># geojsonFiles = [&#39;file1.geojson&#39;, &#39;/path/to/file2.geojson&#39;]</span>
+<span class="n">geojsonFiles</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span>
+<span class="c1"># prefix (used for file names, task names and sections) as well as the mpas</span>
+<span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
+<span class="c1"># in figure titles and captions.</span>
+<span class="n">fields</span> <span class="o">=</span>
+    <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">},</span>
+     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">},</span>
+     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">},</span>
+     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Zonal Velocity&#39;</span><span class="p">},</span>
+     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Meridional Velocity&#39;</span><span class="p">}]</span>
+
+<span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+
+<span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
+<span class="c1"># longitude between observation points will be subsampled at this interval.</span>
+<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
+<span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
+<span class="c1"># MPAS vertical grid or any other name if the vertical grid is defined by</span>
+<span class="c1"># &#39;verticalComparisonGrid&#39;</span>
+<span class="c1">#verticalComparisonGridName = mpas</span>
+<span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
+
+<span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39;.</span>
+<span class="c1"># This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># The minimum weight of a destination cell after remapping. Any cell with</span>
+<span class="c1"># weights lower than this threshold will therefore be masked out.</span>
+<span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+
+<span class="p">[</span><span class="n">geojsonTemperatureTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of potential temperature</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">30.</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-2., 2., 9)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-2., 2., 9)</span>
+
+
+<span class="p">[</span><span class="n">geojsonSalinityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of salinity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">39.0</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)</span>
+
+
+<span class="p">[</span><span class="n">geojsonPotentialDensityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of potential density</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">Spectral_r</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(1026., 1028., 9)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)</span>
+
+
+<span class="p">[</span><span class="n">geojsonZonalVelocityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of zonal velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+
+
+<span class="p">[</span><span class="n">geojsonMeridionalVelocityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of meridional velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+</pre></div>
+</div>
+</section>
+<section id="geojson-files">
+<h2>Geojson Files<a class="headerlink" href="#geojson-files" title="Permalink to this heading">¶</a></h2>
+<p>This task takes a list of geojson file names (supplied as a python list of
+<code class="docutils literal notranslate"><span class="pre">str</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geojsonFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file1.geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file2.geojson&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Transects are specified by <code class="docutils literal notranslate"><span class="pre">LineString</span></code> objects in the files.  Some examples
+are provided in the <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features">MPAS geometric features repository</a>.  You can also
+generate your own very easily at To generate your own geojson file, go to
+<a class="reference external" href="http://geojson.io/">geojson.io</a> and draw one or more polylines, then add a name to each:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+<span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
+  <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;My Favorite Name&quot;</span>
+<span class="p">},</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>and save the file as GeoJSON (say transects.geojson).  Finally, set the
+option:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geojsonFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;transects.geojson&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>(giving an absolute path if necessary) in your custom config file.</p>
+</section>
+<section id="fields">
+<h2>Fields<a class="headerlink" href="#fields" title="Permalink to this heading">¶</a></h2>
+<p>Since there are no observations associated with geojson transects, you are
+free to choose which MPAS fields you would like to plot.  These fields are
+provided as a python dictionary.  The keys are names for the fields (anything
+you would like use as a prefix on files and subtask names, best if it does
+not contain spaces).  The values are python dictionaries.  The values
+associate with the <code class="docutils literal notranslate"><span class="pre">mpas</span></code> key are the names of the 3D fields where transects
+are desired.  The <code class="docutils literal notranslate"><span class="pre">units</span></code> entry indicates the units to display on the
+colorbar.  The <code class="docutils literal notranslate"><span class="pre">titleName</span></code> entry specifies the name of the field to include
+in plot titles and captions.</p>
+<p>Each field must have a corresponding section in the config file defining its
+color maps.  For example, <code class="docutils literal notranslate"><span class="pre">temperature</span></code> has an associated
+<code class="docutils literal notranslate"><span class="pre">[geojsonTemperatureTransect]</span></code> section.</p>
+</section>
+<section id="other-options">
+<h2>Other Options<a class="headerlink" href="#other-options" title="Permalink to this heading">¶</a></h2>
+<dl class="simple">
+<dt>For details on the remaining configuration options, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/transects.html#config-transects"><span class="std std-ref">Output Grids for Transects</span></a></p></li>
+<li><p><a class="reference internal" href="../config/climatology.html#config-remapping"><span class="std std-ref">Remapping Options</span></a></p></li>
+<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
+<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<a class="reference internal image-reference" href="../../_images/geojson_transect.png"><img alt="../../_images/geojson_transect.png" class="align-center" src="../../_images/geojson_transect.png" style="width: 500px;" /></a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soseTransects.html" class="btn btn-neutral float-left" title="soseTransects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="oceanRegionalProfiles.html" class="btn btn-neutral float-right" title="oceanRegionalProfiles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

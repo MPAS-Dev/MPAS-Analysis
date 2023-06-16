@@ -1,0 +1,38 @@
+.. _trenberth_mht:
+
+Meridional Heat Transport (MHT)
+===============================
+
+Description
+-----------
+The Trenbert and Caron oceanic meridional heat transport is computed
+by computation of energy balance of the atmosphere, adjusted to fit
+physical constraints, and using two reanalysis products: the National
+Centers for Environmental Prediction-National Center for Atmospheric
+Research (NCEP-NCAR) reanalysis and the European Centre for Medium-Range
+Weather Forecasts (ECMWF) product. The analysis focuses on the period
+from February 1985 to April 1989 when there are reliable top-of-the-atmosphere
+radiation data from the Earth Radiation Budget Experiment.
+
+Source
+------
+Data available upon request from Dr. Kevin Trenberth
+
+Release Policy
+--------------
+Acknowledgment: please cite: Trenberth and Caron (2001). Estimates of
+Meridional Atmosphere and Ocean Heat Transports, J. of Climate, 14, 3433-3443.
+
+References
+----------
+`Trenberth and Caron (2001)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_meridionalHeatTransport`
+
+.. _`Trenberth and Caron (2001)`: https://doi.org/10.1175/1520-0442%282001%29014<3433%3AEOMAAO>2.0.CO%3B2
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/MHT/obs.bib
+
