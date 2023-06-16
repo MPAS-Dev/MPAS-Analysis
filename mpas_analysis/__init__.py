@@ -3,5 +3,6 @@
 import matplotlib as mpl
 mpl.use('Agg')
 
-__version_info__ = (1, 8, 0)
-__version__ = '.'.join(str(vi) for vi in __version_info__)
+__version_info__ = (1, 9, 0)
+__version__ = '1.9.0rc1'
+# __version__ = '.'.join(str(vi) for vi in __version_info__)
