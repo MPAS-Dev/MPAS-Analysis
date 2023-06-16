@@ -215,11 +215,11 @@ class ComputeMeltSubtask(AnalysisTask):
             raiseException=True)
 
         landIceFluxMode = self.namelist.get('config_land_ice_flux_mode')
-        if landIceFluxMode not in ['standalone', 'coupled']:
+        if landIceFluxMode not in ['data', 'standalone', 'coupled']:
             raise ValueError('*** timeSeriesAntarcticMelt requires '
                              'config_land_ice_flux_mode \n'
-                             '    to be standalone or coupled.  Otherwise, no '
-                             'melt rates are available \n'
+                             '    to be data, standalone or coupled. '
+                             '    Otherwise, no melt rates are available \n'
                              '    for plotting.')
 
         # Load mesh related variables
