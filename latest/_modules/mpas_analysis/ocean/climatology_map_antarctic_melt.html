@@ -292,11 +292,11 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapAntarcticMelt</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
         <span class="n">landIceFluxMode</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config_land_ice_flux_mode&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">landIceFluxMode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="s1">&#39;coupled&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">landIceFluxMode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="s1">&#39;standalone&#39;</span><span class="p">,</span> <span class="s1">&#39;coupled&#39;</span><span class="p">]:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;*** climatologyMapMeltAntarctic requires &#39;</span>
                              <span class="s1">&#39;config_land_ice_flux_mode </span><span class="se">\n</span><span class="s1">&#39;</span>
-                             <span class="s1">&#39;    to be standalone or coupled.  Otherwise, no &#39;</span>
-                             <span class="s1">&#39;melt rates are available </span><span class="se">\n</span><span class="s1">&#39;</span>
+                             <span class="s1">&#39;    to be data, standalone or coupled. &#39;</span>
+                             <span class="s1">&#39;    Otherwise, no melt rates are available </span><span class="se">\n</span><span class="s1">&#39;</span>
                              <span class="s1">&#39;    for plotting.&#39;</span><span class="p">)</span></div>
 
 
