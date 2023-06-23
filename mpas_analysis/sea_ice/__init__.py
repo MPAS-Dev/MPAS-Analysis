@@ -31,3 +31,5 @@ from mpas_analysis.sea_ice.climatology_map_snowmelt import \
     ClimatologyMapSeaIceSnowMelt
 from mpas_analysis.sea_ice.climatology_map_area_pond import \
     ClimatologyMapSeaIcePondArea
+from mpas_analysis.sea_ice.climatology_map_risk_index_outcome import \
+    ClimatologyMapRiskIndexOutcome
