@@ -19,7 +19,7 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapRiskIndexOutcoume(AnalysisTask):
+class ClimatologyMapRiskIndexOutcome(AnalysisTask):
     """
     An analysis task for evaluating the Risk Index Outcome
     for navigation in sea-ice covered water.

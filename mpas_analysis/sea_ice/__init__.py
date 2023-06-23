@@ -10,4 +10,4 @@ from mpas_analysis.sea_ice.climatology_map_production import \
 from mpas_analysis.sea_ice.climatology_map_melting import \
     ClimatologyMapSeaIceMelting
 from mpas_analysis.sea_ice.climatology_map_risk_index_outcome import \
-    ClimatologyMapRiskIndexOutcoume
+    ClimatologyMapRiskIndexOutcome
