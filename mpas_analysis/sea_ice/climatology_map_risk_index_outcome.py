@@ -234,7 +234,7 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
     def _compute_risk_index_outcome(self, climatology):
         """
         Compute the risk index outcome from sea-ice concentration and (floe) thickness,
-        as outlined in by International Maritime Organization (IMO) document.
+        as outlined in the International Maritime Organization (IMO) document.
         (https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html)
         """
         ds_restart = xr.open_dataset(self.restartFileName)
@@ -251,7 +251,7 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
         # reference floe thicknesses for calculation of Risk Index Values 
         # (this values were agreed upon by Elizabeth Hunke, Andrew Roberts,
-        #and Gennaro D'Angelo based on literature and IMO description)
+        # and Gennaro D'Angelo based on literature and IMO description)
         h_riv = np.array([0.5, 10, 15, 30, 50, 70, 100, 120, 170, 200, 250]) * 0.01 
         # table of Risk Index Values (defined by IMO)
         riv = np.array([[ 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1 ],\
@@ -293,7 +293,7 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
         # Risk Index Outcome for single-category ice. There are only
         # two terms per cell: one coming from the fraction of the cell
-        # occupied by open water and one coming from the fraction occupied
+        # covered by open water and one coming from the fraction covered
         # by sea ice (rio <= 30 by IMO definition)
         rio = scale_factor * ((1.0 - concentration) * riv[pc, 0] + concentration * riv_iceCell)
 
