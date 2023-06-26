@@ -7,6 +7,7 @@
 #
 
 import xarray as xr
+import numpy as np
 from pyremap import LatLon2DGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
@@ -208,7 +209,7 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the risk index outcome from sea-ice concentration and thickness.
+        Compute the risk index outcome from sea-ice concentration and (floe) thickness.
 
         Parameters
         ----------
@@ -232,22 +233,27 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
     def _compute_risk_index_outcome(self, climatology):
         """
-        Compute the risk index outcome from sea-ice concentration and thickness.
+        Compute the risk index outcome from sea-ice concentration and (floe) thickness,
+        as outlined in by International Maritime Organization (IMO) document.
         (https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html)
         """
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
+        # sea-ice concentration conversion from range [0,1] to range [0,10]
         scale_factor = 10
-        pc = self.config.get(self.taskName, 'polarClass') - 1
+        # polar class array index should be in the range [0,11], but not checked!
+        pc = self.config.getint(self.taskName, 'polarClass') - 1
 
-        concentration = climatology['timeMonthly_avg_iceAreaCell']
-        thickness = climatology['timeMonthly_avg_iceVolumeCell']
-
+# this are labels that should appear in the plot, to indicate the Polar Class of the vessel (included here for the moment)
 #       pic = ["PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "IA Super",\
 #              "IA", "IB", "IC", "Not Ice Strengthened"]
 
+        # reference floe thicknesses for calculation of Risk Index Values 
+        # (this values were agreed upon by Elizabeth Hunke, Andrew Roberts,
+        #and Gennaro D'Angelo based on literature and IMO description)
         h_riv = np.array([0.5, 10, 15, 30, 50, 70, 100, 120, 170, 200, 250]) * 0.01 
+        # table of Risk Index Values (defined by IMO)
         riv = np.array([[ 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1 ],\
                         [ 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 1, 0 ],\
                         [ 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 0,-1 ],\
@@ -261,19 +267,34 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
                         [ 3, 2, 1, 0,-1,-2,-3,-4,-5,-6,-7,-8 ],\
                         [ 3, 1, 0,-1,-2,-3,-4,-5,-6,-7,-8,-8 ]])
 
-        riv_iceCell = np.nan*np.ones(np.shape(thickness))
+        concentration = climatology['timeMonthly_avg_iceAreaCell']
+        thickness = climatology['timeMonthly_avg_iceVolumeCell']
 
+        # these lines may not be required, but rio should not be used
+        # to check concentration and thickness
+        concentration[np.where(concentration<0.0)] = 0.0
+        concentration[np.where(concentration>1.0)] = 1.0
+        thickness[np.where(concentration==0.0)] = 0.0 
+
+        # introduce riv array and set values in open water
+        riv_iceCell = np.nan*np.ones(np.shape(thickness))
         riv_mask = np.where(thickness < h_riv[0])
         riv_iceCell[riv_mask] = riv[pc, 0]
 
+        # set riv values for chosen Polar Class of vessel
         for ind in range(len(h_riv)-1):
 #           riv_mask = np.logical_and(thickness >= h_riv[ind], thickness < h_riv[ind+1])
             riv_mask = np.where(thickness >= h_riv[ind])
             riv_iceCell[riv_mask] = riv[pc, ind+1]
 
+        # set riv for highest floe thickness
         riv_mask = np.where(thickness >= h_riv[-1])
         riv_iceCell[riv_mask] = riv[pc, -1]
 
-        rio = ((1.0 - concentration) * riv[pc, 0] + concentration * riv_iceCell) * units_scale_factor
+        # Risk Index Outcome for single-category ice. There are only
+        # two terms per cell: one coming from the fraction of the cell
+        # occupied by open water and one coming from the fraction occupied
+        # by sea ice (rio <= 30 by IMO definition)
+        rio = scale_factor * ((1.0 - concentration) * riv[pc, 0] + concentration * riv_iceCell)
 
         return rio
