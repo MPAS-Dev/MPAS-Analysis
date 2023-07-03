@@ -40,7 +40,7 @@ requirements:
     - netcdf4
     - numpy
     - pandas
-    - pillow
+    - pillow >=10.0.0,<11.0.0
     - progressbar2
     - pyproj
     - pyremap >=0.0.14,<0.1.0

@@ -26,7 +26,7 @@ install_requires = \
      'netcdf4',
      'numpy',
      'pandas',
-     'pillow',
+     'pillow >=10.0.0,<11.0.0',
      'progressbar2',
      'pyproj',
      'python-dateutil',
