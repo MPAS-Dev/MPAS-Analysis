@@ -9,8 +9,8 @@ Analysis for simulations produced with Model for Prediction Across Scales
 used those components.
 
 
-.. image:: users_guide/_static/sst_example.png
-   :target: users_guide/_static/sst_example.png
+.. image:: _static/sst_example.png
+   :target: _static/sst_example.png
    :alt: sea surface temperature
 
 
