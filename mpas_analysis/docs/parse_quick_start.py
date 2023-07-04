@@ -13,7 +13,7 @@ def build_quick_start():
                '[![Build Status]': '',
                '[![Documentation Status]': '',
                '![sea surface temperature](docs/users_guide/_static/sst_example.png)':
-                   '![sea surface temperature](users_guide/_static/sst_example.png)\n'}
+                   '![sea surface temperature](_static/sst_example.png)\n'}
 
     skip = [('## conda-forge', '## Installation')]
     outContent = ''
