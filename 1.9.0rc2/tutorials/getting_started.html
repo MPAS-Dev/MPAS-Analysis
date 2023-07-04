@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User: Getting Started &mdash; MPAS-Analysis 1.9.0rc2 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developer: Getting Started" href="dev_getting_started.html" />
+    <link rel="prev" title="Eddy Kinetic Energy Climatology Mapping" href="../design_docs/eddykineticenergy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.0rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">User: Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-a-conda-environment">1 Setting up a Conda Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#installing-miniconda">1.1 Installing Miniconda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-a-conda-environment">1.2 Creating a conda environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#activating-the-environment">1.3 Activating the environment</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-observations">2 Downloading observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-an-example-run">3 Downloading an example run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuring-mpas-analysis">4 Configuring MPAS-Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#runs">4.1 [runs]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#execute">4.2 [execute]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#diagnostics">4.3 [diagnostics]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input">4.4 [input]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#output">4.5 [output]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#climatology-timeseries-and-index">4.6 [climatology], [timeSeries] and [index]</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#running-mpas-analysis">5 Running MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#viewing-the-output">6 Viewing the Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">7 Troubleshooting</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#purging-old-analysis">7.1 Purging old Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#errors-during-setup">7.2 Errors During Setup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#errors-in-tasks">7.2 Errors in Tasks</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">User: Getting Started</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/tutorials/getting_started.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="user-getting-started">
+<span id="tutorial-getting-started"></span><h1>User: Getting Started<a class="headerlink" href="#user-getting-started" title="Permalink to this heading">¶</a></h1>
+<p>This tutorial walks a new user through the basics of using MPAS-Analysis.</p>
+<section id="setting-up-a-conda-environment">
+<h2>1 Setting up a Conda Environment<a class="headerlink" href="#setting-up-a-conda-environment" title="Permalink to this heading">¶</a></h2>
+<p>MPAS-Analysis relies on several packages that are only available as conda
+packages from the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel.  The first step for running
+MPAS-Analysis is to create a conda environment with all the needed packages.</p>
+<section id="installing-miniconda">
+<h3>1.1 Installing Miniconda<a class="headerlink" href="#installing-miniconda" title="Permalink to this heading">¶</a></h3>
+<p>If you have not yet installed Anaconda or Miniconda, you will need to begin
+there.  The concept behind Anaconda is that just about everything you would
+need for a typical python workflow is included.  The concept behind Miniconda
+is that you create different environments for different purposes.  This allows
+for greater flexibility and tends to lead to fewer conflicts between
+incompatible packages, particularly when using a channel other than the
+<code class="docutils literal notranslate"><span class="pre">defaults</span></code> supplied by Anaconda.  Since we will use the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>
+channel, the Miniconda approach is strongly recommended.</p>
+<p>First download the <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3 installer</a> for your operating system, then run
+it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Miniconda3-latest-Linux-x86_64.sh
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>MPAS-Analysis and many of the packages it depends on support OSX and Linux
+but not Windows.</p>
+</div>
+<p>In this tutorial, we assume that Miniconda is installed in the default location,
+<code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.  If you choose to install it somewhere else, just make sure
+to make the appropriate substitution whenever you see a reference to this path
+below.</p>
+<p>You will see prompt like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you wish the installer to initialize Miniconda3
+by running conda init? [yes|no]
+</pre></div>
+</div>
+<p>You may wish to skip the step (answer “no”) if you are working on a system
+where you will also be using other conda environments.  This means you have to
+manually activate <code class="docutils literal notranslate"><span class="pre">conda</span></code> whenever you need it.  For <code class="docutils literal notranslate"><span class="pre">bash</span></code> and similar
+shells, this is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniconda3/etc/profile.d/conda.sh
+</pre></div>
+</div>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or related shells, this becomes:</p>
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniconda3/etc/profile.d/conda.csh
+</pre></div>
+</div>
+</section>
+<section id="creating-a-conda-environment">
+<h3>1.2 Creating a conda environment<a class="headerlink" href="#creating-a-conda-environment" title="Permalink to this heading">¶</a></h3>
+<p>First, we need to add the <a class="reference external" href="https://conda-forge.org/">conda-forge channel</a> and make sure it always takes
+precedence for packages available on that channel:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
+</pre></div>
+</div>
+<p>Then, you can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> and
+install the latest version of the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code> package into it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>mpas-analysis<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span>mpas-analysis
+</pre></div>
+</div>
+</section>
+<section id="activating-the-environment">
+<h3>1.3 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h3>
+<p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>
+environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniconda3/etc/profile.d/conda.sh
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas-analysis
+</pre></div>
+</div>
+<p>or for <code class="docutils literal notranslate"><span class="pre">csh</span></code>:</p>
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniconda3/etc/profile.d/conda.csh
+&gt; conda activate mpas-analysis
+</pre></div>
+</div>
+<p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Miniconda3 so it
+loads automatically.</p>
+</section>
+</section>
+<section id="downloading-observations">
+<h2>2 Downloading observations<a class="headerlink" href="#downloading-observations" title="Permalink to this heading">¶</a></h2>
+<p>MPAS-Analysis can only run a very limited set of analysis without observational
+datasets for comparison.  Many analysis tasks also require “mapping files” that
+describe interpolation between different grids and meshes.  Some tasks also
+need masks that define regions of interest on different grids and meshes.</p>
+<p>Most of the observational datasets as well as some common mapping files and
+region masks are available for public download by calling:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>download_analysis_data<span class="w"> </span>-o<span class="w"> </span>&lt;/path/to/mpas_analysis/diagnostics&gt;
+</pre></div>
+</div>
+<p>Substitute <code class="docutils literal notranslate"><span class="pre">&lt;/path/to/mpas_analysis/diagnostics&gt;</span></code> with a convenient location
+for storing the diagnostics data.  You will need this path later on when you
+set up a configuration file for running the analysis.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The observational data is approximately <strong>45GB</strong> in size and may take some
+time to download.  If the download gets interrupted, only incomplete or
+missing files will be downloaded if you run <code class="docutils literal notranslate"><span class="pre">download_analysis_data</span></code> again.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are on an E3SM supported system, the data has already
+been downloaded for you to use.  Please look at the <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> config
+option in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> of an example <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs">config file</a>
+for your supported machine.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We do not currently support downloading a subset of the data but we plan to
+add this capability in the future.  In a pinch, you could manually download
+files.  For reference, here is the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/obs/analysis_input_files">full list of files</a> that are
+automatically downloaded from the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/">diagnostics web server</a>.</p>
+</div>
+</section>
+<section id="downloading-an-example-run">
+<h2>3 Downloading an example run<a class="headerlink" href="#downloading-an-example-run" title="Permalink to this heading">¶</a></h2>
+<p>We provide data for an “ultra-low-resolution” E3SM simulation (480 km grid cells
+for the ocean and sea-ice components) as a relatively small example dataset for
+testing MPAS-Analysis.  The simulation is too coarse and too short to be of
+scientific interest, but we wanted to keep the size manageable.  The ocean and
+sea-ice output are about 950 MB.</p>
+<p>Download the <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/test_output/20200305.A_WCYCL1850.ne4_oQU480.anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil.ocean_seaice.tar.gz">Ultra-low-res ocean and sea-ice dataset</a> and untar it into a
+convenient directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mkdir<span class="w"> </span>A_WCYCL1850.ne4_oQU480.anvil
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>A_WCYCL1850.ne4_oQU480.anvil
+$<span class="w"> </span>tar<span class="w"> </span>-xvf<span class="w"> </span>../20200305.A_WCYCL1850.ne4_oQU480.anvil.ocean_seaice.tar.gz
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+</section>
+<section id="configuring-mpas-analysis">
+<h2>4 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Permalink to this heading">¶</a></h2>
+<p>Configuration is with Python <code class="docutils literal notranslate"><span class="pre">cfg</span></code> (also called <code class="docutils literal notranslate"><span class="pre">ini</span></code>) files:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">runName</span>
+
+<span class="k">[execute]</span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot; or &quot;bck&quot;)</span>
+<span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">serial</span>
+<span class="na">...</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/default.cfg">default config file</a> contains over 1,000 config options, which gives a lot
+of flexibility to MPAS-Analysis but can be more than bit overwhelming to new
+users.</p>
+<p>You can modify the default options with one or more custom config files.  We
+provide an <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example.cfg">example config file</a> as a starting point. This file contains the
+most common config options that a user might want to customize.  The values are
+mostly the same as in the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/default.cfg">default config file</a>.</p>
+<p>If you are on an E3SM supported machine, you can use the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example_e3sm.cfg">E3SM example config file</a> instead.  If you specify the name of the supported machine with the
+<code class="docutils literal notranslate"><span class="pre">--machine</span></code> flag when you call <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>, there are several config
+options that will be set for you automatically.  E3SM supported machines aren’t
+the primary focus of this tutorial, the following will assume you’re working
+on an unknown machine (or simply not taking advantage of known paths on a
+supported machine).</p>
+<p>First, you should copy this file to a new name for a specific run (say
+<code class="docutils literal notranslate"><span class="pre">myrun.cfg</span></code>).  Then, you should modify any config options you want to change
+in your new config file. At a minimum, you need to specify:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">[runs]/mainRunName</span></code>:  A name for the run to be included plot titles
+and legends</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[diagnostics]/base_path</span></code>: The base directory for observations,
+mapping files and region masks</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[input]/baseDirectory</span></code>: The directory for the simulation results
+to analyze</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[input]/mpasMeshName</span></code>: The name of the MPAS ocean/sea ice mesh</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[output]/baseDirectory</span></code>: The directory for the analysis results</p></li>
+</ul>
+<p>We will cover these and a few other common options in this tutorial.  With the
+exception of a few paths that you will need to provide, the config options
+displayed below are the ones appropriate for the example E3SM simulation from
+Section 3.</p>
+<section id="runs">
+<h3>4.1 [runs]<a class="headerlink" href="#runs" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section contains options related to which E3SM simulation(s) are
+being analyzed:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
+<span class="c1">## options related to the run to be analyzed and control runs to be</span>
+<span class="c1">## compared against</span>
+
+<span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
+<span class="na">mainRunName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">A_WCYCL1850.ne4_oQU480.anvil</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">mainRunName</span></code> can be any useful name that will appear at the top of each
+web page of the analysis output and in the legends or titles of the figures.
+Often, this is the full name of the E3SM simulation but sometimes it is
+convenient to have a shorter name.  In this case, we use part of the run name
+but leave off the date of the simulation to keep it a little shorter.</p>
+</section>
+<section id="execute">
+<h3>4.2 [execute]<a class="headerlink" href="#execute" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section contains options related to serial or parallel
+execution of the individual “tasks” that make up an MPAS-Analysis run.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+<span class="c1">## options related to executing parallel tasks</span>
+
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
+
+<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot;, &quot;bck&quot; or &quot;mpi&quot;)</span>
+<span class="c1"># Set this to &quot;bck&quot; (background parallelism) if running on a machine that can</span>
+<span class="c1"># handle 12 simultaneous processes, one for each monthly climatology.</span>
+<span class="c1"># Set to &quot;mpi&quot; to run one MPI task on each node and however many threads per</span>
+<span class="c1"># node to reach 12 total threads.</span>
+<span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bck</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code> should typically be equal to the number of cores on a
+laptop or a desktop.  In a high-performance computing (HPC) node, it is
+typically not possible to run 30 to 60 tasks in parallel even if the node has
+that many cores.  This is because many tasks consume enough memory that the
+job will crash with too many tasks running at the same time.  We have found that
+<code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code> should typically be somewhere between 6 and 12 for the
+HPC machines we use for E3SM.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ncclimoParallelMode</span></code> indicates how <a class="reference external" href="http://nco.sourceforge.net/nco.html#ncclimo-netCDF-Climatology-Generator">ncclimo</a> should be run to make
+climatologies used in many MPAS-Analysis plots.  Typically, we recommend
+<code class="docutils literal notranslate"><span class="pre">bck</span></code>, meaning <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> runs with 12 threads at once on the same node.
+In circumstances where <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> is crashing and it appears to be running out
+of memory, it is worth exploring <code class="docutils literal notranslate"><span class="pre">serial</span></code> or <code class="docutils literal notranslate"><span class="pre">mpi</span></code> modes, or using the
+<code class="docutils literal notranslate"><span class="pre">xarray</span></code> and <code class="docutils literal notranslate"><span class="pre">dask</span></code> instead to compute climatologies by setting
+<code class="docutils literal notranslate"><span class="pre">[climatology]/useNcclimo</span> <span class="pre">=</span> <span class="pre">False</span></code></p>
+<p>For this tutorial, we suggest starting with 4 parallel tasks and <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> in
+<code class="docutils literal notranslate"><span class="pre">bck</span></code> mode.</p>
+</section>
+<section id="diagnostics">
+<h3>4.3 [diagnostics]<a class="headerlink" href="#diagnostics" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> section is used to supply the directory where you downloaded
+observations in Section 2.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[diagnostics]</span>
+<span class="c1">## config options related to observations, mapping files and region files used</span>
+<span class="c1">## by MPAS-Analysis in diagnostics computations.</span>
+
+<span class="c1"># The base path to the diagnostics directory.  Typically, this will be a shared</span>
+<span class="c1"># directory on each E3SM supported machine (see the example config files for</span>
+<span class="c1"># its location).  For other machines, this would be the directory pointed to</span>
+<span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span>
+<span class="c1"># mapping files and region files.</span>
+<span class="na">base_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/diagnostics</span>
+</pre></div>
+</div>
+<p>For <code class="docutils literal notranslate"><span class="pre">base_path</span></code>, supply the path where you downloaded the data
+<code class="docutils literal notranslate"><span class="pre">&lt;/path/to/mpas_analysis/diagnostics&gt;</span></code>.</p>
+</section>
+<section id="input">
+<h3>4.4 [input]<a class="headerlink" href="#input" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section provides paths to the E3SM simulation data and the name
+of the MPAS-Ocean and MPAS-Seaice mesh.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span>
+<span class="c1">## options related to reading in the results to be analyzed</span>
+
+<span class="c1"># directory containing model results</span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/dir/for/model/output</span>
+
+<span class="c1"># Note: an absolute path can be supplied for any of these subdirectories.</span>
+<span class="c1"># A relative path is assumed to be relative to baseDirectory.</span>
+<span class="c1"># In this example, results are assumed to be in &lt;baseDirecory&gt;/run</span>
+
+<span class="c1"># subdirectory containing restart files</span>
+<span class="na">runSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run</span>
+<span class="c1"># subdirectory for ocean history files</span>
+<span class="na">oceanHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ocn/hist</span>
+<span class="c1"># subdirectory for sea ice history files</span>
+<span class="na">seaIceHistorySubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">archive/ice/hist</span>
+
+<span class="c1"># names of namelist and streams files, either a path relative to baseDirectory</span>
+<span class="c1"># or an absolute path.</span>
+<span class="na">oceanNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpaso_in</span>
+<span class="na">oceanStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.ocean</span>
+<span class="na">seaIceNamelistFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/mpassi_in</span>
+<span class="na">seaIceStreamsFileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">run/streams.seaice</span>
+
+<span class="c1"># name of the ocean and sea-ice mesh (e.g. EC30to60E2r2, WC14to60E2r3,</span>
+<span class="c1"># ECwISC30to60E2r1, SOwISC12to60E2r4, oQU240, etc.)</span>
+<span class="na">mpasMeshName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">oQU480</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is the path where you untarred the example run.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">mpasMeshName</span></code> is the standard E3SM name for the MPAS-Ocean and
+MPAS-Seaice mesh.  In this example, this is <code class="docutils literal notranslate"><span class="pre">oQU480</span></code>, meaning the
+quasi-uniform 480-km mesh for the ocean and sea ice.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">runSubdirectory</span></code> must contain valid MPAS-Ocean and MPAS-Seaice restart
+files, used to get information about the MPAS mesh and the ocean vertical grid.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">oceanHistorySubdirectory</span></code> must contain MPAS-Ocean monthly mean output
+files, typically named:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpaso</span><span class="o">.</span><span class="n">hist</span><span class="o">.</span><span class="n">am</span><span class="o">.</span><span class="n">timeSeriesStatsMonthly</span><span class="o">.</span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span><span class="o">.</span><span class="n">nc</span>
+</pre></div>
+</div>
+<p>Similarly, <code class="docutils literal notranslate"><span class="pre">seaIceHistorySubdirectory</span></code> contains the MPAS-Seaice monthly mean
+output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpassi</span><span class="o">.</span><span class="n">hist</span><span class="o">.</span><span class="n">am</span><span class="o">.</span><span class="n">timeSeriesStatsMonthly</span><span class="o">.</span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span><span class="o">.</span><span class="n">nc</span>
+</pre></div>
+</div>
+<p>Finally, MPAS-Analysis needs a set of “namelists” and “streams” files that
+provide information on the E3SM configuration for MPAS-Ocean and MPAS-Seaice,
+and about the output files, respectively.  These are typically also found in
+the <code class="docutils literal notranslate"><span class="pre">run</span></code> directory.</p>
+<p>For the example data, only <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> and <code class="docutils literal notranslate"><span class="pre">mpasMeshName</span></code> need to be
+set, the other options can be left as the defaults from the
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example.cfg">example config file</a>.</p>
+<p>For this tutorial, you just need to set <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> to the place where
+you untarred the simulation results.  The other config options should be as
+they are in the code block above.</p>
+</section>
+<section id="output">
+<h3>4.5 [output]<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">[output]</span></code> section provides a path where the output from the analysis run
+will be written, the option to output the results web pages to another
+location, and a list of analysis to be generated (or explicitly skipped).</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[output]</span>
+<span class="c1">## options related to writing out plots, intermediate cached data sets, logs,</span>
+<span class="c1">## etc.</span>
+
+<span class="c1"># directory where analysis should be written</span>
+<span class="c1"># NOTE: This directory path must be specific to each test case.</span>
+<span class="na">baseDirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/dir/for/analysis/output</span>
+
+<span class="c1"># provide an absolute path to put HTML in an alternative location (e.g. a web</span>
+<span class="c1"># portal)</span>
+<span class="na">htmlSubdirectory</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">html</span>
+
+<span class="c1"># a list of analyses to generate.  Valid names can be seen by running:</span>
+<span class="c1">#   mpas_analysis --list</span>
+<span class="c1"># This command also lists tags for each analysis.</span>
+<span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
+<span class="c1"># These include:</span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
+<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span>
+<span class="c1">#                      public server (the default)</span>
+<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
+<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
+<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
+<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
+<span class="c1">#                                       with this tag will be run, and all</span>
+<span class="c1">#                                       analysis for other components or</span>
+<span class="c1">#                                       without the tag will be skipped</span>
+<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
+<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
+<span class="c1">#                                   tasks from the given component or with</span>
+<span class="c1">#                                   the given tag.  Do</span>
+<span class="c1">#                                      mpas_analysis --list</span>
+<span class="c1">#                                   to list all task names and their tags</span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
+<span class="c1"># option:</span>
+<span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
+<span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all_publicObs&#39;]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is any convenient location for the output.</p>
+<p><code class="docutils literal notranslate"><span class="pre">htmlSubdirectory</span></code> can simply be the <code class="docutils literal notranslate"><span class="pre">&lt;baseDirectory&gt;/html</span></code>, the default or
+an absolute path to another location.  The later is useful for HPC machines that
+have a web portal.</p>
+<p>Finally, the <code class="docutils literal notranslate"><span class="pre">generate</span></code> option provides a python list of flags that can be
+used to determine which analysis will be generated.  For this tutorial, we will
+stick with the default, <code class="docutils literal notranslate"><span class="pre">'all_publicObs'</span></code>, indicating that we will only run
+analysis where the observations are included on the public server and which
+were downloaded in Section 2 (or analysis that does not require observations).</p>
+</section>
+<section id="climatology-timeseries-and-index">
+<h3>4.6 [climatology], [timeSeries] and [index]<a class="headerlink" href="#climatology-timeseries-and-index" title="Permalink to this heading">¶</a></h3>
+<p>These options determine the start and end years of climatologies (time averages
+over a particular month, season or the full year), time series or the El Niño
+climate index.</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatology]</span>
+<span class="c1">## options related to producing climatologies, typically to compare against</span>
+<span class="c1">## observations and previous runs</span>
+
+<span class="c1"># the first year over which to average climatalogies</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">3</span>
+<span class="c1"># the last year over which to average climatalogies</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+
+<span class="k">[timeSeries]</span>
+<span class="c1">## options related to producing time series plots, often to compare against</span>
+<span class="c1">## observations and previous runs</span>
+
+<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+
+<span class="k">[index]</span>
+<span class="c1">## options related to producing nino index.</span>
+
+<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
+</pre></div>
+</div>
+<p>For each of these, options a full year of data must exist for that year to
+be included in the analysis.</p>
+<p>For the example E3SM simulation that we downloaded in Section 3, only 5 years of
+simulation data are available, so we are doing a climatology over the last 3
+years (3 to 5) and displaying time series and the El Niño index over the full
+5 years.</p>
+</section>
+</section>
+<section id="running-mpas-analysis">
+<h2>5 Running MPAS-Analysis<a class="headerlink" href="#running-mpas-analysis" title="Permalink to this heading">¶</a></h2>
+<p>The hard work is done.  Now that we have a config file, we are ready to run.</p>
+<p>On many file systems, MPAS-Analysis and other python-based software that used
+NetCDF files based on the HDF5 file structure can experience file access errors
+unless the following environment variable is set as follows in bash:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+</pre></div>
+</div>
+<p>or under csh:</p>
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">setenv </span>HDF5_USE_FILE_LOCKING FALSE
+</pre></div>
+</div>
+<p>Then, running MPAS-Analysis is as simple as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>myrun.cfg
+</pre></div>
+</div>
+<p>Typical output is the analysis is running correctly looks something like:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>running: /home/xylar/Desktop/miniconda3/envs/mpas-analysis/bin/ESMF_RegridWeight
+Gen --source /tmp/tmph58_hgz4/src_mesh.nc --destination /tmp/tmph58_hgz4/dst_mes
+h.nc --weight /home/xylar/Desktop/analysis_test/analysis/A_WCYCL1850.ne4_oQU480.
+anvil/mapping/map_oQU480_to_0.5x0.5degree_bilinear.nc --method bilinear --netcdf
+4 --no_log --src_regional --ignore_unmapped
+running: /home/xylar/Desktop/miniconda3/envs/mpas-analysis/bin/ESMF_RegridWeight
+Gen --source /tmp/tmpxt8x1h_6/src_mesh.nc --destination /tmp/tmpxt8x1h_6/dst_mes
+h.nc --weight /home/xylar/Desktop/analysis_test/analysis/A_WCYCL1850.ne4_oQU480.
+anvil/mapping/map_obs_eke_0.25x0.25degree_to_0.5x0.5degree_bilinear.nc --method
+bilinear --netcdf4 --no_log --src_regional --ignore_unmapped
+running: /home/xylar/Desktop/miniconda3/envs/mpas-analysis/bin/ESMF_RegridWeight
+Gen --source /tmp/tmp3_7gpndz/src_mesh.nc --destination /tmp/tmp3_7gpndz/dst_mes
+h.nc --weight /home/xylar/Desktop/analysis_test/analysis/A_WCYCL1850.ne4_oQU480.
+anvil/mapping/map_oQU480_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc
+--method bilinear --netcdf4 --no_log --src_regional --dst_regional --ignore_unma
+pped
+Preprocessing SOSE transect data...
+  temperature
+  salinity
+  potentialDensity
+  zonalVelocity
+  meridionalVelocity
+  velMag
+  Done.
+running: /home/xylar/Desktop/miniconda3/envs/mpas-analysis/bin/ESMF_RegridWeight
+Gen --source /tmp/tmpt9n4vb5n/src_mesh.nc --destination /tmp/tmpt9n4vb5n/dst_mes
+h.nc --weight /home/xylar/Desktop/analysis_test/analysis/A_WCYCL1850.ne4_oQU480.
+anvil/mapping/map_oQU480_to_SOSE_transects_5km_bilinear.nc --method bilinear --n
+etcdf4 --no_log --src_regional --dst_regional --ignore_unmapped
+
+Running tasks:   2% |                                          | ETA:   0:09:04
+Running tasks:  52% |######################                    | ETA:   0:06:13
+Running tasks: 100% |##########################################| Time:  0:18:50
+
+Log files for executed tasks can be found in /home/xylar/Desktop/analysis_test/a
+nalysis/A_WCYCL1850.ne4_oQU480.anvil/logs
+Total setup time: 0:03:11.74
+Total run time: 0:22:02.33
+Generating webpage for viewing results...
+Done.
+</pre></div>
+</div>
+<p>The first part of the output, before the progress bar, is the “setup” phase
+where MPAS-Analysis is checking if the requested analysis can be run on the
+simulation results.  The specific output shown here is related to creating
+so-called mapping files that are used to interpolate between the <code class="docutils literal notranslate"><span class="pre">oQU480</span></code> mesh
+and the various grids MPAS-Analysis uses to compare with observations.  Since
+MPAS-Analysis didn’t know about that <code class="docutils literal notranslate"><span class="pre">oQU480</span></code> mesh ahead of time, it is
+creating mapping files and regions masks for this mesh on the fly.</p>
+<p>The command-line tool has several more options you can explore with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>These include listing the available analysis tasks and their tags, purging a
+previous analysis run before running the analysis again, plotting all available
+color maps, and outputting verbose python error messages when the analysis fails
+during the setup phase (before a progress bar appears).</p>
+</section>
+<section id="viewing-the-output">
+<h2>6 Viewing the Output<a class="headerlink" href="#viewing-the-output" title="Permalink to this heading">¶</a></h2>
+<p>The primary output from MPAS-Analysis is a set of web pages, each containing
+galleries of figures.  The output can be found in the directory you provided in
+Section 4.5, which is the <code class="docutils literal notranslate"><span class="pre">html</span></code> subdirectory of the base output directory by
+default.  If the web page is incomplete, it presumably means there was an error
+during the analysis run, since the web page is generated as the final step.</p>
+<p>The main web page has links to the ocean and sea-ice web pages as well as some
+“provenance” information about which version of MPAS-Analysis you were using
+and how it was configured.</p>
+<p>The web page generated by this tutorial should look something like
+<a class="reference external" href="https://mpas-dev.github.io/MPAS-Analysis/examples/QU480">this example output</a>.</p>
+</section>
+<section id="troubleshooting">
+<span id="tutorial-getting-started-trouble"></span><h2>7 Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permalink to this heading">¶</a></h2>
+<p>This section briefly describes strategies for diagnosing errors in
+MPAS-Analysis.  This tutorial cannot hope to provide a comprehensive guide to
+troubleshooting these errors.  Please search the documentation, Google the error
+online, or get in touch with the MPAS-Analysis developer team (by
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/issues">posting an issue</a> on GitHub) if you are experiencing an error.</p>
+<section id="purging-old-analysis">
+<h3>7.1 Purging old Analysis<a class="headerlink" href="#purging-old-analysis" title="Permalink to this heading">¶</a></h3>
+<p>One thing you might want to try first if you are experiencing problems is to
+delete any analysis you may already have in your output directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>--purge<span class="w"> </span>myrun.cfg
+</pre></div>
+</div>
+<p>This will first delete existing analysis and then run the analysis again.</p>
+</section>
+<section id="errors-during-setup">
+<h3>7.2 Errors During Setup<a class="headerlink" href="#errors-during-setup" title="Permalink to this heading">¶</a></h3>
+<p>If an error occurs during setup, by default the full python traceback is
+suppressed.  This is because some tasks fail because the run being analyzed was
+not configured for that analysis.  In such cases, many users want the analysis
+to continue, simply skipping the tasks that can’t be run.</p>
+<p>However, this means that sometime the analysis is not configured properly and
+as a results most or all tasks are not running.  To find out why, you will
+probably need to run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>--verbose<span class="w"> </span>myrun.cfg
+</pre></div>
+</div>
+<p>This will give you a detailed python stack trace.  Even if this is not helpful
+to you, it might help developers to troubleshoot your issue.</p>
+</section>
+<section id="errors-in-tasks">
+<h3>7.2 Errors in Tasks<a class="headerlink" href="#errors-in-tasks" title="Permalink to this heading">¶</a></h3>
+<p>If you see the progress bar start but error occur during running of analysis
+tasks, the error messages will not be displayed to the screen.  Instead, they
+will be in log files (as stated in the short error message letting you know
+that a task has failed).  The contents of these log files may help you to
+determine the cause of the error.  If not, please include them if you are
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/issues">posting an issue</a> on GitHub.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../design_docs/eddykineticenergy.html" class="btn btn-neutral float-left" title="Eddy Kinetic Energy Climatology Mapping" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dev_getting_started.html" class="btn btn-neutral float-right" title="Developer: Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
