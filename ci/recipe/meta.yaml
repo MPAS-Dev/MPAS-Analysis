@@ -34,7 +34,7 @@ requirements:
     - gsw
     - lxml
     - mache >=1.11.0
-    - matplotlib-base >=3.6.0
+    - matplotlib-base >=3.6.0,!=3.7.2
     - mpas_tools >=0.16.0
     - nco >=4.8.1
     - netcdf4
