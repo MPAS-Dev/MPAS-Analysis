@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colormaps &mdash; MPAS-Analysis 1.9.0rc3 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Seasons" href="seasons.html" />
+    <link rel="prev" title="Preprocessed Reference Runs" href="preprocessed.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.0rc3
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Colormaps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#supported-colormaps">Supported Colormaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#indexed-colormaps">Indexed Colormaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-colormaps">Continuous Colormaps</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#colormpas-in-three-panel-plots">Colormpas in Three Panel Plots</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#adding-contour-lines">Adding Contour Lines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#specifying-colorbar-tick-marks">Specifying Colorbar Tick Marks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
+      <li class="breadcrumb-item active">Colormaps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/config/colormaps.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="colormaps">
+<span id="config-colormaps"></span><h1>Colormaps<a class="headerlink" href="#colormaps" title="Permalink to this heading">¶</a></h1>
+<p>Each analysis task that includes plots with colormaps has a series of
+configuration options that can be used to manipulate the colormap.
+MPAS-Analysis supports two types of plots, each of which has an associated
+set of options for configuring its colormap.</p>
+<section id="supported-colormaps">
+<h2>Supported Colormaps<a class="headerlink" href="#supported-colormaps" title="Permalink to this heading">¶</a></h2>
+<p>MPAS-Analysis supports all <a class="reference external" href="https://matplotlib.org/users/colormaps.html">matplotlib colormaps</a>, all <a class="reference external" href="https://matplotlib.org/cmocean/">cmocean colormaps</a>,
+all <a class="reference external" href="http://www.fabiocrameri.ch/colourmaps.php">Scientific Colour Map Suite 3.0</a> colormaps, the selection of key
+<a class="reference external" href="https://sciviscolor.org/home/colormaps/">SciVisColor colormaps</a> and five custom color maps: <code class="docutils literal notranslate"><span class="pre">ferret</span></code>,
+<code class="docutils literal notranslate"><span class="pre">erdc_iceFire_H</span></code>, <code class="docutils literal notranslate"><span class="pre">erdc_iceFire_L</span></code>, <code class="docutils literal notranslate"><span class="pre">BuOr</span></code> and <code class="docutils literal notranslate"><span class="pre">Maximenko</span></code>.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/colormaps.png"><img alt="All available colormaps" src="../../_images/colormaps.png" style="width: 720px;" /></a>
+<figcaption>
+<p><span class="caption-text">All available colormaps</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>To plot all availabe colormpas (as above), run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_analysis</span> <span class="o">--</span><span class="n">plot_colormaps</span>
+</pre></div>
+</div>
+</section>
+<section id="indexed-colormaps">
+<h2>Indexed Colormaps<a class="headerlink" href="#indexed-colormaps" title="Permalink to this heading">¶</a></h2>
+<p>Indexed colormaps are used in association with contour plots in MPAS-Analysis.
+The following configuration options are associated with an indexed colormap:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap name</span>
+<span class="n">colormapName</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="n">colormapIndices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="n">colorbarLevels</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The indices are between 0 and 255, indicating the location within the colormap
+to sample.  The levels are the contour values to plot.  Since the region
+between two contours will be filled with a solid color specified by a colormap
+index, the number of levels is one greater than the number of indices.  The
+exception is when a separate shading should be used for values that fall
+outside the range of the contours, in which case the number of colormap indices
+is one more than the number of levels values, and the first and last index
+are used to specify the “under” and “over” color values.</p>
+</section>
+<section id="continuous-colormaps">
+<h2>Continuous Colormaps<a class="headerlink" href="#continuous-colormaps" title="Permalink to this heading">¶</a></h2>
+<p>A continuous colormap is specified with a different set of options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap for model/observations</span>
+<span class="n">colormapName</span> <span class="o">=</span> <span class="n">erdc_iceFire_H</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normType</span> <span class="o">=</span> <span class="n">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;linscale&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">100.</span><span class="p">,</span>
+            <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">100.</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>MPAS Analysis supports three norms for the continuous color map, with an
+associated dictionary of arguments.  These are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://matplotlib.org/users/colormapnorms.html">linear</a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/users/colormapnorms.html#logarithmic">log</a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/users/colormapnorms.html#symmetric-logarithmic">symLog</a></p></li>
+</ul>
+</div></blockquote>
+<p>See the associated documentaiton for the arguments to each norm.</p>
+</section>
+<section id="colormpas-in-three-panel-plots">
+<h2>Colormpas in Three Panel Plots<a class="headerlink" href="#colormpas-in-three-panel-plots" title="Permalink to this heading">¶</a></h2>
+<p>Many MPAS-Analysis tasks include a panel for the main model run, another for
+observations or a control run and a third panel for displaying a bias or the
+the model-reference difference.  In such cases, we support one colormap for the
+first two panels and another for the final panel.  Options for each of these
+colormaps are specified by appending either <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to
+each.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="n">colorbarLevelsResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">RdBu_r</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">142</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span>
+                             <span class="mi">227</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-contour-lines">
+<h2>Adding Contour Lines<a class="headerlink" href="#adding-contour-lines" title="Permalink to this heading">¶</a></h2>
+<p>Contour lines can be added to a plot with the following options:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># contour line levels</span>
+<span class="n">contourLevels</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">240.</span><span class="p">,</span> <span class="mf">130.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
+<span class="c1"># contour line thickness</span>
+<span class="n">contourThickness</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="c1"># contour color</span>
+<span class="n">contourColor</span> <span class="o">=</span> <span class="mf">0.25</span>
+</pre></div>
+</div>
+<p>The levels are the field values for each contour.  The line thickness is
+specified in points.  The <code class="docutils literal notranslate"><span class="pre">contourColor</span></code> can be any color name supported
+by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> or a floating point number between 0 and 1 specifying a
+shade of gray.</p>
+<p>Append <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to these options for a 3-panel plot.</p>
+</section>
+<section id="specifying-colorbar-tick-marks">
+<h2>Specifying Colorbar Tick Marks<a class="headerlink" href="#specifying-colorbar-tick-marks" title="Permalink to this heading">¶</a></h2>
+<p>By default, colorbar tick marks are chosen automatically by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.
+To specify tick marks explicitly, use:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">colorbarTicks</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="o">-</span><span class="mf">50.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span>
+                 <span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">50.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Alternatively, <code class="docutils literal notranslate"><span class="pre">numpy</span></code> functions can be used to specify the tick locations:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">colorbarTicks</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Again, append <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to these options for a 3-panel plot.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="preprocessed.html" class="btn btn-neutral float-left" title="Preprocessed Reference Runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="seasons.html" class="btn btn-neutral float-right" title="Seasons" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
