@@ -22,7 +22,7 @@ install_requires = \
      'dask',
      'gsw',
      'lxml',
-     'matplotlib >=3.6.0',
+     'matplotlib >=3.6.0,!=3.7.2',
      'netcdf4',
      'numpy',
      'pandas',
