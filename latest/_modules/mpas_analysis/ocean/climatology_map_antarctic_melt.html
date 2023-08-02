@@ -399,6 +399,16 @@
         <span class="n">projection</span> <span class="o">=</span> <span class="n">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">)</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
             <span class="n">projection</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">xVarName</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">yVarName</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+
+        <span class="c1"># update the mesh name to match the format used elsewhere in</span>
+        <span class="c1"># MPAS-Analysis</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">y</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_Antarctic_stereo&#39;</span>
+
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
     <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
