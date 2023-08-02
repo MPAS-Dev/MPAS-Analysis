@@ -302,6 +302,16 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
             projection, fileName=fileName, xVarName='x', yVarName='y')
+
+        # update the mesh name to match the format used elsewhere in
+        # MPAS-Analysis
+        x = obsDescriptor.x
+        y = obsDescriptor.y
+        width = 1e-3 * (x[-1] - x[0])
+        height = 1e-3 * (y[-1] - y[0])
+        res = 1e-3 * (x[1] - x[0])
+        obsDescriptor.meshName = f'{width}x{height}km_{res}km_Antarctic_stereo'
+
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
