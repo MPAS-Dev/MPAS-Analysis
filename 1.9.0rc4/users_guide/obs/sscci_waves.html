@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative &mdash; MPAS-Analysis 1.9.0rc4 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Ice concentration: SSM/I, NASATeam algorithm" href="nasateam_conc.html" />
+    <link rel="prev" title="Wave Reanalysis: ERA5" href="era5_waves.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.0rc4
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../observations.html">Observations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#ocean-observations">Ocean Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#sea-ice-observations">Sea Ice Observations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observations.html#details-on-each-data-set">Details on Each Data Set</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="hadley_center_sst.html">SST merged Hadley Center-NOAA/OI data set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aquarius_sss.html">SSS from NASA Aquarius satellite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa18_t_s.html">WOA18 Temperature and Salinity Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aviso_ssh.html">AVISO Absolute Dynamic Topography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="argo_mld.html">Argo Mixed Layer Depth (MLD) climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trenberth_mht.html">Meridional Heat Transport (MHT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adusumilli_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woce.html">WOCE sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa.html">World Ocean Atlas v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="landschuetzer-som-ffn.html">Landschuetzerv2016 SOM-FFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="era5_waves.html">Wave Reanalysis: ERA5</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
+<li class="toctree-l3"><a class="reference internal" href="icesat_thickness.html">IceSat Ice Thickness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piomass_ice_volume.html">PIOMAS Arctic Sea Ice Volume Reanalysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aniceflux.html">Sea ice production and transport: Haumann et al 2016</a></li>
+<li class="toctree-l3"><a class="reference internal" href="altiberg.html">Iceberg Concentration: Altiberg</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
+      <li class="breadcrumb-item active">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/obs/sscci_waves.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="wave-satelite-altimeter-observations-esa-sea-state-climate-change-initiative">
+<span id="sscci-waves"></span><h1>Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative<a class="headerlink" href="#wave-satelite-altimeter-observations-esa-sea-state-climate-change-initiative" title="Permalink to this heading">¶</a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<p>The ESA Sea State Climate Change Initiative (CCI) project has produced global merged multi-sensor
+time-series of monthly gridded satellite altimeter significant wave height (referred to as Level 4 (L4) data)
+with a particular focus for use in climate studies.</p>
+<p>This dataset contains the Version 1.1 Remote Sensing Sea Surface Height product, gridded over a global
+regular cylindrical projection (1°x1° resolution), averaging valid and good measurements from all
+available altimeters on a monthly basis (using the L2P products also available).
+These L4 products are meant for statistics and visualization.</p>
+<p>This first version of the Sea State CCI products is inherited from the GlobWave project,
+building on experience and existing outputs. It extends and improves the GlobWave products,
+which were a post-processing over existing L2 altimeter agency products with additional filtering,
+corrections and variables. A major improvement consists in a new denoised sea surface height
+variable using Empirical Mode Decomposition, which was used as input to these monthly statistical fields.</p>
+<p>The altimeter data used in the Sea State CCI dataset v1.1 come from multiple satellite missions
+spanning from 1991 to 2018 (ERS-1, ERS-2, Topex, Envisat, GFO, CryoSat-2, Jason-1, Jason-2, Jason-3, SARAL).
+Many altimeters are bi-frequency (Ku-C or Ku-S) and only measurements in Ku band were used,
+for consistency reasons, being available on each altimeter but SARAL (Ka band).</p>
+</section>
+<section id="source">
+<h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="http://dx.doi.org/10.5285/47140d618dcc40309e1edbca7e773478">CEDA Archive</a></p></li>
+</ul>
+</section>
+<section id="release-policy">
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
+<p>Public data: access to these data is available to both registered and non-registered users.
+Use of these data is covered by the following <a class="reference external" href="https://artefacts.ceda.ac.uk/licences/specific_licences/esacci_sea_state_terms_and_conditions.pdf">licence</a>.
+When using these data you must cite them correctly using the citation given on the CEDA Data Catalogue record.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://essd.copernicus.org/articles/12/1929/2020/">Dodet et al. 2020</a></p></li>
+</ul>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SSCCI/obs.bib">bibtex file</a></p>
+</section>
+<section id="mpas-analysis-tasks">
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../tasks/climatologyMapWaves.html#task-climatologymapwaves"><span class="std std-ref">climatologyMapWaves</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="era5_waves.html" class="btn btn-neutral float-left" title="Wave Reanalysis: ERA5" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nasateam_conc.html" class="btn btn-neutral float-right" title="Ice concentration: SSM/I, NASATeam algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
