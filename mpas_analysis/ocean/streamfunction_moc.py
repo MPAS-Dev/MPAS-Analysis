@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 
 import xarray as xr
@@ -25,7 +25,7 @@ from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_files_year_month, get_region_mask
 
-from mpas_analysis.shared.io import open_mpas_dataset\
+from mpas_analysis.shared.io import open_mpas_dataset
 
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
@@ -183,13 +183,13 @@ class ComputeMOCMasksSubtask(ComputeRegionMasksSubtask):
         # -------
         # Xylar Asay-Davis
 
+        if os.path.exists(self.maskAndTransectFileName):
+            return
+
         # call ComputeRegionMasksSubtask.run_task() first
         super().run_task()
 
         config = self.config
-
-        if os.path.exists(self.maskAndTransectFileName):
-            return
 
         dsMesh = xr.open_dataset(self.obsFileName)
         dsMask = xr.open_dataset(self.maskFileName)
@@ -1660,7 +1660,7 @@ def _compute_transport(maxEdgesInTransect, transectEdgeGlobalIDs,
             transectEdgeMaskSigns[iEdge, np.newaxis] * \
             dvEdge[iEdge, np.newaxis] * \
             layerThicknessEdge[np.newaxis, :]
-    transportZ = transportZEdge.sum(axis=1)
+    transportZ = np.nansum(transportZEdge, axis=1)
     return transportZ
 
 
@@ -1676,7 +1676,7 @@ def _compute_moc(latBins, nz, latCell, regionCellMask, transportZ,
             regionCellMask == 1, latCell >= latBins[iLat - 1]),
             latCell < latBins[iLat])
         mocTop[iLat, :] = mocTop[iLat - 1, :] + \
-            velArea[indlat, :].sum(axis=0)
+            np.nansum(velArea[indlat, :], axis=0)
     # convert m^3/s to Sverdrup
     mocTop = mocTop * m3ps_to_Sv
     mocTop = mocTop.T

@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Functions for creating climatologies from monthly time series data
 """
@@ -20,6 +20,7 @@ import os
 import numpy
 from tempfile import TemporaryDirectory
 
+from mpas_tools.io import write_netcdf
 from pyremap import Remapper, LatLonGridDescriptor, ProjectionGridDescriptor
 
 from mpas_analysis.shared.constants import constants
@@ -28,7 +29,7 @@ from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, fingerprint_generator
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor, known_comparison_grids
@@ -382,7 +383,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
             remappedClimatology = remapper.remap(climatologyDataSet,
                                                  renormalizationThreshold)
-            write_netcdf(remappedClimatology, remappedFileName)
+            write_netcdf_with_fill(remappedClimatology, remappedFileName)
     return remappedClimatology
 
 
@@ -795,7 +796,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
         climatology.attrs['totalMonths'] = monthCount
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        write_netcdf(climatology, outputFileClimo)
+        write_netcdf_with_fill(climatology, outputFileClimo)
         climatology.close()
 
 
@@ -871,7 +872,7 @@ def _cache_aggregated_climatology(startYearClimo, endYearClimo, cachePrefix,
         climatology.attrs['totalMonths'] = totalMonths
         climatology.attrs['fingerprintClimo'] = fingerprint_generator()
 
-        write_netcdf(climatology, outputFileClimo)
+        write_netcdf_with_fill(climatology, outputFileClimo)
 
     return climatology
 

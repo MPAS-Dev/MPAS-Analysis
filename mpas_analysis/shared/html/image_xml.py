@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import os
 import sys
@@ -211,7 +211,7 @@ def _generate_thumbnails(imageFileName, directory):
     # first, make a thumbnail with the same aspect ratio
     factor = image.size[1] / float(thumbnailHeight)
     thumbnailSize = [int(dim / factor + 0.5) for dim in image.size]
-    thumbnail = image.resize(thumbnailSize, Image.ANTIALIAS)
+    thumbnail = image.resize(thumbnailSize, Image.LANCZOS)
     thumbnail.save('{}/{}'.format(thumbnailDir, imageFileName))
 
     # second, make a thumbnail with a fixed size
@@ -220,7 +220,7 @@ def _generate_thumbnails(imageFileName, directory):
 
     factor = min(widthFactor, heightFactor)
     size = [int(dim / factor + 0.5) for dim in image.size]
-    thumbnail = image.resize(size, Image.ANTIALIAS)
+    thumbnail = image.resize(size, Image.LANCZOS)
 
     if widthFactor <= heightFactor:
         # crop out the top of the thumbnail

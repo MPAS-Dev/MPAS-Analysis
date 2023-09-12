@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import xarray as xr
 import numpy as np
@@ -16,7 +16,7 @@ import os
 from mpas_analysis.shared.plot import plot_vertical_section, plot_1D, savefig
 
 from mpas_analysis.shared.io.utility import make_directories, build_obs_path
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
@@ -264,7 +264,7 @@ class MeridionalHeatTransport(AnalysisTask):
                 annualClimatology['meridionalHeatTransportLatZ'] /= \
                     refLayerThickness
 
-            write_netcdf(annualClimatology, outFileName)
+            write_netcdf_with_fill(annualClimatology, outFileName)
 
         # **** Plot MHT ****
         maxTitleLength = 70

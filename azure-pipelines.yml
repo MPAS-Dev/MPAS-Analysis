@@ -2,7 +2,7 @@
 trigger:
   branches:
     include:
-    - master
+    - main
     - develop
   tags:
     include:
@@ -11,7 +11,7 @@ trigger:
 pr:
   branches:
     include:
-    - master
+    - main
     - develop
 
 jobs:
@@ -37,7 +37,11 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda install --yes "conda<22.11.0" conda-build mamba boa
+      conda update --yes --all
+      conda install --yes mamba
+      # workaround based on recent failures
+      rm /usr/share/miniconda/pkgs/cache/*.json
+      mamba install --yes conda-build boa
     displayName: Update conda base environment
 
   - bash: |
@@ -70,7 +74,7 @@ jobs:
       conda activate
       mamba create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
-          tabulate m2r2 "mistune<2"
+          tabulate "m2r2>=0.3.3" "mistune<2"
     condition: eq(variables['python.version'], '3.10')
     displayName: Create Anaconda docs environment
 
@@ -93,7 +97,7 @@ jobs:
       if [[ "$(Build.SourceBranch)" == "refs/heads/develop" ]]; then
         export DOCS_VERSION="latest"
         deploy=True
-      elif [[ "$(Build.SourceBranch)" == "refs/heads/master" ]]; then
+      elif [[ "$(Build.SourceBranch)" == "refs/heads/main" ]]; then
         export DOCS_VERSION="stable"
         deploy=True
       elif [[ "$(Build.SourceBranch)" == refs/tags/* ]]; then
@@ -141,7 +145,7 @@ jobs:
     displayName: build and deploy docs
 
 - job:
-  displayName: xarray-master
+  displayName: xarray-main
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
@@ -158,7 +162,11 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda install --yes python=$PYTHON_VERSION "conda<22.11.0" conda-build mamba boa
+      conda update --yes --all
+      conda install --yes mamba
+      # workaround based on recent failures
+      rm /usr/share/miniconda/pkgs/cache/*.json
+      mamba install --yes conda-build boa
     displayName: Update conda base environment
 
   - bash: |
@@ -179,56 +187,6 @@ jobs:
       conda activate mpas
       pip install git+https://github.com/pydata/xarray.git
 
-    displayName: Create Anaconda mpas environment
-
-  - bash: |
-      set -e
-      eval "$(conda shell.bash hook)"
-      conda activate mpas
-      pytest --pyargs mpas_analysis
-    displayName: pytest
-
-- job:
-  displayName: osx
-  pool:
-    vmImage: 'macOS-latest'
-  strategy:
-    matrix:
-      Python39:
-        python.version: '3.9'
-      Python310:
-        python.version: '3.10'
-      Python311:
-        python.version: '3.11'
-
-  steps:
-  - bash: echo "##vso[task.prependpath]$CONDA/bin"
-    displayName: Add conda to PATH
-
-  - bash: sudo chown -R 501:20 /usr/local/miniconda/pkgs
-    displayName: Fix permissions
-
-  - bash: |
-      set -e
-      eval "$(conda shell.bash hook)"
-      conda config --add channels conda-forge
-      conda config --set channel_priority strict
-      conda install --yes "conda<22.11.0" conda-build mamba boa
-    displayName: Update conda base environment
-
-  - bash: |
-      set -e
-      eval "$(conda shell.bash hook)"
-      conda activate
-      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
-    displayName: Build MPAS-Analysis
-
-  - bash: |
-      set -e
-      eval "$(conda shell.bash hook)"
-      conda activate
-      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
-          python=$PYTHON_VERSION mpas-analysis pytest
     displayName: Create Anaconda mpas environment
 
   - bash: |

@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 import os
 import xarray
 import numpy
@@ -15,6 +15,7 @@ import csv
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -23,7 +24,7 @@ from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
     add_inset
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, build_obs_path, decode_strings
@@ -57,7 +58,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -169,8 +170,7 @@ class ComputeMeltSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='computeMeltRates_{:04d}-{:04d}'.format(startYear,
-                                                                endYear))
+            subtaskName=f'computeMeltRates_{startYear:04d}-{endYear:04d}')
 
         self.mpasTimeSeriesTask = mpasTimeSeriesTask
         self.run_after(mpasTimeSeriesTask)
@@ -182,8 +182,8 @@ class ComputeMeltSubtask(AnalysisTask):
         self.restartFileName = None
         self.startYear = startYear
         self.endYear = endYear
-        self.startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
-        self.endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
+        self.startDate = f'{self.startYear:04d}-01-01_00:00:00'
+        self.endDate = f'{self.endYear:04d}-12-31_23:59:59'
         self.variableList = \
             ['timeMonthly_avg_landIceFreshwaterFlux']
 
@@ -215,11 +215,11 @@ class ComputeMeltSubtask(AnalysisTask):
             raiseException=True)
 
         landIceFluxMode = self.namelist.get('config_land_ice_flux_mode')
-        if landIceFluxMode not in ['standalone', 'coupled']:
+        if landIceFluxMode not in ['data', 'standalone', 'coupled']:
             raise ValueError('*** timeSeriesAntarcticMelt requires '
                              'config_land_ice_flux_mode \n'
-                             '    to be standalone or coupled.  Otherwise, no '
-                             'melt rates are available \n'
+                             '    to be data, standalone or coupled. '
+                             '    Otherwise, no melt rates are available \n'
                              '    for plotting.')
 
         # Load mesh related variables
@@ -246,16 +246,17 @@ class ComputeMeltSubtask(AnalysisTask):
         mpasTimeSeriesTask = self.mpasTimeSeriesTask
         config = self.config
 
-        outputDirectory = '{}/iceShelfFluxes/'.format(
-            build_config_full_path(config, 'output', 'timeseriesSubdirectory'))
+        timeSeriesBase = build_config_full_path(config, 'output',
+                                                'timeseriesSubdirectory')
+        outputDirectory = f'{timeSeriesBase}/iceShelfFluxes/'
 
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
-        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
-            outputDirectory, self.startYear, self.endYear)
+        outFileName = f'{outputDirectory}/iceShelfFluxes_' \
+                      f'{self.startYear:04d}-{self.endYear:04d}.nc'
 
         # Load data:
         inputFile = mpasTimeSeriesTask.outputFile
@@ -271,14 +272,14 @@ class ComputeMeltSubtask(AnalysisTask):
                 if numpy.all(dsOut.Time.values == dsIn.Time.values):
                     return
                 else:
-                    self.logger.warning('File {} is incomplete. Deleting '
-                                        'it.'.format(outFileName))
+                    self.logger.warning(f'File {outFileName} is incomplete. '
+                                        f'Deleting it.')
                     os.remove(outFileName)
         except OSError:
             # something is potentially wrong with the file, so let's delete
             # it and try again
-            self.logger.warning('Problems reading file {}. Deleting '
-                                'it.'.format(outFileName))
+            self.logger.warning(f'Problems reading file {outFileName}. '
+                                f'Deleting it.')
             os.remove(outFileName)
 
         restartFileName = \
@@ -310,7 +311,7 @@ class ComputeMeltSubtask(AnalysisTask):
         datasets = []
         nTime = dsIn.sizes['Time']
         for tIndex in range(nTime):
-            self.logger.info('  {}/{}'.format(tIndex+1, nTime))
+            self.logger.info(f'  {tIndex + 1}/{nTime}')
 
             freshwaterFlux = \
                 dsIn.timeMonthly_avg_landIceFreshwaterFlux.isel(Time=tIndex)
@@ -320,7 +321,7 @@ class ComputeMeltSubtask(AnalysisTask):
             totalMeltFluxes = numpy.zeros((nRegions,))
 
             for regionIndex in range(nRegions):
-                self.logger.info('    {}'.format(regionNames[regionIndex]))
+                self.logger.info(f'    {regionNames[regionIndex]}')
                 cellMask = \
                     dsRegionMask.regionCellMasks.isel(nRegions=regionIndex)
 
@@ -354,7 +355,7 @@ class ComputeMeltSubtask(AnalysisTask):
         dsOut.meltRates.attrs['description'] = \
             'Melt rate averaged over each ice shelf or region'
 
-        write_netcdf(dsOut, outFileName)
+        write_netcdf_with_fill(dsOut, outFileName)
 
 
 class CombineMeltSubtask(AnalysisTask):
@@ -402,18 +403,18 @@ class CombineMeltSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        outputDirectory = '{}/iceShelfFluxes/'.format(
-            build_config_full_path(self.config, 'output',
-                                   'timeseriesSubdirectory'))
+        timeSeriesBase = build_config_full_path(self.config, 'output',
+                                                'timeseriesSubdirectory')
+        outputDirectory = f'{timeSeriesBase}/iceShelfFluxes/'
 
-        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
-            outputDirectory, self.startYears[0], self.endYears[-1])
+        outFileName = f'{outputDirectory}/iceShelfFluxes_' \
+                      f'{self.startYears[0]:04d}-{self.endYears[-1]:04d}.nc'
 
         if not os.path.exists(outFileName):
             inFileNames = []
             for startYear, endYear in zip(self.startYears, self.endYears):
-                inFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
-                    outputDirectory, startYear, endYear)
+                inFileName = f'{outputDirectory}/iceShelfFluxes_' \
+                             f'{startYear:04d}-{endYear:04d}.nc'
                 inFileNames.append(inFileName)
 
             ds = xarray.open_mfdataset(inFileNames, combine='nested',
@@ -421,7 +422,7 @@ class CombineMeltSubtask(AnalysisTask):
 
             ds.load()
 
-            write_netcdf(ds, outFileName)
+            write_netcdf_with_fill(ds, outFileName)
 
 
 class PlotMeltSubtask(AnalysisTask):
@@ -461,7 +462,7 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -474,7 +475,7 @@ class PlotMeltSubtask(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='plotMeltRates_{}'.format(iceShelf.replace(' ', '_')))
+            subtaskName=f'plotMeltRates_{iceShelf.replace(" ", "_")}')
 
         self.iceShelfMasksFile = parentTask.iceShelfMasksFile
         self.iceShelf = iceShelf
@@ -503,9 +504,9 @@ class PlotMeltSubtask(AnalysisTask):
         self.xmlFileNames = []
 
         for prefix in ['melt_flux', 'melt_rate']:
+            iceShelfSuffix = self.iceShelf.replace(" ", "_")
             self.xmlFileNames.append(
-                '{}/{}_{}.xml'.format(self.plotsDirectory, prefix,
-                                      self.iceShelf.replace(' ', '_')))
+                f'{self.plotsDirectory}/{prefix}_{iceShelfSuffix}.xml')
         return
 
     def run_task(self):
@@ -516,8 +517,8 @@ class PlotMeltSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis, Stephen Price
 
-        self.logger.info("\nPlotting Antarctic melt rate time series for "
-                         "{}...".format(self.iceShelf))
+        self.logger.info(f'\nPlotting Antarctic melt rate time series for '
+                         f'{self.iceShelf}...')
 
         self.logger.info('  Load melt rate data...')
 
@@ -542,6 +543,10 @@ class PlotMeltSubtask(AnalysisTask):
 
             refTotalMeltFlux, refMeltRates = \
                 self._load_ice_shelf_fluxes(self.controlConfig)
+        else:
+            controlRunName = None
+            refTotalMeltFlux = None
+            refMeltRates = None
 
         # Load observations from multiple files and put in dictionary based
         # on shelf key name
@@ -554,10 +559,9 @@ class PlotMeltSubtask(AnalysisTask):
 
         obsDict = {}  # dict for storing dict of obs data
         for obsName in obsFileNameDict:
-            obsFileName = '{}/{}'.format(observationsDirectory,
-                                         obsFileNameDict[obsName])
+            obsFileName = f'{observationsDirectory}/{obsFileNameDict[obsName]}'
             obsDict[obsName] = {}
-            obsFile = csv.reader(open(obsFileName, 'rU'))
+            obsFile = csv.reader(open(obsFileName, 'r'))
             next(obsFile, None)  # skip the header line
             for line in obsFile:  # some later useful values commented out
                 shelfName = line[0]
@@ -579,8 +583,21 @@ class PlotMeltSubtask(AnalysisTask):
                     'meltRate': meltRate,
                     'meltRateUncertainty': meltRateUncertainty}
                 break
+        regionGroup = 'Ice Shelves'
+        _, prefix, date = get_aggregator_by_name(regionGroup)
 
-        # If areas from obs file used need to be converted from sq km to sq m
+        obsFileName = f'{observationsDirectory}/Adusumilli/Adusumilli_2020_' \
+                      f'iceshelf_melt_rates_2010-2018_v0.20230504.' \
+                      f'{prefix}{date}.nc'
+        with xarray.open_dataset(obsFileName) as ds_adusumilli:
+            region_names = [name.values for name in ds_adusumilli.regionNames]
+            index = region_names.index(self.iceShelf)
+            ds_shelf = ds_adusumilli.isel(nRegions=index)
+            obsDict['Adusumilli et al. (2020)'] = {
+                'meltFlux': ds_shelf.totalMeltFlux.values,
+                'meltFluxUncertainty': ds_shelf.meltFluxUncertainty.values,
+                'meltRate': ds_shelf.meanMeltRate.values,
+                'meltRateUncertainty': ds_shelf.meltRateUncertainty.values}
 
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
@@ -610,22 +627,23 @@ class PlotMeltSubtask(AnalysisTask):
                     obsDict[obsName]['meltRateUncertainty'])
             else:
                 # append NaN so this particular obs won't plot
-                self.logger.warning('{} observations not available for '
-                                    '{}'.format(obsName, self.iceShelf))
+                self.logger.warning(f'{obsName} observations not available '
+                                    f'for {self.iceShelf}')
                 obsMeltFlux.append(None)
                 obsMeltFluxUnc.append(None)
                 obsMeltRate.append(None)
                 obsMeltRateUnc.append(None)
 
         title = self.iceShelf.replace('_', ' ')
+        suffix = self.iceShelf.replace(' ', '_')
 
         xLabel = 'Time (yr)'
         yLabel = 'Melt Flux (GT/yr)'
 
         timeSeries = totalMeltFlux.isel(nRegions=self.regionIndex)
 
-        filePrefix = 'melt_flux_{}'.format(self.iceShelf.replace(' ', '_'))
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        filePrefix = f'melt_flux_{suffix}'
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
 
         fields = [timeSeries]
         lineColors = [config.get('timeSeries', 'mainColor')]
@@ -685,8 +703,8 @@ class PlotMeltSubtask(AnalysisTask):
 
         savefig(outFileName, config)
 
-        caption = 'Running Mean of Total Melt Flux  under Ice ' \
-                  'Shelves in the {} Region'.format(title)
+        caption = f'Running Mean of Total Melt Flux under Ice Shelves in ' \
+                  f'the {title} Region'
         write_image_xml(
             config=config,
             filePrefix=filePrefix,
@@ -704,8 +722,8 @@ class PlotMeltSubtask(AnalysisTask):
 
         timeSeries = meltRates.isel(nRegions=self.regionIndex)
 
-        filePrefix = 'melt_rate_{}'.format(self.iceShelf.replace(' ', '_'))
-        outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+        filePrefix = f'melt_rate_{suffix}'
+        outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
 
         fields = [timeSeries]
         lineColors = [config.get('timeSeries', 'mainColor')]
@@ -750,8 +768,8 @@ class PlotMeltSubtask(AnalysisTask):
 
         savefig(outFileName, config)
 
-        caption = 'Running Mean of Area-averaged Melt Rate under Ice ' \
-                  'Shelves in the {} Region'.format(title)
+        caption = f'Running Mean of Area-averaged Melt Rate under Ice ' \
+                  f'Shelves in the {title} Region'
         write_image_xml(
             config=config,
             filePrefix=filePrefix,
@@ -764,7 +782,8 @@ class PlotMeltSubtask(AnalysisTask):
             imageDescription=caption,
             imageCaption=caption)
 
-    def _load_ice_shelf_fluxes(self, config):
+    @staticmethod
+    def _load_ice_shelf_fluxes(config):
         """
         Reads melt flux time series and computes regional total melt flux and
         mean melt rate.
@@ -773,14 +792,16 @@ class PlotMeltSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        outputDirectory = '{}/iceShelfFluxes/'.format(
-            build_config_full_path(config, 'output', 'timeseriesSubdirectory'))
+        timeSeriesBase = build_config_full_path(config, 'output',
+                                                'timeseriesSubdirectory')
+
+        outputDirectory = f'{timeSeriesBase}/iceShelfFluxes/'
 
         startYear = config.getint('timeSeries', 'startYear')
         endYear = config.getint('timeSeries', 'endYear')
 
-        outFileName = '{}/iceShelfFluxes_{:04d}-{:04d}.nc'.format(
-            outputDirectory, startYear, endYear)
+        outFileName = f'{outputDirectory}/iceShelfFluxes_' \
+                      f'{startYear:04d}-{endYear:04d}.nc'
 
         dsOut = xarray.open_dataset(outFileName)
         return dsOut.totalMeltFlux, dsOut.meltRates

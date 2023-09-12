@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 
 import xarray as xr
@@ -21,7 +21,7 @@ from geometric_features import FeatureCollection, read_feature_collection
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
@@ -419,7 +419,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         dsOut.coords['z'] = (('nVertLevels',), z)
         dsOut['z'].attrs['units'] = 'meters'
 
-        write_netcdf(dsOut, outputFileName)
+        write_netcdf_with_fill(dsOut, outputFileName)
 
     @staticmethod
     def _masked_area_sum(cellMasks, areaCell, var):
@@ -529,7 +529,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
             ds['totalArea'] = ds['totalArea'].isel(Time=0)
 
-            write_netcdf(ds, outputFileName)
+            write_netcdf_with_fill(ds, outputFileName)
 
         regionNames = ds['regionNames']
         ds = ds.drop_vars('regionNames')
@@ -567,7 +567,7 @@ class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
                     dsSeason['{}_mean'.format(prefix)] = mean
 
                 dsSeason.coords['regionNames'] = regionNames
-                write_netcdf(dsSeason, outputFileName)
+                write_netcdf_with_fill(dsSeason, outputFileName)
 
 
 class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):

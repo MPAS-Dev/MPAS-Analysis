@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 from setuptools import setup, find_packages
 import os
@@ -22,18 +22,18 @@ install_requires = \
      'dask',
      'gsw',
      'lxml',
-     'matplotlib >=3.0.2',
+     'matplotlib >=3.6.0,!=3.7.2',
      'netcdf4',
      'numpy',
      'pandas',
-     'pillow',
+     'pillow >=10.0.0,<11.0.0',
      'progressbar2',
      'pyproj',
      'python-dateutil',
      'requests',
      'scipy',
      'setuptools',
-     'shapely',
+     'shapely>=2.0,<3.0',
      'six',
      'xarray>=0.14.1']
 

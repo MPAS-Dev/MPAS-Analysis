@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 import os
 import xarray
 import numpy
@@ -28,7 +28,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.plot import savefig, add_inset
 
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import decode_strings, \
     build_obs_path, build_config_full_path, make_directories
@@ -387,7 +387,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing temp file {}...'.format(temp_file_name))
-            write_netcdf(ds, temp_file_name)
+            write_netcdf_with_fill(ds, temp_file_name)
 
             chunk = {obsDict['latVar']: 400,
                      obsDict['lonVar']: 400}
@@ -414,7 +414,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing temp file {}...'.format(temp_file_name))
-            write_netcdf(ds, temp_file_name)
+            write_netcdf_with_fill(ds, temp_file_name)
             self.logger.info('  Reading back from {}...'.format(temp_file_name))
             ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
@@ -434,7 +434,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             self.logger.info('  computing the dataset')
             ds.compute()
             self.logger.info('  writing {}...'.format(self.fileName))
-            write_netcdf(ds, self.fileName)
+            write_netcdf_with_fill(ds, self.fileName)
             for file_name in temp_files:
                 self.logger.info('  Deleting temp file {}'.format(file_name))
                 os.remove(file_name)
@@ -605,7 +605,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 raise IOError('No MPAS-O restart file found: need at least one'
                               ' restart file to plot T-S diagrams')
             dsRestart = xarray.open_dataset(restartFileName)
-            dsRestart = dsRestart.isel(Time=0).chunk(chunk)
+            dsRestart = dsRestart.isel(Time=0)
+            if 'landIceMask' in dsRestart:
+                landIceMask = dsRestart.landIceMask
+            else:
+                landIceMask = None
+            dsRestart = dsRestart.chunk(chunk)
 
             regionMaskFileName = self.mpasMasksSubtask.maskFileName
 
@@ -614,13 +619,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
 
-            dsMask = dsRegionMask.isel(nRegions=regionIndex).chunk(chunk)
+            dsMask = dsRegionMask.isel(nRegions=regionIndex)
 
             cellMask = dsMask.regionCellMasks == 1
-            if 'landIceMask' in dsRestart:
+            if landIceMask is not None:
                 # only the region outside of ice-shelf cavities
-                cellMask = numpy.logical_and(cellMask,
-                                             dsRestart.landIceMask == 0)
+                cellMask = numpy.logical_and(cellMask, landIceMask == 0)
 
             if config.has_option(sectionName, 'zmin'):
                 zmin = config.getfloat(sectionName, 'zmin')
@@ -628,8 +632,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 if 'zminRegions' in dsMask:
                     zmin = dsMask.zminRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmin = dsMask.zmin.values
 
             if config.has_option(sectionName, 'zmax'):
@@ -638,8 +640,6 @@ class ComputeRegionTSSubtask(AnalysisTask):
                 if 'zmaxRegions' in dsMask:
                     zmax = dsMask.zmaxRegions.values
                 else:
-                    # the old naming convention, used in some pre-generated
-                    # mask files
                     zmax = dsMask.zmax.values
 
             inFileName = get_unmasked_mpas_climatology_file_name(
@@ -688,7 +688,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['z'] = ('nPoints', zMid)
             dsOut['volume'] = ('nPoints', volume)
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
-            write_netcdf(dsOut, outFileName)
+            write_netcdf_with_fill(dsOut, outFileName)
 
         return zmin, zmax
 
@@ -714,12 +714,12 @@ class ComputeRegionTSSubtask(AnalysisTask):
             regionMaskFileName = obsDict['maskTask'].maskFileName
 
             dsRegionMask = \
-                xarray.open_dataset(regionMaskFileName).chunk(chunk).stack(
+                xarray.open_dataset(regionMaskFileName).stack(
                         nCells=(obsDict['latVar'], obsDict['lonVar']))
             dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
             if 'nCells' in dsRegionMask.data_vars:
-                dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
+                dsRegionMask = dsRegionMask.drop_vars(['nCells'])
 
             maskRegionNames = decode_strings(dsRegionMask.regionNames)
             regionIndex = maskRegionNames.index(self.regionName)
@@ -750,7 +750,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = ds.stack(nCells=(obsDict['latVar'], obsDict['lonVar']))
             ds = ds.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
-            if 'nCells' in dsRegionMask.data_vars:
+            if 'nCells' in ds.data_vars:
                ds = ds.drop_vars(['nCells'])
 
             ds = ds.where(cellMask, drop=True)
@@ -780,7 +780,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             dsOut['z'] = ('nPoints', z)
             dsOut['volume'] = ('nPoints', volume)
             dsOut['zbounds'] = ('nBounds', [zmin, zmax])
-            write_netcdf(dsOut, outFileName)
+            write_netcdf_with_fill(dsOut, outFileName)
 
 
 class PlotRegionTSDiagramSubtask(AnalysisTask):

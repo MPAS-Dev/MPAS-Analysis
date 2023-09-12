@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 """
 Runs MPAS-Analysis via a configuration file (e.g. `analysis.cfg`)
@@ -265,6 +265,11 @@ def build_analysis_list(config, controlConfig):
     analyses.append(sea_ice.ClimatologyMapIcebergConc(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
+
+    # Wave Analyses
+    analyses.append(ocean.ClimatologyMapWaves(
+        config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
+        controlConfig))
 
     check_for_duplicate_names(analyses)
 

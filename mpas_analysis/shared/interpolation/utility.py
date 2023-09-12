@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 import numpy
 import xarray
 
@@ -19,7 +19,7 @@ def add_periodic_lon(ds, lonDim, degrees=True):
     in the lon dimension
     """
 
-    lonRange = ds.lon[-1].values - ds.lon[0].values
+    lonRange = ds[lonDim][-1].values - ds[lonDim][0].values
     if degrees:
         period = 360.
     else:

@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import xarray
 import os
@@ -18,6 +18,8 @@ import multiprocessing
 from multiprocessing.pool import ThreadPool
 import glob
 
+from mpas_tools.io import write_netcdf
+
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.climatology.climatology import \
@@ -27,8 +29,6 @@ from mpas_analysis.shared.climatology.climatology import \
 
 from mpas_analysis.shared.io.utility import make_directories, \
     get_files_year_month
-
-from mpas_analysis.shared.io import write_netcdf
 
 from mpas_analysis.shared.constants import constants
 
@@ -689,7 +689,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
                                        combine='nested',
                                        concat_dim='Time',
                                        chunks={'nCells': chunkSize},
-                                       decode_cf=False, decode_times=False,
+                                       decode_times=False,
                                        preprocess=_preprocess) as ds:
 
                 ds.coords['year'] = ('Time', years)
@@ -717,7 +717,7 @@ class MpasClimatologySeasonSubtask(AnalysisTask):
             with xarray.open_mfdataset(fileNames, concat_dim='weight',
                                        combine='nested',
                                        chunks={'nCells': chunkSize},
-                                       decode_cf=False, decode_times=False,
+                                       decode_times=False,
                                        preprocess=_preprocess) as ds:
                 ds.coords['weight'] = ('weight', weights)
                 dsNew = ((ds.weight * ds).sum(dim='weight') /

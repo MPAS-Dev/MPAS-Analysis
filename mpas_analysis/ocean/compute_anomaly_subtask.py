@@ -8,14 +8,14 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 
 import os
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.timekeeping.utility import \
     get_simulation_start_time, string_to_datetime
@@ -192,4 +192,4 @@ class ComputeAnomalySubtask(AnalysisTask):
             outFileName = '{}/{}'.format(baseDirectory,
                                          outFileName)
 
-        write_netcdf(ds, outFileName)
+        write_netcdf_with_fill(ds, outFileName)

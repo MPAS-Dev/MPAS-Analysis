@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import os
 import xarray as xr
@@ -21,7 +21,7 @@ from mpas_analysis.shared.analysis_task import AnalysisTask
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, get_region_mask
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.regions import get_feature_list
 
@@ -47,7 +47,7 @@ def compute_mpas_transect_masks(geojsonFileName, meshFileName, maskFileName,
         dsMask = mpas_tools.conversion.mask(dsMesh=dsMesh, fcMask=fcMask,
                                             logger=logger, dir=dir)
 
-        write_netcdf(dsMask, maskFileName)
+        write_netcdf_with_fill(dsMask, maskFileName)
     else:
         args = ['compute_mpas_transect_masks',
                 '-m', meshFileName,

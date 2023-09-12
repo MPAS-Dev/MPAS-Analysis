@@ -18,9 +18,9 @@ matrix:
     - name: "python-3.8"
       python: 3.8
       env: CONDA_ENV=py38
-    - name: "python-3.7-xarray-master"
+    - name: "python-3.7-xarray-main"
       python: 3.7
-      env: CONDA_ENV=py37-xarray-master
+      env: CONDA_ENV=py37-xarray-main
 
 env:
   global:

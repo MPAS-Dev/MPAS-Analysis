@@ -33,13 +33,13 @@ first impression of how our simulation is doing.
 The primary output from MPAS-Ocean and MPAS-Seaice are monthly and daily
 averages of a large number of data fields.  Here are links to the list of:
 
-* `MPAS-Ocean monthly fields <https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-ocean/cime_config/buildnml#L1082-L1290>`_
+* `MPAS-Ocean monthly fields <https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-ocean/cime_config/buildnml#L1082-L1290>`_
 
-* `MPAS-Ocean daily fields <https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-ocean/cime_config/buildnml#L1028-L1062>`_
+* `MPAS-Ocean daily fields <https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-ocean/cime_config/buildnml#L1028-L1062>`_
 
-* `MPAS-Seaice monthly fields <https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-seaice/cime_config/buildnml#L726-L823>`_
+* `MPAS-Seaice monthly fields <https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-seaice/cime_config/buildnml#L726-L823>`_
 
-* `MPAS-Seaice daily fields <https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-seaice/cime_config/buildnml#L695-L700>`_
+* `MPAS-Seaice daily fields <https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-seaice/cime_config/buildnml#L695-L700>`_
 
 The components also produce a smaller amount of more specialized output, such
 as monthly maximum/minimum values.
@@ -871,7 +871,7 @@ here is the full analysis task as described in this tutorial:
     #
     # Additional copyright and license information can be found in the LICENSE file
     # distributed with this code, or at
-    # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+    # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
     import xarray as xr
     import numpy as np
 

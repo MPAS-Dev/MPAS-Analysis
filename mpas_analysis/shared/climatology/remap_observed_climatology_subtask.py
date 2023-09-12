@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 import os
 import os.path
 import xarray as xr
@@ -18,7 +18,7 @@ from mpas_analysis.shared.constants import constants
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories
-from mpas_analysis.shared.io import write_netcdf
+from mpas_analysis.shared.io import write_netcdf_with_fill
 
 from mpas_analysis.shared.climatology.climatology import get_remapper, \
     remap_and_write_climatology, compute_climatology
@@ -63,7 +63,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         Parameters
         ----------
         parentTask :  ``AnalysisTask``
-            The parent (master) task for this subtask
+            The parent (main) task for this subtask
 
         seasons : list of str
            A list of seasons (keys in ``constants.monthDictionary``) over
@@ -126,7 +126,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         obsFileName = self.get_file_name(stage='original')
         if not os.path.exists(obsFileName):
             ds = self.build_observational_dataset(self.fileName)
-            write_netcdf(ds, obsFileName)
+            write_netcdf_with_fill(ds, obsFileName)
 
     def run_task(self):
         """
@@ -171,7 +171,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
                         # climatology so assume this already is one
                         seasonalClimatology = ds
 
-                    write_netcdf(seasonalClimatology, climatologyFileName)
+                    write_netcdf_with_fill(seasonalClimatology, climatologyFileName)
 
                     remapper = self.remappers[comparisonGridName]
 

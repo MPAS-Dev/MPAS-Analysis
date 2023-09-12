@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 This is an example analysis task to be used as a template for new tasks.
 It should be copied into one of the component folders (`ocean`, `sea_ice`,
@@ -275,7 +275,7 @@ class MyTask(AnalysisTask):
 
         # Each analysis task generates one or more plots and writes out an
         # associated xml file for each plot.  Once all tasks have finished,
-        # the "master" task will run through all the tasks and look at
+        # the "main" task will run through all the tasks and look at
         # xmlFileNames to find out what XML files were written out.  Each task
         # should provide a list of files in the order that the corresponding
         # images should appear on the webpage.

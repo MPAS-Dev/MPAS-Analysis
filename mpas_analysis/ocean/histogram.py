@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 import os
 import xarray
@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 
 from mpas_analysis.shared import AnalysisTask
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     build_obs_path, make_directories, decode_strings
 from mpas_analysis.shared.climatology import compute_climatology, \
@@ -256,7 +256,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         # referenced by future analysis (i.e., as a control run)
         new_region_mask_filename = \
             f'{base_directory}/{self.filePrefix}_{self.regionName}_mask.nc'
-        write_netcdf(ds_mask, new_region_mask_filename)
+        write_netcdf_with_fill(ds_mask, new_region_mask_filename)
 
         if self.weightList is not None:
             ds_weights = xarray.Dataset()
@@ -273,7 +273,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
 
         weights_filename = \
             f'{base_directory}/{self.filePrefix}_{self.regionName}_weights.nc'
-        write_netcdf(ds_weights, weights_filename)
+        write_netcdf_with_fill(ds_weights, weights_filename)
 
 
 class PlotRegionHistogramSubtask(AnalysisTask):

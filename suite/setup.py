@@ -50,26 +50,22 @@ def main():
     web_section = machine_info.config['web_portal']
     web_base = os.path.join(web_section['base_path'], web_section['username'])
     html_base = f'{web_base}/analysis_testing'
+    if args.run == 'QU480':
+        simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
+        mesh = 'QU480'
+    else:
+        simulation = '20230406.GMPAS-IAF-ISMF.T62_oQU240wLI.chrysalis'
+        mesh = 'oQU240wLI'
     if machine in ['anvil', 'chrysalis']:
-        input_base = '/lcrc/group/e3sm/ac.xylar/acme_scratch/anvil'
+        input_base = '/lcrc/group/e3sm/public_html/diagnostics/mpas_analysis/example_simulations'
         output_base = f'/lcrc/group/e3sm/{username}/analysis_testing'
-        if args.run == 'QU480':
-            simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
-            mesh = 'QU480'
-        else:
-            simulation = '20201025.GMPAS-IAF.T62_oQU240wLI.anvil'
-            mesh = 'oQU240wLI'
-    elif machine == 'cori-haswell':
-        input_base = '/global/cfs/cdirs/e3sm/xylar'
-        scratch = os.environ['CSCRATCH']
+    elif machine == 'pm-cpu':
+        input_base = '/global/cfs/cdirs/e3sm/diagnostics/mpas_analysis/example_simulations'
+        scratch = os.environ['SCRATCH']
         output_base = f'{scratch}/analysis_testing'
-        simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
-        mesh = 'QU480'
     elif machine == 'compy':
-        input_base = '/compyfs/asay932/analysis_testing/test_output'
+        input_base = '/compyfs/diagnostics/mpas_analysis/example_simulations'
         output_base = f'/compyfs/{username}/analysis_testing'
-        simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
-        mesh = 'QU480'
     else:
         raise ValueError(f'Machine {machine} is not set up for the test suite '
                          f'yet.')
@@ -100,11 +96,12 @@ def main():
 
     if mesh == 'QU480':
         generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke',\n" \
-                   "            'no_landIceCavities']"
+                   "            'no_landIceCavities', 'no_waves']"
         end_year = '5'
     elif mesh == 'oQU240wLI':
-        generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke']"
-        end_year = '8'
+        generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', " \
+                   "'no_waves']"
+        end_year = '10'
     else:
         raise ValueError(f'Unexpected mesh: {mesh}')
 
@@ -134,7 +131,7 @@ def main():
     config = os.path.join(suite_path, f'{args.run}.cfg')
     config_from_job = os.path.join('..', f'{args.run}.cfg')
 
-    if args.run == 'ctrl':
+    if args.run in ['main', 'ctrl']:
         out_subdir = os.path.join(machine, args.branch, f'main_py{args.python}')
     else:
         out_subdir = os.path.join(machine, args.branch, args.run)
@@ -151,13 +148,13 @@ def main():
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
-    if args.run in ['main_vs_ctrl', 'no_ncclimo', 'wc_defaults']:
+    if args.run in ['main_vs_ctrl', 'moc_am', 'no_ncclimo', 'wc_defaults']:
         # add the run-specific config second
         config_from_job = ' '.join(
             [config_from_job,
              os.path.join('..', '..', 'suite', f'{args.run}.cfg')])
 
-    if args.run != 'ctrl':
+    if args.run not in ['main', 'ctrl']:
         try:
             os.makedirs(os.path.join(suite_path, args.run))
         except FileExistsError:

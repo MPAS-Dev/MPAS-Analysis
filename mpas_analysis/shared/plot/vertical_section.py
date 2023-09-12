@@ -7,7 +7,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Funcitons for plotting vertical sections, both alone and as comparisons between
 runs or with observations
@@ -875,11 +875,11 @@ def plot_vertical_section(
         if movingAveragePoints is not None and movingAveragePoints != 1:
             dim = field.dims[0]
             field = field.rolling(dim={dim: movingAveragePoints},
-                                  center=True).mean().dropna(dim)
+                                  center=True).mean().dropna(dim, how='all')
             x = x.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim)
+                          center=True).mean().dropna(dim, how='all')
             y = y.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim)
+                          center=True).mean().dropna(dim, how='all')
 
         mask = field.notnull()
         maskedTriangulation, unmaskedTriangulation = _get_triangulation(

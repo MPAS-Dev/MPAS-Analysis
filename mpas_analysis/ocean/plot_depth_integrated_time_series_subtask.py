@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 
 import os
@@ -18,7 +18,7 @@ from mpas_analysis.shared import AnalysisTask
 
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig
 
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.timekeeping.utility import date_to_days, \
     days_to_datetime
@@ -378,7 +378,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             # write out the data set and read it back as a single-file data set
             # (without dask)
             dsPreprocessed = dsPreprocessed.drop_vars('xtime')
-            write_netcdf(dsPreprocessed, self.preprocessedFileName)
+            write_netcdf_with_fill(dsPreprocessed, self.preprocessedFileName)
             dsPreprocessed = xarray.open_dataset(self.preprocessedFileName)
 
         if preprocessedReferenceRunName != 'None':

@@ -8,7 +8,7 @@
 #
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
-# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE
+# https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 #
 
 
@@ -35,7 +35,7 @@ def compute_moving_avg(ds, movingAveragePoints=12):
     # Xylar Asay-Davis
 
     ds = ds.rolling(Time=movingAveragePoints,
-                    center=True).mean().dropna('Time')
+                    center=True).mean().dropna(dim='Time', how='all')
 
     return ds
 
