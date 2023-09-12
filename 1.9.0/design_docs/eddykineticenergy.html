@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Eddy Kinetic Energy Climatology Mapping &mdash; MPAS-Analysis 1.9.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/documentation_options.js?v=c4cb232b"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="User: Getting Started" href="../tutorials/getting_started.html" />
+    <link rel="prev" title="Prerequisite Tasks and Subtasks" href="prerequisite_tasks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis_task_template.html">Analysis Task Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Eddy Kinetic Energy Climatology Mapping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#summary">Summary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#physics">Physics</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithms">Algorithms</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#design-and-implementation">Design and Implementation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bibliography">Bibliography</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Design Documents</a></li>
+      <li class="breadcrumb-item active">Eddy Kinetic Energy Climatology Mapping</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/design_docs/eddykineticenergy.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eddy-kinetic-energy-climatology-mapping">
+<h1>Eddy Kinetic Energy Climatology Mapping<a class="headerlink" href="#eddy-kinetic-energy-climatology-mapping" title="Link to this heading">¶</a></h1>
+<h2>
+Kevin Rosa <br>
+date: 2018/06/18 <br>
+</h2><section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">¶</a></h2>
+<p>The document describes a new feature which will be added to the MPAS-Analysis
+tools package: visualization of surface Eddy Kinetic Energy (EKE).
+The EKE climatology map will function very similarly to other climatological fields (e.g. SSH, SST, etc.).
+The output file will contain three images: the modeled EKE climatology, the observed EKE climatology, and the difference.
+Plotting EKE is particularly important for MPAS-O because one can configure meshes with eddy-permitting regions and would then want to compare the EKE in these regions against observations.</p>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Model output must contain the meridional and zonal components of both <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_velocity*</span></code> and <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_velocity*Squared</span></code>.</p></li>
+<li><p>User can download the EKE observations data, via 1 of 2 methods:</p>
+<ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">./download_analysis_data.py</span> <span class="pre">-o</span> <span class="pre">/path/to/output/directory</span></code> if they wish to download all observations data.
+<em>or</em></p></li>
+<li><p>Download only the EKE dataset at <a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc">https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc</a></p></li>
+</ul>
+</li>
+<li><p>In config file…</p>
+<ol class="arabic simple">
+<li><p>Specify <code class="docutils literal notranslate"><span class="pre">ekeSubdirectory</span></code> with location of EKE observations file.</p></li>
+<li><p>Under <code class="docutils literal notranslate"><span class="pre">[climatologyMapEKE]</span></code>, leave <code class="docutils literal notranslate"><span class="pre">seasons</span> <span class="pre">=</span>&#160; <span class="pre">['ANN']</span></code>.  <em>Only annual observations are available currently.</em></p></li>
+<li><p>When setting <code class="docutils literal notranslate"><span class="pre">generate</span></code>, task <code class="docutils literal notranslate"><span class="pre">climatologyMapEKE</span></code> has tags: <code class="docutils literal notranslate"><span class="pre">climatology,</span> <span class="pre">horizontalMap,</span> <span class="pre">eke</span></code></p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="physics">
+<h2>Physics<a class="headerlink" href="#physics" title="Link to this heading">¶</a></h2>
+<p>In the ocean, it is convenient to separate the the horizontal current, <em>u</em>,
+into its mean and eddy components:
+(1) <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?u=\overline{u}+u'" title="u = ubar + uprime" /></a></span></p>
+<p>This approach separates the total kinetic energy into mean kinetic energy
+(MKE) and eddy kinetic energy (EKE).</p>
+<p>The EKE over much of the ocean is at least an order of magnitude greater than
+the MKE (Wytrki, 1976).
+This eddy energy is important for transporting momentum, heat, mass, and chemical
+constituents of seawater (Robinson, 1983).</p>
+</section>
+<section id="algorithms">
+<h2>Algorithms<a class="headerlink" href="#algorithms" title="Link to this heading">¶</a></h2>
+<p>Time mean of equation 1: <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" /></a></span></p>
+<p>The model outputs <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" /></a></span>
+and <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}" title="u-squared bar" /></a></span>
+while the observational dataset provides <span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u'^2}" title="u-prime-squared bar" /></a></span>
+so two different EKE equations must be used:</p>
+<ol class="arabic simple" start="2">
+<li><p><span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" /></a></span></p></li>
+<li><p><span class="raw-html-m2r"><a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" /></a></span></p></li>
+</ol>
+</section>
+<section id="design-and-implementation">
+<h2>Design and Implementation<a class="headerlink" href="#design-and-implementation" title="Link to this heading">¶</a></h2>
+<p>The primary design consideration for this feature is that it integrate
+seamlessly with the rest of the analysis tools.
+To this end, the sea surface temperature (SST) plotting tools will be used as a
+template.</p>
+<p>Files to create:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/climatology_map_eke.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/tasks/climatologyMapEKE.rst</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code> for <code class="docutils literal notranslate"><span class="pre">drifter_variance.nc</span></code> dataset</p></li>
+</ul>
+<p>Files to edit:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/__init__.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/analysis_tasks.rst</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/api.rst</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis/config.default</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis/obs/analysis_input_files</span></code></p></li>
+</ul>
+<p>The main challenge for plotting EKE is that EKE is a function of several model variables and is not itself a variable that is directly written by the model.
+Because of this, the climatology mapping functions for SSH, SST, SSS, and MLD will not serve as a direct template for the EKE formulation in <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/climatology_map_eke.py</span></code>.
+I will try to follow the structure of <code class="docutils literal notranslate"><span class="pre">mpas_analysis/ocean/compute_transects_with_vel_mag.py</span></code> as much as possible.</p>
+<p>It appears that there is a method for plotting velocity magnitudes on the antarctic grid.  Look into ‘climatology_map_sose.py’…</p>
+</section>
+<section id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Link to this heading">¶</a></h2>
+<p>I will test runs of varying durations and resolutions to make sure the EKE plotting is working.  I will also ensure that the following jobs fail:</p>
+<ol class="arabic simple">
+<li><p>Input model results files missing at least one of the 4 necessary velocity variables.</p></li>
+<li><p>Request seasonal plots.</p></li>
+<li><p>Test that <code class="docutils literal notranslate"><span class="pre">./download_analysis_data.py</span></code> downloads EKE data.</p></li>
+</ol>
+</section>
+<section id="bibliography">
+<h2>Bibliography<a class="headerlink" href="#bibliography" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://latex.codecogs.com/eqneditor/editor.php">https://latex.codecogs.com/eqneditor/editor.php</a></p></li>
+<li><p>Chelton, D. B., Schlax, M. G., Samelson, R. M. &amp; Szoeke, R. A. de. Global observations of large oceanic eddies. Geophysical Research Letters 34, (2007).</p></li>
+<li><p>Laurindo, L. C., Mariano, A. J. &amp; Lumpkin, R. An improved near-surface velocity climatology for the global ocean from drifter observations. Deep Sea Research Part I: Oceanographic Research Papers 124, 73–92 (2017).</p></li>
+<li><p>Wyrtki, K., Magaard, L. &amp; Hager, James. Eddy energy in the oceans. Journal of Geophysical Research 81, 2641–2646</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="prerequisite_tasks.html" class="btn btn-neutral float-left" title="Prerequisite Tasks and Subtasks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../tutorials/getting_started.html" class="btn btn-neutral float-right" title="User: Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
