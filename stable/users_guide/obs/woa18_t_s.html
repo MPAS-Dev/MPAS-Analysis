@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WOA18 Temperature and Salinity Climatology &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -68,6 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adusumilli_melt.html">Antarctic melt rates and fluxes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
 <li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
@@ -77,6 +79,8 @@
 <li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="era5_waves.html">Wave Reanalysis: ERA5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sscci_waves.html">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
@@ -124,7 +128,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
       <li class="breadcrumb-item active">WOA18 Temperature and Salinity Climatology</li>
       <li class="wy-breadcrumbs-aside">
@@ -137,9 +141,9 @@
            <div itemprop="articleBody">
              
   <section id="woa18-temperature-and-salinity-climatology">
-<span id="woa18-t-s"></span><h1>WOA18 Temperature and Salinity Climatology<a class="headerlink" href="#woa18-temperature-and-salinity-climatology" title="Permalink to this heading">¶</a></h1>
+<span id="woa18-t-s"></span><h1>WOA18 Temperature and Salinity Climatology<a class="headerlink" href="#woa18-temperature-and-salinity-climatology" title="Link to this heading">¶</a></h1>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>The World Ocean Atlas 2018 (WOA18) release July 2019 updates previous
 versions of the World Ocean Atlas to include approximately 3 million
 new oceanographic casts added to the World  Ocean  Database (WOD) since
@@ -155,18 +159,18 @@ available for the upper 1500 m only. Climatologies are available on a 1deg
 regular grid and on a 0.25deg grid.</p>
 </section>
 <section id="source">
-<h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
+<h2>Source<a class="headerlink" href="#source" title="Link to this heading">¶</a></h2>
 <p><a class="reference external" href="https://www.nodc.noaa.gov/OC5/woa18">NOAA National Oceanographic Data Center (NODC) website</a></p>
 </section>
 <section id="release-policy">
-<h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Link to this heading">¶</a></h2>
 <p>Acknowledgment: Locarnini and co-authors, 2019: World Ocean Atlas 2018,
 Volume 1: Temperature. A. Mishonov Technical Editor, NOAA Atlas NESDIS 81.
 Zweng and co-authors, 2019: World Ocean Atlas 2018, Volume 2: Salinity.
 A. Mishonov Technical Editor, NOAA Atlas NESDIS 82.</p>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf">Locarnini et al. (2019)</a></p></li>
 <li><p><a class="reference external" href="https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf">Zweng et al. (2019)</a></p></li>
@@ -174,7 +178,7 @@ A. Mishonov Technical Editor, NOAA Atlas NESDIS 82.</p>
 <p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/WOA18/obs.bib">bibtex file</a></p>
 </section>
 <section id="mpas-analysis-tasks">
-<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../tasks/climatologyMapWoa.html#task-climatologymapwoa"><span class="std std-ref">climatologyMapWoa</span></a></p></li>
 </ul>

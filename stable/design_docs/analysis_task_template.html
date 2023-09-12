@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analysis Task Template &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -97,7 +98,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Design Documents</a></li>
       <li class="breadcrumb-item active">Analysis Task Template</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,7 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="analysis-task-template">
-<h1>Analysis Task Template<a class="headerlink" href="#analysis-task-template" title="Permalink to this heading">¶</a></h1>
+<h1>Analysis Task Template<a class="headerlink" href="#analysis-task-template" title="Link to this heading">¶</a></h1>
 <p><span class="raw-html-m2r"><h2>
 Xylar Asay-Davis <br>
 date: 2017/03/08 <br>
@@ -194,7 +195,7 @@ necessary files and config options are present)</p>
 </ul>
 <p>The template will be located at:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis/
-    - analysis_task_template.py
+<span class="w">    </span>-<span class="w"> </span>analysis_task_template.py
 </pre></div>
 </div>
 <p>That is, it is the only file (other than <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>) in the base of the
@@ -256,7 +257,7 @@ of individual lines easier:</p>
 
 
 <span class="k">class</span> <span class="nc">AnalysisTask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for analysis tasks.</span>
 
 <span class="sd">    Authors</span>
@@ -268,7 +269,7 @@ of individual lines easier:</p>
 <span class="sd">    03/16/2017</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Individual tasks (children classes of this base class) should first</span>
@@ -301,7 +302,7 @@ of individual lines easier:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">variableMap</span> <span class="o">=</span> <span class="n">variableMap</span>  <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis (e.g. reading namelists and</span>
 <span class="sd">        streams files).</span>
 
@@ -346,7 +347,7 @@ of individual lines easier:</p>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the analysis task.</span>
 
 <span class="sd">        Individual tasks (children classes of this base class) should first</span>
@@ -365,7 +366,7 @@ of individual lines easier:</p>
 
     <span class="k">def</span> <span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if this analysis should be generated, based on the</span>
 <span class="sd">        `generate` config option and `taskName`, `componentName` and</span>
 <span class="sd">        `categories`.</span>
@@ -456,7 +457,7 @@ of individual lines easier:</p>
 
 
 <span class="k">class</span> <span class="nc">MyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &lt;Describe the analysis task here.&gt;</span>
 
 <span class="sd">    Authors</span>
@@ -469,7 +470,7 @@ of individual lines easier:</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">myArg</span><span class="o">=</span><span class="s1">&#39;myDefaultValue&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -514,7 +515,7 @@ of individual lines easier:</p>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
@@ -558,7 +559,7 @@ of individual lines easier:</p>
         <span class="c1"># }}}</span>
 
     <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the analysis task.</span>
 
 <span class="sd">        Individual tasks (children classes of this base class) should first</span>
@@ -589,7 +590,7 @@ of individual lines easier:</p>
     <span class="c1"># &quot;save&quot; arguments as member variables of `self` and then get them back</span>
     <span class="c1"># (like `self.myArg` here).</span>
     <span class="k">def</span> <span class="nf">_my_sub_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;Performs my favority subtask&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -612,7 +613,7 @@ Contributors: Xylar Asay-Davis
 the new <code class="docutils literal notranslate"><span class="pre">__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> methods :</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">fieldName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task.</span>
 
 <span class="sd">    Parameters</span>
@@ -672,7 +673,7 @@ the new <code class="docutils literal notranslate"><span class="pre">__init__</s
     <span class="c1"># }}}</span>
 
 <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">    Raises</span>

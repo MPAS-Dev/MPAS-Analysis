@@ -10,12 +10,9 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.shared.plot.climatology_map</li>
       <li class="wy-breadcrumbs-aside">
@@ -103,7 +104,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Functions for plotting remapped horizontal fields (and comparing with reference</span>
 <span class="sd"> data sets)</span>
@@ -129,7 +130,9 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.projection</span> <span class="kn">import</span> <span class="n">get_cartopy_projection</span>
 
 
-<div class="viewcode-block" id="plot_polar_comparison"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_polar_comparison.html#mpas_analysis.shared.plot.plot_polar_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_polar_comparison</span><span class="p">(</span>
+<div class="viewcode-block" id="plot_polar_comparison">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_polar_comparison.html#mpas_analysis.shared.plot.plot_polar_comparison">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_polar_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">lon</span><span class="p">,</span>
         <span class="n">lat</span><span class="p">,</span>
@@ -152,7 +155,7 @@
         <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a data set around either the north or south pole.</span>
 
 <span class="sd">    Parameters</span>
@@ -223,7 +226,7 @@
 
     <span class="k">def</span> <span class="nf">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
                    <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a subplot within the figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -346,7 +349,10 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_global_comparison"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_global_comparison.html#mpas_analysis.shared.plot.plot_global_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_global_comparison</span><span class="p">(</span>
+
+<div class="viewcode-block" id="plot_global_comparison">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_global_comparison.html#mpas_analysis.shared.plot.plot_global_comparison">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_global_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">Lons</span><span class="p">,</span>
         <span class="n">Lats</span><span class="p">,</span>
@@ -368,7 +374,7 @@
         <span class="n">lineColor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
         <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a data set as a longitude/latitude map.</span>
 
 <span class="sd">    Parameters</span>
@@ -544,6 +550,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
+
 <span class="k">def</span> <span class="nf">plot_projection_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">x</span><span class="p">,</span>
@@ -566,7 +573,7 @@
         <span class="n">vertical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a data set as a projection map.</span>
 
 <span class="sd">    Parameters</span>
@@ -639,7 +646,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
     <span class="k">def</span> <span class="nf">add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">8e5</span><span class="p">,</span> <span class="n">arrow_width</span><span class="o">=</span><span class="mf">1.5e4</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        https://stackoverflow.com/a/27637925/7728169</span>
 <span class="sd">        Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -796,7 +803,7 @@
 
 
 <span class="k">def</span> <span class="nf">_add_stats</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="n">Lats</span><span class="p">,</span> <span class="n">axes</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; compute the means, std devs. and Pearson correlation &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; compute the means, std devs. and Pearson correlation &quot;&quot;&quot;</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">Lats</span><span class="p">))</span>
     <span class="n">modelMean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
 

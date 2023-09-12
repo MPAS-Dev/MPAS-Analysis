@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -106,7 +107,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Developers: Adding a new analysis task</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/dev_add_task.rst.txt" rel="nofollow"> View page source</a>
@@ -118,7 +119,7 @@
            <div itemprop="articleBody">
              
   <section id="developers-adding-a-new-analysis-task">
-<span id="tutorial-dev-add-task"></span><h1>Developers: Adding a new analysis task<a class="headerlink" href="#developers-adding-a-new-analysis-task" title="Permalink to this heading">¶</a></h1>
+<span id="tutorial-dev-add-task"></span><h1>Developers: Adding a new analysis task<a class="headerlink" href="#developers-adding-a-new-analysis-task" title="Link to this heading">¶</a></h1>
 <p>This tutorial walks a new developer through the basics of creating a new
 analysis task in MPAS-Analysis.  It is a common practice to find an existing
 analysis task that is as close as possible to the new analysis, and to copy
@@ -136,7 +137,7 @@ notebooks include hard-coded paths and are otherwise not easily applied to new
 simulations without considerable effort. This is the motivation for adapting
 the code to MPAS-Analysis.</p>
 <section id="getting-started">
-<h2>1. Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<h2>1. Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
 <p>To begin, please follow the <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a> tutorial, which
 will help you through the basics of creating a fork of MPAS-Analysis,
 cloning it onto the machine(s) where you will do your development, making
@@ -147,7 +148,7 @@ you a tour of the <a class="reference internal" href="../developers_guide/genera
 analysis task that we will use as a starting point for developing a new task.</p>
 </section>
 <section id="the-reference-scripts">
-<h2>2. The reference scripts<a class="headerlink" href="#the-reference-scripts" title="Permalink to this heading">¶</a></h2>
+<h2>2. The reference scripts<a class="headerlink" href="#the-reference-scripts" title="Link to this heading">¶</a></h2>
 <p>I have two scripts I used in the past to compute the barotropic streamfunction
 and write it out, and then to plot it.  These scripts yanked out some code
 from MPAS-Analysis so there are a few similarities but there’s a lot of work
@@ -296,7 +297,7 @@ to do.</p>
 
 
 <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">nEdgesOnCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>
@@ -354,7 +355,7 @@ to do.</p>
 
 
 <span class="k">def</span> <span class="nf">get_antarctic_stereographic_projection</span><span class="p">():</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a projection for an Antarctic steregraphic comparison grid</span>
 
 <span class="sd">    Returns</span>
@@ -373,7 +374,7 @@ to do.</p>
 
 
 <span class="k">def</span> <span class="nf">get_fris_stereographic_comparison_descriptor</span><span class="p">():</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a descriptor of a region of a polar stereographic grid centered on the</span>
 <span class="sd">    Filchner-Ronne Ice Shelf, used for remapping and determining the grid name</span>
 
@@ -413,7 +414,7 @@ to do.</p>
 
 
 <span class="k">def</span> <span class="nf">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">100e3</span><span class="p">,):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    https://stackoverflow.com/a/27637925/7728169</span>
 <span class="sd">    Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
 
@@ -447,7 +448,7 @@ to do.</p>
 
 
 <span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">plot_pdf</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves the current plot to a file, then closes it.</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -572,7 +573,7 @@ to do.</p>
 <a class="reference internal image-reference" href="../_images/bsf.png"><img alt="../_images/bsf.png" class="align-center" src="../_images/bsf.png" style="width: 903px;" /></a>
 </section>
 <section id="selecting-an-existing-task-to-copy">
-<h2>3. Selecting an existing task to copy<a class="headerlink" href="#selecting-an-existing-task-to-copy" title="Permalink to this heading">¶</a></h2>
+<h2>3. Selecting an existing task to copy<a class="headerlink" href="#selecting-an-existing-task-to-copy" title="Link to this heading">¶</a></h2>
 <p>I selected <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a> as the
 analysis task that was closest to what I envision for a new
 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> task.  Here were my thoughts:</p>
@@ -598,34 +599,34 @@ tasks.</p></li>
 a reasonable starting point.</p>
 </section>
 <section id="developing-the-task">
-<h2>4. Developing the task<a class="headerlink" href="#developing-the-task" title="Permalink to this heading">¶</a></h2>
+<h2>4. Developing the task<a class="headerlink" href="#developing-the-task" title="Link to this heading">¶</a></h2>
 <p>I’ll start just by making a new worktree, then copying the “template” analysis
 task to the new name:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git worktree add ../add_climatology_map_bsf
-<span class="nb">cd</span> ../add_climatology_map_bsf
-cp mpas_analysis/ocean/climatology_map_ohc_anomaly.py mpas_analysis/ocean/climatology_map_bsf.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../add_climatology_map_bsf
+<span class="nb">cd</span><span class="w"> </span>../add_climatology_map_bsf
+cp<span class="w"> </span>mpas_analysis/ocean/climatology_map_ohc_anomaly.py<span class="w"> </span>mpas_analysis/ocean/climatology_map_bsf.py
 </pre></div>
 </div>
 <p>Then, I’ll open this new worktree in PyCharm.  (You can, of course, use
 whatever editor you like.)</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pycharm-community .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pycharm-community<span class="w"> </span>.
 </pre></div>
 </div>
 <p>I’ll create or recreate my <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as in
 <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a>, and then make sure to at least do:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda activate mpas_dev
-python -m pip install -e .
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
 <section id="climatologymapbsf-class">
-<h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Permalink to this heading">¶</a></h2>
+<h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Link to this heading">¶</a></h2>
 <p>In the editor, I rename the class from <code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code> to
 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> and task name from <code class="docutils literal notranslate"><span class="pre">climatologyMapOHCAnomaly</span></code> to
 <code class="docutils literal notranslate"><span class="pre">climatologyMapBSF</span></code>.</p>
 <p>Then, I update the docstring right away because otherwise I’ll forget!</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
 <span class="sd">    streamfunction (BSF)</span>
 
@@ -641,7 +642,7 @@ climatology of the velocity field and layer thicknesses that I will get from
 that task, but I know I won’t need the <code class="docutils literal notranslate"><span class="pre">ref_year_climatology_task</span></code> attribute
 so I get rid of it.</p>
 <section id="constructor">
-<h3>4.2 Constructor<a class="headerlink" href="#constructor" title="Permalink to this heading">¶</a></h3>
+<h3>4.2 Constructor<a class="headerlink" href="#constructor" title="Link to this heading">¶</a></h3>
 <p>Then, I move on to the constructor.  The main things I need to do besides
 renaming the task are:</p>
 <ul class="simple">
@@ -651,7 +652,7 @@ renaming the task are:</p>
 <li><p>get rid of <code class="docutils literal notranslate"><span class="pre">depth_range</span></code> because I’m using only the full ocean column.</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-     <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Construct the analysis task.</span>
 
 <span class="sd">     Parameters</span>
@@ -772,26 +773,26 @@ Streamfunction” with a single image in it.  That seems a little silly but
 we’ll change that later if we feel the need.</p>
 </section>
 <section id="setup-and-check-method">
-<h3>4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Permalink to this heading">¶</a></h3>
+<h3>4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Link to this heading">¶</a></h3>
 <p>In the OHC analysis task, we needed to check if the reference year for the
 anomaly and the climatology year were different from one another.  We don’t
 need this check for the BSF because we’re not computing an anomaly here.  So
 we can get rid of the <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method entirely and the version
 from <code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code> (the superclass) will be called automatically.</p>
 <p>At this point, I commit my changes even though I’m less than halfway done.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git add mpas_analysis/ocean/climatology_map_bsf.py
-git commit
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>add<span class="w"> </span>mpas_analysis/ocean/climatology_map_bsf.py
+git<span class="w"> </span>commit
 </pre></div>
 </div>
 <p>I can always do</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git commit --amend mpas_analysis/ocean/climatology_map_bsf.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>commit<span class="w"> </span>--amend<span class="w"> </span>mpas_analysis/ocean/climatology_map_bsf.py
 </pre></div>
 </div>
 <p>to keep adding changes to my commit as I go.</p>
 </section>
 </section>
 <section id="developing-a-subtask">
-<h2>5. Developing a subtask<a class="headerlink" href="#developing-a-subtask" title="Permalink to this heading">¶</a></h2>
+<h2>5. Developing a subtask<a class="headerlink" href="#developing-a-subtask" title="Link to this heading">¶</a></h2>
 <p>Similarly to how <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> computes the ocean heat content,
 we need a class for computing the barotropic streamfunction before we remap
 to the comparison grid.  In general, it is important to perform computations
@@ -800,12 +801,12 @@ case of the barotropic streamfunction, this is especially true.  Any attempt
 to compute this analysis directly on the comparison grid (e.g. using remapped,
 reconstructed velocity components) would be woefully inaccurate.</p>
 <section id="remapmpasbsfclimatology-class">
-<h3>5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class<a class="headerlink" href="#remapmpasbsfclimatology-class" title="Permalink to this heading">¶</a></h3>
+<h3>5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class<a class="headerlink" href="#remapmpasbsfclimatology-class" title="Link to this heading">¶</a></h3>
 <p>We start by renaming the class from <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to
 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code>, updating the docstring, removing the unneeded
 attributes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
 <span class="sd">    from climatologies of normal velocity and layer thickness</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -813,7 +814,7 @@ attributes:</p>
 </div>
 </section>
 <section id="id1">
-<h3>3.2 Constructor<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>3.2 Constructor<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>I started by taking out all of the unneeded parameters from the constructor.
 What I was left with was simply a call to the constructor of the superclass
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.
@@ -834,14 +835,14 @@ still uses mixed case so we will have to change the call in
 </div>
 </section>
 <section id="id2">
-<h3>5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <p>The same turns out to be true of <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code>.  As soon as I get rid
 of everything we no longer need in the BSF version, all I am left with is a
 call to the superclass’ version, and in that case we might as well get rid of
 the method entirely.</p>
 </section>
 <section id="customize-masked-climatology-method">
-<h3>5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Permalink to this heading">¶</a></h3>
+<h3>5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Link to this heading">¶</a></h3>
 <p>Finally, we’ve gotten to the part where the real work will take place!</p>
 <p>The sub task will run in the same way as described in
 <a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task-subtask-run-task"><span class="std std-ref">3.4 run_task() method</span></a> of the
@@ -944,7 +945,7 @@ so they conform to the PEP8 style guide, I leave them unchanged:</p>
     <span class="k">return</span> <span class="n">bsf_vertex</span>
 
 <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>
@@ -995,7 +996,7 @@ so they conform to the PEP8 style guide, I leave them unchanged:</p>
 <p>Finally, I substitute the functionality of the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function in my
 script into the <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> function:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">    and layer thickness fields.</span>
 
@@ -1054,7 +1055,7 @@ compute the BSF.</p>
 </section>
 </section>
 <section id="config-options">
-<h2>6. Config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>6. Config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>We’re not quite done yet.  We need to set some config options for the analysis
 task that the <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code>
 subtask is expecting.  Again, an easy starting point is to copy the
@@ -1062,45 +1063,45 @@ subtask is expecting.  Again, an easy starting point is to copy the
 <code class="docutils literal notranslate"><span class="pre">[climatologyMapBSF]</span></code> section, and then delete the things we don’t need,
 and finally make a few modifications so the color map and data range is more
 similar to the plot script I used above:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapBSF]</span><span class="w"></span>
-<span class="c1">## options related to plotting horizontally remapped climatologies of</span><span class="w"></span>
-<span class="c1">## the barotropic streamfunction (BSF) against control model results</span><span class="w"></span>
-<span class="c1">## (if available)</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapBSF]</span>
+<span class="c1">## options related to plotting horizontally remapped climatologies of</span>
+<span class="c1">## the barotropic streamfunction (BSF) against control model results</span>
+<span class="c1">## (if available)</span>
 
-<span class="c1"># colormap for model/observations</span><span class="w"></span>
-<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.curl</span><span class="w"></span>
-<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
-<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
-<span class="c1"># color indices into colormapName for filled contours</span><span class="w"></span>
-<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
-<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
-<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10., &#39;vmax&#39;: 10.}</span><span class="w"></span>
-<span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3., 10.]</span><span class="w"></span>
+<span class="c1"># colormap for model/observations</span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.curl</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10., &#39;vmax&#39;: 10.}</span>
+<span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3., 10.]</span>
 
-<span class="c1"># colormap for differences</span><span class="w"></span>
-<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.balance</span><span class="w"></span>
-<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
-<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
-<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
-<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
-<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10.,</span><span class="w"></span>
-<span class="w">                      </span><span class="na">&#39;vmax&#39;: 10.}</span><span class="w"></span>
-<span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3.,</span><span class="w"></span>
-<span class="w">                           </span><span class="na">10.]</span><span class="w"></span>
+<span class="c1"># colormap for differences</span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">cmo.balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 0.1, &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -10.,</span>
+<span class="w">                      </span><span class="na">&#39;vmax&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">10.}</span>
+<span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-10., -3., -1., -0.3, -0.1, 0., 0.1, 0.3, 1., 3.,</span>
+<span class="w">                           </span><span class="na">10.]</span>
 
-<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span><span class="w"></span>
-<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span><span class="w"></span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span><span class="w"></span>
+<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span><span class="w"></span>
-<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span><span class="w"></span>
+<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span>
 </pre></div>
 </div>
 </section>
 <section id="adding-the-task">
-<h2>7. Adding the task<a class="headerlink" href="#adding-the-task" title="Permalink to this heading">¶</a></h2>
+<h2>7. Adding the task<a class="headerlink" href="#adding-the-task" title="Link to this heading">¶</a></h2>
 <p>There is one last step required to add this task to MPAS-Analysis.  You should
 add the task to the <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code> so it is a little
 easier to import the task.  Try to add it near similar tasks:</p>
@@ -1124,13 +1125,13 @@ easier to import the task.  Try to add it near similar tasks:</p>
 </pre></div>
 </div>
 <p>A quick way to check if the task has been added correctly is to run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis --list
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis<span class="w"> </span>--list
 </pre></div>
 </div>
 <p>You should see the new task in the list of tasks.</p>
 </section>
 <section id="the-full-code-for-posterity">
-<h2>8. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Permalink to this heading">¶</a></h2>
+<h2>8. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Link to this heading">¶</a></h2>
 <p>Since the <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> analysis task is not in MPAS-Analysis yet and
 since it may have evolved by the time it gets added, here is the full code as
 described in this tutorial:</p>
@@ -1143,7 +1144,7 @@ described in this tutorial:</p>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.sparse</span>
@@ -1156,7 +1157,7 @@ described in this tutorial:</p>
 
 
 <span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
 <span class="sd">    streamfunction (BSF)</span>
 
@@ -1167,7 +1168,7 @@ described in this tutorial:</p>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -1263,13 +1264,13 @@ described in this tutorial:</p>
 
 
 <span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
 <span class="sd">    from climatologies of normal velocity and layer thickness</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
 
@@ -1402,7 +1403,7 @@ described in this tutorial:</p>
         <span class="k">return</span> <span class="n">bsf_vertex</span>
 
     <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n_edges_on_cell</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">nEdgesOnCell</span>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Config File Reorganization &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -97,7 +98,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Design Documents</a></li>
       <li class="breadcrumb-item active">Config File Reorganization</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,7 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="config-file-reorganization">
-<h1>Config File Reorganization<a class="headerlink" href="#config-file-reorganization" title="Permalink to this heading">¶</a></h1>
+<h1>Config File Reorganization<a class="headerlink" href="#config-file-reorganization" title="Link to this heading">¶</a></h1>
 <h2>
 Xylar Asay-Davis<br>
 date: 2017/01/29<br>
@@ -140,31 +141,31 @@ Date last modified: 2017/02/02 <br>
 Contributors: Xylar Asay-Davis
 </h3><p>Implementation of the <code class="docutils literal notranslate"><span class="pre">config.template</span></code> file can be found <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">here</a>.</p>
 <p>The following comment describes the planned implementation in the config file.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># a list of analyses to generate.  Valid names are:</span><span class="w"></span>
-<span class="c1">#   &#39;timeSeriesOHC&#39;, &#39;timeSeriesSST&#39;, &#39;regriddedSST&#39;,</span><span class="w"></span>
-<span class="c1">#   &#39;regriddedSSS&#39;, &#39;regriddedMLD&#39;, &#39;timeSeriesSeaIceAreaVol&#39;,</span><span class="w"></span>
-<span class="c1">#   &#39;regriddedSeaIceConcThick&#39;</span><span class="w"></span>
-<span class="c1"># the following shortcuts exist:</span><span class="w"></span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_timeSeries&#39; -- all time-series analyses will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_regriddedHorizontal&#39; -- all analyses involving regridded horizontal</span><span class="w"></span>
-<span class="w">    </span><span class="c1">#                                fields will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_ocean&#39; -- all ocean analyses will be run</span><span class="w"></span>
-<span class="c1">#   &#39;all_seaIce&#39; -- all sea-ice analyses will be run</span><span class="w"></span>
-<span class="c1">#   &#39;no_timeSeriesOHC&#39; -- skip &#39;timeSeriesOHC&#39; (and similarly with the</span><span class="w"></span>
-<span class="c1">#                             other analyses).</span><span class="w"></span>
-<span class="c1">#   &#39;no_ocean&#39;, &#39;no_timeSeries&#39;, etc. -- in analogy to &#39;all_*&#39;, skip the</span><span class="w"></span>
-<span class="c1">#                                            given category of analysis</span><span class="w"></span>
-<span class="c1"># an equivalent syntax can be used on the command line to override this</span><span class="w"></span>
-<span class="c1"># option:</span><span class="w"></span>
-<span class="c1">#    ./run_analysis.py config.analysis --generate \</span><span class="w"></span>
-<span class="c1">#         all,no_ocean,all_timeSeries</span><span class="w"></span>
-<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;]</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="c1"># a list of analyses to generate.  Valid names are:</span>
+<span class="c1">#   &#39;timeSeriesOHC&#39;, &#39;timeSeriesSST&#39;, &#39;regriddedSST&#39;,</span>
+<span class="c1">#   &#39;regriddedSSS&#39;, &#39;regriddedMLD&#39;, &#39;timeSeriesSeaIceAreaVol&#39;,</span>
+<span class="c1">#   &#39;regriddedSeaIceConcThick&#39;</span>
+<span class="c1"># the following shortcuts exist:</span>
+<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
+<span class="c1">#   &#39;all_timeSeries&#39; -- all time-series analyses will be run</span>
+<span class="c1">#   &#39;all_regriddedHorizontal&#39; -- all analyses involving regridded horizontal</span>
+<span class="w">    </span><span class="c1">#                                fields will be run</span>
+<span class="c1">#   &#39;all_ocean&#39; -- all ocean analyses will be run</span>
+<span class="c1">#   &#39;all_seaIce&#39; -- all sea-ice analyses will be run</span>
+<span class="c1">#   &#39;no_timeSeriesOHC&#39; -- skip &#39;timeSeriesOHC&#39; (and similarly with the</span>
+<span class="c1">#                             other analyses).</span>
+<span class="c1">#   &#39;no_ocean&#39;, &#39;no_timeSeries&#39;, etc. -- in analogy to &#39;all_*&#39;, skip the</span>
+<span class="c1">#                                            given category of analysis</span>
+<span class="c1"># an equivalent syntax can be used on the command line to override this</span>
+<span class="c1"># option:</span>
+<span class="c1">#    ./run_analysis.py config.analysis --generate \</span>
+<span class="c1">#         all,no_ocean,all_timeSeries</span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;]</span>
 </pre></div>
 </div>
 <p>Where there are conflicts between items in the <code class="docutils literal notranslate"><span class="pre">generate</span></code> list, successive items will override earlier items.  For example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_timeSeriesOHC']</span></code> will generate all analyses except <code class="docutils literal notranslate"><span class="pre">timeSeriesOHC</span></code>.  As another example, <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all',</span> <span class="pre">'no_ocean',</span> <span class="pre">'all_timeSeries']</span></code> would generate all diagnostics except those comparing ocean model results with observations (and previous model results).  (Note that a more efficient and intuitive way to do the same would be <code class="docutils literal notranslate"><span class="pre">generate</span> <span class="pre">=</span> <span class="pre">['all_seaIce',</span> <span class="pre">'all_timeSeries']</span></code>.)</p>
 <p>An analogous approach has also been added at the command line, for example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run_analysis.py config.analysis --generate all,no_ocean,all_timeSeries
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./run_analysis.py<span class="w"> </span>config.analysis<span class="w"> </span>--generate<span class="w"> </span>all,no_ocean,all_timeSeries
 </pre></div>
 </div>
 <p>If the <code class="docutils literal notranslate"><span class="pre">--generate</span></code> flag is used on the command line, it will replace the generate option in the config file.</p>

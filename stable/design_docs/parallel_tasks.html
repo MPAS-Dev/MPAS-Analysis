@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Support Parallel Tasks &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -97,7 +98,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">Design Documents</a></li>
       <li class="breadcrumb-item active">Support Parallel Tasks</li>
       <li class="wy-breadcrumbs-aside">
@@ -110,7 +111,7 @@
            <div itemprop="articleBody">
              
   <section id="support-parallel-tasks">
-<h1>Support Parallel Tasks<a class="headerlink" href="#support-parallel-tasks" title="Permalink to this heading">¶</a></h1>
+<h1>Support Parallel Tasks<a class="headerlink" href="#support-parallel-tasks" title="Link to this heading">¶</a></h1>
 <p><span class="raw-html-m2r"><h2>
 Xylar Asay-Davis <br>
 date: 2017/02/22 <br>
@@ -260,7 +261,7 @@ Contributors: Xylar Asay-Davis
 </h4><p>Tasks can now run in parallel.  This has been implemented in these 4 functions within <code class="docutils literal notranslate"><span class="pre">run_analysis.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_parallel_tasks</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">,</span> <span class="n">configFiles</span><span class="p">,</span> <span class="n">taskCount</span><span class="p">):</span>
     <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Run this script once each for several parallel tasks.</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
@@ -297,7 +298,7 @@ Contributors: Xylar Asay-Davis
 
 
 <span class="k">def</span> <span class="nf">launch_tasks</span><span class="p">(</span><span class="n">taskNames</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">configFiles</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Launch one or more tasks</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
@@ -338,7 +339,7 @@ Contributors: Xylar Asay-Davis
 
 
 <span class="k">def</span> <span class="nf">wait_for_task</span><span class="p">(</span><span class="n">processes</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Wait for the next process to finish and check its status.  Returns both the</span>
 <span class="sd">    task name and the process that finished.</span>
 
@@ -361,7 +362,7 @@ Contributors: Xylar Asay-Davis
 
 
 <span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>  <span class="c1"># {{{</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns whether a given process is currently running</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
@@ -380,11 +381,11 @@ Contributors: Xylar Asay-Davis
 Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4><p>There is a configuration option, <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code>, which defaults to 1, meaning tasks run in serial:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
-<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+<span class="c1">## options related to executing parallel tasks</span>
 
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
-<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span><span class="w"></span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">8</span>
 </pre></div>
 </div>
 <h4> Implementation: Lock files written by multiple tasks <br>
@@ -409,15 +410,15 @@ Contributors: Xylar Asay-Davis
 </h4><p>I have included a config option <code class="docutils literal notranslate"><span class="pre">commandPrefix</span></code> that <em>should</em> be able to be used to
 run the analysis on compute nodes.  If the command prefix is empty, the code should run
 as normal on the compute nodes.</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span><span class="w"></span>
-<span class="c1">## options related to executing parallel tasks</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+<span class="c1">## options related to executing parallel tasks</span>
 
-<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span><span class="w"></span>
-<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span><span class="w"></span>
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
+<span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
-<span class="c1"># Prefix on the commnd line before a parallel task (e.g. &#39;srun -n 1 python&#39;)</span><span class="w"></span>
-<span class="c1"># Default is no prefix (run_analysis.py is executed directly)</span><span class="w"></span>
-<span class="na">commandPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun -n 1</span><span class="w"></span>
+<span class="c1"># Prefix on the commnd line before a parallel task (e.g. &#39;srun -n 1 python&#39;)</span>
+<span class="c1"># Default is no prefix (run_analysis.py is executed directly)</span>
+<span class="na">commandPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun -n 1</span>
 </pre></div>
 </div>
 <h4> Implementation: There may need to be a way to limit the memory used by a task <br>

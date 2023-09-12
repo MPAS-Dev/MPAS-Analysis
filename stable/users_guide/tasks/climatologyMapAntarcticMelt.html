@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>climatologyMapAntarcticMelt &mdash; MPAS-Analysis stable documentation</title>
@@ -11,16 +11,13 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="hovmollerOceanRegions" href="hovmollerOceanRegions.html" />
+    <link rel="next" title="climatologyMapWaves" href="climatologyMapWaves.html" />
     <link rel="prev" title="climatologyMapSchmidtko" href="climatologyMapSchmidtko.html" /> 
 </head>
 
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -66,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
@@ -133,7 +135,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
       <li class="breadcrumb-item active">climatologyMapAntarcticMelt</li>
       <li class="wy-breadcrumbs-aside">
@@ -146,59 +148,59 @@
            <div itemprop="articleBody">
              
   <section id="climatologymapantarcticmelt">
-<span id="task-climatologymapantarcticmelt"></span><h1>climatologyMapAntarcticMelt<a class="headerlink" href="#climatologymapantarcticmelt" title="Permalink to this heading">¶</a></h1>
+<span id="task-climatologymapantarcticmelt"></span><h1>climatologyMapAntarcticMelt<a class="headerlink" href="#climatologymapantarcticmelt" title="Link to this heading">¶</a></h1>
 <p>An analysis task for comparison of Antarctic maps of melt rates against
-observations from <a class="reference external" href="http://doi.org/10.1126/science.1235798">Rignot et al. (2013)</a>.</p>
+observations from <a class="reference external" href="https://doi.org/10.1038/s41561-020-0616-z">Adusumilli et al. (2020)</a>.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
 <span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">meltRate</span><span class="p">,</span> <span class="n">landIceCavities</span>
 </pre></div>
 </div>
 <section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapAntarcticMelt]</span><span class="w"></span>
-<span class="c1">## options related to plotting horizontally regridded maps of Antarctic</span><span class="w"></span>
-<span class="c1">## sub-ice-shelf melt rates against control model results and observations</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapAntarcticMelt]</span>
+<span class="c1">## options related to plotting horizontally regridded maps of Antarctic</span>
+<span class="c1">## sub-ice-shelf melt rates against control model results and observations</span>
 
-<span class="c1"># comparison grid(s)</span><span class="w"></span>
-<span class="c1"># only the Antarctic really makes sense but lat-lon could technically work.</span><span class="w"></span>
-<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;antarctic&#39;]</span><span class="w"></span>
+<span class="c1"># comparison grid(s)</span>
+<span class="c1"># only the Antarctic really makes sense but lat-lon could technically work.</span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;antarctic&#39;]</span>
 
-<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span><span class="w"></span>
-<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span><span class="w"></span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span><span class="w"></span>
+<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span>
 
-<span class="c1"># colormap for model/observations</span><span class="w"></span>
-<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">erdc_iceFire_H</span><span class="w"></span>
-<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
-<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
-<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
-<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
-<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span><span class="w"></span>
-<span class="w">                  </span><span class="na">&#39;vmax&#39;: 100.}</span><span class="w"></span>
-<span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,</span><span class="w"></span>
-<span class="w">                       </span><span class="na">10., 20., 50., 100.]</span><span class="w"></span>
+<span class="c1"># colormap for model/observations</span>
+<span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">erdc_iceFire_H</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span>
+<span class="w">                  </span><span class="na">&#39;vmax&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
+<span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,</span>
+<span class="w">                       </span><span class="na">10., 20., 50., 100.]</span>
 
-<span class="c1"># colormap for differences</span><span class="w"></span>
-<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span><span class="w"></span>
-<span class="c1"># whether the colormap is indexed or continuous</span><span class="w"></span>
-<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span><span class="w"></span>
-<span class="c1"># the type of norm used in the colormap</span><span class="w"></span>
-<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span><span class="w"></span>
-<span class="c1"># A dictionary with keywords for the norm</span><span class="w"></span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span><span class="w"></span>
-<span class="w">                      </span><span class="na">&#39;vmax&#39;: 100.}</span><span class="w"></span>
-<span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,</span><span class="w"></span>
-<span class="w">                           </span><span class="na">5., 10., 20., 50., 100.]</span><span class="w"></span>
+<span class="c1"># colormap for differences</span>
+<span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="na">colormapTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span>
+<span class="w">                      </span><span class="na">&#39;vmax&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
+<span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,</span>
+<span class="w">                           </span><span class="na">5., 10., 20., 50., 100.]</span>
 
-<span class="c1"># make a tables of mean melt rates and melt fluxes for individual ice shelves?</span><span class="w"></span>
-<span class="na">makeTables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span><span class="w"></span>
+<span class="c1"># make a tables of mean melt rates and melt fluxes for individual ice shelves?</span>
+<span class="na">makeTables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 
-<span class="c1"># If making tables, which ice shelves?  This is a list of ice shelves or</span><span class="w"></span>
-<span class="c1"># [&#39;all&#39;] for all 106 ice shelves and regions.</span><span class="w"></span>
-<span class="na">iceShelvesInTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
+<span class="c1"># If making tables, which ice shelves?  This is a list of ice shelves or</span>
+<span class="c1"># [&#39;all&#39;] for all 106 ice shelves and regions.</span>
+<span class="na">iceShelvesInTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 </pre></div>
 </div>
 <p>The option <code class="docutils literal notranslate"><span class="pre">meltTables</span></code> determines if tables of mean melt rates, averaged
@@ -216,11 +218,11 @@ The table is in <code class="docutils literal notranslate"><span class="pre">csv
 </dl>
 </section>
 <section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
-<p><a class="reference internal" href="../obs/rignot_melt.html#rignot-melt"><span class="std std-ref">Antarctic melt rates and fluxes</span></a></p>
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
+<p><a class="reference internal" href="../obs/adusumilli_melt.html#adusumilli-melt"><span class="std std-ref">Antarctic melt rates and fluxes</span></a></p>
 </section>
 <section id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../../_images/ant_melt.png"><img alt="../../_images/ant_melt.png" class="align-center" src="../../_images/ant_melt.png" style="width: 720px;" /></a>
 </section>
 </section>
@@ -230,7 +232,7 @@ The table is in <code class="docutils literal notranslate"><span class="pre">csv
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="climatologyMapSchmidtko.html" class="btn btn-neutral float-left" title="climatologyMapSchmidtko" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hovmollerOceanRegions.html" class="btn btn-neutral float-right" title="hovmollerOceanRegions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="climatologyMapWaves.html" class="btn btn-neutral float-right" title="climatologyMapWaves" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -10,12 +10,9 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.shared.generalized_reader.generalized_reader</li>
       <li class="wy-breadcrumbs-aside">
@@ -103,7 +104,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Utility functions for importing MPAS files into xarray. These functions extend</span>
 <span class="sd">the capabilities of mpas_xarray to include mapping variable names from MPAS</span>
@@ -127,14 +128,16 @@
     <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">days_to_datetime</span>
 
 
-<div class="viewcode-block" id="open_multifile_dataset"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset">[docs]</a><span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+<div class="viewcode-block" id="open_multifile_dataset">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset">[docs]</a>
+<span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">chunking</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
 <span class="sd">    calendar name.</span>
 
@@ -268,10 +271,11 @@
     <span class="k">return</span> <span class="n">ds</span></div>
 
 
+
 <span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">,</span>
                 <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs variable remapping, then calls mpas_xarray.preprocess, to</span>
 <span class="sd">    perform the remainder of preprocessing.</span>
 
@@ -377,7 +381,7 @@
 
 
 <span class="k">def</span> <span class="nf">_map_variable_name</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a `variableName` in a `variableMap` and an xarray `ds`,</span>
 <span class="sd">    return the name of the the first variable in `variableMap[variableName]`</span>
 <span class="sd">    that is found in ds.</span>
@@ -438,7 +442,7 @@
 
 
 <span class="k">def</span> <span class="nf">_rename_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given an `xarray.DataSet` object `ds` and a dictionary mapping</span>
 <span class="sd">    variable names `variableMap`, returns a new data set in which variables</span>
 <span class="sd">    from `ds` with names equal to values in `variableMap` are renamed</span>

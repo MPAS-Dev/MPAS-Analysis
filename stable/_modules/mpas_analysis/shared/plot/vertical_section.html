@@ -10,12 +10,9 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.shared.plot.vertical_section</li>
       <li class="wy-breadcrumbs-aside">
@@ -103,7 +104,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Funcitons for plotting vertical sections, both alone and as comparisons between</span>
 <span class="sd">runs or with observations</span>
@@ -126,7 +127,9 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
 
 
-<div class="viewcode-block" id="plot_vertical_section_comparison"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison">[docs]</a><span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
+<div class="viewcode-block" id="plot_vertical_section_comparison">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">modelArray</span><span class="p">,</span>
         <span class="n">refArray</span><span class="p">,</span>
@@ -181,7 +184,7 @@
         <span class="n">resultSuffix</span><span class="o">=</span><span class="s1">&#39;Result&#39;</span><span class="p">,</span>
         <span class="n">diffSuffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">,</span>
         <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots vertical section plots in a three-panel format, comparing model data</span>
 <span class="sd">    (in modelArray) to some reference dataset (in refArray), which can be</span>
 <span class="sd">    either observations or an alternative model, and also presenting the</span>
@@ -647,7 +650,10 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span><span class="p">,</span> <span class="n">suptitle</span></div>
 
 
-<div class="viewcode-block" id="plot_vertical_section"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section">[docs]</a><span class="k">def</span> <span class="nf">plot_vertical_section</span><span class="p">(</span>
+
+<div class="viewcode-block" id="plot_vertical_section">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section">[docs]</a>
+<span class="k">def</span> <span class="nf">plot_vertical_section</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">field</span><span class="p">,</span>
         <span class="n">colorMapSectionName</span><span class="p">,</span>
@@ -695,7 +701,7 @@
         <span class="n">labelContours</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
         <span class="n">contourLabelPrecision</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
         <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a data set as a x distance (latitude, longitude,</span>
 <span class="sd">    or spherical distance) vs depth map (vertical section).</span>
 
@@ -971,11 +977,11 @@
         <span class="k">if</span> <span class="n">movingAveragePoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">movingAveragePoints</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
             <span class="n">dim</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
-                                  <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+                                  <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
             <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
-                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="p">{</span><span class="n">dim</span><span class="p">:</span> <span class="n">movingAveragePoints</span><span class="p">},</span>
-                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span>
+                          <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
 
         <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
         <span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">_get_triangulation</span><span class="p">(</span>
@@ -1211,8 +1217,9 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span></div>
 
 
+
 <span class="k">def</span> <span class="nf">_get_triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;divide each quad in the x/y mesh into 2 triangles&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;divide each quad in the x/y mesh into 2 triangles&quot;&quot;&quot;</span>
 
     <span class="n">nx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">ny</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>

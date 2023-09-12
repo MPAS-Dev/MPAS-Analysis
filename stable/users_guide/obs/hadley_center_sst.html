@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SST merged Hadley Center-NOAA/OI data set &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -68,6 +69,7 @@
 <li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adusumilli_melt.html">Antarctic melt rates and fluxes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
 <li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
@@ -77,6 +79,8 @@
 <li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
 <li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="era5_waves.html">Wave Reanalysis: ERA5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sscci_waves.html">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</a></li>
 <li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
 <li class="toctree-l3"><a class="reference internal" href="ssmi_ice_area.html">Ice area and extent time series: SSM/I derived</a></li>
@@ -124,7 +128,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
       <li class="breadcrumb-item active">SST merged Hadley Center-NOAA/OI data set</li>
       <li class="wy-breadcrumbs-aside">
@@ -137,9 +141,9 @@
            <div itemprop="articleBody">
              
   <section id="sst-merged-hadley-center-noaa-oi-data-set">
-<span id="hadley-center-sst"></span><h1>SST merged Hadley Center-NOAA/OI data set<a class="headerlink" href="#sst-merged-hadley-center-noaa-oi-data-set" title="Permalink to this heading">¶</a></h1>
+<span id="hadley-center-sst"></span><h1>SST merged Hadley Center-NOAA/OI data set<a class="headerlink" href="#sst-merged-hadley-center-noaa-oi-data-set" title="Link to this heading">¶</a></h1>
 <section id="description">
-<h2>Description<a class="headerlink" href="#description" title="Permalink to this heading">¶</a></h2>
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>The merged Hadley-OI sea surface temperature (SST) and sea ice
 concentration (SIC) data sets were specifically developed as surface
 forcing data sets for AMIP style uncoupled simulations of the Community
@@ -154,22 +158,22 @@ from a base period were used to create a more homogeneous record. Also,
 additional adjustments were made to the SIC data set.</p>
 </section>
 <section id="source">
-<h2>Source<a class="headerlink" href="#source" title="Permalink to this heading">¶</a></h2>
+<h2>Source<a class="headerlink" href="#source" title="Link to this heading">¶</a></h2>
 <p><a class="reference external" href="https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008">NCAR Hadley-NOAA/OI SST website</a></p>
 </section>
 <section id="release-policy">
-<h2>Release Policy<a class="headerlink" href="#release-policy" title="Permalink to this heading">¶</a></h2>
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Link to this heading">¶</a></h2>
 <p>Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
 2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
 Atmosphere Model. Journal of Climate, 21, 5145-5153.</p>
 </section>
 <section id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h2>
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
 <p><a class="reference external" href="https://doi.org/10.1175/2008JCLI2292.1">Hurrell et al. (2008)</a></p>
 <p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SST/obs.bib">bibtex file</a></p>
 </section>
 <section id="mpas-analysis-tasks">
-<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Permalink to this heading">¶</a></h2>
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Link to this heading">¶</a></h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../tasks/climatologyMapSST.html#task-climatologymapsst"><span class="std std-ref">climatologyMapSST</span></a></p></li>
 </ul>

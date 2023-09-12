@@ -10,12 +10,9 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.ocean.time_series_salinity_anomaly</li>
       <li class="wy-breadcrumbs-aside">
@@ -104,7 +105,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
@@ -113,8 +114,10 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
 
 
-<div class="viewcode-block" id="TimeSeriesSalinityAnomaly"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly">[docs]</a><span class="k">class</span> <span class="nc">TimeSeriesSalinityAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TimeSeriesSalinityAnomaly">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly">[docs]</a>
+<span class="k">class</span> <span class="nc">TimeSeriesSalinityAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of time series of salinity anomalies from the first</span>
 <span class="sd">    simulation year as a function of depth.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -122,8 +125,10 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="TimeSeriesSalinityAnomaly.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TimeSeriesSalinityAnomaly.__init__">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -182,7 +187,9 @@
                 <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

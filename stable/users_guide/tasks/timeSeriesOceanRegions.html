@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>timeSeriesOceanRegions &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -61,6 +62,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">timeSeriesOceanRegions</a><ul>
@@ -138,7 +140,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
       <li class="breadcrumb-item active">timeSeriesOceanRegions</li>
       <li class="wy-breadcrumbs-aside">
@@ -151,7 +153,7 @@
            <div itemprop="articleBody">
              
   <section id="timeseriesoceanregions">
-<span id="task-timeseriesoceanregions"></span><h1>timeSeriesOceanRegions<a class="headerlink" href="#timeseriesoceanregions" title="Permalink to this heading">¶</a></h1>
+<span id="task-timeseriesoceanregions"></span><h1>timeSeriesOceanRegions<a class="headerlink" href="#timeseriesoceanregions" title="Link to this heading">¶</a></h1>
 <p>An analysis task for plotting time series of of temperature, salinity,
 potential density and other fields of interest averaged over ocean regions.</p>
 <p>Component and Tags:</p>
@@ -160,54 +162,54 @@ potential density and other fields of interest averaged over ocean regions.</p>
 </pre></div>
 </div>
 <section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span><span class="w"></span>
-<span class="c1">## options related to plotting time series of groups of ocean regions</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span>
+<span class="c1">## options related to plotting time series of groups of ocean regions</span>
 
-<span class="c1"># the names of region groups to plot, each with its own section below</span><span class="w"></span>
-<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Antarctic Regions&#39;]</span><span class="w"></span>
+<span class="c1"># the names of region groups to plot, each with its own section below</span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Antarctic Regions&#39;]</span>
 
 
-<span class="k">[timeSeriesAntarcticRegions]</span><span class="w"></span>
-<span class="c1">## options related to plotting time series of Antarctic regions</span><span class="w"></span>
+<span class="k">[timeSeriesAntarcticRegions]</span>
+<span class="c1">## options related to plotting time series of Antarctic regions</span>
 
-<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span><span class="w"></span>
-<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span><span class="w"></span>
-<span class="c1"># regionMaskSubdirectory for details.</span><span class="w"></span>
-<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span><span class="w"></span>
+<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
+<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
+<span class="c1"># regionMaskSubdirectory for details.</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 
-<span class="c1"># a list of variables to plot</span><span class="w"></span>
-<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Temperature&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;units&#39;: r&#39;$^\circ$C&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_temperature&#39;},</span><span class="w"></span>
-<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;salinity&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Salinity&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;units&#39;: &#39;PSU&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_activeTracers_salinity&#39;},</span><span class="w"></span>
-<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;potentialDensity&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Potential Density&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;units&#39;: &#39;kg m$^{-3}$&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_potentialDensity&#39;},</span><span class="w"></span>
-<span class="w">             </span><span class="na">{&#39;name&#39;: &#39;mixedLayerDepth&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;title&#39;: &#39;Mixed Layer Depth&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;units&#39;: &#39;m&#39;,</span><span class="w"></span>
-<span class="w">              </span><span class="na">&#39;mpas&#39;: &#39;timeMonthly_avg_dThreshMLD&#39;}]</span><span class="w"></span>
+<span class="c1"># a list of variables to plot</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[{&#39;name&#39;: &#39;temperature&#39;,</span>
+<span class="w">              </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Temperature&#39;,</span>
+<span class="w">              </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$^\circ$C&#39;,</span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_temperature&#39;},</span>
+<span class="w">             </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;,</span>
+<span class="w">              </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;,</span>
+<span class="w">              </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;PSU&#39;,</span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_salinity&#39;},</span>
+<span class="w">             </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;,</span>
+<span class="w">              </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;,</span>
+<span class="w">              </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;kg m$^{-3}$&#39;,</span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_potentialDensity&#39;},</span>
+<span class="w">             </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;mixedLayerDepth&#39;,</span>
+<span class="w">              </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Mixed Layer Depth&#39;,</span>
+<span class="w">              </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;m&#39;,</span>
+<span class="w">              </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_dThreshMLD&#39;}]</span>
 
-<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span><span class="w"></span>
-<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span><span class="w"></span>
-<span class="c1"># Add these to a custom config file to override the defaults.</span><span class="w"></span>
-<span class="c1"># zmin = -1000</span><span class="w"></span>
-<span class="c1"># zmax = -400</span><span class="w"></span>
+<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
+<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
+<span class="c1"># Add these to a custom config file to override the defaults.</span>
+<span class="c1"># zmin = -1000</span>
+<span class="c1"># zmax = -400</span>
 
-<span class="c1"># Observational data sets to compare against</span><span class="w"></span>
-<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span><span class="w"></span>
+<span class="c1"># Observational data sets to compare against</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;SOSE&#39;, &#39;WOA18&#39;]</span>
 </pre></div>
 </div>
 </section>
 <section id="region-groups">
-<h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
+<h2>Region Groups<a class="headerlink" href="#region-groups" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">regionGroup</span></code> is a list of region groups,each of which will get its own
 gallery group on the resulting analysis webpage.  See
 <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for more information on the available region
@@ -217,21 +219,21 @@ from the name of the region group.  By default, the only region group for this
 task is <code class="docutils literal notranslate"><span class="pre">'Antarctic</span> <span class="pre">Regions'</span></code>.</p>
 </section>
 <section id="region-names">
-<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this heading">¶</a></h2>
+<h2>Region Names<a class="headerlink" href="#region-names" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
 region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span><span class="w"></span>
-<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span><span class="w"></span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
 </pre></div>
 </div>
 </section>
 <section id="variables">
-<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this heading">¶</a></h2>
+<h2>Variables<a class="headerlink" href="#variables" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">variables</span></code> list has a python dictionary for each variable to be plotted.
 A separate gallery will be produced for each variable with a title given by
 the <code class="docutils literal notranslate"><span class="pre">&quot;title&quot;</span></code> entry in the dictionary.  The <code class="docutils literal notranslate"><span class="pre">&quot;units&quot;</span></code> entry is used for the
@@ -241,7 +243,7 @@ It should contain no spaces.  The <code class="docutils literal notranslate"><sp
 corresponding field in the MPAS-Ocean <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> files.</p>
 </section>
 <section id="depth-bounds">
-<h2>Depth Bounds<a class="headerlink" href="#depth-bounds" title="Permalink to this heading">¶</a></h2>
+<h2>Depth Bounds<a class="headerlink" href="#depth-bounds" title="Link to this heading">¶</a></h2>
 <p>Some region groups such as <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code> define default depth bounds
 (<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>) for each region.  For <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, this was
 done so regions on the continental shelf (ending in “Shelf”) would be averaged
@@ -252,7 +254,7 @@ of the deeper ocean (ending in “Deep”, with <code class="docutils literal no
 since they have negative values.</p>
 </section>
 <section id="other-config-options">
-<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Link to this heading">¶</a></h2>
 <dl class="simple">
 <dt>For more details, see:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
@@ -261,7 +263,7 @@ since they have negative values.</p>
 </dl>
 </section>
 <section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">obs</span></code> is a list of the observational data sets to plot as reference lines
 (constant in time).  Possible values are <code class="docutils literal notranslate"><span class="pre">'SOSE'</span></code> and <code class="docutils literal notranslate"><span class="pre">'WOA18'</span></code>.  An empty
 list can be provided if no observations should be plotted.</p>
@@ -269,7 +271,7 @@ list can be provided if no observations should be plotted.</p>
 <p><a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
 </section>
 <section id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../../_images/west_ross_shelf_temp.png"><img alt="../../_images/west_ross_shelf_temp.png" class="align-center" src="../../_images/west_ross_shelf_temp.png" style="width: 500px;" /></a>
 </section>
 </section>

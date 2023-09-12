@@ -10,12 +10,9 @@
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.ocean.index_nino34</li>
       <li class="wy-breadcrumbs-aside">
@@ -104,7 +105,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
 <span class="kn">import</span> <span class="nn">datetime</span>
@@ -134,8 +135,10 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
-<div class="viewcode-block" id="IndexNino34"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a><span class="k">class</span> <span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="IndexNino34">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a>
+<span class="k">class</span> <span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A task for computing and plotting time series and spectra of the El Nino</span>
 <span class="sd">    3.4 climate index</span>
 
@@ -152,9 +155,11 @@
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
 
-<div class="viewcode-block" id="IndexNino34.__init__"><a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="IndexNino34.__init__">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -184,8 +189,9 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasTimeSeriesTask</span><span class="p">)</span></div>
 
+
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -236,7 +242,7 @@
                                                         <span class="n">filePrefix</span><span class="p">))</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes NINO34 index and plots the time series and power spectrum with</span>
 <span class="sd">        95 and 99% confidence bounds</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -407,7 +413,7 @@
                         <span class="n">ninoIndexNumber</span><span class="o">=</span><span class="n">ninoIndexNumber</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes nino34 index time series.  It follow the standard nino34</span>
 <span class="sd">        algorithm, i.e.,</span>
 
@@ -458,7 +464,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_mean</span><span class="p">(</span><span class="n">anomaly</span><span class="p">,</span> <span class="n">wgts</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes power spectra of Nino34 index.</span>
 
 <span class="sd">        nino34Index is the NINO index computed by compute_nino34_index</span>
@@ -544,7 +550,7 @@
         <span class="k">return</span> <span class="n">spectra</span>
 
     <span class="k">def</span> <span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes lag one auto-correlation for the NINO34 spectra calculation</span>
 
 <span class="sd">        Parameters</span>
@@ -564,7 +570,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]]))</span>
 
     <span class="k">def</span> <span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates a generic weighted running mean</span>
 
 <span class="sd">        Parameters</span>
@@ -596,7 +602,7 @@
                              <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">periodMin</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">periodMax</span><span class="o">=</span><span class="mf">10.</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -702,7 +708,7 @@
                                 <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 
 <span class="sd">        Parameters</span>
@@ -779,7 +785,7 @@
     <span class="k">def</span> <span class="nf">_plot_nino_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ninoIndex</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
                               <span class="n">panelTitle</span><span class="p">,</span> <span class="n">title_font</span><span class="p">,</span> <span class="n">axis_font</span><span class="p">,</span>
                               <span class="n">lineWidth</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the nino time series on a subplot</span>
 
 <span class="sd">        Parameters</span>
@@ -841,7 +847,7 @@
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_plot_size_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the maximum y value over the given range of x values</span>
 
 <span class="sd">        Parameters</span>
@@ -874,6 +880,7 @@
             <span class="n">maxY</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">xmax</span><span class="p">,</span> <span class="n">x</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">maxY</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">maxY</span></div>
+
 
 <span class="c1"># }}}</span>
 </pre></div>

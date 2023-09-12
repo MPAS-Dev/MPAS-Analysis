@@ -10,12 +10,9 @@
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -26,14 +23,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -82,7 +83,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
       <li class="breadcrumb-item active">mpas_analysis.shared.timekeeping.utility</li>
       <li class="wy-breadcrumbs-aside">
@@ -103,7 +104,7 @@
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Time keeping utility functions</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -121,8 +122,10 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">decode_strings</span>
 
 
-<div class="viewcode-block" id="get_simulation_start_time"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time">[docs]</a><span class="k">def</span> <span class="nf">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="get_simulation_start_time">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time">[docs]</a>
+<span class="k">def</span> <span class="nf">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a ``StreamsFile`` object, returns the simulation start time parsed</span>
 <span class="sd">    from a restart file.</span>
 
@@ -164,8 +167,11 @@
     <span class="k">return</span> <span class="n">simulationStartTime</span></div>
 
 
-<div class="viewcode-block" id="string_to_datetime"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_datetime.html#mpas_analysis.shared.timekeeping.utility.string_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">string_to_datetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="string_to_datetime">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_datetime.html#mpas_analysis.shared.timekeeping.utility.string_to_datetime">[docs]</a>
+<span class="k">def</span> <span class="nf">string_to_datetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a date string and a calendar, returns a ``datetime.datetime``</span>
 
 <span class="sd">    Parameters</span>
@@ -208,8 +214,11 @@
                              <span class="n">minute</span><span class="o">=</span><span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">second</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="string_to_relative_delta"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_relative_delta.html#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta">[docs]</a><span class="k">def</span> <span class="nf">string_to_relative_delta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="string_to_relative_delta">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_relative_delta.html#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta">[docs]</a>
+<span class="k">def</span> <span class="nf">string_to_relative_delta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a date string and a calendar, returns an instance of</span>
 <span class="sd">    ``MpasRelativeDelta``</span>
 
@@ -257,9 +266,12 @@
                              <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="string_to_days_since_date"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_days_since_date.html#mpas_analysis.shared.timekeeping.utility.string_to_days_since_date">[docs]</a><span class="k">def</span> <span class="nf">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
+
+<div class="viewcode-block" id="string_to_days_since_date">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_days_since_date.html#mpas_analysis.shared.timekeeping.utility.string_to_days_since_date">[docs]</a>
+<span class="k">def</span> <span class="nf">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
                               <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a date string or an array-like of date strings, a reference date</span>
 <span class="sd">    string, and a calendar, returns the number of days (as a float or</span>
 <span class="sd">    numpy.array of floats) since the reference date</span>
@@ -325,8 +337,11 @@
     <span class="k">return</span> <span class="n">days</span></div>
 
 
-<div class="viewcode-block" id="days_to_datetime"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">[docs]</a><span class="k">def</span> <span class="nf">days_to_datetime</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="days_to_datetime">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">[docs]</a>
+<span class="k">def</span> <span class="nf">days_to_datetime</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Covert days to ``datetime.datetime`` objects given a reference date and an</span>
 <span class="sd">    MPAS calendar (either &#39;gregorian&#39; or &#39;noleap&#39;).</span>
 
@@ -378,8 +393,11 @@
     <span class="k">return</span> <span class="n">datetimes</span></div>
 
 
-<div class="viewcode-block" id="datetime_to_days"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html#mpas_analysis.shared.timekeeping.utility.datetime_to_days">[docs]</a><span class="k">def</span> <span class="nf">datetime_to_days</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="datetime_to_days">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html#mpas_analysis.shared.timekeeping.utility.datetime_to_days">[docs]</a>
+<span class="k">def</span> <span class="nf">datetime_to_days</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given date(s), a calendar and a reference date, returns the days since</span>
 <span class="sd">    the reference date, either as a single float or an array of floats.</span>
 
@@ -427,9 +445,12 @@
     <span class="k">return</span> <span class="n">days</span></div>
 
 
-<div class="viewcode-block" id="date_to_days"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html#mpas_analysis.shared.timekeeping.utility.date_to_days">[docs]</a><span class="k">def</span> <span class="nf">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+
+<div class="viewcode-block" id="date_to_days">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html#mpas_analysis.shared.timekeeping.utility.date_to_days">[docs]</a>
+<span class="k">def</span> <span class="nf">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
                  <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a date to days since the reference date.</span>
 
 <span class="sd">    Parameters</span>
@@ -470,8 +491,9 @@
                             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span></div>
 
 
+
 <span class="k">def</span> <span class="nf">_parse_date_string</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">isInterval</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a string containing a date, returns a tuple defining a date of the</span>
 <span class="sd">    form (year, month, day, hour, minute, second) appropriate for constructing</span>
 <span class="sd">    a datetime or timedelta</span>
@@ -559,7 +581,7 @@
 
 
 <span class="k">def</span> <span class="nf">_mpas_to_netcdf_calendar</span><span class="p">(</span><span class="n">calendar</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert from MPAS calendar to NetCDF4 calendar names.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -571,7 +593,7 @@
 
 
 <span class="k">def</span> <span class="nf">_round_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Round a datetime object to nearest second</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Round a datetime object to nearest second</span>
 <span class="sd">    date : datetime.datetime or similar objet object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">microsecond</span><span class="p">)</span> <span class="o">=</span> \

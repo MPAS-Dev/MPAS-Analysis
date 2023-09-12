@@ -1,37 +1,40 @@
-============================  =========================================================  ========================================
-Observational Dataset         Source                                                     References
-============================  =========================================================  ========================================
-:ref:`hadley_center_sst`      `NCAR Hadley-NOAA/OI SST website`_                         `Hurrell et al. (2008)`_
-:ref:`aquarius_sss`           `NASA Aquarius Website`_                                   `Lagerloef et al. (2015)`_
-:ref:`woa18_t_s`              `NOAA National Oceanographic Data Center (NODC) website`_  - `Locarnini et al. (2019)`_
-                                                                                         - `Zweng et al. (2019)`_
-:ref:`aviso_ssh`              `NASA JPL AVISO website`_                                  `AVISO: Sea Surface Height above Geoid`_
-:ref:`argo_mld`               `UCSD Mixed Layer Website`_                                - `Holte et al. (2017)`_
-                                                                                         - `Holte and Talley (2009)`_
-                                                                                         - `de Boyer Montegut et al. (2004)`_
-:ref:`trenberth_mht`          Data available upon request from Dr. Kevin Trenberth       `Trenberth and Caron (2001)`_
-:ref:`roemmich_gilson_argo`   `Scripps Roemmich-Gilson Argo Website`_                    `Roemmich and Gilson (2009)`_
-:ref:`sose`                   `SOSE Website at UCSD`_                                    `Mazloff et al. (2010)`_
-:ref:`rignot_melt`            `Ice-Shelf Melting Around Antarctica`_                     `Rignot et al. (2013)`_
-:ref:`hadisst_nino`           `NCAR Hadley-NOAA/OI SST website`_                         `Hurrell et al. (2008)`_
-:ref:`ers_sst_nino`           `NOAA ERSST v4 website`_                                   - `Huang et al. (2014)`_
-                                                                                         - `Liu et al. (2014)`_
-                                                                                         - `Huang et al. (2015)`_
-:ref:`schmidtko`              `ASCII data file`_                                         `Schmidtko et al. (2014)`_
-:ref:`woce`                   - `WOCE Atlas Website`_                                    `Orsi and Whitworth (2005)`_
+============================  ========================================================================================================  ========================================
+Observational Dataset         Source                                                                                                    References
+============================  ========================================================================================================  ========================================
+:ref:`hadley_center_sst`      `NCAR Hadley-NOAA/OI SST website`_                                                                        `Hurrell et al. (2008)`_
+:ref:`aquarius_sss`           `NASA Aquarius Website`_                                                                                  `Lagerloef et al. (2015)`_
+:ref:`woa18_t_s`              `NOAA National Oceanographic Data Center (NODC) website`_                                                 - `Locarnini et al. (2019)`_
+                                                                                                                                        - `Zweng et al. (2019)`_
+:ref:`aviso_ssh`              `NASA JPL AVISO website`_                                                                                 `AVISO: Sea Surface Height above Geoid`_
+:ref:`argo_mld`               `UCSD Mixed Layer Website`_                                                                               - `Holte et al. (2017)`_
+                                                                                                                                        - `Holte and Talley (2009)`_
+                                                                                                                                        - `de Boyer Montegut et al. (2004)`_
+:ref:`trenberth_mht`          Data available upon request from Dr. Kevin Trenberth                                                      `Trenberth and Caron (2001)`_
+:ref:`roemmich_gilson_argo`   `Scripps Roemmich-Gilson Argo Website`_                                                                   `Roemmich and Gilson (2009)`_
+:ref:`sose`                   `SOSE Website at UCSD`_                                                                                   `Mazloff et al. (2010)`_
+:ref:`rignot_melt`            `Ice-Shelf Melting Around Antarctica`_                                                                    `Rignot et al. (2013)`_
+:ref:`adusumilli_melt`        `Data from: Interannual variations in meltwater input to the Southern Ocean from Antarctic ice shelves`_  `Adusumilli et al. (2020)`_
+:ref:`hadisst_nino`           `NCAR Hadley-NOAA/OI SST website`_                                                                        `Hurrell et al. (2008)`_
+:ref:`ers_sst_nino`           `NOAA ERSST v4 website`_                                                                                  - `Huang et al. (2014)`_
+                                                                                                                                        - `Liu et al. (2014)`_
+                                                                                                                                        - `Huang et al. (2015)`_
+:ref:`schmidtko`              `ASCII data file`_                                                                                        `Schmidtko et al. (2014)`_
+:ref:`woce`                   - `WOCE Atlas Website`_                                                                                   `Orsi and Whitworth (2005)`_
                               - `CCHDO`_
-:ref:`woa`                    - `World Ocean Atlas v2 Website`_                          - `Oxygen: Garcia et al. 2014a`_
-                                                                                         - `Nutrients: Garcia et al. 2014b`_
-:ref:`landschuetzer-som-ffn`  `SOM-FFN Website`_                                         - `Landschuetzer et al. 2013`_
-                                                                                         - `Landschuetzer et al. 2014`_
-                                                                                         - `Landschuetzer et al. 2016`_
-                                                                                         - `Bakker et al. 2016`_
-:ref:`seawifs`                `Ocean Color Website`_                                     - `O'Reilly et al. 1998`_
-:ref:`glodapv2`               `GLODAPv2 Website`_                                        - `Olsen et al. 2016`_
-                                                                                         - `Lauvset et al. 2016`_
-                                                                                         - `Olsen et al. 2017`_
-:ref:`drifter_eke`            `NOAA/AOML`_                                               `Laurindo et al. (2017)`_
-============================  =========================================================  ========================================
+:ref:`woa`                    - `World Ocean Atlas v2 Website`_                                                                         - `Oxygen: Garcia et al. 2014a`_
+                                                                                                                                        - `Nutrients: Garcia et al. 2014b`_
+:ref:`landschuetzer-som-ffn`  `SOM-FFN Website`_                                                                                        - `Landschuetzer et al. 2013`_
+                                                                                                                                        - `Landschuetzer et al. 2014`_
+                                                                                                                                        - `Landschuetzer et al. 2016`_
+                                                                                                                                        - `Bakker et al. 2016`_
+:ref:`seawifs`                `Ocean Color Website`_                                                                                    - `O'Reilly et al. 1998`_
+:ref:`glodapv2`               `GLODAPv2 Website`_                                                                                       - `Olsen et al. 2016`_
+                                                                                                                                        - `Lauvset et al. 2016`_
+                                                                                                                                        - `Olsen et al. 2017`_
+:ref:`drifter_eke`            `NOAA/AOML`_                                                                                              `Laurindo et al. (2017)`_
+:ref:`era5_waves`             `Copernicus Climate Data Store`_                                                                          - `Hersback et al. 2020`_
+:ref:`sscci_waves`            - `CEDA Archive`_                                                                                         - `Dodet et al. 2020`_
+============================  ========================================================================================================  ========================================
 
 .. _`NCAR Hadley-NOAA/OI SST website`: https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008
 .. _`Hurrell et al. (2008)`: https://doi.org/10.1175/2008JCLI2292.1
@@ -53,6 +56,8 @@ Observational Dataset         Source                                            
 .. _`Mazloff et al. (2010)`: http://doi.org/10.1175/2009JPO4236.1
 .. _`Ice-Shelf Melting Around Antarctica`: http://science.sciencemag.org/content/341/6143/266
 .. _`Rignot et al. (2013)`: http://science.sciencemag.org/content/341/6143/266
+.. _`Data from: Interannual variations in meltwater input to the Southern Ocean from Antarctic ice shelves`: https://doi.org/10.6075/J04Q7SHT
+.. _`Adusumilli et al. (2020)`: https://doi.org/10.1038/s41561-020-0616-z
 .. _`NCAR Hadley-NOAA/OI SST website`: https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008
 .. _`Hurrell et al. (2008)`: https://doi.org/10.1175/2008JCLI2292.1
 .. _`NOAA ERSST v4 website`: https://www.ncdc.noaa.gov/data-access/marineocean-data/extended-reconstructed-sea-surface-temperature-ersst-v4
@@ -80,4 +85,8 @@ Observational Dataset         Source                                            
 .. _`Olsen et al. 2017`: https://www.nodc.noaa.gov/ocads/data/0162565.xml
 .. _`NOAA/AOML`: http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php
 .. _`Laurindo et al. (2017)`: https://doi.org/10.1016/j.dsr.2017.04.009
+.. _`Copernicus Climate Data Store`: https://doi.org/10.24381/cds.f17050d7
+.. _`Hersback et al. 2020`: https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.3803
+.. _`CEDA Archive`: http://dx.doi.org/10.5285/47140d618dcc40309e1edbca7e773478
+.. _`Dodet et al. 2020`: https://essd.copernicus.org/articles/12/1929/2020/
 

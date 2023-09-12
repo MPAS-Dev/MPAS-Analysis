@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Regions &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -111,7 +112,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
       <li class="breadcrumb-item active">Regions</li>
       <li class="wy-breadcrumbs-aside">
@@ -124,9 +125,9 @@
            <div itemprop="articleBody">
              
   <section id="regions">
-<span id="config-regions"></span><h1>Regions<a class="headerlink" href="#regions" title="Permalink to this heading">¶</a></h1>
+<span id="config-regions"></span><h1>Regions<a class="headerlink" href="#regions" title="Link to this heading">¶</a></h1>
 <section id="region-config-section">
-<h2>Region Config Section<a class="headerlink" href="#region-config-section" title="Permalink to this heading">¶</a></h2>
+<h2>Region Config Section<a class="headerlink" href="#region-config-section" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">[regions]</span></code> section of a configuration file contains options related
 to regions either defined in MPAS components’ online analysis or determined
 within MPAS-Analysis using region mask files:</p>
@@ -150,14 +151,14 @@ these regions are named in plot titles and in gallery names on the resulting
 web page.</p>
 </section>
 <section id="region-groups">
-<span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
+<span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Link to this heading">¶</a></h2>
 <p>Currently, eight analysis tasks (<a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a>,
 <a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>,
 <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, <a class="reference internal" href="../tasks/streamfunctionMOC.html#task-streamfunctionmoc"><span class="std std-ref">streamfunctionMOC</span></a>,
 <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>, <a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) use masks that define regions in an MPAS
 mesh as part of their analysis.  Most of these region group are defined in
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v0.7.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
 Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>,
 <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.

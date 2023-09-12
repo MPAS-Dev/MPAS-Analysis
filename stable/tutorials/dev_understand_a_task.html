@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis stable documentation</title>
@@ -11,12 +11,9 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=ea3bebfc"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -29,14 +26,18 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> MPAS-Analysis
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
           </a>
               <div class="version">
                 stable
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -108,7 +109,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Developers: Understanding an analysis task</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorials/dev_understand_a_task.rst.txt" rel="nofollow"> View page source</a>
@@ -120,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="developers-understanding-an-analysis-task">
-<span id="tutorial-understand-a-task"></span><h1>Developers: Understanding an analysis task<a class="headerlink" href="#developers-understanding-an-analysis-task" title="Permalink to this heading">¶</a></h1>
+<span id="tutorial-understand-a-task"></span><h1>Developers: Understanding an analysis task<a class="headerlink" href="#developers-understanding-an-analysis-task" title="Link to this heading">¶</a></h1>
 <p>This tutorial walks a new developer through an existing analysis task to get
 a more in-depth understanding of the code.  This tutorial is meant as the
 starting point for the <a class="reference internal" href="dev_add_task.html#tutorial-dev-add-task"><span class="std std-ref">Developers: Adding a new analysis task</span></a> tutorial.  It is a common
@@ -130,7 +131,7 @@ This tutorial describes an existing analysis task, and
 <a class="reference internal" href="dev_add_task.html#tutorial-dev-add-task"><span class="std std-ref">Developers: Adding a new analysis task</span></a> uses it as a starting point for developing a new
 task.</p>
 <section id="the-big-picture">
-<h2>1. The big picture<a class="headerlink" href="#the-big-picture" title="Permalink to this heading">¶</a></h2>
+<h2>1. The big picture<a class="headerlink" href="#the-big-picture" title="Link to this heading">¶</a></h2>
 <p>MPAS-Analysis is meant to provide a first look at E3SM simulation output from
 the MPAS-Ocean and MPAS-Seaice components.  The analysis is intended to be
 robust and automated.  However, there is currently little effort to ensure that
@@ -143,14 +144,14 @@ than expected differences between pre-industrial and present-day climate
 conditions.  Under these conditions, MPAS-Analysis provides us with a useful
 first impression of how our simulation is doing.</p>
 <section id="mpas-output">
-<h3>1.1 MPAS output<a class="headerlink" href="#mpas-output" title="Permalink to this heading">¶</a></h3>
+<h3>1.1 MPAS output<a class="headerlink" href="#mpas-output" title="Link to this heading">¶</a></h3>
 <p>The primary output from MPAS-Ocean and MPAS-Seaice are monthly and daily
 averages of a large number of data fields.  Here are links to the list of:</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-ocean/cime_config/buildnml#L1082-L1290">MPAS-Ocean monthly fields</a></p></li>
-<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-ocean/cime_config/buildnml#L1028-L1062">MPAS-Ocean daily fields</a></p></li>
-<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-seaice/cime_config/buildnml#L726-L823">MPAS-Seaice monthly fields</a></p></li>
-<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/master/components/mpas-seaice/cime_config/buildnml#L695-L700">MPAS-Seaice daily fields</a></p></li>
+<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-ocean/cime_config/buildnml#L1082-L1290">MPAS-Ocean monthly fields</a></p></li>
+<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-ocean/cime_config/buildnml#L1028-L1062">MPAS-Ocean daily fields</a></p></li>
+<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-seaice/cime_config/buildnml#L726-L823">MPAS-Seaice monthly fields</a></p></li>
+<li><p><a class="reference external" href="https://github.com/E3SM-Project/E3SM/blob/main/components/mpas-seaice/cime_config/buildnml#L695-L700">MPAS-Seaice daily fields</a></p></li>
 </ul>
 <p>The components also produce a smaller amount of more specialized output, such
 as monthly maximum/minimum values.</p>
@@ -161,7 +162,7 @@ campaigns require unique, sometimes regionally focused analysis not available
 in existing tools.</p>
 </section>
 <section id="analysis-tasks">
-<h3>1.2 Analysis tasks<a class="headerlink" href="#analysis-tasks" title="Permalink to this heading">¶</a></h3>
+<h3>1.2 Analysis tasks<a class="headerlink" href="#analysis-tasks" title="Link to this heading">¶</a></h3>
 <p>MPAS-Analysis is designed to a series of interdependent analysis tasks in
 parallel with one another.  It builds up dependency graph between the tasks,
 allowing independent tasks to run at the same time while putting dependent
@@ -187,7 +188,7 @@ run in parallel with other subtasks and 2) it can allow code reuse if the same
 subtask can be used across multiple analysis tasks.</p>
 </section>
 <section id="shared-framework">
-<h3>1.3 Shared framework<a class="headerlink" href="#shared-framework" title="Permalink to this heading">¶</a></h3>
+<h3>1.3 Shared framework<a class="headerlink" href="#shared-framework" title="Link to this heading">¶</a></h3>
 <p>MPAS-Analysis includes a shared framework used across analysis tasks.  The
 framework is made up mostly of functions that can be called from within
 analysis tasks but also includes some analysis tasks and subtasks that are
@@ -218,7 +219,7 @@ transects
 </section>
 </section>
 <section id="tour-of-an-analysis-task-climatologymapohcanomaly">
-<h2>2. Tour of an analysis task (<code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code>)<a class="headerlink" href="#tour-of-an-analysis-task-climatologymapohcanomaly" title="Permalink to this heading">¶</a></h2>
+<h2>2. Tour of an analysis task (<code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code>)<a class="headerlink" href="#tour-of-an-analysis-task-climatologymapohcanomaly" title="Link to this heading">¶</a></h2>
 <p>Aside from some code that takes care of managing analysis tasks and generating
 web pages, MPAS-Analysis is made up almost entirely of analysis tasks and
 shared functions they can call.  Since adding new analysis nearly always
@@ -237,7 +238,7 @@ at the code directly:
 for the base class:
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/mpas_analysis/shared/analysis_task.py">AnalysisTask</a></p>
 <section id="attributes">
-<h3>2.1 Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
+<h3>2.1 Attributes<a class="headerlink" href="#attributes" title="Link to this heading">¶</a></h3>
 <p>Classes can contain pieces of data called attributes.  In MPAS-Analysis, the
 objects representing tasks share several attributes that they inherit from
 the <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a> class.  A few of the most
@@ -280,7 +281,7 @@ first year to be remapped and then subtracted from the main climatology
 </ul>
 </section>
 <section id="constructor">
-<h3>2.2 Constructor<a class="headerlink" href="#constructor" title="Permalink to this heading">¶</a></h3>
+<h3>2.2 Constructor<a class="headerlink" href="#constructor" title="Link to this heading">¶</a></h3>
 <p>Almost all classes have “constructors”, which are methods for making a new
 object of that class.  In python, the constructor is called <code class="docutils literal notranslate"><span class="pre">__init__()</span></code>.
 In general, the <code class="docutils literal notranslate"><span class="pre">__</span></code> (double underscore) is used in python to indicate a
@@ -313,7 +314,7 @@ constructor, we store references to these tasks as attributes:</p>
 super class’s <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
              <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task.</span>
 
 <span class="sd">    Parameters</span>
@@ -379,25 +380,25 @@ find something unexpected:</p>
 </pre></div>
 </div>
 <p>By default, these config options look like this:</p>
-<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapOHCAnomaly]</span><span class="w"></span>
-<span class="c1">## options related to plotting horizontally remapped climatologies of</span><span class="w"></span>
-<span class="c1">## ocean heat content (OHC) against control model results (if available)</span><span class="w"></span>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[climatologyMapOHCAnomaly]</span>
+<span class="c1">## options related to plotting horizontally remapped climatologies of</span>
+<span class="c1">## ocean heat content (OHC) against control model results (if available)</span>
 
-<span class="na">...</span><span class="w"></span>
+<span class="na">...</span>
 
-<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span><span class="w"></span>
-<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span><span class="w"></span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span><span class="w"></span>
+<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
+<span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span><span class="w"></span>
-<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span><span class="w"></span>
+<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span>
 
-<span class="c1"># A list of pairs of minimum and maximum depths (positive up, in meters) to</span><span class="w"></span>
-<span class="c1"># include in the vertical sums.  The default values are the equivalents of the</span><span class="w"></span>
-<span class="c1"># default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m</span><span class="w"></span>
-<span class="c1"># intended to be well below the bottom of the ocean for all existing MPAS-O</span><span class="w"></span>
-<span class="c1"># meshes.</span><span class="w"></span>
-<span class="na">depthRanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -10000.0)]</span><span class="w"></span>
+<span class="c1"># A list of pairs of minimum and maximum depths (positive up, in meters) to</span>
+<span class="c1"># include in the vertical sums.  The default values are the equivalents of the</span>
+<span class="c1"># default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m</span>
+<span class="c1"># intended to be well below the bottom of the ocean for all existing MPAS-O</span>
+<span class="c1"># meshes.</span>
+<span class="na">depthRanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[(0.0, -10000.0), (0.0, -700.0), (-700.0, -2000.0), (-2000.0, -10000.0)]</span>
 </pre></div>
 </div>
 <p>We plot only the annual mean OHC anomaly and we plot it only on a global
@@ -521,7 +522,7 @@ with different depths and seasons one after the other.</p>
 to add the <code class="docutils literal notranslate"><span class="pre">subtask</span></code> to this task.</p>
 </section>
 <section id="setup-and-check-method">
-<h3>2.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Permalink to this heading">¶</a></h3>
+<h3>2.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Link to this heading">¶</a></h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method of an analysis task is called when it is clear
 that this particular analysis has been requested (but before the analysis is
 actually ready to run).  This is in contrast to the constructor, which is
@@ -532,7 +533,7 @@ determine if it should run or not.</p>
 has been configured properly to run the analysis.  For example, is the
 necessary analysis member enabled.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">    in which case the analysis will not be meaningful.</span>
 
@@ -570,7 +571,7 @@ do the work typically need to define this method, as we will explore below.</p>
 </section>
 </section>
 <section id="tour-of-a-subtask-remapmpasohcclimatology">
-<h2>3. Tour of a subtask (<code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code>)<a class="headerlink" href="#tour-of-a-subtask-remapmpasohcclimatology" title="Permalink to this heading">¶</a></h2>
+<h2>3. Tour of a subtask (<code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code>)<a class="headerlink" href="#tour-of-a-subtask-remapmpasohcclimatology" title="Link to this heading">¶</a></h2>
 <p>The class <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> is, in some ways, more complicated than
 its “parent” task <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
 It descends not from the <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a> base
@@ -590,7 +591,7 @@ directly because we need to add to its functionality.  We need to compute the
 OHC, which is not available straight from MPAS-Ocean output, from the
 monthly-mean temperature and layer thickness.</p>
 <section id="id1">
-<h3>3.1 Attributes<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>3.1 Attributes<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>The docstring indicates the attributes that <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code>
 includes.  (It also has all the attributes of its super class,
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>,
@@ -598,7 +599,7 @@ and that class’ super class, <a class="reference internal" href="../developers
 but we don’t redundantly document these in the docstring in part because that
 would be a maintenance nightmare.)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
 
@@ -619,12 +620,12 @@ and the minimum and maximum depth over which the ocean heat content will be
 integrated.</p>
 </section>
 <section id="id2">
-<h3>3.2 Constructor<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>3.2 Constructor<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
              <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
              <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">    ``parent_task``.</span>
 
@@ -697,10 +698,10 @@ The super class will do the same for the <code class="docutils literal notransla
 will also add this task as a subtask of the parent task.</p>
 </section>
 <section id="id3">
-<h3>3.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id3" title="Permalink to this heading">¶</a></h3>
+<h3>3.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id3" title="Link to this heading">¶</a></h3>
 <p>As in the parent task, we need to define the <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -730,7 +731,7 @@ take care of this for us because it isn’t designed for computing anomalies,
 just “normal” climatologies over a range of years.</p>
 </section>
 <section id="run-task-method">
-<span id="tutorial-understand-a-task-subtask-run-task"></span><h3>3.4 <code class="docutils literal notranslate"><span class="pre">run_task()</span></code> method<a class="headerlink" href="#run-task-method" title="Permalink to this heading">¶</a></h3>
+<span id="tutorial-understand-a-task-subtask-run-task"></span><h3>3.4 <code class="docutils literal notranslate"><span class="pre">run_task()</span></code> method<a class="headerlink" href="#run-task-method" title="Link to this heading">¶</a></h3>
 <p>Normally, the main work of a task happens in the <code class="docutils literal notranslate"><span class="pre">run_task()</span></code> method.
 The <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> class doesn’t define this method because it is
 happy to inherit the
@@ -739,7 +740,7 @@ method from its super class,
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.</p>
 <p>An abbreviated version of that method looks like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the requested climatologies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="o">...</span>
@@ -750,7 +751,7 @@ method from its super class,
 </div>
 <p>It calls a private helper method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For each season, creates a masked version of the climatology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="o">...</span>
@@ -770,10 +771,10 @@ to make changes to the climatology before it gets remapped.  That’s where
 we will actually compute the OHC from variables available from MPAS output.</p>
 </section>
 <section id="customize-masked-climatology-method">
-<h3>3.5 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Permalink to this heading">¶</a></h3>
+<h3>3.5 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Link to this heading">¶</a></h3>
 <p>Here is how we compute the OHC itself:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">    and layer thickness fields.</span>
 
@@ -799,7 +800,7 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 <p>We call a private helper method to do the actual work, so let’s take a look
 at that before we continue with <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">    climatology data sets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -843,11 +844,11 @@ namelist options available from the <code class="docutils literal notranslate"><
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">layer_thickness</span></code> from the <code class="docutils literal notranslate"><span class="pre">climatology</span></code> dataset itself.  As the
 docstring for <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> states, <code class="docutils literal notranslate"><span class="pre">climatology</span></code> is
-and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2022.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
+and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2023.8.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_activeTracers_temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_layerThickness</span></code> because we requested them back in the
 constructor of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
-We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2022.11.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
+We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2023.8.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
 this helper method.</p>
 <p>Back to <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>, we have:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
@@ -878,7 +879,7 @@ analysis output directory a little more useful.</p>
 </section>
 </section>
 <section id="the-full-code-for-posterity">
-<h2>4. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Permalink to this heading">¶</a></h2>
+<h2>4. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Link to this heading">¶</a></h2>
 <p>Since the <code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code> analysis task may evolve in the future,
 here is the full analysis task as described in this tutorial:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
@@ -890,7 +891,7 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="c1">#</span>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
-<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/master/LICENSE</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -902,7 +903,7 @@ here is the full analysis task as described in this tutorial:</p>
 
 
 <span class="k">class</span> <span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of the anomaly from a reference year</span>
 <span class="sd">    (typically the start of the simulation) of ocean heat content (OHC)</span>
 
@@ -918,7 +919,7 @@ here is the full analysis task as described in this tutorial:</p>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
                  <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -1028,7 +1029,7 @@ here is the full analysis task as described in this tutorial:</p>
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">        in which case the analysis will not be meaningful.</span>
 
@@ -1054,7 +1055,7 @@ here is the full analysis task as described in this tutorial:</p>
 
 
 <span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
 
@@ -1072,7 +1073,7 @@ here is the full analysis task as described in this tutorial:</p>
                  <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
                  <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parent_task``.</span>
 
@@ -1125,7 +1126,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1140,7 +1141,7 @@ here is the full analysis task as described in this tutorial:</p>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
 
@@ -1175,7 +1176,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="k">return</span> <span class="n">climatology</span>
 
     <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
