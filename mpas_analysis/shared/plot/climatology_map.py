@@ -702,7 +702,15 @@ def plot_projection_comparison(
 def _add_stats(modelArray, refArray, diffArray, Lats, axes):
     """ compute the means, std devs. and Pearson correlation """
     weights = np.cos(np.deg2rad(Lats))
-    modelMean = np.average(modelArray, weights=weights)
+
+    model_weights = weights
+    model_mask = None
+    if isinstance(modelArray, np.ma.MaskedArray):
+        # make sure we're using the MPAS land mask for all 3 sets of stats
+        model_mask = modelArray.mask
+        model_weights = np.ma.array(weights, mask=model_mask)
+
+    modelMean = np.average(modelArray, weights=model_weights)
 
     _add_stats_text(
         names=['Min', 'Mean', 'Max'],
@@ -710,26 +718,28 @@ def _add_stats(modelArray, refArray, diffArray, Lats, axes):
         ax=axes[0], loc='upper')
 
     if refArray is not None:
+        ref_weights = weights
+        ref_mask = None
         if isinstance(modelArray, np.ma.MaskedArray):
             # make sure we're using the MPAS land mask for all 3 sets of stats
-            mask = modelArray.mask
             if isinstance(refArray, np.ma.MaskedArray):
                 # mask invalid where either model or ref array is invalid
-                mask = np.logical_or(mask, refArray.mask)
-            refArray = np.ma.array(refArray, mask=mask)
+                ref_mask = np.logical_or(model_mask, refArray.mask)
+                ref_weights = np.ma.array(weights, mask=ref_mask)
+            refArray = np.ma.array(refArray, mask=ref_mask)
         modelAnom = modelArray - modelMean
-        modelVar = np.average(modelAnom ** 2, weights=weights)
-        refMean = np.average(refArray, weights=weights)
+        modelVar = np.average(modelAnom ** 2, weights=ref_weights)
+        refMean = np.average(refArray, weights=ref_weights)
         refAnom = refArray - refMean
-        refVar = np.average(refAnom**2, weights=weights)
+        refVar = np.average(refAnom**2, weights=ref_weights)
 
         _add_stats_text(
             names=['Min', 'Mean', 'Max'],
             values=[np.amin(refArray), refMean, np.amax(refArray)],
             ax=axes[1], loc='upper')
 
-        diffMean = np.average(diffArray, weights=weights)
-        diffVar = np.average((diffArray - diffMean)**2, weights=weights)
+        diffMean = np.average(diffArray, weights=ref_weights)
+        diffVar = np.average((diffArray - diffMean)**2, weights=ref_weights)
         diffRMSE = np.sqrt(diffVar)
 
         _add_stats_text(
@@ -737,7 +747,7 @@ def _add_stats(modelArray, refArray, diffArray, Lats, axes):
             values=[np.amin(diffArray), diffMean, np.amax(diffArray)],
             ax=axes[2], loc='upper')
 
-        covar = np.average(modelAnom*refAnom, weights=weights)
+        covar = np.average(modelAnom*refAnom, weights=ref_weights)
 
         corr = covar/np.sqrt(modelVar*refVar)
 
