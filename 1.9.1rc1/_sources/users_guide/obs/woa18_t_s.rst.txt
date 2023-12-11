@@ -1,0 +1,48 @@
+.. _woa18_t_s:
+
+WOA18 Temperature and Salinity Climatology
+==========================================
+
+Description
+-----------
+The World Ocean Atlas 2018 (WOA18) release July 2019 updates previous
+versions of the World Ocean Atlas to include approximately 3 million
+new oceanographic casts added to the World  Ocean  Database (WOD) since
+the previous release as well as renewed and updated quality control.
+Animal mounted pinniped temperature profiles have been added as a data
+source improving coverage in some high latitude areas. WOA18 includes
+analysis for temperature, salinity, dissolved oxygen, and dissolved
+inorganic nutrients (only temperature and salinity are used in MPAS-Analysis
+as of Aug 2019). The atlas includes annual, seasonal, and monthly
+climatologies and related statistical fields. Annual fields are available
+for the full depth (0-5500 m), while monthly and seasonal fields are
+available for the upper 1500 m only. Climatologies are available on a 1deg
+regular grid and on a 0.25deg grid.
+
+Source
+------
+`NOAA National Oceanographic Data Center (NODC) website`_
+
+Release Policy
+--------------
+Acknowledgment: Locarnini and co-authors, 2019: World Ocean Atlas 2018,
+Volume 1: Temperature. A. Mishonov Technical Editor, NOAA Atlas NESDIS 81.
+Zweng and co-authors, 2019: World Ocean Atlas 2018, Volume 2: Salinity.
+A. Mishonov Technical Editor, NOAA Atlas NESDIS 82.
+
+References
+----------
+- `Locarnini et al. (2019)`_
+- `Zweng et al. (2019)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapWoa`
+
+.. _`NOAA National Oceanographic Data Center (NODC) website`: https://www.nodc.noaa.gov/OC5/woa18
+.. _`Locarnini et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf
+.. _`Zweng et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/WOA18/obs.bib
+
