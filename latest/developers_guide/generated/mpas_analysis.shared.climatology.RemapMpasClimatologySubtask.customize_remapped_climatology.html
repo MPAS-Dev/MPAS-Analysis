@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -143,17 +145,17 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-climatology-remapmpasclimatologysubtask-customize-remapped-climatology">
-<h1>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology<a class="headerlink" href="#mpas-analysis-shared-climatology-remapmpasclimatologysubtask-customize-remapped-climatology" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology<a class="headerlink" href="#mpas-analysis-shared-climatology-remapmpasclimatologysubtask-customize-remapped-climatology" title="Link to this heading">¶</a></h1>
 <dl class="py method">
 <dt class="sig sig-object py" id="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology">
-<span class="sig-prename descclassname"><span class="pre">RemapMpasClimatologySubtask.</span></span><span class="sig-name descname"><span class="pre">customize_remapped_climatology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">climatology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonGridNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">season</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/climatology/remap_mpas_climatology_subtask.html#RemapMpasClimatologySubtask.customize_remapped_climatology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">RemapMpasClimatologySubtask.</span></span><span class="sig-name descname"><span class="pre">customize_remapped_climatology</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">climatology</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonGridNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">season</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/climatology/remap_mpas_climatology_subtask.html#RemapMpasClimatologySubtask.customize_remapped_climatology"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology" title="Link to this definition">¶</a></dt>
 <dd><p>Override this function to customize the climatology after remapping</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>climatology</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2023.7.1.dev0)"><em>xarray.Dataset</em></a>) – The MPAS climatology data set that has been remapped</p></li>
-<li><p><strong>comparisonGridNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the comparison grid to use for remapping.</p></li>
-<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the season to be remapped</p></li>
+<li><p><strong>climatology</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2023.12.1.dev0)"><em>xarray.Dataset</em></a>) – The MPAS climatology data set that has been remapped</p></li>
+<li><p><strong>comparisonGridNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the comparison grid to use for remapping.</p></li>
+<li><p><strong>season</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the season to be remapped</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -125,16 +127,16 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-generalized-reader-generalized-reader-open-multifile-dataset">
-<h1>mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset<a class="headerlink" href="#mpas-analysis-shared-generalized-reader-generalized-reader-open-multifile-dataset" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset<a class="headerlink" href="#mpas-analysis-shared-generalized-reader-generalized-reader-open-multifile-dataset" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.generalized_reader.generalized_reader.</span></span><span class="sig-name descname"><span class="pre">open_multifile_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationStartTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iselValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableMap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/generalized_reader/generalized_reader.html#open_multifile_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.generalized_reader.generalized_reader.</span></span><span class="sig-name descname"><span class="pre">open_multifile_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationStartTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iselValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableMap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">endDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chunking</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/generalized_reader/generalized_reader.html#open_multifile_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset" title="Link to this definition">¶</a></dt>
 <dd><p>Opens and returns an xarray data set given file name(s) and the MPAS
 calendar name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
+<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
 <li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'noleap'</span></code>}, optional) – The name of one of the calendars supported by MPAS cores</p></li>
 <li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options</p></li>
 <li><p><strong>simulationStartTime</strong> (<em>string</em><em>, </em><em>optional</em>) – <p>The start date of the simulation, used to convert from time variables
@@ -151,8 +153,8 @@ start of the simulation.</p>
 </p></li>
 <li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> if using a
 <code class="docutils literal notranslate"><span class="pre">variableMap</span></code> or <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> if not using a <code class="docutils literal notranslate"><span class="pre">variableMap</span></code>)</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
-<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
 values used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.sel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -160,7 +162,7 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
 arrays of indices used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.isel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -169,15 +171,15 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
+<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
 MPAS-Analysis and values that are lists of possible names for the same
 variable in the MPAS dycore that produced the data set (which may
 differ between versions).</p></li>
-<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.11)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.11)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>chunking</strong> (<em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
+<li><p><strong>chunking</strong> (<em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
 value <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>, otherwise if None do not perform chunking.  If
 True, use automated chunking using default config value
 <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>. If chunking is a dict use dictionary values for
@@ -189,10 +191,10 @@ chunking.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.11)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
     a floating-pont number of days since the start of the simulation
     or a <code class="docutils literal notranslate"><span class="pre">numpy.datatime64</span></code> object).</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
     variable is a number of days since the start of the simulation but
     simulationStartTime is None.</p></li>
 </ul>

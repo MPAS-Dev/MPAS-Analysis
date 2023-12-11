@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MPAS Components and E3SM &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -112,9 +114,9 @@
            <div itemprop="articleBody">
              
   <section id="mpas-components-and-e3sm">
-<h1>MPAS Components and E3SM<a class="headerlink" href="#mpas-components-and-e3sm" title="Permalink to this heading">¶</a></h1>
+<h1>MPAS Components and E3SM<a class="headerlink" href="#mpas-components-and-e3sm" title="Link to this heading">¶</a></h1>
 <section id="mpas-ocean">
-<h2>MPAS Ocean<a class="headerlink" href="#mpas-ocean" title="Permalink to this heading">¶</a></h2>
+<h2>MPAS Ocean<a class="headerlink" href="#mpas-ocean" title="Link to this heading">¶</a></h2>
 <p>The Model for Prediction Across Scales Ocean (MPAS-O) is designed for the
 simulation of the ocean system from time scales of months to millenia and
 spatial scales from sub 1 km to global circulations.</p>
@@ -126,7 +128,7 @@ the ocean component of climate system models.</p>
 <p>Full documentaiton is available at:
 <a class="reference external" href="https://mpas-dev.github.io/ocean/ocean.html">https://mpas-dev.github.io/ocean/ocean.html</a></p>
 <section id="setting-up-standalone-mpas-o-runs">
-<h3>Setting up Standalone MPAS-O Runs<a class="headerlink" href="#setting-up-standalone-mpas-o-runs" title="Permalink to this heading">¶</a></h3>
+<h3>Setting up Standalone MPAS-O Runs<a class="headerlink" href="#setting-up-standalone-mpas-o-runs" title="Link to this heading">¶</a></h3>
 <p>In order to support all ocean analysis tasks from MPAS-Analysis, certain
 “analysis members”, Fortran modules that perform analysis during the
 simulation, need to be enabled.</p>
@@ -263,13 +265,13 @@ streams.  These are the minimum that allow the analysis to run successfully.</p>
 </section>
 </section>
 <section id="mpas-seaice">
-<h2>MPAS-Seaice<a class="headerlink" href="#mpas-seaice" title="Permalink to this heading">¶</a></h2>
+<h2>MPAS-Seaice<a class="headerlink" href="#mpas-seaice" title="Link to this heading">¶</a></h2>
 <p>The Model for Prediction Across Scales Sea Ice (MPAS-Seaice)
 is designed for the simulations of sea ice on unstructured grids supported by
 the MPAS framework.  The model has not yet been publicly released and does not
 have public documentation.</p>
 <section id="setting-up-standalone-mpas-sea-ice-runs">
-<h3>Setting up Standalone MPAS Sea Ice Runs<a class="headerlink" href="#setting-up-standalone-mpas-sea-ice-runs" title="Permalink to this heading">¶</a></h3>
+<h3>Setting up Standalone MPAS Sea Ice Runs<a class="headerlink" href="#setting-up-standalone-mpas-sea-ice-runs" title="Link to this heading">¶</a></h3>
 <p>In order to support all sea=ice analysis tasks from MPAS-Analysis, certain
 “analysis members”, Fortran modules that perform analysis during the
 simulation, need to be enabled.</p>
@@ -323,7 +325,7 @@ streams.  These are the minimum that allow the analysis to run successfully.</p>
 </section>
 </section>
 <section id="e3sm">
-<h2>E3SM<a class="headerlink" href="#e3sm" title="Permalink to this heading">¶</a></h2>
+<h2>E3SM<a class="headerlink" href="#e3sm" title="Link to this heading">¶</a></h2>
 <p>The Energy Exascale Earth System Model (E3SM) Project is an ongoing,
 state-of-the-science Earth system modeling, simulation, and prediction project
 that optimizes the use of DOE laboratory resources to meet the science needs of
@@ -331,7 +333,7 @@ the nation and the mission needs of DOE.</p>
 <p>A Full description of E3SM is available at:
 <a class="reference external" href="https://e3sm.org/">https://e3sm.org/</a></p>
 <section id="setting-up-e3sm-runs">
-<h3>Setting up E3SM runs<a class="headerlink" href="#setting-up-e3sm-runs" title="Permalink to this heading">¶</a></h3>
+<h3>Setting up E3SM runs<a class="headerlink" href="#setting-up-e3sm-runs" title="Link to this heading">¶</a></h3>
 <p>All online analysis and output stream within MPAS components (MPAS-O and
 MPAS-SeaIce) are configured to support MPAS-Analysis without any modifications
 to namelists or streams files.</p>

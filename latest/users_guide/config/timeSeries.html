@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Time Series &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -125,7 +127,7 @@
            <div itemprop="articleBody">
              
   <section id="time-series">
-<span id="config-time-series"></span><h1>Time Series<a class="headerlink" href="#time-series" title="Permalink to this heading">¶</a></h1>
+<span id="config-time-series"></span><h1>Time Series<a class="headerlink" href="#time-series" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[timeSeries]</span></code> section of a configuration file contains options used to
 determine the start and end years of time series plots and the reference years
 for anomalies:</p>
@@ -149,7 +151,7 @@ for anomalies:</p>
 </pre></div>
 </div>
 <section id="start-and-end-year">
-<h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Permalink to this heading">¶</a></h2>
+<h2>Start and End Year<a class="headerlink" href="#start-and-end-year" title="Link to this heading">¶</a></h2>
 <p>A custom config file should specify a start and end year for time series.
 If <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code> in the <code class="docutils literal notranslate"><span class="pre">input</span></code> section and the start or end
 year is beyond the range of the simulation, the range will be reduced to those
@@ -157,7 +159,7 @@ dates with available data and a warning message will be displayed.  If
 <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">True</span></code>, out of range year will produce an error.</p>
 </section>
 <section id="anomaly-reference-year">
-<h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Permalink to this heading">¶</a></h2>
+<h2>Anomaly Reference Year<a class="headerlink" href="#anomaly-reference-year" title="Link to this heading">¶</a></h2>
 <p>Anomalies between a moving average of a time series and the average over a
 reference year are used in several analysis tasks.  By default, the reference
 year is not specified in the configuration file and it taken to be the start of

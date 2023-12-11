@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developer: Getting Started &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -131,7 +133,7 @@
            <div itemprop="articleBody">
              
   <section id="developer-getting-started">
-<span id="tutorial-dev-getting-started"></span><h1>Developer: Getting Started<a class="headerlink" href="#developer-getting-started" title="Permalink to this heading">¶</a></h1>
+<span id="tutorial-dev-getting-started"></span><h1>Developer: Getting Started<a class="headerlink" href="#developer-getting-started" title="Link to this heading">¶</a></h1>
 <p>This mini-tutorial is meant as the starting point for other tutorials for
 developers.  It describes the process for creating a fork of the MPAS-Analysis
 repo, cloning the repository (and your fork) locally, making a git worktree for
@@ -139,9 +141,9 @@ development, and creating a conda environment that includes the
 <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package and all of its dependencies, installed in a mode
 appropriate for development.</p>
 <section id="getting-started-on-github">
-<h2>1. Getting started on GitHub<a class="headerlink" href="#getting-started-on-github" title="Permalink to this heading">¶</a></h2>
+<h2>1. Getting started on GitHub<a class="headerlink" href="#getting-started-on-github" title="Link to this heading">¶</a></h2>
 <section id="forking-mpas-analysis">
-<h3>1.1 Forking MPAS-Analysis<a class="headerlink" href="#forking-mpas-analysis" title="Permalink to this heading">¶</a></h3>
+<h3>1.1 Forking MPAS-Analysis<a class="headerlink" href="#forking-mpas-analysis" title="Link to this heading">¶</a></h3>
 <p>If you would like to contribute to MPAS-Analysis, you will need to create your
 own fork of the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">repository</a>.  Go
 to the link and click on <code class="docutils literal notranslate"><span class="pre">Fork</span></code> near the top right corner of the page.  The
@@ -150,14 +152,14 @@ Owner should be your GitHub username and the Repository name should be
 “Create fork”.</p>
 </section>
 <section id="adding-ssh-keys">
-<h3>1.2 Adding SSH keys<a class="headerlink" href="#adding-ssh-keys" title="Permalink to this heading">¶</a></h3>
+<h3>1.2 Adding SSH keys<a class="headerlink" href="#adding-ssh-keys" title="Link to this heading">¶</a></h3>
 <p>If you have not already done so, you should add SSH keys to GitHub that allow
 you to push to your fork from the machine(s) where you will do your
 development.  Instructions can be found
 <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">here</a>.</p>
 </section>
 <section id="local-git-configuration">
-<h3>1.3 Local git configuration<a class="headerlink" href="#local-git-configuration" title="Permalink to this heading">¶</a></h3>
+<h3>1.3 Local git configuration<a class="headerlink" href="#local-git-configuration" title="Link to this heading">¶</a></h3>
 <p>It will be convenient to have some basic configuration for <code class="docutils literal notranslate"><span class="pre">git</span></code> taken care
 of before we clone the repository.  Here are some recommended config options
 to set.  Edit your <code class="docutils literal notranslate"><span class="pre">~/.gitconfig</span></code> (create it if it doesn’t exist).</p>
@@ -180,7 +182,7 @@ Otherwise, your commits will not be associated with your GitHub user name.</p>
 </section>
 </section>
 <section id="cloning-the-repository">
-<h2>2. Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this heading">¶</a></h2>
+<h2>2. Cloning the repository<a class="headerlink" href="#cloning-the-repository" title="Link to this heading">¶</a></h2>
 <p>You will want to clone both the main MPAS-Analysis repository and your own
 fork.  The MPAS-Analysis development tutorials assume that you will be
 developing branches in different worktrees and recommend a directory structure
@@ -216,7 +218,7 @@ $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>devel
 <p>Make sure to replace <code class="docutils literal notranslate"><span class="pre">&lt;username&gt;</span></code> with your GitHub username.</p>
 </section>
 <section id="making-a-worktree">
-<h2>3. Making a worktree<a class="headerlink" href="#making-a-worktree" title="Permalink to this heading">¶</a></h2>
+<h2>3. Making a worktree<a class="headerlink" href="#making-a-worktree" title="Link to this heading">¶</a></h2>
 <p>To do your development, first make sure you are in the <code class="docutils literal notranslate"><span class="pre">develop</span></code> directory
 within your base directory (e.g. <code class="docutils literal notranslate"><span class="pre">mpas-analysis/develop</span></code>).  Then, “fetch” and
 changes that might have happened on the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch so you are using
@@ -239,12 +241,12 @@ branch you will be developing.</p>
 </div>
 </section>
 <section id="making-a-conda-environment">
-<h2>4. Making a conda environment<a class="headerlink" href="#making-a-conda-environment" title="Permalink to this heading">¶</a></h2>
+<h2>4. Making a conda environment<a class="headerlink" href="#making-a-conda-environment" title="Link to this heading">¶</a></h2>
 <p>MPAS-Analysis relies on several packages that are only available as conda
 packages from the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel.  The first step for running
 MPAS-Analysis is to create a conda environment with all the needed packages.</p>
 <section id="installing-mambaforge">
-<h3>4.1 Installing Mambaforge<a class="headerlink" href="#installing-mambaforge" title="Permalink to this heading">¶</a></h3>
+<h3>4.1 Installing Mambaforge<a class="headerlink" href="#installing-mambaforge" title="Link to this heading">¶</a></h3>
 <p>If you have not yet installed Anaconda, Miniconda or Mambaforge, you will need
 to begin there.  The concept behind Anaconda is that just about everything you
 would need for a typical python workflow is included.  The concept behind
@@ -315,7 +317,7 @@ this easier.  For example:</p>
 </div>
 </section>
 <section id="one-time-miniconda-setup">
-<h3>4.2 One-time Miniconda setup<a class="headerlink" href="#one-time-miniconda-setup" title="Permalink to this heading">¶</a></h3>
+<h3>4.2 One-time Miniconda setup<a class="headerlink" href="#one-time-miniconda-setup" title="Link to this heading">¶</a></h3>
 <p>If you installed Miniconda, rather than Mambaforge, you will need to add the
 <a class="reference external" href="https://conda-forge.org/">conda-forge channel</a> and make sure it always takes
 precedence for packages available on that channel:</p>
@@ -330,7 +332,7 @@ $<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </s
 <p>If you installed Mambaforge, these steps will happen automatically.</p>
 </section>
 <section id="create-a-development-environment">
-<h3>4.3 Create a development environment<a class="headerlink" href="#create-a-development-environment" title="Permalink to this heading">¶</a></h3>
+<h3>4.3 Create a development environment<a class="headerlink" href="#create-a-development-environment" title="Link to this heading">¶</a></h3>
 <p>You can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> and install the
 dependencies that MPAS-Analysis needs by running the following in the worktree
 where you are doing your development:</p>
@@ -359,7 +361,7 @@ MPAS-Analysis in the conda environment by rerunning</p>
 </div>
 </section>
 <section id="activating-the-environment">
-<span id="tutorial-dev-get-started-activ-env"></span><h3>4.4 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Permalink to this heading">¶</a></h3>
+<span id="tutorial-dev-get-started-activ-env"></span><h3>4.4 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Link to this heading">¶</a></h3>
 <p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
 environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/mambaforge/etc/profile.d/conda.sh
@@ -376,7 +378,7 @@ Miniconda3 so it loads automatically.  You can also use the <code class="docutil
 alias for this step if you defined one.</p>
 </section>
 <section id="switching-worktrees">
-<h3>4.5 Switching worktrees<a class="headerlink" href="#switching-worktrees" title="Permalink to this heading">¶</a></h3>
+<h3>4.5 Switching worktrees<a class="headerlink" href="#switching-worktrees" title="Link to this heading">¶</a></h3>
 <p>If you switch to a different worktree, it is safest to rerun the whole
 process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment.  If you know that
 the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>,
@@ -390,7 +392,7 @@ using.</p>
 </section>
 </section>
 <section id="editing-code">
-<h2>5. Editing code<a class="headerlink" href="#editing-code" title="Permalink to this heading">¶</a></h2>
+<h2>5. Editing code<a class="headerlink" href="#editing-code" title="Link to this heading">¶</a></h2>
 <p>You may, of course, edit the MPAS-Analysis code using whatever tool you like.
 I strongly recommend editing on your laptop and using
 <a class="reference external" href="https://www.jetbrains.com/pycharm/download/">PyCharm community edition</a>
@@ -400,14 +402,14 @@ deviations from preferred coding style guidelines known as
 the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment you created.</p>
 </section>
 <section id="running-mpas-analysis-on-a-laptop">
-<h2>6. Running MPAS-Analysis on a laptop<a class="headerlink" href="#running-mpas-analysis-on-a-laptop" title="Permalink to this heading">¶</a></h2>
+<h2>6. Running MPAS-Analysis on a laptop<a class="headerlink" href="#running-mpas-analysis-on-a-laptop" title="Link to this heading">¶</a></h2>
 <p>If you wish to run MPAS-Analysis on your laptop (or desktop machine), you will
 need to follow steps 2-6 of the <a class="reference internal" href="getting_started.html#tutorial-getting-started"><span class="std std-ref">User: Getting Started</span></a> tutorial.</p>
 </section>
 <section id="running-mpas-analysis-on-an-e3sm-supported-machine">
-<h2>7. Running MPAS-Analysis on an E3SM supported machine<a class="headerlink" href="#running-mpas-analysis-on-an-e3sm-supported-machine" title="Permalink to this heading">¶</a></h2>
+<h2>7. Running MPAS-Analysis on an E3SM supported machine<a class="headerlink" href="#running-mpas-analysis-on-an-e3sm-supported-machine" title="Link to this heading">¶</a></h2>
 <section id="configuring-mpas-analysis">
-<h3>7.1 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Permalink to this heading">¶</a></h3>
+<h3>7.1 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Link to this heading">¶</a></h3>
 <p>We configure MPAS-Analysis is with Python <code class="docutils literal notranslate"><span class="pre">cfg</span></code> (also called <code class="docutils literal notranslate"><span class="pre">ini</span></code>) files:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
 <span class="c1"># mainRunName is a name that identifies the simulation being analyzed.</span>
@@ -444,7 +446,7 @@ exception of a few paths that you will need to provide, the config options
 displayed below are the ones appropriate for the example E3SM simulation using
 the QU480 MPAS mesh.</p>
 <section id="runs">
-<h4>7.1.1 [runs]<a class="headerlink" href="#runs" title="Permalink to this heading">¶</a></h4>
+<h4>7.1.1 [runs]<a class="headerlink" href="#runs" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section contains options related to which E3SM simulation(s) are
 being analyzed:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[runs]</span>
@@ -462,7 +464,7 @@ convenient to have a shorter name.  In this case, we use part of the run name
 but leave off the date of the simulation to keep it a little shorter.</p>
 </section>
 <section id="execute">
-<h4>7.1.2 [execute]<a class="headerlink" href="#execute" title="Permalink to this heading">¶</a></h4>
+<h4>7.1.2 [execute]<a class="headerlink" href="#execute" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section contains options related to serial or parallel
 execution of the individual “tasks” that make up an MPAS-Analysis run.  For
 the most part, you can let MPAS-Analysis take care of this on supported
@@ -486,7 +488,7 @@ following:</p>
 memory, you may want to explore other config options from this section.</p>
 </section>
 <section id="input">
-<h4>7.1.3 [input]<a class="headerlink" href="#input" title="Permalink to this heading">¶</a></h4>
+<h4>7.1.3 [input]<a class="headerlink" href="#input" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section provides paths to the E3SM simulation data and the name
 of the MPAS-Ocean and MPAS-Seaice mesh.</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[input]</span>
@@ -559,7 +561,7 @@ and about the output files, respectively.  These are typically also found in
 the <code class="docutils literal notranslate"><span class="pre">run</span></code> directory.</p>
 </section>
 <section id="output">
-<span id="tutorial-dev-get-started-config-output"></span><h4>7.1.4 [output]<a class="headerlink" href="#output" title="Permalink to this heading">¶</a></h4>
+<span id="tutorial-dev-get-started-config-output"></span><h4>7.1.4 [output]<a class="headerlink" href="#output" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">[output]</span></code> section provides a path where the output from the analysis run
 will be written, the option to output the results web pages to another
 location, and a list of analysis to be generated (or explicitly skipped).</p>
@@ -644,7 +646,7 @@ turning off some analysis that will not work because some features
 available in this run and one (the El Niño climate index) is not useful.</p>
 </section>
 <section id="climatology-timeseries-and-index">
-<span id="tutorial-dev-get-started-config-clim"></span><h4>7.1.5. [climatology], [timeSeries] and [index]<a class="headerlink" href="#climatology-timeseries-and-index" title="Permalink to this heading">¶</a></h4>
+<span id="tutorial-dev-get-started-config-clim"></span><h4>7.1.5. [climatology], [timeSeries] and [index]<a class="headerlink" href="#climatology-timeseries-and-index" title="Link to this heading">¶</a></h4>
 <p>These options determine the start and end years of climatologies (time averages
 over a particular month, season or the full year), time series or the El Niño
 climate index.</p>
@@ -692,7 +694,7 @@ also be displayed over the full 5 years.)</p>
 </section>
 </section>
 <section id="running-mpas-analysis">
-<h3>7.2 Running MPAS-Analysis<a class="headerlink" href="#running-mpas-analysis" title="Permalink to this heading">¶</a></h3>
+<h3>7.2 Running MPAS-Analysis<a class="headerlink" href="#running-mpas-analysis" title="Link to this heading">¶</a></h3>
 <p>The hard work is done.  Now that we have a config file, we are ready to run.</p>
 <p>To run MPAS-Analysis, you should either create a job script or log into
 an interactive session on a compute node.  Then, activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
@@ -768,7 +770,7 @@ color maps, and outputting verbose python error messages when the analysis
 fails during the setup phase (before a progress bar appears).</p>
 </section>
 <section id="viewing-the-output">
-<h3>7.3 Viewing the Output<a class="headerlink" href="#viewing-the-output" title="Permalink to this heading">¶</a></h3>
+<h3>7.3 Viewing the Output<a class="headerlink" href="#viewing-the-output" title="Link to this heading">¶</a></h3>
 <p>The primary output from MPAS-Analysis is a set of web pages, each containing
 galleries of figures.  The output can be found in the directory you provided in
 <a class="reference internal" href="#tutorial-dev-get-started-config-output"><span class="std std-ref">7.1.4 [output]</span></a> and given in the last line of

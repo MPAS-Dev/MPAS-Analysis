@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.add_inset &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -131,10 +133,10 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-plot-add-inset">
-<h1>mpas_analysis.shared.plot.add_inset<a class="headerlink" href="#mpas-analysis-shared-plot-add-inset" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.plot.add_inset<a class="headerlink" href="#mpas-analysis-shared-plot-add-inset" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.plot.add_inset">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.plot.</span></span><span class="sig-name descname"><span class="pre">add_inset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latlonbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowerleft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ybuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/plot/inset.html#add_inset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.plot.add_inset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.plot.</span></span><span class="sig-name descname"><span class="pre">add_inset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latlonbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">45.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">polarbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lowerleft</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xbuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ybuffer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/plot/inset.html#add_inset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.plot.add_inset" title="Link to this definition">¶</a></dt>
 <dd><p>Plots an inset map showing the location of a transect or polygon.  Shapes
 are plotted on a polar grid if they are entirely poleward of +/-50 deg.
 latitude and with a lat/lon grid if not.</p>
@@ -143,17 +145,17 @@ latitude and with a lat/lon grid if not.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fig</strong> (<code class="docutils literal notranslate"><span class="pre">matplotlib.figure.Figure</span></code>) – A matplotlib figure to add the inset to</p></li>
 <li><p><strong>fc</strong> (<code class="docutils literal notranslate"><span class="pre">geometric_features.FeatureCollection</span></code>) – A collection of regions, transects and/or points to plot in the inset</p></li>
-<li><p><strong>latlonbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees lat/lon to use as a buffer around the shape(s)
+<li><p><strong>latlonbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees lat/lon to use as a buffer around the shape(s)
 to plot if a lat/lon plot is used.</p></li>
-<li><p><strong>polarbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees latitude to use as a buffer equatorward of the
+<li><p><strong>polarbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The number of degrees latitude to use as a buffer equatorward of the
 shape(s) in polar plots</p></li>
-<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – width and height in inches of the inset</p></li>
-<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – width and height in inches of the inset</p></li>
+<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – width and height in inches of the inset</p></li>
+<li><p><strong>height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – width and height in inches of the inset</p></li>
 <li><p><strong>lowerleft</strong> (<em>pair</em><em> of </em><em>floats</em><em>, </em><em>optional</em>) – the location of the lower left corner of the axis in inches, default
 puts the inset in the upper right corner of <code class="docutils literal notranslate"><span class="pre">fig</span></code>.</p></li>
-<li><p><strong>xbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – right and top buffers from the top-right corner (in inches) if
+<li><p><strong>xbuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – right and top buffers from the top-right corner (in inches) if
 lowerleft is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>ybuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>, </em><em>optional</em>) – right and top buffers from the top-right corner (in inches) if
+<li><p><strong>ybuffer</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – right and top buffers from the top-right corner (in inches) if
 lowerleft is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
 <li><p><strong>maxlength</strong> (float or <code class="docutils literal notranslate"><span class="pre">None</span></code>, optional) – Any segments longer than maxlength will be subdivided in the plot to
 ensure curvature.  If <code class="docutils literal notranslate"><span class="pre">None</span></code>, no subdivision is performed.</p></li>

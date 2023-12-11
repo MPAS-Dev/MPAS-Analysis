@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.timekeeping.utility.datetime_to_days &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -127,19 +129,19 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-timekeeping-utility-datetime-to-days">
-<h1>mpas_analysis.shared.timekeeping.utility.datetime_to_days<a class="headerlink" href="#mpas-analysis-shared-timekeeping-utility-datetime-to-days" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.timekeeping.utility.datetime_to_days<a class="headerlink" href="#mpas-analysis-shared-timekeeping-utility-datetime-to-days" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.timekeeping.utility.datetime_to_days">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.timekeeping.utility.</span></span><span class="sig-name descname"><span class="pre">datetime_to_days</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referenceDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0001-01-01'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/timekeeping/utility.html#datetime_to_days"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.datetime_to_days" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.timekeeping.utility.</span></span><span class="sig-name descname"><span class="pre">datetime_to_days</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">referenceDate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0001-01-01'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/timekeeping/utility.html#datetime_to_days"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.datetime_to_days" title="Link to this definition">¶</a></dt>
 <dd><p>Given date(s), a calendar and a reference date, returns the days since
 the reference date, either as a single float or an array of floats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>datetime</strong> (<em>instance</em><em> or </em><em>array-like</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.11)"><em>datetime.datetime</em></a>) – The date(s) to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
+<li><p><strong>datetime</strong> (<em>instance</em><em> or </em><em>array-like</em><em> of </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.12)"><em>datetime.datetime</em></a>) – The date(s) to be converted to days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the
 given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em><em>, </em><em>optional</em>) – A calendar to be used to convert days to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> object.</p></li>
-<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
+<li><p><strong>referenceDate</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – <p>A reference date of the form:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span>
 <span class="mi">0001</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span>
 </pre></div>
@@ -151,7 +153,7 @@ given <code class="docutils literal notranslate"><span class="pre">calendar</spa
 <dd class="field-even"><p><strong>days</strong> (<em>float or array of floats</em>) – The days since <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> on the given <code class="docutils literal notranslate"><span class="pre">calendar</span></code>.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">datetimes</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">datetimes</span></code>, <code class="docutils literal notranslate"><span class="pre">referenceDate</span></code> or <code class="docutils literal notranslate"><span class="pre">calendar</span></code> is
     supplied.</p>
 </dd>
 </dl>

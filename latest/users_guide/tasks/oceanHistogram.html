@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>oceanHistogram &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -154,7 +156,7 @@
            <div itemprop="articleBody">
              
   <section id="oceanhistogram">
-<span id="task-oceanhistogram"></span><h1>oceanHistogram<a class="headerlink" href="#oceanhistogram" title="Permalink to this heading">¶</a></h1>
+<span id="task-oceanhistogram"></span><h1>oceanHistogram<a class="headerlink" href="#oceanhistogram" title="Link to this heading">¶</a></h1>
 <p>An analysis task for plotting histograms of 2-d variables of climatologies
 in ocean regions.</p>
 <p>Component and Tags:</p>
@@ -163,7 +165,7 @@ in ocean regions.</p>
 </pre></div>
 </div>
 <section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanHistogram]</span>
 <span class="c1">## options related to plotting histograms of climatologies of 2-d ocean</span>
@@ -194,14 +196,14 @@ in ocean regions.</p>
 </div>
 </section>
 <section id="region-groups">
-<h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
+<h2>Region Groups<a class="headerlink" href="#region-groups" title="Link to this heading">¶</a></h2>
 <p>A list of groups of regions, each of which will get its own gallery on
 the resulting analysis web page.  See <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for
 more information on the available region groups.  By default,
 the only region group is <code class="docutils literal notranslate"><span class="pre">'Ocean</span> <span class="pre">Basins'</span></code>.</p>
 </section>
 <section id="region-names">
-<h2>Region Names<a class="headerlink" href="#region-names" title="Permalink to this heading">¶</a></h2>
+<h2>Region Names<a class="headerlink" href="#region-names" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the
 regions in the geojson file.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these
 are:</p>
@@ -222,20 +224,20 @@ are:</p>
 </div>
 </section>
 <section id="variable-list">
-<h2>Variable List<a class="headerlink" href="#variable-list" title="Permalink to this heading">¶</a></h2>
+<h2>Variable List<a class="headerlink" href="#variable-list" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">variableList</span></code> option determines the variables to plot. Currently, only
 2-d variables are supported but we envision extending to 3-d variables in the
 near future. The variables are to be listed according to their registry names, with <code class="docutils literal notranslate"><span class="pre">timeMontly_avg_</span></code> prepended in the code.</p>
 </section>
 <section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Permalink to this heading">¶</a></h2>
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">obsList</span></code> option contains a list of the names of observational data sets.
 Currently, “AVISO” is the only data set available, but we anticipate adding
 several additional data sets in the near future.</p>
 <p><a class="reference internal" href="../obs/aviso_ssh.html#aviso-ssh"><span class="std std-ref">AVISO Absolute Dynamic Topography</span></a></p>
 </section>
 <section id="weight-list">
-<h2>Weight List<a class="headerlink" href="#weight-list" title="Permalink to this heading">¶</a></h2>
+<h2>Weight List<a class="headerlink" href="#weight-list" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">weightList</span></code> option determines the variables to normalize by in plotting
 the histogram. This is an optional feature. If used, <code class="docutils literal notranslate"><span class="pre">weightList</span></code> should be
 of the same length as <code class="docutils literal notranslate"><span class="pre">variableList</span></code>. We currently only support for 2-d
@@ -244,17 +246,17 @@ variables that are the same size as their corresponding variables in
 <code class="docutils literal notranslate"><span class="pre">areaCell</span></code> to weight cell-centered variables such as <code class="docutils literal notranslate"><span class="pre">ssh</span></code>.</p>
 </section>
 <section id="bins">
-<h2>Bins<a class="headerlink" href="#bins" title="Permalink to this heading">¶</a></h2>
+<h2>Bins<a class="headerlink" href="#bins" title="Link to this heading">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">bins</span></code> sets the number of bins to include in the histogram.</p>
 </section>
 <section id="other-config-options">
-<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Permalink to this heading">¶</a></h2>
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Link to this heading">¶</a></h2>
 <p>Other config options include <code class="docutils literal notranslate"><span class="pre">lineWidth</span></code>, <code class="docutils literal notranslate"><span class="pre">mainColor</span></code>, <code class="docutils literal notranslate"><span class="pre">obsColor</span></code>,
 <code class="docutils literal notranslate"><span class="pre">controlColor</span></code>, <code class="docutils literal notranslate"><span class="pre">titleFontSize</span></code>, <code class="docutils literal notranslate"><span class="pre">defaultFontSize</span></code>. For more details on
 the remaining config options, see <a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a>.</p>
 </section>
 <section id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../../_images/histogram_ssh_aviso_atl.png"><img alt="../../_images/histogram_ssh_aviso_atl.png" class="align-center" src="../../_images/histogram_ssh_aviso_atl.png" style="width: 500px;" /></a>
 </section>
 </section>

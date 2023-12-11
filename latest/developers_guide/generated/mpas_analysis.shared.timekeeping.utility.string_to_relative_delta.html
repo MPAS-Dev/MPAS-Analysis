@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.timekeeping.utility.string_to_relative_delta &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -127,16 +129,16 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-timekeeping-utility-string-to-relative-delta">
-<h1>mpas_analysis.shared.timekeeping.utility.string_to_relative_delta<a class="headerlink" href="#mpas-analysis-shared-timekeeping-utility-string-to-relative-delta" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.timekeeping.utility.string_to_relative_delta<a class="headerlink" href="#mpas-analysis-shared-timekeeping-utility-string-to-relative-delta" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.timekeeping.utility.string_to_relative_delta">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.timekeeping.utility.</span></span><span class="sig-name descname"><span class="pre">string_to_relative_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dateString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/timekeeping/utility.html#string_to_relative_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.timekeeping.utility.</span></span><span class="sig-name descname"><span class="pre">string_to_relative_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dateString</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gregorian'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/timekeeping/utility.html#string_to_relative_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta" title="Link to this definition">¶</a></dt>
 <dd><p>Given a date string and a calendar, returns an instance of
 <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dateString</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – <p>A date and time in one of the following formats:</p>
+<li><p><strong>dateString</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – <p>A date and time in one of the following formats:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="p">:</span><span class="n">mm</span><span class="p">:</span><span class="n">ss</span>
 <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">hh</span><span class="o">.</span><span class="n">mm</span><span class="o">.</span><span class="n">ss</span>
 <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="n">SSSSS</span>
@@ -160,7 +162,7 @@ from the time portion of the string.</p>
 <dd class="field-even"><p><strong>relativedelta</strong> (An <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> object)</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">dateString</span></code> is supplied.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If an invalid <code class="docutils literal notranslate"><span class="pre">dateString</span></code> is supplied.</p>
 </dd>
 </dl>
 </dd></dl>

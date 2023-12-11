@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+        <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -119,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="developers-adding-a-new-analysis-task">
-<span id="tutorial-dev-add-task"></span><h1>Developers: Adding a new analysis task<a class="headerlink" href="#developers-adding-a-new-analysis-task" title="Permalink to this heading">¶</a></h1>
+<span id="tutorial-dev-add-task"></span><h1>Developers: Adding a new analysis task<a class="headerlink" href="#developers-adding-a-new-analysis-task" title="Link to this heading">¶</a></h1>
 <p>This tutorial walks a new developer through the basics of creating a new
 analysis task in MPAS-Analysis.  It is a common practice to find an existing
 analysis task that is as close as possible to the new analysis, and to copy
@@ -137,7 +139,7 @@ notebooks include hard-coded paths and are otherwise not easily applied to new
 simulations without considerable effort. This is the motivation for adapting
 the code to MPAS-Analysis.</p>
 <section id="getting-started">
-<h2>1. Getting started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
+<h2>1. Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h2>
 <p>To begin, please follow the <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a> tutorial, which
 will help you through the basics of creating a fork of MPAS-Analysis,
 cloning it onto the machine(s) where you will do your development, making
@@ -148,7 +150,7 @@ you a tour of the <a class="reference internal" href="../developers_guide/genera
 analysis task that we will use as a starting point for developing a new task.</p>
 </section>
 <section id="the-reference-scripts">
-<h2>2. The reference scripts<a class="headerlink" href="#the-reference-scripts" title="Permalink to this heading">¶</a></h2>
+<h2>2. The reference scripts<a class="headerlink" href="#the-reference-scripts" title="Link to this heading">¶</a></h2>
 <p>I have two scripts I used in the past to compute the barotropic streamfunction
 and write it out, and then to plot it.  These scripts yanked out some code
 from MPAS-Analysis so there are a few similarities but there’s a lot of work
@@ -573,7 +575,7 @@ to do.</p>
 <a class="reference internal image-reference" href="../_images/bsf.png"><img alt="../_images/bsf.png" class="align-center" src="../_images/bsf.png" style="width: 903px;" /></a>
 </section>
 <section id="selecting-an-existing-task-to-copy">
-<h2>3. Selecting an existing task to copy<a class="headerlink" href="#selecting-an-existing-task-to-copy" title="Permalink to this heading">¶</a></h2>
+<h2>3. Selecting an existing task to copy<a class="headerlink" href="#selecting-an-existing-task-to-copy" title="Link to this heading">¶</a></h2>
 <p>I selected <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a> as the
 analysis task that was closest to what I envision for a new
 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> task.  Here were my thoughts:</p>
@@ -599,7 +601,7 @@ tasks.</p></li>
 a reasonable starting point.</p>
 </section>
 <section id="developing-the-task">
-<h2>4. Developing the task<a class="headerlink" href="#developing-the-task" title="Permalink to this heading">¶</a></h2>
+<h2>4. Developing the task<a class="headerlink" href="#developing-the-task" title="Link to this heading">¶</a></h2>
 <p>I’ll start just by making a new worktree, then copying the “template” analysis
 task to the new name:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../add_climatology_map_bsf
@@ -620,7 +622,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 </div>
 </section>
 <section id="climatologymapbsf-class">
-<h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Permalink to this heading">¶</a></h2>
+<h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Link to this heading">¶</a></h2>
 <p>In the editor, I rename the class from <code class="docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code> to
 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> and task name from <code class="docutils literal notranslate"><span class="pre">climatologyMapOHCAnomaly</span></code> to
 <code class="docutils literal notranslate"><span class="pre">climatologyMapBSF</span></code>.</p>
@@ -642,7 +644,7 @@ climatology of the velocity field and layer thicknesses that I will get from
 that task, but I know I won’t need the <code class="docutils literal notranslate"><span class="pre">ref_year_climatology_task</span></code> attribute
 so I get rid of it.</p>
 <section id="constructor">
-<h3>4.2 Constructor<a class="headerlink" href="#constructor" title="Permalink to this heading">¶</a></h3>
+<h3>4.2 Constructor<a class="headerlink" href="#constructor" title="Link to this heading">¶</a></h3>
 <p>Then, I move on to the constructor.  The main things I need to do besides
 renaming the task are:</p>
 <ul class="simple">
@@ -773,7 +775,7 @@ Streamfunction” with a single image in it.  That seems a little silly but
 we’ll change that later if we feel the need.</p>
 </section>
 <section id="setup-and-check-method">
-<h3>4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Permalink to this heading">¶</a></h3>
+<h3>4.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#setup-and-check-method" title="Link to this heading">¶</a></h3>
 <p>In the OHC analysis task, we needed to check if the reference year for the
 anomaly and the climatology year were different from one another.  We don’t
 need this check for the BSF because we’re not computing an anomaly here.  So
@@ -792,7 +794,7 @@ git<span class="w"> </span>commit
 </section>
 </section>
 <section id="developing-a-subtask">
-<h2>5. Developing a subtask<a class="headerlink" href="#developing-a-subtask" title="Permalink to this heading">¶</a></h2>
+<h2>5. Developing a subtask<a class="headerlink" href="#developing-a-subtask" title="Link to this heading">¶</a></h2>
 <p>Similarly to how <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> computes the ocean heat content,
 we need a class for computing the barotropic streamfunction before we remap
 to the comparison grid.  In general, it is important to perform computations
@@ -801,7 +803,7 @@ case of the barotropic streamfunction, this is especially true.  Any attempt
 to compute this analysis directly on the comparison grid (e.g. using remapped,
 reconstructed velocity components) would be woefully inaccurate.</p>
 <section id="remapmpasbsfclimatology-class">
-<h3>5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class<a class="headerlink" href="#remapmpasbsfclimatology-class" title="Permalink to this heading">¶</a></h3>
+<h3>5.1 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code> class<a class="headerlink" href="#remapmpasbsfclimatology-class" title="Link to this heading">¶</a></h3>
 <p>We start by renaming the class from <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to
 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code>, updating the docstring, removing the unneeded
 attributes:</p>
@@ -814,7 +816,7 @@ attributes:</p>
 </div>
 </section>
 <section id="id1">
-<h3>3.2 Constructor<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>3.2 Constructor<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <p>I started by taking out all of the unneeded parameters from the constructor.
 What I was left with was simply a call to the constructor of the superclass
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.
@@ -835,14 +837,14 @@ still uses mixed case so we will have to change the call in
 </div>
 </section>
 <section id="id2">
-<h3>5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id2" title="Permalink to this heading">¶</a></h3>
+<h3>5.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id2" title="Link to this heading">¶</a></h3>
 <p>The same turns out to be true of <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code>.  As soon as I get rid
 of everything we no longer need in the BSF version, all I am left with is a
 call to the superclass’ version, and in that case we might as well get rid of
 the method entirely.</p>
 </section>
 <section id="customize-masked-climatology-method">
-<h3>5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Permalink to this heading">¶</a></h3>
+<h3>5.4 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Link to this heading">¶</a></h3>
 <p>Finally, we’ve gotten to the part where the real work will take place!</p>
 <p>The sub task will run in the same way as described in
 <a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task-subtask-run-task"><span class="std std-ref">3.4 run_task() method</span></a> of the
@@ -1055,7 +1057,7 @@ compute the BSF.</p>
 </section>
 </section>
 <section id="config-options">
-<h2>6. Config options<a class="headerlink" href="#config-options" title="Permalink to this heading">¶</a></h2>
+<h2>6. Config options<a class="headerlink" href="#config-options" title="Link to this heading">¶</a></h2>
 <p>We’re not quite done yet.  We need to set some config options for the analysis
 task that the <code class="xref py py-class docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code>
 subtask is expecting.  Again, an easy starting point is to copy the
@@ -1101,7 +1103,7 @@ similar to the plot script I used above:</p>
 </div>
 </section>
 <section id="adding-the-task">
-<h2>7. Adding the task<a class="headerlink" href="#adding-the-task" title="Permalink to this heading">¶</a></h2>
+<h2>7. Adding the task<a class="headerlink" href="#adding-the-task" title="Link to this heading">¶</a></h2>
 <p>There is one last step required to add this task to MPAS-Analysis.  You should
 add the task to the <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code> so it is a little
 easier to import the task.  Try to add it near similar tasks:</p>
@@ -1131,7 +1133,7 @@ easier to import the task.  Try to add it near similar tasks:</p>
 <p>You should see the new task in the list of tasks.</p>
 </section>
 <section id="the-full-code-for-posterity">
-<h2>8. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Permalink to this heading">¶</a></h2>
+<h2>8. The full code for posterity<a class="headerlink" href="#the-full-code-for-posterity" title="Link to this heading">¶</a></h2>
 <p>Since the <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> analysis task is not in MPAS-Analysis yet and
 since it may have evolved by the time it gets added, here is the full code as
 described in this tutorial:</p>

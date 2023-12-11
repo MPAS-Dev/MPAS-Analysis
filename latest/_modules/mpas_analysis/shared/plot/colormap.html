@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.colormap &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -123,7 +125,9 @@
 <span class="kn">import</span> <span class="nn">pkg_resources</span>
 
 
-<div class="viewcode-block" id="setup_colormap"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap">[docs]</a><span class="k">def</span> <span class="nf">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="setup_colormap">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap">[docs]</a>
+<span class="k">def</span> <span class="nf">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Set up a colormap from the registry</span>
 
@@ -214,6 +218,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;colormap&#39;</span><span class="p">:</span> <span class="n">colormap</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span>
             <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="n">ticks</span><span class="p">,</span> <span class="s1">&#39;contours&#39;</span><span class="p">:</span> <span class="n">contours</span><span class="p">,</span> <span class="s1">&#39;lineWidth&#39;</span><span class="p">:</span> <span class="n">lineWidth</span><span class="p">,</span>
             <span class="s1">&#39;lineColor&#39;</span><span class="p">:</span> <span class="n">lineColor</span><span class="p">,</span> <span class="s1">&#39;arrows&#39;</span><span class="p">:</span> <span class="n">arrows</span><span class="p">}</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">register_custom_colormaps</span><span class="p">():</span>

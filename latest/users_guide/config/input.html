@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Input &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -129,7 +131,7 @@
            <div itemprop="articleBody">
              
   <section id="input">
-<span id="config-input"></span><h1>Input<a class="headerlink" href="#input" title="Permalink to this heading">¶</a></h1>
+<span id="config-input"></span><h1>Input<a class="headerlink" href="#input" title="Link to this heading">¶</a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[input]</span></code> section of a configuration file contains options used to
 specify the location of the “main” simulation and some settings for how
 these data will be read in:</p>
@@ -176,7 +178,7 @@ these data will be read in:</p>
 </pre></div>
 </div>
 <section id="input-directories">
-<h2>Input Directories<a class="headerlink" href="#input-directories" title="Permalink to this heading">¶</a></h2>
+<h2>Input Directories<a class="headerlink" href="#input-directories" title="Link to this heading">¶</a></h2>
 <p>The input directories are specified through a base directory and optionally
 separate subdirectories for the run (continaing namelist, streams and and one
 or more restart files for each MPAS component) and for each component’s
@@ -196,7 +198,7 @@ configuration should be:</p>
 the <code class="docutils literal notranslate"><span class="pre">run</span></code> and <code class="docutils literal notranslate"><span class="pre">archive</span></code> directories.</p>
 </section>
 <section id="namelist-files">
-<h2>Namelist Files<a class="headerlink" href="#namelist-files" title="Permalink to this heading">¶</a></h2>
+<h2>Namelist Files<a class="headerlink" href="#namelist-files" title="Link to this heading">¶</a></h2>
 <p>MPAS components are configured with a namelist file containing a very large
 number of parameters and other configuration settings.  Part of the strength
 of MPAS-Analysis is that it is aware of these namelists and can automatically
@@ -221,7 +223,7 @@ instead be specified as:</p>
 </div>
 </section>
 <section id="streams-files">
-<h2>Streams Files<a class="headerlink" href="#streams-files" title="Permalink to this heading">¶</a></h2>
+<h2>Streams Files<a class="headerlink" href="#streams-files" title="Link to this heading">¶</a></h2>
 <p>Streams files are used to configure input and output from MPAS components.
 MPAS-Analysis can parse these files to determine the locations of output files
 (using the <code class="docutils literal notranslate"><span class="pre">*HistorySubdirectory</span></code> to find them if they have been moved by
@@ -243,7 +245,7 @@ short-term archiving:</p>
 </div>
 </section>
 <section id="mesh-name">
-<h2>Mesh Name<a class="headerlink" href="#mesh-name" title="Permalink to this heading">¶</a></h2>
+<h2>Mesh Name<a class="headerlink" href="#mesh-name" title="Link to this heading">¶</a></h2>
 <p>The MPAS-Ocean and MPAS-Seaice run on the same mesh.  There are a number of
 standard E3SM ocean/sea ice meshes at various resolutions.  The meshes
 currently supported by the public release of MPAS-Analysis include:</p>
@@ -263,7 +265,7 @@ resolution at the equator.</p></li>
 mesh resolutions, please contact the MPAS-Analysis developers.</p>
 </section>
 <section id="xarray-and-dask">
-<h2>Xarray and Dask<a class="headerlink" href="#xarray-and-dask" title="Permalink to this heading">¶</a></h2>
+<h2>Xarray and Dask<a class="headerlink" href="#xarray-and-dask" title="Link to this heading">¶</a></h2>
 <p>MPAS-Analysis makes extensive use of the <a class="reference external" href="https://xarray.pydata.org/en/stable/">xarray package</a>, which uses the
 <a class="reference external" href="https://dask.pydata.org/en/latest/">dask package</a> internally to perform operations that are too large to fit
 in memory.  While most tasks in MPAS-Analysis have moved away from opening
@@ -281,7 +283,7 @@ occrus in the <code class="docutils literal notranslate"><span class="pre">strea
 memory usage.</p>
 </section>
 <section id="errors-on-missing-data">
-<h2>Errors on Missing Data<a class="headerlink" href="#errors-on-missing-data" title="Permalink to this heading">¶</a></h2>
+<h2>Errors on Missing Data<a class="headerlink" href="#errors-on-missing-data" title="Link to this heading">¶</a></h2>
 <p>if <code class="docutils literal notranslate"><span class="pre">errorOnMissing</span> <span class="pre">=</span> <span class="pre">False</span></code>, the time ranges (<code class="docutils literal notranslate"><span class="pre">startYear</span></code> and <code class="docutils literal notranslate"><span class="pre">endYear</span></code>)
 in <code class="docutils literal notranslate"><span class="pre">climatology</span></code>, <code class="docutils literal notranslate"><span class="pre">timeSeries</span></code>, and <code class="docutils literal notranslate"><span class="pre">index</span></code> will be clipped to the range
 of the available data.  If this option is set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, an error will be

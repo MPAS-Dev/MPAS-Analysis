@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.io.utility &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -121,7 +123,9 @@
 <span class="kn">import</span> <span class="nn">warnings</span>
 
 
-<div class="viewcode-block" id="paths"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a><span class="k">def</span> <span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="paths">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a>
+<span class="k">def</span> <span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns glob&#39;d paths in list for arbitrary number of function arguments.</span>
 <span class="sd">    Note, each expanded set of paths is sorted.</span>
@@ -144,6 +148,7 @@
     <span class="k">for</span> <span class="n">aargs</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
         <span class="n">paths</span> <span class="o">+=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">aargs</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">paths</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">fingerprint_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
@@ -175,7 +180,9 @@
     <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="make_directories"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a><span class="k">def</span> <span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="make_directories">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a>
+<span class="k">def</span> <span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make the given path if it does not already exist.</span>
 
@@ -200,7 +207,10 @@
     <span class="k">return</span> <span class="n">path</span></div>
 
 
-<div class="viewcode-block" id="build_config_full_path"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.build_config_full_path.html#mpas_analysis.shared.io.utility.build_config_full_path">[docs]</a><span class="k">def</span> <span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
+
+<div class="viewcode-block" id="build_config_full_path">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.build_config_full_path.html#mpas_analysis.shared.io.utility.build_config_full_path">[docs]</a>
+<span class="k">def</span> <span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
                            <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">defaultPath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">):</span>
@@ -252,6 +262,7 @@
     <span class="k">if</span> <span class="n">defaultPath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullPath</span><span class="p">):</span>
         <span class="n">fullPath</span> <span class="o">=</span> <span class="n">defaultPath</span>
     <span class="k">return</span> <span class="n">fullPath</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>
@@ -374,7 +385,9 @@
     <span class="k">return</span> <span class="n">fullPath</span>
 
 
-<div class="viewcode-block" id="check_path_exists"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a><span class="k">def</span> <span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<div class="viewcode-block" id="check_path_exists">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a>
+<span class="k">def</span> <span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raise an exception if the given path does not exist.</span>
 
@@ -394,6 +407,7 @@
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
         <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Path </span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Regions &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -125,9 +127,9 @@
            <div itemprop="articleBody">
              
   <section id="regions">
-<span id="config-regions"></span><h1>Regions<a class="headerlink" href="#regions" title="Permalink to this heading">¶</a></h1>
+<span id="config-regions"></span><h1>Regions<a class="headerlink" href="#regions" title="Link to this heading">¶</a></h1>
 <section id="region-config-section">
-<h2>Region Config Section<a class="headerlink" href="#region-config-section" title="Permalink to this heading">¶</a></h2>
+<h2>Region Config Section<a class="headerlink" href="#region-config-section" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">[regions]</span></code> section of a configuration file contains options related
 to regions either defined in MPAS components’ online analysis or determined
 within MPAS-Analysis using region mask files:</p>
@@ -151,14 +153,14 @@ these regions are named in plot titles and in gallery names on the resulting
 web page.</p>
 </section>
 <section id="region-groups">
-<span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Permalink to this heading">¶</a></h2>
+<span id="config-region-groups"></span><h2>Region Groups<a class="headerlink" href="#region-groups" title="Link to this heading">¶</a></h2>
 <p>Currently, eight analysis tasks (<a class="reference internal" href="../tasks/climatologyMapAntarcticMelt.html#task-climatologymapantarcticmelt"><span class="std std-ref">climatologyMapAntarcticMelt</span></a>,
 <a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>,
 <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, <a class="reference internal" href="../tasks/streamfunctionMOC.html#task-streamfunctionmoc"><span class="std std-ref">streamfunctionMOC</span></a>,
 <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>, <a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) use masks that define regions in an MPAS
 mesh as part of their analysis.  Most of these region group are defined in
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
 Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>,
 <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.

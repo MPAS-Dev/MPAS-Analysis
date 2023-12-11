@@ -1,18 +1,20 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.mpas_xarray.mpas_xarray &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -127,7 +129,9 @@
 <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
 
 
-<div class="viewcode-block" id="open_multifile_dataset"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset">[docs]</a><span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
+<div class="viewcode-block" id="open_multifile_dataset">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset">[docs]</a>
+<span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -217,7 +221,10 @@
     <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="subset_variables"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a><span class="k">def</span> <span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
+
+<div class="viewcode-block" id="subset_variables">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a>
+<span class="k">def</span> <span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a data set and a list of variable names, returns a new data set that</span>
 <span class="sd">    contains only variables with those names.</span>
@@ -263,7 +270,10 @@
     <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="preprocess"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">[docs]</a><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
+
+<div class="viewcode-block" id="preprocess">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">[docs]</a>
+<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
                <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Builds correct time specification for MPAS, allowing a date offset</span>
@@ -357,7 +367,10 @@
     <span class="k">return</span> <span class="n">ds</span></div>
 
 
-<div class="viewcode-block" id="remove_repeated_time_index"><a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a><span class="k">def</span> <span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+
+<div class="viewcode-block" id="remove_repeated_time_index">
+<a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a>
+<span class="k">def</span> <span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove repeated times from xarray dataset.</span>
 
@@ -395,6 +408,7 @@
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">indices</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">ds</span></div>
+
 
 
 <span class="k">def</span> <span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>

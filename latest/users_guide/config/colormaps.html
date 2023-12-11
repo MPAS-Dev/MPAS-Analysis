@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Colormaps &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -129,13 +131,13 @@
            <div itemprop="articleBody">
              
   <section id="colormaps">
-<span id="config-colormaps"></span><h1>Colormaps<a class="headerlink" href="#colormaps" title="Permalink to this heading">¶</a></h1>
+<span id="config-colormaps"></span><h1>Colormaps<a class="headerlink" href="#colormaps" title="Link to this heading">¶</a></h1>
 <p>Each analysis task that includes plots with colormaps has a series of
 configuration options that can be used to manipulate the colormap.
 MPAS-Analysis supports two types of plots, each of which has an associated
 set of options for configuring its colormap.</p>
 <section id="supported-colormaps">
-<h2>Supported Colormaps<a class="headerlink" href="#supported-colormaps" title="Permalink to this heading">¶</a></h2>
+<h2>Supported Colormaps<a class="headerlink" href="#supported-colormaps" title="Link to this heading">¶</a></h2>
 <p>MPAS-Analysis supports all <a class="reference external" href="https://matplotlib.org/users/colormaps.html">matplotlib colormaps</a>, all <a class="reference external" href="https://matplotlib.org/cmocean/">cmocean colormaps</a>,
 all <a class="reference external" href="http://www.fabiocrameri.ch/colourmaps.php">Scientific Colour Map Suite 3.0</a> colormaps, the selection of key
 <a class="reference external" href="https://sciviscolor.org/home/colormaps/">SciVisColor colormaps</a> and five custom color maps: <code class="docutils literal notranslate"><span class="pre">ferret</span></code>,
@@ -143,7 +145,7 @@ all <a class="reference external" href="http://www.fabiocrameri.ch/colourmaps.ph
 <figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../../_images/colormaps.png"><img alt="All available colormaps" src="../../_images/colormaps.png" style="width: 720px;" /></a>
 <figcaption>
-<p><span class="caption-text">All available colormaps</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">All available colormaps</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
 </figcaption>
 </figure>
 <p>To plot all availabe colormpas (as above), run:</p>
@@ -152,7 +154,7 @@ all <a class="reference external" href="http://www.fabiocrameri.ch/colourmaps.ph
 </div>
 </section>
 <section id="indexed-colormaps">
-<h2>Indexed Colormaps<a class="headerlink" href="#indexed-colormaps" title="Permalink to this heading">¶</a></h2>
+<h2>Indexed Colormaps<a class="headerlink" href="#indexed-colormaps" title="Link to this heading">¶</a></h2>
 <p>Indexed colormaps are used in association with contour plots in MPAS-Analysis.
 The following configuration options are associated with an indexed colormap:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap name</span>
@@ -173,7 +175,7 @@ is one more than the number of levels values, and the first and last index
 are used to specify the “under” and “over” color values.</p>
 </section>
 <section id="continuous-colormaps">
-<h2>Continuous Colormaps<a class="headerlink" href="#continuous-colormaps" title="Permalink to this heading">¶</a></h2>
+<h2>Continuous Colormaps<a class="headerlink" href="#continuous-colormaps" title="Link to this heading">¶</a></h2>
 <p>A continuous colormap is specified with a different set of options:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># colormap for model/observations</span>
 <span class="n">colormapName</span> <span class="o">=</span> <span class="n">erdc_iceFire_H</span>
@@ -196,7 +198,7 @@ associated dictionary of arguments.  These are:</p>
 <p>See the associated documentaiton for the arguments to each norm.</p>
 </section>
 <section id="colormpas-in-three-panel-plots">
-<h2>Colormpas in Three Panel Plots<a class="headerlink" href="#colormpas-in-three-panel-plots" title="Permalink to this heading">¶</a></h2>
+<h2>Colormpas in Three Panel Plots<a class="headerlink" href="#colormpas-in-three-panel-plots" title="Link to this heading">¶</a></h2>
 <p>Many MPAS-Analysis tasks include a panel for the main model run, another for
 observations or a control run and a third panel for displaying a bias or the
 the model-reference difference.  In such cases, we support one colormap for the
@@ -221,7 +223,7 @@ each.  For example:</p>
 </div>
 </section>
 <section id="adding-contour-lines">
-<h2>Adding Contour Lines<a class="headerlink" href="#adding-contour-lines" title="Permalink to this heading">¶</a></h2>
+<h2>Adding Contour Lines<a class="headerlink" href="#adding-contour-lines" title="Link to this heading">¶</a></h2>
 <p>Contour lines can be added to a plot with the following options:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># contour line levels</span>
 <span class="n">contourLevels</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">240.</span><span class="p">,</span> <span class="mf">130.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
@@ -238,7 +240,7 @@ shade of gray.</p>
 <p>Append <code class="docutils literal notranslate"><span class="pre">Result</span></code> or <code class="docutils literal notranslate"><span class="pre">Difference</span></code> to these options for a 3-panel plot.</p>
 </section>
 <section id="specifying-colorbar-tick-marks">
-<h2>Specifying Colorbar Tick Marks<a class="headerlink" href="#specifying-colorbar-tick-marks" title="Permalink to this heading">¶</a></h2>
+<h2>Specifying Colorbar Tick Marks<a class="headerlink" href="#specifying-colorbar-tick-marks" title="Link to this heading">¶</a></h2>
 <p>By default, colorbar tick marks are chosen automatically by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.
 To specify tick marks explicitly, use:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">colorbarTicks</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="o">-</span><span class="mf">50.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">5.</span><span class="p">,</span>

@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -122,34 +124,34 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-regions-compute-region-masks-subtask-computeregionmaskssubtask">
-<h1>mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask<a class="headerlink" href="#mpas-analysis-shared-regions-compute-region-masks-subtask-computeregionmaskssubtask" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask<a class="headerlink" href="#mpas-analysis-shared-regions-compute-region-masks-subtask-computeregionmaskssubtask" title="Link to this heading">¶</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.</span></span><span class="sig-name descname"><span class="pre">ComputeRegionMasksSubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsFileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lonVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useMpasMaskCreator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#ComputeRegionMasksSubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.regions.compute_region_masks_subtask.</span></span><span class="sig-name descname"><span class="pre">ComputeRegionMasksSubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsFileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lonVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useMpasMaskCreator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#ComputeRegionMasksSubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" title="Link to this definition">¶</a></dt>
 <dd><p>An analysis tasks for computing cell masks for regions defined by geojson
 features</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of one of the supported region groups (see
+<li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of one of the supported region groups (see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code>)</p></li>
 <li><p><strong>aggregationFunction</strong> (<em>callable</em>) – An aggregation function returned by
 <code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code></p></li>
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the output mask file</p></li>
-<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of an observations file to create masks for.  But default,
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the output mask file</p></li>
+<li><p><strong>obsFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of an observations file to create masks for.  But default,
 lon/lat are taken from an MPAS restart file</p></li>
 <li><p><strong>latVar</strong> (<em>lonVar</em><em>,</em>) – The name of the longitude and latitude variables in <code class="docutils literal notranslate"><span class="pre">obsFileName</span></code></p></li>
-<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
+<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
 Default is the MPAS mesh name</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsFileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lonVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useMpasMaskCreator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#ComputeRegionMasksSubtask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.__init__" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regionGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">meshName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">obsFileName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lonVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lon'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latVar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lat'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">useMpasMaskCreator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/regions/compute_region_masks_subtask.html#ComputeRegionMasksSubtask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Construct the analysis task and adds it as a subtask of the
 <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p>
 <dl class="field-list simple">
@@ -157,9 +159,9 @@ Default is the MPAS mesh name</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of one of the supported region groups (see
+<li><p><strong>regionGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of one of the supported region groups (see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code>)</p></li>
-<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
+<li><p><strong>meshName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the mesh or grid, used as part of the mask file name.
 Default is the MPAS mesh name</p></li>
 </ul>
 </dd>

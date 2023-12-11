@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>oceanRegionalProfiles &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -147,7 +149,7 @@
            <div itemprop="articleBody">
              
   <section id="oceanregionalprofiles">
-<span id="task-oceanregionalprofiles"></span><h1>oceanRegionalProfiles<a class="headerlink" href="#oceanregionalprofiles" title="Permalink to this heading">¶</a></h1>
+<span id="task-oceanregionalprofiles"></span><h1>oceanRegionalProfiles<a class="headerlink" href="#oceanregionalprofiles" title="Link to this heading">¶</a></h1>
 <p>An analysis task for plotting depth profiles of temperature, salinity,
 potential density, etc. averaged over regions and in time. The plots also
 include a measure of variability (the standard deviation in space and time).</p>
@@ -157,7 +159,7 @@ include a measure of variability (the standard deviation in space and time).</p>
 </pre></div>
 </div>
 <section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Permalink to this heading">¶</a></h2>
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[oceanRegionalProfiles]</span>
 <span class="c1">## options related to plotting vertical profiles of regional means (and</span>
@@ -207,7 +209,7 @@ include a measure of variability (the standard deviation in space and time).</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">[oceanRegionalProfiles]</span></code> section contains a list of <code class="docutils literal notranslate"><span class="pre">regionGroups</span></code>,
 one or more of the <a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> defined in
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.2.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.</p>
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/stable/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.</p>
 <p>For each region group, there is a corresponding section
 <code class="docutils literal notranslate"><span class="pre">[profiles&lt;RegionGroup&gt;]</span></code>, where <code class="docutils literal notranslate"><span class="pre">&lt;RegionGroup&gt;</span></code> is the name of the region
 group with spaces removed.  In this section, the <code class="docutils literal notranslate"><span class="pre">fields</span></code> dictionary is used
@@ -234,7 +236,7 @@ The default is the full range.</p>
 </dl>
 </section>
 <section id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Permalink to this heading">¶</a></h2>
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
 <a class="reference internal image-reference" href="../../_images/ocean_profile.png"><img alt="../../_images/ocean_profile.png" class="align-center" src="../../_images/ocean_profile.png" style="width: 500px;" /></a>
 </section>
 </section>

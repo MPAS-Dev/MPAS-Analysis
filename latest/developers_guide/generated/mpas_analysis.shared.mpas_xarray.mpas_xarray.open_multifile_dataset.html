@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset &mdash; MPAS-Analysis latest documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -125,16 +127,16 @@
            <div itemprop="articleBody">
              
   <section id="mpas-analysis-shared-mpas-xarray-mpas-xarray-open-multifile-dataset">
-<h1>mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset<a class="headerlink" href="#mpas-analysis-shared-mpas-xarray-mpas-xarray-open-multifile-dataset" title="Permalink to this heading">¶</a></h1>
+<h1>mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset<a class="headerlink" href="#mpas-analysis-shared-mpas-xarray-mpas-xarray-open-multifile-dataset" title="Link to this heading">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset">
-<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.mpas_xarray.mpas_xarray.</span></span><span class="sig-name descname"><span class="pre">open_multifile_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationStartTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xtime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iselValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#open_multifile_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.mpas_xarray.mpas_xarray.</span></span><span class="sig-name descname"><span class="pre">open_multifile_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fileNames</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calendar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simulationStartTime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeVariableName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xtime'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variableList</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iselValues</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/mpas_xarray/mpas_xarray.html#open_multifile_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" title="Link to this definition">¶</a></dt>
 <dd><p>Opens and returns an xarray data set given file name(s) and the MPAS
 calendar name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
+<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores</p></li>
 <li><p><strong>simulationStartTime</strong> (<em>string</em><em>, </em><em>optional</em>) – <p>The start date of the simulation, used to convert from time variables
 expressed as days since the start of the simulation to days since the
@@ -149,8 +151,8 @@ forms:</p>
 start of the simulation.</p>
 </p></li>
 <li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> or <code class="docutils literal notranslate"><span class="pre">'Time'</span></code>).</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
-<li><p><strong>selectCorrdValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>selectCorrdValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
 values used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.dataset.sel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -158,7 +160,7 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
 arrays of indices used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.dataset.isel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -174,9 +176,9 @@ An example:</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.11)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string or
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.12)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string or
     a floating-pont number of days since the start of the simulation).</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.12)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
     variable is a number of days since the start of the simulation but
     simulationStartTime is None.</p></li>
 </ul>
