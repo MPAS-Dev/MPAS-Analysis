@@ -1,0 +1,43 @@
+.. _sose:
+
+2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)
+========================================================================
+
+Description
+-----------
+Monthly potential temperature, salinity velocity components and neutral
+density output from the Southern Ocean State Estimate (SOSE) covering
+years 2005-2010
+
+Source
+------
+`SOSE Website at UCSD`_
+
+Release Policy
+--------------
+`Conditions of use`_: The data on
+these webpages are made freely available for scientific, bona fide,
+not-for-profit research only. If your use of the data is different (e.g.
+commercial), you must contact the data providers and receive written
+permission for your use of the data prior to any such use. The user must
+acknowledge SOSE data in all products or publications that use them, e.g.
+by including the following written note: "Computational resources for the
+SOSE were provided by NSF XSEDE resource grant OCE130007." An appropriate
+citation should also be made.
+
+References
+----------
+`Mazloff et al. (2010)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSose`
+- :ref:`task_soseTransects`
+
+.. _`SOSE Website at UCSD`: http://sose.ucsd.edu/sose_stateestimation_data_05to10.html
+.. _`Conditions of use`: http://sose.ucsd.edu/sose_stateestimation_disclaimer.html
+.. _`Mazloff et al. (2010)`: http://doi.org/10.1175/2009JPO4236.1
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SOSE/obs.bib
+

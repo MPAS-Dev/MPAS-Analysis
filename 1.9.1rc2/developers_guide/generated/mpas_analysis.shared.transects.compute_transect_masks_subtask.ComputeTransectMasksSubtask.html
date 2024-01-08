@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask &mdash; MPAS-Analysis 1.9.1rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/documentation_options.js?v=ec8f56d0"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Design Documents" href="../../design_docs/index.html" />
+    <link rel="prev" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" href="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.1rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#climatology">Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#time-series">Time Series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#transects">Transects</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html">mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/developers_guide/generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mpas-analysis-shared-transects-compute-transect-masks-subtask-computetransectmaskssubtask">
+<h1>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask<a class="headerlink" href="#mpas-analysis-shared-transects-compute-transect-masks-subtask-computetransectmaskssubtask" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.transects.compute_transect_masks_subtask.</span></span><span class="sig-name descname"><span class="pre">ComputeTransectMasksSubtask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transectGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask" title="Link to this definition">¶</a></dt>
+<dd><p>An analysis tasks for computing cell masks for transects defined by geojson
+features</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>aggregationFunction</strong> (<em>callable</em>) – An aggregation function returned by
+<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code></p></li>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+repository, defining the shapes to be masked</p></li>
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the output mask file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parentTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transectGroup</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subprocessCount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/transects/compute_transect_masks_subtask.html#ComputeTransectMasksSubtask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Construct the analysis task and adds it as a subtask of the
+<code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
+<code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
+<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of a transect group, see
+<code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.transects.get_transect_info()</span></code></p></li>
+<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask, default
+is as many processes as allowed</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(parentTask, transectGroup[, ...])</p></td>
+<td><p>Construct the analysis task and adds it as a subtask of the <code class="docutils literal notranslate"><span class="pre">parentTask</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
+<td><p>Add a subtask to this tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_analysis_enabled</span></code>(analysisOptionName[, ...])</p></td>
+<td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_generate</span></code>()</p></td>
+<td><p>Determines if this analysis should be generated, based on the <code class="docutils literal notranslate"><span class="pre">generate</span></code> config option and <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code> and <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
+<td><p>Close the Process object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">expand_transect_names</span></code>(transectNames)</p></td>
+<td><p>If <code class="docutils literal notranslate"><span class="pre">transectNames</span></code> contains <code class="docutils literal notranslate"><span class="pre">'all'</span></code>, make sure the geojson file exists and then return all the transect names found in the file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
+<td><p>Return whether process is alive</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
+<td><p>Wait until child process terminates</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
+<td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_transect_mask</span></code>()</p></td>
+<td><p>If the geojson mask file has not already been cached in the diagnostics or custom diagnostic directories, it will be created in the analysis output's masks directory.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
+<td><p>Sets up logging and then runs the analysis task.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
+<td><p>Only run this task after the given task has completed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
+<td><p>Compute the requested climatologies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
+<td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
+<td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
+<td><p>Start child process</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
+<td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">BLOCKED</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FAIL</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">READY</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">RUNNING</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SUCCESS</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">UNSET</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">authkey</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">daemon</span></code></p></td>
+<td><p>Return whether process is a daemon</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exitcode</span></code></p></td>
+<td><p>Return exit code of process or <cite>None</cite> if it has yet to stop</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ident</span></code></p></td>
+<td><p>Return identifier (PID) of process or <cite>None</cite> if it has yet to start</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pid</span></code></p></td>
+<td><p>Return identifier (PID) of process or <cite>None</cite> if it has yet to start</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sentinel</span></code></p></td>
+<td><p>Return a file descriptor (Unix) or handle (Windows) suitable for waiting for process termination.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../design_docs/index.html" class="btn btn-neutral float-right" title="Design Documents" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reorganize Timekeeping &mdash; MPAS-Analysis 1.9.1rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/documentation_options.js?v=ec8f56d0"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generalize Calendar supported by Analysis" href="generalize_calendar.html" />
+    <link rel="prev" title="Config File Reorganization" href="config_file_reorganization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.1rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Design Documents</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis_task_template.html">Analysis Task Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Design Documents</a></li>
+      <li class="breadcrumb-item active">Reorganize Timekeeping</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/design_docs/timekeeping_reorg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="reorganize-timekeeping">
+<h1>Reorganize Timekeeping<a class="headerlink" href="#reorganize-timekeeping" title="Link to this heading">¶</a></h1>
+<h2>
+Xylar Asay-Davis <br>
+date: 2017/02/06 <br>
+</h2>
+<h3> Summary </h3>
+
+Currently, the `Date` class is used to parse a date object from a date string
+(e.g. '0001-01-01_00:00:00') taken from MPAS namelists, streams files or time
+variables (e.g. `xtime`).  However, this class assumes a 365-day calendar and
+cannot easily be adapted to the Gregorian calendar also supported by MPAS
+components (`config_calendar_type = 'gregorian'`).  Furthermore, existing
+routines exist to handle most of the capabilites
+of the `Date` class.  The proposed reorganization would eliminate the `Date` class
+in favor of a numer of helper functions that can be used to convert between various
+date formats: date strings, days since a reference date, `datetime.datetime` objects
+and `relativedelta` objects (see below).  The success of this reorganization will be
+demonstrated when the existing analysis can be performed successfully with the new
+utility functions with both MPAS calendars, the `'gregorian_noleap'` (365-day) calendar
+used by most existing ACME and MPAS runs and the `'gregorian'` calendar also supported
+in MPAS components.
+
+
+<h2> Requirements </h2><h3> Requirement: Date string parsing supports both MPAS calendars <br>
+Date last modified: 2017/02/06 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>There must be a way to parse dates from MPAS that is aware of the appropriate calendar
+stored in the <code class="docutils literal notranslate"><span class="pre">config_calendar_type</span></code> namelist option, either <code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code> or
+<code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code>.</p>
+<h3> Requirement: Capability of incrementing dates by a number of years and/or months <br>
+Date last modified: 2017/02/06 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The analysis requires a way of incrementing a given date by an interval specified in
+not only days, hours, minutes and seconds but also months and years.  The standard
+<code class="docutils literal notranslate"><span class="pre">datetime.timedelta</span></code> does not support increments by years and months because they are
+not fixed periods of time.  The existing <code class="docutils literal notranslate"><span class="pre">Date</span></code> class in MPAS-Analysis supports
+increments in months and years, but only for the <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code> (365-day) calendar.
+A method must exist to increment dates on either calendar by a given number of years
+and/or months (in addition to days, hours, etc.).</p>
+<h2> Design and Implementation </h2><h3> Implementation: Date string parsing supports both MPAS calendars <br>
+Date last modified: 2017/02/06 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The implementation is on the branch:
+<a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg">https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg</a>
+and in PR #102</p>
+<p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> is documented as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stringToDatetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a date string and a calendar, returns a `datetime.datetime`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dateString : string</span>
+<span class="sd">        A date and time in one of the following formats:</span>
+<span class="sd">        - YYYY-MM-DD hh:mm:ss</span>
+<span class="sd">        - YYYY-MM-DD hh.mm.ss</span>
+<span class="sd">        - YYYY-MM-DD SSSSS</span>
+<span class="sd">        - DDD hh:mm:ss</span>
+<span class="sd">        - DDD hh.mm.ss</span>
+<span class="sd">        - DDD SSSSS</span>
+<span class="sd">        - hh.mm.ss</span>
+<span class="sd">        - hh:mm:ss</span>
+<span class="sd">        - YYYY-MM-DD</span>
+<span class="sd">        - YYYY-MM</span>
+<span class="sd">        - SSSSS</span>
+
+<span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
+<span class="sd">        from the time portion of the string.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    datetime : A `datetime.datetime` object</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If an invalid `dateString` is supplied.</span>
+
+<span class="sd">    Author</span>
+<span class="sd">    ------</span>
+<span class="sd">    Xylar Asay-Davis</span>
+
+<span class="sd">    Last modified</span>
+<span class="sd">    -------------</span>
+<span class="sd">    02/04/2017</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<p>As long as <code class="docutils literal notranslate"><span class="pre">relativedelta</span></code> objects rather than <code class="docutils literal notranslate"><span class="pre">datetime.timedelta</span></code> objects are used to increment
+<code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects, <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> can be used to represent dates on either the Gregorian
+or the 365-day calendar.</p>
+<h3> Implementation: Capability of incrementing dates by a number of years and/or months <br>
+Date last modified: 2017/02/09 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>The implementation is on the branch:
+<a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg">https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg</a>
+and in PR #102</p>
+<p>The proposed implementation adds a new class MpasRelativeDelta derived from
+<code class="docutils literal notranslate"><span class="pre">dateutil.relativedelta.relativedelta</span></code> to compute the expected
+increments in years and months (as well as days, hours, minutes and seconds, as needed).
+The class is documented as follows</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MpasRelativeDelta</span><span class="p">(</span><span class="n">relativedelta</span><span class="p">):</span>
+    <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    MpasRelativeDelta is a subclass of dateutil.relativedelta for relative time</span>
+<span class="s2">    intervals with different MPAS calendars.</span>
+
+<span class="s2">    Only relative intervals (years, months, etc.) are supported and not the</span>
+<span class="s2">    absolute date specifications (year, month, etc.).  Addition/subtraction</span>
+<span class="s2">    of datetime.datetime objects (but not other MpasRelativeDelta,</span>
+<span class="s2">    datetime.timedelta or other related objects) is supported.</span>
+
+<span class="s2">    Author</span>
+<span class="s2">    ------</span>
+<span class="s2">    Xylar Asay-Davis</span>
+
+<span class="s2">    Last Modified</span>
+<span class="s2">    -------------</span>
+<span class="s2">    02/09/2017</span>
+</pre></div>
+</div>
+<p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> is documented as follows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
+<span class="o">...</span>
+<span class="k">def</span> <span class="nf">stringToRelativedelta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a date string and a calendar, returns an instance of</span>
+<span class="sd">    `MpasRelativeDelta`</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dateString : string</span>
+<span class="sd">        A date and time in one of the following formats:</span>
+<span class="sd">        - YYYY-MM-DD hh:mm:ss</span>
+<span class="sd">        - YYYY-MM-DD hh.mm.ss</span>
+<span class="sd">        - YYYY-MM-DD SSSSS</span>
+<span class="sd">        - DDD hh:mm:ss</span>
+<span class="sd">        - DDD hh.mm.ss</span>
+<span class="sd">        - DDD SSSSS</span>
+<span class="sd">        - hh.mm.ss</span>
+<span class="sd">        - hh:mm:ss</span>
+<span class="sd">        - YYYY-MM-DD</span>
+<span class="sd">        - YYYY-MM</span>
+<span class="sd">        - SSSSS</span>
+
+<span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
+<span class="sd">        from the time portion of the string.</span>
+
+<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">        The name of one of the calendars supported by MPAS cores</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    relativedelta : An `MpasRelativeDelta` object</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If an invalid `dateString` is supplied.</span>
+
+<span class="sd">    Author</span>
+<span class="sd">    ------</span>
+<span class="sd">    Xylar Asay-Davis</span>
+
+<span class="sd">    Last modified</span>
+<span class="sd">    -------------</span>
+<span class="sd">    02/04/2017</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+</pre></div>
+</div>
+<h2> Testing </h2><h3> Testing and Validation: Date string parsing supports both MPAS calendars <br>
+Date last modified: 2017/02/08 <br>
+Contributors: Xylar Asay-Davis
+</h3>
+Analysis will be run on Edison with all available configurations found in `configs/edison`.  As there
+are currently no plans to run with the `gregorian` calendar option, we do not have test runs that use this
+calendar.  If this situation changes in the future, we'll test at that time.
+
+Regression tests previously for `Date` has been modified to test the new utility functions. New tests
+have been added to test that dates with both `gregorian` and `gregorian_noleap` calendars behave as
+expected, particularly around the leap day.
+
+<h2> Testing </h2>
+<h3> Testing and Validation: Capability of incrementing dates by a number of years and/or months <br>
+Date last modified: 2017/02/06 <br>
+Contributors: Xylar Asay-Davis
+</h3><p>Same as above.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="config_file_reorganization.html" class="btn btn-neutral float-left" title="Config File Reorganization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generalize_calendar.html" class="btn btn-neutral float-right" title="Generalize Calendar supported by Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

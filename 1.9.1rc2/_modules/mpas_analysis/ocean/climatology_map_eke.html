@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.climatology_map_eke &mdash; MPAS-Analysis 1.9.1rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/documentation_options.js?v=ec8f56d0"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.9.1rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.climatology_map_eke</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.climatology_map_eke</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+    <span class="n">RemapObservedClimatologySubtask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapEKE">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE">[docs]</a>
+<span class="k">class</span> <span class="nc">ClimatologyMapEKE</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for comparison of eddy kinetic energy (eke) against</span>
+<span class="sd">    observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Kevin Rosa</span>
+
+<div class="viewcode-block" id="ClimatologyMapEKE.__init__">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis, Kevin Rosa</span>
+
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;eke&#39;</span>
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapEKE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapEKE&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;eke&#39;</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="c1"># EKE observations are annual climatology so only accept annual</span>
+        <span class="c1"># climatology **should move this to setup_and_check()</span>
+        <span class="k">if</span> <span class="n">seasons</span> <span class="o">!=</span> <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of seasons. For EKE, may only request annual &#39;</span>
+                             <span class="s1">&#39;climatology&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
+                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+
+        <span class="c1"># the variables in variableList will be added to mpasClimatologyTask</span>
+        <span class="c1"># along with the seasons.</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;timeMonthly_avg_velocityZonalSquared&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;timeMonthly_avg_velocityMeridionalSquared&#39;</span><span class="p">]</span>
+        <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasEKEClimatology</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">,</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+            <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
+
+        <span class="c1"># to compare to observations:</span>
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="n">refTitleLabel</span> <span class="o">=</span> \
+                <span class="s1">&#39;Observations (Surface EKE from Drifter Data)&#39;</span>
+
+            <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Subdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">))</span>
+
+            <span class="n">obsFileName</span> <span class="o">=</span> \
+                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/drifter_variance_20180804.nc&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">observationsDirectory</span><span class="p">)</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;eke&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;ekeDRIFTER&#39;</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: EKE from Drifters&#39;</span>
+
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedEKEClimatology</span><span class="p">(</span>
+                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+        <span class="c1"># compare with previous run:</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;eke&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                    <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;EKE&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;cm$^2$/s$^2$&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Mean Surface Eddy Kinetic Energy&#39;</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Eddy Kinetic Energy&#39;</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;eke&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># adds to the functionality of RemapDepthSlicesSubtask</span>
+<span class="k">class</span> <span class="nc">RemapMpasEKEClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of eddy kinetic energy from means of</span>
+<span class="sd">    velocity and velocity-squared.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Kevin Rosa</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct velocity magnitude as part of the climatology</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="c1"># first, call the base class&#39;s version of this function so we extract</span>
+        <span class="c1"># the desired slices.</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasEKEClimatology</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">customize_masked_climatology</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span>
+                                                               <span class="n">season</span><span class="p">)</span>
+
+        <span class="c1"># calculate mpas eddy kinetic energy</span>
+        <span class="n">scaleFactor</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># m2/s2 to cm2/s2</span>
+        <span class="n">eke</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">scaleFactor</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityZonalSquared</span> <span class="o">-</span>
+             <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityZonal</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span>
+             <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityMeridionalSquared</span> <span class="o">-</span>
+             <span class="n">climatology</span><span class="o">.</span><span class="n">timeMonthly_avg_velocityMeridional</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># drop unnecessary fields before re-mapping</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityZonalSquared&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;timeMonthly_avg_velocityMeridionalSquared&#39;</span><span class="p">])</span>
+
+        <span class="c1"># this creates a new variable eke in climatology (like netcdf)</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;eke&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">eke</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">eke</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cm$^[2]$ s$^{-2}$&#39;</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">eke</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;eddy kinetic energy&#39;</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
+
+
+<span class="k">class</span> <span class="nc">RemapObservedEKEClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for reading and remapping EKE observations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Kevin Rosa</span>
+
+    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get a MeshDescriptor for the observation grid</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name describing the source grid</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
+<span class="sd">            The descriptor for the observation grid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Kevin Rosa</span>
+
+        <span class="c1"># create a descriptor of the observation grid using the lat/lon</span>
+        <span class="c1"># coordinates</span>
+        <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
+                                                  <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;Lat&#39;</span><span class="p">,</span>
+                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;Lon&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">obsDescriptor</span>
+
+    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        read in the data sets for observations, and possibly rename some</span>
+<span class="sd">        variables and dimensions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fileName : str</span>
+<span class="sd">            observation file name</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        dsObs : ``xarray.Dataset``</span>
+<span class="sd">            The observational dataset</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Kevin Rosa, Xylar Asay-Davis</span>
+
+        <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
+
+        <span class="n">scaleFactor</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># m2/s2 to cm2/s2</span>
+        <span class="n">eke</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">scaleFactor</span> <span class="o">*</span> \
+            <span class="p">(</span><span class="n">dsIn</span><span class="p">[</span><span class="s1">&#39;Up2bar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">+</span> <span class="n">dsIn</span><span class="p">[</span><span class="s1">&#39;Vp2bar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># create a new dataset for the observations. solves transpose issues.</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">({</span><span class="s1">&#39;eke&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;longitude&#39;</span><span class="p">],</span> <span class="n">eke</span><span class="o">.</span><span class="n">T</span><span class="p">)},</span>
+                           <span class="n">coords</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Lat&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;latitude&#39;</span><span class="p">],</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">Lat</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+                                   <span class="s1">&#39;Lon&#39;</span><span class="p">:</span> <span class="p">([</span><span class="s1">&#39;longitude&#39;</span><span class="p">],</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">Lon</span><span class="o">.</span><span class="n">values</span><span class="p">)}</span>
+                           <span class="p">)</span>
+        <span class="c1"># update attributes</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">eke</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;cm$^2$ s$^{-2}$&#39;</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">eke</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Eddy kinetic energy&#39;</span>
+
+        <span class="k">return</span> <span class="n">dsObs</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
