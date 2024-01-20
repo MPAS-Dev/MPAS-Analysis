@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.io.utility.build_config_full_path &mdash; MPAS-Analysis stable documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -133,13 +135,13 @@
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – configuration from which to read the path</p></li>
-<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of a section in <cite>config</cite>, which must have an option
+<li><p><strong>section</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of a section in <cite>config</cite>, which must have an option
 <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code></p></li>
-<li><p><strong>relativePathOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – the name of an option in <code class="docutils literal notranslate"><span class="pre">section</span></code> of the relative path within
+<li><p><strong>relativePathOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of an option in <code class="docutils literal notranslate"><span class="pre">section</span></code> of the relative path within
 <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> (or possibly an absolute path)</p></li>
-<li><p><strong>relativePathSection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a section for <code class="docutils literal notranslate"><span class="pre">relativePathOption</span></code> if not <code class="docutils literal notranslate"><span class="pre">section</span></code></p></li>
-<li><p><strong>defaultPath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a path to return if the resulting path doesn’t exist.</p></li>
-<li><p><strong>baseDirectoryOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the option in <code class="docutils literal notranslate"><span class="pre">section</span></code> for the base directorys</p></li>
+<li><p><strong>relativePathSection</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a section for <code class="docutils literal notranslate"><span class="pre">relativePathOption</span></code> if not <code class="docutils literal notranslate"><span class="pre">section</span></code></p></li>
+<li><p><strong>defaultPath</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – the name of a path to return if the resulting path doesn’t exist.</p></li>
+<li><p><strong>baseDirectoryOption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – the name of the option in <code class="docutils literal notranslate"><span class="pre">section</span></code> for the base directorys</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

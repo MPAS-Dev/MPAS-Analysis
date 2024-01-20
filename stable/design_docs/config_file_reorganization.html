@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Config File Reorganization &mdash; MPAS-Analysis stable documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -182,7 +184,7 @@ Contributors: Xylar Asay-Davis
 <h3> Implementation: consistent section and option names <br>
 Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
-</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a> in #86, “<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>” has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes <code class="docutils literal notranslate"><span class="pre">all_</span></code> and <code class="docutils literal notranslate"><span class="pre">no_</span></code> make splitting and comparison simpler in the implementation.</p>
+</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a> in #86, “<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>“ has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes <code class="docutils literal notranslate"><span class="pre">all_</span></code> and <code class="docutils literal notranslate"><span class="pre">no_</span></code> make splitting and comparison simpler in the implementation.</p>
 <h2> Testing </h2><h3> Testing and Validation: a simple way of turning on and off individual analysis modules <br>
 Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
