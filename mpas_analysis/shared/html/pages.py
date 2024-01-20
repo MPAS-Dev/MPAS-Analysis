@@ -92,6 +92,9 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
             html_dir = config.get('output', 'htmlSubdirectory')
             if html_dir.startswith(base_path):
                 url = base_url + html_dir[len(base_path):]
+                if not url.endswith('/'):
+                    # lack of trailing '/' is causing issues on NERSC's portal
+                    url = f'{url}/'
                 print(f'Web page: {url}')
     if url is None:
         print("Done.")
