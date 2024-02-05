@@ -1043,7 +1043,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                     refTopDepth = dsMOCIn.depth.values
 
                 # first, copy all computed data
-                for inIndex in range(dsMOCIn.dims['Time']):
+                for inIndex in range(dsMOCIn.sizes['Time']):
 
                     mask = np.logical_and(
                         dsMOCIn.year[inIndex].values == years,
@@ -1219,7 +1219,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 dsMOCIn.load()
 
                 # first, copy all computed data
-                for inIndex in range(dsMOCIn.dims['Time']):
+                for inIndex in range(dsMOCIn.sizes['Time']):
 
                     mask = np.logical_and(
                         dsMOCIn.year[inIndex].values == years,

@@ -84,7 +84,7 @@ def open_mpas_dataset(fileName, calendar,
         # select only the data in the specified range of dates
         ds = ds.sel(Time=slice(startDate, endDate))
 
-    if ds.dims['Time'] == 0:
+    if ds.sizes['Time'] == 0:
         raise ValueError('The data set contains no Time entries between '
                          'dates {} and {}.'.format(
                              days_to_datetime(startDate, calendar=calendar),

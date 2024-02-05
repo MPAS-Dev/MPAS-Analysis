@@ -130,7 +130,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         zBot = zMid.where(zMid.verticalIndex == self.maxLevelCell).sum(
             dim='nVertLevels')
 
-        verticalIndices = np.zeros((len(self.depths), ds.dims['nCells']), int)
+        verticalIndices = np.zeros((len(self.depths), ds.sizes['nCells']), int)
 
         mask = np.zeros(verticalIndices.shape, bool)
 
@@ -145,7 +145,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
                 verticalIndices[depthIndex, :] = self.maxLevelCell.values
                 mask[depthIndex, :] = self.maxLevelCell.values >= 0
             else:
-                
+
                 diff = np.abs(zMid - depth).where(ocean_mask, drop=True)
                 verticalIndex = diff.argmin(dim='nVertLevels')
 
@@ -199,7 +199,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
 
         climatology.coords['verticalIndex'] = \
             ('nVertLevels',
-             np.arange(climatology.dims['nVertLevels']))
+             np.arange(climatology.sizes['nVertLevels']))
 
         depthNames = [str(depth) for depth in self.depths]
 
