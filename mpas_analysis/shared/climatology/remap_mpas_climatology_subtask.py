@@ -14,7 +14,7 @@ import numpy
 import os
 
 from mpas_tools.io import write_netcdf
-from pyremap import MpasMeshDescriptor
+from pyremap import MpasCellMeshDescriptor, MpasVertexMeshDescriptor
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -416,9 +416,12 @@ class RemapMpasClimatologySubtask(AnalysisTask):
                 self.comparisonDescriptors[comparisonGridName]
             self.comparisonGridName = comparisonDescriptor.meshName
             meshName = config.get('input', 'mpasMeshName')
-            mpasDescriptor = MpasMeshDescriptor(
-                self.restartFileName, meshName=meshName,
-                vertices=self.vertices)
+            if self.vertices:
+                mpasDescriptor = MpasVertexMeshDescriptor(
+                    self.restartFileName, meshName=meshName)
+            else:
+                mpasDescriptor = MpasCellMeshDescriptor(
+                    self.restartFileName, meshName=meshName)
             self.mpasMeshName = mpasDescriptor.meshName
 
             self.remappers[comparisonGridName] = get_remapper(
