@@ -113,7 +113,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasMeshDescriptor</span>
+<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">,</span> <span class="n">MpasVertexMeshDescriptor</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -541,9 +541,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
             <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
-            <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasMeshDescriptor</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">,</span>
-                <span class="n">vertices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
+                <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasVertexMeshDescriptor</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">mpasDescriptor</span><span class="o">.</span><span class="n">meshName</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_remapper</span><span class="p">(</span>
