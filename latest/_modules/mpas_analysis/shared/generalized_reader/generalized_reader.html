@@ -258,7 +258,7 @@
     <span class="c1"># select only the data in the specified range of dates</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The data set contains no Time entries between &#39;</span>
                          <span class="s1">&#39;dates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                              <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">),</span>
