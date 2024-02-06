@@ -542,16 +542,20 @@ def plot_projection_comparison(
     # Authors
     # -------
     # Xylar Asay-Davis
-    def add_arrow_to_line_2d(ax, path, arrow_spacing=8e5, arrow_width=1.5e4):
+
+    def add_arrow_to_line_2d(ax, poly, arrow_spacing=8e5, arrow_width=1.5e4):
         """
         https://stackoverflow.com/a/27637925/7728169
         Add arrows to a matplotlib.lines.Line2D at selected locations.
+
+        Polygons instead of paths, following
+        https://gis.stackexchange.com/a/246861/143986
         """
-        v = path.vertices
-        x = v[:, 0]
-        y = v[:, 1]
+        x = poly[:, 0]
+        y = poly[:, 1]
         arrows = []
-        s = np.cumsum(np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2))
+        delta = np.sqrt(np.diff(x) ** 2 + np.diff(y) ** 2)
+        s = np.cumsum(delta)
         indices = np.searchsorted(
             s, arrow_spacing*np.arange(1, int(s[-1]/arrow_spacing)))
         for n in indices:
@@ -610,7 +614,8 @@ def plot_projection_comparison(
             if arrows is not None:
                 for collection in cs.collections:
                     for path in collection.get_paths():
-                        add_arrow_to_line_2d(ax, path)
+                        for poly in path.to_polygons():
+                            add_arrow_to_line_2d(ax, poly)
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
