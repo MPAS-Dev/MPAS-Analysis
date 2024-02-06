@@ -372,7 +372,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
             # need to add a dummy year coordinate
             dsObs = dsObs.rename({'month': 'Time'})
             dsObs.coords['month'] = dsObs['Time']
-            dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
+            dsObs.coords['year'] = ('Time', np.ones(dsObs.sizes['Time'], int))
 
         data_vars = {}
         for fieldName in self.fieldNames:

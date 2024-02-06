@@ -270,7 +270,7 @@ class ComputeTransportSubtask(AnalysisTask):
                                    startDate=startDate,
                                    endDate=endDate) as dsOut:
 
-                for inIndex in range(dsOut.dims['Time']):
+                for inIndex in range(dsOut.sizes['Time']):
 
                     mask = numpy.logical_and(
                         dsOut.year[inIndex].values == years,

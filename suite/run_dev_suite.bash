@@ -6,14 +6,13 @@ env_name=mpas_dev
 
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
-source $conda_base/etc/profile.d/mamba.sh
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
 branch=$(git symbolic-ref --short HEAD)
 
 # test building the docs
-mamba activate ${env_name}
+conda activate ${env_name}
 cd docs
 make clean
 make html

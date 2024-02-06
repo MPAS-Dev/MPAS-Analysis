@@ -715,7 +715,7 @@ def _setup_climatology_caching(ds, startYearClimo, endYearClimo,
 
     cacheInfo = []
 
-    cacheIndices = -1 * numpy.ones(ds.dims['Time'], int)
+    cacheIndices = -1 * numpy.ones(ds.sizes['Time'], int)
     monthsInDs = ds.month.values
     yearsInDs = ds.year.values
 
@@ -787,7 +787,7 @@ def _cache_individual_climatologies(ds, cacheInfo, printProgress,
 
         totalDays = dsYear.daysInMonth.sum(dim='Time').values
 
-        monthCount = dsYear.dims['Time']
+        monthCount = dsYear.sizes['Time']
 
         climatology = compute_climatology(dsYear, monthValues, calendar,
                                           maskVaries=False)

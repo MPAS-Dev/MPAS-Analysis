@@ -303,7 +303,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                                    startDate=startDate,
                                    endDate=endDate) as dsIn:
 
-                for inIndex in range(dsIn.dims['Time']):
+                for inIndex in range(dsIn.sizes['Time']):
 
                     mask = np.logical_and(
                         dsIn.year[inIndex].values == years,
