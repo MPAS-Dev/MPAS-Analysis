@@ -1,0 +1,46 @@
+.. _aviso_ssh:
+
+AVISO Absolute Dynamic Topography
+=================================
+
+Description
+-----------
+`NASA JPL AVISO website`_
+This dataset contains absolute dynamic topography (similar to sea level
+but with respect to the geoid) binned and averaged monthly on 1 degree
+grids. The coverage is from October 1992 to December 2010. These data
+were provided by AVISO (French space agency data provider) to support the
+CMIP5 (Coupled Model Intercomparison Project Phase 5) under the World
+Climate Research Program (WCRP) and was first made available via the JPL
+Earth System Grid. The dynamic topography are derived from sea surface
+height measured by several satellites including Envisat, TOPEX/Poseidon,
+Jason-1 and OSTM/Jason-2, and referenced to the geoid. Along with this
+dataset, two additional ancillary data files are included in the same
+directory which contain the number of observations and standard error
+co-located on the same 1 degree grids.
+
+Source
+------
+`NASA JPL AVISO website`_
+
+Release Policy
+--------------
+When using Ssalto/Duacs data (NRT or DT along-track Absolute Dynamic
+Topography (ADT), maps of SLA geostrophic currents (MSLA UV) or maps of
+ADT heights and currents (MADT H and UV), climatologies and averages of
+MSLA-H), please cite: "The altimeter products were produced by
+Ssalto/Duacs and distributed by Aviso, with support from Cnes
+(http://www.aviso.altimetry.fr/duacs/)"
+
+References
+----------
+`AVISO: Sea Surface Height above Geoid`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSSH`
+
+.. _`NASA JPL AVISO website`: https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO
+.. _`NASA JPL AVISO website`: https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO
+.. _`AVISO: Sea Surface Height above Geoid`: ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf
+
