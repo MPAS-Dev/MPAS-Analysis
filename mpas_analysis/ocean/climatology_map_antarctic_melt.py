@@ -117,7 +117,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         if controlConfig is None:
 
             refTitleLabel = \
-                'Observations (Adusumilli et al, 2020)'
+                'Observations (Paolo et al, 2023)'
 
             observationsDirectory = build_obs_path(
                 config, 'ocean', 'meltSubdirectory')
@@ -135,12 +135,12 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
                 res = np.amax(avail_res[valid])
 
             obsFileName = \
-                f'{observationsDirectory}/Adusumilli/Adusumilli_2020_' \
-                f'iceshelf_melt_rates_2010-2018_v0_6000x6000km_{res:g}km_' \
-                f'Antarctic_stereo.20230504.nc'
+                f'{observationsDirectory}/Paolo/Paolo_2023_' \
+                f'iceshelf_melt_rates_1992-2017_v1.0_6000x6000km_{res:g}km_' \
+                f'Antarctic_stereo.20240220.nc'
             refFieldName = 'meltRate'
-            outFileLabel = 'meltAdusumilli'
-            galleryName = 'Observations: Adusumilli et al. (2020)'
+            outFileLabel = 'meltPaolo'
+            galleryName = 'Observations: Paolo et al. (2023)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
