@@ -638,6 +638,56 @@
 
   <observation>
     <name>
+      Antarctic melt rates and fluxes
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      Melt rates and melt fluxes from Paolo et al. (2023)
+    </description>
+    <source>
+      [Data from: ANT_G1920V01_IceShelfMelt.nc](https://doi.org/10.5067/SE3XH9RXQWAM)
+    </source>
+    <releasePolicy>
+      Not stated.
+    </releasePolicy>
+    <references>
+      [Paolo et al. (2023)](https://doi.org/10.5194/tc-17-3409-2023)
+    </references>
+    <bibtex>
+      @article{Paolo2023,
+          author = {Paolo, F. S. and Gardner, A. S. and Greene, C. A. and Nilsson, J. and Schodlok, M. P. and Schlegel, N.-J. and Fricker, H. A.},
+          title = {Widespread slowdown in thinning rates of West Antarctic ice shelves},
+          journal = {The Cryosphere},
+          volume = {17},
+          year = {2023},
+          number = {8},
+          pages = {3409--3433},
+          url = {https://tc.copernicus.org/articles/17/3409/2023/},
+          doi = {10.5194/tc-17-3409-2023}
+      }
+    </bibtex>
+    <dataUrls>
+      - https://its-live-data.s3.amazonaws.com/height_change/Antarctica/Floating/ANT_G1920V01_IceShelfMelt.nc
+    </dataUrls>
+    <preprocessing>
+      preprocess_observations/preprocess_paolo_melt.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapAntarcticMelt
+      - timeSeriesAntarcticMelt
+    </tasks>
+    <subdirectory>
+      Ocean/Melt/Paolo
+    </subdirectory>
+    <nameInDocs>
+      paolo_melt
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       HadISST Nino 3.4 Index
     </name>
     <component>

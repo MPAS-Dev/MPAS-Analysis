@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
 from geometric_features.aggregation import get_aggregator_by_name
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -598,6 +599,36 @@ class PlotMeltSubtask(AnalysisTask):
                 'meltFluxUncertainty': ds_shelf.meltFluxUncertainty.values,
                 'meltRate': ds_shelf.meanMeltRate.values,
                 'meltRateUncertainty': ds_shelf.meltRateUncertainty.values}
+
+        rho_fw = cime_constants['SHR_CONST_RHOFW']
+        kg_per_gt = constants.kg_per_GT
+        gt_per_m3 = rho_fw / kg_per_gt
+
+        obsFileName = f'{observationsDirectory}/Paolo/' \
+                      f'Paolo_2023_melt_rates.20240220.csv'
+        obsName = 'Paolo et al. (2023)'
+        obsDict[obsName] = {}
+        obsFile = csv.reader(open(obsFileName, 'r'))
+        next(obsFile, None)  # skip the header line
+        for line in obsFile:  # some later useful values commented out
+            shelfName = line[0]
+            if shelfName != self.iceShelf:
+                continue
+
+            # km^2 --> m^2
+            area = 1e6 * float(line[1])
+            meltRate = float(line[2])
+            meltRateUncertainty = float(line[3])
+            meltFlux = gt_per_m3 * area * meltRate
+            meltFluxUncertainty = gt_per_m3 * area * meltRateUncertainty
+
+            # build dict of obs. keyed to filename description
+            # (which will be used for plotting)
+            obsDict[obsName] = {
+                'meltFlux': meltFlux,
+                'meltFluxUncertainty': meltFluxUncertainty,
+                'meltRate': meltRate,
+                'meltRateUncertainty': meltRateUncertainty}
 
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
