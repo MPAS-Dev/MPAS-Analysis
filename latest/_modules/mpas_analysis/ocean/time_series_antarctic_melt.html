@@ -115,6 +115,7 @@
 
 <span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
 <span class="kn">from</span> <span class="nn">geometric_features.aggregation</span> <span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
+<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
@@ -703,6 +704,36 @@
                 <span class="s1">&#39;meltFluxUncertainty&#39;</span><span class="p">:</span> <span class="n">ds_shelf</span><span class="o">.</span><span class="n">meltFluxUncertainty</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                 <span class="s1">&#39;meltRate&#39;</span><span class="p">:</span> <span class="n">ds_shelf</span><span class="o">.</span><span class="n">meanMeltRate</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
                 <span class="s1">&#39;meltRateUncertainty&#39;</span><span class="p">:</span> <span class="n">ds_shelf</span><span class="o">.</span><span class="n">meltRateUncertainty</span><span class="o">.</span><span class="n">values</span><span class="p">}</span>
+
+        <span class="n">rho_fw</span> <span class="o">=</span> <span class="n">cime_constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_RHOFW&#39;</span><span class="p">]</span>
+        <span class="n">kg_per_gt</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">kg_per_GT</span>
+        <span class="n">gt_per_m3</span> <span class="o">=</span> <span class="n">rho_fw</span> <span class="o">/</span> <span class="n">kg_per_gt</span>
+
+        <span class="n">obsFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/Paolo/&#39;</span> \
+                      <span class="sa">f</span><span class="s1">&#39;Paolo_2023_melt_rates.20240220.csv&#39;</span>
+        <span class="n">obsName</span> <span class="o">=</span> <span class="s1">&#39;Paolo et al. (2023)&#39;</span>
+        <span class="n">obsDict</span><span class="p">[</span><span class="n">obsName</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">obsFile</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">))</span>
+        <span class="nb">next</span><span class="p">(</span><span class="n">obsFile</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># skip the header line</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">obsFile</span><span class="p">:</span>  <span class="c1"># some later useful values commented out</span>
+            <span class="n">shelfName</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">shelfName</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># km^2 --&gt; m^2</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="mf">1e6</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">meltRate</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">meltRateUncertainty</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+            <span class="n">meltFlux</span> <span class="o">=</span> <span class="n">gt_per_m3</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> <span class="n">meltRate</span>
+            <span class="n">meltFluxUncertainty</span> <span class="o">=</span> <span class="n">gt_per_m3</span> <span class="o">*</span> <span class="n">area</span> <span class="o">*</span> <span class="n">meltRateUncertainty</span>
+
+            <span class="c1"># build dict of obs. keyed to filename description</span>
+            <span class="c1"># (which will be used for plotting)</span>
+            <span class="n">obsDict</span><span class="p">[</span><span class="n">obsName</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;meltFlux&#39;</span><span class="p">:</span> <span class="n">meltFlux</span><span class="p">,</span>
+                <span class="s1">&#39;meltFluxUncertainty&#39;</span><span class="p">:</span> <span class="n">meltFluxUncertainty</span><span class="p">,</span>
+                <span class="s1">&#39;meltRate&#39;</span><span class="p">:</span> <span class="n">meltRate</span><span class="p">,</span>
+                <span class="s1">&#39;meltRateUncertainty&#39;</span><span class="p">:</span> <span class="n">meltRateUncertainty</span><span class="p">}</span>
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesAntarcticMelt&#39;</span><span class="p">,</span>
