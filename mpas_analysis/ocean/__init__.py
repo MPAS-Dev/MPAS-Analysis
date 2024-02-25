@@ -23,6 +23,8 @@ from mpas_analysis.ocean.climatology_map_schmidtko import \
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
+from mpas_analysis.ocean.conservation import ConservationTask
+
 from mpas_analysis.ocean.time_series_temperature_anomaly import \
     TimeSeriesTemperatureAnomaly
 from mpas_analysis.ocean.time_series_salinity_anomaly import \
