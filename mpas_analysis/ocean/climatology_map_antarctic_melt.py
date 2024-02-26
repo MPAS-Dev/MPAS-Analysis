@@ -76,7 +76,6 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
 
         sectionName = self.taskName
 
-        mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
         iselValues = None
 
         # read in what seasons we want to plot
@@ -109,7 +108,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
             climatologyName=fieldName,
-            variableList=[mpasFieldName],
+            variableList=None,
             comparisonGridNames=comparisonGridNames,
             seasons=seasons,
             iselValues=iselValues)
@@ -117,7 +116,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         if controlConfig is None:
 
             refTitleLabel = \
-                'Observations (Paolo et al, 2023)'
+                'Observations (Paolo et al. 2023)'
 
             observationsDirectory = build_obs_path(
                 config, 'ocean', 'meltSubdirectory')
@@ -138,13 +137,10 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
                 f'{observationsDirectory}/Paolo/Paolo_2023_' \
                 f'iceshelf_melt_rates_1992-2017_v1.0_6000x6000km_{res:g}km_' \
                 f'Antarctic_stereo.20240220.nc'
-            refFieldName = 'meltRate'
-            outFileLabel = 'meltPaolo'
-            galleryName = 'Observations: Paolo et al. (2023)'
 
             remapObservationsSubtask = RemapObservedAntarcticMeltClimatology(
                 parentTask=self, seasons=seasons, fileName=obsFileName,
-                outFilePrefix=refFieldName,
+                outFilePrefix='meltRate',
                 comparisonGridNames=comparisonGridNames)
             self.add_subtask(remapObservationsSubtask)
             diffTitleLabel = 'Model - Observations'
@@ -152,33 +148,117 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         else:
             remapObservationsSubtask = None
             controlRunName = controlConfig.get('runs', 'mainRunName')
-            galleryName = None
             refTitleLabel = f'Control: {controlRunName}'
+            diffTitleLabel = 'Main - Control'
 
+        totalFluxVar = 'timeMonthly_avg_landIceFreshwaterFluxTotal'
+        landIceFluxVar = 'timeMonthly_avg_landIceFreshwaterFlux'
+        frazilFluxVar = 'timeMonthly_avg_frazilIceFreshwaterFlux'
+
+        mpasFieldName = totalFluxVar
+
+        if controlConfig is None:
+            refFieldName = 'meltRate'
+        else:
             refFieldName = mpasFieldName
-            outFileLabel = 'melt'
+
+        for comparisonGridName in comparisonGridNames:
+            for season in seasons:
+                # make a new subtask for this season and comparison grid
+                subtaskName = f'plot_total_melt_{season}_{comparisonGridName}'
+                subtask = PlotAntarcticMeltSubtask(
+                    self, season, comparisonGridName, remapClimatologySubtask,
+                    remapObservationsSubtask, controlConfig=controlConfig,
+                    subtaskName=subtaskName)
+
+                subtask.set_plot_info(
+                    outFileLabel='antMeltTotal',
+                    fieldNameInTitle='Total Melt Flux',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm a$^{-1}$ freshwater equiv.',
+                    imageCaption='Antarctic Total Melt Flux',
+                    galleryGroup='Melt Rate',
+                    groupSubtitle=None,
+                    groupLink='antarctic_melt',
+                    galleryName='Total Melt Flux')
+
+                self.add_subtask(subtask)
+
+        mpasFieldName = landIceFluxVar
+
+        if controlConfig is None:
+            refFieldName = 'meltRate'
+        else:
+            refFieldName = mpasFieldName
+
+        for comparisonGridName in comparisonGridNames:
+            for season in seasons:
+                # make a new subtask for this season and comparison grid
+                subtaskName = \
+                    f'plot_interface_melt_{season}_{comparisonGridName}'
+                subtask = PlotAntarcticMeltSubtask(
+                    self, season, comparisonGridName, remapClimatologySubtask,
+                    remapObservationsSubtask, controlConfig=controlConfig,
+                    subtaskName=subtaskName)
+
+                # In PlotAntarcticMeltSubtask, we will remove the obs from
+                # these plots if totalFluxVar is present so we only compare one
+                # field with obs
+
+                subtask.set_plot_info(
+                    outFileLabel='antMeltInterface',
+                    fieldNameInTitle='Melt Rate at Interface',
+                    mpasFieldName=mpasFieldName,
+                    refFieldName=refFieldName,
+                    refTitleLabel=refTitleLabel,
+                    diffTitleLabel=diffTitleLabel,
+                    unitsLabel=r'm a$^{-1}$ freshwater equiv.',
+                    imageCaption='Antarctic Melt Rate at Interface',
+                    galleryGroup='Melt Rate',
+                    groupSubtitle=None,
+                    groupLink='antarctic_melt_int',
+                    galleryName='Melt Rate at the Ice-ocean Interface')
+
+                self.add_subtask(subtask)
+
+        mpasFieldName = frazilFluxVar
+
+        if controlConfig is None:
+            refTitleLabel = None
+            refFieldName = None
+            diffTitleLabel = None
+
+        else:
+            controlRunName = controlConfig.get('runs', 'mainRunName')
+            refTitleLabel = f'Control: {controlRunName}'
+            refFieldName = mpasFieldName
             diffTitleLabel = 'Main - Control'
 
         for comparisonGridName in comparisonGridNames:
             for season in seasons:
                 # make a new subtask for this season and comparison grid
-                subtask = PlotClimatologyMapSubtask(
+                subtaskName = \
+                    f'plot_interface_frazil_{season}_{comparisonGridName}'
+                subtask = PlotAntarcticMeltSubtask(
                     self, season, comparisonGridName, remapClimatologySubtask,
-                    remapObservationsSubtask, controlConfig=controlConfig)
+                    controlConfig=controlConfig, subtaskName=subtaskName)
 
                 subtask.set_plot_info(
-                    outFileLabel=outFileLabel,
-                    fieldNameInTitle='Melt Rate',
+                    outFileLabel='antFrazil',
+                    fieldNameInTitle='Frazil Accretion Rate, negative upward',
                     mpasFieldName=mpasFieldName,
                     refFieldName=refFieldName,
                     refTitleLabel=refTitleLabel,
                     diffTitleLabel=diffTitleLabel,
-                    unitsLabel=r'm a$^{-1}$',
-                    imageCaption='Antarctic Melt Rate',
+                    unitsLabel=r'm a$^{-1}$ freshwater equiv.',
+                    imageCaption='Antarctic Accretion Rate',
                     galleryGroup='Melt Rate',
                     groupSubtitle=None,
-                    groupLink='antarctic_melt',
-                    galleryName=galleryName)
+                    groupLink='antarctic_frazil_flux',
+                    galleryName='Frazil Accretion Rate')
 
                 self.add_subtask(subtask)
 
@@ -212,10 +292,34 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):
     landIceMask : xarray.DataArray
         A mask indicating where there is land ice on the ocean grid (thus,
         where melt rates are valid)
+
+    renameDict : dict
+        A dictionary use to rename variables in the climatology
     """
     # Authors
     # -------
     # Xylar Asay-Davis
+
+    def setup_and_check(self):
+        """
+        Figure out which variable(s) to remap
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        totalFluxVar = 'timeMonthly_avg_landIceFreshwaterFluxTotal'
+        landIceFluxVar = 'timeMonthly_avg_landIceFreshwaterFlux'
+        frazilFluxVar = 'timeMonthly_avg_frazilIceFreshwaterFlux'
+
+        if totalFluxVar in self.mpasClimatologyTask.allVariables:
+            # include the total and constituent fluxes
+            self.variableList = [totalFluxVar, landIceFluxVar, frazilFluxVar]
+        else:
+            # we only have the old name without the frazil accretion rate
+            self.variableList = [landIceFluxVar]
+
+        super().setup_and_check()
 
     def run_task(self):
         """
@@ -260,12 +364,14 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):
         # -------
         # Xylar Asay-Davis
 
-        fieldName = self.variableList[0]
+        for fieldName in self.variableList:
 
-        # scale the field to m/yr from kg/m^2/s and mask out non-land-ice areas
-        climatology[fieldName] = \
-            constants.sec_per_year / constants.rho_fw * \
-            climatology[fieldName].where(self.landIceMask)
+            # scale the field to m/yr from kg/m^2/s and mask out non-land-ice
+            # areas
+            climatology[fieldName] = \
+                constants.sec_per_year / constants.rho_fw * \
+                climatology[fieldName].where(self.landIceMask)
+            climatology[fieldName].attrs['units'] = 'm yr^-1'
 
         return climatology
 
@@ -422,7 +528,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                                  pool=ThreadPool(1)):
 
                 # Load data:
-                inFileName = self.mpasClimatologyTask.get_file_name(self.season)
+                inFileName = \
+                    self.mpasClimatologyTask.get_file_name(self.season)
                 mpasFieldName = 'timeMonthly_avg_landIceFreshwaterFlux'
                 dsIn = xr.open_dataset(inFileName)
                 freshwaterFlux = dsIn[mpasFieldName]
@@ -445,7 +552,8 @@ class AntarcticMeltTableSubtask(AnalysisTask):
 
                 # select only those regions we want to plot
                 dsRegionMask = dsRegionMask.isel(nRegions=regionIndices)
-                cellMasks = dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
+                cellMasks = \
+                    dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
                 restartFileName = \
                     self.runStreams.readpath('restart')[0]
@@ -548,3 +656,53 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                     row[controlRunName] = \
                         f'{dsControl.totalMeltFlux[index].values}'
                 writer.writerow(row)
+
+
+class PlotAntarcticMeltSubtask(PlotClimatologyMapSubtask):
+    """
+    A subtask for plotting antarctic melt fields if available
+
+    Attributes
+    ----------
+    doPlot : bool
+        Whether the required variable from the climatology is available so that
+        a plot should be generated
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    def setup_and_check(self):
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+        """
+        allVariables = \
+            self.remapMpasClimatologySubtask.mpasClimatologyTask.allVariables
+
+        totalFluxVar = 'timeMonthly_avg_landIceFreshwaterFluxTotal'
+        landIceFluxVar = 'timeMonthly_avg_landIceFreshwaterFlux'
+        plotAll = (totalFluxVar in allVariables)
+
+        if self.mpasFieldName == landIceFluxVar and plotAll and \
+                self.controlConfig is None:
+            # need to remove obs because we only wnat to plot them vs the
+            # total flux
+            self.remapObsClimatologySubtask = None
+            self.refTitleLabel = None
+            self.refFieldName = None
+            self.diffTitleLabel = None
+
+        self.doPlot = (self.mpasFieldName == landIceFluxVar or plotAll)
+
+        if self.doPlot:
+            super().setup_and_check()
+        else:
+            # still need to call the base class's method
+            AnalysisTask.setup_and_check(self=self)
+
+    def run_task(self):
+        """
+        Plot the variable if available
+        """
+        if self.doPlot:
+            super().run_task()
