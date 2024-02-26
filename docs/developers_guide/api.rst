@@ -61,6 +61,7 @@ Ocean tasks
 .. autosummary::
    :toctree: generated/
 
+   ConservationTask
    ClimatologyMapSST
    ClimatologyMapSSS
    ClimatologyMapMLD
@@ -75,6 +76,7 @@ Ocean tasks
    ClimatologyMapWaves
    IndexNino34
    MeridionalHeatTransport
+   OceanHistogram
    StreamfunctionMOC
    TimeSeriesOHCAnomaly
    TimeSeriesTemperatureAnomaly

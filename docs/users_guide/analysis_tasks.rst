@@ -37,6 +37,7 @@ Analysis Tasks
    tasks/oceanRegionalProfiles
    tasks/regionalTSDiagrams
    tasks/oceanHistogram
+   tasks/conservation
 
    tasks/climatologyMapSeaIceConcNH
    tasks/climatologyMapSeaIceThickNH
