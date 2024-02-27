@@ -232,7 +232,6 @@ class ConservationTask(AnalysisTask):
         for plot_type in self.plotTypes:
             for varname in self.variableList[plot_type]:
                 all_plots_variable_list.append(varname)
-        self.logger.info(all_plots_variable_list)
         self._compute_time_series_with_ncrcat(all_plots_variable_list)
         for plot_type in self.plotTypes:
             self._make_plot(plot_type)
@@ -361,9 +360,6 @@ class ConservationTask(AnalysisTask):
                                     'timeSeries startYear and will not be '
                                     'plotted.')
                 self.referenceRunName = 'None'
-        else:
-            self.logger.info(f'  Either reference run {self.referenceRunName} is not found'
-                             f' or reference input dir f{self.referenceInputDirectory} is not found...')
 
         # make the plot
         self.logger.info('  Make conservation plots...')
@@ -400,7 +396,6 @@ class ConservationTask(AnalysisTask):
             lineColors.append(config.get('conservation', 'mainColor'))
             lineStyles.append(lineStylesBase[index])
             if self.referenceRunName != 'None':
-                self.logger.info('  Plot control conservation...')
                 if varname in self.derivedVariableList:
                     variable = self._derive_variable(ds_ref_slice, varname)
                 else:
@@ -518,9 +513,8 @@ class ConservationTask(AnalysisTask):
             land_ice_mass_change = self._derive_variable(ds, 'landIceMassChange')
             # Convert from to Gt to kg
             land_ice_mass_change = land_ice_mass_change * 1e12
-            # Convert from to kg to mm
             rho = self.namelist.getfloat('config_density0')
-            # Convert from Gt to mm
+            # Convert from to kg to mm
             derived_variable = land_ice_mass_change * 1.0e3 / (rho * A)
 
         else:
@@ -617,7 +611,7 @@ class ConservationTask(AnalysisTask):
         args.extend(inputFiles)
         args.append(self.outputFile)
 
-        self.logger.info('running: {printCommand}')
+        self.logger.info(f'running: {printCommand}')
         for handler in self.logger.handlers:
             handler.flush()
 
