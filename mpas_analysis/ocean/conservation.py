@@ -155,8 +155,8 @@ class ConservationTask(AnalysisTask):
             f'{self.componentName}HistorySubdirectory',
             defaultPath=self.runDirectory)
 
-        self.startYear = self.config.getint('conservation', 'startYear')
-        self.endYear = self.config.getint('conservation', 'endYear')
+        self.startYear = self.config.getint('timeSeries', 'startYear')
+        self.endYear = self.config.getint('timeSeries', 'endYear')
         self.inputFiles = sorted(self.historyStreams.readpath(
             'conservationCheckOutput',
             startDate=f'{self.startYear:04d}-01-01_00:00:00',
@@ -393,7 +393,7 @@ class ConservationTask(AnalysisTask):
                     legend_text = f'{legend_text}, '
                 legend_text = f"{legend_text}{varname.replace('accumulated', '').replace('Flux', '')}"
             legendText.append(legend_text)
-            lineColors.append(config.get('conservation', 'mainColor'))
+            lineColors.append(config.get('timeSeries', 'mainColor'))
             lineStyles.append(lineStylesBase[index])
             if self.referenceRunName != 'None':
                 if varname in self.derivedVariableList:
@@ -411,24 +411,24 @@ class ConservationTask(AnalysisTask):
                 if len(self.masterVariableList[plot_type]) > 1:
                     legend_text = f"{legend_text}, {varname.replace('accumulated', '').replace('Flux', '')}"
                 legendText.append(legend_text)
-                lineColors.append(config.get('conservation', 'controlColor'))
+                lineColors.append(config.get('timeSeries', 'controlColor'))
                 lineStyles.append(lineStylesBase[index])
 
         lineWidths = [3 for i in fields]
-        if config.has_option('conservation', 'movingAveragePoints'):
-            movingAveragePoints = config.getint('conservation',
+        if config.has_option('timeSeries', 'movingAveragePoints'):
+            movingAveragePoints = config.getint('timeSeries',
                                                 'movingAveragePoints')
         else:
             movingAveragePoints = None
 
-        if config.has_option('conservation', 'firstYearXTicks'):
-            firstYearXTicks = config.getint('conservation',
+        if config.has_option('timeSeries', 'firstYearXTicks'):
+            firstYearXTicks = config.getint('timeSeries',
                                             'firstYearXTicks')
         else:
             firstYearXTicks = None
 
-        if config.has_option('conservation', 'yearStrideXTicks'):
-            EearStrideXTicks = config.getint('conservation',
+        if config.has_option('timeSeries', 'yearStrideXTicks'):
+            EearStrideXTicks = config.getint('timeSeries',
                                              'yearStrideXTicks')
         else:
             yearStrideXTicks = None
