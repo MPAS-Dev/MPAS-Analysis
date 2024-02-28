@@ -175,7 +175,7 @@ class ConservationTask(AnalysisTask):
         self.referenceInputDirectory = config.get('oceanPreprocessedReference',
                                                   'baseDirectory')
 
-        self.plotTypes = self.config.getexpression('conservation', 'plotTypes')
+        self.plotTypes = self.config.getexpression('timeSeriesConservation', 'plotTypes')
 
         self.masterVariableList = {'absolute_energy_error': ['absoluteEnergyError'],
                               'total_energy_flux': ['netEnergyFlux'],
