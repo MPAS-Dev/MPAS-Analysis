@@ -587,8 +587,6 @@ def update_time_bounds_from_file_names(config, section, componentName):
         '{}HistorySubdirectory'.format(componentName),
         defaultPath=runDirectory)
 
-    errorOnMissing = config.getboolean('input', 'errorOnMissing')
-
     namelistFileName = build_config_full_path(
         config, 'input',
         '{}NamelistFileName'.format(componentName))
@@ -660,24 +658,12 @@ def update_time_bounds_from_file_names(config, section, componentName):
         requestedEndYear = endYear
 
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        if errorOnMissing:
-            raise ValueError(
-                "{} start and/or end year different from requested\n"
-                "requested: {:04d}-{:04d}\n"
-                "actual:   {:04d}-{:04d}\n".format(
-                    section, requestedStartYear, requestedEndYear, startYear,
-                    endYear))
-        else:
-            print("Warning: {} start and/or end year different from "
-                  "requested\n"
-                  "requested: {:04d}-{:04d}\n"
-                  "actual:   {:04d}-{:04d}\n".format(section,
-                                                     requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear))
-            config.set(section, 'startYear', str(startYear))
-            config.set(section, 'endYear', str(endYear))
+        raise ValueError(
+            "{} start and/or end year different from requested\n"
+            "requested: {:04d}-{:04d}\n"
+            "actual:   {:04d}-{:04d}\n".format(
+                section, requestedStartYear, requestedEndYear, startYear,
+                endYear))
 
     startDate = '{:04d}-01-01_00:00:00'.format(startYear)
     config.set(section, 'startDate', startDate)
