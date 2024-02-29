@@ -179,7 +179,6 @@
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
         <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
@@ -212,7 +211,7 @@
             <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
             <span class="n">climatologyName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">,</span>
-            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
             <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
@@ -220,7 +219,7 @@
         <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="n">refTitleLabel</span> <span class="o">=</span> \
-                <span class="s1">&#39;Observations (Paolo et al, 2023)&#39;</span>
+                <span class="s1">&#39;Observations (Paolo et al. 2023)&#39;</span>
 
             <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;meltSubdirectory&#39;</span><span class="p">)</span>
@@ -241,13 +240,10 @@
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/Paolo/Paolo_2023_&#39;</span> \
                 <span class="sa">f</span><span class="s1">&#39;iceshelf_melt_rates_1992-2017_v1.0_6000x6000km_</span><span class="si">{</span><span class="n">res</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">km_&#39;</span> \
                 <span class="sa">f</span><span class="s1">&#39;Antarctic_stereo.20240220.nc&#39;</span>
-            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
-            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;meltPaolo&#39;</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: Paolo et al. (2023)&#39;</span>
 
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedAntarcticMeltClimatology</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
-                <span class="n">outFilePrefix</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">&#39;meltRate&#39;</span><span class="p">,</span>
                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
             <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
@@ -255,33 +251,117 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
+        <span class="n">totalFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFluxTotal&#39;</span>
+        <span class="n">landIceFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
+        <span class="n">frazilFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_frazilIceFreshwaterFlux&#39;</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="n">totalFluxVar</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
             <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
-            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;melt&#39;</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot_total_melt_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotAntarcticMeltSubtask</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                    <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;antMeltTotal&#39;</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Total Melt Flux&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m a$^{-1}$ freshwater equiv.&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Antarctic Total Melt Flux&#39;</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;antarctic_melt&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="s1">&#39;Total Melt Flux&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="n">landIceFluxVar</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;meltRate&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
+
+        <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtaskName</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;plot_interface_melt_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotAntarcticMeltSubtask</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
+                    <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
+
+                <span class="c1"># In PlotAntarcticMeltSubtask, we will remove the obs from</span>
+                <span class="c1"># these plots if totalFluxVar is present so we only compare one</span>
+                <span class="c1"># field with obs</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;antMeltInterface&#39;</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Melt Rate at Interface&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m a$^{-1}$ freshwater equiv.&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Antarctic Melt Rate at Interface&#39;</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;antarctic_melt_int&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="s1">&#39;Melt Rate at the Ice-ocean Interface&#39;</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
+
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="n">frazilFluxVar</span>
+
+        <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
             <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
         <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
                 <span class="c1"># make a new subtask for this season and comparison grid</span>
-                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                <span class="n">subtaskName</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">&#39;plot_interface_frazil_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotAntarcticMeltSubtask</span><span class="p">(</span>
                     <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
-                    <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
+                    <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
                 <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
-                    <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
-                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;antFrazil&#39;</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Frazil Accretion Rate, negative upward&#39;</span><span class="p">,</span>
                     <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
                     <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                     <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                     <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m a$^{-1}$&#39;</span><span class="p">,</span>
-                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Antarctic Melt Rate&#39;</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m a$^{-1}$ freshwater equiv.&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Antarctic Accretion Rate&#39;</span><span class="p">,</span>
                     <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Melt Rate&#39;</span><span class="p">,</span>
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;antarctic_melt&#39;</span><span class="p">,</span>
-                    <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;antarctic_frazil_flux&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="s1">&#39;Frazil Accretion Rate&#39;</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
 
@@ -317,10 +397,34 @@
 <span class="sd">    landIceMask : xarray.DataArray</span>
 <span class="sd">        A mask indicating where there is land ice on the ocean grid (thus,</span>
 <span class="sd">        where melt rates are valid)</span>
+
+<span class="sd">    renameDict : dict</span>
+<span class="sd">        A dictionary use to rename variables in the climatology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Figure out which variable(s) to remap</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">totalFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFluxTotal&#39;</span>
+        <span class="n">landIceFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
+        <span class="n">frazilFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_frazilIceFreshwaterFlux&#39;</span>
+
+        <span class="k">if</span> <span class="n">totalFluxVar</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">allVariables</span><span class="p">:</span>
+            <span class="c1"># include the total and constituent fluxes</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">totalFluxVar</span><span class="p">,</span> <span class="n">landIceFluxVar</span><span class="p">,</span> <span class="n">frazilFluxVar</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># we only have the old name without the frazil accretion rate</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">landIceFluxVar</span><span class="p">]</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -365,12 +469,14 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">fieldName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">fieldName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
 
-        <span class="c1"># scale the field to m/yr from kg/m^2/s and mask out non-land-ice areas</span>
-        <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span> <span class="o">*</span> \
-            <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span><span class="p">)</span>
+            <span class="c1"># scale the field to m/yr from kg/m^2/s and mask out non-land-ice</span>
+            <span class="c1"># areas</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_fw</span> <span class="o">*</span> \
+                <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span><span class="p">)</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m yr^-1&#39;</span>
 
         <span class="k">return</span> <span class="n">climatology</span>
 
@@ -527,7 +633,8 @@
                                  <span class="n">pool</span><span class="o">=</span><span class="n">ThreadPool</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
 
                 <span class="c1"># Load data:</span>
-                <span class="n">inFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
+                <span class="n">inFileName</span> <span class="o">=</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">)</span>
                 <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
                 <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
                 <span class="n">freshwaterFlux</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">]</span>
@@ -550,7 +657,8 @@
 
                 <span class="c1"># select only those regions we want to plot</span>
                 <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndices</span><span class="p">)</span>
-                <span class="n">cellMasks</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
+                <span class="n">cellMasks</span> <span class="o">=</span> \
+                    <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 
                 <span class="n">restartFileName</span> <span class="o">=</span> \
                     <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -653,6 +761,56 @@
                     <span class="n">row</span><span class="p">[</span><span class="n">controlRunName</span><span class="p">]</span> <span class="o">=</span> \
                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dsControl</span><span class="o">.</span><span class="n">totalMeltFlux</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">PlotAntarcticMeltSubtask</span><span class="p">(</span><span class="n">PlotClimatologyMapSubtask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for plotting antarctic melt fields if available</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    doPlot : bool</span>
+<span class="sd">        Whether the required variable from the climatology is available so that</span>
+<span class="sd">        a plot should be generated</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">allVariables</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">remapMpasClimatologySubtask</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">allVariables</span>
+
+        <span class="n">totalFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFluxTotal&#39;</span>
+        <span class="n">landIceFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
+        <span class="n">plotAll</span> <span class="o">=</span> <span class="p">(</span><span class="n">totalFluxVar</span> <span class="ow">in</span> <span class="n">allVariables</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span> <span class="o">==</span> <span class="n">landIceFluxVar</span> <span class="ow">and</span> <span class="n">plotAll</span> <span class="ow">and</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># need to remove obs because we only wnat to plot them vs the</span>
+            <span class="c1"># total flux</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">remapObsClimatologySubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refFieldName</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">doPlot</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span> <span class="o">==</span> <span class="n">landIceFluxVar</span> <span class="ow">or</span> <span class="n">plotAll</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">doPlot</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># still need to call the base class&#39;s method</span>
+            <span class="n">AnalysisTask</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plot the variable if available</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">doPlot</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">run_task</span><span class="p">()</span>
 </pre></div>
 
            </div>
