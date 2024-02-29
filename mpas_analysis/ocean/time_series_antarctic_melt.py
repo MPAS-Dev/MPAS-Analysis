@@ -603,7 +603,7 @@ class PlotMeltSubtask(AnalysisTask):
             index = region_names.index(self.iceShelf)
             ds_shelf = ds_adusumilli.isel(nRegions=index)
             obsDict['Adusumilli et al. (2020)'] = {
-                'meltFlux': ds_shelf.integratedMeltFlux.values,
+                'meltFlux': ds_shelf.totalMeltFlux.values,
                 'meltFluxUncertainty': ds_shelf.meltFluxUncertainty.values,
                 'meltRate': ds_shelf.meanMeltRate.values,
                 'meltRateUncertainty': ds_shelf.meltRateUncertainty.values}
