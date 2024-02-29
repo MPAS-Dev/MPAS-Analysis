@@ -42,6 +42,9 @@ class ConservationTask(AnalysisTask):
     config :  mpas_tools.config.MpasConfigParser
         Contains configuration options
 
+    controlConfig :  mpas_tools.config.MpasConfigParser
+        Contains configuration options for a control run, if provided
+
     outputFile : str
         The path to the output file produced by this analysis
 
@@ -62,12 +65,6 @@ class ConservationTask(AnalysisTask):
 
     mainRunName : str
         The name of the main run from the config file
-
-    referenceRunName : str
-        The name of the reference run from the config file
-
-    referenceInputDirectory : str
-        The directory of the reference run from the config file
 
     plotTypes : list of str
         The plot types requested in the config file
@@ -95,7 +92,7 @@ class ConservationTask(AnalysisTask):
     # -------
     # Carolyn Begeman
 
-    def __init__(self, config):
+    def __init__(self, config, controlConfig):
         """
         Construct the analysis task.
 
@@ -113,6 +110,8 @@ class ConservationTask(AnalysisTask):
             taskName='oceanConservation',
             componentName='ocean',
             tags=['timeSeries', 'conservation'])
+
+        self.controlConfig = controlConfig
 
     def setup_and_check(self):
         """
@@ -170,10 +169,6 @@ class ConservationTask(AnalysisTask):
             self.allVariables = list(ds.data_vars.keys())
 
         self.mainRunName = self.config.get('runs', 'mainRunName')
-        self.referenceRunName = \
-            config.get('runs', 'preprocessedReferenceRunName')
-        self.referenceInputDirectory = config.get('oceanPreprocessedReference',
-                                                  'baseDirectory')
 
         self.plotTypes = self.config.getexpression('timeSeriesConservation', 'plotTypes')
 
@@ -341,28 +336,30 @@ class ConservationTask(AnalysisTask):
                                startDate=f'{self.startYear:04d}-01-01_00:00:00',
                                endDate=f'{self.endYear:04d}-01-01_00:00:00')
 
-        if self.referenceRunName != 'None' and self.referenceInputDirectory != 'None':
-            inFilesPreprocessed = f'{self.referenceInputDirectory}/timeseries/{self.fullTaskName}.nc'
-            self.logger.info('  Load in conservation for a preprocessed reference '
-                             f'run {inFilesPreprocessed}...')
-            ds_ref = open_mpas_dataset(fileName=inFilesPreprocessed,
-                                   calendar=self.calendar,
-                                   variableList=self.variableList[plot_type],
-                                   timeVariableNames='xtime')
-            yearEndPreprocessed = days_to_datetime(ds_ref.Time.max(),
-                                                   calendar=self.calendar).year
-            if self.startYear <= yearEndPreprocessed:
+        if self.controlConfig is not None:
+            baseDirectory = build_config_full_path(
+                self.controlConfig, 'output', 'timeSeriesSubdirectory')
+
+            controlFileName = f'{baseDirectory}/{self.fullTaskName}.nc'
+            self.logger.info('  Load in conservation for a control run '
+                             f'{controlFileName}...')
+            ds_ref = open_mpas_dataset(fileName=controlFileName,
+                                       calendar=self.calendar,
+                                       variableList=self.variableList[plot_type],
+                                       timeVariableNames='xtime')
+            controlEndYear = self.controlConfig.getint('timeSeries', 'endYear')
+            if self.startYear <= controlEndYear:
                 timeStart = date_to_days(year=self.startYear, month=1, day=1,
                                          calendar=self.calendar)
                 timeEnd = date_to_days(year=self.endYear, month=12, day=31,
                                        calendar=self.calendar)
-                ds_ref_slice= \
+                ds_ref_slice = \
                     ds_ref.sel(Time=slice(timeStart, timeEnd))
             else:
-                self.logger.warning('Preprocessed time series ends before the '
+                self.logger.warning('Control time series ends before the '
                                     'timeSeries startYear and will not be '
                                     'plotted.')
-                self.referenceRunName = 'None'
+                self.controlConfig = None
 
         # make the plot
         self.logger.info('  Make conservation plots...')
@@ -380,7 +377,7 @@ class ConservationTask(AnalysisTask):
             variable = self._get_variable(ds, varname)
             fields.append(variable)
             legend_text = ''
-            if self.referenceRunName != 'None':
+            if self.controlConfig is not None:
                 legend_text = self.mainRunName
             if len(self.masterVariableList[plot_type]) > 1:
                 if len(legend_text) > 0:
@@ -389,10 +386,10 @@ class ConservationTask(AnalysisTask):
             legendText.append(legend_text)
             lineColors.append(config.get('timeSeries', 'mainColor'))
             lineStyles.append(lineStylesBase[index])
-            if self.referenceRunName != 'None':
-                variable = self._get_variable(ds, varname)
+            if self.controlConfig is not None:
+                variable = self._get_variable(ds_ref, varname)
                 fields.append(variable)
-                legend_text = self.referenceRunName
+                legend_text = self.controlConfig.get('runs', 'mainRunName')
                 if len(self.masterVariableList[plot_type]) > 1:
                     legend_text = f"{legend_text}, {varname.replace('accumulated', '').replace('Flux', '')}"
                 legendText.append(legend_text)
