@@ -214,7 +214,7 @@ class TestClimatology(TestCase):
         monthValues = constants.monthDictionary[monthNames]
         dsClimatology = compute_climatology(ds, monthValues, calendar)
 
-        assert('Time' not in dsClimatology.dims.keys())
+        assert('Time' not in dsClimatology.dims)
 
         self.assertEqual(list(dsClimatology.data_vars.keys()), ['mld'])
 
