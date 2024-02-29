@@ -178,29 +178,29 @@ class ConservationTask(AnalysisTask):
         self.plotTypes = self.config.getexpression('timeSeriesConservation', 'plotTypes')
 
         self.masterVariableList = {'absolute_energy_error': ['absoluteEnergyError'],
-                              'total_energy_flux': ['netEnergyFlux'],
-                              'absolute_salt_error': ['absoluteSaltError'],
-                              'ice_salt_flux': ['netSaltFlux'],
-                              'total_mass_flux': ['netMassFlux'],
-                              'total_mass_change': ['netMassChange'],
-                              'land_ice_mass_change': ['landIceMassChange'],
-                              'land_ice_ssh_change': ['landIceSshChange'],
-                              'land_ice_mass_flux': ['landIceMassFlux'],
-                              'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
+                                   'total_energy_flux': ['netEnergyFlux'],
+                                   'absolute_salt_error': ['absoluteSaltError'],
+                                   'ice_salt_flux': ['netSaltFlux'],
+                                   'total_mass_flux': ['netMassFlux'],
+                                   'total_mass_change': ['netMassChange'],
+                                   'land_ice_mass_change': ['landIceMassChange'],
+                                   'land_ice_ssh_change': ['landIceSshChange'],
+                                   'land_ice_mass_flux': ['landIceMassFlux'],
+                                   'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
                                                                 'accumulatedLandIceFlux',
                                                                 'accumulatedRemovedRiverRunoffFlux',
                                                                 'accumulatedRemovedIceRunoffFlux']}
 
         # for each derived variable, which source variables are needed
-        self.derivedVariableList = {'netMassChange': ['netMassFlux'],
+        self.derivedVariableList = {'netMassChange': ['massChange'],
                                     'landIceMassFlux': ['accumulatedIcebergFlux',
-                                                          'accumulatedLandIceFlux',
-                                                          'accumulatedRemovedRiverRunoffFlux',
-                                                          'accumulatedRemovedIceRunoffFlux'],
+                                                        'accumulatedLandIceFlux',
+                                                        'accumulatedRemovedRiverRunoffFlux',
+                                                        'accumulatedRemovedIceRunoffFlux'],
                                     'landIceSshChange': ['accumulatedIcebergFlux',
-                                                          'accumulatedLandIceFlux',
-                                                          'accumulatedRemovedRiverRunoffFlux',
-                                                          'accumulatedRemovedIceRunoffFlux'],
+                                                         'accumulatedLandIceFlux',
+                                                         'accumulatedRemovedRiverRunoffFlux',
+                                                         'accumulatedRemovedIceRunoffFlux'],
                                     'landIceMassChange': ['accumulatedIcebergFlux',
                                                           'accumulatedLandIceFlux',
                                                           'accumulatedRemovedRiverRunoffFlux',
@@ -303,6 +303,7 @@ class ConservationTask(AnalysisTask):
         titles['absolute_salt_error'] = 'Salt conservation error'
         titles['total_mass_flux'] = 'Total mass flux'
         titles['total_mass_change'] = 'Total mass anomaly'
+        titles['land_ice_mass_flux'] = 'Mass flux due to land ice'
         titles['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
         titles['land_ice_ssh_change'] = 'SSH anomaly due to land ice fluxes'
         titles['land_ice_mass_flux_components'] = 'Mass fluxes from land ice'
@@ -314,6 +315,7 @@ class ConservationTask(AnalysisTask):
         y_labels['absolute_salt_error'] = 'Salt (Gt)'
         y_labels['total_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['total_mass_change'] = 'Mass (Gt)'
+        y_labels['land_ice_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['land_ice_mass_change'] = 'Mass (Gt)'
         y_labels['land_ice_ssh_change'] = 'SSH anomaly (mm)'
         y_labels['land_ice_mass_flux_components'] = 'Mass flux (Gt/yr)'
@@ -326,6 +328,7 @@ class ConservationTask(AnalysisTask):
         captions['absolute_salt_error'] = 'Absolute salt conservation error'
         captions['total_mass_flux'] = 'Total mass flux'
         captions['total_mass_change'] = 'Total mass anomaly'
+        captions['land_ice_mass_flux'] = 'Mass flux due to land ice'
         captions['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
         captions['land_ice_ssh_change'] = 'SSH anomaly due to land ice fluxes. Assumes a constant ocean area.'
         captions['land_ice_mass_flux_components'] = 'Mass flux components from land ice'
@@ -374,16 +377,7 @@ class ConservationTask(AnalysisTask):
         lineColors = []
         lineStyles = []
         for index, varname in enumerate(self.masterVariableList[plot_type]):
-            if varname in self.derivedVariableList:
-                variable = self._derive_variable(ds, varname)
-            else:
-                variable = ds[varname]
-            if 'Removed' in varname:
-                variable = -variable
-            if 'mass_flux' or 'salt_flux' in plot_type:
-                variable = variable * 1e-12 * constants.sec_per_year  # convert to Gt/yr
-            if 'salt_error' in plot_type:
-                variable = variable * 1e-12  # convert to Gt
+            variable = self._get_variable(ds, varname)
             fields.append(variable)
             legend_text = ''
             if self.referenceRunName != 'None':
@@ -396,16 +390,7 @@ class ConservationTask(AnalysisTask):
             lineColors.append(config.get('timeSeries', 'mainColor'))
             lineStyles.append(lineStylesBase[index])
             if self.referenceRunName != 'None':
-                if varname in self.derivedVariableList:
-                    variable = self._derive_variable(ds_ref_slice, varname)
-                else:
-                    variable = ds_ref_slice[varname]
-                if 'Removed' in varname:
-                    variable = -variable
-                if 'mass_flux' or 'salt_flux' in plot_type:
-                    variable = variable * 1e-12 * constants.sec_per_year  # convert to Gt/yr
-                if 'salt_error' in plot_type:
-                    variable = variable * 1e-12  # convert to Gt
+                variable = self._get_variable(ds, varname)
                 fields.append(variable)
                 legend_text = self.referenceRunName
                 if len(self.masterVariableList[plot_type]) > 1:
@@ -428,7 +413,7 @@ class ConservationTask(AnalysisTask):
             firstYearXTicks = None
 
         if config.has_option('timeSeries', 'yearStrideXTicks'):
-            EearStrideXTicks = config.getint('timeSeries',
+            yearStrideXTicks = config.getint('timeSeries',
                                              'yearStrideXTicks')
         else:
             yearStrideXTicks = None
@@ -446,15 +431,6 @@ class ConservationTask(AnalysisTask):
         # save the plot to the output file
         plt.savefig(outFileName)
 
-        # here's an example of how you would create an XML file for this plot
-        # with the appropriate entries.  Some notes:
-        # * Gallery groups typically represent all the analysis from a task,
-        #   or sometimes from multiple tasks
-        # * A gallery might be for just for one set of observations, one
-        #   season, etc., depending on what makes sense
-        # * Within each gallery, there is one plot for each value in
-        #   'plotParameters', with a corresponding caption and short thumbnail
-        #   description
         caption = captions[plot_type]
         write_image_xml(
             config=self.config,
@@ -468,59 +444,83 @@ class ConservationTask(AnalysisTask):
             imageDescription=caption,
             imageCaption=caption)
 
-    def _derive_variable(self, ds, varname):
-
-        if varname == 'netMassChange':
-            # Convert from kg/s to Gt/s
-            mass_flux = ds['netMassFlux'] * 1e-12
-            # Assume that the frequency of output is monthly
-            dt = constants.sec_per_month
-            # Convert from Gt/yr to Gt
-            derived_variable = mass_flux.cumsum(axis=0) * dt
-        elif varname == 'landIceMassChange':
-            land_ice_mass_flux = self._derive_variable(ds, 'landIceMassFlux')
-            # Convert from kg/s to Gt/s
-            land_ice_mass_flux = land_ice_mass_flux * 1e-12
-            # Assume that the frequency of output is monthly
-            dt = constants.sec_per_month
-            # Convert from Gt/yr to Gt
-            derived_variable = land_ice_mass_flux.cumsum(axis=0) * dt
-
-        elif varname == 'landIceMassFlux':
-            # Here, keep units as kg/s because the conversion to Gt/yr will happen later
-            derived_variable = ds['accumulatedIcebergFlux'] + \
-                ds['accumulatedLandIceFlux'] + \
-                -ds['accumulatedRemovedRiverRunoffFlux'] + \
-                -ds['accumulatedRemovedIceRunoffFlux']
-
-        elif varname == 'landIceSshChange':
-            ts_files = sorted(self.historyStreams.readpath(
-                'timeSeriesStatsMonthlyOutput',
-                startDate=f'{self.startYear:04d}-01-01_00:00:00',
-                endDate=f'{self.endYear:04d}-01-01_00:00:00',
-                calendar=self.calendar))
-            # Note that here we assume that the area of the ocean is constant in time
-            # to save computational expense because most configurations do not allow
-            # the area of the ocean to change
-            ts_file = ts_files[0]
-            if not os.path.exists(ts_file):
-               raise ValueError(f'Could not find timeMonthlyStats file {ts_file}')
-            var = 'timeMonthly_avg_areaCellGlobal' 
-            ds_ts = open_mpas_dataset(fileName=ts_file,
-                                      calendar=self.calendar,
-                                      variableList=[var])
-            A = ds_ts[var].mean()
-            land_ice_mass_change = self._derive_variable(ds, 'landIceMassChange')
-            # Convert from to Gt to kg
-            land_ice_mass_change = land_ice_mass_change * 1e12
-            rho = self.namelist.getfloat('config_density0')
-            # Convert from to kg to mm
-            derived_variable = land_ice_mass_change * 1.0e3 / (rho * A)
-
+    def _get_variable(self, ds, varname, mks=False):
+        if varname not in self.derivedVariableList:
+            variable = ds[varname]
         else:
-            raise ValueError(f'Attempted to derive non-supported variable {varname}')
+            # Here we keep the units mks
+            if varname == 'netMassChange':
+                variable = self._get_variable(ds, 'massChange', mks=True)
+                # mass_flux = self._get_variable(ds, 'netMassFlux')
+                # # Assume that the frequency of output is monthly
+                # dt = constants.sec_per_month
+                # # Convert from kg/s to kg
+                # derived_variable = mass_flux.cumsum(axis=0) * dt
+            elif varname == 'landIceMassChange':
+                land_ice_mass_flux = self._get_variable(ds, 'landIceMassFlux', mks=True)
+                # Assume that the frequency of output is monthly
+                dt = constants.sec_per_month
+                # Convert from kg/s to kg/month
+                land_ice_mass_flux = land_ice_mass_flux * dt
+                # Convert from kg/month to kg
+                variable = np.cumsum(land_ice_mass_flux)
 
-        return derived_variable
+            elif varname == 'landIceMassFlux':
+                variable = self._get_variable(ds, 'accumulatedIcebergFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedLandIceFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedRemovedRiverRunoffFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedRemovedIceRunoffFlux', mks=True)
+
+            elif varname == 'landIceSshChange':
+                ts_files = sorted(self.historyStreams.readpath(
+                    'timeSeriesStatsMonthlyOutput',
+                    startDate=f'{self.startYear:04d}-01-01_00:00:00',
+                    endDate=f'{self.endYear:04d}-01-01_00:00:00',
+                    calendar=self.calendar))
+                # Note that here we assume that the area of the ocean is constant in time
+                # to save computational expense because most configurations do not allow
+                # the area of the ocean to change
+                ts_file = ts_files[0]
+                if not os.path.exists(ts_file):
+                   raise ValueError(f'Could not find timeMonthlyStats file {ts_file}')
+                var = 'timeMonthly_avg_areaCellGlobal' 
+                ds_ts = open_mpas_dataset(fileName=ts_file,
+                                          calendar=self.calendar,
+                                          variableList=[var])
+                A = ds_ts[var].mean()
+                land_ice_mass_change = self._get_variable(ds, 'landIceMassChange', mks=True)
+                rho = self.namelist.getfloat('config_density0')
+                # Convert from to kg to m
+                variable = land_ice_mass_change / (rho * A)
+
+            else:
+                raise ValueError(f'Attempted to derive non-supported variable {varname}')
+
+        removed_vars = ['accumulatedRemovedRiverRunoffFlux',
+                        'accumulatedRemovedIceRunoffFlux']
+        if varname in removed_vars:
+            variable = -variable
+
+        if not mks:
+            # Here we do all the unit conversion from mks into whatever we want
+            mass_vars = ['initialMass', 'finalMass', 'absoluteMassError',
+                         'relativeMassError', 'massChange', 'landIceMassChange']
+            salt_vars = ['initialSalt', 'finalSalt', 'absoluteSaltError',
+                         'relativeSaltError']
+            mass_flux_vars = ['netMassFlux', 'landIceMassFlux']
+            salt_flux_vars = ['netSaltFlux']
+            ssh_vars = ['landIceSshChange', 'sshChange']
+            if (varname in mass_vars) or (varname in salt_vars):
+                # Convert from kg to Gt
+                variable = variable * 1e-12
+            if (varname in mass_flux_vars) or (varname in salt_flux_vars):
+                # Convert from kg/s to Gt/yr
+                variable = variable * 1e-12 * constants.sec_per_year
+            if varname in ssh_vars:
+                # Convert from m to mm
+                variable = variable * 1e3
+
+        return variable
 
     def _compute_time_series_with_ncrcat(self, variable_list):
 
@@ -531,10 +531,6 @@ class ConservationTask(AnalysisTask):
         ------
         OSError
             If ``ncrcat`` is not in the system path.
-
-        Author
-        ------
-        Xylar Asay-Davis
         """
 
         if find_executable('ncrcat') is None:
