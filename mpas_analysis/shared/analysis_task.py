@@ -609,18 +609,10 @@ def update_time_bounds_from_file_names(config, section, componentName):
     calendar = namelist.get('config_calendar_type')
 
     requestedStartYear = config.getint(section, 'startYear')
-    requestedEndYear = config.get(section, 'endYear')
-    if requestedEndYear == 'end':
-        requestedEndYear = None
-    else:
-        # get it again as an integer
-        requestedEndYear = config.getint(section, 'endYear')
+    requestedEndYear = config.getint(section, 'endYear')
 
     startDate = '{:04d}-01-01_00:00:00'.format(requestedStartYear)
-    if requestedEndYear is None:
-        endDate = None
-    else:
-        endDate = '{:04d}-12-31_23:59:59'.format(requestedEndYear)
+    endDate = '{:04d}-12-31_23:59:59'.format(requestedEndYear)
 
     streamName = 'timeSeriesStatsMonthlyOutput'
     try:
@@ -652,10 +644,6 @@ def update_time_bounds_from_file_names(config, section, componentName):
     while (lastIndex >= 0 and months[lastIndex] != 12):
         lastIndex -= 1
     endYear = years[lastIndex]
-
-    if requestedEndYear is None:
-        config.set(section, 'endYear', str(endYear))
-        requestedEndYear = endYear
 
     if startYear != requestedStartYear or endYear != requestedEndYear:
         raise ValueError(
