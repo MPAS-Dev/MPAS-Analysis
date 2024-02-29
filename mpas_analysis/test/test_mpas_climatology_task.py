@@ -138,7 +138,7 @@ class TestMpasClimatologyTask(TestCase):
         mpasClimatologyTask = self.setup_task()
         config = mpasClimatologyTask.config
 
-        # first make sure the start and end years stay unchanged when we use
+        # make sure the start and end years stay unchanged when we use
         # the start and end years already in the config file
         startYear = 2
         endYear = 2
@@ -165,18 +165,10 @@ class TestMpasClimatologyTask(TestCase):
         config.set('climatology', 'startDate', startDate)
         config.set('climatology', 'endDate', endDate)
 
-        update_time_bounds_from_file_names(config, 'climatology', 'ocean')
-        mpasClimatologyTask._create_symlinks()
-
-        startYear = 2
-        endYear = 2
-        startDate = '{:04d}-01-01_00:00:00'.format(startYear)
-        endDate = '{:04d}-12-31_23:59:59'.format(endYear)
-
-        assert(mpasClimatologyTask.startYear == startYear)
-        assert(mpasClimatologyTask.endYear == endYear)
-        assert(mpasClimatologyTask.startDate == startDate)
-        assert(mpasClimatologyTask.endDate == endDate)
+        with self.assertRaisesRegex(ValueError,
+                                    'climatology start and/or end year '
+                                    'different from requested'):
+            update_time_bounds_from_file_names(config, 'climatology', 'ocean')
 
     def test_subtask_run_analysis(self):
         mpasClimatologyTask = self.setup_task()
