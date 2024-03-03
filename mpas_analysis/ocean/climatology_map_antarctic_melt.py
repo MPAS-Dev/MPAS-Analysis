@@ -248,7 +248,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
 
                 subtask.set_plot_info(
                     outFileLabel='antFrazil',
-                    fieldNameInTitle='Frazil Accretion Rate, negative upward',
+                    fieldNameInTitle='Frazil Accretion Rate, neg. upward',
                     mpasFieldName=mpasFieldName,
                     refFieldName=refFieldName,
                     refTitleLabel=refTitleLabel,
