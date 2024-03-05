@@ -172,6 +172,9 @@ def build_analysis_list(config, controlConfig):
         config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
 
+    analyses.append(ocean.ConservationTask(
+        config, controlConfig))
+
     analyses.append(ocean.RegionalTSDiagrams(
         config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
