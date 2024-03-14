@@ -21,12 +21,12 @@ jobs:
     vmImage: 'ubuntu-latest'
   strategy:
     matrix:
-      Python39:
-        python.version: '3.9'
       Python310:
         python.version: '3.10'
       Python311:
         python.version: '3.11'
+      Python312:
+        python.version: '3.12'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -37,27 +37,22 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda update --yes --all
-      conda install --yes mamba
-      # workaround based on recent failures
-      rm /usr/share/miniconda/pkgs/cache/*.json
-      mamba install --yes conda-build boa
-    displayName: Update conda base environment
+      conda create --yes --name build_env conda-build
+    displayName: Create build environment
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
-      conda activate
-      # workaround based on recent failures
-      rm /usr/share/miniconda/pkgs/cache/*.json
-      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
+      conda activate build_env
+      conda build -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
     displayName: Build MPAS-Analysis
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
       conda activate
-      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
+      conda create --yes --quiet --name mpas \
+          -c ${CONDA_PREFIX}/envs/build_env/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis pytest
     displayName: Create Anaconda mpas environment
 
@@ -72,7 +67,8 @@ jobs:
       set -e
       eval "$(conda shell.bash hook)"
       conda activate
-      mamba create --yes --quiet --name docs -c ${CONDA_PREFIX}/conda-bld/ \
+      conda create --yes --quiet --name docs \
+          -c ${CONDA_PREFIX}/envs/build_env/conda-bld/ \
           python=$PYTHON_VERSION mpas-analysis sphinx mock sphinx_rtd_theme \
           tabulate "m2r2>=0.3.3" "mistune<2"
     condition: eq(variables['python.version'], '3.10')
@@ -151,7 +147,7 @@ jobs:
   strategy:
     matrix:
       Python310:
-        python.version: '3.10'
+        python.version: '3.11'
 
   steps:
   - bash: echo "##vso[task.prependpath]$CONDA/bin"
@@ -162,28 +158,25 @@ jobs:
       eval "$(conda shell.bash hook)"
       conda config --add channels conda-forge
       conda config --set channel_priority strict
-      conda update --yes --all
-      conda install --yes mamba
-      # workaround based on recent failures
-      rm /usr/share/miniconda/pkgs/cache/*.json
-      mamba install --yes conda-build boa
-    displayName: Update conda base environment
+      conda create --yes --name build_env conda-build
+    displayName: Create build environment
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
-      conda activate
+      conda activate build_env
       # workaround based on recent failures
       rm /usr/share/miniconda/pkgs/cache/*.json
-      conda mambabuild -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
+      conda build -m "ci/python${PYTHON_VERSION}.yaml" "ci/recipe"
     displayName: Build MPAS-Analysis
 
   - bash: |
       set -e
       eval "$(conda shell.bash hook)"
       conda activate
-      mamba create --yes --quiet --name mpas -c ${CONDA_PREFIX}/conda-bld/ \
-           python=$PYTHON_VERSION mpas-analysis pytest
+      conda create --yes --quiet --name mpas \
+          -c ${CONDA_PREFIX}/envs/build_env/conda-bld/ \
+          python=$PYTHON_VERSION mpas-analysis pytest
       conda activate mpas
       pip install git+https://github.com/pydata/xarray.git
 
