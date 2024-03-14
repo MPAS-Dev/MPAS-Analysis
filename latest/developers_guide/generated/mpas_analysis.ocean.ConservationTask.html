@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.ClimatologyMapOHCAnomaly &mdash; MPAS-Analysis latest documentation</title>
+  <title>mpas_analysis.ocean.ConservationTask &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="mpas_analysis.ocean.ClimatologyMapAntarcticMelt" href="mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html" />
-    <link rel="prev" title="mpas_analysis.ocean.ClimatologyMapEKE" href="mpas_analysis.ocean.ClimatologyMapEKE.html" /> 
+    <link rel="next" title="mpas_analysis.ocean.ClimatologyMapSST" href="mpas_analysis.ocean.ClimatologyMapSST.html" />
+    <link rel="prev" title="mpas_analysis.shared.AnalysisTask.set_start_end_date" href="mpas_analysis.shared.AnalysisTask.set_start_end_date.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -61,14 +61,14 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../api.html#base-class">Base Class</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#ocean-tasks">Ocean tasks</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ConservationTask.html">mpas_analysis.ocean.ConservationTask</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.ConservationTask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSST.html">mpas_analysis.ocean.ClimatologyMapSST</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSSS.html">mpas_analysis.ocean.ClimatologyMapSSS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapMLD.html">mpas_analysis.ocean.ClimatologyMapMLD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapMLDMinMax.html">mpas_analysis.ocean.ClimatologyMapMLDMinMax</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSSH.html">mpas_analysis.ocean.ClimatologyMapSSH</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapEKE.html">mpas_analysis.ocean.ClimatologyMapEKE</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.ClimatologyMapOHCAnomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html">mpas_analysis.ocean.ClimatologyMapOHCAnomaly</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html">mpas_analysis.ocean.ClimatologyMapAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSose.html">mpas_analysis.ocean.ClimatologyMapSose</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapArgoTemperature.html">mpas_analysis.ocean.ClimatologyMapArgoTemperature</a></li>
@@ -130,9 +130,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
-      <li class="breadcrumb-item active">mpas_analysis.ocean.ClimatologyMapOHCAnomaly</li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.ConservationTask</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/mpas_analysis.ocean.ConservationTask.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -140,35 +140,45 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mpas-analysis-ocean-climatologymapohcanomaly">
-<h1>mpas_analysis.ocean.ClimatologyMapOHCAnomaly<a class="headerlink" href="#mpas-analysis-ocean-climatologymapohcanomaly" title="Link to this heading">¶</a></h1>
+  <section id="mpas-analysis-ocean-conservationtask">
+<h1>mpas_analysis.ocean.ConservationTask<a class="headerlink" href="#mpas-analysis-ocean-conservationtask" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapOHCAnomaly">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapOHCAnomaly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_year_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="Link to this definition">¶</a></dt>
-<dd><p>An analysis task for comparison of the anomaly from a reference year
-(typically the start of the simulation) of ocean heat content (OHC)</p>
+<dt class="sig sig-object py" id="mpas_analysis.ocean.ConservationTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ConservationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/conservation.html#ConservationTask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ConservationTask" title="Link to this definition">¶</a></dt>
+<dd><p>This task generates time series plots from output from the conservation
+analysis member. A number of different plot types are supported, as indicated
+in the <cite>plotTypes</cite> config option in the <cite>conservation</cite> section.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mpas_climatology_task</strong> (<a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><em>mpas_analysis.shared.climatology.MpasClimatologyTask</em></a>) – The task that produced the climatology to be remapped and plotted</p></li>
-<li><p><strong>ref_year_climatology_task</strong> (<em>mpas_analysis.shared.climatology.RefYearMpasClimatologyTask</em>) – The task that produced the climatology from the first year to be
-remapped and then subtracted from the main climatology</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options</p></li>
+<li><p><strong>controlConfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options for a control run, if provided</p></li>
+<li><p><strong>outputFile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the output file produced by this analysis</p></li>
+<li><p><strong>runDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the restart files from the main simulation being analyzed</p></li>
+<li><p><strong>historyDirectory</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the history files from the main simulation being analyzed</p></li>
+<li><p><strong>startYear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The year to start the analysis</p></li>
+<li><p><strong>endYear</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – The year to end the analysis</p></li>
+<li><p><strong>inputFiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The paths to all conservation AM files</p></li>
+<li><p><strong>mainRunName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the main run from the config file</p></li>
+<li><p><strong>plotTypes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The plot types requested in the config file</p></li>
+<li><p><strong>masterVariableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> of </em><em>key-</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>] </em><em>pairs</em>) – Keys are the supported plot types. Entries are lists of the variables
+that are needed to produce that plot type.</p></li>
+<li><p><strong>derivedVariableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> of </em><em>key-</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>] </em><em>pairs</em>) – Keys are the derived variables. Entries are lists of variables in the
+AM output that are needed to derive that variable.</p></li>
+<li><p><strong>xmlFileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – File names for xml output with full path</p></li>
+<li><p><strong>filePrefixes</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – File prefixes for xml files</p></li>
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em> of </em><em>key-</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>] </em><em>pairs</em>) – Keys are the requested plot types. Entries are lists of the variables
+in the AM output that are needed to produce that plot type.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpas_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_year_climatology_task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">control_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ohc_anomaly.html#ClimatologyMapOHCAnomaly.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="mpas_analysis.ocean.ConservationTask.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/conservation.html#ConservationTask.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ConservationTask.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options</p></li>
-<li><p><strong>mpas_climatology_task</strong> (<a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><em>mpas_analysis.shared.climatology.MpasClimatologyTask</em></a>) – The task that produced the climatology to be remapped and plotted</p></li>
-<li><p><strong>ref_year_climatology_task</strong> (<em>mpas_analysis.shared.climatology.RefYearMpasClimatologyTask</em>) – The task that produced the climatology from the first year to be
-remapped and then subtracted from the main climatology</p></li>
-<li><p><strong>control_config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options</p>
 </dd>
 </dl>
 </dd></dl>
@@ -176,7 +186,7 @@ remapped and then subtracted from the main climatology</p></li>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpas_climatology_task, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ConservationTask.__init__" title="mpas_analysis.ocean.ConservationTask.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, controlConfig)</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
@@ -207,13 +217,13 @@ remapped and then subtracted from the main climatology</p></li>
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
-<td><p>Run the analysis.</p></td>
+<td><p>Create an output netCDF file that has all of the requested conservation AM variables in the requested time window.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
-<td><p>Checks whether analysis is being performed only on the reference year, in which case the analysis will not be meaningful.</p></td>
+<td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
 <td><p>Start child process</p></td>
@@ -275,8 +285,8 @@ remapped and then subtracted from the main climatology</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mpas_analysis.ocean.ClimatologyMapEKE.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.ClimatologyMapEKE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.ClimatologyMapAntarcticMelt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpas_analysis.shared.AnalysisTask.set_start_end_date.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.AnalysisTask.set_start_end_date" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.ocean.ClimatologyMapSST.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.ClimatologyMapSST" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

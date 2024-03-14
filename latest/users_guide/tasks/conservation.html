@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>climatologyMapSST &mdash; MPAS-Analysis latest documentation</title>
+  <title>conservation &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="climatologyMapSSS" href="climatologyMapSSS.html" />
-    <link rel="prev" title="climatologyMapMLDMinMax" href="climatologyMapMLDMinMax.html" /> 
+    <link rel="next" title="climatologyMapSeaIceConcNH" href="climatologyMapSeaIceConcNH.html" />
+    <link rel="prev" title="oceanHistogram" href="oceanHistogram.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,12 +52,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapSST</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
@@ -87,7 +82,11 @@
 <li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
 <li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
 <li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
-<li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">conservation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
@@ -140,9 +139,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
-      <li class="breadcrumb-item active">climatologyMapSST</li>
+      <li class="breadcrumb-item active">conservation</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/tasks/climatologyMapSST.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/tasks/conservation.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -150,74 +149,59 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="climatologymapsst">
-<span id="task-climatologymapsst"></span><h1>climatologyMapSST<a class="headerlink" href="#climatologymapsst" title="Link to this heading">¶</a></h1>
-<p>An analysis task for comparison of global maps of sea surface temperature (SST)
-against observations.</p>
+  <section id="conservation">
+<span id="task-conservation"></span><h1>conservation<a class="headerlink" href="#conservation" title="Link to this heading">¶</a></h1>
+<p>An analysis task for plotting histograms of 2-d variables of climatologies
+in ocean regions.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">sst</span><span class="p">,</span> <span class="n">publicObs</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">timeseries</span><span class="p">,</span> <span class="n">conservation</span>
 </pre></div>
 </div>
 <section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapSST</span><span class="p">]</span>
-<span class="c1">## options related to plotting horizontally remapped climatologies of</span>
-<span class="c1">## sea surface temperature (SST) against reference model results and</span>
-<span class="c1">## observations</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[conservation]</span>
+<span class="c1">## options related to producing time series plots, often to compare against</span>
+<span class="c1">## observations and previous runs</span>
 
-<span class="c1"># colormap for model/observations</span>
-<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
-<span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="c1"># the year from which to compute anomalies if not the start year of the</span>
+<span class="c1"># simulation.  This might be useful if a long spin-up cycle is performed and</span>
+<span class="c1"># only the anomaly over a later span of years is of interest.</span>
+<span class="c1"># anomalyRefYear = 249</span>
 
-<span class="c1"># colormap for differences</span>
-<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">RdBu_r</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">142</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span>
-                             <span class="mi">227</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
-<span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
+<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
+<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
+<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
+<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
+<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
+<span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">end</span>
 
-<span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep,</span>
-<span class="c1"># Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">,</span> <span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="c1"># Plot types to generate. The following plotTypes are supported:</span>
+<span class="c1">#    total_energy_flux : Total energy flux</span>
+<span class="c1">#    absolute_energy_error : Energy error</span>
+<span class="c1">#    ice_salt_flux : Salt flux related to land ice and sea ice</span>
+<span class="c1">#    absolute_salt_error : Salt conservation error</span>
+<span class="c1">#    total_mass_flux : Total mass flux</span>
+<span class="c1">#    total_mass_change : Total mass anomaly</span>
+<span class="c1">#    land_ice_mass_change : Mass anomaly due to land ice fluxes</span>
+<span class="c1">#    land_ice_ssh_change : SSH anomaly due to land ice fluxes</span>
+<span class="c1">#    land_ice_mass_flux_components : Mass fluxes from land ice</span>
+<span class="na">plotTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;land_ice_mass_flux_components&#39;</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
-
-<span class="c1"># first and last year of SST observational climatology (preferably one of the</span>
-<span class="c1"># two ranges given below)</span>
-<span class="c1"># values for preindustrial</span>
-<span class="n">obsStartYear</span> <span class="o">=</span> <span class="mi">1870</span>
-<span class="n">obsEndYear</span> <span class="o">=</span> <span class="mi">1900</span>
-<span class="c1"># alternative values for present day</span>
-<span class="c1">#obsStartYear = 1990</span>
-<span class="c1">#obsEndYear = 2011</span>
+<span class="c1"># line colors for the main, control and obs curves</span>
+<span class="c1"># see https://matplotlib.org/stable/gallery/color/named_colors.html</span>
+<span class="c1"># and https://matplotlib.org/stable/tutorials/colors/colors.html</span>
+<span class="na">mainColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">black</span>
+<span class="na">controlColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">tab:red</span>
 </pre></div>
 </div>
-<p>By default, a “preindustrial” climatology is computed for comparison with the
-model results.  For simulations covering a different time period, the range of
-years (<code class="docutils literal notranslate"><span class="pre">obsStartYear</span></code> and <code class="docutils literal notranslate"><span class="pre">obsEndYear</span></code>) should be updated.</p>
-<dl class="simple">
-<dt>For details on the remaining configuration options, see:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
-<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
-<li><p><a class="reference internal" href="../config/comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
-<p><a class="reference internal" href="../obs/hadley_center_sst.html#hadley-center-sst"><span class="std std-ref">SST merged Hadley Center-NOAA/OI data set</span></a></p>
 </section>
 <section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/sst.png"><img alt="../../_images/sst.png" class="align-center" src="../../_images/sst.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../_images/total_mass_flux.png"><img alt="../../_images/total_mass_flux.png" class="align-center" src="../../_images/total_mass_flux.png" style="width: 500px;" /></a>
 </section>
 </section>
 
@@ -225,8 +209,8 @@ years (<code class="docutils literal notranslate"><span class="pre">obsStartYear
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="climatologyMapMLDMinMax.html" class="btn btn-neutral float-left" title="climatologyMapMLDMinMax" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="climatologyMapSSS.html" class="btn btn-neutral float-right" title="climatologyMapSSS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="oceanHistogram.html" class="btn btn-neutral float-left" title="oceanHistogram" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="climatologyMapSeaIceConcNH.html" class="btn btn-neutral float-right" title="climatologyMapSeaIceConcNH" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
