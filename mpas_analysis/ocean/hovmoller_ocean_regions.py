@@ -72,13 +72,7 @@ class HovmollerOceanRegions(AnalysisTask):
             tags=['profiles', 'timeSeries', 'hovmoller'])
 
         startYear = config.getint('timeSeries', 'startYear')
-        endYear = config.get('timeSeries', 'endYear')
-        if endYear == 'end':
-            # a valid end year wasn't found, so likely the run was not found,
-            # perhaps because we're just listing analysis tasks
-            endYear = startYear
-        else:
-            endYear = int(endYear)
+        endYear = config.getint('timeSeries', 'endYear')
 
         regionGroups = config.getexpression('hovmollerOceanRegions',
                                             'regionGroups')

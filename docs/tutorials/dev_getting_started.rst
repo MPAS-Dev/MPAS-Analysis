@@ -642,24 +642,16 @@ climate index.
     ## options related to producing time series plots, often to compare against
     ## observations and previous runs
 
-    # start and end years for timeseries analysis. Use endYear = end to indicate
-    # that the full range of the data should be used.  If errorOnMissing = False,
-    # the start and end year will be clipped to the valid range.  Otherwise, out
-    # of bounds values will lead to an error.  In a "control" config file used in
-    # a "main vs. control" analysis run, the range of years must be valid and
-    # cannot include "end" because the original data may not be available.
+    # start and end years for timeseries analysis.  Out-of-bounds values will lead
+    # to an error.
     startYear = 1
     endYear = 5
 
     [index]
     ## options related to producing nino index.
 
-    # start and end years for El Nino 3.4 analysis. Use endYear = end to indicate
-    # that the full range of the data should be used.  If errorOnMissing = False,
-    # the start and end year will be clipped to the valid range.  Otherwise, out
-    # of bounds values will lead to an error.  In a "control" config file used in
-    # a "main vs. control" analysis run, the range of years must be valid and
-    # cannot include "end" because the original data may not be available.
+    # start and end years for El Nino 3.4 analysis.  Out-of-bounds values will lead
+    # to an error.
     startYear = 1
     endYear = 5
 
