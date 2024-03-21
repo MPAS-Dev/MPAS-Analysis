@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ice area and extent time series: SSM/I derived &mdash; MPAS-Analysis 1.10.0rc2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/documentation_options.js?v=3bcbdadc"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="IceSat Ice Thickness" href="icesat_thickness.html" />
+    <link rel="prev" title="Ice concentration: SSM/I, Bootstrap algorithm" href="bootstrap_conc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.10.0rc2
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../observations.html">Observations</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#ocean-observations">Ocean Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observations.html#sea-ice-observations">Sea Ice Observations</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observations.html#details-on-each-data-set">Details on Each Data Set</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="hadley_center_sst.html">SST merged Hadley Center-NOAA/OI data set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aquarius_sss.html">SSS from NASA Aquarius satellite</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa18_t_s.html">WOA18 Temperature and Salinity Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aviso_ssh.html">AVISO Absolute Dynamic Topography</a></li>
+<li class="toctree-l3"><a class="reference internal" href="argo_mld.html">Argo Mixed Layer Depth (MLD) climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="trenberth_mht.html">Meridional Heat Transport (MHT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="roemmich_gilson_argo.html">Roemmich-Gilson Argo Climatology</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sose.html">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rignot_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adusumilli_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="paolo_melt.html">Antarctic melt rates and fluxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hadisst_nino.html">HadISST Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ers_sst_nino.html">ERS SSTv4 Nino 3.4 Index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="schmidtko.html">Antarctic Seafloor Temperature and Salinity</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woce.html">WOCE sections</a></li>
+<li class="toctree-l3"><a class="reference internal" href="woa.html">World Ocean Atlas v2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="landschuetzer-som-ffn.html">Landschuetzerv2016 SOM-FFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="seawifs.html">SeaWiFS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="glodapv2.html">GLODAPv2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="drifter_eke.html">Surface Current Variance from Drifter Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="era5_waves.html">Wave Reanalysis: ERA5</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sscci_waves.html">Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nasateam_conc.html">Ice concentration: SSM/I, NASATeam algorithm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bootstrap_conc.html">Ice concentration: SSM/I, Bootstrap algorithm</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Ice area and extent time series: SSM/I derived</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#description">Description</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#source">Source</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-policy">Release Policy</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mpas-analysis-tasks">MPAS-Analysis Tasks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="icesat_thickness.html">IceSat Ice Thickness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="piomass_ice_volume.html">PIOMAS Arctic Sea Ice Volume Reanalysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="aniceflux.html">Sea ice production and transport: Haumann et al 2016</a></li>
+<li class="toctree-l3"><a class="reference internal" href="altiberg.html">Iceberg Concentration: Altiberg</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../observations.html">Observations</a></li>
+      <li class="breadcrumb-item active">Ice area and extent time series: SSM/I derived</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/obs/ssmi_ice_area.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ice-area-and-extent-time-series-ssm-i-derived">
+<span id="ssmi-ice-area"></span><h1>Ice area and extent time series: SSM/I derived<a class="headerlink" href="#ice-area-and-extent-time-series-ssm-i-derived" title="Link to this heading">¶</a></h1>
+<section id="description">
+<h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
+<p>The sea ice data presented here were derived from satellite
+passive-microwave radiometers, specifically, the Scanning Multichannel
+Microwave Radiometer (SMMR) on NASA’s Nimbus 7 satellite, for November
+1978-August 1987, a sequence of Special Sensor Microwave Imagers (SSMIs)
+on the F8, F11, and F13 satellites of the Defense Meteorological
+Satellite Program (DMSP), for August 1987-December 2007, and the Special
+Sensor Microwave Imager Sounder (SSMIS) on the DMSP F17 satellite for
+January 2008-December 2012. The baseline data used were daily maps of
+sea ice concentration. The maps are polar stereographic projections with
+individual grid elements of approximately 25 km x 25 km; and the ice
+concentration data are also archived at the National Snow and Ice Data
+Center (NSIDC) at <a class="reference external" href="http://nsidc.org">http://nsidc.org</a>. The concentrations are calculated for
+each ocean grid element and are used to derive ‘sea ice extent’, which is
+calculated as the sum of all ocean elements having a sea ice
+concentration of at least 15%, and ‘sea ice area’, which is calculated as
+the sum over all ocean grid elements of the product of ice concentration
+and grid element area. The data sets provided here include the
+hemispheric totals and additionally the values for nine regions in the
+Arctic and five regions in the Antarctic. These regions are identified in
+Figures 1 and 2 respectively. Figures 3 and 4 provide plots of the trends
+in the Arctic and Antarctic sea ice extents, along with monthly
+deviations and 12-month running means. The monthly deviations are
+calculated by taking the individual month’s ice extent/area and
+subtracting from it the average over the course of the data set of the
+extents/areas for that month.</p>
+</section>
+<section id="source">
+<h2>Source<a class="headerlink" href="#source" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://neptune.gsfc.nasa.gov/csb/index.php?section=59">NASA Ice area and extent website</a></p>
+</section>
+<section id="release-policy">
+<h2>Release Policy<a class="headerlink" href="#release-policy" title="Link to this heading">¶</a></h2>
+<p>NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+<a class="reference external" href="https://podaac.jpl.nasa.gov/CitingPODAAC">Data Citation and Acknowledgements</a></p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://doi.org/10.1029/1999JC900081">Cavalieri et al. (1999)</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.1109/LGRS.2011.2166754">Cavalieri et al. (2012)</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.5194/tc-6-881-2012">Cavalieri and Parkinson (2012)</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.1029/1999JC900082">Parkinson et al. (1999)</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.5194/tc-6-871-2012">Parkinson and Cavalieri (2012)</a></p></li>
+<li><p><a class="reference external" href="https://doi.org/10.1029/2000JC000733">Zwally et al. (2002)</a></p></li>
+</ul>
+<p><a class="reference external" href="https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/IceArea_timeseries/obs.bib">bibtex file</a></p>
+</section>
+<section id="mpas-analysis-tasks">
+<h2>MPAS-Analysis Tasks<a class="headerlink" href="#mpas-analysis-tasks" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../tasks/timeSeriesSeaIceAreaVol.html#task-timeseriesseaiceareavol"><span class="std std-ref">timeSeriesSeaIceAreaVol</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="bootstrap_conc.html" class="btn btn-neutral float-left" title="Ice concentration: SSM/I, Bootstrap algorithm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="icesat_thickness.html" class="btn btn-neutral float-right" title="IceSat Ice Thickness" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
