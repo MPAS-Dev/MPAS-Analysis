@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API reference &mdash; MPAS-Analysis 1.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/documentation_options.js?v=1d24b1d9"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="mpas_analysis.__main__.main" href="generated/mpas_analysis.__main__.main.html" />
+    <link rel="prev" title="Iceberg Concentration: Altiberg" href="../users_guide/obs/altiberg.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.10.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.main.html">mpas_analysis.__main__.main</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.build_analysis_list.html">mpas_analysis.__main__.build_analysis_list</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.determine_analyses_to_generate.html">mpas_analysis.__main__.determine_analyses_to_generate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.add_task_and_subtasks.html">mpas_analysis.__main__.add_task_and_subtasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.update_generate.html">mpas_analysis.__main__.update_generate</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.run_analysis.html">mpas_analysis.__main__.run_analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.__main__.wait_for_task.html">mpas_analysis.__main__.wait_for_task</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#downloading-data">Downloading data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="generated/mpas_analysis.download_data.download_analysis_data.html">mpas_analysis.download_data.download_analysis_data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-tasks">Analysis tasks</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#base-class">Base Class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.html">mpas_analysis.shared.AnalysisTask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html">mpas_analysis.shared.AnalysisTask.setup_and_check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run_task.html">mpas_analysis.shared.AnalysisTask.run_task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run_after.html">mpas_analysis.shared.AnalysisTask.run_after</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.add_subtask.html">mpas_analysis.shared.AnalysisTask.add_subtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run.html">mpas_analysis.shared.AnalysisTask.run</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.check_generate.html">mpas_analysis.shared.AnalysisTask.check_generate</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.check_analysis_enabled.html">mpas_analysis.shared.AnalysisTask.check_analysis_enabled</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.set_start_end_date.html">mpas_analysis.shared.AnalysisTask.set_start_end_date</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ocean-tasks">Ocean tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ConservationTask.html">mpas_analysis.ocean.ConservationTask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSST.html">mpas_analysis.ocean.ClimatologyMapSST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSSS.html">mpas_analysis.ocean.ClimatologyMapSSS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapMLD.html">mpas_analysis.ocean.ClimatologyMapMLD</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html">mpas_analysis.ocean.ClimatologyMapMLDMinMax</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSSH.html">mpas_analysis.ocean.ClimatologyMapSSH</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapEKE.html">mpas_analysis.ocean.ClimatologyMapEKE</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html">mpas_analysis.ocean.ClimatologyMapOHCAnomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html">mpas_analysis.ocean.ClimatologyMapAntarcticMelt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSose.html">mpas_analysis.ocean.ClimatologyMapSose</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html">mpas_analysis.ocean.ClimatologyMapArgoTemperature</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html">mpas_analysis.ocean.ClimatologyMapArgoSalinity</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWaves.html">mpas_analysis.ocean.ClimatologyMapWaves</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.IndexNino34.html">mpas_analysis.ocean.IndexNino34</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.MeridionalHeatTransport.html">mpas_analysis.ocean.MeridionalHeatTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.OceanHistogram.html">mpas_analysis.ocean.OceanHistogram</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.StreamfunctionMOC.html">mpas_analysis.ocean.StreamfunctionMOC</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html">mpas_analysis.ocean.TimeSeriesOHCAnomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html">mpas_analysis.ocean.TimeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html">mpas_analysis.ocean.TimeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesSST.html">mpas_analysis.ocean.TimeSeriesSST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html">mpas_analysis.ocean.TimeSeriesAntarcticMelt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html">mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sea-ice-tasks">Sea ice tasks</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceConc</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceThick</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.sea_ice.TimeSeriesSeaIce.html">mpas_analysis.sea_ice.TimeSeriesSeaIce</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html">mpas_analysis.sea_ice.ClimatologyMapIcebergConc</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#shared-modules">Shared modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#reading-mpas-datasets">Reading MPAS Datasets</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.open_mpas_dataset.html">mpas_analysis.shared.io.open_mpas_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html">mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html">mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#climatology">Climatology</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_comparison_descriptor.html">mpas_analysis.shared.climatology.get_comparison_descriptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapper.html">mpas_analysis.shared.climatology.get_remapper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html">mpas_analysis.shared.climatology.compute_monthly_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_climatology.html">mpas_analysis.shared.climatology.compute_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html">mpas_analysis.shared.climatology.add_years_months_days_in_month</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html">mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html">mpas_analysis.shared.climatology.MpasClimatologyTask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html">mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html">mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#time-series">Time Series</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.time_series.cache_time_series.html">mpas_analysis.shared.time_series.cache_time_series</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html">mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.time_series.compute_moving_avg.html">mpas_analysis.shared.time_series.compute_moving_avg</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html">mpas_analysis.shared.time_series.MpasTimeSeriesTask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#namelist-and-streams-files">Namelist and Streams Files</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html">mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.get</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getint</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html">mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.html">mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#i-o-utilities">I/O Utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.paths.html">mpas_analysis.shared.io.utility.paths</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.make_directories.html">mpas_analysis.shared.io.utility.make_directories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.build_config_full_path.html">mpas_analysis.shared.io.utility.build_config_full_path</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.check_path_exists.html">mpas_analysis.shared.io.utility.check_path_exists</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.io.write_netcdf.html">mpas_analysis.shared.io.write_netcdf</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting">Plotting</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.timeseries_analysis_plot.html">mpas_analysis.shared.plot.timeseries_analysis_plot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.timeseries_analysis_plot_polar.html">mpas_analysis.shared.plot.timeseries_analysis_plot_polar</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_polar_comparison.html">mpas_analysis.shared.plot.plot_polar_comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_global_comparison.html">mpas_analysis.shared.plot.plot_global_comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_1D.html">mpas_analysis.shared.plot.plot_1D</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html">mpas_analysis.shared.plot.plot_vertical_section_comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section.html">mpas_analysis.shared.plot.plot_vertical_section</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html">mpas_analysis.shared.plot.colormap.setup_colormap</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html">mpas_analysis.shared.plot.ticks.plot_xtick_format</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html">mpas_analysis.shared.plot.add_inset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html">mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#projection">Projection</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_pyproj_projection.html">mpas_analysis.shared.projection.get_pyproj_projection</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_cartopy_projection.html">mpas_analysis.shared.projection.get_cartopy_projection</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#regions">Regions</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html">mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html">mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html">mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#timekeeping">Timekeeping</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html">mpas_analysis.shared.timekeeping.utility.get_simulation_start_time</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_datetime.html">mpas_analysis.shared.timekeeping.utility.string_to_datetime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_relative_delta.html">mpas_analysis.shared.timekeeping.utility.string_to_relative_delta</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_days_since_date.html">mpas_analysis.shared.timekeeping.utility.string_to_days_since_date</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html">mpas_analysis.shared.timekeeping.utility.days_to_datetime</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html">mpas_analysis.shared.timekeeping.utility.datetime_to_days</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html">mpas_analysis.shared.timekeeping.utility.date_to_days</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html">mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#transects">Transects</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html">mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html">mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
+<p>This page provides an auto-generated summary of the MPAS-Analysis API. For
+more details and examples, refer to the relevant chapters in the main part of
+the documentation.</p>
+<section id="top-level-script-mpas-analysis">
+<h2>Top-level script: mpas_analysis<a class="headerlink" href="#top-level-script-mpas-analysis" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.main.html#mpas_analysis.__main__.main" title="mpas_analysis.__main__.main"><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code></a>()</p></td>
+<td><p>Entry point for the main script <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.build_analysis_list.html#mpas_analysis.__main__.build_analysis_list" title="mpas_analysis.__main__.build_analysis_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_analysis_list</span></code></a>(config, controlConfig)</p></td>
+<td><p>Build a list of analysis tasks.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.determine_analyses_to_generate.html#mpas_analysis.__main__.determine_analyses_to_generate" title="mpas_analysis.__main__.determine_analyses_to_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">determine_analyses_to_generate</span></code></a>(analyses, verbose)</p></td>
+<td><p>Build a list of analysis tasks to run based on the 'generate' config option (or command-line flag) and prerequisites and subtasks of each requested task.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.add_task_and_subtasks.html#mpas_analysis.__main__.add_task_and_subtasks" title="mpas_analysis.__main__.add_task_and_subtasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_task_and_subtasks</span></code></a>(analysisTask, ...[, ...])</p></td>
+<td><p>If a task has been requested through the generate config option or if it is a prerequisite of a requested task, add it to the dictionary of tasks to generate.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.update_generate.html#mpas_analysis.__main__.update_generate" title="mpas_analysis.__main__.update_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_generate</span></code></a>(config, generate)</p></td>
+<td><p>Update the 'generate' config option using a string from the command line.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.run_analysis.html#mpas_analysis.__main__.run_analysis" title="mpas_analysis.__main__.run_analysis"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_analysis</span></code></a>(config, analyses)</p></td>
+<td><p>Run all the tasks, either in serial or in parallel</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.__main__.wait_for_task.html#mpas_analysis.__main__.wait_for_task" title="mpas_analysis.__main__.wait_for_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wait_for_task</span></code></a>(runningTasks[, timeout])</p></td>
+<td><p>Build a list of analysis modules based on the 'generate' config option.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="downloading-data">
+<h2>Downloading data<a class="headerlink" href="#downloading-data" title="Link to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.download_data.download_analysis_data.html#mpas_analysis.download_data.download_analysis_data" title="mpas_analysis.download_data.download_analysis_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">download_analysis_data</span></code></a>()</p></td>
+<td><p>Entry point for downloading the input data set from public repository for MPAS-Analysis to work.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="analysis-tasks">
+<h2>Analysis tasks<a class="headerlink" href="#analysis-tasks" title="Link to this heading">¶</a></h2>
+<section id="base-class">
+<h3>Base Class<a class="headerlink" href="#base-class" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>(config, taskName, componentName)</p></td>
+<td><p>The base class for analysis tasks.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html#mpas_analysis.shared.AnalysisTask.setup_and_check" title="mpas_analysis.shared.AnalysisTask.setup_and_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.setup_and_check</span></code></a>()</p></td>
+<td><p>Perform steps to set up the analysis (e.g. reading namelists and streams files).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run_task.html#mpas_analysis.shared.AnalysisTask.run_task" title="mpas_analysis.shared.AnalysisTask.run_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.run_task</span></code></a>()</p></td>
+<td><p>Run the analysis.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run_after.html#mpas_analysis.shared.AnalysisTask.run_after" title="mpas_analysis.shared.AnalysisTask.run_after"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.run_after</span></code></a>(task)</p></td>
+<td><p>Only run this task after the given task has completed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.add_subtask.html#mpas_analysis.shared.AnalysisTask.add_subtask" title="mpas_analysis.shared.AnalysisTask.add_subtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.add_subtask</span></code></a>(subtask)</p></td>
+<td><p>Add a subtask to this tasks.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.run.html#mpas_analysis.shared.AnalysisTask.run" title="mpas_analysis.shared.AnalysisTask.run"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.run</span></code></a>([writeLogFile])</p></td>
+<td><p>Sets up logging and then runs the analysis task.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.check_generate.html#mpas_analysis.shared.AnalysisTask.check_generate" title="mpas_analysis.shared.AnalysisTask.check_generate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.check_generate</span></code></a>()</p></td>
+<td><p>Determines if this analysis should be generated, based on the <code class="docutils literal notranslate"><span class="pre">generate</span></code> config option and <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">componentName</span></code> and <code class="docutils literal notranslate"><span class="pre">tags</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.check_analysis_enabled.html#mpas_analysis.shared.AnalysisTask.check_analysis_enabled" title="mpas_analysis.shared.AnalysisTask.check_analysis_enabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.check_analysis_enabled</span></code></a>(...[, ...])</p></td>
+<td><p>Check to make sure a given analysis is turned on, issuing a warning or raising an exception if not.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.AnalysisTask.set_start_end_date.html#mpas_analysis.shared.AnalysisTask.set_start_end_date" title="mpas_analysis.shared.AnalysisTask.set_start_end_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AnalysisTask.set_start_end_date</span></code></a>(section)</p></td>
+<td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ocean-tasks">
+<h3>Ocean tasks<a class="headerlink" href="#ocean-tasks" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ConservationTask.html#mpas_analysis.ocean.ConservationTask" title="mpas_analysis.ocean.ConservationTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConservationTask</span></code></a>(config, controlConfig)</p></td>
+<td><p>This task generates time series plots from output from the conservation analysis member.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSST.html#mpas_analysis.ocean.ClimatologyMapSST" title="mpas_analysis.ocean.ClimatologyMapSST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSST</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of sea surface temperature (sst) against observations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSSS.html#mpas_analysis.ocean.ClimatologyMapSSS" title="mpas_analysis.ocean.ClimatologyMapSSS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSSS</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of sea surface salinity (sss) against observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapMLD.html#mpas_analysis.ocean.ClimatologyMapMLD" title="mpas_analysis.ocean.ClimatologyMapMLD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapMLD</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of mixed layer depth (mld) against observations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapMLDMinMax.html#mpas_analysis.ocean.ClimatologyMapMLDMinMax" title="mpas_analysis.ocean.ClimatologyMapMLDMinMax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapMLDMinMax</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of mixed layer depth (mld) against observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSSH.html#mpas_analysis.ocean.ClimatologyMapSSH" title="mpas_analysis.ocean.ClimatologyMapSSH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSSH</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of sea surface height (ssh) against observations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE" title="mpas_analysis.ocean.ClimatologyMapEKE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapEKE</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of eddy kinetic energy (eke) against observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of the anomaly from a reference year (typically the start of the simulation) of ocean heat content (OHC)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html#mpas_analysis.ocean.ClimatologyMapAntarcticMelt" title="mpas_analysis.ocean.ClimatologyMapAntarcticMelt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapAntarcticMelt</span></code></a>(config, ...)</p></td>
+<td><p>An analysis task for comparison of Antarctic melt rates against observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSose.html#mpas_analysis.ocean.ClimatologyMapSose" title="mpas_analysis.ocean.ClimatologyMapSose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSose</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of antarctic field against the Southern Ocean State Estimate</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature" title="mpas_analysis.ocean.ClimatologyMapArgoTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoTemperature</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of potential temperature against Argo observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity" title="mpas_analysis.ocean.ClimatologyMapArgoSalinity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoSalinity</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of global salinity against Argo observations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves" title="mpas_analysis.ocean.ClimatologyMapWaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapWaves</span></code></a>(config, ...)</p></td>
+<td><p>An analysis task for the computation of wave climatologies</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34" title="mpas_analysis.ocean.IndexNino34"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IndexNino34</span></code></a>(config, mpasTimeSeriesTask[, ...])</p></td>
+<td><p>A task for computing and plotting time series and spectra of the El Nino 3.4 climate index</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport" title="mpas_analysis.ocean.MeridionalHeatTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeridionalHeatTransport</span></code></a>(config, ...[, ...])</p></td>
+<td><p>Plot meridional heat transport from the analysis member output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram" title="mpas_analysis.ocean.OceanHistogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OceanHistogram</span></code></a>(config, mpasClimatologyTask, ...)</p></td>
+<td><p>Plots a histogram of a 2-d ocean variable.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC" title="mpas_analysis.ocean.StreamfunctionMOC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamfunctionMOC</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>Computation and plotting of model meridional overturning circulation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly" title="mpas_analysis.ocean.TimeSeriesOHCAnomaly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesOHCAnomaly</span></code></a>(config, mpasTimeSeriesTask)</p></td>
+<td><p>Performs analysis of ocean heat content (OHC) from time-series output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly" title="mpas_analysis.ocean.TimeSeriesTemperatureAnomaly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesTemperatureAnomaly</span></code></a>(config, ...)</p></td>
+<td><p>Performs analysis of time series of potential temperature anomalies from a reference simulation year as a function of depth.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly" title="mpas_analysis.ocean.TimeSeriesSalinityAnomaly"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesSalinityAnomaly</span></code></a>(config, ...)</p></td>
+<td><p>Performs analysis of time series of salinity anomalies from the first simulation year as a function of depth.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesSST.html#mpas_analysis.ocean.TimeSeriesSST" title="mpas_analysis.ocean.TimeSeriesSST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesSST</span></code></a>(config, mpasTimeSeriesTask[, ...])</p></td>
+<td><p>Performs analysis of the time-series output of sea-surface temperature (SST).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html#mpas_analysis.ocean.TimeSeriesAntarcticMelt" title="mpas_analysis.ocean.TimeSeriesAntarcticMelt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesAntarcticMelt</span></code></a>(config, ...[, ...])</p></td>
+<td><p>Performs analysis of the time-series output of Antarctic sub-ice-shelf melt rates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions" title="mpas_analysis.ocean.TimeSeriesOceanRegions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesOceanRegions</span></code></a>(config, regionMasksTask)</p></td>
+<td><p>Performs analysis of the time-series output of regionoal mean temperature, salinity, etc.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport" title="mpas_analysis.ocean.TimeSeriesTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesTransport</span></code></a>(config[, controlConfig])</p></td>
+<td><p>Extract and plot time series of transport through transects on the MPAS mesh.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask" title="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComputeAnomalySubtask</span></code></a>(parentTask, ...[, ...])</p></td>
+<td><p>A subtask for computing anomalies of moving averages and writing them out.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html#mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask" title="mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotDepthIntegratedTimeSeriesSubtask</span></code></a>(...[, ...])</p></td>
+<td><p>Plots a time series, summed or averaged over various depth ranges</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask" title="mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotHovmollerSubtask</span></code></a>(parentTask, regionName, ...)</p></td>
+<td><p>Plots a time series vs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sea-ice-tasks">
+<h3>Sea ice tasks<a class="headerlink" href="#sea-ice-tasks" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSeaIceConc</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of sea ice concentration against observations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceThick" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceThick"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapSeaIceThick</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of sea ice thickness against observations</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.sea_ice.TimeSeriesSeaIce.html#mpas_analysis.sea_ice.TimeSeriesSeaIce" title="mpas_analysis.sea_ice.TimeSeriesSeaIce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesSeaIce</span></code></a>(config, mpasTimeSeriesTask)</p></td>
+<td><p>Performs analysis of time series of sea-ice properties.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html#mpas_analysis.sea_ice.ClimatologyMapIcebergConc" title="mpas_analysis.sea_ice.ClimatologyMapIcebergConc"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapIcebergConc</span></code></a>(config, ...[, ...])</p></td>
+<td><p>An analysis task for comparison of iceberg concentration against observations</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="shared-modules">
+<h2>Shared modules<a class="headerlink" href="#shared-modules" title="Link to this heading">¶</a></h2>
+<section id="reading-mpas-datasets">
+<h3>Reading MPAS Datasets<a class="headerlink" href="#reading-mpas-datasets" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.open_mpas_dataset.html#mpas_analysis.shared.io.open_mpas_dataset" title="mpas_analysis.shared.io.open_mpas_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">open_mpas_dataset</span></code></a>(fileName, calendar[, ...])</p></td>
+<td><p>Opens and returns an xarray data set given file name(s) and the MPAS calendar name.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpas_xarray.open_multifile_dataset</span></code></a>(...[, ...])</p></td>
+<td><p>Opens and returns an xarray data set given file name(s) and the MPAS calendar name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpas_xarray.preprocess</span></code></a>(ds, calendar, ...)</p></td>
+<td><p>Builds correct time specification for MPAS, allowing a date offset because the time must be between 1678 and 2262 based on the xarray library.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpas_xarray.remove_repeated_time_index</span></code></a>(ds)</p></td>
+<td><p>Remove repeated times from xarray dataset.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables" title="mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mpas_xarray.subset_variables</span></code></a>(ds, variableList)</p></td>
+<td><p>Given a data set and a list of variable names, returns a new data set that contains only variables with those names.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset" title="mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code></a>(...)</p></td>
+<td><p>Opens and returns an xarray data set given file name(s) and the MPAS calendar name.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="climatology">
+<h3>Climatology<a class="headerlink" href="#climatology" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_comparison_descriptor.html#mpas_analysis.shared.climatology.get_comparison_descriptor" title="mpas_analysis.shared.climatology.get_comparison_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_comparison_descriptor</span></code></a>(config, ...)</p></td>
+<td><p>Get the comparison grid descriptor from the comparison_grid_name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapper.html#mpas_analysis.shared.climatology.get_remapper" title="mpas_analysis.shared.climatology.get_remapper"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapper</span></code></a>(config, sourceDescriptor, ...)</p></td>
+<td><p>Given config options and descriptions of the source and comparison grids, returns a <code class="docutils literal notranslate"><span class="pre">pyremap.Remapper</span></code> object that can be used to remap from source files or data sets to corresponding data sets on the comparison grid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_monthly_climatology.html#mpas_analysis.shared.climatology.compute_monthly_climatology" title="mpas_analysis.shared.climatology.compute_monthly_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_monthly_climatology</span></code></a>(ds[, calendar, ...])</p></td>
+<td><p>Compute monthly climatologies from a data set.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology" title="mpas_analysis.shared.climatology.compute_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_climatology</span></code></a>(ds, monthValues[, ...])</p></td>
+<td><p>Compute a monthly, seasonal or annual climatology data set from a data set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.add_years_months_days_in_month.html#mpas_analysis.shared.climatology.add_years_months_days_in_month" title="mpas_analysis.shared.climatology.add_years_months_days_in_month"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_years_months_days_in_month</span></code></a>(ds[, calendar])</p></td>
+<td><p>Add <code class="docutils literal notranslate"><span class="pre">year</span></code>, <code class="docutils literal notranslate"><span class="pre">month</span></code> and <code class="docutils literal notranslate"><span class="pre">daysInMonth</span></code> as data arrays in <code class="docutils literal notranslate"><span class="pre">ds</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_directory</span></code></a>(config)</p></td>
+<td><p>Get the directory for an unmasked MPAS climatology produced by ncclimo, making the directory if it doesn't already exist</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_unmasked_mpas_climatology_file_name</span></code></a>(...)</p></td>
+<td><p>Get the file name for an unmasked MPAS climatology produced by ncclimo</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masked_mpas_climatology_file_name</span></code></a>(...[, op])</p></td>
+<td><p>Get the file name for a masked MPAS climatology</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name" title="mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_mpas_climatology_file_name</span></code></a>(...)</p></td>
+<td><p>Get the file name for a masked MPAS climatology</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.html#mpas_analysis.shared.climatology.MpasClimatologyTask" title="mpas_analysis.shared.climatology.MpasClimatologyTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code></a>(config, componentName[, ...])</p></td>
+<td><p>An analysis tasks for computing climatologies from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly*</span></code> analysis members.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html#mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables" title="mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.add_variables</span></code></a>(variableList)</p></td>
+<td><p>Add one or more variables and optionally one or more seasons for which to compute climatologies.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html#mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name" title="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasClimatologyTask.get_file_name</span></code></a>(season)</p></td>
+<td><p>Returns the full path for MPAS climatology file produced by ncclimo.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>(...[, ...])</p></td>
+<td><p>An analysis tasks for computing climatologies from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.setup_and_check</span></code></a>()</p></td>
+<td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.run_task</span></code></a>()</p></td>
+<td><p>Compute the requested climatologies</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.add_comparison_grid_descriptor</span></code></a>(...)</p></td>
+<td><p>Add a custom grid descriptor (something other than 'latlon', 'antarctic', 'arctic', 'north_atlantic', or 'north_pacific', or 'subpolar_north_atlantic').</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_masked_file_name</span></code></a>(season)</p></td>
+<td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.get_remapped_file_name</span></code></a>(...)</p></td>
+<td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.customize_masked_climatology</span></code></a>(...)</p></td>
+<td><p>Override this function to customize the climatology during the masking phase (before remapping)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask.customize_remapped_climatology</span></code></a>(...)</p></td>
+<td><p>Override this function to customize the climatology after remapping</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask</span></code></a>(parentTask, ...)</p></td>
+<td><p>An analysis task for comparison of 2D model fields against observations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_observation_descriptor</span></code></a>(...)</p></td>
+<td><p>get a MeshDescriptor for the observation grid.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.build_observational_dataset</span></code></a>(...)</p></td>
+<td><p>read in the data sets for observations, and possibly rename some variables and dimensions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name" title="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RemapObservedClimatologySubtask.get_file_name</span></code></a>(stage)</p></td>
+<td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="time-series">
+<h3>Time Series<a class="headerlink" href="#time-series" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.time_series.cache_time_series.html#mpas_analysis.shared.time_series.cache_time_series" title="mpas_analysis.shared.time_series.cache_time_series"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cache_time_series</span></code></a>(timesInDataSet, ...[, ...])</p></td>
+<td><p>Create or update a NetCDF file <code class="docutils literal notranslate"><span class="pre">cacheFileName</span></code> containing the given time series, calculated with <code class="docutils literal notranslate"><span class="pre">timeSeriesCalcFunction</span></code> over the given times, start and end year, and time frequency with which results are cached.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html#mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start" title="mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_moving_avg_anomaly_from_start</span></code></a>(...[, ...])</p></td>
+<td><p>Compute the rolling mean of the anomaly of a quantity from the beginning of the simulation (such that the rolling mean starts at zero by definition)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.time_series.compute_moving_avg.html#mpas_analysis.shared.time_series.compute_moving_avg" title="mpas_analysis.shared.time_series.compute_moving_avg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_moving_avg</span></code></a>(ds[, movingAveragePoints])</p></td>
+<td><p>Compute the rolling mean of a data set</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask" title="mpas_analysis.shared.time_series.MpasTimeSeriesTask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasTimeSeriesTask</span></code></a>(config, componentName[, ...])</p></td>
+<td><p>An analysis tasks for computing time series from output from the <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> analysis member.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="namelist-and-streams-files">
+<h3>Namelist and Streams Files<a class="headerlink" href="#namelist-and-streams-files" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict" title="mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_namelist_to_dict</span></code></a>(fname[, readonly])</p></td>
+<td><p>Converts a namelist file to key-value pairs in dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.__init__</span></code></a>(fname[, path])</p></td>
+<td><p>Parse the namelist file</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.__getattr__</span></code></a>(key)</p></td>
+<td><p>Accessor for dot noation, e.g., nml.field</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.__getitem__</span></code></a>(key)</p></td>
+<td><p>Accessor for bracket notation, e.g., nml['field']</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.get" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.get</span></code></a>(key)</p></td>
+<td><p>Get the value associated with a given key</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getint" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.getint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.getint</span></code></a>(key)</p></td>
+<td><p>Get the integer value associated with a given key</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.getfloat</span></code></a>(key)</p></td>
+<td><p>Get the float value associated with a given key</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool" title="mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NameList.getbool</span></code></a>(key)</p></td>
+<td><p>Get the boolean value associated with a given key</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamsFile.__init__</span></code></a>(fname[, streamsdir])</p></td>
+<td><p>Parse the streams file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamsFile.read</span></code></a>(streamname, attribname)</p></td>
+<td><p>Get the value of the given attribute in the given stream</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamsFile.readpath</span></code></a>(streamName[, ...])</p></td>
+<td><p>Given the name of a stream and optionally start and end dates and a calendar type, returns a list of files that match the file template in the stream.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamsFile.has_stream</span></code></a>(streamName)</p></td>
+<td><p>Does the stream file have the given stream?</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream" title="mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamsFile.find_stream</span></code></a>(possibleStreams)</p></td>
+<td><p>If one (or more) of the names in <code class="docutils literal notranslate"><span class="pre">possibleStreams</span></code> is an stream in this streams file, returns the first match.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="i-o-utilities">
+<h3>I/O Utilities<a class="headerlink" href="#i-o-utilities" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths" title="mpas_analysis.shared.io.utility.paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.paths</span></code></a>(*args)</p></td>
+<td><p>Returns glob'd paths in list for arbitrary number of function arguments.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories" title="mpas_analysis.shared.io.utility.make_directories"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.make_directories</span></code></a>(path)</p></td>
+<td><p>Make the given path if it does not already exist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.build_config_full_path.html#mpas_analysis.shared.io.utility.build_config_full_path" title="mpas_analysis.shared.io.utility.build_config_full_path"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.build_config_full_path</span></code></a>(config, ...)</p></td>
+<td><p>Get a full path from a base directory and a relative path</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists" title="mpas_analysis.shared.io.utility.check_path_exists"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.check_path_exists</span></code></a>(path)</p></td>
+<td><p>Raise an exception if the given path does not exist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.io.write_netcdf.html#module-mpas_analysis.shared.io.write_netcdf" title="mpas_analysis.shared.io.write_netcdf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">write_netcdf</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="plotting">
+<h3>Plotting<a class="headerlink" href="#plotting" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.timeseries_analysis_plot.html#mpas_analysis.shared.plot.timeseries_analysis_plot" title="mpas_analysis.shared.plot.timeseries_analysis_plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timeseries_analysis_plot</span></code></a>(config, dsvalues, ...)</p></td>
+<td><p>Plots the list of time series data sets.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.timeseries_analysis_plot_polar.html#mpas_analysis.shared.plot.timeseries_analysis_plot_polar" title="mpas_analysis.shared.plot.timeseries_analysis_plot_polar"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timeseries_analysis_plot_polar</span></code></a>(config, ...)</p></td>
+<td><p>Plots the list of time series data sets on a polar plot.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_polar_comparison.html#mpas_analysis.shared.plot.plot_polar_comparison" title="mpas_analysis.shared.plot.plot_polar_comparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_polar_comparison</span></code></a>(config, lon, lat, ...)</p></td>
+<td><p>Plots a data set around either the north or south pole.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_global_comparison.html#mpas_analysis.shared.plot.plot_global_comparison" title="mpas_analysis.shared.plot.plot_global_comparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_global_comparison</span></code></a>(config, Lons, Lats, ...)</p></td>
+<td><p>Plots a data set as a longitude/latitude map.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_1D.html#mpas_analysis.shared.plot.plot_1D" title="mpas_analysis.shared.plot.plot_1D"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_1D</span></code></a>(config, xArrays, fieldArrays, errArrays)</p></td>
+<td><p>Plots a 1D line plot with error bars if available.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison" title="mpas_analysis.shared.plot.plot_vertical_section_comparison"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vertical_section_comparison</span></code></a>(config, ...)</p></td>
+<td><p>Plots vertical section plots in a three-panel format, comparing model data (in modelArray) to some reference dataset (in refArray), which can be either observations or an alternative model, and also presenting the difference plot of the two.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section" title="mpas_analysis.shared.plot.plot_vertical_section"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_vertical_section</span></code></a>(config, field, ...[, ...])</p></td>
+<td><p>Plots a data set as a x distance (latitude, longitude, or spherical distance) vs depth map (vertical section).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.colormap.setup_colormap.html#mpas_analysis.shared.plot.colormap.setup_colormap" title="mpas_analysis.shared.plot.colormap.setup_colormap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">colormap.setup_colormap</span></code></a>(config, ...[, suffix])</p></td>
+<td><p>Set up a colormap from the registry</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.ticks.plot_xtick_format.html#mpas_analysis.shared.plot.ticks.plot_xtick_format" title="mpas_analysis.shared.plot.ticks.plot_xtick_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ticks.plot_xtick_format</span></code></a>(calendar, minDays, ...)</p></td>
+<td><p>Formats tick labels and positions along the x-axis for time series / index plots</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.add_inset.html#mpas_analysis.shared.plot.add_inset" title="mpas_analysis.shared.plot.add_inset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_inset</span></code></a>(fig, fc[, latlonbuffer, ...])</p></td>
+<td><p>Plots an inset map showing the location of a transect or polygon.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask</span></code></a>(parentTask, ...[, ...])</p></td>
+<td><p>An analysis task for plotting 2D model fields against observations.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotClimatologyMapSubtask.set_plot_info</span></code></a>(...)</p></td>
+<td><p>Store attributes related to plots, plot file names and HTML output.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="projection">
+<h3>Projection<a class="headerlink" href="#projection" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection" title="mpas_analysis.shared.projection.get_pyproj_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_pyproj_projection</span></code></a>(comparison_grid_name)</p></td>
+<td><p>Get the projection from the comparison_grid_name.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.projection.get_cartopy_projection.html#mpas_analysis.shared.projection.get_cartopy_projection" title="mpas_analysis.shared.projection.get_cartopy_projection"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_cartopy_projection</span></code></a>(comparison_grid_name)</p></td>
+<td><p>Get the projection from the comparison_grid_name.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="regions">
+<h3>Regions<a class="headerlink" href="#regions" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html#mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks" title="mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_region_masks.ComputeRegionMasks</span></code></a>(...)</p></td>
+<td><p>An analysis tasks for computing cell masks for regions defined by geojson features</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask.html#mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask" title="mpas_analysis.shared.regions.compute_region_masks_subtask.ComputeRegionMasksSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_region_masks_subtask.ComputeRegionMasksSubtask</span></code></a>(...)</p></td>
+<td><p>An analysis tasks for computing cell masks for regions defined by geojson features</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list.html#mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list" title="mpas_analysis.shared.regions.compute_region_masks_subtask.get_feature_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_region_masks_subtask.get_feature_list</span></code></a>(...)</p></td>
+<td><p>Builds a list of features found in the geojson file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="timekeeping">
+<h3>Timekeeping<a class="headerlink" href="#timekeeping" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time" title="mpas_analysis.shared.timekeeping.utility.get_simulation_start_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.get_simulation_start_time</span></code></a>(streams)</p></td>
+<td><p>Given a <code class="docutils literal notranslate"><span class="pre">StreamsFile</span></code> object, returns the simulation start time parsed from a restart file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_datetime.html#mpas_analysis.shared.timekeeping.utility.string_to_datetime" title="mpas_analysis.shared.timekeeping.utility.string_to_datetime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.string_to_datetime</span></code></a>(dateString)</p></td>
+<td><p>Given a date string and a calendar, returns a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_relative_delta.html#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta" title="mpas_analysis.shared.timekeeping.utility.string_to_relative_delta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.string_to_relative_delta</span></code></a>(dateString)</p></td>
+<td><p>Given a date string and a calendar, returns an instance of <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.string_to_days_since_date.html#mpas_analysis.shared.timekeeping.utility.string_to_days_since_date" title="mpas_analysis.shared.timekeeping.utility.string_to_days_since_date"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.string_to_days_since_date</span></code></a>(dateString)</p></td>
+<td><p>Given a date string or an array-like of date strings, a reference date string, and a calendar, returns the number of days (as a float or numpy.array of floats) since the reference date</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime" title="mpas_analysis.shared.timekeeping.utility.days_to_datetime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.days_to_datetime</span></code></a>(days[, calendar, ...])</p></td>
+<td><p>Covert days to <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects given a reference date and an MPAS calendar (either 'gregorian' or 'noleap').</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html#mpas_analysis.shared.timekeeping.utility.datetime_to_days" title="mpas_analysis.shared.timekeeping.utility.datetime_to_days"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.datetime_to_days</span></code></a>(dates[, calendar, ...])</p></td>
+<td><p>Given date(s), a calendar and a reference date, returns the days since the reference date, either as a single float or an array of floats.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html#mpas_analysis.shared.timekeeping.utility.date_to_days" title="mpas_analysis.shared.timekeeping.utility.date_to_days"><code class="xref py py-obj docutils literal notranslate"><span class="pre">utility.date_to_days</span></code></a>([year, month, day, ...])</p></td>
+<td><p>Convert a date to days since the reference date.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta.html#mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta" title="mpas_analysis.shared.timekeeping.MpasRelativeDelta.MpasRelativeDelta"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MpasRelativeDelta.MpasRelativeDelta</span></code></a>([dt1, ...])</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> is a subclass of <code class="docutils literal notranslate"><span class="pre">dateutil.relativedelta</span></code> for relative time intervals with different MPAS calendars.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="transects">
+<h3>Transects<a class="headerlink" href="#transects" title="Link to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_transect_masks_subtask.compute_mpas_transect_masks</span></code></a>(...)</p></td>
+<td><p>Build a transect mask file from the given MPAS mesh and geojson file     defining a set of transects.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask" title="mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_transect_masks_subtask.ComputeTransectMasksSubtask</span></code></a>(...)</p></td>
+<td><p>An analysis tasks for computing cell masks for transects defined by geojson features</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../users_guide/obs/altiberg.html" class="btn btn-neutral float-left" title="Iceberg Concentration: Altiberg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generated/mpas_analysis.__main__.main.html" class="btn btn-neutral float-right" title="mpas_analysis.__main__.main" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

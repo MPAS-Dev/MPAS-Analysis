@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPAS-Analysis &mdash; MPAS-Analysis 1.10.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/documentation_options.js?v=1d24b1d9"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Quick Start Guide" href="users_guide/quick_start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.10.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">MPAS-Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mpas-analysis">
+<h1>MPAS-Analysis<a class="headerlink" href="#mpas-analysis" title="Link to this heading">¶</a></h1>
+<a class="reference internal image-reference" href="_images/sst_example.png"><img alt="_images/sst_example.png" class="align-center" src="_images/sst_example.png" style="width: 300px;" /></a>
+<p>Analysis for simulations produced with Model for Prediction Across Scales
+(MPAS) components and the Energy Exascale Earth System Model (E3SM), which
+used those components.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/quick_start.html">Quick Start Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#installation-for-users">Installation for users</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#installation-for-developers">Installation for developers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#download-analysis-input-data">Download analysis input data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#list-analysis">List Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#running-the-analysis">Running the analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#list-of-mpas-output-files-that-are-needed-by-mpas-analysis">List of MPAS output files that are needed by MPAS-Analysis:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#purge-old-analysis">Purge Old Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#running-in-parallel-via-a-queueing-system">Running in parallel via a queueing system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#customizing-plots-or-creating-new-ones">Customizing plots or creating new ones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#instructions-for-creating-a-new-analysis-task">Instructions for creating a new analysis task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/quick_start.html#generating-documentation">Generating Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/configuration.html">Configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/runs.html">Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/execute.html">Execute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/config/transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/analysis_tasks.html">Analysis Tasks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/conservation.html">conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/components.html">MPAS Components and E3SM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/components.html#mpas-ocean">MPAS Ocean</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/components.html#mpas-seaice">MPAS-Seaice</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/components.html#e3sm">E3SM</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="users_guide/observations.html">Observations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/observations.html#ocean-observations">Ocean Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/observations.html#sea-ice-observations">Sea Ice Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/observations.html#details-on-each-data-set">Details on Each Data Set</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#shared-modules">Shared modules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/generalized_horizontal_interpolation.html">Generalized Horizontal Interpolation in MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/config_file_reorganization.html">Config File Reorganization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/timekeeping_reorg.html">Reorganize Timekeeping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/generalize_calendar.html">Generalize Calendar supported by Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/variable_mapping_reorg.html">Moving variable mapping outside of mpas_xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/parallel_tasks.html">Support Parallel Tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/remapper.html">Remapper for “online” remapping of data sets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/analysis_task_template.html">Analysis Task Template</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/prerequisite_tasks.html">Prerequisite Tasks and Subtasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="design_docs/eddykineticenergy.html">Eddy Kinetic Energy Climatology Mapping</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html#contributors">Contributors</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="versions.html">Versions</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="users_guide/quick_start.html" class="btn btn-neutral float-right" title="Quick Start Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
