@@ -173,13 +173,7 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">endYear</span> <span class="o">==</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span>
-            <span class="c1"># a valid end year wasn&#39;t found, so likely the run was not found,</span>
-            <span class="c1"># perhaps because we&#39;re just listing analysis tasks</span>
-            <span class="n">endYear</span> <span class="o">=</span> <span class="n">startYear</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">endYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
+        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
 
         <span class="n">regionGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;regionGroups&#39;</span><span class="p">)</span>
 
@@ -645,7 +639,7 @@
                                    <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                    <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsOut</span><span class="p">:</span>
 
-                <span class="k">for</span> <span class="n">inIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]):</span>
+                <span class="k">for</span> <span class="n">inIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]):</span>
 
                     <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
                         <span class="n">dsOut</span><span class="o">.</span><span class="n">year</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">years</span><span class="p">,</span>

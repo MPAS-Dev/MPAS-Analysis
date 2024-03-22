@@ -663,24 +663,16 @@ climate index.</p>
 <span class="c1">## options related to producing time series plots, often to compare against</span>
 <span class="c1">## observations and previous runs</span>
 
-<span class="c1"># start and end years for timeseries analysis. Use endYear = end to indicate</span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="c1"># start and end years for timeseries analysis.  Out-of-bounds values will lead</span>
+<span class="c1"># to an error.</span>
 <span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 <span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 
 <span class="k">[index]</span>
 <span class="c1">## options related to producing nino index.</span>
 
-<span class="c1"># start and end years for El Nino 3.4 analysis. Use endYear = end to indicate</span>
-<span class="c1"># that the full range of the data should be used.  If errorOnMissing = False,</span>
-<span class="c1"># the start and end year will be clipped to the valid range.  Otherwise, out</span>
-<span class="c1"># of bounds values will lead to an error.  In a &quot;control&quot; config file used in</span>
-<span class="c1"># a &quot;main vs. control&quot; analysis run, the range of years must be valid and</span>
-<span class="c1"># cannot include &quot;end&quot; because the original data may not be available.</span>
+<span class="c1"># start and end years for El Nino 3.4 analysis.  Out-of-bounds values will lead</span>
+<span class="c1"># to an error.</span>
 <span class="na">startYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 <span class="na">endYear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">5</span>
 </pre></div>

@@ -691,10 +691,13 @@
 <span class="sd">        indices to process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">chunkYears</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;chunkYears&#39;</span><span class="p">)</span>
+
         <span class="n">outFileNames</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
 
             <span class="n">make_directories</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">)</span>
 
@@ -712,6 +715,11 @@
             <span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
             <span class="n">startDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
             <span class="n">endDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endDate</span><span class="p">)</span>
+
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+        <span class="c1"># chunk into 10-year seguments so we don&#39;t run out of memory</span>
+        <span class="k">if</span> <span class="n">nTime</span> <span class="o">&gt;</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">chunkYears</span><span class="p">:</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">chunkYears</span><span class="p">})</span>
 
         <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
 
