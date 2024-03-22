@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.9.1" %}
+{% set version = "1.10.0" %}
 
 package:
   name: {{ name|lower }}
@@ -43,7 +43,7 @@ requirements:
     - pillow >=10.0.0,<11.0.0
     - progressbar2
     - pyproj
-    - pyremap >=0.0.14,<0.1.0
+    - pyremap >=1.2.0,<2.0.0
     - python-dateutil
     - requests
     - scipy

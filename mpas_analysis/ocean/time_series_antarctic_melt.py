@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
 from geometric_features.aggregation import get_aggregator_by_name
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -79,19 +80,14 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
             # nothing else to do
             return
 
-        masksSubtask = regionMasksTask.add_mask_subtask(regionGroup=regionGroup)
+        masksSubtask = \
+            regionMasksTask.add_mask_subtask(regionGroup=regionGroup)
         self.iceShelfMasksFile = masksSubtask.geojsonFileName
 
         iceShelvesToPlot = masksSubtask.expand_region_names(iceShelvesToPlot)
 
         startYear = config.getint('timeSeries', 'startYear')
-        endYear = config.get('timeSeries', 'endYear')
-        if endYear == 'end':
-            # a valid end year wasn't found, so likely the run was not found,
-            # perhaps because we're just listing analysis tasks
-            endYear = startYear
-        else:
-            endYear = int(endYear)
+        endYear = config.getint('timeSeries', 'endYear')
 
         years = list(range(startYear, endYear + 1))
 
@@ -184,8 +180,7 @@ class ComputeMeltSubtask(AnalysisTask):
         self.endYear = endYear
         self.startDate = f'{self.startYear:04d}-01-01_00:00:00'
         self.endDate = f'{self.endYear:04d}-12-31_23:59:59'
-        self.variableList = \
-            ['timeMonthly_avg_landIceFreshwaterFlux']
+        self.variableList = None
 
     def setup_and_check(self):
         """
@@ -228,6 +223,13 @@ class ComputeMeltSubtask(AnalysisTask):
         except ValueError:
             raise IOError('No MPAS-O restart file found: need at least one '
                           'restart file for Antarctic melt calculations')
+
+        totalFluxVar = 'timeMonthly_avg_landIceFreshwaterFluxTotal'
+        landIceFluxVar = 'timeMonthly_avg_landIceFreshwaterFlux'
+        if totalFluxVar in self.mpasTimeSeriesTask.allVariables:
+            self.variableList = [totalFluxVar]
+        else:
+            self.variableList = [landIceFluxVar]
 
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
@@ -308,17 +310,18 @@ class ComputeMeltSubtask(AnalysisTask):
 
         regionNames = decode_strings(dsRegionMask.regionNames)
 
+        fluxVar = self.variableList[0]
+
         datasets = []
         nTime = dsIn.sizes['Time']
         for tIndex in range(nTime):
             self.logger.info(f'  {tIndex + 1}/{nTime}')
 
-            freshwaterFlux = \
-                dsIn.timeMonthly_avg_landIceFreshwaterFlux.isel(Time=tIndex)
+            freshwaterFlux = dsIn[fluxVar].isel(Time=tIndex)
 
             nRegions = dsRegionMask.sizes['nRegions']
             meltRates = numpy.zeros((nRegions,))
-            totalMeltFluxes = numpy.zeros((nRegions,))
+            integratedMeltFluxes = numpy.zeros((nRegions,))
 
             for regionIndex in range(nRegions):
                 self.logger.info(f'    {regionNames[regionIndex]}')
@@ -326,7 +329,7 @@ class ComputeMeltSubtask(AnalysisTask):
                     dsRegionMask.regionCellMasks.isel(nRegions=regionIndex)
 
                 # convert from kg/s to kg/yr
-                totalMeltFlux = constants.sec_per_year * \
+                integratedMeltFlux = constants.sec_per_year * \
                     (cellMask * areaCell * freshwaterFlux).sum(dim='nCells')
 
                 totalArea = \
@@ -334,23 +337,23 @@ class ComputeMeltSubtask(AnalysisTask):
 
                 # from kg/m^2/yr to m/yr
                 meltRates[regionIndex] = ((1. / constants.rho_fw) *
-                                          (totalMeltFlux / totalArea))
+                                          (integratedMeltFlux / totalArea))
 
                 # convert from kg/yr to GT/yr
-                totalMeltFlux /= constants.kg_per_GT
-                totalMeltFluxes[regionIndex] = totalMeltFlux
+                integratedMeltFlux /= constants.kg_per_GT
+                integratedMeltFluxes[regionIndex] = integratedMeltFlux
 
             dsOut = xarray.Dataset()
             dsOut.coords['Time'] = dsIn.Time.isel(Time=tIndex)
-            dsOut['totalMeltFlux'] = (('nRegions',), totalMeltFluxes)
+            dsOut['integratedMeltFlux'] = (('nRegions',), integratedMeltFluxes)
             dsOut['meltRates'] = (('nRegions',), meltRates)
             datasets.append(dsOut)
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
         dsOut['regionNames'] = dsRegionMask.regionNames
-        dsOut.totalMeltFlux.attrs['units'] = 'GT a$^{-1}$'
-        dsOut.totalMeltFlux.attrs['description'] = \
-            'Total melt flux summed over each ice shelf or region'
+        dsOut.integratedMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+        dsOut.integratedMeltFlux.attrs['description'] = \
+            'Integrated melt flux summed over each ice shelf or region'
         dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
         dsOut.meltRates.attrs['description'] = \
             'Melt rate averaged over each ice shelf or region'
@@ -535,17 +538,17 @@ class PlotMeltSubtask(AnalysisTask):
                 fc.add_feature(feature)
                 break
 
-        totalMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
+        integratedMeltFlux, meltRates = self._load_ice_shelf_fluxes(config)
 
         plotControl = self.controlConfig is not None
         if plotControl:
             controlRunName = self.controlConfig.get('runs', 'mainRunName')
 
-            refTotalMeltFlux, refMeltRates = \
+            refintegratedMeltFlux, refMeltRates = \
                 self._load_ice_shelf_fluxes(self.controlConfig)
         else:
             controlRunName = None
-            refTotalMeltFlux = None
+            refintegratedMeltFlux = None
             refMeltRates = None
 
         # Load observations from multiple files and put in dictionary based
@@ -599,6 +602,36 @@ class PlotMeltSubtask(AnalysisTask):
                 'meltRate': ds_shelf.meanMeltRate.values,
                 'meltRateUncertainty': ds_shelf.meltRateUncertainty.values}
 
+        rho_fw = cime_constants['SHR_CONST_RHOFW']
+        kg_per_gt = constants.kg_per_GT
+        gt_per_m3 = rho_fw / kg_per_gt
+
+        obsFileName = f'{observationsDirectory}/Paolo/' \
+                      f'Paolo_2023_melt_rates.20240220.csv'
+        obsName = 'Paolo et al. (2023)'
+        obsDict[obsName] = {}
+        obsFile = csv.reader(open(obsFileName, 'r'))
+        next(obsFile, None)  # skip the header line
+        for line in obsFile:  # some later useful values commented out
+            shelfName = line[0]
+            if shelfName != self.iceShelf:
+                continue
+
+            # km^2 --> m^2
+            area = 1e6 * float(line[1])
+            meltRate = float(line[2])
+            meltRateUncertainty = float(line[3])
+            meltFlux = gt_per_m3 * area * meltRate
+            meltFluxUncertainty = gt_per_m3 * area * meltRateUncertainty
+
+            # build dict of obs. keyed to filename description
+            # (which will be used for plotting)
+            obsDict[obsName] = {
+                'meltFlux': meltFlux,
+                'meltFluxUncertainty': meltFluxUncertainty,
+                'meltRate': meltRate,
+                'meltRateUncertainty': meltRateUncertainty}
+
         mainRunName = config.get('runs', 'mainRunName')
         movingAveragePoints = config.getint('timeSeriesAntarcticMelt',
                                             'movingAveragePoints')
@@ -640,7 +673,7 @@ class PlotMeltSubtask(AnalysisTask):
         xLabel = 'Time (yr)'
         yLabel = 'Melt Flux (GT/yr)'
 
-        timeSeries = totalMeltFlux.isel(nRegions=self.regionIndex)
+        timeSeries = integratedMeltFlux.isel(nRegions=self.regionIndex)
 
         filePrefix = f'melt_flux_{suffix}'
         outFileName = f'{self.plotsDirectory}/{filePrefix}.png'
@@ -650,7 +683,7 @@ class PlotMeltSubtask(AnalysisTask):
         lineWidths = [2.5]
         legendText = [mainRunName]
         if plotControl:
-            fields.append(refTotalMeltFlux.isel(nRegions=self.regionIndex))
+            fields.append(refintegratedMeltFlux.isel(nRegions=self.regionIndex))
             lineColors.append(config.get('timeSeries', 'controlColor'))
             lineWidths.append(1.2)
             legendText.append(controlRunName)
@@ -703,7 +736,7 @@ class PlotMeltSubtask(AnalysisTask):
 
         savefig(outFileName, config)
 
-        caption = f'Running Mean of Total Melt Flux under Ice Shelves in ' \
+        caption = f'Running Mean of Integrated Melt Flux under Ice Shelves in ' \
                   f'the {title} Region'
         write_image_xml(
             config=config,
@@ -712,13 +745,13 @@ class PlotMeltSubtask(AnalysisTask):
             componentSubdirectory='ocean',
             galleryGroup='Antarctic Melt Time Series',
             groupLink='antmelttime',
-            gallery='Total Melt Flux',
+            gallery='Integrated Melt Flux',
             thumbnailDescription=title,
             imageDescription=caption,
             imageCaption=caption)
 
         xLabel = 'Time (yr)'
-        yLabel = 'Melt Rate (m/yr)'
+        yLabel = 'Melt Rate (m/yr) freshwater equiv.'
 
         timeSeries = meltRates.isel(nRegions=self.regionIndex)
 
@@ -785,8 +818,8 @@ class PlotMeltSubtask(AnalysisTask):
     @staticmethod
     def _load_ice_shelf_fluxes(config):
         """
-        Reads melt flux time series and computes regional total melt flux and
-        mean melt rate.
+        Reads melt flux time series and computes regional integrated melt flux
+        and mean melt rate.
         """
         # Authors
         # -------
@@ -804,4 +837,4 @@ class PlotMeltSubtask(AnalysisTask):
                       f'{startYear:04d}-{endYear:04d}.nc'
 
         dsOut = xarray.open_dataset(outFileName)
-        return dsOut.totalMeltFlux, dsOut.meltRates
+        return dsOut.integratedMeltFlux, dsOut.meltRates

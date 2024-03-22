@@ -4,8 +4,9 @@ timeSeriesAntarcticMelt
 =======================
 
 An analysis task for plotting time series of mean melt rates per ice shelf or
-Antarctic region along with observations from `Rignot et al. (2013)`_
-and `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_.
+Antarctic region along with observations from `Rignot et al. (2013)`_,
+`Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_,
+and `Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_.
 
 Component and Tags::
 

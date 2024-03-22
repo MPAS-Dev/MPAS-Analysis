@@ -67,13 +67,7 @@ class TimeSeriesTransport(AnalysisTask):
             tags=['timeSeries', 'transport'])
 
         startYear = config.getint('timeSeries', 'startYear')
-        endYear = config.get('timeSeries', 'endYear')
-        if endYear == 'end':
-            # a valid end year wasn't found, so likely the run was not found,
-            # perhaps because we're just listing analysis tasks
-            endYear = startYear
-        else:
-            endYear = int(endYear)
+        endYear = config.getint('timeSeries', 'endYear')
 
         years = [year for year in range(startYear, endYear + 1)]
 
@@ -270,7 +264,7 @@ class ComputeTransportSubtask(AnalysisTask):
                                    startDate=startDate,
                                    endDate=endDate) as dsOut:
 
-                for inIndex in range(dsOut.dims['Time']):
+                for inIndex in range(dsOut.sizes['Time']):
 
                     mask = numpy.logical_and(
                         dsOut.year[inIndex].values == years,

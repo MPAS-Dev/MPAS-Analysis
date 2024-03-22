@@ -587,8 +587,6 @@ def update_time_bounds_from_file_names(config, section, componentName):
         '{}HistorySubdirectory'.format(componentName),
         defaultPath=runDirectory)
 
-    errorOnMissing = config.getboolean('input', 'errorOnMissing')
-
     namelistFileName = build_config_full_path(
         config, 'input',
         '{}NamelistFileName'.format(componentName))
@@ -611,18 +609,10 @@ def update_time_bounds_from_file_names(config, section, componentName):
     calendar = namelist.get('config_calendar_type')
 
     requestedStartYear = config.getint(section, 'startYear')
-    requestedEndYear = config.get(section, 'endYear')
-    if requestedEndYear == 'end':
-        requestedEndYear = None
-    else:
-        # get it again as an integer
-        requestedEndYear = config.getint(section, 'endYear')
+    requestedEndYear = config.getint(section, 'endYear')
 
     startDate = '{:04d}-01-01_00:00:00'.format(requestedStartYear)
-    if requestedEndYear is None:
-        endDate = None
-    else:
-        endDate = '{:04d}-12-31_23:59:59'.format(requestedEndYear)
+    endDate = '{:04d}-12-31_23:59:59'.format(requestedEndYear)
 
     streamName = 'timeSeriesStatsMonthlyOutput'
     try:
@@ -655,29 +645,13 @@ def update_time_bounds_from_file_names(config, section, componentName):
         lastIndex -= 1
     endYear = years[lastIndex]
 
-    if requestedEndYear is None:
-        config.set(section, 'endYear', str(endYear))
-        requestedEndYear = endYear
-
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        if errorOnMissing:
-            raise ValueError(
-                "{} start and/or end year different from requested\n"
-                "requested: {:04d}-{:04d}\n"
-                "actual:   {:04d}-{:04d}\n".format(
-                    section, requestedStartYear, requestedEndYear, startYear,
-                    endYear))
-        else:
-            print("Warning: {} start and/or end year different from "
-                  "requested\n"
-                  "requested: {:04d}-{:04d}\n"
-                  "actual:   {:04d}-{:04d}\n".format(section,
-                                                     requestedStartYear,
-                                                     requestedEndYear,
-                                                     startYear,
-                                                     endYear))
-            config.set(section, 'startYear', str(startYear))
-            config.set(section, 'endYear', str(endYear))
+        raise ValueError(
+            "{} start and/or end year different from requested\n"
+            "requested: {:04d}-{:04d}\n"
+            "actual:   {:04d}-{:04d}\n".format(
+                section, requestedStartYear, requestedEndYear, startYear,
+                endYear))
 
     startDate = '{:04d}-01-01_00:00:00'.format(startYear)
     config.set(section, 'startDate', startDate)

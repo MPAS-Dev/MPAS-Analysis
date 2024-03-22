@@ -587,10 +587,13 @@ class TimeSeriesSeaIce(AnalysisTask):
         indices to process.
         """
 
+        config = self.config
+        chunkYears = config.getint('timeSeriesSeaIceAreaVol', 'chunkYears')
+
         outFileNames = {}
         for hemisphere in ['NH', 'SH']:
             baseDirectory = build_config_full_path(
-                self.config, 'output', 'timeSeriesSubdirectory')
+                config, 'output', 'timeSeriesSubdirectory')
 
             make_directories(baseDirectory)
 
@@ -608,6 +611,11 @@ class TimeSeriesSeaIce(AnalysisTask):
             variableList=self.variableList,
             startDate=self.startDate,
             endDate=self.endDate)
+
+        nTime = ds.sizes['Time']
+        # chunk into 10-year seguments so we don't run out of memory
+        if nTime > 12 * chunkYears:
+            ds = ds.chunk({'Time': 12 * chunkYears})
 
         for hemisphere in ['NH', 'SH']:
 

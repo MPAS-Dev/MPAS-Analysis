@@ -16,23 +16,16 @@ for anomalies::
   # only the anomaly over a later span of years is of interest.
   # anomalyRefYear = 249
 
-  # start and end years for timeseries analysis. Use endYear = end to indicate
-  # that the full range of the data should be used.  If errorOnMissing = False,
-  # the start and end year will be clipped to the valid range.  Otherwise, out
-  # of bounds values will lead to an error.  In a "control" config file used in
-  # a "main vs. control" analysis run, the range of years must be valid and
-  # cannot include "end" because the original data may not be available.
+  # start and end years for timeseries analysis.  Out-of-bounds values will lead
+  # to an error.
   startYear = 1
-  endYear = end
+  endYear = 20
 
 Start and End Year
 ------------------
 
 A custom config file should specify a start and end year for time series.
-If ``errorOnMissing = False`` in the ``input`` section and the start or end
-year is beyond the range of the simulation, the range will be reduced to those
-dates with available data and a warning message will be displayed.  If
-``errorOnMissing = True``, out of range year will produce an error.
+Out of range year will produce an error.
 
 
 Anomaly Reference Year

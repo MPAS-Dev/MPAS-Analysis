@@ -430,7 +430,7 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         dsObs.coords['month'] = ('Time', np.array(dsObs['calmonth'], int))
 
         # no meaningful year since this is already a climatology
-        dsObs.coords['year'] = ('Time', np.ones(dsObs.dims['Time'], int))
+        dsObs.coords['year'] = ('Time', np.ones(dsObs.sizes['Time'], int))
         dsObs = dsObs[[self.fieldName, 'month']]
 
         slices = []

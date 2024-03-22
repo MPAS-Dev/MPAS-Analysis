@@ -21,7 +21,7 @@ import shutil
 import os
 import numpy
 import xarray
-from pyremap import MpasMeshDescriptor, LatLonGridDescriptor
+from pyremap import MpasCellMeshDescriptor, LatLonGridDescriptor
 
 from mpas_tools.config import MpasConfigParser
 
@@ -83,7 +83,7 @@ class TestClimatology(TestCase):
         comparisonDescriptor = \
             get_comparison_descriptor(config, comparison_grid_name='latlon')
 
-        mpasDescriptor = MpasMeshDescriptor(
+        mpasDescriptor = MpasCellMeshDescriptor(
             mpasMeshFileName, meshName=config.get('input', 'mpasMeshName'))
 
         remapper = get_remapper(
@@ -155,7 +155,7 @@ class TestClimatology(TestCase):
             assert os.path.exists(mappingFileName)
 
             assert isinstance(remapper.sourceDescriptor,
-                              MpasMeshDescriptor)
+                              MpasCellMeshDescriptor)
             assert isinstance(remapper.destinationDescriptor,
                               LatLonGridDescriptor)
 
@@ -214,7 +214,7 @@ class TestClimatology(TestCase):
         monthValues = constants.monthDictionary[monthNames]
         dsClimatology = compute_climatology(ds, monthValues, calendar)
 
-        assert('Time' not in dsClimatology.dims.keys())
+        assert('Time' not in dsClimatology.dims)
 
         self.assertEqual(list(dsClimatology.data_vars.keys()), ['mld'])
 

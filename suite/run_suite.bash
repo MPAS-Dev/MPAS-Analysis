@@ -12,14 +12,14 @@ export HDF5_USE_FILE_LOCKING=FALSE
 
 branch=$(git symbolic-ref --short HEAD)
 
-conda update -y conda conda-build mamba boa
-conda mambabuild ci/recipe
+conda update -y conda conda-build
+conda build ci/recipe
 
 # create the test conda envs
 for py in ${main_py} ${alt_py}
 do
     env=test_mpas_analysis_py${py}
-    mamba create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
+    conda create -y -n ${env} --use-local python=${py} mpas-analysis sphinx \
         mock sphinx_rtd_theme "tabulate>=0.8.2" "m2r2>=0.3.3" "mistune<2" \
         pytest "mache>=1.11.0" "esmf=*=mpi_mpich_*" jinja2
     conda activate ${env}
@@ -30,7 +30,7 @@ done
 # create another env for testing xarray main branch
 py=${main_py}
 env=test_mpas_analysis_xarray_main
-mamba create --yes --quiet --name ${env} --use-local python=${py} \
+conda create --yes --quiet --name ${env} --use-local python=${py} \
     mpas-analysis pytest
 conda activate ${env}
 pip install git+https://github.com/pydata/xarray.git

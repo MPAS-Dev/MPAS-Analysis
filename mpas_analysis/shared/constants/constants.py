@@ -53,7 +53,7 @@ sec_per_day = 86400.
 sec_per_year = sec_per_day * 365.
 
 # seconds per month (approximate)
-sec_per_month = sec_per_day * 30.
+sec_per_month = sec_per_day * 365. / 12.
 
 # Tapering coefficient for calculating spectral degrees of freedom
 tapcoef = 1.055111111111111

@@ -4,7 +4,7 @@ climatologyMapAntarcticMelt
 ===========================
 
 An analysis task for comparison of Antarctic maps of melt rates against
-observations from `Adusumilli et al. (2020) <https://doi.org/10.1038/s41561-020-0616-z>`_.
+observations from `Paolo et al. (2023) <https://doi.org/10.5194/tc-17-3409-2023>`_.
 
 Component and Tags::
 
@@ -76,7 +76,7 @@ For more details, see:
 Observations
 ------------
 
-:ref:`adusumilli_melt`
+:ref:`paolo_melt`
 
 Example Result
 --------------
