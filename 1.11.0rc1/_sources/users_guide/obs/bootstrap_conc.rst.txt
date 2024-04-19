@@ -1,0 +1,47 @@
+.. _bootstrap_conc:
+
+Ice concentration: SSM/I, Bootstrap algorithm
+=============================================
+
+Description
+-----------
+This sea ice concentration data set was derived using measurements from
+the Scanning Multichannel Microwave Radiometer (SMMR) on the Nimbus-7
+satellite and from the Special Sensor Microwave/Imager (SSM/I) sensors on
+the Defense Meteorological Satellite Program's (DMSP) -F8, -F11, and -F13
+satellites. Measurements from the Special Sensor Microwave Imager/Sounder
+(SSMIS) aboard DMSP-F17 are also included. The data set has been
+generated using the Advanced Microwave Scanning Radiometer - Earth
+Observing System (AMSR-E) Bootstrap Algorithm with daily varying
+tie-points. Daily (every other day prior to July 1987) and monthly data
+are available for both the north and south polar regions. Data are
+gridded on the SSM/I polar stereographic grid (25 x 25 km) and provided
+in two-byte integer format. Data are available via FTP.
+
+Source
+------
+`NSIDC Bootstrap Website`_
+
+Release Policy
+--------------
+NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+`Data Citation and Acknowledgements`_
+
+References
+----------
+`Comiso (2017)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSeaIceConcNH`
+- :ref:`task_climatologyMapSeaIceConcSH`
+
+.. _`NSIDC Bootstrap Website`: http://nsidc.org/data/NSIDC-0079
+.. _`Data Citation and Acknowledgements`: https://podaac.jpl.nasa.gov/CitingPODAAC
+.. _`Comiso (2017)`: https://doi.org/10.5067/7Q8HCCWS4I0R
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/SSMI/Bootstrap_NSIDC0079/obs.bib
+
