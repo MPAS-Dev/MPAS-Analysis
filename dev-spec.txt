@@ -29,7 +29,7 @@ pyproj
 pyremap>=1.2.0,<2.0.0
 python-dateutil
 requests
-scipy
+scipy >=1.7.0
 setuptools
 shapely>=2.0,<3.0
 xarray>=0.14.1

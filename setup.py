@@ -31,7 +31,7 @@ install_requires = \
      'pyproj',
      'python-dateutil',
      'requests',
-     'scipy',
+     'scipy>=1.7.0',
      'setuptools',
      'shapely>=2.0,<3.0',
      'six',
