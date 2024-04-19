@@ -43,7 +43,7 @@ with open(os.path.join(here, 'mpas_analysis', '__init__.py')) as f:
 
 # version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
 #                     init_file).group(1).replace(', ', '.')
-version = '1.10.0rc2'
+version = '1.11.0rc1'
 
 setup(name='mpas_analysis',
       version=version,
