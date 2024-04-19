@@ -13,7 +13,7 @@
   <![endif]-->
   
         <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -115,6 +115,7 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
+<span class="kn">from</span> <span class="nn">scipy.signal.windows</span> <span class="kn">import</span> <span class="n">tukey</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">climatology</span>
@@ -504,7 +505,7 @@
 
         <span class="c1"># Move nino34Index to numpy to allow functionality with scipy routines</span>
         <span class="n">ninoIndex</span> <span class="o">=</span> <span class="n">nino34Index</span><span class="o">.</span><span class="n">values</span>
-        <span class="n">window</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">tukey</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ninoIndex</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">tukey</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ninoIndex</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
         <span class="n">f</span><span class="p">,</span> <span class="n">Pxx</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">periodogram</span><span class="p">(</span><span class="n">window</span> <span class="o">*</span> <span class="n">ninoIndex</span><span class="p">,</span>
                                     <span class="mf">1.0</span> <span class="o">/</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_month</span><span class="p">)</span>
 
