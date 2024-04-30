@@ -31,7 +31,7 @@ install_requires = \
      'pyproj',
      'python-dateutil',
      'requests',
-     'scipy',
+     'scipy>=1.7.0',
      'setuptools',
      'shapely>=2.0,<3.0',
      'six',
@@ -41,9 +41,8 @@ here = os.path.abspath(os.path.dirname(__file__))
 with open(os.path.join(here, 'mpas_analysis', '__init__.py')) as f:
     init_file = f.read()
 
-# version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
-#                     init_file).group(1).replace(', ', '.')
-version = '1.10.0rc2'
+version = re.search(r'{}\s*=\s*[(]([^)]*)[)]'.format('__version_info__'),
+                    init_file).group(1).replace(', ', '.')
 
 setup(name='mpas_analysis',
       version=version,

@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.10.0" %}
+{% set version = "1.11.0rc1" %}
 
 package:
   name: {{ name|lower }}
@@ -27,7 +27,7 @@ requirements:
     - cartopy_offlinedata
     - cmocean
     - dask
-    - esmf >=8.4.2,<8.5.0
+    - esmf >=8.4.2,<8.7.0
     - esmf=*=mpi_mpich_*
     - f90nml
     - geometric_features >=1.2.0
@@ -46,7 +46,7 @@ requirements:
     - pyremap >=1.2.0,<2.0.0
     - python-dateutil
     - requests
-    - scipy
+    - scipy >=1.7.0
     - setuptools
     - shapely >=2.0,<3.0
     - xarray >=0.14.1

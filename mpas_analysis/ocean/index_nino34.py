@@ -16,6 +16,7 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 from scipy import signal, stats
+from scipy.signal.windows import tukey
 import matplotlib.pyplot as plt
 
 from mpas_analysis.shared.climatology import climatology
@@ -400,7 +401,7 @@ class IndexNino34(AnalysisTask):
 
         # Move nino34Index to numpy to allow functionality with scipy routines
         ninoIndex = nino34Index.values
-        window = signal.tukey(len(ninoIndex), alpha=0.1)
+        window = tukey(len(ninoIndex), alpha=0.1)
         f, Pxx = signal.periodogram(window * ninoIndex,
                                     1.0 / constants.sec_per_month)
 

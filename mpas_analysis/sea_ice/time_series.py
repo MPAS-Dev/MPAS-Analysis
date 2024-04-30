@@ -9,6 +9,7 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
+import numpy as np
 import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
@@ -590,6 +591,14 @@ class TimeSeriesSeaIce(AnalysisTask):
         config = self.config
         chunkYears = config.getint('timeSeriesSeaIceAreaVol', 'chunkYears')
 
+        maxAllowedSeaIceThickness = config.get(
+            'timeSeriesSeaIceAreaVol', 'maxAllowedSeaIceThickness')
+
+        if maxAllowedSeaIceThickness == 'None':
+            maxAllowedSeaIceThickness = None
+        else:
+            maxAllowedSeaIceThickness = float(maxAllowedSeaIceThickness)
+
         outFileNames = {}
         for hemisphere in ['NH', 'SH']:
             baseDirectory = build_config_full_path(
@@ -612,6 +621,10 @@ class TimeSeriesSeaIce(AnalysisTask):
             startDate=self.startDate,
             endDate=self.endDate)
 
+        ds = ds.rename(
+            {'timeMonthly_avg_iceAreaCell': 'iceConc',
+                'timeMonthly_avg_iceVolumeCell': 'iceThick'})
+
         nTime = ds.sizes['Time']
         # chunk into 10-year seguments so we don't run out of memory
         if nTime > 12 * chunkYears:
@@ -624,22 +637,26 @@ class TimeSeriesSeaIce(AnalysisTask):
             else:
                 mask = dsMesh.latCell < 0
 
+            if maxAllowedSeaIceThickness is not None:
+                mask = np.logical_and(mask,
+                                      ds.iceThick <= maxAllowedSeaIceThickness)
+
             dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
-                {'timeMonthly_avg_iceAreaCell': 'iceArea',
-                 'timeMonthly_avg_iceVolumeCell': 'iceVolume'})
+                {'iceConc': 'iceArea',
+                 'iceThick': 'iceVolume'})
             dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
                                          dsMesh.areaCell.sum('nCells'))
 
             dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
             dsAreaSum['iceArea'].attrs['description'] = \
-                'Total {} sea ice area'.format(hemisphere)
+                f'Total {hemisphere} sea ice area'
             dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
             dsAreaSum['iceVolume'].attrs['description'] = \
-                'Total {} sea ice volume'.format(hemisphere)
+                f'Total {hemisphere} sea ice volume'
             dsAreaSum['iceThickness'].attrs['units'] = 'm'
             dsAreaSum['iceThickness'].attrs['description'] = \
-                'Mean {} sea ice volume'.format(hemisphere)
+                f'Mean {hemisphere} sea ice volume'
 
             dsTimeSeries[hemisphere] = dsAreaSum
 
