@@ -14,7 +14,7 @@
   <![endif]-->
   
         <script src="../../_static/documentation_options.js?v=ea3bebfc"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -149,16 +149,16 @@ plotted on a single plot.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>instance</em><em> of </em><em>ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>modelArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.2.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
-<li><p><strong>refArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.2.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
+<li><p><strong>modelArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.3.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
+<li><p><strong>refArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.3.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
 <li><p><strong>diffArray</strong> (<em>float array</em>) – difference between modelArray and refArray</p></li>
-<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.2.1.dev0)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.2.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the model, ref and diff arrays.  Optional second
+<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.3.1.dev0)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.3.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the model, ref and diff arrays.  Optional second
 and third entries will be used for a second and third x axis above the
 plot.  The typical use for the second and third axis is for transects,
 for which the primary x axis represents distance along a transect, and
 the second and third x axes are used to display the corresponding
 latitudes and longitudes.</p></li>
-<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.2.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the model, ref and diff arrays</p></li>
+<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.3.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the model, ref and diff arrays</p></li>
 <li><p><strong>triangulation_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.12)"><em>dict</em></a><em>, </em><em>optional</em>) – A dict of arguments to create a matplotlib.tri.Triangulation of the
 transect that does not rely on it being on a logically rectangular grid.
 The arguments rather than the triangulation itself are passed because
