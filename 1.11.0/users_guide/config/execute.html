@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Execute &mdash; MPAS-Analysis 1.11.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/documentation_options.js?v=6cf1fb80"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Dask threads and subprocess count" href="dask_threads.html" />
+    <link rel="prev" title="Runs" href="runs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+              <div class="version">
+                1.11.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../configuration.html">Configuration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="runs.html">Runs</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Execute</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-tasks">Parallel Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallelism-in-nco">Parallelism in NCO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mapping-file-creation">Parallel Mapping File Creation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#parallel-mask-creation">Parallel Mask Creation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="dask_threads.html">Dask threads and subprocess count</a></li>
+<li class="toctree-l2"><a class="reference internal" href="diagnostics.html">Diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatology.html">Climatology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeries.html">Time Series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html">Index</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regions.html">Regions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot.html">Plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="html.html">HTML</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observations.html">Ocean, Sea Ice and Iceberg Observations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="preprocessed.html">Preprocessed Reference Runs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="colormaps.html">Colormaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="seasons.html">Seasons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="comparison_grids.html">Comparison Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="moving_average.html">Moving Average</a></li>
+<li class="toctree-l2"><a class="reference internal" href="time_axis_ticks.html">Time-Axis Tick Marks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transects.html">Output Grids for Transects</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../configuration.html">Configuration</a></li>
+      <li class="breadcrumb-item active">Execute</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/config/execute.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="execute">
+<span id="config-execute"></span><h1>Execute<a class="headerlink" href="#execute" title="Link to this heading">¶</a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">[execute]</span></code> section of a configuration file contains options used to
+control how tasks are executed within an MPAS-Analysis run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">execute</span><span class="p">]</span>
+<span class="c1">## options related to executing parallel tasks</span>
+
+<span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
+<span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot;, &quot;bck&quot; or &quot;mpi&quot;)</span>
+<span class="c1"># Set this to &quot;bck&quot; (background parallelism) in most cases.  The default number</span>
+<span class="c1"># of threads (see below) is 12, one for each monthly climatology. Set to &quot;mpi&quot;</span>
+<span class="c1"># to run one MPI task on each node and however many threads per node to reach</span>
+<span class="c1"># 12 total threads.</span>
+<span class="n">ncclimoParallelMode</span> <span class="o">=</span> <span class="n">serial</span>
+
+<span class="c1"># the number of total threads to use when ncclimo runs in &quot;bck&quot; or &quot;mpi&quot; mode.</span>
+<span class="c1"># Reduce this number if ncclimo is crashing (maybe because it is out of memory).</span>
+<span class="c1"># The number of threads must be a factor of 12 (1, 2, 3, 4, 6 or 12).</span>
+<span class="n">ncclimoThreads</span> <span class="o">=</span> <span class="mi">12</span>
+
+<span class="c1"># the number of MPI tasks to use in creating mapping files (1 means tasks run in</span>
+<span class="c1"># serial, the default)</span>
+<span class="n">mapMpiTasks</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span>
+<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or ins</span>
+<span class="c1"># serial but with a command)</span>
+<span class="n">mapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># possibly with some flags if it should be run with that command</span>
+<span class="n">ncremapParallelExec</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
+<span class="c1"># Multiprocessing method used in python mask creation (&quot;forkserver&quot;, &quot;fork&quot; or</span>
+<span class="c1"># &quot;spawn&quot;).  We have found that &quot;spawn&quot; is the only one that works in python</span>
+<span class="c1"># 3.7 on Anvil so this is the default</span>
+<span class="n">multiprocessingMethod</span> <span class="o">=</span> <span class="n">spawn</span>
+</pre></div>
+</div>
+<section id="parallel-tasks">
+<h2>Parallel Tasks<a class="headerlink" href="#parallel-tasks" title="Link to this heading">¶</a></h2>
+<p>By default, MPAS-Analysis runs one task at a time, displaying any logging
+output directly to the screen, rather than storing it in log files.  However,
+the analysis will run much more quickly if parallel processes are used. For
+example, to run 12 tasks in parallel, simply set:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parallelTaskCount</span> <span class="o">=</span> <span class="mi">12</span>
+</pre></div>
+</div>
+<p>MPAS-Analysis currently supports parallelism through spawning processes, rather
+than with MPI, meaning that MPAS-Analysis should be run on a single node of a
+multi-node machine such as a cluster or supercomputer.  Given that some tasks
+themselves spawn multiple threads and that some tasks are memory intensive, it
+may not be desirable to launch one task per core on a node with limited memory.</p>
+<p>Because MPAS-Analysis does not use MPI parallelism, it can typically be run on
+the login nodes of supercomputing facilities.  Check with the policies of your
+center to see if this is permitted and make sure not to run with a large number
+of parallel tasks so as to overwhelm the shared resource.</p>
+</section>
+<section id="parallelism-in-nco">
+<h2>Parallelism in NCO<a class="headerlink" href="#parallelism-in-nco" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> command from the <a class="reference external" href="http://nco.sourceforge.net/nco.html">NetCDF Operators (NCO) package</a> is used
+internally in MPAS-Analysis. This command supports three options for
+parallelism: <code class="docutils literal notranslate"><span class="pre">serial</span></code>, <code class="docutils literal notranslate"><span class="pre">bck</span></code> or <code class="docutils literal notranslate"><span class="pre">mpi</span></code>.  If set to <code class="docutils literal notranslate"><span class="pre">serial</span></code>, the
+default, any MPAS-Analysis tasks that use <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> will compute
+climatologies one month and then one season at a time.  If <code class="docutils literal notranslate"><span class="pre">bck</span></code> mode is
+used, <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> threads are spawned (default is 12, one for each
+month), and then separate threads are used to compute each season.  Given that
+computing climatologies takes up a significant portion of the runtime in
+MPAS-Analysis, the speed-up of nearly a factor of <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> in these
+computations can be quite noticeable.  For very big data sets, it may be
+necessary to run <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code> either with fewer threads (reducing
+<code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code>, noting that it must be a factor of 12) or on multiple nodes
+to prevent running out of memory.  To run an MPI job, spawn a job with between
+2 and 12 nodes, and set <code class="docutils literal notranslate"><span class="pre">ncclimoParallelMode</span> <span class="pre">=</span> <span class="pre">mpi</span></code> to run the 12 <code class="docutils literal notranslate"><span class="pre">ncclimo</span></code>
+threads on multiple nodes.</p>
+<p>Again, when running MPAS-Analysis on login nodes of supercomputing facilities,
+it is important to be aware of the policies regarding using shared resources.
+On login nodes, <code class="docutils literal notranslate"><span class="pre">bck</span></code> may only be appropriate with <code class="docutils literal notranslate"><span class="pre">ncclimoThreads</span></code> set to a
+small number and <code class="docutils literal notranslate"><span class="pre">mpi</span></code> mode may not work at all.</p>
+</section>
+<section id="parallel-mapping-file-creation">
+<h2>Parallel Mapping File Creation<a class="headerlink" href="#parallel-mapping-file-creation" title="Link to this heading">¶</a></h2>
+<p>If mapping files from the MPAS mesh to the comparison grids aren’t already
+available in the diagnostics directory, they will be created before any other
+MPAS-Analysis tasks are run.  If you are running MPAS-Analysis out of
+E3SM-Unified on a compute node, on many systems (see below), ESMF has been
+built with the system version of MPI and you must run mapping-file generation
+with <code class="docutils literal notranslate"><span class="pre">srun</span></code>.  If you are running with <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, the mapping
+files will be generated in parallel.</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span>
+</pre></div>
+</div>
+<p>Similarly, some systems (Anvil and Chrysalis) require a parallel executable
+for calls to <code class="docutils literal notranslate"><span class="pre">ncremap</span></code> from E3SM-Unified on compute nodes:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">ncremapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun</span>
+</pre></div>
+</div>
+<p>E3SM supported machines with system MPI support in E3SM-Unified 1.8.1:</p>
+<ul class="simple">
+<li><p>Anvil</p></li>
+<li><p>Chicoma</p></li>
+<li><p>Chrysalis</p></li>
+<li><p>Compy</p></li>
+<li><p>Cori-Haswell</p></li>
+<li><p>Perlmutter</p></li>
+</ul>
+<p>These machines do <strong>not</strong> have MPI support in E3SM-Unified:</p>
+<ul class="simple">
+<li><p>Andes</p></li>
+<li><p>Acme1</p></li>
+</ul>
+<p>In the very near future, we hope to add a capability to MPAS-Analysis so that
+it will automatically recognize which machine it is on (or you can specify if
+need be), allowing these and other config options to be set automatically.</p>
+</section>
+<section id="parallel-mask-creation">
+<h2>Parallel Mask Creation<a class="headerlink" href="#parallel-mask-creation" title="Link to this heading">¶</a></h2>
+<p>Tasks that involve <a class="reference internal" href="regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> can generate the masks for each
+region in the group on the fly.  This is done with the mask generation
+command-line tools form MPAS-Tools (see
+<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/mesh_conversion.html#mask-creation-with-pthon-multiprocessing">Mask Creation with Python Multiprocessing</a>),
+which support 3 modes of parallelism: “spawn”, “fork” and “forkserver”. For
+technical details on these modes, see
+<a class="reference external" href="https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods">Contexts and start methods</a>.
+We have found that “spawn” seems to be the most reliable option on Anvil under
+python 3.7 and 3.8.  Any of these methods works well under python 3.8 but only
+“spawn” was reliable under python 3.7.  Therefore, we use “spawn” as the
+default.</p>
+<p>As we gain more experience with this setting, we may update config files for
+specific machines to have different defaults.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="runs.html" class="btn btn-neutral float-left" title="Runs" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="dask_threads.html" class="btn btn-neutral float-right" title="Dask threads and subprocess count" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
