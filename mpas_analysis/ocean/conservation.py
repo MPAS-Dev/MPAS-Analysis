@@ -178,6 +178,15 @@ class ConservationTask(AnalysisTask):
                                    'ice_salt_flux': ['netSaltFlux'],
                                    'total_mass_flux': ['netMassFlux'],
                                    'total_mass_change': ['netMassChange'],
+                                   'rain_mass_flux': ['accumulatedRainFlux'],
+                                   'snow_mass_flux': ['accumulatedSnowFlux'],
+                                   'evaporation_mass_flux': ['accumulatedEvaporationFlux'],
+                                   'sea_ice_mass_flux': ['accumulatedSeaIceFlux'],
+                                   'river_runoff_mass_flux': ['accumulatedRiverRunoffFlux'],
+                                   'ice_runoff_mass_flux': ['accumulatedIceRunoffFlux'],
+                                   'iceberg_mass_flux': ['accumulatedIcebergFlux'],
+                                   'frazil_mass_flux': ['accumulatedFrazilFlux'],
+                                   'ice_shelf_melt_mass_flux': ['accumulatedLandIceFlux'],
                                    'land_ice_mass_change': ['landIceMassChange'],
                                    'land_ice_ssh_change': ['landIceSshChange'],
                                    'land_ice_mass_flux': ['landIceMassFlux'],
@@ -298,6 +307,15 @@ class ConservationTask(AnalysisTask):
         titles['absolute_salt_error'] = 'Salt conservation error'
         titles['total_mass_flux'] = 'Total mass flux'
         titles['total_mass_change'] = 'Total mass anomaly'
+        titles['rain_mass_flux'] = 'Mass flux due to rain'
+        titles['snow_mass_flux'] = 'Mass flux due to snow'
+        titles['evaporation_mass_flux'] = 'Mass flux due to evaporation'
+        titles['sea_ice_mass_flux'] = 'Mass flux due to sea ice'
+        titles['river_runoff_mass_flux'] = 'Mass flux due to river runoff'
+        titles['ice_runoff_mass_flux'] = 'Mass flux due to ice runoff'
+        titles['iceberg_mass_flux'] = 'Mass flux due to icebergs'
+        titles['frazil_mass_flux'] = 'Mass flux due to frazil'
+        titles['ice_shelf_melt_mass_flux'] = 'Mass flux due to ice shelf melt'
         titles['land_ice_mass_flux'] = 'Mass flux due to land ice'
         titles['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
         titles['land_ice_ssh_change'] = 'SSH anomaly due to land ice fluxes'
@@ -309,6 +327,15 @@ class ConservationTask(AnalysisTask):
         y_labels['ice_salt_flux'] = 'Salt flux (Gt/yr)'
         y_labels['absolute_salt_error'] = 'Salt (Gt)'
         y_labels['total_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['rain_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['snow_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['evaporation_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['sea_ice_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['river_runoff_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['ice_runoff_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['iceberg_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['frazil_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['ice_shelf_melt_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['total_mass_change'] = 'Mass (Gt)'
         y_labels['land_ice_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['land_ice_mass_change'] = 'Mass (Gt)'
@@ -322,6 +349,15 @@ class ConservationTask(AnalysisTask):
             '(sea ice salinity flux, sea ice frazil flux, and land ice frazil flux)'
         captions['absolute_salt_error'] = 'Absolute salt conservation error'
         captions['total_mass_flux'] = 'Total mass flux'
+        captions['rain_mass_flux'] = 'Mass flux due to rain'
+        captions['snow_mass_flux'] = 'Mass flux due to snow'
+        captions['evaporation_mass_flux'] = 'Mass flux due to evaporation'
+        captions['sea_ice_mass_flux'] = 'Mass flux due to sea ice'
+        captions['river_runoff_mass_flux'] = 'Mass flux due to river runoff'
+        captions['ice_runoff_mass_flux'] = 'Mass flux due to ice runoff'
+        captions['iceberg_mass_flux'] = 'Mass flux due to icebergs'
+        captions['frazil_mass_flux'] = 'Mass flux due to frazil'
+        captions['ice_shelf_melt_mass_flux'] = 'Mass flux due to ice shelf melt'
         captions['total_mass_change'] = 'Total mass anomaly'
         captions['land_ice_mass_flux'] = 'Mass flux due to land ice'
         captions['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
