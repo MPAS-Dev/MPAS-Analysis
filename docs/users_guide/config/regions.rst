@@ -46,7 +46,7 @@ Several tasks (:ref:`task_hovmollerOceanRegions`, :ref:`task_oceanHistogram`,
 :ref:`task_oceanRegionalProfiles`, :ref:`task_regionalTSDiagrams`, and
 :ref:`task_timeSeriesOceanRegions`) can use any of the defined region groups.
 Currently, available region groups are: ``Artic Ocean Regions``, ``Antarctic Regions``,
-``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
+``Greenland Regions``, ``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
 
 The option ``regionMaskSubdirectory`` in the ``[diagnostics]`` section specifies
 the path to cached mask files for these region groups, typically
