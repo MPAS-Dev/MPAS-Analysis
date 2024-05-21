@@ -86,6 +86,9 @@ class OceanRegionalProfiles(AnalysisTask):
 
             fields = config.getexpression(regionGroupSection, 'fields')
 
+            max_bottom_depth = config.getexpression(regionGroupSection, 'maxDepth')
+            if max_bottom_depth:
+                max_bottom_depth = float(max_bottom_depth)
             seasons = config.getexpression(regionGroupSection, 'seasons')
 
             regionNames = config.getexpression(regionGroupSection,
@@ -104,7 +107,8 @@ class OceanRegionalProfiles(AnalysisTask):
                 regionNames = get_feature_list(geojsonFileName)
 
             self.add_region_group(regionMasksTask, regionGroup, regionNames,
-                                  fields, startYear, endYear, seasons)
+                                  fields, startYear, endYear, max_bottom_depth,
+                                  seasons)
 
             combineSubtask = \
                 self.combineSubtasks[regionGroup][(startYear, endYear)]
@@ -123,7 +127,8 @@ class OceanRegionalProfiles(AnalysisTask):
                         self.add_subtask(plotSubtask)
 
     def add_region_group(self, regionMasksTask, regionGroup, regionNames,
-                         fields, startYear, endYear, seasons=None):
+                         fields, startYear, endYear, max_bottom_depth=None,
+                         seasons=None):
         """
         Add years to the profiles to compute
 
@@ -175,7 +180,8 @@ class OceanRegionalProfiles(AnalysisTask):
             else:
                 computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
                     self, masksSubtask, regionGroup, regionNames, fields,
-                    startYear=year, endYear=year)
+                    startYear=year, endYear=year,
+                    max_bottom_depth=max_bottom_depth)
                 computeSubtask.run_after(masksSubtask)
                 combineSubtask.run_after(computeSubtask)
                 self.computeSubtasks[regionGroup][key] = computeSubtask
@@ -193,13 +199,16 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
     startYear, endYear : int
         The beginning and end of the time series to compute
+
+    max_bottom_depth : float
+        The maximum bottom depth of cells to include in the profile statistics
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, masksSubtask, regionGroup, regionNames,
-                 fields, startYear, endYear):
+                 fields, startYear, endYear, max_bottom_depth):
         """
         Construct the analysis task.
 
@@ -223,6 +232,10 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         startYear, endYear : int
             The beginning and end of the time series to compute
+
+        max_bottom_depth : float
+            The maximum bottom depth of cells to include in the profile
+            statistics
         """
         # Authors
         # -------
@@ -246,6 +259,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         self.fields = fields
         self.startYear = startYear
         self.endYear = endYear
+        self.max_bottom_depth = max_bottom_depth
 
     def setup_and_check(self):
         """
@@ -346,6 +360,11 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                                     'data': np.arange(nVertLevels)})
 
         vertMask = vertIndex < dsRestart.maxLevelCell
+        if self.max_bottom_depth:
+            depthMask = dsRestart.bottomDepth < self.max_bottom_depth
+            vertDepthMask = vertMask * depthMask
+        else:
+            vertDepthMask = vertMask
 
         # get region masks
         regionMaskFileName = self.masksSubtask.maskFileName
@@ -366,7 +385,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = self._masked_area_sum(cellMasks, areaCell, vertMask)
+        totalArea = self._masked_area_sum(cellMasks, areaCell, vertDepthMask)
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -391,7 +410,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 prefix = field['prefix']
                 self.logger.info('      {}'.format(field['titleName']))
 
-                var = dsLocal[variableName].where(vertMask)
+                var = dsLocal[variableName].where(vertDepthMask)
 
                 meanName = '{}_mean'.format(prefix)
                 dsLocal[meanName] = \
