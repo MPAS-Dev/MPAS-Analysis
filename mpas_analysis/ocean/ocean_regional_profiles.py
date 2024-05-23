@@ -87,8 +87,6 @@ class OceanRegionalProfiles(AnalysisTask):
             fields = config.getexpression(regionGroupSection, 'fields')
 
             max_bottom_depth = config.getexpression(regionGroupSection, 'maxDepth')
-            if max_bottom_depth:
-                max_bottom_depth = float(max_bottom_depth)
             seasons = config.getexpression(regionGroupSection, 'seasons')
 
             regionNames = config.getexpression(regionGroupSection,
@@ -360,9 +358,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                                     'data': np.arange(nVertLevels)})
 
         vertMask = vertIndex < dsRestart.maxLevelCell
-        if self.max_bottom_depth:
+        if self.max_bottom_depth is not None:
             depthMask = dsRestart.bottomDepth < self.max_bottom_depth
-            vertDepthMask = vertMask * depthMask
+            vertDepthMask = np.logical_and(vertMask, depthMask)
         else:
             vertDepthMask = vertMask
 
