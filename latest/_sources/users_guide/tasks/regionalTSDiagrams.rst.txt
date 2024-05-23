@@ -121,6 +121,8 @@ The following configuration options are available for this task:
     # Obserational data sets to compare against
     obs = ['WOA18']
 
+Similar config sections are included for other region groups.
+
 Region Groups
 -------------
 
