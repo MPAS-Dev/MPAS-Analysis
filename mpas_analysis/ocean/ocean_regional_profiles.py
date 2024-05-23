@@ -17,16 +17,19 @@ import os
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
+from mpas_analysis.shared.io.utility import get_region_mask
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.plot import savefig, add_inset
+from mpas_analysis.shared.regions.compute_region_masks_subtask import get_feature_list
 
 
 class OceanRegionalProfiles(AnalysisTask):
@@ -87,8 +90,18 @@ class OceanRegionalProfiles(AnalysisTask):
 
             regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
+
             if len(regionNames) == 0:
                 return
+            if 'all' in regionNames:
+                aggregationFunction, prefix, date = get_aggregator_by_name(
+                     regionGroup)
+                date = date
+                outFileSuffix = '{}{}'.format(prefix, date)
+                geojsonFileName = \
+                    get_region_mask(self.config,
+                                    '{}.geojson'.format(outFileSuffix))
+                regionNames = get_feature_list(geojsonFileName)
 
             self.add_region_group(regionMasksTask, regionGroup, regionNames,
                                   fields, startYear, endYear, seasons)
@@ -227,6 +240,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         parentTask.add_subtask(self)
         self.masksSubtask = masksSubtask
+        if 'all' in regionNames:
+            regionNames = get_feature_list(self.masksSubtask.geojsonFileName)
         self.regionNames = regionNames
         self.fields = fields
         self.startYear = startYear
