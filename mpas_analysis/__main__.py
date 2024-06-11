@@ -436,11 +436,11 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                                              verbose, callCheckGenerate=False)
         totalFailures += failureCount
         if prereq._setupStatus != 'success':
-            assert(failureCount > 0)
-            # a prereq failed setup_and_check
             print("Warning: prerequisite of {} failed during check, "
                   "so this task will not be run".format(
                       taskTitle))
+            assert(failureCount > 0)
+            # a prereq failed setup_and_check
             analysisTask._setupStatus = 'fail'
             totalFailures += 1
             return totalFailures
@@ -466,11 +466,11 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                                              verbose, callCheckGenerate=False)
         totalFailures += failureCount
         if subtask._setupStatus != 'success':
-            assert(failureCount > 0)
             # a subtask failed setup_and_check
             print("Warning: subtask of {} failed during check, "
                   "so this task will not be run".format(
                       taskTitle))
+            assert(failureCount > 0)
             analysisTask._setupStatus = 'fail'
             totalFailures += 1
             return totalFailures
