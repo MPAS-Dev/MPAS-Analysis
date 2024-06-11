@@ -108,6 +108,8 @@ def string_to_datetime(dateString):
     (year, month, day, hour, minute, second) = \
         _parse_date_string(dateString, isInterval=False)
 
+    if year == 0:
+        year = 1
     return datetime.datetime(year=year, month=month, day=day, hour=hour,
                              minute=minute, second=second)
 

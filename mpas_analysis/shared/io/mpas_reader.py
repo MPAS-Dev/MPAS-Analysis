@@ -194,7 +194,10 @@ def _parse_dataset_time(ds, inTimeVariableName, calendar,
         # convert to string
         timeStrings = [''.join(xtime.astype('U')).strip()
                        for xtime in timeVar.values]
-        days = string_to_days_since_date(dateString=timeStrings,
+        for i, timeString in enumerate(timeStrings):
+             if timeString[8:] == '15_00:00:00':
+                 timeStrings[i] = f'{timeStrings[i+1][:7]}-01_00:00:00'
+             days = string_to_days_since_date(dateString=timeStrings,
                                          referenceDate=referenceDate,
                                          calendar=calendar)
 
