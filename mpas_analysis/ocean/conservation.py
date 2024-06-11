@@ -172,43 +172,54 @@ class ConservationTask(AnalysisTask):
 
         self.plotTypes = self.config.getexpression('timeSeriesConservation', 'plotTypes')
 
-        self.masterVariableList = {'absolute_energy_error': ['absoluteEnergyError'],
-                                   'total_energy_flux': ['netEnergyFlux'],
-                                   'absolute_salt_error': ['absoluteSaltError'],
-                                   'ice_salt_flux': ['netSaltFlux'],
-                                   'total_mass_flux': ['netMassFlux'],
-                                   'total_mass_change': ['netMassChange'],
-                                   'rain_mass_flux': ['accumulatedRainFlux'],
-                                   'snow_mass_flux': ['accumulatedSnowFlux'],
-                                   'evaporation_mass_flux': ['accumulatedEvaporationFlux'],
-                                   'sea_ice_mass_flux': ['accumulatedSeaIceFlux'],
-                                   'river_runoff_mass_flux': ['accumulatedRiverRunoffFlux'],
-                                   'ice_runoff_mass_flux': ['accumulatedIceRunoffFlux'],
-                                   'iceberg_mass_flux': ['accumulatedIcebergFlux'],
-                                   'frazil_mass_flux': ['accumulatedFrazilFlux'],
-                                   'ice_shelf_melt_mass_flux': ['accumulatedLandIceFlux'],
-                                   'land_ice_mass_change': ['landIceMassChange'],
-                                   'land_ice_ssh_change': ['landIceSshChange'],
-                                   'land_ice_mass_flux': ['landIceMassFlux'],
-                                   'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
-                                                                'accumulatedLandIceFlux',
-                                                                'accumulatedRemovedRiverRunoffFlux',
-                                                                'accumulatedRemovedIceRunoffFlux']}
+        self.masterVariableList = {
+            'absolute_energy_error': ['absoluteEnergyError'],
+            'total_energy': ['finalEnergy'],
+            'total_energy_flux': ['netEnergyFlux'],
+            'total_energy_change': ['energyAnomaly'],
+            'total_salt_change': ['saltAnomaly'],
+            'total_salt': ['finalSalt'],
+            'absolute_salt_error': ['absoluteSaltError'],
+            'ice_salt_flux': ['netSaltFlux'],
+            'sea_ice_salt_flux': ['accumulatedSeaIceSalinityFlux'],
+            'total_mass_flux': ['netMassFlux'],
+            'total_mass': ['finalMass'],
+            'total_mass_change': ['massAnomaly'],
+            'rain_mass_flux': ['accumulatedRainFlux'],
+            'snow_mass_flux': ['accumulatedSnowFlux'],
+            'evaporation_mass_flux': ['accumulatedEvaporationFlux'],
+            'sea_ice_mass_flux': ['accumulatedSeaIceFlux'],
+            'river_runoff_mass_flux': ['accumulatedRiverRunoffFlux'],
+            'ice_runoff_mass_flux': ['accumulatedIceRunoffFlux'],
+            'iceberg_mass_flux': ['accumulatedIcebergFlux'],
+            'frazil_mass_flux': ['accumulatedFrazilFlux'],
+            'ice_shelf_frazil_mass_flux': ['accumulatedLandIceFrazilFlux'],
+            'ice_shelf_melt_mass_flux': ['accumulatedLandIceFlux'],
+            'land_ice_mass_change': ['landIceMassChange'],
+            'land_ice_ssh_change': ['landIceSshChange'],
+            'land_ice_mass_flux': ['landIceMassFlux'],
+            'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
+                                              'accumulatedLandIceFlux',
+                                              'accumulatedRemovedRiverRunoffFlux',
+                                              'accumulatedRemovedIceRunoffFlux']}
 
         # for each derived variable, which source variables are needed
-        self.derivedVariableList = {'netMassChange': ['massChange'],
-                                    'landIceMassFlux': ['accumulatedIcebergFlux',
-                                                        'accumulatedLandIceFlux',
-                                                        'accumulatedRemovedRiverRunoffFlux',
-                                                        'accumulatedRemovedIceRunoffFlux'],
-                                    'landIceSshChange': ['accumulatedIcebergFlux',
-                                                         'accumulatedLandIceFlux',
-                                                         'accumulatedRemovedRiverRunoffFlux',
-                                                         'accumulatedRemovedIceRunoffFlux'],
-                                    'landIceMassChange': ['accumulatedIcebergFlux',
-                                                          'accumulatedLandIceFlux',
-                                                          'accumulatedRemovedRiverRunoffFlux',
-                                                          'accumulatedRemovedIceRunoffFlux']}
+        self.derivedVariableList = {
+            'massAnomaly': ['massChange', 'netMassFlux'],
+            'energyAnomaly': ['energyChange', 'netEnergyFlux'],
+            'saltAnomaly': ['saltChange', 'netSaltFlux'],
+            'landIceMassFlux': ['accumulatedIcebergFlux',
+                                'accumulatedLandIceFlux',
+                                'accumulatedRemovedRiverRunoffFlux',
+                                'accumulatedRemovedIceRunoffFlux'],
+            'landIceSshChange': ['accumulatedIcebergFlux',
+                                 'accumulatedLandIceFlux',
+                                 'accumulatedRemovedRiverRunoffFlux',
+                                 'accumulatedRemovedIceRunoffFlux'],
+            'landIceMassChange': ['accumulatedIcebergFlux',
+                                  'accumulatedLandIceFlux',
+                                  'accumulatedRemovedRiverRunoffFlux',
+                                  'accumulatedRemovedIceRunoffFlux']}
 
         # Determine the xml files for each plot and the variables each plot will use
         self.xmlFileNames = []
@@ -302,11 +313,17 @@ class ConservationTask(AnalysisTask):
 
         titles = {}
         titles['total_energy_flux'] = 'Total energy flux'
+        titles['total_energy'] = 'Total energy'
         titles['absolute_energy_error'] = 'Energy error'
+        titles['total_energy_change'] = 'Cumulative energy change'
+        titles['total_salt_change'] = 'Cumulative salt change'
+        titles['total_salt'] = 'Total salt'
         titles['ice_salt_flux'] = 'Salt flux related to land ice and sea ice'
+        titles['sea_ice_salt_flux'] = 'Salt flux related to sea ice, frazil excluded'
         titles['absolute_salt_error'] = 'Salt conservation error'
         titles['total_mass_flux'] = 'Total mass flux'
-        titles['total_mass_change'] = 'Total mass anomaly'
+        titles['total_mass'] = 'Total mass'
+        titles['total_mass_change'] = 'Cumulative mass change'
         titles['rain_mass_flux'] = 'Mass flux due to rain'
         titles['snow_mass_flux'] = 'Mass flux due to snow'
         titles['evaporation_mass_flux'] = 'Mass flux due to evaporation'
@@ -315,6 +332,7 @@ class ConservationTask(AnalysisTask):
         titles['ice_runoff_mass_flux'] = 'Mass flux due to ice runoff'
         titles['iceberg_mass_flux'] = 'Mass flux due to icebergs'
         titles['frazil_mass_flux'] = 'Mass flux due to frazil'
+        titles['ice_shelf_frazil_mass_flux'] = 'Mass flux due to ice shelf frazil'
         titles['ice_shelf_melt_mass_flux'] = 'Mass flux due to ice shelf melt'
         titles['land_ice_mass_flux'] = 'Mass flux due to land ice'
         titles['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
@@ -323,10 +341,16 @@ class ConservationTask(AnalysisTask):
 
         y_labels = {}
         y_labels['total_energy_flux'] = 'Energy flux (W)'
+        y_labels['total_energy'] = 'Energy (J)'
         y_labels['absolute_energy_error'] = 'Energy (J)'
+        y_labels['total_energy_change'] = 'Energy (J)'
+        y_labels['total_salt_change'] = 'Salt (Gt)'
+        y_labels['total_salt'] = 'Salt (Gt)'
         y_labels['ice_salt_flux'] = 'Salt flux (Gt/yr)'
+        y_labels['sea_ice_salt_flux'] = 'Salt flux (Gt/yr)'
         y_labels['absolute_salt_error'] = 'Salt (Gt)'
         y_labels['total_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['total_mass'] = 'Mass (Gt)'
         y_labels['rain_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['snow_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['evaporation_mass_flux'] = 'Mass flux (Gt/yr)'
@@ -335,6 +359,7 @@ class ConservationTask(AnalysisTask):
         y_labels['ice_runoff_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['iceberg_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['frazil_mass_flux'] = 'Mass flux (Gt/yr)'
+        y_labels['ice_shelf_frazil_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['ice_shelf_melt_mass_flux'] = 'Mass flux (Gt/yr)'
         y_labels['total_mass_change'] = 'Mass (Gt)'
         y_labels['land_ice_mass_flux'] = 'Mass flux (Gt/yr)'
@@ -344,11 +369,18 @@ class ConservationTask(AnalysisTask):
 
         captions = {}
         captions['total_energy_flux'] = 'Total energy flux'
+        captions['total_energy'] = 'Total energy'
         captions['absolute_energy_error'] = 'Absolute energy conservation error'
+        captions['total_energy_change'] = 'Cumulative energy change'
+        captions['total_salt_change'] = 'Cumulative salt change'
+        captions['total_salt'] = 'Total salt'
         captions['ice_salt_flux'] = 'Salt flux related to land ice and sea ice ' \
             '(sea ice salinity flux, sea ice frazil flux, and land ice frazil flux)'
+        captions['sea_ice_salt_flux'] = 'Salt flux related to sea ice excluding frazil' \
+            '(sea ice salinity flux)'
         captions['absolute_salt_error'] = 'Absolute salt conservation error'
         captions['total_mass_flux'] = 'Total mass flux'
+        captions['total_mass'] = 'Total mass'
         captions['rain_mass_flux'] = 'Mass flux due to rain'
         captions['snow_mass_flux'] = 'Mass flux due to snow'
         captions['evaporation_mass_flux'] = 'Mass flux due to evaporation'
@@ -357,11 +389,13 @@ class ConservationTask(AnalysisTask):
         captions['ice_runoff_mass_flux'] = 'Mass flux due to ice runoff'
         captions['iceberg_mass_flux'] = 'Mass flux due to icebergs'
         captions['frazil_mass_flux'] = 'Mass flux due to frazil'
+        captions['ice_shelf_frazil_mass_flux'] = 'Mass flux due to ice shelf frazil'
         captions['ice_shelf_melt_mass_flux'] = 'Mass flux due to ice shelf melt'
-        captions['total_mass_change'] = 'Total mass anomaly'
+        captions['total_mass_change'] = 'Cumulative mass change'
         captions['land_ice_mass_flux'] = 'Mass flux due to land ice'
         captions['land_ice_mass_change'] = 'Mass anomaly due to land ice fluxes'
-        captions['land_ice_ssh_change'] = 'SSH anomaly due to land ice fluxes. Assumes a constant ocean area.'
+        captions['land_ice_ssh_change'] = 'SSH anomaly due to land ice fluxes. ' \
+                                          'Assumes a constant ocean area.'
         captions['land_ice_mass_flux_components'] = 'Mass flux components from land ice'
 
         self.logger.info(f'  Open conservation file {self.outputFile}...')
@@ -427,7 +461,8 @@ class ConservationTask(AnalysisTask):
                 fields.append(variable)
                 legend_text = self.controlConfig.get('runs', 'mainRunName')
                 if len(self.masterVariableList[plot_type]) > 1:
-                    legend_text = f"{legend_text}, {varname.replace('accumulated', '').replace('Flux', '')}"
+                    legend_text = f"{legend_text}, " \
+                        f"{varname.replace('accumulated', '').replace('Flux', '')}"
                 legendText.append(legend_text)
                 lineColors.append(config.get('timeSeries', 'controlColor'))
                 lineStyles.append(lineStylesBase[index])
@@ -482,13 +517,15 @@ class ConservationTask(AnalysisTask):
             variable = ds[varname]
         else:
             # Here we keep the units mks
-            if varname == 'netMassChange':
-                variable = self._get_variable(ds, 'massChange', mks=True)
-                # mass_flux = self._get_variable(ds, 'netMassFlux')
-                # # Assume that the frequency of output is monthly
-                # dt = constants.sec_per_month
-                # # Convert from kg/s to kg
-                # derived_variable = mass_flux.cumsum(axis=0) * dt
+            if varname == 'massAnomaly':
+                source_variable = self._get_variable(ds, 'massChange', mks=False)
+                variable = source_variable.cumsum(axis=0)
+            elif varname == 'saltAnomaly':
+                source_variable = self._get_variable(ds, 'saltChange', mks=False)
+                variable = source_variable.cumsum(axis=0)
+            elif varname == 'energyAnomaly':
+                source_variable = self._get_variable(ds, 'energyChange', mks=True)
+                variable = source_variable.cumsum(axis=0)
             elif varname == 'landIceMassChange':
                 land_ice_mass_flux = self._get_variable(ds, 'landIceMassFlux', mks=True)
                 # Assume that the frequency of output is monthly
@@ -539,9 +576,9 @@ class ConservationTask(AnalysisTask):
             mass_vars = ['initialMass', 'finalMass', 'absoluteMassError',
                          'relativeMassError', 'massChange', 'landIceMassChange']
             salt_vars = ['initialSalt', 'finalSalt', 'absoluteSaltError',
-                         'relativeSaltError']
+                         'relativeSaltError', 'saltChange']
             mass_flux_vars = ['netMassFlux', 'landIceMassFlux']
-            salt_flux_vars = ['netSaltFlux']
+            salt_flux_vars = ['netSaltFlux, accumulatedSeaIceSalinityFlux']
             ssh_vars = ['landIceSshChange', 'sshChange']
             if (varname in mass_vars) or (varname in salt_vars):
                 # Convert from kg to Gt
@@ -634,9 +671,10 @@ class ConservationTask(AnalysisTask):
         if append:
             args.append('--record_append')
 
-        printCommand = '{} {} ... {} {}'.format(' '.join(args), inputFiles[0],
-                                                inputFiles[-1],
-                                                self.outputFile)
+        allArgs = ' '.join(args)
+        printCommand = f'{allArgs} {inputFiles[0]} ... {inputFiles[-1]} ' \
+                       f'{self.outputFile}'
+
         args.extend(inputFiles)
         args.append(self.outputFile)
 
