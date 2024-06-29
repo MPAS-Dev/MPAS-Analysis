@@ -600,16 +600,16 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             parallel_exec = None
 
         if self.useNcremap:
+            basename, ext = os.path.splitext(outFileName)
+            ncremapFilename = f'{basename}_ncremap{ext}'
             remapper.remap_file(inFileName=inFileName,
-                                outFileName=outFileName,
+                                outFileName=ncremapFilename,
                                 overwrite=True,
                                 renormalize=renormalizationThreshold,
                                 logger=self.logger,
                                 parallel_exec=parallel_exec)
 
-            remappedClimatology = xr.open_dataset(outFileName)
-            remappedClimatology.load()
-            remappedClimatology.close()
+            remappedClimatology = xr.open_dataset(ncremapFilename)
         else:
 
             climatologyDataSet = xr.open_dataset(inFileName)

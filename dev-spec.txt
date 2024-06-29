@@ -19,9 +19,9 @@ mache >=1.11.0
 # https://github.com/matplotlib/matplotlib/pull/26291
 matplotlib-base>=3.6.0,!=3.7.2
 mpas_tools>=0.30.0
-nco>=4.8.1
+nco>=4.8.1,!=5.2.6
 netcdf4
-numpy
+numpy<2.0
 pandas
 pillow >=10.0.0,<11.0.0
 progressbar2
