@@ -725,16 +725,16 @@
             <span class="n">parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span><span class="p">:</span>
+            <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">ncremapFilename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s1">_ncremap</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
-                                <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
+                                <span class="n">outFileName</span><span class="o">=</span><span class="n">ncremapFilename</span><span class="p">,</span>
                                 <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
                                 <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
 
-            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
-            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
-            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">ncremapFilename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="n">climatologyDataSet</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
