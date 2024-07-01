@@ -136,6 +136,9 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.ClimatologyMapSST(config,
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))
+    analyses.append(ocean.ClimatologyMapFluxes(config,
+                                               oceanClimatologyTasks['avg'],
+                                               controlConfig))
     analyses.append(ocean.ClimatologyMapSSS(config,
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))
@@ -433,11 +436,14 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                                              verbose, callCheckGenerate=False)
         totalFailures += failureCount
         if prereq._setupStatus != 'success':
-            assert(failureCount > 0)
+            if failureCount == 0:
+                 raise ValueError(f'Error: prerequisite {prereq.printTaskName} of '
+                                  f'{taskTitle} did not set up successfully but also '
+                                  'did not indicate a failure.  This likely indicates '
+                                  'a bug like multiple tasks with the same name.')
             # a prereq failed setup_and_check
-            print("Warning: prerequisite of {} failed during check, "
-                  "so this task will not be run".format(
-                      taskTitle))
+            print(f'Warning: prerequisite of {taskTitle} failed during check, '
+                  'so this task will not be run')
             analysisTask._setupStatus = 'fail'
             totalFailures += 1
             return totalFailures
@@ -463,11 +469,14 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
                                              verbose, callCheckGenerate=False)
         totalFailures += failureCount
         if subtask._setupStatus != 'success':
-            assert(failureCount > 0)
+            if failureCount == 0:
+                 raise ValueError(f'Error: subtask {subtask.printTaskName} of '
+                                  f'{taskTitle} did not set up successfully but also '
+                                  'did not indicate a failure.  This likely indicates '
+                                  'a bug like multiple tasks with the same name.')
             # a subtask failed setup_and_check
-            print("Warning: subtask of {} failed during check, "
-                  "so this task will not be run".format(
-                      taskTitle))
+            print(f'Warning: subtask of {taskTitle} failed during check, '
+                  'so this task will not be run')
             analysisTask._setupStatus = 'fail'
             totalFailures += 1
             return totalFailures
