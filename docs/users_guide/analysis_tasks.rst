@@ -4,6 +4,7 @@ Analysis Tasks
 .. toctree::
    :maxdepth: 1
 
+   tasks/climatologyMapFluxes
    tasks/climatologyMapMLD
    tasks/climatologyMapMLDMinMax
    tasks/climatologyMapSST
