@@ -296,7 +296,7 @@ def register_custom_colormaps():
 
     name = 'white_cmo_deep'
     # modify cmo.deep to start at white
-    colors2 = plt.cm.get_cmap('cmo.deep')(np.linspace(0, 1, 224))
+    colors2 = plt.get_cmap('cmo.deep')(np.linspace(0, 1, 224))
     colorCount = 32
     colors1 = np.ones((colorCount, 4), float)
     x = np.linspace(0., 1., colorCount+1)[0:-1]
