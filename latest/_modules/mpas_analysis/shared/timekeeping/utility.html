@@ -212,6 +212,8 @@
     <span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span> <span class="o">=</span> \
         <span class="n">_parse_date_string</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">isInterval</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="n">year</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">year</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="n">hour</span><span class="p">,</span>
                              <span class="n">minute</span><span class="o">=</span><span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="n">second</span><span class="p">)</span></div>
 

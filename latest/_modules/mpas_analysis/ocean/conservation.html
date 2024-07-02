@@ -276,34 +276,54 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">plotTypes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesConservation&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTypes&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">masterVariableList</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;absolute_energy_error&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;absoluteEnergyError&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;total_energy_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netEnergyFlux&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;absolute_salt_error&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;absoluteSaltError&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;ice_salt_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netSaltFlux&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;total_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netMassFlux&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;total_mass_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netMassChange&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;land_ice_mass_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceMassChange&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceSshChange&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">],</span>
-                                   <span class="s1">&#39;land_ice_mass_flux_components&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
-                                                                <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
-                                                                <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
-                                                                <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">masterVariableList</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;absolute_energy_error&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;absoluteEnergyError&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_energy&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;finalEnergy&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_energy_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netEnergyFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_energy_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;energyAnomaly&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_salt_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;saltAnomaly&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_salt&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;finalSalt&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;absolute_salt_error&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;absoluteSaltError&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;ice_salt_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netSaltFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;sea_ice_salt_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedSeaIceSalinityFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;netMassFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_mass&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;finalMass&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;total_mass_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;massAnomaly&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;rain_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedRainFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;snow_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedSnowFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;evaporation_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedEvaporationFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;sea_ice_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedSeaIceFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;river_runoff_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedRiverRunoffFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;ice_runoff_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIceRunoffFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;iceberg_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;frazil_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedFrazilFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;ice_shelf_frazil_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;ice_shelf_melt_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;land_ice_mass_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceMassChange&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceSshChange&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;land_ice_mass_flux_components&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
 
         <span class="c1"># for each derived variable, which source variables are needed</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">derivedVariableList</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;netMassChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;massChange&#39;</span><span class="p">],</span>
-                                    <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
-                                                        <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
-                                                        <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
-                                                        <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
-                                    <span class="s1">&#39;landIceSshChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
-                                    <span class="s1">&#39;landIceMassChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">derivedVariableList</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;massAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;massChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netMassFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;energyAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;energyChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netEnergyFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;saltAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;saltChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netSaltFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;landIceSshChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;landIceMassChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
 
         <span class="c1"># Determine the xml files for each plot and the variables each plot will use</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
@@ -397,11 +417,27 @@
 
         <span class="n">titles</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_energy_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total energy flux&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_energy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total energy&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;absolute_energy_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Energy error&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_energy_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative energy change&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_salt_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative salt change&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_salt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total salt&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux related to land ice and sea ice&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;sea_ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux related to sea ice, frazil excluded&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;absolute_salt_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt conservation error&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass flux&#39;</span>
-        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass anomaly&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_mass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;total_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative mass change&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;rain_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to rain&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;snow_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to snow&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;evaporation_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to evaporation&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;sea_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to sea ice&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;river_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to river runoff&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;ice_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice runoff&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;iceberg_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to icebergs&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to frazil&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;ice_shelf_frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice shelf frazil&#39;</span>
+        <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;ice_shelf_melt_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice shelf melt&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to land ice&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass anomaly due to land ice fluxes&#39;</span>
         <span class="n">titles</span><span class="p">[</span><span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SSH anomaly due to land ice fluxes&#39;</span>
@@ -409,10 +445,26 @@
 
         <span class="n">y_labels</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_energy_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Energy flux (W)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_energy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Energy (J)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;absolute_energy_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Energy (J)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_energy_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Energy (J)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_salt_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt (Gt)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_salt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt (Gt)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;sea_ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux (Gt/yr)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;absolute_salt_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt (Gt)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_mass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass (Gt)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;rain_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;snow_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;evaporation_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;sea_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;river_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;ice_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;iceberg_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;ice_shelf_frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
+        <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;ice_shelf_melt_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;total_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass (Gt)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux (Gt/yr)&#39;</span>
         <span class="n">y_labels</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass (Gt)&#39;</span>
@@ -421,15 +473,33 @@
 
         <span class="n">captions</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_energy_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total energy flux&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_energy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total energy&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;absolute_energy_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Absolute energy conservation error&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_energy_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative energy change&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_salt_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative salt change&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_salt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total salt&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux related to land ice and sea ice &#39;</span> \
             <span class="s1">&#39;(sea ice salinity flux, sea ice frazil flux, and land ice frazil flux)&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;sea_ice_salt_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Salt flux related to sea ice excluding frazil&#39;</span> \
+            <span class="s1">&#39;(sea ice salinity flux)&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;absolute_salt_error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Absolute salt conservation error&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass flux&#39;</span>
-        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass anomaly&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_mass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total mass&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;rain_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to rain&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;snow_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to snow&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;evaporation_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to evaporation&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;sea_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to sea ice&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;river_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to river runoff&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;ice_runoff_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice runoff&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;iceberg_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to icebergs&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to frazil&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;ice_shelf_frazil_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice shelf frazil&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;ice_shelf_melt_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to ice shelf melt&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;total_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Cumulative mass change&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux due to land ice&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass anomaly due to land ice fluxes&#39;</span>
-        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SSH anomaly due to land ice fluxes. Assumes a constant ocean area.&#39;</span>
+        <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SSH anomaly due to land ice fluxes. &#39;</span> \
+                                          <span class="s1">&#39;Assumes a constant ocean area.&#39;</span>
         <span class="n">captions</span><span class="p">[</span><span class="s1">&#39;land_ice_mass_flux_components&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Mass flux components from land ice&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Open conservation file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
@@ -495,7 +565,8 @@
                 <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
                 <span class="n">legend_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterVariableList</span><span class="p">[</span><span class="n">plot_type</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">legend_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">legend_text</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">varname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;accumulated&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Flux&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">legend_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">legend_text</span><span class="si">}</span><span class="s2">, &quot;</span> \
+                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">varname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;accumulated&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Flux&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legend_text</span><span class="p">)</span>
                 <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">))</span>
                 <span class="n">lineStyles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lineStylesBase</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
@@ -550,13 +621,15 @@
             <span class="n">variable</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="c1"># Here we keep the units mks</span>
-            <span class="k">if</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;netMassChange&#39;</span><span class="p">:</span>
-                <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;massChange&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="c1"># mass_flux = self._get_variable(ds, &#39;netMassFlux&#39;)</span>
-                <span class="c1"># # Assume that the frequency of output is monthly</span>
-                <span class="c1"># dt = constants.sec_per_month</span>
-                <span class="c1"># # Convert from kg/s to kg</span>
-                <span class="c1"># derived_variable = mass_flux.cumsum(axis=0) * dt</span>
+            <span class="k">if</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;massAnomaly&#39;</span><span class="p">:</span>
+                <span class="n">source_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;massChange&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">variable</span> <span class="o">=</span> <span class="n">source_variable</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;saltAnomaly&#39;</span><span class="p">:</span>
+                <span class="n">source_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;saltChange&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">variable</span> <span class="o">=</span> <span class="n">source_variable</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;energyAnomaly&#39;</span><span class="p">:</span>
+                <span class="n">source_variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;energyChange&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">variable</span> <span class="o">=</span> <span class="n">source_variable</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;landIceMassChange&#39;</span><span class="p">:</span>
                 <span class="n">land_ice_mass_flux</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="c1"># Assume that the frequency of output is monthly</span>
@@ -607,9 +680,9 @@
             <span class="n">mass_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;initialMass&#39;</span><span class="p">,</span> <span class="s1">&#39;finalMass&#39;</span><span class="p">,</span> <span class="s1">&#39;absoluteMassError&#39;</span><span class="p">,</span>
                          <span class="s1">&#39;relativeMassError&#39;</span><span class="p">,</span> <span class="s1">&#39;massChange&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceMassChange&#39;</span><span class="p">]</span>
             <span class="n">salt_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;initialSalt&#39;</span><span class="p">,</span> <span class="s1">&#39;finalSalt&#39;</span><span class="p">,</span> <span class="s1">&#39;absoluteSaltError&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;relativeSaltError&#39;</span><span class="p">]</span>
+                         <span class="s1">&#39;relativeSaltError&#39;</span><span class="p">,</span> <span class="s1">&#39;saltChange&#39;</span><span class="p">]</span>
             <span class="n">mass_flux_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;netMassFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">]</span>
-            <span class="n">salt_flux_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;netSaltFlux&#39;</span><span class="p">]</span>
+            <span class="n">salt_flux_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;netSaltFlux, accumulatedSeaIceSalinityFlux&#39;</span><span class="p">]</span>
             <span class="n">ssh_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;landIceSshChange&#39;</span><span class="p">,</span> <span class="s1">&#39;sshChange&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">varname</span> <span class="ow">in</span> <span class="n">mass_vars</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">varname</span> <span class="ow">in</span> <span class="n">salt_vars</span><span class="p">):</span>
                 <span class="c1"># Convert from kg to Gt</span>
@@ -702,9 +775,10 @@
         <span class="k">if</span> <span class="n">append</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--record_append&#39;</span><span class="p">)</span>
 
-        <span class="n">printCommand</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> ... </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                <span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
-                                                <span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
+        <span class="n">allArgs</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">printCommand</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">allArgs</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> ... </span><span class="si">{</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> &#39;</span> \
+                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="si">}</span><span class="s1">&#39;</span>
+
         <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span>
         <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
 
