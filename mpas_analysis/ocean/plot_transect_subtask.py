@@ -19,7 +19,7 @@ observations or reference data.
 import xarray as xr
 import numpy
 from matplotlib import colors
-from matplotlib import cm
+import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection
 
@@ -860,7 +860,7 @@ class PlotTransectSubtask(AnalysisTask):
     def _get_contour_colormap():
         # https://stackoverflow.com/a/18926541/7728169
 
-        cmap = cm.get_cmap('hot')
+        cmap = plt.get_cmap('hot')
         cmap = colors.LinearSegmentedColormap.from_list(
             f'trunc_{cmap.name}', cmap(numpy.linspace(0.1, 0.85, 100)))
 
