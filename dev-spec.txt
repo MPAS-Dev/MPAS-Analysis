@@ -2,7 +2,7 @@
 # $ conda create --name <env> --file <this file>
 
 # Base
-python>=3.8
+python>=3.9
 bottleneck
 cartopy >=0.18.0
 cartopy_offlinedata
@@ -15,13 +15,11 @@ geometric_features>=1.4.0
 gsw
 lxml
 mache >=1.11.0
-# 3.7.2 contains a bug with tight layouts and insets
-# https://github.com/matplotlib/matplotlib/pull/26291
-matplotlib-base>=3.6.0,!=3.7.2
-mpas_tools>=0.30.0
+matplotlib-base>=3.9.0
+mpas_tools>=0.34.0
 nco>=4.8.1,!=5.2.6
 netcdf4
-numpy<2.0
+numpy>=2.0,<3.0
 pandas
 pillow >=10.0.0,<11.0.0
 progressbar2

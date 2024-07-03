@@ -53,7 +53,7 @@ def write_netcdf_with_fill(ds, fileName, fillValues=netCDF4.default_fillvals):
             encodingDict[variableName] = {'_FillValue': None}
 
         # make strings write as unicode instead
-        if dtype.type is numpy.string_:
+        if dtype.type is numpy.bytes_:
             encodingDict[variableName] = {'dtype': str}
 
     ds.to_netcdf(fileName, encoding=encodingDict)
