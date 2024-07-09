@@ -138,7 +138,12 @@ def build_analysis_list(config, controlConfig):
                                             controlConfig))
     analyses.append(ocean.ClimatologyMapFluxes(config,
                                                oceanClimatologyTasks['avg'],
-                                               controlConfig))
+                                               controlConfig,
+                                               fluxType='mass'))
+    analyses.append(ocean.ClimatologyMapFluxes(config,
+                                               oceanClimatologyTasks['avg'],
+                                               controlConfig,
+                                               fluxType='heat'))
     analyses.append(ocean.ClimatologyMapSSS(config,
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))
