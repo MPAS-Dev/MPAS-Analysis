@@ -353,7 +353,7 @@ def decode_strings(da):
     # -------
     # Xylar Asay-Davis
 
-    if da.dtype.type is numpy.string_:
+    if da.dtype.type is numpy.bytes_:
         strings = [bytes.decode(name) for name in da.values]
     else:
         strings = [name for name in da.values]
