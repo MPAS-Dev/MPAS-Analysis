@@ -61,6 +61,12 @@ tapcoef = 1.055111111111111
 # small value to prevent division by zero
 eps = 1.E-10
 
+# density of reference seawater (kg/m^3)
+rho_sw = 1026.
+
+# Heat capacity of seawater
+cp_sw = 3.996e3
+
 # density of freshwater (kg/m^3)
 rho_fw = 1000.
 
