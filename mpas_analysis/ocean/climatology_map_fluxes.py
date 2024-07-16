@@ -203,7 +203,7 @@ class RemapMpasTemperatureFluxClimatology(RemapMpasClimatologySubtask):
         # drop unnecessary fields before re-mapping
         climatology.drop_vars([variable])
 
-        # this creates a new variable eke in climatology (like netcdf)
+        # this creates a variable with heat flux units in climatology (like netcdf)
         variable = variable.replace('TemperatureFlux', 'HeatFlux')
         climatology[variable] = heatFlux
         climatology[variable].attrs['units'] = 'W m$^[-2]$'
