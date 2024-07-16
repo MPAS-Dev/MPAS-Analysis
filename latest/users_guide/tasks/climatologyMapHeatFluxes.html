@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>climatologyMapFluxes &mdash; MPAS-Analysis latest documentation</title>
+  <title>climatologyMapHeatFluxes &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="climatologyMapMLD" href="climatologyMapMLD.html" />
-    <link rel="prev" title="Analysis Tasks" href="../analysis_tasks.html" /> 
+    <link rel="prev" title="climatologyMapMassFluxes" href="climatologyMapMassFluxes.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,12 +50,8 @@
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapFluxes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
@@ -141,9 +137,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
-      <li class="breadcrumb-item active">climatologyMapFluxes</li>
+      <li class="breadcrumb-item active">climatologyMapHeatFluxes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/tasks/climatologyMapFluxes.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/tasks/climatologyMapHeatFluxes.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -151,85 +147,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="climatologymapfluxes">
-<span id="task-climatologymapfluxes"></span><h1>climatologyMapFluxes<a class="headerlink" href="#climatologymapfluxes" title="Link to this heading">¶</a></h1>
-<p>An analysis task for comparison of global maps of surface mass fluxes.
-No observational products are currently available.</p>
-<p>Component and Tags:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">fluxes</span>
-</pre></div>
-</div>
-<section id="configuration-options">
-<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
-<p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapFluxes</span><span class="p">]</span>
-
-<span class="c1"># colormap for model</span>
-<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">balance</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
-<span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">symLog</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
-
-<span class="c1"># colormap for differences</span>
-<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
-<span class="c1"># whether the colormap is indexed or continuous</span>
-<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">142</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">227</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
-<span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
-<span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">symLog</span>
-<span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
-
-<span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;riverRunoffFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;iceRunoffFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;snowFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;rainFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;evaporationFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;seaIceFreshWaterFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">]</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">,</span> <span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
-<span class="c1"># comparison grid(s) on which to plot analysis</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
-
-<span class="c1"># first and last year of SST observational climatology (preferably one of the</span>
-<span class="c1"># two ranges given below)</span>
-<span class="c1"># values for preindustrial</span>
-<span class="n">obsStartYear</span> <span class="o">=</span> <span class="mi">1870</span>
-<span class="n">obsEndYear</span> <span class="o">=</span> <span class="mi">1900</span>
-</pre></div>
-</div>
-<p>By default, a “preindustrial” climatology is computed for comparison with the
-model results.  For simulations covering a different time period, the range of
-years (<code class="docutils literal notranslate"><span class="pre">obsStartYear</span></code> and <code class="docutils literal notranslate"><span class="pre">obsEndYear</span></code>) should be updated.</p>
-<dl class="simple">
-<dt>For details on the remaining configuration options, see:</dt><dd><ul class="simple">
-<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
-<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
-<li><p><a class="reference internal" href="../config/comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<section id="observations">
-<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
-<p>None available.</p>
-</section>
-<section id="example-result">
-<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/seaIceFreshWaterFlux.png"><img alt="../../_images/seaIceFreshWaterFlux.png" class="align-center" src="../../_images/seaIceFreshWaterFlux.png" style="width: 500px;" /></a>
-</section>
+  <section id="climatologymapheatfluxes">
+<span id="task-climatologymapheatfluxes"></span><h1>climatologyMapHeatFluxes<a class="headerlink" href="#climatologymapheatfluxes" title="Link to this heading">¶</a></h1>
+<p>See <a class="reference internal" href="climatologyMapMassFluxes.html#task-climatologymapmassfluxes"><span class="std std-ref">climatologyMapMassFluxes</span></a>. This task functions identically
+except a different config section is used and different variables are
+appropriate.</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../analysis_tasks.html" class="btn btn-neutral float-left" title="Analysis Tasks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="climatologyMapMassFluxes.html" class="btn btn-neutral float-left" title="climatologyMapMassFluxes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="climatologyMapMLD.html" class="btn btn-neutral float-right" title="climatologyMapMLD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

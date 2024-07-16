@@ -239,7 +239,12 @@
                                             <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapFluxes</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                                <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
-                                               <span class="n">controlConfig</span><span class="p">))</span>
+                                               <span class="n">controlConfig</span><span class="p">,</span>
+                                               <span class="n">fluxType</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapFluxes</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                               <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+                                               <span class="n">controlConfig</span><span class="p">,</span>
+                                               <span class="n">fluxType</span><span class="o">=</span><span class="s1">&#39;heat&#39;</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapSSS</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                             <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                             <span class="n">controlConfig</span><span class="p">))</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>climatologyMapOHCAnomaly &mdash; MPAS-Analysis latest documentation</title>
+  <title>climatologyMapMassFluxes &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="climatologyMapSose" href="climatologyMapSose.html" />
-    <link rel="prev" title="climatologyMapEKE" href="climatologyMapEKE.html" /> 
+    <link rel="next" title="climatologyMapHeatFluxes" href="climatologyMapHeatFluxes.html" />
+    <link rel="prev" title="Analysis Tasks" href="../analysis_tasks.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,7 +50,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapMassFluxes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
@@ -58,11 +63,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapOHCAnomaly</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
@@ -141,9 +142,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
-      <li class="breadcrumb-item active">climatologyMapOHCAnomaly</li>
+      <li class="breadcrumb-item active">climatologyMapMassFluxes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/tasks/climatologyMapOHCAnomaly.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/tasks/climatologyMapMassFluxes.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -151,68 +152,74 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="climatologymapohcanomaly">
-<span id="task-climatologymapohcanomaly"></span><h1>climatologyMapOHCAnomaly<a class="headerlink" href="#climatologymapohcanomaly" title="Link to this heading">¶</a></h1>
-<p>An analysis task for plotting anomalies in ocean heat content (OHC) compared
-with a reference year (typically the start of the simulation).</p>
+  <section id="climatologymapmassfluxes">
+<span id="task-climatologymapmassfluxes"></span><h1>climatologyMapMassFluxes<a class="headerlink" href="#climatologymapmassfluxes" title="Link to this heading">¶</a></h1>
+<p>An analysis task for comparison of global maps of surface mass fluxes.
+No observational products are currently available.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">deltaOHC</span><span class="p">,</span> <span class="n">publicObs</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">fluxes</span><span class="p">,</span> <span class="n">mass</span>
 </pre></div>
 </div>
 <section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading">¶</a></h2>
-<p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapOHCAnomaly</span><span class="p">]</span>
-<span class="c1">## options related to plotting horizontally remapped climatologies of</span>
-<span class="c1">## ocean heat content (OHC) against reference model results (if available)</span>
+<p>The following configuration options are available for climatologyMapMassFluxes
+and similarly for climatologyMapHeatFluxes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapMassFluxes</span><span class="p">]</span>
 
-<span class="c1"># colormap for model/observations</span>
-<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">BuOr</span>
+<span class="c1"># colormap for model</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">38</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+<span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mi">37</span><span class="p">)</span>
-<span class="c1"># colormap levels/values for ticks (defaults to same as levels)</span>
-<span class="n">colorbarTicksResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">12.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">colorbarLevelsResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="nb">int</span><span class="p">)</span>
+<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">57</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">113</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">142</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">198</span><span class="p">,</span> <span class="mi">227</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mi">11</span><span class="p">)</span>
+<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">}</span>
 
-<span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep,</span>
-<span class="c1"># Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="n">variables</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;riverRunoffFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;iceRunoffFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;snowFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;rainFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;evaporationFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;seaIceFreshWaterFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;landIceFreshwaterFlux&#39;</span><span class="p">]</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">,</span> <span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
 
-<span class="c1"># A list of pairs of minimum and maximum depths (positive up, in meters) to</span>
-<span class="c1"># include in the vertical sums.  The default values are the equivalents of the</span>
-<span class="c1"># default ranges of the timeSeriesOHCAnomaly task, with a value of -10,000 m</span>
-<span class="c1"># intended to be well below the bottom of the ocean for all existing MPAS-O</span>
-<span class="c1"># meshes.</span>
-<span class="n">depthRanges</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">700.0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mf">700.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2000.0</span><span class="p">),</span>
-               <span class="p">(</span><span class="o">-</span><span class="mf">2000.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">)]</span>
+<span class="c1"># comparison grid(s) on which to plot analysis</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
+<p>By default, a “preindustrial” climatology is computed for comparison with the
+model results.  For simulations covering a different time period, the range of
+years (<code class="docutils literal notranslate"><span class="pre">obsStartYear</span></code> and <code class="docutils literal notranslate"><span class="pre">obsEndYear</span></code>) should be updated.</p>
 <dl class="simple">
-<dt>For more details, see:</dt><dd><ul class="simple">
+<dt>For details on the remaining configuration options, see:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
 <li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
 <li><p><a class="reference internal" href="../config/comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
 </ul>
 </dd>
 </dl>
-<p>The option <code class="docutils literal notranslate"><span class="pre">depthRange</span></code> is a list of upper and lower bounds in meters over
-which to integrate the heat content.</p>
+</section>
+<section id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
+<p>None available.</p>
 </section>
 <section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading">¶</a></h2>
-<a class="reference internal image-reference" href="../../_images/clim_ohc.png"><img alt="../../_images/clim_ohc.png" class="align-center" src="../../_images/clim_ohc.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../_images/seaIceFreshWaterFlux.png"><img alt="../../_images/seaIceFreshWaterFlux.png" class="align-center" src="../../_images/seaIceFreshWaterFlux.png" style="width: 500px;" /></a>
 </section>
 </section>
 
@@ -220,8 +227,8 @@ which to integrate the heat content.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="climatologyMapEKE.html" class="btn btn-neutral float-left" title="climatologyMapEKE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="climatologyMapSose.html" class="btn btn-neutral float-right" title="climatologyMapSose" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../analysis_tasks.html" class="btn btn-neutral float-left" title="Analysis Tasks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="climatologyMapHeatFluxes.html" class="btn btn-neutral float-right" title="climatologyMapHeatFluxes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -110,14 +110,11 @@
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
-
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
-    <span class="n">RemapObservedClimatologySubtask</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
 
@@ -126,7 +123,8 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapFluxes.html#mpas_analysis.ocean.ClimatologyMapFluxes">[docs]</a>
 <span class="k">class</span> <span class="nc">ClimatologyMapFluxes</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An analysis task for plotting sea surface fluxes</span>
+<span class="sd">    An analysis task for plotting sea surface fluxes. Observational comparison</span>
+<span class="sd">    is not supported because no observational datasets are currently available.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -134,7 +132,8 @@
 
 <div class="viewcode-block" id="ClimatologyMapFluxes.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapFluxes.html#mpas_analysis.ocean.ClimatologyMapFluxes.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">fluxType</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -148,64 +147,78 @@
 
 <span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
+
+<span class="sd">        fluxType : str, optional</span>
+<span class="sd">            The type of surface fluxes, which corresponds to a different config</span>
+<span class="sd">            section. One of &#39;mass&#39; or &#39;heat&#39;.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Carolyn Begeman</span>
 
+        <span class="n">taskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;climatologyMap</span><span class="si">{</span><span class="n">fluxType</span><span class="o">.</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s1">Fluxes&#39;</span>
+        <span class="n">groupLink</span> <span class="o">=</span> <span class="n">taskName</span>
+
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapFluxes</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;climatologyMapFluxes&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;fluxes&#39;</span><span class="p">])</span>
-
-        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;fluxes&#39;</span><span class="p">,</span> <span class="n">fluxType</span><span class="p">])</span>
 
         <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of seasons&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
 
-        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+        <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span>
                                                    <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of comparison grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">taskName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
         <span class="c1"># the variable mpasFieldName will be added to mpasClimatologyTask</span>
         <span class="c1"># along with the seasons.</span>
-        <span class="n">variableList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
-        <span class="n">unitsLabels</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">mpasVariableList</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">remapClimatologySubtasks</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">groupLink</span> <span class="o">=</span> <span class="s1">&#39;ocnfluxclimo&#39;</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variableList</span><span class="p">:</span>
 
-            <span class="n">unitsLabels</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;kg m$^2$ s^${-1}$&#39;</span>
             <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeMonthly_avg_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">mpasVariableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mpasFieldName</span><span class="p">)</span>
 
-            <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
-                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatologyName</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
-                <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
-                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
-                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
-                <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">,</span>
-                <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;remap_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1"># TemperatureFlux variables have different units and need to be</span>
+            <span class="c1"># converted to the units of heat flux variables to be compared</span>
+            <span class="k">if</span> <span class="s1">&#39;TemperatureFlux&#39;</span> <span class="ow">in</span> <span class="n">variable</span><span class="p">:</span>
+                <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasTemperatureFluxClimatology</span><span class="p">(</span>
+                    <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">climatologyName</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                    <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+                    <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                    <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                    <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">,</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;remap_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_&#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;TemperatureFlux&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;HeatFlux&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
+                    <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">climatologyName</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                    <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
+                    <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
+                    <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+                    <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">,</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;remap_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="n">variable</span>
             <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">refFieldName</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
-
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
                 <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
@@ -213,20 +226,30 @@
                 <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
             <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
-                <span class="n">galleryName</span> <span class="o">=</span> <span class="n">variable</span>
-                <span class="n">unitsLabel</span> <span class="o">=</span> <span class="n">unitsLabels</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
                 <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
                     <span class="c1"># make a new subtask for this season and comparison grid</span>
                     <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot_</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
                     <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
                     <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtasks</span><span class="p">[</span><span class="n">variable</span><span class="p">],</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span> <span class="n">remapClimatologySubtask</span><span class="p">,</span>
                         <span class="n">remapObservationsSubtask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">,</span>
                         <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
+                    <span class="k">if</span> <span class="s1">&#39;TemperatureFlux&#39;</span> <span class="ow">in</span> <span class="n">variable</span><span class="p">:</span>
+                        <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="n">variable</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;TemperatureFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;HeatFlux&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="n">variable</span>
+
+                    <span class="k">if</span> <span class="s1">&#39;HeatFlux&#39;</span> <span class="ow">in</span> <span class="n">mpasFieldName</span><span class="p">:</span>
+                        <span class="n">groupSubtitle</span> <span class="o">=</span> <span class="s1">&#39;Heat fluxes&#39;</span>
+                        <span class="n">unitsLabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;W m$^{-2}$&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">groupSubtitle</span> <span class="o">=</span> <span class="s1">&#39;Mass fluxes&#39;</span>
+                        <span class="n">unitsLabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-2}$ s^${-1}$&#39;</span>
+
                     <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                         <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
-                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
                         <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
                         <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                         <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
@@ -234,13 +257,65 @@
                         <span class="n">unitsLabel</span><span class="o">=</span><span class="n">unitsLabel</span><span class="p">,</span>
                         <span class="n">imageCaption</span><span class="o">=</span><span class="n">variable</span><span class="p">,</span>
                         <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;surface fluxes&#39;</span><span class="p">,</span>
-                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="s1">&#39;Mass fluxes&#39;</span><span class="p">,</span>
+                        <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                         <span class="n">groupLink</span><span class="o">=</span><span class="n">groupLink</span><span class="p">,</span>
                         <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
 </div>
 
+
+<span class="c1"># adds to the functionality of RemapMpasClimatology</span>
+<span class="k">class</span> <span class="nc">RemapMpasTemperatureFluxClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of heat flux from temperature flux</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Carolyn Begeman</span>
+
+    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct velocity magnitude as part of the climatology</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the climatology data set</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : ``xarray.Dataset`` object</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Carolyn Begeman</span>
+
+        <span class="c1"># first, call the base class&#39;s version of this function so we extract</span>
+        <span class="c1"># the desired slices.</span>
+        <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasTemperatureFluxClimatology</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">customize_masked_climatology</span><span class="p">(</span><span class="n">climatology</span><span class="p">,</span>
+                                                               <span class="n">season</span><span class="p">)</span>
+
+        <span class="c1"># calculate heat flux from temperature flux</span>
+        <span class="n">scaleFactor</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">rho_sw</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">cp_sw</span>  <span class="c1"># C m s^-1 to W m^-2</span>
+        <span class="n">heatFlux</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">scaleFactor</span> <span class="o">*</span> <span class="n">climatology</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span>
+        <span class="c1"># drop unnecessary fields before re-mapping</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="n">variable</span><span class="p">])</span>
+
+        <span class="c1"># this creates a variable with heat flux units in climatology (like netcdf)</span>
+        <span class="n">variable</span> <span class="o">=</span> <span class="n">variable</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;TemperatureFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;HeatFlux&#39;</span><span class="p">)</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span> <span class="o">=</span> <span class="n">heatFlux</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;W m$^[-2]$&#39;</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="n">variable</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">variable</span><span class="si">}</span><span class="s1"> converted to heat flux&#39;</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
 </pre></div>
 
            </div>
