@@ -468,9 +468,11 @@ class ConservationTask(AnalysisTask):
                 lineStyles.append(lineStylesBase[index])
 
         lineWidths = [3 for i in fields]
-        if config.has_option('timeSeries', 'movingAveragePoints'):
-            movingAveragePoints = config.getint('timeSeries',
-                                                'movingAveragePoints')
+        if config.has_option('timeSeriesConservation', 'movingAveragePoints'):
+            # We assume here that movingAveragePoints is given in months
+            # and conservation output has daily frequency
+            movingAveragePoints = \
+                config.getint('timeSeriesConservation', 'movingAveragePoints')
         else:
             movingAveragePoints = None
 
