@@ -54,7 +54,7 @@ def main():
         simulation = '20200305.A_WCYCL1850.ne4_oQU480.anvil'
         mesh = 'QU480'
     else:
-        simulation = '20230406.GMPAS-IAF-ISMF.T62_oQU240wLI.chrysalis'
+        simulation = '20240718.GMPAS-IAF-PISMF.T62_oQU240wLI.chrysalis'
         mesh = 'oQU240wLI'
     if machine in ['anvil', 'chrysalis']:
         input_base = '/lcrc/group/e3sm/public_html/diagnostics/mpas_analysis/example_simulations'
