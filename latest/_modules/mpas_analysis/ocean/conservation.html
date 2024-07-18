@@ -572,9 +572,11 @@
                 <span class="n">lineStyles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lineStylesBase</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
 
         <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">):</span>
-            <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
-                                                <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeriesConservation&#39;</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">):</span>
+            <span class="c1"># We assume here that movingAveragePoints is given in months</span>
+            <span class="c1"># and conservation output has daily frequency</span>
+            <span class="n">movingAveragePoints</span> <span class="o">=</span> \
+                <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesConservation&#39;</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="kc">None</span>
 
