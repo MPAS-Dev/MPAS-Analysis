@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.ClimatologyMapSSH &mdash; MPAS-Analysis latest documentation</title>
+  <title>mpas_analysis.ocean.ClimatologyMapVel &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
 
@@ -19,8 +19,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="mpas_analysis.ocean.ClimatologyMapEKE" href="mpas_analysis.ocean.ClimatologyMapEKE.html" />
-    <link rel="prev" title="mpas_analysis.ocean.ClimatologyMapMLDMinMax" href="mpas_analysis.ocean.ClimatologyMapMLDMinMax.html" /> 
+    <link rel="next" title="mpas_analysis.ocean.ClimatologyMapArgoTemperature" href="mpas_analysis.ocean.ClimatologyMapArgoTemperature.html" />
+    <link rel="prev" title="mpas_analysis.ocean.ClimatologyMapSose" href="mpas_analysis.ocean.ClimatologyMapSose.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -66,13 +66,13 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSSS.html">mpas_analysis.ocean.ClimatologyMapSSS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapMLD.html">mpas_analysis.ocean.ClimatologyMapMLD</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapMLDMinMax.html">mpas_analysis.ocean.ClimatologyMapMLDMinMax</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.ClimatologyMapSSH</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSSH.html">mpas_analysis.ocean.ClimatologyMapSSH</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapEKE.html">mpas_analysis.ocean.ClimatologyMapEKE</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapFluxes.html">mpas_analysis.ocean.ClimatologyMapFluxes</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html">mpas_analysis.ocean.ClimatologyMapOHCAnomaly</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html">mpas_analysis.ocean.ClimatologyMapAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapSose.html">mpas_analysis.ocean.ClimatologyMapSose</a></li>
-<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapVel.html">mpas_analysis.ocean.ClimatologyMapVel</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.ClimatologyMapVel</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapArgoTemperature.html">mpas_analysis.ocean.ClimatologyMapArgoTemperature</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapArgoSalinity.html">mpas_analysis.ocean.ClimatologyMapArgoSalinity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.ClimatologyMapWaves.html">mpas_analysis.ocean.ClimatologyMapWaves</a></li>
@@ -132,9 +132,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
-      <li class="breadcrumb-item active">mpas_analysis.ocean.ClimatologyMapSSH</li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.ClimatologyMapVel</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/developers_guide/generated/mpas_analysis.ocean.ClimatologyMapSSH.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/developers_guide/generated/mpas_analysis.ocean.ClimatologyMapVel.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -142,16 +142,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="mpas-analysis-ocean-climatologymapssh">
-<h1>mpas_analysis.ocean.ClimatologyMapSSH<a class="headerlink" href="#mpas-analysis-ocean-climatologymapssh" title="Link to this heading">¶</a></h1>
+  <section id="mpas-analysis-ocean-climatologymapvel">
+<h1>mpas_analysis.ocean.ClimatologyMapVel<a class="headerlink" href="#mpas-analysis-ocean-climatologymapvel" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapSSH">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapSSH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ssh.html#ClimatologyMapSSH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapSSH" title="Link to this definition">¶</a></dt>
-<dd><p>An analysis task for comparison of sea surface height (ssh) against
-observations</p>
+<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapVel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.ocean.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapVel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_vel.html#ClimatologyMapVel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapVel" title="Link to this definition">¶</a></dt>
+<dd><p>An analysis task for comparison of antarctic field against the Southern
+Ocean State Estimate</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapSSH.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_ssh.html#ClimatologyMapSSH.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapSSH.__init__" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="mpas_analysis.ocean.ClimatologyMapVel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/ocean/climatology_map_vel.html#ClimatologyMapVel.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.ocean.ClimatologyMapVel.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Construct the analysis task.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -167,7 +167,7 @@ observations</p>
 <p class="rubric">Methods</p>
 <table class="autosummary longtable docutils align-default">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapSSH.__init__" title="mpas_analysis.ocean.ClimatologyMapSSH.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpasClimatologyTask[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#mpas_analysis.ocean.ClimatologyMapVel.__init__" title="mpas_analysis.ocean.ClimatologyMapVel.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(config, mpasClimatologyTask[, ...])</p></td>
 <td><p>Construct the analysis task.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_subtask</span></code>(subtask)</p></td>
@@ -266,8 +266,8 @@ observations</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="mpas_analysis.ocean.ClimatologyMapMLDMinMax.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.ClimatologyMapMLDMinMax" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mpas_analysis.ocean.ClimatologyMapEKE.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.ClimatologyMapEKE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpas_analysis.ocean.ClimatologyMapSose.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.ClimatologyMapSose" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.ocean.ClimatologyMapArgoTemperature.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.ClimatologyMapArgoTemperature" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

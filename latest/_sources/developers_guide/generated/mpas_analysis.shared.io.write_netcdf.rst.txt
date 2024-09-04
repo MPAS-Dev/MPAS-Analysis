@@ -4,26 +4,9 @@
 .. automodule:: mpas_analysis.shared.io.write_netcdf
 
    
-   
-   
-
-   
-   
    .. rubric:: Functions
 
    .. autosummary::
    
       write_netcdf_with_fill
    
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
