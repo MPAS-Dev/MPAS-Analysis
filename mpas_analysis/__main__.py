@@ -153,6 +153,9 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.ClimatologyMapEKE(config,
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))
+    analyses.append(ocean.ClimatologyMapVel(config,
+                                            oceanClimatologyTasks['avg'],
+                                            controlConfig))
     analyses.append(ocean.ClimatologyMapBSF(config,
                                             oceanClimatologyTasks['avg'],
                                             controlConfig))

@@ -72,6 +72,7 @@ Ocean tasks
    ClimatologyMapOHCAnomaly
    ClimatologyMapAntarcticMelt
    ClimatologyMapSose
+   ClimatologyMapVel
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    ClimatologyMapWaves

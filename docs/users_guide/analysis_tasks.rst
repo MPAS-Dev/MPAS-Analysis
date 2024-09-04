@@ -14,6 +14,7 @@ Analysis Tasks
    tasks/climatologyMapEKE
    tasks/climatologyMapOHCAnomaly
    tasks/climatologyMapSose
+   tasks/climatologyMapVel
    tasks/climatologyMapBGC
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapArgoSalinity

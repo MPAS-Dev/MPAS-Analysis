@@ -1,4 +1,5 @@
 from mpas_analysis.ocean.climatology_map_sst import ClimatologyMapSST
+from mpas_analysis.ocean.climatology_map_vel import ClimatologyMapVel
 from mpas_analysis.ocean.climatology_map_mld import ClimatologyMapMLD
 from mpas_analysis.ocean.climatology_map_mld_min_max import \
     ClimatologyMapMLDMinMax
