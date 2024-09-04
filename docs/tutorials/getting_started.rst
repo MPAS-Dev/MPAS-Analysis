@@ -77,7 +77,7 @@ install the latest version of the ``mpas-analysis`` package into it:
 
 .. code-block:: bash
 
-   $ conda create -n mpas-analysis python=3.8 mpas-analysis
+   $ conda create -n mpas-analysis python=3.12 mpas-analysis
 
 1.3 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
