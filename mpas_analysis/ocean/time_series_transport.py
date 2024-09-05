@@ -577,6 +577,8 @@ class PlotTransportSubtask(AnalysisTask):
                    'Davis Strait': [-1.6, -3.6],
                    'Barents Sea Opening': [1.4, 2.6],
                    'Nares Strait': [-1.8, 0.2],
+                   'OSNAP section East': [15.6 - 0.8, 15.6 + 0.8],
+                   'OSNAP section West': [2.1 - 0.3, 2.1 + 0.3],
                    'Denmark Strait': None,
                    'Iceland-Faroe-Scotland': None}
 
