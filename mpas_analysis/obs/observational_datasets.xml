@@ -1605,11 +1605,7 @@
       ocean
     </component>
     <description>
-<<<<<<< HEAD
       OSNAP is designed to provide a continuous record of the full-water 
-=======
-      OSNAP was designed to provide a continuous record of the full-water 
->>>>>>> 300a3f1b (PR review changes)
       column, trans-basin fluxes of heat, mass and freshwater in the subpolar 
       North Atlantic. It consists of two legs: one extending from southern 
       Labrador to the southwestern tip of Greenland across the mouth of the 
