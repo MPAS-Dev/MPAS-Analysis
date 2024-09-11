@@ -16,8 +16,6 @@ from mpas_analysis.ocean.plot_transect_subtask import PlotTransectSubtask
 
 from mpas_analysis.shared.io.utility import build_obs_path
 
-from collections import OrderedDict
-
 
 class OsnapTransects(AnalysisTask):
     """
@@ -42,12 +40,12 @@ class OsnapTransects(AnalysisTask):
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
         """
         # Authors
         # -------
-        # Xylar Asay-Davis
+        # Alice Barthel
 
         tags = ['climatology', 'transect', 'osnap', 'publicObs', 'arctic']
 
