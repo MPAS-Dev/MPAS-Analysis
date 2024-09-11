@@ -225,10 +225,10 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.WoceTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
-    analyses.append(ocean.OsnapTransects(config, oceanClimatolgyTasks['avg'],
+    analyses.append(ocean.OsnapTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
     
-    analyses.append(ocean.SoseTransects(config, oceanClimatolgyTasks['avg'],
+    analyses.append(ocean.SoseTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
     analyses.append(ocean.GeojsonTransects(config,
