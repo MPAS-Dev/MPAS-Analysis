@@ -20,8 +20,7 @@ The following configuration options are available for this task::
     [osnapTransects]
     ## options related to plotting model vs. OSNAP transects.
 
-    # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
-    # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+    # Times for comparison times (JFM, JAS, ANN)
     seasons =  ['ANN']
 
     # The approximate horizontal resolution (in km) of each transect.  Latitude/
