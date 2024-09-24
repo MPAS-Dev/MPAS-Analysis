@@ -57,7 +57,7 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda create -y -n mpas_dev --file dev-spec.txt
 conda activate mpas_dev
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 ```
 
 If you are developing another conda package at the same time (this is common
@@ -69,9 +69,9 @@ conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
     --file analysis/MPAS-Analysis/dev-spec.txt
 conda activate mpas_dev
 cd tools/MPAS-Tools/conda_package
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 cd ../../../analysis/MPAS-Analysis
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 ```
 Obviously, the paths to the repos may be different in your local clones.  With
 the `mpas_dev` environment as defined above, you can make changes to both
