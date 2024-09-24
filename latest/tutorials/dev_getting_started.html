@@ -345,7 +345,7 @@ setting up the conda environment on your laptop.</p>
 <p>Then, you can activate the environment and install MPAS-Analysis in “edit”
 mode by running:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
-$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>In this mode, any edits you make to the code in the worktree will be available
@@ -355,7 +355,7 @@ it will know about the changes.</p>
 <p class="admonition-title">Note</p>
 <p>If you add or remove files in the code, you will need to re-install
 MPAS-Analysis in the conda environment by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </div>
@@ -383,7 +383,7 @@ alias for this step if you defined one.</p>
 process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment.  If you know that
 the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>,
 You can just reinstall <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> itself by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>in the new worktree.  If you forget this step, you will find that changes you

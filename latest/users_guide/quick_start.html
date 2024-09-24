@@ -143,7 +143,7 @@ environment):</p>
 conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
 conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt
 conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>If you are developing another conda package at the same time (this is common
@@ -154,9 +154,9 @@ development environment, e.g.:</p>
 <span class="w">    </span>--file<span class="w"> </span>analysis/MPAS-Analysis/dev-spec.txt
 conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
 <span class="nb">cd</span><span class="w"> </span>tools/MPAS-Tools/conda_package
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 <span class="nb">cd</span><span class="w"> </span>../../../analysis/MPAS-Analysis
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>Obviously, the paths to the repos may be different in your local clones.  With
