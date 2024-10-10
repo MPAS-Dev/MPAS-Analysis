@@ -512,19 +512,14 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = config.getexpression(sectionName, 'variables')
+        variables = _get_variables_list(config, sectionName)
 
         variableList = {'timeMonthly_avg_layerThickness'}
 
         for var in variables:
             mpas_var = var['mpas']
-            if mpas_var == 'none':
-                continue
-            if isinstance(mpas_var, (list, tuple)):
-                for v in mpas_var:
-                    variableList.add(v)
-            else:
-                variableList.add(mpas_var)
+            for v in mpas_var:
+                variableList.add(v)
 
         outputExists = os.path.exists(outFileName)
         outputValid = outputExists
@@ -601,7 +596,10 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                         description = 'potential temperature minus the ' \
                                       'potential freezing temperature'
                     else:
-                        mpasVarName = var['mpas']
+                        mpasVarNames = var['mpas']
+                        assert len(mpasVarNames) == 1
+                        mpasVarName = mpasVarNames[0]
+
                         timeSeries = \
                             dsIn[mpasVarName].where(cellMask, drop=True)
                         units = timeSeries.units
@@ -1105,8 +1103,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTimeSeriesSubtask, self).setup_and_check()
 
-        self.variables = self.config.getexpression(self.sectionName,
-                                                   'variables')
+        self.variables = _get_variables_list(self.config, self.sectionName)
 
         self.xmlFileNames = []
         for var in self.variables:
@@ -1281,3 +1278,29 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 thumbnailDescription=self.regionName,
                 imageDescription=caption,
                 imageCaption=caption)
+
+
+def _get_variables_list(config, sectionName):
+    """
+    Get a list of dict of variables for the given region
+    """
+    availableVariables = config.getexpression('timeSeriesOceanRegions',
+                                              'availableVariables')
+
+    variableList = config.getexpression(sectionName, 'variables')
+
+    variables = []
+
+    for varName in variableList:
+        found = False
+        for var in availableVariables:
+            if varName == var['name']:
+                found = True
+                break
+        if not found:
+            raise ValueError(f'Did not find {varName} in config option '
+                             f'availableVariables in '
+                             f'[timeSeriesOceanRegions]')
+        variables.append(var)
+
+    return variables
