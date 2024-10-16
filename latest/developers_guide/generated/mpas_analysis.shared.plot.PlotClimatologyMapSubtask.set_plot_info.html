@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -34,9 +32,6 @@
           <a href="../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -141,25 +136,25 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
-<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
-<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
-<li><p><strong>refFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the variable to use from the observations or reference
+<li><p><strong>outFileLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The prefix on each plot and associated XML file</p></li>
+<li><p><strong>fieldNameInTitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the field being plotted, as used in the plot title</p></li>
+<li><p><strong>mpasFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the variable in the MPAS timeSeriesStatsMonthly output</p></li>
+<li><p><strong>refFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the variable to use from the observations or reference
 file</p></li>
-<li><p><strong>refTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the title of the observations or reference subplot</p></li>
-<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
-<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
+<li><p><strong>refTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the title of the observations or reference subplot</p></li>
+<li><p><strong>unitsLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the units of the plotted field, to be displayed on color bars</p></li>
+<li><p><strong>imageCaption</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the caption when mousing over the plot or displaying it full
 screen</p></li>
-<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
-<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>None</em>) – the subtitle of the group in which this plot belongs (or blank
+<li><p><strong>galleryGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the name of the group of galleries in which this plot belongs</p></li>
+<li><p><strong>groupSubtitle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>None</em>) – the subtitle of the group in which this plot belongs (or blank
 if none)</p></li>
-<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
-<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>None</em>) – the name of the gallery in which this plot belongs</p></li>
-<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
-<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the name of the section where the color map and range is defined,
+<li><p><strong>groupLink</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – a short name (with no spaces) for the link to the gallery group</p></li>
+<li><p><strong>galleryName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>None</em>) – the name of the gallery in which this plot belongs</p></li>
+<li><p><strong>diffTitleLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the title of the difference subplot</p></li>
+<li><p><strong>configSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the name of the section where the color map and range is defined,
 default is the name of the task</p></li>
-<li><p><strong>maskMinThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value below which the field is mask out in plots</p></li>
-<li><p><strong>maskMaxThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value above which the field is mask out in plots</p></li>
+<li><p><strong>maskMinThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value below which the field is mask out in plots</p></li>
+<li><p><strong>maskMaxThreshold</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – a value above which the field is mask out in plots</p></li>
 <li><p><strong>extend</strong> (<em>{'neither'</em><em>, </em><em>'both'</em><em>, </em><em>'min'</em><em>, </em><em>'max'}</em><em>, </em><em>optional</em>) – Determines the <code class="docutils literal notranslate"><span class="pre">contourf</span></code>-coloring of values that are outside the
 range of the levels provided if using an indexed colormap.</p></li>
 </ul>

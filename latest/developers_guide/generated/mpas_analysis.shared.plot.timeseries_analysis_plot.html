@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.timeseries_analysis_plot &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -34,9 +32,6 @@
           <a href="../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -143,45 +138,45 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>instance</em><em> of </em><em>ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>dsvalues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>xarray DataSets</em>) – the data set(s) to be plotted</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the title of the plot</p></li>
-<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – axis labels</p></li>
-<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – axis labels</p></li>
-<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of time points over which to perform a moving average</p></li>
-<li><p><strong>lineColors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
+<li><p><strong>dsvalues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>xarray DataSets</em>) – the data set(s) to be plotted</p></li>
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the title of the plot</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – axis labels</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – axis labels</p></li>
+<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the calendar to use for formatting the time axis</p></li>
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the number of time points over which to perform a moving average</p></li>
+<li><p><strong>lineColors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
 text.  Default is black, solid line with no marker, and no legend.</p></li>
-<li><p><strong>lineStyles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
+<li><p><strong>lineStyles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
 text.  Default is black, solid line with no marker, and no legend.</p></li>
-<li><p><strong>markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
+<li><p><strong>markers</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
 text.  Default is black, solid line with no marker, and no legend.</p></li>
-<li><p><strong>legendText</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
+<li><p><strong>legendText</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – control line color, style, marker, and corresponding legend
 text.  Default is black, solid line with no marker, and no legend.</p></li>
-<li><p><strong>lineWidths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – control line width.  Default is 1.0.</p></li>
-<li><p><strong>maxPoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>{None</em><em>, </em><em>int}</em><em>, </em><em>optional</em>) – the approximate maximum number of time points to use in a time series.
+<li><p><strong>lineWidths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – control line width.  Default is 1.0.</p></li>
+<li><p><strong>maxPoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>{None</em><em>, </em><em>int}</em><em>, </em><em>optional</em>) – the approximate maximum number of time points to use in a time series.
 This can be helpful for reducing the number of symbols plotted if
 plotting with markers.  Otherwise the markers become indistinguishable
 from each other.</p></li>
-<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the size of the title font</p></li>
-<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
-<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.12)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – the size of the figure in inches</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the size of the title font</p></li>
+<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – the size of the figure in inches</p></li>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
 option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
-<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
+<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
 entry is the first tick.</p></li>
-<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
+<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
 automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p></li>
-<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the x axis.
+<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the x axis.
 This may need to be adjusted depending on the figure size and aspect
 ratio.</p></li>
-<li><p><strong>obsMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Mean values and uncertainties for observations to be plotted as error
+<li><p><strong>obsMean</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Mean values and uncertainties for observations to be plotted as error
 bars. The two lists must have the same number of elements.</p></li>
-<li><p><strong>obsUncertainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Mean values and uncertainties for observations to be plotted as error
+<li><p><strong>obsUncertainty</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – Mean values and uncertainties for observations to be plotted as error
 bars. The two lists must have the same number of elements.</p></li>
-<li><p><strong>obsLegend</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The label in the legend for each element in <code class="docutils literal notranslate"><span class="pre">obsMean</span></code> (and
+<li><p><strong>obsLegend</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The label in the legend for each element in <code class="docutils literal notranslate"><span class="pre">obsMean</span></code> (and
 <code class="docutils literal notranslate"><span class="pre">obsUncertainty</span></code>)</p></li>
-<li><p><strong>legendLocation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p></li>
-<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the maximum number of characters in the title, beyond which it is
+<li><p><strong>legendLocation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The location of the legend (see <code class="docutils literal notranslate"><span class="pre">pyplot.legend()</span></code> for details)</p></li>
+<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the maximum number of characters in the title, beyond which it is
 truncated with a trailing ellipsis.  The default is from the
 <code class="docutils literal notranslate"><span class="pre">maxTitleLength</span></code> config option.</p></li>
 </ul>

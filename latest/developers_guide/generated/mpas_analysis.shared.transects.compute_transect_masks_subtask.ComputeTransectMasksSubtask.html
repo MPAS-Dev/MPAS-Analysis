@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.transects.compute_transect_masks_subtask.ComputeTransectMasksSubtask &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -34,9 +32,6 @@
           <a href="../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -134,10 +129,10 @@ features</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>aggregationFunction</strong> (<em>callable</em>) – An aggregation function returned by
 <code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_region_by_name()</span></code></p></li>
-<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
+<li><p><strong>geojsonFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A geojson file, typically from the MPAS <code class="docutils literal notranslate"><span class="pre">geometric_features</span></code>
 repository, defining the shapes to be masked</p></li>
-<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
-<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of the output mask file</p></li>
+<li><p><strong>outFileSuffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The suffix for the resulting mask file</p></li>
+<li><p><strong>maskFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of the output mask file</p></li>
 </ul>
 </dd>
 </dl>
@@ -151,9 +146,9 @@ repository, defining the shapes to be masked</p></li>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The name of a transect group, see
+<li><p><strong>transectGroup</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The name of a transect group, see
 <code class="xref py py-func docutils literal notranslate"><span class="pre">mpas_analysis.shared.transects.get_transect_info()</span></code></p></li>
-<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask, default
+<li><p><strong>subprocessCount</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The number of processes that can be used to make the mask, default
 is as many processes as allowed</p></li>
 </ul>
 </dd>

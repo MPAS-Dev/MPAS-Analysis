@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -5,16 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.__main__ &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -31,9 +29,6 @@
           <a href="../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -237,14 +232,6 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapSST</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                             <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                             <span class="n">controlConfig</span><span class="p">))</span>
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapFluxes</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
-                                               <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
-                                               <span class="n">controlConfig</span><span class="p">,</span>
-                                               <span class="n">fluxType</span><span class="o">=</span><span class="s1">&#39;mass&#39;</span><span class="p">))</span>
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapFluxes</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
-                                               <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
-                                               <span class="n">controlConfig</span><span class="p">,</span>
-                                               <span class="n">fluxType</span><span class="o">=</span><span class="s1">&#39;heat&#39;</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapSSS</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                             <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                             <span class="n">controlConfig</span><span class="p">))</span>
@@ -252,9 +239,6 @@
                                             <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                             <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapEKE</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
-                                            <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
-                                            <span class="n">controlConfig</span><span class="p">))</span>
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapVel</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
                                             <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                             <span class="n">controlConfig</span><span class="p">))</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">ClimatologyMapBSF</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
@@ -551,14 +535,11 @@
                                              <span class="n">verbose</span><span class="p">,</span> <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">totalFailures</span> <span class="o">+=</span> <span class="n">failureCount</span>
         <span class="k">if</span> <span class="n">prereq</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">failureCount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error: prerequisite </span><span class="si">{</span><span class="n">prereq</span><span class="o">.</span><span class="n">printTaskName</span><span class="si">}</span><span class="s1"> of &#39;</span>
-                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">taskTitle</span><span class="si">}</span><span class="s1"> did not set up successfully but also &#39;</span>
-                                  <span class="s1">&#39;did not indicate a failure.  This likely indicates &#39;</span>
-                                  <span class="s1">&#39;a bug like multiple tasks with the same name.&#39;</span><span class="p">)</span>
+            <span class="k">assert</span><span class="p">(</span><span class="n">failureCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
             <span class="c1"># a prereq failed setup_and_check</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: prerequisite of </span><span class="si">{</span><span class="n">taskTitle</span><span class="si">}</span><span class="s1"> failed during check, &#39;</span>
-                  <span class="s1">&#39;so this task will not be run&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: prerequisite of </span><span class="si">{}</span><span class="s2"> failed during check, &quot;</span>
+                  <span class="s2">&quot;so this task will not be run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                      <span class="n">taskTitle</span><span class="p">))</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
             <span class="n">totalFailures</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">totalFailures</span>
@@ -584,14 +565,11 @@
                                              <span class="n">verbose</span><span class="p">,</span> <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">totalFailures</span> <span class="o">+=</span> <span class="n">failureCount</span>
         <span class="k">if</span> <span class="n">subtask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">failureCount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Error: subtask </span><span class="si">{</span><span class="n">subtask</span><span class="o">.</span><span class="n">printTaskName</span><span class="si">}</span><span class="s1"> of &#39;</span>
-                                  <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">taskTitle</span><span class="si">}</span><span class="s1"> did not set up successfully but also &#39;</span>
-                                  <span class="s1">&#39;did not indicate a failure.  This likely indicates &#39;</span>
-                                  <span class="s1">&#39;a bug like multiple tasks with the same name.&#39;</span><span class="p">)</span>
+            <span class="k">assert</span><span class="p">(</span><span class="n">failureCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
             <span class="c1"># a subtask failed setup_and_check</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: subtask of </span><span class="si">{</span><span class="n">taskTitle</span><span class="si">}</span><span class="s1"> failed during check, &#39;</span>
-                  <span class="s1">&#39;so this task will not be run&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: subtask of </span><span class="si">{}</span><span class="s2"> failed during check, &quot;</span>
+                  <span class="s2">&quot;so this task will not be run&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                      <span class="n">taskTitle</span><span class="p">))</span>
             <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
             <span class="n">totalFailures</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">totalFailures</span>

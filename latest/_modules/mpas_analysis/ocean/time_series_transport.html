@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
@@ -5,16 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.time_series_transport &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -31,9 +29,6 @@
           <a href="../../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -163,7 +158,7 @@
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">TimeSeriesTransport</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
@@ -172,45 +167,41 @@
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
         <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
 
-        <span class="n">transportGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span> <span class="s1">&#39;transportGroups&#39;</span><span class="p">)</span>
-
         <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">year</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-        <span class="k">for</span> <span class="n">transportGroup</span> <span class="ow">in</span> <span class="n">transportGroups</span><span class="p">:</span>
-            <span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;transectsToPlot&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="k">return</span>
 
-            <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectMasksSubtask</span><span class="p">(</span>
-                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">transectGroup</span><span class="o">=</span><span class="n">transportGroup</span><span class="p">)</span>
+        <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
+                                               <span class="s1">&#39;transectsToPlot&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
 
-            <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_transect_names</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">)</span>
-            <span class="n">transportTransectFileName</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span>
+        <span class="n">masksSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectMasksSubtask</span><span class="p">(</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">transectGroup</span><span class="o">=</span><span class="s1">&#39;Transport Transects&#39;</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
+        <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">expand_transect_names</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">)</span>
+        <span class="n">transportTransectFileName</span> <span class="o">=</span> <span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span>
 
-            <span class="c1"># in the end, we&#39;ll combine all the time series into one, but we</span>
-            <span class="c1"># create this task first so it&#39;s easier to tell it to run after all</span>
-            <span class="c1"># the compute tasks</span>
-            <span class="n">combineSubtask</span> <span class="o">=</span> <span class="n">CombineTransportSubtask</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span> <span class="n">startYears</span><span class="o">=</span><span class="n">years</span><span class="p">,</span> <span class="n">endYears</span><span class="o">=</span><span class="n">years</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="o">=</span><span class="n">groupSuffix</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
-            <span class="c1"># run one subtask per year</span>
-            <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
-                <span class="n">computeSubtask</span> <span class="o">=</span> <span class="n">ComputeTransportSubtask</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="n">startYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">endYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="o">=</span><span class="n">masksSubtask</span><span class="p">,</span>
-                    <span class="n">transectsToPlot</span><span class="o">=</span><span class="n">transectsToPlot</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="o">=</span><span class="n">groupSuffix</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">computeSubtask</span><span class="p">)</span>
-                <span class="n">computeSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
-                <span class="n">combineSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeSubtask</span><span class="p">)</span>
+        <span class="c1"># in the end, we&#39;ll combine all the time series into one, but we</span>
+        <span class="c1"># create this task first so it&#39;s easier to tell it to run after all</span>
+        <span class="c1"># the compute tasks</span>
+        <span class="n">combineSubtask</span> <span class="o">=</span> <span class="n">CombineTransportSubtask</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">startYears</span><span class="o">=</span><span class="n">years</span><span class="p">,</span> <span class="n">endYears</span><span class="o">=</span><span class="n">years</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">transect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">):</span>
-                <span class="n">plotTransportSubtask</span> <span class="o">=</span> <span class="n">PlotTransportSubtask</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span> <span class="n">transportTransectFileName</span><span class="p">,</span>
-                    <span class="n">transportGroup</span><span class="p">)</span>
-                <span class="n">plotTransportSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineSubtask</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTransportSubtask</span><span class="p">)</span></div>
+        <span class="c1"># run one subtask per year</span>
+        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
+            <span class="n">computeSubtask</span> <span class="o">=</span> <span class="n">ComputeTransportSubtask</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">startYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">endYear</span><span class="o">=</span><span class="n">year</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="o">=</span><span class="n">masksSubtask</span><span class="p">,</span>
+                <span class="n">transectsToPlot</span><span class="o">=</span><span class="n">transectsToPlot</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">computeSubtask</span><span class="p">)</span>
+            <span class="n">computeSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
+            <span class="n">combineSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeSubtask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">transect</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">):</span>
+            <span class="n">plotTransportSubtask</span> <span class="o">=</span> <span class="n">PlotTransportSubtask</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span> <span class="n">transportTransectFileName</span><span class="p">)</span>
+            <span class="n">plotTransportSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineSubtask</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTransportSubtask</span><span class="p">)</span></div>
 </div>
 
 
@@ -229,9 +220,6 @@
 
 <span class="sd">    transectsToPlot : list of str</span>
 <span class="sd">        A list of transects to plot</span>
-<span class="sd">    </span>
-<span class="sd">    groupSuffix : str</span>
-<span class="sd">        standard transects vs Arctic transects</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Authors</span>
@@ -239,7 +227,7 @@
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span>
-                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">transectsToPlot</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="p">):</span>
+                 <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">transectsToPlot</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -257,23 +245,21 @@
 
 <span class="sd">        transectsToPlot : list of str</span>
 <span class="sd">            A list of transects to plot</span>
-
-<span class="sd">        groupSuffix : str</span>
-<span class="sd">            standard transects vs Arctic transects</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-        <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compute</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">&#39;</span> 
+
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComputeTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeTransport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span>
+                                                                <span class="n">endYear</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
                                                   <span class="s1">&#39;subprocessCount&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
@@ -283,7 +269,6 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">transectsToPlot</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">groupSuffix</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -342,7 +327,8 @@
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">outputDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
 
         <span class="n">inputFiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
             <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
@@ -503,7 +489,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -515,25 +501,21 @@
 <span class="sd">        startYears, endYears : list of int</span>
 <span class="sd">            The beginning and end of each time series to combine</span>
 
-<span class="sd">        groupSuffix : str</span>
-<span class="sd">            standard transects vs Arctic transects</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-     
+
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">CombineTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;combine</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">TimeSeries&#39;</span><span class="p">)</span>
-        <span class="c1">#print(self.taskName, self.subtaskName)</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;combineTimeSeries&#39;</span><span class="p">)</span>
+
         <span class="bp">self</span><span class="o">.</span><span class="n">startYears</span> <span class="o">=</span> <span class="n">startYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">groupSuffix</span>
 
     <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -542,17 +524,19 @@
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span>
+
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
                                    <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">))</span>
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">outputDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
             <span class="n">inFileNames</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">):</span>
-                <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+                <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">outputDirectory</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">)</span>
                 <span class="n">inFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
 
             <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
@@ -576,10 +560,6 @@
 <span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
-<span class="sd">    transportGroup : str (with spaces)</span>
-<span class="sd">        standard transects (``Transport Transects``)</span>
-<span class="sd">        vs Arctic transects (``Arctic Transport Transects``)</span>
-<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Authors</span>
@@ -587,7 +567,7 @@
     <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">transectIndex</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
-                 <span class="n">transportTransectFileName</span><span class="p">,</span> <span class="n">transportGroup</span><span class="p">):</span>
+                 <span class="n">transportTransectFileName</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -606,29 +586,23 @@
 
 <span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-
-<span class="sd">        transportGroup : str (with spaces)</span>
-<span class="sd">            standard transects (``Transport Transects``)</span>
-<span class="sd">            vs Arctic transects (``Arctic Transport Transects``)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
-        <span class="n">transectKey</span> <span class="o">=</span> <span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;plotTransport_</span><span class="si">{</span><span class="n">transectKey</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;plotTransport_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">transportTransectFileName</span> <span class="o">=</span> <span class="n">transportTransectFileName</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transect</span> <span class="o">=</span> <span class="n">transect</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transectIndex</span> <span class="o">=</span> <span class="n">transectIndex</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span> <span class="o">=</span> <span class="n">transportGroup</span>
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -682,8 +656,6 @@
                    <span class="s1">&#39;Davis Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.6</span><span class="p">],</span>
                    <span class="s1">&#39;Barents Sea Opening&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">],</span>
                    <span class="s1">&#39;Nares Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
-                   <span class="s1">&#39;OSNAP section East&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">15.6</span> <span class="o">-</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">15.6</span> <span class="o">+</span> <span class="mf">0.8</span><span class="p">],</span>
-                   <span class="s1">&#39;OSNAP section West&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.1</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.1</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">],</span>
                    <span class="s1">&#39;Denmark Strait&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                    <span class="s1">&#39;Iceland-Faroe-Scotland&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
@@ -708,8 +680,7 @@
         <span class="n">plotControl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
                                             <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Plotting...&#39;</span><span class="p">)</span>
@@ -790,8 +761,7 @@
             <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;transporttime&#39;</span><span class="p">,</span>
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">thumbnailDescription</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
-            <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
-            <span class="n">gallery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="p">)</span>
+            <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_load_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -800,13 +770,15 @@
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
         <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
         <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
-        <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">baseDirectory</span><span class="si">}</span><span class="s1">/transport/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+
+        <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport/transport_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">baseDirectory</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">)</span>
 
         <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
         <span class="n">transport</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transectIndex</span><span class="p">)</span>

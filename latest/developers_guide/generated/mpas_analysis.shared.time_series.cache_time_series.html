@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../">
 <head>
@@ -6,16 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.time_series.cache_time_series &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -34,9 +32,6 @@
           <a href="../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -144,11 +139,11 @@ will be extracted or computed.</p></li>
 <code class="docutils literal notranslate"><span class="pre">timesInDataSet</span></code> to be computed, and <code class="docutils literal notranslate"><span class="pre">firstCall</span></code>, indicating
 whether this is the first call to the funciton (useful for printing
 progress information).</p></li>
-<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
+<li><p><strong>cacheFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The absolute path to the cache file where the times series will be
 stored</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">year</span></code> and <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate</p></li>
-<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
+<li><p><strong>yearsPerCacheUpdate</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The frequency with which the cache file is updated as the computation
 progresses.  If the computation is expensive, it may be useful to
 output the file frequently.  If not, there will be needless overhead
 in caching the file too frequently.</p></li>

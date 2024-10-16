@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
@@ -5,16 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.climatology.remap_mpas_climatology_subtask &mdash; MPAS-Analysis latest documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=7ab3649f" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
-        <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
-        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -31,9 +29,6 @@
           <a href="../../../../index.html" class="icon icon-home">
             MPAS-Analysis
           </a>
-              <div class="version">
-                latest
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -725,16 +720,16 @@
             <span class="n">parallel_exec</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span><span class="p">:</span>
-            <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
-            <span class="n">ncremapFilename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s1">_ncremap</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
-                                <span class="n">outFileName</span><span class="o">=</span><span class="n">ncremapFilename</span><span class="p">,</span>
+                                <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                 <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                                 <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
                                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
                                 <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
 
-            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">ncremapFilename</span><span class="p">)</span>
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+            <span class="n">remappedClimatology</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="n">climatologyDataSet</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
