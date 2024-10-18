@@ -75,7 +75,8 @@ jobs:
           touch .nojekyll
           # Add `index.html` to point to the `develop` branch automatically.
           printf '<meta http-equiv="refresh" content="0; url=./develop/index.html" />' > index.html
-          # Only replace `${{ github.head_ref || github.ref_name }}` docs with latest changes. Docs for releases should be untouched.
+          # Only replace docs in a directory with the destination branch name with latest changes. Docs for
+          # releases should be untouched.
           rm -rf ${{ github.head_ref || github.ref_name }}
           # don't clobber existing release versions (in case we retroactively fixed them)
           cp -r -n ../_build/html/* .
