@@ -113,14 +113,7 @@ todo_include_todos = False
 # a list of builtin themes.
 #
 
-# on_rtd is whether we are on readthedocs.org, this line of code grabbed from
-# docs.readthedocs.org
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
-
-if not on_rtd:  # only import and set the theme if we're building docs locally
-    import sphinx_rtd_theme
-    html_theme = 'sphinx_rtd_theme'
-    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -225,3 +218,9 @@ for mdFileName in glob('design_docs/*.md'):
         outFile.write(output)
 
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
+
+# -- Options sphinx-multiversion -------------------------------------------
+# Include tags like "tags/1.0.0" -- 1.7.2 doesn't build
+smv_tag_whitelist = r'^(?!1.7.2)\d+\.\d+.\d+$'
+smv_branch_whitelist = r'^(develop|main)$'
+smv_remote_whitelist = 'origin'
