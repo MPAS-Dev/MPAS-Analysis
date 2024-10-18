@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.climatology.RemapMpasClimatologySubtask.add\_comparison\_grid\_descriptor
-===============================================================================================
-
-.. currentmodule:: mpas_analysis.shared.climatology
-
-.. automethod:: RemapMpasClimatologySubtask.add_comparison_grid_descriptor

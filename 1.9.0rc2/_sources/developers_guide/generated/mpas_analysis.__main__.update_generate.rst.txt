@@ -1,6 +1,0 @@
-﻿mpas\_analysis.\_\_main\_\_.update\_generate
-============================================
-
-.. currentmodule:: mpas_analysis.__main__
-
-.. autofunction:: update_generate

@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.plot.PlotClimatologyMapSubtask.set\_plot\_info
-====================================================================
-
-.. currentmodule:: mpas_analysis.shared.plot
-
-.. automethod:: PlotClimatologyMapSubtask.set_plot_info

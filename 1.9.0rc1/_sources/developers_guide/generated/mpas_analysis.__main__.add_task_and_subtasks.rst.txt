@@ -1,6 +1,0 @@
-﻿mpas\_analysis.\_\_main\_\_.add\_task\_and\_subtasks
-====================================================
-
-.. currentmodule:: mpas_analysis.__main__
-
-.. autofunction:: add_task_and_subtasks

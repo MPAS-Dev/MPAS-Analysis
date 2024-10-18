@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.plot.plot\_global\_comparison
-===================================================
-
-.. currentmodule:: mpas_analysis.shared.plot
-
-.. autofunction:: plot_global_comparison
