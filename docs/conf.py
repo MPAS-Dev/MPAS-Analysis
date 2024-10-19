@@ -42,6 +42,9 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.viewcode',
               'sphinx.ext.napoleon']
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
+
 autosummary_generate = True
 
 # Otherwise, the Return parameter list looks different from the Parameters list
