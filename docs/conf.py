@@ -219,6 +219,12 @@ for mdFileName in glob('design_docs/*.md'):
 
 github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
 
+html_sidebars = {
+    "**": [
+        "versions.html",
+    ],
+}
+
 # -- Options sphinx-multiversion -------------------------------------------
 # Include tags like "tags/1.0.0" -- 1.7.2 doesn't build
 smv_tag_whitelist = r'^(?!1.7.2)\d+\.\d+.\d+$'
