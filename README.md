@@ -1,5 +1,4 @@
 # MPAS-Analysis
-[![Build Status](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_apis/build/status/MPAS-Dev.MPAS-Analysis?branchName=develop)](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_build/latest?definitionId=2&branchName=develop)
 
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
@@ -290,7 +289,7 @@ to be generated and is set up properly.
 
 ## Generating Documentation
 
-Create a development environment as described above in "Installation for 
+Create a development environment as described above in "Installation for
 developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```
