@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.OceanHistogram
+===================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: OceanHistogram
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OceanHistogram.__init__
+      ~OceanHistogram.add_subtask
+      ~OceanHistogram.check_analysis_enabled
+      ~OceanHistogram.check_generate
+      ~OceanHistogram.close
+      ~OceanHistogram.is_alive
+      ~OceanHistogram.join
+      ~OceanHistogram.kill
+      ~OceanHistogram.run
+      ~OceanHistogram.run_after
+      ~OceanHistogram.run_task
+      ~OceanHistogram.set_start_end_date
+      ~OceanHistogram.setup_and_check
+      ~OceanHistogram.start
+      ~OceanHistogram.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OceanHistogram.BLOCKED
+      ~OceanHistogram.FAIL
+      ~OceanHistogram.READY
+      ~OceanHistogram.RUNNING
+      ~OceanHistogram.SUCCESS
+      ~OceanHistogram.UNSET
+      ~OceanHistogram.authkey
+      ~OceanHistogram.daemon
+      ~OceanHistogram.exitcode
+      ~OceanHistogram.ident
+      ~OceanHistogram.name
+      ~OceanHistogram.pid
+      ~OceanHistogram.sentinel
+   
+   

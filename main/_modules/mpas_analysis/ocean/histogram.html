@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.histogram &mdash; MPAS-Analysis 1.11.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=7ab3649f" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../versions.html">Versions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.histogram</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.histogram</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
+<span class="c1">#</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xarray</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+    <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">decode_strings</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">compute_climatology</span><span class="p">,</span> \
+    <span class="n">get_unmasked_mpas_climatology_file_name</span>
+
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">histogram_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
+
+
+<div class="viewcode-block" id="OceanHistogram">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram">[docs]</a>
+<span class="k">class</span> <span class="nc">OceanHistogram</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a histogram of a 2-d ocean variable.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="OceanHistogram.__init__">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+                 <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
+<span class="sd">            A task for computing region masks</span>
+
+<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;oceanHistogram&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;histogram&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;regionGroups&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;variableList&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;weightList&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;weightList&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Histogram weightList is not the same &#39;</span>
+                                 <span class="s1">&#39;length as variableList&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;histogramSubdirectory&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">):</span>
+            <span class="n">make_directories</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">obsList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;obsList&#39;</span><span class="p">)</span>
+        <span class="n">obsDicts</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;AVISO&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;AVISO&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;gridName&#39;</span><span class="p">:</span> <span class="s1">&#39;Global_1.0x1.0degree&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;gridFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;SSH/zos_AVISO_L4_199210-201012_20180710.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;lonVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;latVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;sshVar&#39;</span><span class="p">:</span> <span class="s1">&#39;zos&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;pressureAdjustedSSHVar&#39;</span><span class="p">:</span> <span class="s1">&#39;zos&#39;</span><span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">regionGroup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionGroups</span><span class="p">:</span>
+            <span class="n">groupObsDicts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">mpasMasksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
+                <span class="n">regionGroup</span><span class="o">=</span><span class="n">regionGroup</span><span class="p">)</span>
+            <span class="n">regionNames</span> <span class="o">=</span> <span class="n">mpasMasksSubtask</span><span class="o">.</span><span class="n">expand_region_names</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+
+            <span class="n">regionGroupSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">filePrefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;histogram_</span><span class="si">{</span><span class="n">regionGroupSuffix</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="c1"># Add mask subtasks for observations and prep groupObsDicts</span>
+            <span class="c1"># groupObsDicts is a subsetted version of localObsDicts with an</span>
+            <span class="c1"># additional attribute for the maskTask</span>
+            <span class="k">for</span> <span class="n">obsName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsList</span><span class="p">:</span>
+                <span class="n">localObsDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">obsDicts</span><span class="p">[</span><span class="n">obsName</span><span class="p">])</span>
+                <span class="n">obsFileName</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                    <span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+                    <span class="n">relativePath</span><span class="o">=</span><span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;gridFileName&#39;</span><span class="p">])</span>
+                <span class="n">obsMasksSubtask</span> <span class="o">=</span> <span class="n">regionMasksTask</span><span class="o">.</span><span class="n">add_mask_subtask</span><span class="p">(</span>
+                    <span class="n">regionGroup</span><span class="p">,</span> <span class="n">obsFileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
+                    <span class="n">lonVar</span><span class="o">=</span><span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;lonVar&#39;</span><span class="p">],</span>
+                    <span class="n">latVar</span><span class="o">=</span><span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;latVar&#39;</span><span class="p">],</span>
+                    <span class="n">meshName</span><span class="o">=</span><span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;gridName&#39;</span><span class="p">])</span>
+                <span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;maskTask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">obsMasksSubtask</span>
+                <span class="n">groupObsDicts</span><span class="p">[</span><span class="n">obsName</span><span class="p">]</span> <span class="o">=</span> <span class="n">localObsDict</span>
+
+            <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
+                <span class="n">sectionName</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="c1"># Compute weights for histogram</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">computeWeightsSubtask</span> <span class="o">=</span> <span class="n">ComputeHistogramWeightsSubtask</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">computeWeightsSubtask</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
+
+                    <span class="c1"># Generate histogram plots</span>
+                    <span class="n">plotRegionSubtask</span> <span class="o">=</span> <span class="n">PlotRegionHistogramSubtask</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                        <span class="n">sectionName</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                        <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">obsMasksSubtask</span><span class="p">,</span> <span class="n">groupObsDicts</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">,</span> <span class="n">season</span><span class="p">)</span>
+                    <span class="n">plotRegionSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasMasksSubtask</span><span class="p">)</span>
+                    <span class="n">plotRegionSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">obsMasksSubtask</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">plotRegionSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">computeWeightsSubtask</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotRegionSubtask</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        OSError</span>
+<span class="sd">            If files are not present</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#   self.inDirectory, self.plotsDirectory, self.namelist, self.streams</span>
+        <span class="c1">#   self.calendar</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="c1"># Add variables and seasons to climatology task</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
+            <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeMonthly_avg_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
+                                               <span class="n">seasons</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obsList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Histogram analysis does not currently support&#39;</span>
+                             <span class="s1">&#39;more than one observational product&#39;</span><span class="p">)</span></div>
+
+
+
+<span class="k">class</span> <span class="nc">ComputeHistogramWeightsSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetches weight variables from MPAS output files for each variable in</span>
+<span class="sd">    variableList.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+                 <span class="n">variableList</span><span class="p">,</span> <span class="n">weightList</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize weights task</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+
+<span class="sd">        regionName : str</span>
+<span class="sd">            Name of the region to plot</span>
+
+<span class="sd">        mpasMasksSubtask : ``ComputeRegionMasksSubtask``</span>
+<span class="sd">            A task for creating mask MPAS files for each region to plot, used</span>
+<span class="sd">            to get the mask file name</span>
+
+<span class="sd">        obsDicts : dict of dicts</span>
+<span class="sd">            Information on the observations to compare agains</span>
+
+<span class="sd">        fullSuffix : str</span>
+<span class="sd">            The regionGroup and regionName combined and modified to be</span>
+<span class="sd">            appropriate as a task or file suffix</span>
+
+<span class="sd">        variableList: list of str</span>
+<span class="sd">            List of variables which will be weighted</span>
+
+<span class="sd">        weightList: list of str</span>
+<span class="sd">            List of variables by which to weight the variables in</span>
+<span class="sd">            variableList, of the same length as variableList</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">ComputeHistogramWeightsSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;weights_</span><span class="si">{</span><span class="n">fullSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">regionName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span> <span class="o">=</span> <span class="n">mpasMasksSubtask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span> <span class="o">=</span> <span class="n">regionName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="n">fullSuffix</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="n">variableList</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="n">weightList</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the region mask to each weight variable and save in a file common</span>
+<span class="sd">        to that region.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">base_directory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;histogramSubdirectory&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Get cell mask for the region</span>
+        <span class="n">region_mask_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+        <span class="n">ds_region_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">region_mask_filename</span><span class="p">)</span>
+        <span class="n">mask_region_names</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds_region_mask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+        <span class="n">region_index</span> <span class="o">=</span> <span class="n">mask_region_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+        <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">ds_region_mask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">region_index</span><span class="p">)</span>
+        <span class="n">cell_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
+
+        <span class="c1"># Open the restart file, which contains unmasked weight variables</span>
+        <span class="n">restart_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">)</span>
+        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Save the cell mask only for the region in its own file, which may be</span>
+        <span class="c1"># referenced by future analysis (i.e., as a control run)</span>
+        <span class="n">new_region_mask_filename</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_mask.nc&#39;</span>
+        <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds_mask</span><span class="p">,</span> <span class="n">new_region_mask_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ds_weights</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
+            <span class="c1"># Fetch the weight variables and mask them for each region</span>
+            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">):</span>
+                <span class="n">weight_var_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">weight_var_name</span> <span class="ow">in</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">var_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeMonthly_avg_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">ds_weights</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">_weight&#39;</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">ds_restart</span><span class="p">[</span><span class="n">weight_var_name</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cell_mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Weight variable </span><span class="si">{</span><span class="n">weight_var_name</span><span class="si">}</span><span class="s1"> is &#39;</span>
+                                     <span class="sa">f</span><span class="s1">&#39;not in the restart file, skipping&#39;</span><span class="p">)</span>
+
+        <span class="n">weights_filename</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_weights.nc&#39;</span>
+        <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds_weights</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">PlotRegionHistogramSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots a histogram diagram for a given ocean region</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    regionGroup : str</span>
+<span class="sd">        Name of the collection of region to plot</span>
+
+<span class="sd">    regionName : str</span>
+<span class="sd">        Name of the region to plot</span>
+
+<span class="sd">    sectionName : str</span>
+<span class="sd">        The section of the config file to get options from</span>
+
+<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        The configuration options for the control run (if any)</span>
+
+<span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">        The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">    mpasMasksSubtask : ``ComputeRegionMasksSubtask``</span>
+<span class="sd">        A task for creating mask MPAS files for each region to plot, used</span>
+<span class="sd">        to get the mask file name</span>
+
+<span class="sd">    obsDicts : dict of dicts</span>
+<span class="sd">        Information on the observations to compare against</span>
+
+<span class="sd">    variableList: list of str</span>
+<span class="sd">        list of variables to plot</span>
+
+<span class="sd">    season : str</span>
+<span class="sd">        The season to compute the climatology for</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+                 <span class="n">sectionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+                 <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">obsMasksSubtask</span><span class="p">,</span> <span class="n">obsDicts</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span>
+                 <span class="n">weightList</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parentTask :  ``AnalysisTask``</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+
+<span class="sd">        regionGroup : str</span>
+<span class="sd">            Name of the collection of region to plot</span>
+
+<span class="sd">        regionName : str</span>
+<span class="sd">            Name of the region to plot</span>
+
+<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+
+<span class="sd">        sectionName : str</span>
+<span class="sd">            The config section with options for this regionGroup</span>
+
+<span class="sd">        fullSuffix : str</span>
+<span class="sd">            The regionGroup and regionName combined and modified to be</span>
+<span class="sd">            appropriate as a task or file suffix</span>
+
+<span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        mpasMasksSubtask : ``ComputeRegionMasksSubtask``</span>
+<span class="sd">            A task for creating mask MPAS files for each region to plot, used</span>
+<span class="sd">            to get the mask file name</span>
+
+<span class="sd">        obsDicts : dict of dicts</span>
+<span class="sd">            Information on the observations to compare agains</span>
+
+<span class="sd">        season : str</span>
+<span class="sd">            The season to comput the climatogy for</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlotRegionHistogramSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;plot_</span><span class="si">{</span><span class="n">fullSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span> <span class="o">=</span> <span class="n">regionName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="n">sectionName</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span> <span class="o">=</span> <span class="n">mpasMasksSubtask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obsMasksSubtask</span> <span class="o">=</span> <span class="n">obsMasksSubtask</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">obsDicts</span> <span class="o">=</span> <span class="n">obsDicts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="n">variableList</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="n">weightList</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">season</span> <span class="o">=</span> <span class="n">season</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="n">fullSuffix</span>
+
+    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        IOError</span>
+<span class="sd">            If files are not present</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
+        <span class="c1"># which will perform some common setup, including storing:</span>
+        <span class="c1">#   self.inDirectory, self.plotsDirectory, self.namelist, self.streams</span>
+        <span class="c1">#   self.calendar</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PlotRegionHistogramSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">.xml&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots histograms of properties in an ocean region.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s2"> histograms for &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
+
+        <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
+
+        <span class="n">main_run_name</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+
+        <span class="n">region_mask_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+
+        <span class="n">ds_region_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">region_mask_filename</span><span class="p">)</span>
+
+        <span class="n">mask_region_names</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds_region_mask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+        <span class="n">region_index</span> <span class="o">=</span> <span class="n">mask_region_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+
+        <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">ds_region_mask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">region_index</span><span class="p">)</span>
+        <span class="n">cell_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obsDicts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">obs_region_mask_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsMasksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
+            <span class="n">ds_obs_region_mask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">obs_region_mask_filename</span><span class="p">)</span>
+            <span class="n">mask_region_names</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds_region_mask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
+            <span class="n">region_index</span> <span class="o">=</span> <span class="n">mask_region_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+
+            <span class="n">ds_obs_mask</span> <span class="o">=</span> <span class="n">ds_obs_region_mask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">region_index</span><span class="p">)</span>
+            <span class="n">obs_cell_mask</span> <span class="o">=</span> <span class="n">ds_obs_mask</span><span class="o">.</span><span class="n">regionMasks</span> <span class="o">==</span> <span class="mi">1</span>
+
+        <span class="n">in_filename</span> <span class="o">=</span> <span class="n">get_unmasked_mpas_climatology_file_name</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">in_filename</span><span class="p">)</span>
+
+        <span class="n">base_directory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;histogramSubdirectory&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">weights_filename</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_&#39;</span> \
+                <span class="s1">&#39;weights.nc&#39;</span>
+            <span class="n">ds_weights</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">weights_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">control_run_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">control_filename</span> <span class="o">=</span> <span class="n">get_unmasked_mpas_climatology_file_name</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="n">op</span><span class="o">=</span><span class="s1">&#39;avg&#39;</span><span class="p">)</span>
+            <span class="n">ds_control</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">control_filename</span><span class="p">)</span>
+            <span class="n">base_directory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;histogramSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">control_region_mask_filename</span> <span class="o">=</span> \
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_mask.nc&#39;</span>
+            <span class="n">ds_control_region_masks</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+                <span class="n">control_region_mask_filename</span><span class="p">)</span>
+            <span class="n">control_cell_mask</span> <span class="o">=</span> <span class="n">ds_control_region_masks</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">control_weights_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/&#39;</span> \
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_weights.nc&#39;</span>
+                <span class="n">ds_control_weights</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
+                    <span class="n">control_weights_filename</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">):</span>
+            <span class="n">mainColor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mainColor</span> <span class="o">=</span> <span class="s1">&#39;C0&#39;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;obsColor&#39;</span><span class="p">):</span>
+            <span class="n">obsColor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;obsColor&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">obsColor</span> <span class="o">=</span> <span class="s1">&#39;C1&#39;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">):</span>
+            <span class="n">controlColor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">controlColor</span> <span class="o">=</span> <span class="s1">&#39;C2&#39;</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;lineWidth&#39;</span><span class="p">):</span>
+            <span class="n">lineWidth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;lineWidth&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lineWidth</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+                                          <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">):</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+                                         <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">axisFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">):</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
+                                            <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;bins&#39;</span><span class="p">):</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;bins&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bins</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;normalized Probability Density Function&#39;</span>
+
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">):</span>
+
+            <span class="n">fields</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">legendText</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">var_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeMonthly_avg_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Normalized probability density function for &#39;</span> \
+                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1"> climatologies in &#39;</span> \
+                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+
+            <span class="c1"># Note: consider modifying this for more professional headings</span>
+            <span class="n">varTitle</span> <span class="o">=</span> <span class="n">var</span>
+
+            <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cell_mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">_weight&#39;</span> <span class="ow">in</span> <span class="n">ds_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_weights</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">_weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+                    <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">caption</span><span class="si">}</span><span class="s1"> weighted by </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+
+            <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">main_run_name</span><span class="p">)</span>
+            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mainColor</span><span class="p">)</span>
+
+            <span class="n">xLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;long_name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> &quot;</span> \
+                     <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">ds</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+            <span class="k">for</span> <span class="n">obs_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsDicts</span><span class="p">:</span>
+                <span class="n">localObsDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obsDicts</span><span class="p">[</span><span class="n">obs_name</span><span class="p">])</span>
+                <span class="n">obs_filename</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                    <span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
+                    <span class="n">relativePath</span><span class="o">=</span><span class="n">localObsDict</span><span class="p">[</span><span class="s1">&#39;gridFileName&#39;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">Var&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">localObsDict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">Var is not present in </span><span class="si">{</span><span class="n">obs_name</span><span class="si">}</span><span class="s1">, skipping &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">obs_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">obs_var_name</span> <span class="o">=</span> <span class="n">localObsDict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">Var&#39;</span><span class="p">]</span>
+                <span class="n">ds_obs</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">obs_filename</span><span class="p">)</span>
+                <span class="n">ds_obs</span> <span class="o">=</span> <span class="n">ds_obs</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">obs_cell_mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_obs</span><span class="p">[</span><span class="n">obs_var_name</span><span class="p">])</span>
+                <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs_name</span><span class="p">)</span>
+                <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obsColor</span><span class="p">)</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_control</span><span class="p">[</span><span class="n">var_name</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">control_cell_mask</span><span class="p">,</span>
+                                                         <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+                <span class="n">control_run_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span>
+                                                          <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+                <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">control_run_name</span><span class="p">)</span>
+                <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlColor</span><span class="p">)</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ds_control_weights</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">_weight&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">lineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="n">lineWidth</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lineWidths</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="n">histogram_analysis_plot</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
+                                    <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+                                    <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">,</span>
+                                    <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
+                                    <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
+                                    <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span>
+                                    <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
+                                    <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+
+            <span class="n">out_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_&#39;</span> \
+                           <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">.png&#39;</span>
+            <span class="n">savefig</span><span class="p">(</span><span class="n">out_filename</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
+
+            <span class="n">write_image_xml</span><span class="p">(</span>
+                <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
+                <span class="n">filePrefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_&#39;</span>
+                           <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
+                <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span><span class="si">}</span><span class="s1"> Histograms&#39;</span><span class="p">,</span>
+                <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;histogram</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">gallery</span><span class="o">=</span><span class="n">varTitle</span><span class="p">,</span>
+                <span class="n">thumbnailDescription</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span>
+                                     <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
+                <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
