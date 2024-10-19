@@ -46,9 +46,3 @@ used those components.
    :maxdepth: 1
 
    authors
-
-.. toctree::
-   :caption: Versions
-   :maxdepth: 1
-
-   versions
