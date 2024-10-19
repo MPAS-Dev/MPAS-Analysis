@@ -302,7 +302,7 @@ to be generated and is set up properly.
 Generating Documentation
 ------------------------
 
-Create a development environment as described above in "Installation for 
+Create a development environment as described above in "Installation for
 developers".  Then run:
 To generate the ``sphinx`` documentation, run:
 
