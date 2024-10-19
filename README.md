@@ -27,7 +27,7 @@ used those components.
 
 ## Documentation
 
-[https://mpas-dev.github.io/MPAS-Analysis/latest/](https://mpas-dev.github.io/MPAS-Analysis/latest/)
+[https://mpas-dev.github.io/MPAS-Analysis/develop/](https://mpas-dev.github.io/MPAS-Analysis/develop/)
 
 ## Installation for users
 
