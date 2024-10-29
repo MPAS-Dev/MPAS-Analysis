@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.11.0rc1" %}
+{% set version = "1.12.0" %}
 
 package:
   name: {{ name|lower }}
@@ -10,7 +10,7 @@ source:
 
 build:
     number: 0
-    script: {{ PYTHON }} -m pip install . --no-deps -vv
+    script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
     noarch: python
     entry_points:
         - mpas_analysis = mpas_analysis.__main__:main
@@ -18,11 +18,10 @@ build:
 
 requirements:
   host:
-    - python >=3.8
+    - python >=3.9
     - pip
   run:
-    - python >=3.8
-    - bottleneck
+    - python >=3.9
     - cartopy >=0.18.0
     - cartopy_offlinedata
     - cmocean
@@ -30,15 +29,15 @@ requirements:
     - esmf >=8.4.2,<8.7.0
     - esmf=*=mpi_mpich_*
     - f90nml
-    - geometric_features >=1.2.0
+    - geometric_features >=1.4.0
     - gsw
     - lxml
     - mache >=1.11.0
-    - matplotlib-base >=3.6.0,!=3.7.2
-    - mpas_tools >=0.30.0
-    - nco >=4.8.1
+    - matplotlib-base >=3.9.0
+    - mpas_tools >=0.34.0
+    - nco >=4.8.1,!=5.2.6
     - netcdf4
-    - numpy
+    - numpy >=2.0,<3.0
     - pandas
     - pillow >=10.0.0,<11.0.0
     - progressbar2

@@ -268,7 +268,7 @@ mode by running:
 .. code-block:: bash
 
    $ conda activate mpas_dev
-   $ python -m pip install -e .
+   $ python -m pip install --no-deps --no-build-isolation -e .
 
 In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run ``mpas_analysis`` on the command line,
@@ -281,7 +281,7 @@ it will know about the changes.
 
     .. code-block:: bash
 
-       python -m pip install -e .
+       python -m pip install --no-deps --no-build-isolation -e .
 
 .. _tutorial_dev_get_started_activ_env:
 
@@ -317,7 +317,7 @@ You can just reinstall ``mpas_analysis`` itself by rerunning
 
 .. code-block:: bash
 
-    python -m pip install -e .
+    python -m pip install --no-deps --no-build-isolation -e .
 
 in the new worktree.  If you forget this step, you will find that changes you
 make in the worktree don't affect the ``mpas_dev`` conda environment you are

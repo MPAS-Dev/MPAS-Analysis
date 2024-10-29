@@ -23,8 +23,7 @@ The following configuration options are available for this task::
     # available transects.
     transectsToPlot = ['Drake Passage', 'Tasmania-Ant', 'Africa-Ant', 'Antilles Inflow',
                        'Mona Passage', 'Windward Passage', 'Florida-Cuba', 'Florida-Bahamas',
-                       'Indonesian Throughflow', 'Agulhas', 'Mozambique Channel', 'Bering Strait',
-                       'Lancaster Sound', 'Fram Strait', 'Nares Strait']
+                       'Indonesian Throughflow', 'Agulhas', 'Mozambique Channel']
 
     # Number of months over which to compute moving average
     movingAverageMonths = 1
@@ -54,8 +53,9 @@ defined in the ``transportTransects`` transect group.  These are::
    "Japan blockage", "Lancaster Sound", "Mona Passage", "Mozambique Channel",
    "Nares Strait", "Nares Strait Deepen", "Persian Gulf Deepen",
    "Red Sea Deepen", "Sakhalin blockage", "Strait of Gibralter Deepen 1",
-    "Strait of Gibralter Deepen 2", "Tasmania-Ant", "White Sea",
-    "Windward Passage"]
+   "Hudson Bay-Labrador Sea", "OSNAP section East", "OSNAP section West",
+   "Strait of Gibralter Deepen 2", "Tasmania-Ant", "White Sea",
+   "Windward Passage"]
 
 Many of these are likely not of interest in most simulations, so a subset of
 the most relevant transects has been chosen in the default configuration.

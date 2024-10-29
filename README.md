@@ -1,5 +1,4 @@
 # MPAS-Analysis
-[![Build Status](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_apis/build/status/MPAS-Dev.MPAS-Analysis?branchName=develop)](https://dev.azure.com/MPAS-Dev/MPAS-Analysis%20testing/_build/latest?definitionId=2&branchName=develop)
 
 Analysis for simulations produced with Model for Prediction Across Scales
 (MPAS) components and the Energy Exascale Earth System Model (E3SM), which
@@ -28,7 +27,7 @@ used those components.
 
 ## Documentation
 
-[https://mpas-dev.github.io/MPAS-Analysis/latest/](https://mpas-dev.github.io/MPAS-Analysis/latest/)
+[https://mpas-dev.github.io/MPAS-Analysis/develop/](https://mpas-dev.github.io/MPAS-Analysis/develop/)
 
 ## Installation for users
 
@@ -57,7 +56,7 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda create -y -n mpas_dev --file dev-spec.txt
 conda activate mpas_dev
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 ```
 
 If you are developing another conda package at the same time (this is common
@@ -69,9 +68,9 @@ conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
     --file analysis/MPAS-Analysis/dev-spec.txt
 conda activate mpas_dev
 cd tools/MPAS-Tools/conda_package
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 cd ../../../analysis/MPAS-Analysis
-python -m pip install -e .
+python -m pip install --no-deps --no-build-isolation -e .
 ```
 Obviously, the paths to the repos may be different in your local clones.  With
 the `mpas_dev` environment as defined above, you can make changes to both
@@ -290,7 +289,7 @@ to be generated and is set up properly.
 
 ## Generating Documentation
 
-Create a development environment as described above in "Installation for 
+Create a development environment as described above in "Installation for
 developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```

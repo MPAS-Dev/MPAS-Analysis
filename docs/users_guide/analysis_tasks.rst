@@ -4,6 +4,8 @@ Analysis Tasks
 .. toctree::
    :maxdepth: 1
 
+   tasks/climatologyMapMassFluxes
+   tasks/climatologyMapHeatFluxes
    tasks/climatologyMapMLD
    tasks/climatologyMapMLDMinMax
    tasks/climatologyMapSST
@@ -12,6 +14,7 @@ Analysis Tasks
    tasks/climatologyMapEKE
    tasks/climatologyMapOHCAnomaly
    tasks/climatologyMapSose
+   tasks/climatologyMapVel
    tasks/climatologyMapBGC
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapArgoSalinity

@@ -58,7 +58,7 @@ def get_simulation_start_time(streams):
 
     ds = xarray.open_dataset(restartFile)
     da = ds.simulationStartTime
-    if da.dtype.type is numpy.string_:
+    if da.dtype.type is numpy.bytes_:
         simulationStartTime = bytes.decode(da.values.tobytes())
     else:
         simulationStartTime = da.values.tobytes()
@@ -108,6 +108,8 @@ def string_to_datetime(dateString):
     (year, month, day, hour, minute, second) = \
         _parse_date_string(dateString, isInterval=False)
 
+    if year == 0:
+        year = 1
     return datetime.datetime(year=year, month=month, day=day, hour=hour,
                              minute=minute, second=second)
 

@@ -1,0 +1,92 @@
+name: CI/CD Build Workflow
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+  pull_request:
+    branches:
+      - main
+      - develop
+
+  workflow_dispatch:
+
+env:
+  CANCEL_OTHERS: false
+  PATHS_IGNORE: '["**/README.md", "**/docs/**"]'
+
+jobs:
+  build:
+    name: test mpas_analysis - python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          cancel_others: ${{ env.CANCEL_OTHERS }}
+          paths_ignore: ${{ env.PATHS_IGNORE }}
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        uses: actions/checkout@v4
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Cache Conda
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache if conda-dev-spec.template has not changed in the workflow
+          CACHE_NUMBER: 0
+        with:
+          path: ~/conda_pkgs_dir
+          key:
+            ${{ runner.os }}-${{ matrix.python-version }}-conda-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('dev-spec.txt,setup.py') }}
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Set up Conda Environment
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: "mpas_analysis_ci"
+          miniforge-version: latest
+          channels: conda-forge
+          channel-priority: strict
+          auto-update-conda: true
+          python-version: ${{ matrix.python-version }}
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Install mpas_analysis
+        run: |
+          conda create -n mpas_analysis_dev --file dev-spec.txt \
+              python=${{ matrix.python-version }}
+          conda activate mpas_analysis_dev
+          python -m pip install --no-deps --no-build-isolation -vv -e .
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Run Tests
+        env:
+           CHECK_IMAGES: False
+        run: |
+          set -e
+          conda activate mpas_analysis_dev
+          pip check
+          pytest --pyargs mpas_analysis
+          mpas_analysis --help
+          download_analysis_data --help
+
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+        name: Build Sphinx Docs
+        run: |
+          conda activate mpas_analysis_dev
+          # sphinx-multiversion expects at least a "main" branch
+          git branch main || echo "branch main already exists."
+          cd docs
+          sphinx-multiversion . _build/html
+

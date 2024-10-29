@@ -526,7 +526,7 @@ I'll create or recreate my ``mpas_dev`` environment as in
 .. code-block:: bash
 
     conda activate mpas_dev
-    python -m pip install -e .
+    python -m pip install --no-deps --no-build-isolation -e .
 
 4.1 ``ClimatologyMapBSF`` class
 -------------------------------

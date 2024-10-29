@@ -17,16 +17,19 @@ import os
 import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection, read_feature_collection
+from geometric_features.aggregation import get_aggregator_by_name
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.io.utility import build_config_full_path, \
     get_files_year_month, make_directories, decode_strings
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
+from mpas_analysis.shared.io.utility import get_region_mask
 from mpas_analysis.shared.timekeeping.utility import days_to_datetime
 from mpas_analysis.shared.climatology import compute_climatology
 from mpas_analysis.shared.constants import constants
 from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.plot import savefig, add_inset
+from mpas_analysis.shared.regions.compute_region_masks_subtask import get_feature_list
 
 
 class OceanRegionalProfiles(AnalysisTask):
@@ -83,15 +86,27 @@ class OceanRegionalProfiles(AnalysisTask):
 
             fields = config.getexpression(regionGroupSection, 'fields')
 
+            max_bottom_depth = config.getexpression(regionGroupSection, 'maxDepth')
             seasons = config.getexpression(regionGroupSection, 'seasons')
 
             regionNames = config.getexpression(regionGroupSection,
                                                'regionNames')
+
             if len(regionNames) == 0:
                 return
+            if 'all' in regionNames:
+                aggregationFunction, prefix, date = get_aggregator_by_name(
+                     regionGroup)
+                date = date
+                outFileSuffix = '{}{}'.format(prefix, date)
+                geojsonFileName = \
+                    get_region_mask(self.config,
+                                    '{}.geojson'.format(outFileSuffix))
+                regionNames = get_feature_list(geojsonFileName)
 
             self.add_region_group(regionMasksTask, regionGroup, regionNames,
-                                  fields, startYear, endYear, seasons)
+                                  fields, startYear, endYear, max_bottom_depth,
+                                  seasons)
 
             combineSubtask = \
                 self.combineSubtasks[regionGroup][(startYear, endYear)]
@@ -110,7 +125,8 @@ class OceanRegionalProfiles(AnalysisTask):
                         self.add_subtask(plotSubtask)
 
     def add_region_group(self, regionMasksTask, regionGroup, regionNames,
-                         fields, startYear, endYear, seasons=None):
+                         fields, startYear, endYear, max_bottom_depth=None,
+                         seasons=None):
         """
         Add years to the profiles to compute
 
@@ -162,7 +178,8 @@ class OceanRegionalProfiles(AnalysisTask):
             else:
                 computeSubtask = ComputeRegionalProfileTimeSeriesSubtask(
                     self, masksSubtask, regionGroup, regionNames, fields,
-                    startYear=year, endYear=year)
+                    startYear=year, endYear=year,
+                    max_bottom_depth=max_bottom_depth)
                 computeSubtask.run_after(masksSubtask)
                 combineSubtask.run_after(computeSubtask)
                 self.computeSubtasks[regionGroup][key] = computeSubtask
@@ -180,13 +197,16 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
     startYear, endYear : int
         The beginning and end of the time series to compute
+
+    max_bottom_depth : float
+        The maximum bottom depth of cells to include in the profile statistics
     """
     # Authors
     # -------
     # Xylar Asay-Davis
 
     def __init__(self, parentTask, masksSubtask, regionGroup, regionNames,
-                 fields, startYear, endYear):
+                 fields, startYear, endYear, max_bottom_depth):
         """
         Construct the analysis task.
 
@@ -210,6 +230,10 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         startYear, endYear : int
             The beginning and end of the time series to compute
+
+        max_bottom_depth : float
+            The maximum bottom depth of cells to include in the profile
+            statistics
         """
         # Authors
         # -------
@@ -227,10 +251,13 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         parentTask.add_subtask(self)
         self.masksSubtask = masksSubtask
+        if 'all' in regionNames:
+            regionNames = get_feature_list(self.masksSubtask.geojsonFileName)
         self.regionNames = regionNames
         self.fields = fields
         self.startYear = startYear
         self.endYear = endYear
+        self.max_bottom_depth = max_bottom_depth
 
     def setup_and_check(self):
         """
@@ -331,6 +358,11 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                                     'data': np.arange(nVertLevels)})
 
         vertMask = vertIndex < dsRestart.maxLevelCell
+        if self.max_bottom_depth is not None:
+            depthMask = dsRestart.bottomDepth < self.max_bottom_depth
+            vertDepthMask = np.logical_and(vertMask, depthMask)
+        else:
+            vertDepthMask = vertMask
 
         # get region masks
         regionMaskFileName = self.masksSubtask.maskFileName
@@ -351,7 +383,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = self._masked_area_sum(cellMasks, areaCell, vertMask)
+        totalArea = self._masked_area_sum(cellMasks, areaCell, vertDepthMask)
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -376,7 +408,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 prefix = field['prefix']
                 self.logger.info('      {}'.format(field['titleName']))
 
-                var = dsLocal[variableName].where(vertMask)
+                var = dsLocal[variableName].where(vertDepthMask)
 
                 meanName = '{}_mean'.format(prefix)
                 dsLocal[meanName] = \

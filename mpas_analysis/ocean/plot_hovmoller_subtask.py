@@ -379,22 +379,39 @@ class PlotHovmollerSubtask(AnalysisTask):
         else:
             defaultFontSize = None
 
-        fig, _, suptitle = plot_vertical_section_comparison(
-            config, field, refField, diff, self.sectionName, xCoords=Time,
-            zCoord=z, colorbarLabel=self.unitsLabel, title=title,
-            modelTitle=mainRunName, refTitle=refTitle, diffTitle=diffTitle,
-            xlabels=xLabel, ylabel=yLabel, lineWidth=1, xCoordIsTime=True,
-            movingAveragePoints=movingAveragePoints, calendar=self.calendar,
-            firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks,
-            yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
-            axisFontSize=axisFontSize, defaultFontSize=defaultFontSize)
+        is_empty = False
+        for size in field.sizes.values():
+            if size == 0:
+                is_empty = True
+                break
+
+        if is_empty:
+            # the plot will be empty
+            self.logger.warn('No cells in this region so the plot will be '
+                             'empty')
+            fig = plt.figure()
+            suptitle = None
+        else:
+
+            fig, _, suptitle = plot_vertical_section_comparison(
+                config, field, refField, diff, self.sectionName, xCoords=Time,
+                zCoord=z, colorbarLabel=self.unitsLabel, title=title,
+                modelTitle=mainRunName, refTitle=refTitle, diffTitle=diffTitle,
+                xlabels=xLabel, ylabel=yLabel, lineWidth=1, xCoordIsTime=True,
+                movingAveragePoints=movingAveragePoints,
+                calendar=self.calendar,
+                firstYearXTicks=firstYearXTicks,
+                yearStrideXTicks=yearStrideXTicks,
+                yLim=yLim, invertYAxis=False, titleFontSize=titleFontSize,
+                axisFontSize=axisFontSize, defaultFontSize=defaultFontSize)
 
         if self.regionMaskFile is not None:
 
             # shift the super-title a little to the left to make room for the
             # inset
-            pos = suptitle.get_position()
-            suptitle.set_position((pos[0] - 0.05, pos[1]))
+            if suptitle is not None:
+                pos = suptitle.get_position()
+                suptitle.set_position((pos[0] - 0.05, pos[1]))
 
             fcAll = read_feature_collection(self.regionMaskFile)
 
