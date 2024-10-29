@@ -6,22 +6,24 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analysis Tasks &mdash; MPAS-Analysis 1.11.0 documentation</title>
+  <title>Analysis Tasks &mdash; MPAS-Analysis 1.12.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="climatologyMapMLD" href="tasks/climatologyMapMLD.html" />
-    <link rel="prev" title="Output Grids for Transects" href="config/transects.html" /> 
+    <link rel="next" title="climatologyMapMassFluxes" href="tasks/climatologyMapMassFluxes.html" />
+    <link rel="prev" title="Output Grids for Transects" href="config/transects.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,6 +50,8 @@
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Tasks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSST.html">climatologyMapSST</a></li>
@@ -56,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapVel.html">climatologyMapVel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
@@ -113,10 +118,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
-</ul>
 
         </div>
       </div>
@@ -146,6 +147,8 @@
 <h1>Analysis Tasks<a class="headerlink" href="#analysis-tasks" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSST.html">climatologyMapSST</a></li>
@@ -154,6 +157,7 @@
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapVel.html">climatologyMapVel</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
@@ -198,7 +202,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="config/transects.html" class="btn btn-neutral float-left" title="Output Grids for Transects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tasks/climatologyMapMLD.html" class="btn btn-neutral float-right" title="climatologyMapMLD" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tasks/climatologyMapMassFluxes.html" class="btn btn-neutral float-right" title="climatologyMapMassFluxes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -217,7 +221,30 @@
       </div>
     </section>
   </div>
-  <script>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../1.10.0/users_guide/analysis_tasks.html">1.10.0</a></dd>
+      <dd><a href="../../1.11.0/users_guide/analysis_tasks.html">1.11.0</a></dd>
+      <dd><a href="../../1.8.0/users_guide/analysis_tasks.html">1.8.0</a></dd>
+      <dd><a href="../../1.9.0/users_guide/analysis_tasks.html">1.9.0</a></dd>
+      <dd><a href="../../1.9.1/users_guide/analysis_tasks.html">1.9.1</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="analysis_tasks.html">main</a></dd>
+      <dd><a href="../../develop/users_guide/analysis_tasks.html">develop</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

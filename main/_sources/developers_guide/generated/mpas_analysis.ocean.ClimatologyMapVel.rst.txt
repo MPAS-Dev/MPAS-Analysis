@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.ClimatologyMapVel
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapVel
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapVel.__init__
+      ~ClimatologyMapVel.add_subtask
+      ~ClimatologyMapVel.check_analysis_enabled
+      ~ClimatologyMapVel.check_generate
+      ~ClimatologyMapVel.close
+      ~ClimatologyMapVel.is_alive
+      ~ClimatologyMapVel.join
+      ~ClimatologyMapVel.kill
+      ~ClimatologyMapVel.run
+      ~ClimatologyMapVel.run_after
+      ~ClimatologyMapVel.run_task
+      ~ClimatologyMapVel.set_start_end_date
+      ~ClimatologyMapVel.setup_and_check
+      ~ClimatologyMapVel.start
+      ~ClimatologyMapVel.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapVel.BLOCKED
+      ~ClimatologyMapVel.FAIL
+      ~ClimatologyMapVel.READY
+      ~ClimatologyMapVel.RUNNING
+      ~ClimatologyMapVel.SUCCESS
+      ~ClimatologyMapVel.UNSET
+      ~ClimatologyMapVel.authkey
+      ~ClimatologyMapVel.daemon
+      ~ClimatologyMapVel.exitcode
+      ~ClimatologyMapVel.ident
+      ~ClimatologyMapVel.name
+      ~ClimatologyMapVel.pid
+      ~ClimatologyMapVel.sentinel
+   
+   

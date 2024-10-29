@@ -6,21 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.climatology.compute_monthly_climatology &mdash; MPAS-Analysis 1.11.0 documentation</title>
+  <title>mpas_analysis.shared.climatology.compute_monthly_climatology &mdash; MPAS-Analysis 1.12.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../_static/documentation_options.js?v=fe8e256b"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="mpas_analysis.shared.climatology.compute_climatology" href="mpas_analysis.shared.climatology.compute_climatology.html" />
-    <link rel="prev" title="mpas_analysis.shared.climatology.get_remapper" href="mpas_analysis.shared.climatology.get_remapper.html" /> 
+    <link rel="prev" title="mpas_analysis.shared.climatology.get_remapper" href="mpas_analysis.shared.climatology.get_remapper.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -111,10 +113,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
-</ul>
 
         </div>
       </div>
@@ -153,7 +151,7 @@ out with NaNs.  If the month coordinate is not present, a data array
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.9.1.dev0)"><em>xarray.Dataset</em></a><em> or </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a>) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
+<li><p><strong>ds</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.10.1.dev0)"><em>xarray.Dataset</em></a><em> or </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a>) – A data set with a <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate expressed as days since
 0001-01-01 or <code class="docutils literal notranslate"><span class="pre">month</span></code> coordinate</p></li>
 <li><p><strong>calendar</strong> (<em>{'gregorian'</em><em>, </em><em>'noleap'}</em><em>, </em><em>optional</em>) – The name of one of the calendars supported by MPAS cores, used to
 determine <code class="docutils literal notranslate"><span class="pre">month</span></code> from <code class="docutils literal notranslate"><span class="pre">Time</span></code> coordinate, so must be supplied if
@@ -199,7 +197,30 @@ in each month.</p>
       </div>
     </section>
   </div>
-  <script>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../../1.10.0/index.html">1.10.0</a></dd>
+      <dd><a href="../../../1.11.0/index.html">1.11.0</a></dd>
+      <dd><a href="../../../1.8.0/index.html">1.8.0</a></dd>
+      <dd><a href="../../../1.9.0/index.html">1.9.0</a></dd>
+      <dd><a href="../../../1.9.1/index.html">1.9.1</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="mpas_analysis.shared.climatology.compute_monthly_climatology.html">main</a></dd>
+      <dd><a href="../../../develop/index.html">develop</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

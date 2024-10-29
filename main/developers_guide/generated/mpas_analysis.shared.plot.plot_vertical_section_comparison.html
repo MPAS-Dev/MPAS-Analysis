@@ -6,21 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.plot.plot_vertical_section_comparison &mdash; MPAS-Analysis 1.11.0 documentation</title>
+  <title>mpas_analysis.shared.plot.plot_vertical_section_comparison &mdash; MPAS-Analysis 1.12.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../../_static/documentation_options.js?v=fe8e256b"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="mpas_analysis.shared.plot.plot_vertical_section" href="mpas_analysis.shared.plot.plot_vertical_section.html" />
-    <link rel="prev" title="mpas_analysis.shared.plot.plot_1D" href="mpas_analysis.shared.plot.plot_1D.html" /> 
+    <link rel="prev" title="mpas_analysis.shared.plot.plot_1D" href="mpas_analysis.shared.plot.plot_1D.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -99,10 +101,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../versions.html">Versions</a></li>
-</ul>
 
         </div>
       </div>
@@ -146,16 +144,16 @@ plotted on a single plot.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>instance</em><em> of </em><em>ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>modelArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
-<li><p><strong>refArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
+<li><p><strong>modelArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
+<li><p><strong>refArray</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a>) – model and observational or control run data sets</p></li>
 <li><p><strong>diffArray</strong> (<em>float array</em>) – difference between modelArray and refArray</p></li>
-<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the model, ref and diff arrays.  Optional second
+<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the model, ref and diff arrays.  Optional second
 and third entries will be used for a second and third x axis above the
 plot.  The typical use for the second and third axis is for transects,
 for which the primary x axis represents distance along a transect, and
 the second and third x axes are used to display the corresponding
 latitudes and longitudes.</p></li>
-<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.9.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the model, ref and diff arrays</p></li>
+<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the model, ref and diff arrays</p></li>
 <li><p><strong>triangulation_args</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – A dict of arguments to create a matplotlib.tri.Triangulation of the
 transect that does not rely on it being on a logically rectangular grid.
 The arguments rather than the triangulation itself are passed because
@@ -301,7 +299,30 @@ truncated with a trailing ellipsis.  The default is from the
       </div>
     </section>
   </div>
-  <script>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../../1.10.0/index.html">1.10.0</a></dd>
+      <dd><a href="../../../1.11.0/index.html">1.11.0</a></dd>
+      <dd><a href="../../../1.8.0/index.html">1.8.0</a></dd>
+      <dd><a href="../../../1.9.0/index.html">1.9.0</a></dd>
+      <dd><a href="../../../1.9.1/index.html">1.9.1</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="mpas_analysis.shared.plot.plot_vertical_section_comparison.html">main</a></dd>
+      <dd><a href="../../../develop/index.html">develop</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });

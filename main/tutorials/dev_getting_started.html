@@ -6,21 +6,23 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developer: Getting Started &mdash; MPAS-Analysis 1.11.0 documentation</title>
+  <title>Developer: Getting Started &mdash; MPAS-Analysis 1.12.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6cf1fb80"></script>
+      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Developers: Understanding an analysis task" href="dev_understand_a_task.html" />
-    <link rel="prev" title="User: Getting Started" href="getting_started.html" /> 
+    <link rel="prev" title="User: Getting Started" href="getting_started.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -99,10 +101,6 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Versions</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../versions.html">Versions</a></li>
 </ul>
 
         </div>
@@ -342,7 +340,7 @@ setting up the conda environment on your laptop.</p>
 <p>Then, you can activate the environment and install MPAS-Analysis in “edit”
 mode by running:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
-$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>In this mode, any edits you make to the code in the worktree will be available
@@ -352,7 +350,7 @@ it will know about the changes.</p>
 <p class="admonition-title">Note</p>
 <p>If you add or remove files in the code, you will need to re-install
 MPAS-Analysis in the conda environment by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 </div>
@@ -380,7 +378,7 @@ alias for this step if you defined one.</p>
 process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment.  If you know that
 the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>,
 You can just reinstall <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> itself by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>in the new worktree.  If you forget this step, you will find that changes you
@@ -816,7 +814,30 @@ and how it was configured.</p>
       </div>
     </section>
   </div>
-  <script>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: main
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../1.10.0/tutorials/dev_getting_started.html">1.10.0</a></dd>
+      <dd><a href="../../1.11.0/tutorials/dev_getting_started.html">1.11.0</a></dd>
+      <dd><a href="../../1.8.0/tutorials/dev_getting_started.html">1.8.0</a></dd>
+      <dd><a href="../../1.9.0/tutorials/dev_getting_started.html">1.9.0</a></dd>
+      <dd><a href="../../1.9.1/tutorials/dev_getting_started.html">1.9.1</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="dev_getting_started.html">main</a></dd>
+      <dd><a href="../../develop/tutorials/dev_getting_started.html">develop</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
