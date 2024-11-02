@@ -58,7 +58,7 @@ The following configuration options are available for this task:
     # zmax = -400
 
     # Observational data sets to compare against
-    obs = ['SOSE', 'WOA18']
+    obs = ['SOSE', 'WOA23']
 
 Region Groups
 -------------
@@ -121,12 +121,12 @@ Observations
 ------------
 
 ``obs`` is a list of the observational data sets to plot as reference lines
-(constant in time).  Possible values are ``'SOSE'`` and ``'WOA18'``.  An empty
+(constant in time).  Possible values are ``'SOSE'`` and ``'WOA23'``.  An empty
 list can be provided if no observations should be plotted.
 
 :ref:`sose`
 
-:ref:`woa18_t_s`
+:ref:`woa23_t_s`
 
 Example Result
 --------------
