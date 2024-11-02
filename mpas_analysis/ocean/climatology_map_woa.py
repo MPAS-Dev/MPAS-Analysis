@@ -10,7 +10,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
 Analysis tasks for comparing Polar (and global) climatology maps against
-WOA18 climatological data.
+WOA23 climatological data.
 """
 # Authors
 # -------
@@ -34,7 +34,7 @@ from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
 class ClimatologyMapWoa(AnalysisTask):
     """
     An analysis task for comparison of polar and global temperature and
-    salinity against WOA18 climatology fields
+    salinity against WOA23 climatology fields
     """
     # Authors
     # -------
@@ -65,7 +65,7 @@ class ClimatologyMapWoa(AnalysisTask):
               'mpas': 'timeMonthly_avg_activeTracers_temperature',
               'units': r'$\degree$C',
               'titleName': 'Potential Temperature',
-              'obsFieldName': 't_an'},
+              'obsFieldName': 'pt_an'},
              {'prefix': 'salinity',
               'mpas': 'timeMonthly_avg_activeTracers_salinity',
               'units': r'PSU',
@@ -130,87 +130,57 @@ class ClimatologyMapWoa(AnalysisTask):
             comparisonGridNames=comparisonGridNames,
             iselValues=None)
 
-        remapAnnObsSubtask = None
-        remapMonObsSubtask = None
+        remapObsSubtask = None
 
         if controlConfig is None:
-            # Since we have a WOA18 annual climatology file and
-            # another file containing the 12 WOA18 monthly climatologies,
-            # do the remapping for each season separately
-
             observationsDirectory = build_obs_path(
-                    config, 'ocean', 'woa18Subdirectory')
+                    config, 'ocean', 'woa23Subdirectory')
 
             refFieldNames = [field['obsFieldName'] for field in fields]
 
-            if 'ANN' in seasons:
-                obsFileName = \
-                    '{}/woa18_decav_04_TS_ann_20190829.nc'.format(
-                        observationsDirectory)
-                remapAnnObsSubtask = RemapWoaClimatology(
-                    parentTask=self, seasons=['ANN'],
-                    fileName=obsFileName,
-                    outFilePrefix='woa18_ann',
-                    fieldNames=refFieldNames,
-                    depths=depths,
-                    comparisonGridNames=comparisonGridNames,
-                    subtaskName='remapObservationsAnn')
-                self.add_subtask(remapAnnObsSubtask)
+            obsFileName = f'{observationsDirectory}/' \
+                          f'woa23_decav_04_pt_s_mon_ann.20241101.nc'
 
-            seasonsMinusAnn = list(seasons)
-            if 'ANN' in seasonsMinusAnn:
-                seasonsMinusAnn.remove('ANN')
-            if len(seasonsMinusAnn) > 0:
-                obsFileName = \
-                    '{}/woa18_decav_04_TS_mon_20190829.nc'.format(
-                        observationsDirectory)
-                remapMonObsSubtask = RemapWoaClimatology(
-                        parentTask=self, seasons=seasonsMinusAnn,
-                        fileName=obsFileName,
-                        outFilePrefix='woa18_mon',
-                        fieldNames=refFieldNames,
-                        depths=depths,
-                        comparisonGridNames=comparisonGridNames,
-                        subtaskName='remapObservationsMon')
+            remapObsSubtask = RemapWoaClimatology(
+                parentTask=self, seasons=seasons,
+                fileName=obsFileName,
+                outFilePrefix='woa23',
+                fieldNames=refFieldNames,
+                depths=depths,
+                comparisonGridNames=comparisonGridNames,
+                subtaskName='remapObservationsMon')
 
-                self.add_subtask(remapMonObsSubtask)
+            self.add_subtask(remapObsSubtask)
 
         for field in fields:
             fieldPrefix = field['prefix']
             upperFieldPrefix = fieldPrefix[0].upper() + fieldPrefix[1:]
-            sectionName = '{}{}'.format(self.taskName, upperFieldPrefix)
+            sectionName = f'{self.taskName}{upperFieldPrefix}'
 
             if controlConfig is None:
 
-                refTitleLabel = 'WOA18 Climatology'
+                refTitleLabel = 'WOA23 Climatology'
 
                 refFieldName = field['obsFieldName']
-                outFileLabel = '{}WOA18'.format(fieldPrefix)
-                galleryName = 'WOA18 Climatology'
+                outFileLabel = f'{fieldPrefix}WOA23'
+                galleryName = 'WOA23 Climatology'
                 diffTitleLabel = 'Model - Climatology'
 
             else:
                 controlRunName = controlConfig.get('runs', 'mainRunName')
-                galleryName = 'Control: {}'.format(controlRunName)
+                galleryName = f'Control: {controlRunName}'
                 refTitleLabel = galleryName
 
                 refFieldName = field['mpas']
-                outFileLabel = '{}WOA18'.format(fieldPrefix)
+                outFileLabel = f'{fieldPrefix}WOA23'
                 diffTitleLabel = 'Main - Control'
 
             for comparisonGridName in comparisonGridNames:
                 for depthIndex, depth in enumerate(depths):
                     for season in seasons:
-                        if season == 'ANN':
-                            remapObsSubtask = remapAnnObsSubtask
-                        else:
-                            remapObsSubtask = remapMonObsSubtask
 
-                        subtaskName = 'plot{}_{}_{}_depth_{}'.format(
-                                                            upperFieldPrefix,
-                                                            season,
-                                                            comparisonGridName,
-                                                            depth)
+                        subtaskName = f'plot{upperFieldPrefix}_{season}_' \
+                                      f'{comparisonGridName}_depth_{depth}'
 
                         subtask = PlotClimatologyMapSubtask(
                             parentTask=self,
@@ -222,8 +192,8 @@ class ClimatologyMapWoa(AnalysisTask):
                             depth=depth,
                             subtaskName=subtaskName)
 
-                        configSectionName = 'climatologyMapWoa{}'.format(
-                                upperFieldPrefix)
+                        configSectionName = \
+                            f'climatologyMapWoa{upperFieldPrefix}'
 
                         # if available, use a separate color map for shallow
                         # and deep
@@ -248,7 +218,7 @@ class ClimatologyMapWoa(AnalysisTask):
                             imageCaption=field['titleName'],
                             galleryGroup=field['titleName'],
                             groupSubtitle=None,
-                            groupLink='{}_woa'.format(fieldPrefix),
+                            groupLink=f'{fieldPrefix}_woa',
                             galleryName=galleryName,
                             configSectionName=configSectionName)
 
@@ -334,7 +304,7 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         # -------
         # Xylar Asay-Davis, Milena Veneziani
 
-        # Load WOA18 climatological data
+        # Load WOA23 climatological data
         dsObs = self.build_observational_dataset(fileName)
 
         # create a descriptor of the observation grid using Lat/Lon
@@ -364,15 +334,15 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         # -------
         # Xylar Asay-Davis, Milena Veneziani
 
-        # Load WOA18 climatological data
+        # Load WOA23 climatological data
         dsObs = xr.open_dataset(fileName)
 
-        # Rename coordinates to be consistent with other datasets
-        if 'month' in dsObs.coords:
-            # need to add a dummy year coordinate
-            dsObs = dsObs.rename({'month': 'Time'})
-            dsObs.coords['month'] = dsObs['Time']
-            dsObs.coords['year'] = ('Time', np.ones(dsObs.sizes['Time'], int))
+        # must have capital Time
+        dsObs = dsObs.rename({'time': 'Time'})
+        # make sure month is a coord
+        dsObs = dsObs.set_coords('month')
+        # add a dummy year to the dataset
+        dsObs.coords['year'] = ('Time', np.ones(dsObs.sizes['Time'], int))
 
         data_vars = {}
         for fieldName in self.fieldNames:
@@ -390,7 +360,8 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
             field = xr.concat(slices, dim='depthSlice')
             data_vars[fieldName] = field
 
-        dsObs = xr.Dataset(data_vars=data_vars,
-                           coords={'depthSlice': depthNames})
+        coords = {'depthSlice': depthNames}
+
+        dsObs = xr.Dataset(data_vars=data_vars, coords=coords)
 
         return dsObs
