@@ -24,7 +24,7 @@ from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
 from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
 
 from mpas_analysis.shared.io.utility import build_config_full_path, \
-    build_obs_path, get_files_year_month, decode_strings, get_region_mask
+    build_obs_path, get_files_year_month, decode_strings
 
 from mpas_analysis.shared.html import write_image_xml
 
@@ -74,6 +74,7 @@ class TimeSeriesOceanRegions(AnalysisTask):
 
         regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
+        woaFilename = 'WOA23/woa23_decav_04_pt_s_mon_ann.20241101.nc'
         obsDicts = {
             'SOSE': {
                 'suffix': 'SOSE',
@@ -94,21 +95,21 @@ class TimeSeriesOceanRegions(AnalysisTask):
                 'zVar': 'z',
                 'tDim': 'Time',
                 'legend': 'SOSE 2005-2010 ANN mean'},
-            'WOA18': {
-                'suffix': 'WOA18',
+            'WOA23': {
+                'suffix': 'WOA23',
                 'gridName': 'Global_0.25x0.25degree',
-                'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'gridFileName': woaFilename,
+                'TFileName': woaFilename,
+                'SFileName': woaFilename,
                 'volFileName': None,
                 'lonVar': 'lon',
                 'latVar': 'lat',
-                'TVar': 't_an',
+                'TVar': 'pt_an',
                 'SVar': 's_an',
                 'volVar': 'volume',
                 'zVar': 'depth',
-                'tDim': 'month',
-                'legend': 'WOA18 1955-2017 ANN mean'}}
+                'tDim': 'time',
+                'legend': 'WOA23 1991-2020 ANN mean'}}
 
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
@@ -185,7 +186,8 @@ class TimeSeriesOceanRegions(AnalysisTask):
                     localObsDict = dict(groupObsDicts[obsName])
 
                     obsSubtask = ComputeObsRegionalTimeSeriesSubtask(
-                        self, regionGroup, regionName, fullSuffix, localObsDict)
+                        self, regionGroup, regionName, fullSuffix,
+                        localObsDict)
                     obsSubtasks[obsName] = obsSubtask
 
                 plotRegionSubtask = PlotRegionTimeSeriesSubtask(
@@ -828,8 +830,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        self.logger.info("\nAveraging T and S for {}...".format(
-            self.regionName))
+        self.logger.info(f"\nAveraging T and S for {self.regionName}...")
 
         obsDict = self.obsDict
         config = self.config
@@ -839,20 +840,19 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        sectionName = 'timeSeries{}'.format(sectionSuffix)
+        sectionName = f'timeSeries{sectionSuffix}'
 
-        outputDirectory = '{}/{}/'.format(
-            build_config_full_path(self.config, 'output',
-                                   'timeseriesSubdirectory'),
-            timeSeriesName)
+        baseDir = build_config_full_path(self.config, 'output',
+                                         'timeseriesSubdirectory')
+        outputDirectory = f'{baseDir}/{timeSeriesName}/'
 
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
-        outFileName = '{}/TS_{}_{}.nc'.format(
-            outputDirectory, obsDict['suffix'], self.prefix)
+        outFileName = \
+            f"{outputDirectory}/TS_{obsDict['suffix']}_{self.prefix}.nc"
 
         if os.path.exists(outFileName):
             return
@@ -868,7 +868,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
             [obsDict['latVar'], obsDict['lonVar']])
         if 'nCells' in dsRegionMask.data_vars:
-            dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
+            dsRegionMask = dsRegionMask.drop_vars(['nCells'])
 
         maskRegionNames = decode_strings(dsRegionMask.regionNames)
         regionIndex = maskRegionNames.index(self.regionName)
@@ -927,7 +927,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         if obsDict['volFileName'] is None:
             # compute volume from lat, lon, depth bounds
-            self.logger.info('  Computing volume...'.format(obsFileName))
+            self.logger.info('  Computing volume...')
             latBndsName = ds[latVarName].attrs['bounds']
             lonBndsName = ds[lonVarName].attrs['bounds']
             zBndsName = ds[zVarName].attrs['bounds']
@@ -938,7 +938,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             dLon = numpy.deg2rad(lonBnds[:, 1] - lonBnds[:, 0])
             lat = numpy.deg2rad(ds[latVarName])
             dz = zBnds[:, 1] - zBnds[:, 0]
-            radius = 6378137.0
+            radius = cime_constants['SHR_CONST_REARTH']
             area = radius**2*numpy.cos(lat)*dLat*dLon
             volume = dz*area
             ds[volVarName] = volume
