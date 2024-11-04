@@ -1177,6 +1177,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             timeSeriesName,
             f'{timeSeriesName}_{startYear:04d}-{endYear:04d}.nc')
 
+        maxTitleLength = config.getint('timeSeriesOceanRegions',
+                                       'maxTitleLength')
+
         sectionName = self.sectionName
 
         anomalyVars = config.getexpression(sectionName, 'anomalies')
@@ -1333,7 +1336,8 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 ylabel=yLabel, movingAveragePoints=movingAveragePoints,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, titleFontSize=titleFontSize,
-                defaultFontSize=defaultFontSize)
+                defaultFontSize=defaultFontSize,
+                maxTitleLength=maxTitleLength)
 
             # do this before the inset because otherwise it moves the inset
             # and cartopy doesn't play too well with tight_layout anyway
@@ -1343,7 +1347,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             savefig(outFileName, config, tight=False)
 
-            caption = f'Regional mean of {title}'
+            caption = f'Regional {title}'
 
             write_image_xml(
                 config=config,
