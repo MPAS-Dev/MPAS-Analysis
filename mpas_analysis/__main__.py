@@ -252,26 +252,38 @@ def build_analysis_list(config, controlConfig):
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='NH', controlConfig=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAlbedo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
-    analyses.append(seaIceTimeSeriesTask)
-    analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
-        hemisphere='NH', control_config=controlConfig))
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAlbedo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
-    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
-        config=config, mpas_climatology_task=seaIceClimatologyTask,
-        hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
 
+    analyses.append(seaIceTimeSeriesTask)
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
                                              controlConfig))
 

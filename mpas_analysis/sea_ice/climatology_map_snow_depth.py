@@ -19,14 +19,13 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceProduction(AnalysisTask):
+class ClimatologyMapSeaIceSnowDepth(AnalysisTask):
     """
-    An analysis task for comparison of sea ice production against
-    observations
+    An analysis task for sea ice snow depth
     """
     # Authors
     # -------
-    # Darin Comeau, Xylar Asay-Davis
+    # Elizabeth Hunke, Xylar Asay-Davis
 
     def __init__(self, config, mpas_climatology_task, hemisphere,
                  control_config=None):
@@ -49,13 +48,13 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
         """
         # Authors
         # -------
-        # Darin Comeau, Xylar Asay-Davis
+        # Elizabeth Hunke, Xylar Asay-Davis
 
-        task_name = f'climatologyMapSeaIceProduction{hemisphere}'
+        task_name = f'climatologyMapSeaIceSnowDepth{hemisphere}'
 
-        field_name = 'seaIceProduction'
+        field_name = 'seaIceSnowDepth'
 
-        tags = ['climatology', 'horizontalMap', field_name, 'publicObs']
+        tags = ['climatology', 'horizontalMap', field_name, 'publicObs', 'snow']
         if hemisphere == 'NH':
             tags = tags + ['arctic']
         else:
@@ -88,11 +87,10 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        variable_list = ['timeMonthly_avg_congelation',
-                         'timeMonthly_avg_frazilFormation',
-                         'timeMonthly_avg_snowiceFormation']
+        variable_list = ['timeMonthly_avg_iceAreaCell',
+                         'timeMonthly_avg_snowVolumeCell']
 
-        remap_climatology_subtask = RemapMpasSeaIceProductionClimatology(
+        remap_climatology_subtask = RemapMpasSeaIceSnowDepthClimatology(
             mpas_climatology_task=mpas_climatology_task,
             parent_task=self,
             climatology_name=f'{field_name}{hemisphere}',
@@ -106,22 +104,23 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
             for comparison_grid_name in comparison_grid_names:
 
                 if control_config is None:
-                    if hemisphere == 'SH' and season == 'ANN':
-                        ref_title_label = 'Observations (AnIceFlux)'
-                        gallery_name = None
-                        diff_title_label = 'Model - Observations'
-                        obs_file_name = build_obs_path(
-                                config, 'seaIce',
-                                relativePathOption=f'production{hemisphere}',
-                                relativePathSection=section_name)
+#echmod - no observations yet
+#                    if hemisphere == 'SH' and season == 'ANN':
+#                        ref_title_label = 'Observations (AnIceFlux)'
+#                        gallery_name = None
+#                        diff_title_label = 'Model - Observations'
+#                        obs_file_name = build_obs_path(
+#                                config, 'seaIce',
+#                                relativePathOption=f'melting{hemisphere}',
+#                                relativePathSection=section_name)
 
-                        remap_observations_subtask = RemapAnIceFluxProductionClimatology(
-                            parentTask=self, seasons=seasons,
-                            fileName=obs_file_name,
-                            outFilePrefix=f'{field_name}{hemisphere}',
-                            comparisonGridNames=comparison_grid_names)
-                        self.add_subtask(remap_observations_subtask)
-                    else:
+#                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(
+#                            parentTask=self, seasons=seasons,
+#                            fileName=obs_file_name,
+#                            outFilePrefix=f'{field_name}{hemisphere}',
+#                            comparisonGridNames=comparison_grid_names)
+#                        self.add_subtask(remap_observations_subtask)
+#                    else:
                         remap_observations_subtask = None
                         gallery_name = None
                         ref_title_label = None
@@ -138,8 +137,10 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
                     remap_observations_subtask = None
 
                 image_caption = f'Climatology Map of ' \
-                                f'{hemisphere_long}-Hemisphere Sea Ice Production'
-                gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Production'
+                                f'{hemisphere_long}-Hemisphere ' \
+                                f'Cell-Averaged Snow Depth'
+#                gallery_group = f'{hemisphere_long}-Hemisphere Snow Depth'
+                gallery_group = f'Snow Depth'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
@@ -149,33 +150,33 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel=f'seaice_production{hemisphere}',
-                    fieldNameInTitle='Sea Ice Production',
+                    outFileLabel=f'seaice_snowdepth{hemisphere}',
+                    fieldNameInTitle='Mean Snow Depth',
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'm yr$^{-1}$',
+                    unitsLabel=r'm$',
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
-                    groupLink=f'{hemisphere.lower()}_production',
+                    groupLink=f'{hemisphere.lower()}_snowdepth',
                     galleryName=gallery_name,
                     extend='max')
 
                 self.add_subtask(subtask)
 
 
-class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
+class RemapMpasSeaIceSnowDepthClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of sea ice production from
-    climatologies of individual production terms
+    A subtask for computing climatologies of sea ice snow depth from
+    climatologies of sea ice area and snow volume
     """
     def __init__(self, mpas_climatology_task, parent_task, climatology_name,
                  variable_list, seasons, comparison_grid_names):
 
         """
-        Construct the analysis task and adds it as a subtask of the
+        Construct the analysis task and add it as a subtask of the
         ``parent_task``.
         Parameters
         ----------
@@ -199,7 +200,7 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
             The name(s) of the comparison grid to use for remapping.
         """
 
-        subtask_name = f'remapMpasClimatology_SeaIceProduction'
+        subtask_name = f'remapMpasClimatology_SeaIceSnowDepth'
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super().__init__(
@@ -226,8 +227,7 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the total sea ice production from the individual production
-        fields.
+        Compute the snow depth from snow volume and ice area.
         Parameters
         ----------
         climatology : xarray.Dataset
@@ -240,88 +240,24 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
 
-        production = self._compute_production(climatology)
+        snowdepth = self._compute_snowdepth(climatology)
 
-        climatology['seaIceProduction'] = production
-        climatology.seaIceProduction.attrs['units'] = 'm y^-1'
+        climatology['seaIceSnowDepth'] = snowdepth
+        climatology.seaIceSnowDepth.attrs['units'] = 'm'
         climatology = climatology.drop_vars(self.variable_list)
 
         return climatology
 
-    def _compute_production(self, climatology):
+    def _compute_snowdepth(self, climatology):
         """
-        Compute the total sea ice production in m yr^-1 from the individual
-        production fields in m s^-1.
+        Compute the snow depth in m 
         """
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
-        units_scale_factor = 60 * 60 * 24 * 365
+        volume = climatology['timeMonthly_avg_snowVolumeCell']
+        area = climatology['timeMonthly_avg_iceAreaCell']
 
-        congelation = climatology['timeMonthly_avg_congelation']
-        frazil = climatology['timeMonthly_avg_frazilFormation']
-        snowice = climatology['timeMonthly_avg_snowiceFormation']
-
-        production = (congelation + frazil + snowice) * units_scale_factor
-        return production
-
-class RemapAnIceFluxProductionClimatology(RemapObservedClimatologySubtask):
-    """
-    A subtask for reading and remapping sea ice production from AnIceFlux
-    observations
-    """
-    # Authors
-    # -------
-    # Darin Comeau, Xylar Asay-Davis
-
-    def get_observation_descriptor(self, fileName):
-        """
-        get a MeshDescriptor for the observation grid
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name describing the source grid
-
-        Returns
-        -------
-        obsDescriptor : ``MeshDescriptor``
-            The descriptor for the observation grid
-        """
-        # Authors
-        # -------
-        # Darin Comeau, Xylar Asay-Davis
-
-        # create a descriptor of the observation grid using the lat/lon
-        # coordinates
-        obsDescriptor = LatLon2DGridDescriptor.read(fileName=fileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
-        return obsDescriptor
-
-    def build_observational_dataset(self, fileName):
-        """
-        read in the data sets for observations, and possibly rename some
-        variables and dimensions
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name
-
-        Returns
-        -------
-        dsObs : ``xarray.Dataset``
-            The observational dataset
-        """
-        # Authors
-        # -------
-        # Darin Comeau, Xylar Asay-Davis
-
-        dsObs = xr.open_dataset(fileName)
-        dsObs = dsObs.isel(time=0)
-        dsObs = dsObs.rename({'freezing': 'seaIceProduction'})
-        dsObs['seaIceProduction'] = -dsObs.seaIceProduction
-        dsObs = dsObs.transpose('y', 'x')
-
-        return dsObs
+        snowdepth = volume        # volume per unit grid cell area (m)
+#        snowdepth = volume/area   # volume per unit sea ice area (m)
+        return snowdepth

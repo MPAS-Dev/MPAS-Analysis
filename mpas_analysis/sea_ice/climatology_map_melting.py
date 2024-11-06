@@ -137,7 +137,7 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
 
                     remap_observations_subtask = None
 
-                image_caption = f'{season} Climatology Map of ' \
+                image_caption = f'Climatology Map of ' \
                                 f'{hemisphere_long}-Hemisphere Sea Ice Melting'
                 gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Melting'
                 # make a new subtask for this season and comparison grid
