@@ -316,7 +316,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maskMinThreshold</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">maskMaxThreshold</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="s1">&#39;both&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prependComparisonGrid</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask.set_plot_info">
@@ -326,7 +327,8 @@
                       <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span> <span class="n">groupLink</span><span class="p">,</span>
                       <span class="n">galleryName</span><span class="p">,</span> <span class="n">diffTitleLabel</span><span class="o">=</span><span class="s1">&#39;Model - Observations&#39;</span><span class="p">,</span>
                       <span class="n">configSectionName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">maskMinThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                      <span class="n">maskMaxThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                      <span class="n">maskMaxThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                      <span class="n">prependComparisonGrid</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Store attributes related to plots, plot file names and HTML output.</span>
 
@@ -383,7 +385,11 @@
 
 <span class="sd">        extend : {&#39;neither&#39;, &#39;both&#39;, &#39;min&#39;, &#39;max&#39;}, optional</span>
 <span class="sd">            Determines the ``contourf``-coloring of values that are outside the</span>
-<span class="sd">            range of the levels provided if using an indexed colormap.</span>
+<span class="sd">            range of the levels provided if using an indexed colormap</span>
+
+<span class="sd">        prependComparisonGrid : bool, optional</span>
+<span class="sd">            Whether to prepend the name of the comparison grid to the gallery</span>
+<span class="sd">            group</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">outFileLabel</span> <span class="o">=</span> <span class="n">outFileLabel</span>
@@ -424,7 +430,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailDescription</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1"> z=</span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s1"> m&#39;</span>
 
         <span class="k">if</span> <span class="n">extend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="n">extend</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">extend</span> <span class="o">=</span> <span class="n">extend</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prependComparisonGrid</span> <span class="o">=</span> <span class="n">prependComparisonGrid</span></div>
 
 
     <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -749,14 +757,19 @@
             <span class="n">vertical</span><span class="o">=</span><span class="n">vertical</span><span class="p">,</span>
             <span class="n">extend</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">extend</span><span class="p">)</span>
 
-        <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">capwords</span><span class="p">(</span><span class="n">comparisonGridName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">prependComparisonGrid</span><span class="p">:</span>
+            <span class="n">upperGridName</span> <span class="o">=</span> <span class="n">capwords</span><span class="p">(</span><span class="n">comparisonGridName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+            <span class="n">galleryGroup</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">upperGridName</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">galleryGroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span>
+
         <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="si">}</span><span class="s1">&#39;</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span>
             <span class="n">filePrefix</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">componentSubdirectory</span><span class="o">=</span><span class="n">componentSubdirectory</span><span class="p">,</span>
-            <span class="n">galleryGroup</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">upperGridName</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
             <span class="n">groupSubtitle</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSubtitle</span><span class="p">,</span>
             <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">groupLink</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="n">gallery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryName</span><span class="p">,</span>
