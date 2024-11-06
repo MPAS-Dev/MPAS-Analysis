@@ -199,7 +199,7 @@ class ConservationTask(AnalysisTask):
             'land_ice_ssh_change': ['landIceSshChange'],
             'land_ice_mass_flux': ['landIceMassFlux'],
             'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
-                                              'accumulatedLandIceFlux',
+                                              'accumulatedLandIceFluxTotal',
                                               'accumulatedRemovedRiverRunoffFlux',
                                               'accumulatedRemovedIceRunoffFlux']}
 
@@ -208,16 +208,21 @@ class ConservationTask(AnalysisTask):
             'massAnomaly': ['massChange', 'netMassFlux'],
             'energyAnomaly': ['energyChange', 'netEnergyFlux'],
             'saltAnomaly': ['saltChange', 'netSaltFlux'],
+            'accumulatedLandIceFluxTotal': ['accumulatedLandIceFlux',
+                                            'accumulatedLandIceFrazilFlux'],
             'landIceMassFlux': ['accumulatedIcebergFlux',
                                 'accumulatedLandIceFlux',
+                                'accumulatedLandIceFrazilFlux',
                                 'accumulatedRemovedRiverRunoffFlux',
                                 'accumulatedRemovedIceRunoffFlux'],
             'landIceSshChange': ['accumulatedIcebergFlux',
                                  'accumulatedLandIceFlux',
+                                  'accumulatedLandIceFrazilFlux',
                                  'accumulatedRemovedRiverRunoffFlux',
                                  'accumulatedRemovedIceRunoffFlux'],
             'landIceMassChange': ['accumulatedIcebergFlux',
                                   'accumulatedLandIceFlux',
+                                  'accumulatedLandIceFrazilFlux',
                                   'accumulatedRemovedRiverRunoffFlux',
                                   'accumulatedRemovedIceRunoffFlux']}
 
@@ -537,9 +542,14 @@ class ConservationTask(AnalysisTask):
                 # Convert from kg/month to kg
                 variable = np.cumsum(land_ice_mass_flux)
 
+            elif varname == 'accumulatedLandIceFluxTotal':
+                variable = self._get_variable(ds, 'accumulatedLandIceFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedLandIceFrazilFlux', mks=True)
+
             elif varname == 'landIceMassFlux':
                 variable = self._get_variable(ds, 'accumulatedIcebergFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedLandIceFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedLandIceFrazilFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedRemovedRiverRunoffFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedRemovedIceRunoffFlux', mks=True)
 
