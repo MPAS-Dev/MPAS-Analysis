@@ -190,6 +190,73 @@
 
   <observation>
     <name>
+      WOA23 Temperature and Salinity Climatology
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      The World Ocean Atlas 2023 (WOA23) was released on February 14, 2024 and
+      includes temperature, salinity, oxygen (and parameters Apparent Oxygen
+      Utilization and percent oxygen saturation) and inorganic nutrients
+      (phosphate, silicate, and nitrate). WOA23 includes approximately 1.8
+      million new oceanographic casts added to the WOD since WOA18’s release,
+      as well as renewed and updated quality controls.
+    </description>
+    <source>
+      [NOAA National Centers for Environmental Information (NCEI) website]
+      (https://www.ncei.noaa.gov/products/world-ocean-atlas)
+    </source>
+    <releasePolicy>
+      These data are openly available to the public. Please acknowledge the
+      use of these data with the text given in the acknowledgment attribute.
+    </releasePolicy>
+    <references>
+      - [Locarnini et al. (2024)](https://repository.library.noaa.gov/view/noaa/60599)
+      - [Reagan et al. (2024)](https://repository.library.noaa.gov/view/noaa/60600)
+    </references>
+    <bibtex>
+      @manual{locarnini_world_nodate,
+      title = {World Ocean Atlas 2023, Volume 1: Temperature},
+      url = {https://repository.library.noaa.gov/view/noaa/60599},
+      shorttitle = {World Ocean Atlas 2023, Volume 1},
+      year = {2024},
+      author = {Locarnini, Ricardo A. and Mishonov, Alexey V. and Baranova,
+      Olga K. and Reagan, James R. and Boyer, Timothy P. and Seidov, Dan and
+      Wang, Zhankun and Garcia, Hernan E. and Bouchard, Courtney and Cross,
+      Scott L. and Paver, Christopher R. and Dukhovskoy, Dmitry},
+      }
+
+      @manual{reagan_world_nodate,
+      title = {World Ocean Atlas 2023, Volume 2: Salinity},
+      url = {https://repository.library.noaa.gov/view/noaa/60600},
+      shorttitle = {World Ocean Atlas 2023, Volume 2},
+      author = {Reagan, James R. and Seidov, Dan and Wang, Zhankun and
+      Dukhovskoy, Dmitry and Boyer, Timothy P. and Locarnini, Ricardo A. and
+      Baranova, Olga K. and Mishonov, Alexey V. and Garcia, Hernan E. and
+      Bouchard, Courtney and Cross, Scott L. and Paver, Christopher R.},
+      year = {2024},
+      }
+    </bibtex>
+    <dataUrls>
+      - https://www.ncei.noaa.gov/access/world-ocean-atlas-2023/
+    </dataUrls>
+    <preprocessing>
+      - preprocess_observations/preprocess_woa23.py
+    </preprocessing>
+    <tasks>
+      - climatologyMapWoa
+    </tasks>
+    <subdirectory>
+      Ocean/WOA23
+    </subdirectory>
+    <nameInDocs>
+      woa23_t_s
+    </nameInDocs>
+  </observation>
+
+  <observation>
+    <name>
       AVISO Absolute Dynamic Topography
     </name>
     <component>

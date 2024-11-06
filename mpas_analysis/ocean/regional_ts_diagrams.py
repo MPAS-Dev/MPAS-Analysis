@@ -23,6 +23,7 @@ import multiprocessing
 from multiprocessing.pool import ThreadPool
 
 from geometric_features import FeatureCollection, read_feature_collection
+from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
 
@@ -98,6 +99,7 @@ class RegionalTSDiagrams(AnalysisTask):
 
         self.seasons = config.getexpression(self.taskName, 'seasons')
 
+        woaFilename = 'WOA23/woa23_decav_04_pt_s_mon_ann.20241101.nc'
         obsDicts = {
             'SOSE': {
                 'suffix': 'SOSE',
@@ -120,29 +122,29 @@ class RegionalTSDiagrams(AnalysisTask):
                 'volVar': 'volume',
                 'zVar': 'z',
                 'tVar': 'Time'},
-            'WOA18': {
-                'suffix': 'WOA18',
+            'WOA23': {
+                'suffix': 'WOA23',
                 'gridName': 'Global_0.25x0.25degree',
-                'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'gridFileName': woaFilename,
+                'TFileName': woaFilename,
+                'SFileName': woaFilename,
                 'volFileName': None,
                 'preprocessedFileTemplate':
-                    'WOA18/woa18_{}_T_S_z_vol_20200514.nc',
+                    'WOA23/woa23_{}_decav_04_pt_s_z_vol.20241101.nc',
                 'lonVar': 'lon',
                 'latVar': 'lat',
-                'TVar': 't_an',
+                'TVar': 'pt_an',
                 'SVar': 's_an',
                 'volVar': 'volume',
                 'zVar': 'depth',
-                'tVar': 'month'}}
+                'tVar': 'time'}}
 
         allObsUsed = []
 
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
-            sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
+            sectionName = f'TSDiagramsFor{sectionSuffix}'
             obsList = config.getexpression(sectionName, 'obs')
             allObsUsed = allObsUsed + obsList
         allObsUsed = set(allObsUsed)
@@ -161,7 +163,7 @@ class RegionalTSDiagrams(AnalysisTask):
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
-            sectionName = 'TSDiagramsFor{}'.format(sectionSuffix)
+            sectionName = f'TSDiagramsFor{sectionSuffix}'
 
             regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
@@ -290,7 +292,7 @@ class ComputeObsTSClimatology(AnalysisTask):
             taskName=parentTask.taskName,
             componentName=parentTask.componentName,
             tags=parentTask.tags,
-            subtaskName='climatolgy{}_{}'.format(obsDict['suffix'], season))
+            subtaskName=f'climatolgy{obsDict["suffix"]}_{season}')
 
         self.obsName = obsName
         self.obsDict = obsDict
@@ -332,8 +334,8 @@ class ComputeObsTSClimatology(AnalysisTask):
         with dask.config.set(schedular='threads',
                              pool=ThreadPool(self.daskThreads)):
 
-            self.logger.info("\n computing T S climatogy for {}...".format(
-                self.obsName))
+            self.logger.info(
+                f"\n computing T S climatogy for {self.obsName}...")
 
             chunk = {obsDict['tVar']: 6}
 
@@ -347,19 +349,19 @@ class ComputeObsTSClimatology(AnalysisTask):
             obsFileName = build_obs_path(
                 config, component=self.componentName,
                 relativePath=obsDict['TFileName'])
-            self.logger.info('  Reading from {}...'.format(obsFileName))
+            self.logger.info(f'  Reading from {obsFileName}...')
             ds = xarray.open_dataset(obsFileName, chunks=chunk)
             if obsDict['SFileName'] != obsDict['TFileName']:
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=obsDict['SFileName'])
-                self.logger.info('  Reading from {}...'.format(obsFileName))
+                self.logger.info(f'  Reading from {obsFileName}...')
                 dsS = xarray.open_dataset(obsFileName, chunks=chunk)
                 ds[SVarName] = dsS[SVarName]
 
             if obsDict['volFileName'] is None:
                 # compute volume from lat, lon, depth bounds
-                self.logger.info('  Computing volume...'.format(obsFileName))
+                self.logger.info('  Computing volume...')
                 latBndsName = ds[latVarName].attrs['bounds']
                 lonBndsName = ds[lonVarName].attrs['bounds']
                 zBndsName = ds[zVarName].attrs['bounds']
@@ -370,7 +372,7 @@ class ComputeObsTSClimatology(AnalysisTask):
                 dLon = numpy.deg2rad(lonBnds[:, 1] - lonBnds[:, 0])
                 lat = numpy.deg2rad(ds[latVarName])
                 dz = zBnds[:, 1] - zBnds[:, 0]
-                radius = 6378137.0
+                radius = cime_constants['SHR_CONST_REARTH']
                 area = radius**2*numpy.cos(lat)*dLat*dLon
                 ds[volVarName] = dz*area
 
@@ -378,7 +380,7 @@ class ComputeObsTSClimatology(AnalysisTask):
                 obsFileName = build_obs_path(
                     config, component=self.componentName,
                     relativePath=obsDict['volFileName'])
-                self.logger.info('  Reading from {}...'.format(obsFileName))
+                self.logger.info(f'  Reading from {obsFileName}...')
                 dsVol = xarray.open_dataset(obsFileName)
                 ds[volVarName] = dsVol[volVarName]
 
@@ -386,13 +388,13 @@ class ComputeObsTSClimatology(AnalysisTask):
             temp_files = [temp_file_name]
             self.logger.info('  computing the dataset')
             ds.compute()
-            self.logger.info('  writing temp file {}...'.format(temp_file_name))
+            self.logger.info(f'  writing temp file {temp_file_name}...')
             write_netcdf_with_fill(ds, temp_file_name)
 
             chunk = {obsDict['latVar']: 400,
                      obsDict['lonVar']: 400}
 
-            self.logger.info('  Reading back from {}...'.format(temp_file_name))
+            self.logger.info(f'  Reading back from {temp_file_name}...')
             ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
             if obsDict['tVar'] in ds.dims:
@@ -413,9 +415,9 @@ class ComputeObsTSClimatology(AnalysisTask):
             temp_files.append(temp_file_name)
             self.logger.info('  computing the dataset')
             ds.compute()
-            self.logger.info('  writing temp file {}...'.format(temp_file_name))
+            self.logger.info(f'  writing temp file {temp_file_name}...')
             write_netcdf_with_fill(ds, temp_file_name)
-            self.logger.info('  Reading back from {}...'.format(temp_file_name))
+            self.logger.info(f'  Reading back from {temp_file_name}...')
             ds = xarray.open_dataset(temp_file_name, chunks=chunk)
 
             self.logger.info('  Broadcasting z coordinate...')
@@ -433,15 +435,15 @@ class ComputeObsTSClimatology(AnalysisTask):
 
             self.logger.info('  computing the dataset')
             ds.compute()
-            self.logger.info('  writing {}...'.format(self.fileName))
+            self.logger.info(f'  writing {self.fileName}...')
             write_netcdf_with_fill(ds, self.fileName)
             for file_name in temp_files:
-                self.logger.info('  Deleting temp file {}'.format(file_name))
+                self.logger.info(f'  Deleting temp file {file_name}')
                 os.remove(file_name)
             self.logger.info('  Done!')
 
     def _get_file_name(self, obsDict, suffix=''):
-        obsSection = '{}Observations'.format(self.componentName)
+        obsSection = f'{self.componentName}Observations'
         climatologyDirectory = build_config_full_path(
             config=self.config, section='output',
             relativePathOption='climatologySubdirectory',
@@ -449,9 +451,8 @@ class ComputeObsTSClimatology(AnalysisTask):
 
         make_directories(climatologyDirectory)
 
-        fileName = '{}/{}_{}_{}{}.nc'.format(
-            climatologyDirectory, 'TS_{}'.format(obsDict['suffix']),
-            obsDict['gridName'], self.season, suffix)
+        fileName = f'{climatologyDirectory}/TS_{obsDict["suffix"]}_' \
+                   f'{obsDict["gridName"]}_{self.season}{suffix}.nc'
         return fileName
 
 
@@ -751,7 +752,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             ds = ds.reset_index('nCells').drop_vars(
                 [obsDict['latVar'], obsDict['lonVar']])
             if 'nCells' in ds.data_vars:
-               ds = ds.drop_vars(['nCells'])
+                ds = ds.drop_vars(['nCells'])
 
             ds = ds.where(cellMask, drop=True)
 
@@ -1077,7 +1078,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
                     else:
                         norm = colors.LogNorm(vmin=volMinMpas, vmax=volMaxMpas)
                 else:
-                    raise ValueError('Unsupported normType {}'.format(normType))
+                    raise ValueError(f'Unsupported normType {normType}')
                 if norm is not None:
                     lastPanel.set_norm(norm)
             else:
