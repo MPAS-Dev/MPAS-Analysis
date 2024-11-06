@@ -16,8 +16,7 @@ import re
 
 
 install_requires = \
-    ['bottleneck',
-     'cartopy>=0.18.0',
+    [ 'cartopy>=0.18.0',
      'cmocean',
      'dask',
      'gsw',

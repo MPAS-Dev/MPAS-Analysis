@@ -73,12 +73,16 @@ Ocean tasks
    ClimatologyMapAntarcticMelt
    ClimatologyMapSose
    ClimatologyMapVel
+   ClimatologyMapWoa
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    ClimatologyMapWaves
    IndexNino34
    MeridionalHeatTransport
    OceanHistogram
+   OceanRegionalProfiles
+   RegionalTSDiagrams
+   SoseTransects
    StreamfunctionMOC
    TimeSeriesOHCAnomaly
    TimeSeriesTemperatureAnomaly
@@ -87,6 +91,8 @@ Ocean tasks
    TimeSeriesAntarcticMelt
    TimeSeriesOceanRegions
    TimeSeriesTransport
+   WoaTransects
+   WoceTransects
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 

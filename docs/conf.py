@@ -187,7 +187,7 @@ intersphinx_mapping = {
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'xarray': ('http://xarray.pydata.org/en/stable/', None),
     'geometric_features':
-        ('http://mpas-dev.github.io/geometric_features/stable/', None),
+        ('http://mpas-dev.github.io/geometric_features/main/', None),
     'mpas_tools':
         ('http://mpas-dev.github.io/MPAS-Tools/stable/', None)}
 

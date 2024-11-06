@@ -3,7 +3,6 @@
 
 # Base
 python>=3.9
-bottleneck
 cartopy >=0.18.0
 cartopy_offlinedata
 cmocean

@@ -8,11 +8,11 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
-import xarray as xr
-import numpy
 import os
-
 from collections import OrderedDict
+
+import numpy as np
+import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.ocean.compute_transects_subtask import \
@@ -28,10 +28,10 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
 from mpas_analysis.shared.io import write_netcdf_with_fill
 
 
-class SoseTransects(AnalysisTask):
+class WoaTransects(AnalysisTask):
     """
     Plot model output at transects and various longitudes around Antarctica,
-    compared against SOSE
+    compared against the WOA23 climatology
     """
 
     # Authors
@@ -59,11 +59,11 @@ class SoseTransects(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        tags = ['climatology', 'transect', 'sose', 'publicObs', 'antarctic']
+        tags = ['climatology', 'transect', 'woa', 'publicObs', 'antarctic']
 
         # call the constructor from the base class (AnalysisTask)
-        super(SoseTransects, self).__init__(
-            config=config, taskName='soseTransects',
+        super().__init__(
+            config=config, taskName='woaTransects',
             componentName='ocean',
             tags=tags)
 
@@ -84,8 +84,7 @@ class SoseTransects(AnalysisTask):
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        longitudes = sorted(config.getexpression(sectionName, 'longitudes',
-                                                 use_numpyfunc=True))
+        longitudes = _get_longitudes(config)
 
         fields = \
             [{'prefix': 'temperature',
@@ -93,43 +92,13 @@ class SoseTransects(AnalysisTask):
               'units': r'$\degree$C',
               'titleName': 'Potential Temperature',
               'obsFilePrefix': 'pot_temp',
-              'obsFieldName': 'theta'},
+              'obsFieldName': 'pt_an'},
              {'prefix': 'salinity',
               'mpas': 'timeMonthly_avg_activeTracers_salinity',
               'units': r'PSU',
               'titleName': 'Salinity',
               'obsFilePrefix': 'salinity',
-              'obsFieldName': 'salinity'},
-             {'prefix': 'potentialDensity',
-              'mpas': 'timeMonthly_avg_potentialDensity',
-              'units': r'kg m$^{-3}$',
-              'titleName': 'Potential Density',
-              'obsFilePrefix': 'pot_den',
-              'obsFieldName': 'potentialDensity'},
-             {'prefix': 'zonalVelocity',
-              'mpas': 'timeMonthly_avg_velocityZonal',
-              'units': r'm s$^{-1}$',
-              'titleName': 'Zonal Velocity',
-              'obsFilePrefix': 'zonal_vel',
-              'obsFieldName': 'zonalVel'},
-             {'prefix': 'meridionalVelocity',
-              'mpas': 'timeMonthly_avg_velocityMeridional',
-              'units': r'm s$^{-1}$',
-              'titleName': 'Meridional Velocity',
-              'obsFilePrefix': 'merid_vel',
-              'obsFieldName': 'meridVel'},
-             {'prefix': 'velocityMagnitude',
-              'mpas': 'velMag',
-              'units': r'm s$^{-1}$',
-              'titleName': 'Velocity Magnitude',
-              'obsFilePrefix': None,
-              'obsFieldName': 'velMag'},
-             {'prefix': 'potentialDensityContour',
-              'mpas': 'timeMonthly_avg_potentialDensity',
-              'units': r'kg m$^{-3}$',
-              'titleName': 'Potential Density Contours',
-              'obsFilePrefix': 'pot_den',
-              'obsFieldName': 'potentialDensity'}]
+              'obsFieldName': 's_an'}]
 
         fieldList = config.getexpression(sectionName, 'fieldList')
         fields = [field for field in fields if field['prefix'] in fieldList]
@@ -137,19 +106,19 @@ class SoseTransects(AnalysisTask):
         variableList = [field['mpas'] for field in fields
                         if field['mpas'] != 'velMag']
 
-        transectCollectionName = 'SOSE_transects'
+        transectCollectionName = 'WOA_transects'
         if horizontalResolution not in ['obs', 'mpas']:
-            transectCollectionName = '{}_{}km'.format(transectCollectionName,
-                                                      horizontalResolution)
+            transectCollectionName = \
+                f'{transectCollectionName}_{horizontalResolution}km'
 
-        transectsObservations = SoseTransectsObservations(
+        transectsObservations = WoaTransectsObservations(
             config, horizontalResolution,
             transectCollectionName, fields)
 
         computeTransectsSubtask = ComputeTransectsWithVelMag(
             mpasClimatologyTask=mpasClimatologyTask,
             parentTask=self,
-            climatologyName='SOSE_transects',
+            climatologyName='WOA_transects',
             transectCollectionName=transectCollectionName,
             variableList=variableList,
             seasons=seasons,
@@ -160,13 +129,13 @@ class SoseTransects(AnalysisTask):
         plotObs = controlConfig is None
         if plotObs:
 
-            refTitleLabel = 'State Estimate (SOSE)'
+            refTitleLabel = 'Observations (WOA23 1991-2020)'
 
             diffTitleLabel = 'Model - State Estimate'
 
         else:
             controlRunName = controlConfig.get('runs', 'mainRunName')
-            refTitleLabel = 'Control: {}'.format(controlRunName)
+            refTitleLabel = f'Control: {controlRunName}'
 
             diffTitleLabel = 'Main - Control'
 
@@ -174,18 +143,17 @@ class SoseTransects(AnalysisTask):
             fieldPrefix = field['prefix']
             fieldPrefixUpper = fieldPrefix[0].upper() + fieldPrefix[1:]
             for lon in longitudes:
-                transectName = 'lon_{}'.format(lon)
+                transectName = f'lon_{lon}'
 
                 for season in seasons:
-                    outFileLabel = 'SOSE_{}_'.format(fieldPrefix)
+                    outFileLabel = f'WOA_{fieldPrefix}_'
                     if plotObs:
                         refFieldName = field['obsFieldName']
                     else:
                         refFieldName = field['mpas']
 
-                    fieldNameInTytle = r'{} at {}$\degree$ Lon.'.format(
-                        field['titleName'], lon)
-
+                    fieldNameInTytle = \
+                        fr'{field["titleName"]} at {lon}$\degree$ Lon.'
                     # make a new subtask for this season and comparison grid
                     subtask = PlotTransectSubtask(self, season, transectName,
                                                   fieldPrefix,
@@ -200,28 +168,26 @@ class SoseTransects(AnalysisTask):
                         refTitleLabel=refTitleLabel,
                         diffTitleLabel=diffTitleLabel,
                         unitsLabel=field['units'],
-                        imageCaption='{} {}'.format(fieldNameInTytle,
-                                                    season),
-                        galleryGroup='SOSE Transects',
+                        imageCaption=f'{fieldNameInTytle} {season}',
+                        galleryGroup='WOA23 Transects',
                         groupSubtitle=None,
-                        groupLink='sose_transects',
+                        groupLink='woa_transects',
                         galleryName=field['titleName'],
-                        configSectionName='sose{}Transects'.format(
-                            fieldPrefixUpper),
+                        configSectionName=f'woa{fieldPrefixUpper}Transects',
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
 
 
-class SoseTransectsObservations(TransectsObservations):
+class WoaTransectsObservations(TransectsObservations):
     """
-    A class for loading and manipulating SOSE transect data
+    A class for loading and manipulating WOA transect data
 
     Attributes
     ----------
 
     fields : list of dict
-        dictionaries defining the fields with associated SOSE data
+        dictionaries defining the fields with associated WOA data
     """
 
     # Authors
@@ -249,7 +215,7 @@ class SoseTransectsObservations(TransectsObservations):
             destination "mesh" for regridding
 
         fields : list of dict
-            dictionaries defining the fields with associated SOSE data
+            dictionaries defining the fields with associated WOA data
         """
         # Authors
         # -------
@@ -259,7 +225,7 @@ class SoseTransectsObservations(TransectsObservations):
         obsFileNames = None
 
         # call the constructor from the base class (TransectsObservations)
-        super(SoseTransectsObservations, self).__init__(
+        super(WoaTransectsObservations, self).__init__(
             config, obsFileNames, horizontalResolution,
             transectCollectionName)
 
@@ -278,16 +244,17 @@ class SoseTransectsObservations(TransectsObservations):
         # -------
         # Xylar Asay-Davis
 
-        # first, combine the SOSE observations into a single data set
+        # first, extract the WOA transects at the requested lat range and lon
+        # values
         if self.obsFileNames is None:
-            self.combine_observations()
+            self.extract_observations()
 
         # then, call the method from the parent class
-        return super(SoseTransectsObservations, self).get_observations()
+        return super().get_observations()
 
-    def combine_observations(self):
+    def extract_observations(self):
         """
-        Combine SOSE observations into a single file
+        Extract WOA23 observations over the range of lat and lon requested
         """
         # Authors
         # -------
@@ -295,11 +262,10 @@ class SoseTransectsObservations(TransectsObservations):
 
         config = self.config
 
-        longitudes = sorted(config.getexpression('soseTransects', 'longitudes',
-                                                 use_numpyfunc=True))
+        longitudes = _get_longitudes(config)
 
         observationsDirectory = build_obs_path(
-            config, 'ocean', 'soseSubdirectory')
+            config, 'ocean', 'woa23Subdirectory')
 
         outObsDirectory = build_config_full_path(
             config=config, section='output',
@@ -308,82 +274,43 @@ class SoseTransectsObservations(TransectsObservations):
 
         make_directories(outObsDirectory)
 
-        combinedFileName = '{}/{}.nc'.format(outObsDirectory,
-                                             self.transectCollectionName)
+        transectsFileName = \
+            f'{outObsDirectory}/{self.transectCollectionName}.nc'
         obsFileNames = OrderedDict()
         for lon in longitudes:
-            transectName = 'lon_{}'.format(lon)
-            obsFileNames[transectName] = combinedFileName
+            transectName = f'lon_{lon}'
+            obsFileNames[transectName] = transectsFileName
 
         self.obsFileNames = obsFileNames
 
-        if os.path.exists(combinedFileName):
+        if os.path.exists(transectsFileName):
             return
 
-        print('Preprocessing SOSE transect data...')
+        print('Preprocessing WOA transect data...')
 
-        minLat = config.getfloat('soseTransects', 'minLat')
-        maxLat = config.getfloat('soseTransects', 'maxLat')
+        minLat = config.getfloat('woaTransects', 'minLat')
+        maxLat = config.getfloat('woaTransects', 'maxLat')
 
-        dsObs = None
-        for field in self.fields:
-            prefix = field['obsFilePrefix']
-            fieldName = field['obsFieldName']
-            if prefix is None or (dsObs is not None and fieldName in dsObs):
-                continue
-            print('  {}'.format(field['prefix']))
+        fileName = f'{observationsDirectory}/' \
+                   f'woa23_decav_04_pt_s_mon_ann.20241101.nc'
 
-            fileName = f'{observationsDirectory}/SOSE_2005-2010_monthly_' \
-                       f'{prefix}_SouthernOcean_0.167x0.167degree_20180710.nc'
+        dsObs = xr.open_dataset(fileName)
 
-            dsLocal = xr.open_dataset(fileName)
+        lat = dsObs.lat.values
+        mask = np.logical_and(lat >= minLat, lat <= maxLat)
+        indices = np.argwhere(mask)
+        dsObs = dsObs.isel(lat=slice(indices[0][0],
+                                     indices[-1][0]))
 
-            lat = dsLocal.lat.values
-            mask = numpy.logical_and(lat >= minLat, lat <= maxLat)
-            indices = numpy.argwhere(mask)
-            dsLocal = dsLocal.isel(lat=slice(indices[0][0],
-                                             indices[-1][0]))
-            dsLocal.load()
+        dsObs = dsObs.sel(lon=longitudes, method=str('nearest'))
 
-            if fieldName == 'zonalVel':
-                # need to average in longitude
-                nLon = dsLocal.sizes['lon']
-                lonIndicesP1 = numpy.mod(numpy.arange(nLon) + 1, nLon)
-                dsLocal = 0.5 * (dsLocal + dsLocal.isel(lon=lonIndicesP1))
+        dsObs = dsObs.rename({'depth': 'z'})
+        attrs = dsObs.z.attrs
+        dsObs['z'] = -dsObs.z
+        dsObs['z'].attrs = attrs
+        dsObs['z'].attrs['positive'] = 'up'
 
-            if fieldName == 'meridVel':
-                # need to average in latitude
-                nLat = dsLocal.sizes['lat']
-                latIndicesP1 = numpy.mod(numpy.arange(nLat) + 1, nLat)
-                dsLocal = 0.5 * (dsLocal + dsLocal.isel(lat=latIndicesP1))
-
-            dsLocal = dsLocal.sel(lon=longitudes, method=str('nearest'))
-
-            if dsObs is None:
-                dsObs = dsLocal
-            else:
-                dsLocal['lon'] = dsObs.lon
-                dsLocal['lat'] = dsObs.lat
-                dsObs[fieldName] = dsLocal[fieldName]
-                dsLocal.close()
-
-        if 'zonalVel' in dsObs and 'meridVel' in dsObs:
-            # compute the velocity magnitude
-            print('  velMag')
-            description = 'Monthly velocity magnitude climatologies ' \
-                          'from 2005-2010 average of the Southern Ocean ' \
-                          'State Estimate (SOSE)'
-            dsObs['velMag'] = numpy.sqrt(
-                dsObs.zonalVel ** 2 + dsObs.meridVel ** 2)
-            dsObs.velMag.attrs['units'] = 'm s$^{-1}$'
-            dsObs.velMag.attrs['description'] = description
-
-        # make a copy of the top set of data at z=0
-        dsObs = xr.concat((dsObs.isel(z=0), dsObs), dim='z')
-        z = dsObs.z.values
-        z[0] = 0.
-        dsObs['z'] = ('z', z)
-        write_netcdf_with_fill(dsObs, combinedFileName)
+        write_netcdf_with_fill(dsObs, transectsFileName)
 
         print('  Done.')
 
@@ -402,7 +329,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         Returns
         -------
-        dsObs : ``xarray.Dataset``
+        dsObs : xarray.Dataset
             The observational dataset
         """
         # Authors
@@ -413,15 +340,31 @@ class SoseTransectsObservations(TransectsObservations):
 
         lon = float(transectName.rsplit('_', 1)[-1])
 
-        dsObs = dsObs.sel(method=str('nearest'), lon=lon)
+        dsObs = dsObs.sel(method='nearest', lon=lon)
         lon = dsObs.lon.values
 
+        # must have capital Time
+        dsObs = dsObs.rename({'time': 'Time'})
+        # make sure month is a coord
+        dsObs = dsObs.set_coords('month')
+        # add a dummy year to the dataset
+        dsObs.coords['year'] = ('Time', np.ones(dsObs.sizes['Time'], int))
+
         # do some dropping and renaming so we end up with the right coordinates
-        # and dimensions
+        # and dimensions for transects
         dsObs = dsObs.rename({'lat': 'nPoints', 'z': 'nz'})
         dsObs['lat'] = dsObs.nPoints
         dsObs['z'] = dsObs.nz
-        dsObs['lon'] = ('nPoints', lon * numpy.ones(dsObs.sizes['nPoints']))
+        dsObs['lon'] = ('nPoints', lon * np.ones(dsObs.sizes['nPoints']))
         dsObs = dsObs.drop_vars(['nPoints', 'nz'])
 
         return dsObs
+
+
+def _get_longitudes(config):
+    longitudes = config.getexpression('woaTransects', 'longitudes',
+                                      use_numpyfunc=True)
+    longitudes = np.array(longitudes)
+    # make sure longitudes are between -180 and 180
+    longitudes = np.sort(np.mod(longitudes + 180., 360.) - 180.)
+    return longitudes

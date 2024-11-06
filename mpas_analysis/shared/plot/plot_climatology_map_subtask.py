@@ -219,13 +219,15 @@ class PlotClimatologyMapSubtask(AnalysisTask):
         self.maskMinThreshold = None
         self.maskMaxThreshold = None
         self.extend = 'both'
+        self.prependComparisonGrid = None
 
     def set_plot_info(self, outFileLabel, fieldNameInTitle, mpasFieldName,
                       refFieldName, refTitleLabel, unitsLabel,
                       imageCaption, galleryGroup, groupSubtitle, groupLink,
                       galleryName, diffTitleLabel='Model - Observations',
                       configSectionName=None, maskMinThreshold=None,
-                      maskMaxThreshold=None, extend=None):
+                      maskMaxThreshold=None, extend=None,
+                      prependComparisonGrid=True):
         """
         Store attributes related to plots, plot file names and HTML output.
 
@@ -282,7 +284,11 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         extend : {'neither', 'both', 'min', 'max'}, optional
             Determines the ``contourf``-coloring of values that are outside the
-            range of the levels provided if using an indexed colormap.
+            range of the levels provided if using an indexed colormap
+
+        prependComparisonGrid : bool, optional
+            Whether to prepend the name of the comparison grid to the gallery
+            group
         """
 
         self.outFileLabel = outFileLabel
@@ -324,6 +330,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         if extend is not None:
             self.extend = extend
+
+        self.prependComparisonGrid = prependComparisonGrid
 
     def setup_and_check(self):
         """
@@ -647,14 +655,19 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             vertical=vertical,
             extend=self.extend)
 
-        upperGridName = capwords(comparisonGridName.replace('_', ' '))
+        if self.prependComparisonGrid:
+            upperGridName = capwords(comparisonGridName.replace('_', ' '))
+            galleryGroup = f'{upperGridName} {self.galleryGroup}'
+        else:
+            galleryGroup = self.galleryGroup
+
         caption = f'{season} {self.imageCaption}'
         write_image_xml(
             config,
             filePrefix,
             componentName=componentName,
             componentSubdirectory=componentSubdirectory,
-            galleryGroup=f'{upperGridName} {self.galleryGroup}',
+            galleryGroup=galleryGroup,
             groupSubtitle=self.groupSubtitle,
             groupLink=f'{comparisonGridName}_{self.groupLink}',
             gallery=self.galleryName,
