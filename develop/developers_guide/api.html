@@ -95,12 +95,16 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapAntarcticMelt.html">mpas_analysis.ocean.ClimatologyMapAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapSose.html">mpas_analysis.ocean.ClimatologyMapSose</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapVel.html">mpas_analysis.ocean.ClimatologyMapVel</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWoa.html">mpas_analysis.ocean.ClimatologyMapWoa</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html">mpas_analysis.ocean.ClimatologyMapArgoTemperature</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html">mpas_analysis.ocean.ClimatologyMapArgoSalinity</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWaves.html">mpas_analysis.ocean.ClimatologyMapWaves</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.IndexNino34.html">mpas_analysis.ocean.IndexNino34</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.MeridionalHeatTransport.html">mpas_analysis.ocean.MeridionalHeatTransport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.OceanHistogram.html">mpas_analysis.ocean.OceanHistogram</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.OceanRegionalProfiles.html">mpas_analysis.ocean.OceanRegionalProfiles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.RegionalTSDiagrams.html">mpas_analysis.ocean.RegionalTSDiagrams</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.SoseTransects.html">mpas_analysis.ocean.SoseTransects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.StreamfunctionMOC.html">mpas_analysis.ocean.StreamfunctionMOC</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html">mpas_analysis.ocean.TimeSeriesOHCAnomaly</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html">mpas_analysis.ocean.TimeSeriesTemperatureAnomaly</a></li>
@@ -109,6 +113,8 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesAntarcticMelt.html">mpas_analysis.ocean.TimeSeriesAntarcticMelt</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html">mpas_analysis.ocean.TimeSeriesOceanRegions</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.WoaTransects.html">mpas_analysis.ocean.WoaTransects</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.WoceTransects.html">mpas_analysis.ocean.WoceTransects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html">mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</a></li>
@@ -395,23 +401,35 @@ the documentation.</p>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapVel.html#mpas_analysis.ocean.ClimatologyMapVel" title="mpas_analysis.ocean.ClimatologyMapVel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapVel</span></code></a>(config, mpasClimatologyTask)</p></td>
 <td><p>An analysis task for comparison of antarctic field against the Southern Ocean State Estimate</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature" title="mpas_analysis.ocean.ClimatologyMapArgoTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoTemperature</span></code></a>(config, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWoa.html#mpas_analysis.ocean.ClimatologyMapWoa" title="mpas_analysis.ocean.ClimatologyMapWoa"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapWoa</span></code></a>(config, mpasClimatologyTask)</p></td>
+<td><p>An analysis task for comparison of polar and global temperature and salinity against WOA23 climatology fields</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature" title="mpas_analysis.ocean.ClimatologyMapArgoTemperature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoTemperature</span></code></a>(config, ...[, ...])</p></td>
 <td><p>An analysis task for comparison of potential temperature against Argo observations</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity" title="mpas_analysis.ocean.ClimatologyMapArgoSalinity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoSalinity</span></code></a>(config, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity" title="mpas_analysis.ocean.ClimatologyMapArgoSalinity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapArgoSalinity</span></code></a>(config, ...[, ...])</p></td>
 <td><p>An analysis task for comparison of global salinity against Argo observations</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves" title="mpas_analysis.ocean.ClimatologyMapWaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapWaves</span></code></a>(config, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves" title="mpas_analysis.ocean.ClimatologyMapWaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ClimatologyMapWaves</span></code></a>(config, ...)</p></td>
 <td><p>An analysis task for the computation of wave climatologies</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34" title="mpas_analysis.ocean.IndexNino34"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IndexNino34</span></code></a>(config, mpasTimeSeriesTask[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34" title="mpas_analysis.ocean.IndexNino34"><code class="xref py py-obj docutils literal notranslate"><span class="pre">IndexNino34</span></code></a>(config, mpasTimeSeriesTask[, ...])</p></td>
 <td><p>A task for computing and plotting time series and spectra of the El Nino 3.4 climate index</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport" title="mpas_analysis.ocean.MeridionalHeatTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeridionalHeatTransport</span></code></a>(config, ...[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport" title="mpas_analysis.ocean.MeridionalHeatTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MeridionalHeatTransport</span></code></a>(config, ...[, ...])</p></td>
 <td><p>Plot meridional heat transport from the analysis member output.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram" title="mpas_analysis.ocean.OceanHistogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OceanHistogram</span></code></a>(config, mpasClimatologyTask, ...)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram" title="mpas_analysis.ocean.OceanHistogram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OceanHistogram</span></code></a>(config, mpasClimatologyTask, ...)</p></td>
 <td><p>Plots a histogram of a 2-d ocean variable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.OceanRegionalProfiles.html#mpas_analysis.ocean.OceanRegionalProfiles" title="mpas_analysis.ocean.OceanRegionalProfiles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">OceanRegionalProfiles</span></code></a>(config, regionMasksTask)</p></td>
+<td><p>Compute and plot vertical profiles of regionally analyzed data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.RegionalTSDiagrams.html#mpas_analysis.ocean.RegionalTSDiagrams" title="mpas_analysis.ocean.RegionalTSDiagrams"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RegionalTSDiagrams</span></code></a>(config, ...[, controlConfig])</p></td>
+<td><p>Create T-S Diagrams of the climatology within a given ocean region</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.SoseTransects.html#mpas_analysis.ocean.SoseTransects" title="mpas_analysis.ocean.SoseTransects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SoseTransects</span></code></a>(config, mpasClimatologyTask[, ...])</p></td>
+<td><p>Plot model output at transects and various longitudes around Antarctica, compared against SOSE</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC" title="mpas_analysis.ocean.StreamfunctionMOC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StreamfunctionMOC</span></code></a>(config, mpasClimatologyTask)</p></td>
 <td><p>Computation and plotting of model meridional overturning circulation.</p></td>
@@ -436,6 +454,12 @@ the documentation.</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport" title="mpas_analysis.ocean.TimeSeriesTransport"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TimeSeriesTransport</span></code></a>(config[, controlConfig])</p></td>
 <td><p>Extract and plot time series of transport through transects on the MPAS mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.WoaTransects.html#mpas_analysis.ocean.WoaTransects" title="mpas_analysis.ocean.WoaTransects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WoaTransects</span></code></a>(config, mpasClimatologyTask[, ...])</p></td>
+<td><p>Plot model output at transects and various longitudes around Antarctica, compared against the WOA23 climatology</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.WoceTransects.html#mpas_analysis.ocean.WoceTransects" title="mpas_analysis.ocean.WoceTransects"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WoceTransects</span></code></a>(config, mpasClimatologyTask[, ...])</p></td>
+<td><p>Plot model output at WOCE transects and compare it against WOCE observations</p></td>
 </tr>
 </tbody>
 </table>
