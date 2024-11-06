@@ -36,6 +36,7 @@ Analysis Tasks
    tasks/indexNino34
    tasks/woceTransects
    tasks/soseTransects
+   tasks/woaTransects
    tasks/geojsonTransects
    tasks/oceanRegionalProfiles
    tasks/regionalTSDiagrams
