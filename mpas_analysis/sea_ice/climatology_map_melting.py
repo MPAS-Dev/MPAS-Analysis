@@ -161,7 +161,8 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                     groupSubtitle=None,
                     groupLink=f'{hemisphere.lower()}_melting',
                     galleryName=gallery_name,
-                    extend='max')
+                    extend='max',
+                    prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 

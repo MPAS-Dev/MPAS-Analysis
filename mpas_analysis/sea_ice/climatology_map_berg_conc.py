@@ -158,7 +158,8 @@ class ClimatologyMapIcebergConc(AnalysisTask):
                     groupSubtitle=None,
                     groupLink='{}_conc'.format(hemisphere.lower()),
                     galleryName=galleryName,
-                    extend='neither')
+                    extend='neither',
+                    prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 
