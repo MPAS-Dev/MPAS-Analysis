@@ -160,7 +160,8 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
                     groupSubtitle=None,
                     groupLink=f'{hemisphere.lower()}_albedo',
                     galleryName=gallery_name,
-                    extend='max')
+                    extend='max',
+                    prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 
