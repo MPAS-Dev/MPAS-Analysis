@@ -151,7 +151,7 @@
   <section id="climatologymapwoa">
 <span id="task-climatologymapwoa"></span><h1>climatologyMapWoa<a class="headerlink" href="#climatologymapwoa" title="Link to this heading"></a></h1>
 <p>An analysis task for comparing potential temperature and salinity
-at various depths against WOA18 climatology.</p>
+at various depths against WOA23 climatology.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
 <span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">woa</span><span class="p">,</span> <span class="n">publicObs</span>
@@ -184,7 +184,7 @@ at various depths against WOA18 climatology.</p>
 <span class="p">[</span><span class="n">climatologyMapWoaTemperature</span><span class="p">]</span>
 <span class="c1">## options related to plotting climatology maps of potential temperature</span>
 <span class="c1">## at various levels, including the sea floor against control model results</span>
-<span class="c1">## and WOA18 climatological data</span>
+<span class="c1">## and WOA23 climatological data</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
@@ -211,7 +211,7 @@ at various depths against WOA18 climatology.</p>
 <span class="p">[</span><span class="n">climatologyMapWoaSalinity</span><span class="p">]</span>
 <span class="c1">## options related to plotting climatology maps of salinity</span>
 <span class="c1">## at various levels, including the sea floor against control model results</span>
-<span class="c1">## and WOA18 climatological data</span>
+<span class="c1">## and WOA23 climatological data</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
@@ -246,13 +246,13 @@ at various depths against WOA18 climatology.</p>
 </dl>
 <p>The option <code class="docutils literal notranslate"><span class="pre">depths</span></code> is a list of (approximate) depths at which to sample
 the temperature and salinity fields.  A value of <code class="docutils literal notranslate"><span class="pre">'top'</span></code> indicates the sea
-surface. Note that, for the annual climatology, WOA18 data is available down
-to 5500 m, whereas, for the seasonal or monthly climatologies, WOA18 data
+surface. Note that, for the annual climatology, WOA23 data is available down
+to 5500 m, whereas, for the seasonal or monthly climatologies, WOA23 data
 is only available down to 1500 m.</p>
 </section>
 <section id="observations">
 <h2>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h2>
-<p><a class="reference internal" href="../obs/woa18_t_s.html#woa18-t-s"><span class="std std-ref">WOA18 Temperature and Salinity Climatology</span></a></p>
+<p><a class="reference internal" href="../obs/woa23_t_s.html#woa23-t-s"><span class="std std-ref">WOA23 Temperature and Salinity Climatology</span></a></p>
 </section>
 <section id="example-result">
 <h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading"></a></h2>
@@ -297,6 +297,7 @@ is only available down to 1500 m.</p>
       <dt>Tags</dt>
       <dd><a href="../../../1.10.0/users_guide/tasks/climatologyMapWoa.html">1.10.0</a></dd>
       <dd><a href="../../../1.11.0/users_guide/tasks/climatologyMapWoa.html">1.11.0</a></dd>
+      <dd><a href="../../../1.12.0/users_guide/tasks/climatologyMapWoa.html">1.12.0</a></dd>
       <dd><a href="../../../1.8.0/users_guide/tasks/climatologyMapWoa.html">1.8.0</a></dd>
       <dd><a href="../../../1.9.0/users_guide/tasks/climatologyMapWoa.html">1.9.0</a></dd>
       <dd><a href="../../../1.9.1/users_guide/tasks/climatologyMapWoa.html">1.9.1</a></dd>

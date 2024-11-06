@@ -4,6 +4,7 @@
    obs/hadley_center_sst.rst
    obs/aquarius_sss.rst
    obs/woa18_t_s.rst
+   obs/woa23_t_s.rst
    obs/aviso_ssh.rst
    obs/argo_mld.rst
    obs/trenberth_mht.rst

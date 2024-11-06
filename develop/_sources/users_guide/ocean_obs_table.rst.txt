@@ -5,6 +5,8 @@ Observational Dataset         Source                                            
 :ref:`aquarius_sss`           `NASA Aquarius Website`_                                                                                  `Lagerloef et al. (2015)`_
 :ref:`woa18_t_s`              `NOAA National Oceanographic Data Center (NODC) website`_                                                 - `Locarnini et al. (2019)`_
                                                                                                                                         - `Zweng et al. (2019)`_
+:ref:`woa23_t_s`              `NOAA National Centers for Environmental Information (NCEI) website`_                                     - `Locarnini et al. (2024)`_
+                                                                                                                                        - `Reagan et al. (2024)`_
 :ref:`aviso_ssh`              `NASA JPL AVISO website`_                                                                                 `AVISO: Sea Surface Height above Geoid`_
 :ref:`argo_mld`               `UCSD Mixed Layer Website`_                                                                               - `Holte et al. (2017)`_
                                                                                                                                         - `Holte and Talley (2009)`_
@@ -44,6 +46,9 @@ Observational Dataset         Source                                            
 .. _`NOAA National Oceanographic Data Center (NODC) website`: https://www.nodc.noaa.gov/OC5/woa18
 .. _`Locarnini et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf
 .. _`Zweng et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf
+.. _`NOAA National Centers for Environmental Information (NCEI) website`: https://www.ncei.noaa.gov/products/world-ocean-atlas
+.. _`Locarnini et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60599
+.. _`Reagan et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60600
 .. _`NASA JPL AVISO website`: https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO
 .. _`AVISO: Sea Surface Height above Geoid`: ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf
 .. _`UCSD Mixed Layer Website`: http://mixedlayer.ucsd.edu/

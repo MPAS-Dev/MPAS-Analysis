@@ -118,7 +118,7 @@
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
-    <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> <span class="n">get_region_mask</span>
+    <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span>
 
 <span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
 
@@ -172,6 +172,7 @@
 
         <span class="n">regionGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;regionGroups&#39;</span><span class="p">)</span>
 
+        <span class="n">woaFilename</span> <span class="o">=</span> <span class="s1">&#39;WOA23/woa23_decav_04_pt_s_mon_ann.20241101.nc&#39;</span>
         <span class="n">obsDicts</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;SOSE&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;SOSE&#39;</span><span class="p">,</span>
@@ -192,21 +193,21 @@
                 <span class="s1">&#39;zVar&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;SOSE 2005-2010 ANN mean&#39;</span><span class="p">},</span>
-            <span class="s1">&#39;WOA18&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;WOA23&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;gridName&#39;</span><span class="p">:</span> <span class="s1">&#39;Global_0.25x0.25degree&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;gridFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;TFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;SFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;gridFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
+                <span class="s1">&#39;TFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
+                <span class="s1">&#39;SFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
                 <span class="s1">&#39;volFileName&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s1">&#39;lonVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;latVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;TVar&#39;</span><span class="p">:</span> <span class="s1">&#39;t_an&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;TVar&#39;</span><span class="p">:</span> <span class="s1">&#39;pt_an&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;SVar&#39;</span><span class="p">:</span> <span class="s1">&#39;s_an&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;volVar&#39;</span><span class="p">:</span> <span class="s1">&#39;volume&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;zVar&#39;</span><span class="p">:</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18 1955-2017 ANN mean&#39;</span><span class="p">}}</span>
+                <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA23 1991-2020 ANN mean&#39;</span><span class="p">}}</span>
 
         <span class="k">for</span> <span class="n">regionGroup</span> <span class="ow">in</span> <span class="n">regionGroups</span><span class="p">:</span>
             <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
@@ -283,7 +284,8 @@
                     <span class="n">localObsDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">groupObsDicts</span><span class="p">[</span><span class="n">obsName</span><span class="p">])</span>
 
                     <span class="n">obsSubtask</span> <span class="o">=</span> <span class="n">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">localObsDict</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+                        <span class="n">localObsDict</span><span class="p">)</span>
                     <span class="n">obsSubtasks</span><span class="p">[</span><span class="n">obsName</span><span class="p">]</span> <span class="o">=</span> <span class="n">obsSubtask</span>
 
                 <span class="n">plotRegionSubtask</span> <span class="o">=</span> <span class="n">PlotRegionTimeSeriesSubtask</span><span class="p">(</span>
@@ -928,8 +930,7 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Averaging T and S for </span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Averaging T and S for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
 
         <span class="n">obsDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsDict</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -939,20 +940,19 @@
 
         <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
             <span class="n">regionGroup</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeries</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionSuffix</span><span class="p">)</span>
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">sectionSuffix</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">),</span>
-            <span class="n">timeSeriesName</span><span class="p">)</span>
+        <span class="n">baseDir</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">baseDir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">/&#39;</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/TS_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">outputDirectory</span><span class="p">,</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;suffix&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">outFileName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s2">/TS_</span><span class="si">{</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.nc&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
             <span class="k">return</span>
@@ -968,7 +968,7 @@
         <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
             <span class="p">[</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;latVar&#39;</span><span class="p">],</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;lonVar&#39;</span><span class="p">]])</span>
         <span class="k">if</span> <span class="s1">&#39;nCells&#39;</span> <span class="ow">in</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
-            <span class="n">dsRegionMaks</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+            <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
 
         <span class="n">maskRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
         <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">maskRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
@@ -1027,7 +1027,7 @@
 
         <span class="k">if</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;volFileName&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># compute volume from lat, lon, depth bounds</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing volume...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing volume...&#39;</span><span class="p">)</span>
             <span class="n">latBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">latVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
             <span class="n">lonBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">lonVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
             <span class="n">zBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">zVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
@@ -1038,7 +1038,7 @@
             <span class="n">dLon</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">lonBnds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lonBnds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
             <span class="n">lat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">latVarName</span><span class="p">])</span>
             <span class="n">dz</span> <span class="o">=</span> <span class="n">zBnds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">zBnds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">cime_constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
             <span class="n">area</span> <span class="o">=</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">*</span><span class="n">dLat</span><span class="o">*</span><span class="n">dLon</span>
             <span class="n">volume</span> <span class="o">=</span> <span class="n">dz</span><span class="o">*</span><span class="n">area</span>
             <span class="n">ds</span><span class="p">[</span><span class="n">volVarName</span><span class="p">]</span> <span class="o">=</span> <span class="n">volume</span>
@@ -1415,6 +1415,7 @@
       <dt>Tags</dt>
       <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
       <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
+      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
       <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
       <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
       <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
