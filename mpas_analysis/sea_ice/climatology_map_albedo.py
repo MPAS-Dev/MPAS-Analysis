@@ -138,8 +138,7 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
                 image_caption = f'Climatology Map of ' \
                                 f'{hemisphere_long}-Hemisphere ' \
                                 f'Broadband Albedo'
-#                gallery_group = f'{hemisphere_long}-Hemisphere Broadband Albedo'
-                gallery_group = f'Broadband Albedo'
+                gallery_group = f'{hemisphere_long}-Hemisphere Broadband Albedo'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,

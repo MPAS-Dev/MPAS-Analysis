@@ -139,8 +139,7 @@ class ClimatologyMapSeaIceSnowDepth(AnalysisTask):
                 image_caption = f'Climatology Map of ' \
                                 f'{hemisphere_long}-Hemisphere ' \
                                 f'Cell-Averaged Snow Depth'
-#                gallery_group = f'{hemisphere_long}-Hemisphere Snow Depth'
-                gallery_group = f'Snow Depth'
+                gallery_group = f'{hemisphere_long}-Hemisphere Snow Depth'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
