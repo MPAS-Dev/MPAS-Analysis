@@ -298,7 +298,7 @@
             <span class="s1">&#39;land_ice_ssh_change&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceSshChange&#39;</span><span class="p">],</span>
             <span class="s1">&#39;land_ice_mass_flux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;land_ice_mass_flux_components&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
-                                              <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;accumulatedLandIceFluxTotal&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
                                               <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
 
@@ -307,16 +307,21 @@
             <span class="s1">&#39;massAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;massChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netMassFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;energyAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;energyChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netEnergyFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;saltAnomaly&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;saltChange&#39;</span><span class="p">,</span> <span class="s1">&#39;netSaltFlux&#39;</span><span class="p">],</span>
+            <span class="s1">&#39;accumulatedLandIceFluxTotal&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                            <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
                                 <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;landIceSshChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
                                  <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">],</span>
             <span class="s1">&#39;landIceMassChange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span>
                                   <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">]}</span>
 
@@ -636,9 +641,14 @@
                 <span class="c1"># Convert from kg/month to kg</span>
                 <span class="n">variable</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">land_ice_mass_flux</span><span class="p">)</span>
 
+            <span class="k">elif</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;accumulatedLandIceFluxTotal&#39;</span><span class="p">:</span>
+                <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
             <span class="k">elif</span> <span class="n">varname</span> <span class="o">==</span> <span class="s1">&#39;landIceMassFlux&#39;</span><span class="p">:</span>
                 <span class="n">variable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedIcebergFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
                            <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
+                           <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedLandIceFrazilFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
                            <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedRemovedRiverRunoffFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> \
                            <span class="bp">self</span><span class="o">.</span><span class="n">_get_variable</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="s1">&#39;accumulatedRemovedIceRunoffFlux&#39;</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
