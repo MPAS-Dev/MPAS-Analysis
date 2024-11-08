@@ -6,6 +6,14 @@ from mpas_analysis.sea_ice.climatology_map_snow_depth import \
     ClimatologyMapSeaIceSnowDepth
 from mpas_analysis.sea_ice.climatology_map_albedo import \
     ClimatologyMapSeaIceAlbedo
+from mpas_analysis.sea_ice.climatology_map_tendency_area_thermo import \
+    ClimatologyMapSeaIceAreaTendencyThermo
+from mpas_analysis.sea_ice.climatology_map_tendency_area_transp import \
+    ClimatologyMapSeaIceAreaTendencyTransp
+from mpas_analysis.sea_ice.climatology_map_tendency_volume_thermo import \
+    ClimatologyMapSeaIceVolumeTendencyThermo
+from mpas_analysis.sea_ice.climatology_map_tendency_volume_transp import \
+    ClimatologyMapSeaIceVolumeTendencyTransp
 from mpas_analysis.sea_ice.time_series import TimeSeriesSeaIce
 from mpas_analysis.sea_ice.climatology_map_berg_conc import \
     ClimatologyMapIcebergConc

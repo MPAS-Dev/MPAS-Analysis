@@ -155,7 +155,7 @@ class ClimatologyMapSeaIceSnowDepth(AnalysisTask):
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'm$',
+                    unitsLabel=r'm',
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,

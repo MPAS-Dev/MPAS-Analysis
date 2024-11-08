@@ -19,9 +19,9 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceAlbedo(AnalysisTask):
+class ClimatologyMapSeaIceAreaTendencyTransp(AnalysisTask):
     """
-    An analysis task for sea ice broadband albedo
+    An analysis task for sea ice area tendency due to transport
     """
     # Authors
     # -------
@@ -50,11 +50,12 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
         # -------
         # Elizabeth Hunke, Xylar Asay-Davis
 
-        task_name = f'climatologyMapSeaIceAlbedo{hemisphere}'
+        task_name = f'climatologyMapSeaIceAreaTendencyTransp{hemisphere}'
 
-        field_name = 'seaIceBroadbandAlbedo'
+        field_name = 'AreaTendencyTransport'
+        title_long= 'Sea Ice Area Tendency due to Transport'
 
-        tags = ['climatology', 'horizontalMap', field_name, 'publicObs', 'snow']
+        tags = ['climatology', 'horizontalMap', 'publicObs', 'tendency']
         if hemisphere == 'NH':
             tags = tags + ['arctic']
         else:
@@ -87,9 +88,9 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        variable_list = ['timeMonthly_avg_broadbandAlbedo']
+        variable_list = ['timeMonthly_avg_iceAreaTendencyTransport']
 
-        remap_climatology_subtask = RemapMpasSeaIceAlbedoClimatology(
+        remap_climatology_subtask = RemapMpasSeaIceTendencyClimatology(
             mpas_climatology_task=mpas_climatology_task,
             parent_task=self,
             climatology_name=f'{field_name}{hemisphere}',
@@ -137,8 +138,8 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
 
                 image_caption = f'Climatology Map of ' \
                                 f'{hemisphere_long}-Hemisphere ' \
-                                f'Broadband Albedo'
-                gallery_group = f'{hemisphere_long}-Hemisphere Broadband Albedo'
+                                f'{title_long}'
+                gallery_group = f'{hemisphere_long}-Hemisphere Tendencies due to Transport'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
@@ -148,27 +149,27 @@ class ClimatologyMapSeaIceAlbedo(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel=f'seaice_albedo{hemisphere}',
-                    fieldNameInTitle='Broadband Albedo',
+                    outFileLabel=f'seaice_areatendtransp{hemisphere}',
+                    fieldNameInTitle=title_long,
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'fraction',
+                    unitsLabel=r'yr$^{-1}$',
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
-                    groupLink=f'{hemisphere.lower()}_albedo',
+                    groupLink=f'{hemisphere.lower()}_tendency',
                     galleryName=gallery_name,
-                    extend='neither',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 
 
-class RemapMpasSeaIceAlbedoClimatology(RemapMpasClimatologySubtask):
+class RemapMpasSeaIceTendencyClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of sea ice broadband albedo
+    A subtask for computing climatologies of sea ice tendencies
     """
     def __init__(self, mpas_climatology_task, parent_task, climatology_name,
                  variable_list, seasons, comparison_grid_names):
@@ -198,7 +199,7 @@ class RemapMpasSeaIceAlbedoClimatology(RemapMpasClimatologySubtask):
             The name(s) of the comparison grid to use for remapping.
         """
 
-        subtask_name = f'remapMpasClimatology_SeaIceAlbedo'
+        subtask_name = f'remapMpasClimatology_AreaTendencyTransport'
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super().__init__(
@@ -225,7 +226,7 @@ class RemapMpasSeaIceAlbedoClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the broadband albedo
+        Compute the tendency
         Parameters
         ----------
         climatology : xarray.Dataset
@@ -238,21 +239,22 @@ class RemapMpasSeaIceAlbedoClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
 
-        albedo = self._compute_albedo(climatology)
+        tendency = self._compute_tendency(climatology)
 
-        climatology['seaIceBroadbandAlbedo'] = albedo
-        climatology.seaIceBroadbandAlbedo.attrs['units'] = ' '
+        climatology['AreaTendencyTransport'] = tendency
+        climatology.AreaTendencyTransport.attrs['units'] = 'yr^-1'
         climatology = climatology.drop_vars(self.variable_list)
 
         return climatology
 
-    def _compute_albedo(self, climatology):
+    def _compute_tendency(self, climatology):
         """
-        Compute the albedo
+        Compute the tendency in fraction/yr
         """
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
-        albedo = climatology['timeMonthly_avg_broadbandAlbedo']
+        units_scale_factor = 60 * 60 * 24 * 365
 
-        return albedo
+        tendency = climatology['timeMonthly_avg_iceAreaTendencyTransport'] * units_scale_factor
+        return tendency
