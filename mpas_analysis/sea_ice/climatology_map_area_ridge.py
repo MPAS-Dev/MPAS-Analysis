@@ -19,9 +19,9 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
+class ClimatologyMapSeaIceAreaFractionRidge(AnalysisTask):
     """
-    An analysis task for sea ice area tendency due to thermodynamics
+    An analysis task for ridge area per unit area of sea ice
     """
     # Authors
     # -------
@@ -50,12 +50,11 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
         # -------
         # Elizabeth Hunke, Xylar Asay-Davis
 
-        task_name = f'climatologyMapSeaIceAreaTendencyThermo{hemisphere}'
+        task_name = f'climatologyMapSeaIceAreaFractionRidge{hemisphere}'
 
-        field_name = 'AreaTendencyThermodynamics'
-        title_long= 'Sea Ice Area Tendency due to Thermodynamics'
+        field_name = 'seaIceAreaFractionRidge'
 
-        tags = ['climatology', 'horizontalMap', 'publicObs', 'tendency']
+        tags = ['climatology', 'horizontalMap', field_name, 'publicObs']
         if hemisphere == 'NH':
             tags = tags + ['arctic']
         else:
@@ -88,9 +87,10 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        variable_list = ['timeMonthly_avg_iceAreaTendencyThermodynamics']
+        variable_list = ['timeMonthly_avg_iceAreaCell',
+                         'timeMonthly_avg_ridgedIceAreaAverage']
 
-        remap_climatology_subtask = RemapMpasSeaIceTendencyClimatology(
+        remap_climatology_subtask = RemapMpasSeaIceAreaFractionRidgeClimatology(
             mpas_climatology_task=mpas_climatology_task,
             parent_task=self,
             climatology_name=f'{field_name}{hemisphere}',
@@ -107,7 +107,7 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
 #echmod - no observations yet
 #                    if hemisphere == 'SH' and season == 'ANN':
 #                        ref_title_label = 'Observations (AnIceFlux)'
-#                        gallery_name = 'Sea ice area tendency'
+#                        gallery_name = 'Ridged Ice Area Fraction of Sea Ice'
 #                        diff_title_label = 'Model - Observations'
 #                        obs_file_name = build_obs_path(
 #                                config, 'seaIce',
@@ -122,14 +122,15 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
 #                        self.add_subtask(remap_observations_subtask)
 #                    else:
                         remap_observations_subtask = None
-                        gallery_name = 'Sea ice area tendency'
+                        gallery_name = 'Ridged Ice Area Fraction of Sea Ice'
                         ref_title_label = None
                         ref_field_name = None
                         diff_title_label = 'Model - Observations'
 
                 else:
                     control_run_name = control_config.get('runs', 'mainRunName')
-                    gallery_name = 'Sea ice area tendency'
+#                    gallery_name = None
+                    gallery_name = 'Ridged Ice Area Fraction of Sea Ice'
                     ref_title_label = f'Control: {control_run_name}'
                     field_name = field_name
                     diff_title_label = 'Main - Control'
@@ -138,8 +139,9 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
 
                 image_caption = f'Climatology Map of ' \
                                 f'{hemisphere_long}-Hemisphere ' \
-                                f'{title_long}'
-                gallery_group = f'{hemisphere_long}-Hemisphere Tendencies due to Thermodynamics'
+                                f'Ridged Ice Area per Unit Ice Area'
+#                gallery_group = f'{hemisphere_long}-Hemisphere Ridged Ice Area Fraction of Sea Ice'
+                gallery_group = f'{hemisphere_long}-Hemisphere Ridged Ice'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
@@ -149,27 +151,28 @@ class ClimatologyMapSeaIceAreaTendencyThermo(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel=f'seaice_areatendthermo{hemisphere}',
-                    fieldNameInTitle=title_long,
+                    outFileLabel=f'seaice_ridgearea{hemisphere}',
+                    fieldNameInTitle='Ridged Ice Fraction',
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'yr$^{-1}$',
+                    unitsLabel=r'fraction',
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
-                    groupLink=f'{hemisphere.lower()}_tendency',
+#                    groupLink=f'{hemisphere.lower()}_ridgearea',
+                    groupLink=f'{hemisphere.lower()}_ridge',
                     galleryName=gallery_name,
-                    extend='both',
+                    extend='neither',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 
 
-class RemapMpasSeaIceTendencyClimatology(RemapMpasClimatologySubtask):
+class RemapMpasSeaIceAreaFractionRidgeClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of sea ice tendencies
+    A subtask for computing climatologies of sea ice ridge area fraction
     """
     def __init__(self, mpas_climatology_task, parent_task, climatology_name,
                  variable_list, seasons, comparison_grid_names):
@@ -199,7 +202,7 @@ class RemapMpasSeaIceTendencyClimatology(RemapMpasClimatologySubtask):
             The name(s) of the comparison grid to use for remapping.
         """
 
-        subtask_name = f'remapMpasClimatology_AreaTendencyThermodynamics'
+        subtask_name = f'remapMpasClimatology_SeaIceAreaFractionRidge'
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super().__init__(
@@ -226,7 +229,7 @@ class RemapMpasSeaIceTendencyClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the tendency
+        Compute the ridged ice area per unit ice area
         Parameters
         ----------
         climatology : xarray.Dataset
@@ -239,22 +242,24 @@ class RemapMpasSeaIceTendencyClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
 
-        tendency = self._compute_tendency(climatology)
+        ridgefraction = self._compute_ridgefraction(climatology)
 
-        climatology['AreaTendencyThermodynamics'] = tendency
-        climatology.AreaTendencyThermodynamics.attrs['units'] = 'yr^-1'
+        climatology['seaIceAreaFractionRidge'] = ridgefraction
+        climatology.seaIceAreaFractionRidge.attrs['units'] = 'fraction'
         climatology = climatology.drop_vars(self.variable_list)
 
         return climatology
 
-    def _compute_tendency(self, climatology):
+    def _compute_ridgefraction(self, climatology):
         """
-        Compute the tendency in area fraction/yr
+        Compute the mean ridge thickness in m 
         """
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
-        units_scale_factor = 60 * 60 * 24 * 365
+        ridgearea = climatology['timeMonthly_avg_ridgedIceAreaAverage']
+        area = climatology['timeMonthly_avg_iceAreaCell']
 
-        tendency = climatology['timeMonthly_avg_iceAreaTendencyThermodynamics'] * units_scale_factor
-        return tendency
+        ridgefraction = ridgearea        # area fraction of sea ice
+#        ridgefraction = ridgearea*area   # area fraction of grid cell
+        return ridgefraction

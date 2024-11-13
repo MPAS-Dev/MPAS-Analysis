@@ -107,7 +107,7 @@ class ClimatologyMapSeaIceVolumeTendencyTransp(AnalysisTask):
 #echmod - no observations yet
 #                    if hemisphere == 'SH' and season == 'ANN':
 #                        ref_title_label = 'Observations (AnIceFlux)'
-#                        gallery_name = None
+#                        gallery_name = 'Sea ice volume tendency'
 #                        diff_title_label = 'Model - Observations'
 #                        obs_file_name = build_obs_path(
 #                                config, 'seaIce',
@@ -122,14 +122,14 @@ class ClimatologyMapSeaIceVolumeTendencyTransp(AnalysisTask):
 #                        self.add_subtask(remap_observations_subtask)
 #                    else:
                         remap_observations_subtask = None
-                        gallery_name = None
+                        gallery_name = 'Sea ice volume tendency'
                         ref_title_label = None
                         ref_field_name = None
                         diff_title_label = 'Model - Observations'
 
                 else:
                     control_run_name = control_config.get('runs', 'mainRunName')
-                    gallery_name = None
+                    gallery_name = 'Sea ice volume tendency'
                     ref_title_label = f'Control: {control_run_name}'
                     field_name = field_name
                     diff_title_label = 'Main - Control'
