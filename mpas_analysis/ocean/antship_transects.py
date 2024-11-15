@@ -195,9 +195,9 @@ class AntshipTransects(AnalysisTask):
                         imageCaption=f'{fieldNameInTitle} {season}',
                         galleryGroup='Antarctic Ship Transects',
                         groupSubtitle=None,
-                        groupLink='antShip',
+                        groupLink='antship',
                         galleryName=titleName,
-                        configSectionName=f'antShip{fieldNameUpper}Transects',
+                        configSectionName=f'antship{fieldNameUpper}Transects',
                         verticalBounds=verticalBounds)
 
                     self.add_subtask(subtask)
