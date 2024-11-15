@@ -48,7 +48,7 @@ class AntshipTransects(AnalysisTask):
         # -------
         # Irena Vankova
 
-        tags = ['climatology', 'transect', 'polar']
+        tags = ['transect', 'antarctic', 'publicObs']
 
         # call the constructor from the base class (AnalysisTask)
         super(AntshipTransects, self).__init__(
