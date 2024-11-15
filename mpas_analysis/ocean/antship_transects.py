@@ -84,6 +84,7 @@ class AntshipTransects(AnalysisTask):
 
         origObsFileNames = \
             {'Amery-Lon73.5-1992': 'Amery-Lon73.5-1992.nc',
+             'Weddell-Larsen-C2-1992': 'Weddell-Larsen-C2-1992.nc',
              'Amery-Lon73.5-2000': 'Amery-Lon73.5-2000.nc'}
 
         obsFileNames = {}
