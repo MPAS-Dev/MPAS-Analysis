@@ -117,7 +117,6 @@ class AntshipTransects(AnalysisTask):
              'Amery-Lon73.5-1992': 'Amery-Lon73.5-1992.nc',
              'Amery-Lon73.5-2000': 'Amery-Lon73.5-2000.nc',
              'Amery-Lon75.5-1992': 'Amery-Lon75.5-1992.nc',
-             'Amery-Lon75.5-2000': 'Amery-Lon75.5-2000.nc',
              'Amery-Lon75.5-2008': 'Amery-Lon75.5-2008.nc',
              'DML-RoiB-E-2008': 'DML-RoiB-E-2008.nc',
              'DML-RoiB-E-2019': 'DML-RoiB-E-2019.nc',
