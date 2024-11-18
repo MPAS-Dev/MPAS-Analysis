@@ -112,8 +112,6 @@ class AntshipTransects(AnalysisTask):
              'Ross-Shelf1-1994': 'Ross-Shelf1-1994.nc',
              'Amery-AlongFront-2002': 'Amery-AlongFront-2002.nc',
              'Amery-AlongFront-2006': 'Amery-AlongFront-2006.nc',
-             'Amery-Lon70.5-2006': 'Amery-Lon70.5-2006.nc',
-             'Amery-Lon73-2006': 'Amery-Lon73-2006.nc',
              'Amery-Lon73.5-1992': 'Amery-Lon73.5-1992.nc',
              'Amery-Lon73.5-2000': 'Amery-Lon73.5-2000.nc',
              'Amery-Lon75.5-1992': 'Amery-Lon75.5-1992.nc',
