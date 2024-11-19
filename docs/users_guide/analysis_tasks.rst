@@ -37,6 +37,7 @@ Analysis Tasks
    tasks/woceTransects
    tasks/soseTransects
    tasks/woaTransects
+   tasks/antshipTransects
    tasks/geojsonTransects
    tasks/oceanRegionalProfiles
    tasks/regionalTSDiagrams
