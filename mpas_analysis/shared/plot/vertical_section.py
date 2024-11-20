@@ -895,9 +895,13 @@ def plot_vertical_section(
         # if any node of a triangle is masked, the triangle is masked
         triMask = np.amax(triMask, axis=1)
         unmaskedTriangulation = Triangulation(**triangulation_args)
-        mask_args = dict(triangulation_args)
-        mask_args['mask'] = triMask
-        maskedTriangulation = Triangulation(**mask_args)
+        anythingToPlot = not np.all(triMask)
+        if anythingToPlot:
+            mask_args = dict(triangulation_args)
+            mask_args['mask'] = triMask
+            maskedTriangulation = Triangulation(**mask_args)
+        else:
+            maskedTriangulation = None
         if contourComparisonField is not None:
             mask = contourComparisonField.notnull()
             triMask = np.logical_not(mask.values)
@@ -925,37 +929,39 @@ def plot_vertical_section(
     plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
                     colors=invalidColor)
 
-    if not plotAsContours:
-        # display a heatmap of fieldArray
-        fieldMasked = field.where(mask, 0.0).values.ravel()
+    if maskedTriangulation is not None:
+        # there's something to plot
+        if not plotAsContours:
+            # display a heatmap of fieldArray
+            fieldMasked = field.where(mask, 0.0).values.ravel()
 
-        if colormapDict['levels'] is None:
+            if colormapDict['levels'] is None:
 
-            plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
-                                       cmap=colormapDict['colormap'],
-                                       norm=colormapDict['norm'],
-                                       rasterized=True, shading='gouraud')
+                plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
+                                        cmap=colormapDict['colormap'],
+                                        norm=colormapDict['norm'],
+                                        rasterized=True, shading='gouraud')
+            else:
+                plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
+                                            cmap=colormapDict['colormap'],
+                                            norm=colormapDict['norm'],
+                                            levels=colormapDict['levels'],
+                                            extend='both')
+
+            cbar = plt.colorbar(plotHandle,
+                                orientation='vertical',
+                                spacing='uniform',
+                                aspect=9,
+                                ticks=colormapDict['ticks'])
+
+            if colorbarLabel is not None:
+                cbar.set_label(colorbarLabel)
+
         else:
-            plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
-                                         cmap=colormapDict['colormap'],
-                                         norm=colormapDict['norm'],
-                                         levels=colormapDict['levels'],
-                                         extend='both')
-
-        cbar = plt.colorbar(plotHandle,
-                            orientation='vertical',
-                            spacing='uniform',
-                            aspect=9,
-                            ticks=colormapDict['ticks'])
-
-        if colorbarLabel is not None:
-            cbar.set_label(colorbarLabel)
-
-    else:
-        # display a white heatmap to get a white background for non-land
-        zeroArray = xr.zeros_like(field)
-        plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(),
-                        colors='white')
+            # display a white heatmap to get a white background for non-land
+            zeroArray = xr.zeros_like(field)
+            plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(),
+                            colors='white')
 
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
@@ -975,8 +981,9 @@ def plot_vertical_section(
     fmt_string = None
     cs1 = None
     cs2 = None
+    plotLegend = False
 
-    if contourLevels is not None:
+    if contourLevels is not None and maskedTriangulation is not None:
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
@@ -1009,11 +1016,11 @@ def plot_vertical_section(
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
-    plotLegend = (((lineColor is not None and
-                    comparisonContourLineColor is not None) or
-                   (lineWidth is not None and
-                    comparisonContourLineWidth is not None)) and
-                  (plotAsContours and contourComparisonField is not None))
+        plotLegend = (((lineColor is not None and
+                        comparisonContourLineColor is not None) or
+                    (lineWidth is not None and
+                        comparisonContourLineWidth is not None)) and
+                    (plotAsContours and contourComparisonField is not None))
 
     if plotLegend:
         h1, _ = cs1.legend_elements()
@@ -1149,7 +1156,13 @@ def _get_triangulation(x, y, mask):
     x = x.values.ravel()
     y = y.values.ravel()
 
-    maskedTriangulation = Triangulation(x=x, y=y, triangles=tris, mask=triMask)
+    anythingToPlot = not np.all(triMask)
+    if anythingToPlot:
+        maskedTriangulation = Triangulation(x=x, y=y, triangles=tris,
+                                            mask=triMask)
+    else:
+        maskedTriangulation = None
+
     unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
 
     return maskedTriangulation, unmaskedTriangulation
