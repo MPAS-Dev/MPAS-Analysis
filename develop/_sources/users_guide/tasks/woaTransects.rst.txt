@@ -26,7 +26,7 @@ The following configuration options are available for this task::
 
     # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,
     # Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-    seasons =  ['ANN', 'JFM', 'JAS']
+    seasons =  []
 
     # The approximate horizontal resolution (in km) of each transect.  Latitude/
     # longitude between observation points will be subsampled at this interval.
