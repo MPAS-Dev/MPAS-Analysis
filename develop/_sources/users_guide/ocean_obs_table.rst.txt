@@ -24,6 +24,7 @@ Observational Dataset         Source                                            
 :ref:`schmidtko`              `ASCII data file`_                                                                                        `Schmidtko et al. (2014)`_
 :ref:`woce`                   - `WOCE Atlas Website`_                                                                                   `Orsi and Whitworth (2005)`_
                               - `CCHDO`_
+:ref:`antship`                - `OCEAN ICE D1.1`_                                                                                       `Zhou et al. (2024)`_
 :ref:`woa`                    - `World Ocean Atlas v2 Website`_                                                                         - `Oxygen: Garcia et al. 2014a`_
                                                                                                                                         - `Nutrients: Garcia et al. 2014b`_
 :ref:`landschuetzer-som-ffn`  `SOM-FFN Website`_                                                                                        - `Landschuetzer et al. 2013`_
@@ -77,6 +78,8 @@ Observational Dataset         Source                                            
 .. _`WOCE Atlas Website`: http://woceatlas.ucsd.edu/
 .. _`CCHDO`: https://cchdo.ucsd.edu/
 .. _`Orsi and Whitworth (2005)`: https://doi.org/10.21976/C6BC78
+.. _`OCEAN ICE D1.1`: https://www.seanoe.org/data/00886/99787/
+.. _`Zhou et al. (2024)`: https://doi.org/10.17882/99787
 .. _`World Ocean Atlas v2 Website`: https://www.nodc.noaa.gov/OC5/woa13/
 .. _`Oxygen: Garcia et al. 2014a`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol3.pdf
 .. _`Nutrients: Garcia et al. 2014b`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol4.pdf
