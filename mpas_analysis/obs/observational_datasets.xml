@@ -1033,6 +1033,57 @@
     </nameInDocs>
   </observation>
 
+
+   <observation>
+    <name>
+      AntShip sections
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      AntShip
+      ----
+      Southern Ocean (90°S-45°S) conservative temperature and absolute salinity profiles compilation (OCEAN ICE D1.1)
+
+      This profile compilation contains conservative temperature and absolute salinity profiles computed from ship CTD, Argo floats and seal-borne profilers in the Southern Ocean (90°S-45°S) since 1972, using the GSW toolbox. It provides with an opportunity to investigate the broad scale climatology of the Southern Ocean hydrography on and off the continental shelf and facilitate localized timeseries analysis of the variability across various timescales.
+
+    </description>
+    <source>
+      - [OCEAN ICE D1.1](https://www.seanoe.org/data/00886/99787/)
+    </source>
+    <releasePolicy>
+      "Public" data may be placed on-line.
+    </releasePolicy>
+    <references>
+      [Zhou et al. (2024)](https://doi.org/10.17882/99787)
+    </references>
+    <bibtex>
+      @techreport{Zhou2024,
+        author = {S. Zhou and P. Dutrieux and C. Giulivi},
+        title = { Southern Ocean (90°S-45°S) conservative temperature and absolute salinity profiles compilation (OCEAN ICE D1.1)},
+        year = 2024,
+        url = {https://doi.org/10.17882/99787},
+        note = {Accessed Nov 2024}
+      }
+    </bibtex>
+    <dataUrls>
+    </dataUrls>
+    <preprocessing>
+      (missing)
+    </preprocessing>
+    <tasks>
+      - antshipTransects
+    </tasks>
+    <subdirectory>
+      Ocean/AntShip
+    </subdirectory>
+    <nameInDocs>
+      antship
+    </nameInDocs>
+  </observation>
+
+
   <observation>
     <name>
       World Ocean Atlas v2
