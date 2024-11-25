@@ -135,14 +135,24 @@ def _compute_weights_and_indices(ds, inInterpDim, inInterpCoord, outInterpDim,
             ind1[inAxis] = inIndex + 1
             ind1 = tuple(ind1)
             x1 = numpy.array(xIn[ind1])
-            dx = x1 - x0
-            frac = (x - x0) / dx
-            valid = numpy.isfinite(frac)
-            mask = numpy.zeros(valid.shape, bool)
+
+            # broadcast the arrays in needed
+            x_bc, x0_bc = numpy.broadcast_arrays(x, x0)
+            _, x1_bc = numpy.broadcast_arrays(x, x1)
+
+            # avoid division by zero
+            denom = x1_bc - x0_bc
+            num = x_bc - x0_bc
+            valid = denom != 0.
+            frac = numpy.zeros(num.shape)
+            frac[valid] = num[valid] / denom[valid]
+
+            mask = numpy.zeros(num.shape, bool)
             mask[valid] = numpy.logical_and(frac[valid] >= 0.,
                                             frac[valid] < 1.)
+
             if inIndex == inInterpSize - 2:
-                mask = numpy.logical_or(mask, x == x1)
+                mask = numpy.logical_or(mask, x_bc == x1_bc)
             if numpy.count_nonzero(mask) == 0:
                 continue
 
