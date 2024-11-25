@@ -189,7 +189,7 @@ intersphinx_mapping = {
     'geometric_features':
         ('http://mpas-dev.github.io/geometric_features/main/', None),
     'mpas_tools':
-        ('http://mpas-dev.github.io/MPAS-Tools/stable/', None)}
+        ('http://mpas-dev.github.io/MPAS-Tools/master/', None)}
 
 
 cwd = os.getcwd()
