@@ -267,15 +267,6 @@ In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run ``mpas_analysis`` on the command line,
 it will know about the changes.
 
-.. note::
-
-    If you add or remove files in the code, you will need to re-install
-    MPAS-Analysis in the conda environment by rerunning
-
-    .. code-block:: bash
-
-       python -m pip install --no-deps --no-build-isolation -e .
-
 .. _tutorial_dev_get_started_activ_env:
 
 4.4 Activating the environment
