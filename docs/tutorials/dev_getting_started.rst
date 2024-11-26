@@ -141,28 +141,27 @@ MPAS-Analysis relies on several packages that are only available as conda
 packages from the ``conda-forge`` channel.  The first step for running
 MPAS-Analysis is to create a conda environment with all the needed packages.
 
-4.1 Installing Mambaforge
+4.1 Installing Miniforge3
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have not yet installed Anaconda, Miniconda or Mambaforge, you will need
+If you have not yet installed Anaconda, Miniconda or Miniforge, you will need
 to begin there.  The concept behind Anaconda is that just about everything you
 would need for a typical python workflow is included.  The concept behind
-Miniconda and Mambaforge is that you create different environments for
+Miniconda and Miniforge is that you create different environments for
 different purposes.  This allows for greater flexibility and tends to lead to
 fewer conflicts between incompatible packages, particularly when using a
 channel other than the ``defaults`` supplied by Anaconda.  Since we will use
-the ``conda-forge`` channel and the ``mamba`` tools to speed up installation,
-the Mambaforge approach is strongly recommended.  The main advantage of
-Mambaforge over Miniconda is that it automatically takes care of a few steps
-that we otherwise need to do manually.
+the ``conda-forge`` channel, the Miniforge3 approach is strongly recommended.
+The main advantage of Miniforge3 over Miniconda is that it automatically takes
+care of a few steps that we otherwise need to do manually.
 
 First download the
-`Mambaforge installer <https://github.com/conda-forge/miniforge#mambaforge>`_
+`Miniforge3 installer <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
 for your operating system, then run it:
 
 .. code-block:: bash
 
-   $ /bin/bash Mambaforge-Linux-x86_64.sh
+   $ /bin/bash Miniforge3-Linux-x86_64.sh
 
 .. note::
 
@@ -181,8 +180,8 @@ You will be asked to agree to the terms and conditions. Type ``yes`` to
 continue.
 
 You will be prompted with a location to install. In this tutorial, we assume
-that Mambaforge is installed in the default location, ``~/mambaforge``.  If
-you are using Miniconda or chose to install Mambaforge somewhere else, just
+that Miniforge3 is installed in the default location, ``~/miniforge3``.  If
+you are using Miniconda or chose to install Miniforge3 somewhere else, just
 make sure to make the appropriate substitution whenever you see a reference to
 this path below.
 
@@ -190,33 +189,33 @@ this path below.
 
     On some HPC machines (particularly at LANL Institutional Computing and
     NERSC) the space in your home directory is quite limited.  You may want to
-    install Mambaforge in an alternative location to avoid running out of
+    install Miniforge3 in an alternative location to avoid running out of
     space.
 
 You will see prompt like this:
 
 .. code-block::
 
-    Do you wish the installer to initialize Mambaforge
+    Do you wish the installer to initialize Miniforge3
     by running conda init? [yes|no]
     [no] >>>
 
 You may wish to skip the step (answer ``no``) if you are working on a system
 where you will also be using other conda environments, most notably
-E3SM-Unified (which has its own Miniconda installation).  If you do not run
+E3SM-Unified (which has its own Miniforge3 installation).  If you do not run
 conda init, you have to manually activate ``conda`` whenever you need it.
 For ``bash`` and similar shells, this is:
 
 .. code-block:: bash
 
-   $ source ~/mambaforge/etc/profile.d/conda.sh
+   $ source ~/miniforge3/etc/profile.d/conda.sh
    $ conda activate
 
 If you use ``csh``, ``tcsh`` or related shells, this becomes:
 
 .. code-block:: csh
 
-   > source ~/mambaforge/etc/profile.d/conda.csh
+   > source ~/miniforge3/etc/profile.d/conda.csh
    > conda activate
 
 You may wish to create an alias in your ``.bashrc`` or ``.cshrc`` to make
@@ -224,13 +223,13 @@ this easier.  For example:
 
 .. code-block:: bash
 
-   alias init_conda="source ~/mambaforge/etc/profile.d/conda.sh; conda activate"
+   alias init_conda="source ~/miniforge3/etc/profile.d/conda.sh; conda activate"
 
 
 4.2 One-time Miniconda setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you installed Miniconda, rather than Mambaforge, you will need to add the
+If you installed Miniconda, rather than Miniforge3, you will need to add the
 `conda-forge channel <https://conda-forge.org/>`_ and make sure it always takes
 precedence for packages available on that channel:
 
@@ -239,13 +238,7 @@ precedence for packages available on that channel:
    $ conda config --add channels conda-forge
    $ conda config --set channel_priority strict
 
-Then, you will need to install the ``mamba`` package:
-
-.. code-block:: bash
-
-   $ conda install -y mamba
-
-If you installed Mambaforge, these steps will happen automatically.
+If you installed Miniforge3, these steps will happen automatically.
 
 4.3 Create a development environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -256,7 +249,7 @@ where you are doing your development:
 
 .. code-block:: bash
 
-   $ mamba create -y -n mpas_dev --file dev-spec.txt "esmf=*=nompi_*"
+   $ conda create -y -n mpas_dev --file dev-spec.txt
 
 The last argument is only needed on HPC machines because the conda version of
 MPI doesn't work properly on these machines.  You can omit it if you're
@@ -293,17 +286,17 @@ environment, you will need to run either for ``bash``:
 
 .. code-block:: bash
 
-   $ source ~/mambaforge/etc/profile.d/conda.sh
+   $ source ~/miniforge3/etc/profile.d/conda.sh
    $ conda activate mpas_dev
 
 or for ``csh``:
 
 .. code-block:: csh
 
-   > source ~/mambaforge/etc/profile.d/conda.csh
+   > source ~/miniforge3/etc/profile.d/conda.csh
    > conda activate mpas_dev
 
-You can skip the ``source`` command if you chose to initialize Mambaforge or
+You can skip the ``source`` command if you chose to initialize Miniforge3 or
 Miniconda3 so it loads automatically.  You can also use the ``init_conda``
 alias for this step if you defined one.
 
