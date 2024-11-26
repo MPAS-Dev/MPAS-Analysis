@@ -21,7 +21,7 @@ The following configuration options are available for this task::
   ## in the northern hemisphere (NH)
 
   # colormap for model/observations
-  colormapNameResult = winter
+  colormapNameResult = terrain
   # whether the colormap is indexed or continuous
   colormapTypeResult = indexed
   # color indices into colormapName for filled contours
