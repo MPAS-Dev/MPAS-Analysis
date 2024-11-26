@@ -19,6 +19,7 @@ Contributors
 * Greg Streletz
 * Adrian Turner
 * Luke Van Roekel
+* Elizabeth Hunke
 
 For a list of all the contributions:
 https://github.com/MPAS-Dev/MPAS-Analysis/graphs/contributors
