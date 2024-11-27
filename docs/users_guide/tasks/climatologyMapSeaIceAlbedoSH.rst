@@ -3,7 +3,7 @@
 climatologyMapSeaIceAlbedoSH
 ============================
 
-An analysis task for plotting maps of Arctic sea ice broadband albedo.
+An analysis task for plotting maps of Antrctic sea ice broadband albedo.
 Care must be taken when evaluating albedo - long-time averages do not
 make a lot of sense, especially when the sun is below the horizon for
 part of the averaging period and albedo is not well-defined.
