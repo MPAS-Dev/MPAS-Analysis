@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceVolumeRidge
+=======================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceVolumeRidge
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceVolumeRidge.__init__
+      ~ClimatologyMapSeaIceVolumeRidge.add_subtask
+      ~ClimatologyMapSeaIceVolumeRidge.check_analysis_enabled
+      ~ClimatologyMapSeaIceVolumeRidge.check_generate
+      ~ClimatologyMapSeaIceVolumeRidge.close
+      ~ClimatologyMapSeaIceVolumeRidge.is_alive
+      ~ClimatologyMapSeaIceVolumeRidge.join
+      ~ClimatologyMapSeaIceVolumeRidge.kill
+      ~ClimatologyMapSeaIceVolumeRidge.run
+      ~ClimatologyMapSeaIceVolumeRidge.run_after
+      ~ClimatologyMapSeaIceVolumeRidge.run_task
+      ~ClimatologyMapSeaIceVolumeRidge.set_start_end_date
+      ~ClimatologyMapSeaIceVolumeRidge.setup_and_check
+      ~ClimatologyMapSeaIceVolumeRidge.start
+      ~ClimatologyMapSeaIceVolumeRidge.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceVolumeRidge.BLOCKED
+      ~ClimatologyMapSeaIceVolumeRidge.FAIL
+      ~ClimatologyMapSeaIceVolumeRidge.READY
+      ~ClimatologyMapSeaIceVolumeRidge.RUNNING
+      ~ClimatologyMapSeaIceVolumeRidge.SUCCESS
+      ~ClimatologyMapSeaIceVolumeRidge.UNSET
+      ~ClimatologyMapSeaIceVolumeRidge.authkey
+      ~ClimatologyMapSeaIceVolumeRidge.daemon
+      ~ClimatologyMapSeaIceVolumeRidge.exitcode
+      ~ClimatologyMapSeaIceVolumeRidge.ident
+      ~ClimatologyMapSeaIceVolumeRidge.name
+      ~ClimatologyMapSeaIceVolumeRidge.pid
+      ~ClimatologyMapSeaIceVolumeRidge.sentinel
+   
+   

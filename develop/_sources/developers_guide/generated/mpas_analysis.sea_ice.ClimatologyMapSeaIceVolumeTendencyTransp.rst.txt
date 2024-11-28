@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceVolumeTendencyTransp
+================================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceVolumeTendencyTransp
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.__init__
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.add_subtask
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.check_analysis_enabled
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.check_generate
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.close
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.is_alive
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.join
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.kill
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.run
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.run_after
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.run_task
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.set_start_end_date
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.setup_and_check
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.start
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.BLOCKED
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.FAIL
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.READY
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.RUNNING
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.SUCCESS
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.UNSET
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.authkey
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.daemon
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.exitcode
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.ident
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.name
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.pid
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.sentinel
+   
+   

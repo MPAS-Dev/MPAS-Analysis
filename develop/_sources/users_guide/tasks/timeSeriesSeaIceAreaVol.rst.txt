@@ -4,7 +4,8 @@ timeSeriesSeaIceAreaVol
 =======================
 
 An analysis task for plotting time series of sea ice area and volume for both
-the Arctic and Antarctic against observations.
+the Arctic and Antarctic against observations. The volume of snow on Arctic and
+Antarctic sea ice is also plotted.
 
 Component and Tags::
 
