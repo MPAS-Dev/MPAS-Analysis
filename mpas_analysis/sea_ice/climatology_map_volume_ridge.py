@@ -19,14 +19,13 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.shared.io.utility import build_obs_path
 
 
-class ClimatologyMapSeaIceMelting(AnalysisTask):
+class ClimatologyMapSeaIceVolumeRidge(AnalysisTask):
     """
-    An analysis task for comparison of sea ice melting against
-    observations
+    An analysis task for volume per unit ice area
     """
     # Authors
     # -------
-    # Darin Comeau, Xylar Asay-Davis
+    # Elizabeth Hunke, Xylar Asay-Davis
 
     def __init__(self, config, mpas_climatology_task, hemisphere,
                  control_config=None):
@@ -49,11 +48,11 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
         """
         # Authors
         # -------
-        # Darin Comeau, Xylar Asay-Davis
+        # Elizabeth Hunke, Xylar Asay-Davis
 
-        task_name = f'climatologyMapSeaIceMelting{hemisphere}'
+        task_name = f'climatologyMapSeaIceVolumeRidge{hemisphere}'
 
-        field_name = 'seaIceMelting'
+        field_name = 'seaIceVolumeRidge'
 
         tags = ['climatology', 'horizontalMap', field_name, 'publicObs']
         if hemisphere == 'NH':
@@ -88,11 +87,10 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        variable_list = ['timeMonthly_avg_basalIceMelt',
-                         'timeMonthly_avg_lateralIceMelt',
-                         'timeMonthly_avg_surfaceIceMelt']
+        variable_list = ['timeMonthly_avg_iceAreaCell',
+                         'timeMonthly_avg_ridgedIceVolumeAverage']
 
-        remap_climatology_subtask = RemapMpasSeaIceMeltingClimatology(
+        remap_climatology_subtask = RemapMpasSeaIceVolumeRidgeClimatology(
             mpas_climatology_task=mpas_climatology_task,
             parent_task=self,
             climatology_name=f'{field_name}{hemisphere}',
@@ -106,31 +104,32 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
             for comparison_grid_name in comparison_grid_names:
 
                 if control_config is None:
-                    if hemisphere == 'SH' and season == 'ANN':
-                        ref_title_label = 'Observations (AnIceFlux)'
-                        gallery_name = None
-                        diff_title_label = 'Model - Observations'
-                        obs_file_name = build_obs_path(
-                                config, 'seaIce',
-                                relativePathOption=f'melting{hemisphere}',
-                                relativePathSection=section_name)
+#echmod - no observations yet
+#                    if hemisphere == 'SH' and season == 'ANN':
+#                        ref_title_label = 'Observations (AnIceFlux)'
+#                        gallery_name = 'Mean Ridged Ice Thickness'
+#                        diff_title_label = 'Model - Observations'
+#                        obs_file_name = build_obs_path(
+#                                config, 'seaIce',
+#                                relativePathOption=f'melting{hemisphere}',
+#                                relativePathSection=section_name)
 
-                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(
-                            parentTask=self, seasons=seasons,
-                            fileName=obs_file_name,
-                            outFilePrefix=f'{field_name}{hemisphere}',
-                            comparisonGridNames=comparison_grid_names)
-                        self.add_subtask(remap_observations_subtask)
-                    else:
+#                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(
+#                            parentTask=self, seasons=seasons,
+#                            fileName=obs_file_name,
+#                            outFilePrefix=f'{field_name}{hemisphere}',
+#                            comparisonGridNames=comparison_grid_names)
+#                        self.add_subtask(remap_observations_subtask)
+#                    else:
                         remap_observations_subtask = None
-                        gallery_name = None
+                        gallery_name = 'Mean Ridged Ice Thickness'
                         ref_title_label = None
                         ref_field_name = None
                         diff_title_label = 'Model - Observations'
 
                 else:
                     control_run_name = control_config.get('runs', 'mainRunName')
-                    gallery_name = None
+                    gallery_name = 'Mean Ridged Ice Thickness'
                     ref_title_label = f'Control: {control_run_name}'
                     field_name = field_name
                     diff_title_label = 'Main - Control'
@@ -138,8 +137,10 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                     remap_observations_subtask = None
 
                 image_caption = f'Climatology Map of ' \
-                                f'{hemisphere_long}-Hemisphere Sea Ice Melting'
-                gallery_group = f'{hemisphere_long}-Hemisphere Sea Ice Melting'
+                                f'{hemisphere_long}-Hemisphere ' \
+                                f'Ridged Ice Volume per Unit Ice Area'
+#                gallery_group = f'{hemisphere_long}-Hemisphere Mean Ridged Ice Thickness'
+                gallery_group = f'{hemisphere_long}-Hemisphere Ridged Ice'
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
@@ -149,17 +150,18 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel=f'seaice_melting{hemisphere}',
-                    fieldNameInTitle='Sea Ice Melting',
+                    outFileLabel=f'seaice_ridgevolume{hemisphere}',
+                    fieldNameInTitle='Mean Ridge Thickness',
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'm yr$^{-1}$',
+                    unitsLabel=r'm',
                     imageCaption=image_caption,
                     galleryGroup=gallery_group,
                     groupSubtitle=None,
-                    groupLink=f'{hemisphere.lower()}_melting',
+#                    groupLink=f'{hemisphere.lower()}_ridgevolume',
+                    groupLink=f'{hemisphere.lower()}_ridge',
                     galleryName=gallery_name,
                     extend='max',
                     prependComparisonGrid=False)
@@ -167,16 +169,15 @@ class ClimatologyMapSeaIceMelting(AnalysisTask):
                 self.add_subtask(subtask)
 
 
-class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
+class RemapMpasSeaIceVolumeRidgeClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of sea ice melting from
-    climatologies of individual melt terms
+    A subtask for computing climatologies of sea ice ridge volume
     """
     def __init__(self, mpas_climatology_task, parent_task, climatology_name,
                  variable_list, seasons, comparison_grid_names):
 
         """
-        Construct the analysis task and adds it as a subtask of the
+        Construct the analysis task and add it as a subtask of the
         ``parent_task``.
         Parameters
         ----------
@@ -200,7 +201,7 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
             The name(s) of the comparison grid to use for remapping.
         """
 
-        subtask_name = f'remapMpasClimatology_SeaIceMelting'
+        subtask_name = f'remapMpasClimatology_SeaIceVolumeRidge'
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
         super().__init__(
@@ -227,8 +228,7 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the total sea ice melting from the individual melt
-        fields.
+        Compute the ridged ice volume per unit ice area
         Parameters
         ----------
         climatology : xarray.Dataset
@@ -241,87 +241,24 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
 
-        melting = self._compute_melting(climatology)
+        volumeridge = self._compute_volumeridge(climatology)
 
-        climatology['seaIceMelting'] = melting
-        climatology.seaIceMelting.attrs['units'] = 'm y^-1'
+        climatology['seaIceVolumeRidge'] = volumeridge
+        climatology.seaIceVolumeRidge.attrs['units'] = 'm'
         climatology = climatology.drop_vars(self.variable_list)
 
         return climatology
 
-    def _compute_melting(self, climatology):
+    def _compute_volumeridge(self, climatology):
         """
-        Compute the total sea ice melting in m yr^-1 from the individual
-        melt fields in m s^-1.
+        Compute the mean ridge thickness in m 
         """
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
-        units_scale_factor = 60 * 60 * 24 * 365
+        volume = climatology['timeMonthly_avg_ridgedIceVolumeAverage']
+        area = climatology['timeMonthly_avg_iceAreaCell']
 
-        basal = climatology['timeMonthly_avg_basalIceMelt']
-        surface = climatology['timeMonthly_avg_surfaceIceMelt']
-        lateral = climatology['timeMonthly_avg_lateralIceMelt']
-
-        melting = (basal + surface + lateral) * units_scale_factor
-        return melting
-
-class RemapAnIceFluxMeltingClimatology(RemapObservedClimatologySubtask):
-    """
-    A subtask for reading and remapping sea ice melting from AnIceFlux
-    observations
-    """
-    # Authors
-    # -------
-    # Darin Comeau, Xylar Asay-Davis
-
-    def get_observation_descriptor(self, fileName):
-        """
-        get a MeshDescriptor for the observation grid
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name describing the source grid
-
-        Returns
-        -------
-        obsDescriptor : ``MeshDescriptor``
-            The descriptor for the observation grid
-        """
-        # Authors
-        # -------
-        # Darin Comeau, Xylar Asay-Davis
-
-        # create a descriptor of the observation grid using the lat/lon
-        # coordinates
-        obsDescriptor = LatLon2DGridDescriptor.read(fileName=fileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
-        return obsDescriptor
-
-    def build_observational_dataset(self, fileName):
-        """
-        read in the data sets for observations, and possibly rename some
-        variables and dimensions
-
-        Parameters
-        ----------
-        fileName : str
-            observation file name
-
-        Returns
-        -------
-        dsObs : ``xarray.Dataset``
-            The observational dataset
-        """
-        # Authors
-        # -------
-        # Darin Comeau, Xylar Asay-Davis
-
-        dsObs = xr.open_dataset(fileName)
-        dsObs = dsObs.isel(time=0)
-        dsObs = dsObs.rename({'melting': 'seaIceMelting'})
-        dsObs = dsObs.transpose('y', 'x')
-
-        return dsObs
+        volumeridge = volume        # volume per unit sea ice area (m)
+#        volumeridge = volume*area   # volume per unit grid cell area (m)
+        return volumeridge

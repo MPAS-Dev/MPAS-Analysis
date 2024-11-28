@@ -45,14 +45,33 @@ Analysis Tasks
    tasks/conservation
 
    tasks/climatologyMapSeaIceConcNH
-   tasks/climatologyMapSeaIceThickNH
    tasks/climatologyMapSeaIceConcSH
+   tasks/climatologyMapSeaIceThickNH
    tasks/climatologyMapSeaIceThickSH
-   tasks/timeSeriesSeaIceAreaVol
+   tasks/climatologyMapSeaIceSnowDepthNH
+   tasks/climatologyMapSeaIceSnowDepthSH
+
+   tasks/climatologyMapSeaIceAreaFractionRidgeNH
+   tasks/climatologyMapSeaIceAreaFractionRidgeSH
+   tasks/climatologyMapSeaIceVolumeRidgeNH
+   tasks/climatologyMapSeaIceVolumeRidgeSH
+   tasks/climatologyMapSeaIceAlbedoNH
+   tasks/climatologyMapSeaIceAlbedoSH
 
    tasks/climatologyMapSeaIceProductionNH
-   tasks/climatologyMapSeaIceMeltingNH
    tasks/climatologyMapSeaIceProductionSH
+   tasks/climatologyMapSeaIceMeltingNH
    tasks/climatologyMapSeaIceMeltingSH
+
+   tasks/climatologyMapSeaIceAreaTendencyThermoNH
+   tasks/climatologyMapSeaIceAreaTendencyThermoSH
+   tasks/climatologyMapSeaIceAreaTendencyTranspNH
+   tasks/climatologyMapSeaIceAreaTendencyTranspSH
+   tasks/climatologyMapSeaIceVolumeTendencyThermoNH
+   tasks/climatologyMapSeaIceVolumeTendencyThermoSH
+   tasks/climatologyMapSeaIceVolumeTendencyTranspNH
+   tasks/climatologyMapSeaIceVolumeTendencyTranspSH
+
+   tasks/timeSeriesSeaIceAreaVol
 
    tasks/climatologyMapIcebergConcSH
