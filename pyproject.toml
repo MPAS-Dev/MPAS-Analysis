@@ -1,0 +1,101 @@
+[project]
+name = "mpas_analysis"
+dynamic = ["version"]
+authors = [
+    { name="Xylar Asay-Davis", email="xylar@lanl.gov" },
+    { name="Carolyn Begeman" },
+    { name="Phillip J. Wolfram" },
+    { name="Milena Veneziani" },
+    { name="Darin Comeau" },
+    { name="Steven Brus" },
+    { name="Luke Van Roekel" },
+    { name="Anirban Sinha" },
+    { name="Riley Brady" },
+    { name="Irena Vankova" },
+    { name="Althea Denlinger" },
+    { name="Elizabeth Hunke" },
+    { name="Stephen Price" },
+    { name="Adrian K. Turner" },
+    { name="Kevin Rosa" },
+    { name="Matt Hoffman" },
+    { name="Mark Petersen" },
+    { name="Charles Doutriaux" },
+    { name="Alexander Hager" },
+]
+description = """\
+    Analysis for Model for Prediction Across Scales (MPAS) simulations.\
+    """
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    # these are only for searching/browsing projects on PyPI
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+
+
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+]
+
+dependencies = [
+    "cartopy>=0.18.0",
+    "cmocean",
+    "dask",
+    "gsw",
+    "lxml",
+    "matplotlib >=3.9.0",
+    "netcdf4",
+    "numpy >=2.0,<3.0",
+    "pandas",
+    "pillow >=10.0.0,<11.0.0",
+    "progressbar2",
+    "pyproj",
+    "python-dateutil",
+    "requests",
+    "scipy>=1.7.0",
+    "setuptools",
+    "shapely>=2.0,<3.0",
+    "six",
+    "xarray>=0.14.1"
+]
+
+[tool.isort]
+multi_line_output = "3"
+include_trailing_comma = true
+force_grid_wrap = "0"
+use_parentheses = true
+line_length = "79"
+
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+
+[build-system]
+requires = ["setuptools>=60"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["deploy*", "docs*", "e3sm_submodules*", "licenses*", "utils*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "mpas_analysis.__init__.__version__" }
+
+# evolution of options.entry-points
+[project.scripts]
+mpas_analysis = "mpas_analysis.__main__:main"
+download_analysis_data = "mpas_analysis.download_data:download_analysis_data"
+
+[project.urls]
+Documentation = "https://mpas-dev.github.io/MPAS-Analysis/develop/"
+"Bug Tracker" = "https://github.com/MPAS-Dev/MPAS-Analysis/issues"
