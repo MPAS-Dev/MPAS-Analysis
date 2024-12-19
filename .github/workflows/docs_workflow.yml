@@ -9,6 +9,9 @@ on:
   release:
     types: [published]
 
+env:
+  PYTHON_VERSION: "3.10"
+
 jobs:
   publish-docs:
     runs-on: ubuntu-latest
@@ -41,14 +44,14 @@ jobs:
           channels: conda-forge
           channel-priority: strict
           auto-update-conda: true
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install mpas_analysis
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
           conda create -n mpas_analysis_dev --file dev-spec.txt \
-            python=${{ matrix.python-version }}
+            python=${{ env.PYTHON_VERSION }}
           conda activate mpas_analysis_dev
           python -m pip install -vv --no-deps --no-build-isolation -e .
 
