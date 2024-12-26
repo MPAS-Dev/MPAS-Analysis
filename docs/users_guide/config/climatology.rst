@@ -79,6 +79,13 @@ specify a different year to use for computing anomalies::
 
   anomalyRefYear = 249
 
+.. note::
+
+   Simulations that branch from another run should use the start year of the
+   branch, not the start year of the simulation that was branched from as
+   ``anomalyRefYear``, since MPAS-Analysis will not be able to find data from
+   the original run.
+
 .. _config_remapping:
 
 Remapping Options

@@ -10,6 +10,12 @@ development, and creating a conda environment that includes the
 ``mpas_analysis`` package and all of its dependencies, installed in a mode
 appropriate for development.
 
+.. warning::
+
+   Beware of hyphens and underscores. The conda package name and some
+   environment names use a hyphen (``mpas-analysis``). The python package and
+   the command name use an underscore (``mpas_analysis``).
+
 1. Getting started on GitHub
 ----------------------------
 
@@ -267,6 +273,16 @@ In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run ``mpas_analysis`` on the command line,
 it will know about the changes.
 
+This command only needs to be done once after the ``mpas_dev`` environment is
+built if you are not using worktrees.
+
+.. note::
+
+   If you do use worktrees, rerun the ``python -m pip install ...`` command
+   each time you switch to developing a new branch, since otherwise the
+   version of ``mpas_analysis`` in the ``mpas_dev`` environment will be the
+   one you were developing previously.
+
 .. _tutorial_dev_get_started_activ_env:
 
 4.4 Activating the environment
@@ -326,6 +342,13 @@ need to follow steps 2-6 of the :ref:`tutorial_getting_started` tutorial.
 
 7. Running MPAS-Analysis on an E3SM supported machine
 -----------------------------------------------------
+
+.. warning::
+
+   Run ``mpas_analysis`` on a compute node, not on an HPC login nodes (front
+   ends), because it uses too many resources to be safely run on a login node.
+   When using a compute node interactively, activate the ``mpas_dev``
+   environment, even if it was activated on the login node. Be sure to
 
 7.1 Configuring MPAS-Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -414,6 +437,16 @@ following:
     # command, or one of "srun" or "mpirun" if it should be run in parallel (or in
     # serial but with a command)
     mapParallelExec = None
+
+If you find that new jobs are being lanuched for ncremap tasks, set:
+
+.. code-block:: ini
+    [execute]
+
+    ...
+    # "None" if ncremap should perform remapping without a command, or "srun"
+    # possibly with some flags if it should be run with that command
+    ncremapParallelExec = None
 
 If you are running into trouble with MPAS-Analysis, such as running out of
 memory, you may want to explore other config options from this section.

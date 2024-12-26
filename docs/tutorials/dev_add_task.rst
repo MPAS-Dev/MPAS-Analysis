@@ -9,6 +9,12 @@ analysis task that is as close as possible to the new analysis, and to copy
 that existing task as a template for the new task.  That is the strategy we
 will demonstrate here.
 
+.. note::
+
+   The changes will not be broadly available until the next MPAS-Analysis
+   release and to the broader E3SM community after the next
+   `E3SM-Unified <https://github.com/E3SM-Project/e3sm-unified>`_ release.
+
 To provide a real example, we will show how we copy and modify an analysis
 task used to compute the anomaly in ocean heat content
 (:py:class:`~mpas_analysis.ocean.ClimatologyMapOHCAnomaly`) to instead compute
@@ -22,6 +28,22 @@ notebooks include hard-coded paths and are otherwise not easily applied to new
 simulations without considerable effort. This is the motivation for adapting
 the code to MPAS-Analysis.
 
+
+.. note::
+
+   If one just wishes to add a new field that already exists in MPAS-Ocean or
+   MPAS-Seaice output, only a few of the steps below are necessary:
+
+   1. Follow step 1 to set up an ```mpas_dev``` environment.
+   2. Copy an existing `ocean <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean>`_
+      or `sea_ice <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice>`_
+      python module to a new name and edit it as needed for the new fields.
+   3. Follow step 6 to add config options
+   4. Follow step 7 to add the task to the list of tasks known to
+      MPAS-Analysis
+   5. Follow step 8 to update Analysis Tasks in the user's guide and
+      ``api.rst`` in the developer's guide to include the new analysis task.
+
 1. Getting started
 ------------------
 
@@ -30,6 +52,14 @@ will help you through the basics of creating a fork of MPAS-Analysis,
 cloning it onto the machine(s) where you will do your development, making
 a worktree for the feature you will develop, creating a conda environment for
 testing your new MPAS-Analysis development, and running MPAS-Analysis.
+
+.. note::
+
+   Make sure you follow the tutorial for developers, not for users, since the
+   tutorial for users installs the latest release of MPAS-Analysis, which you
+   cannot modify. Similarly, changes must be tested in your own development
+   environment (often called ``mpas_dev``) rather than the in a shared
+   environment like `E3SM-Unified <https://github.com/E3SM-Project/e3sm-unified>`_.
 
 Then, please follow the :ref:`tutorial_understand_a_task`.  This will give
 you a tour of the :py:class:`~mpas_analysis.ocean.ClimatologyMapOHCAnomaly`
@@ -527,6 +557,9 @@ I'll create or recreate my ``mpas_dev`` environment as in
 
     conda activate mpas_dev
     python -m pip install --no-deps --no-build-isolation -e .
+
+This last command installs the ``mpas_analysis`` package into the conda
+environment.
 
 4.1 ``ClimatologyMapBSF`` class
 -------------------------------
@@ -1092,7 +1125,32 @@ A quick way to check if the task has been added correctly is to run:
 You should see the new task in the list of tasks.
 
 
-8. The full code for posterity
+8. Adding documentation
+-----------------------
+
+You need to add the task to the documentation.  The easiest way to do this
+is to copy an existing task's documentation (the more similar, the better) in
+the `tasks <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/docs/users_guide/tasks>`_
+directory and then modify it.
+
+You also need to add the tasks class and public methods to the
+`api.rst <https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/docs/developers_guide/api.rst>`_
+in the developer's guide.  Again, the easiest approach is to copy the section
+for a similar task and modify as needed.
+
+With the ``mpas_dev`` environment activated, you can run:
+
+.. code-block:: bash
+
+    cd docs
+    make clean html
+
+to build the docs locally in the ``_build/html`` subdirectory.  When generating
+documentation on HPC machines, you will want to copy the html output to the
+public web space to view it, or if the web portal is being cranky, scp it to
+your local machine.
+
+9. The full code for posterity
 ------------------------------
 
 Since the ``ClimatologyMapBSF`` analysis task is not in MPAS-Analysis yet and
