@@ -543,12 +543,12 @@ task to the new name:
     cd ../add_climatology_map_bsf
     cp mpas_analysis/ocean/climatology_map_ohc_anomaly.py mpas_analysis/ocean/climatology_map_bsf.py
 
-Then, I'll open this new worktree in PyCharm.  (You can, of course, use
+Then, I'll open this new worktree in VS Code.  (You can, of course, use
 whatever editor you like.)
 
 .. code-block:: bash
 
-    pycharm-community .
+    code .
 
 I'll create or recreate my ``mpas_dev`` environment as in
 :ref:`tutorial_dev_getting_started`, and then make sure to at least do:

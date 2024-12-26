@@ -328,11 +328,12 @@ using.
 
 You may, of course, edit the MPAS-Analysis code using whatever tool you like.
 I strongly recommend editing on your laptop and using
-`PyCharm community edition <https://www.jetbrains.com/pycharm/download/>`_
-to do the editing.  PyCharm provides many features including flagging
-deviations from preferred coding style guidelines known as
-`PEP8 <https://peps.python.org/pep-0008/>`_ and syntax error detection using
-the ``mpas_dev`` conda environment you created.
+`VS Code <https://code.visualstudio.com/>`_ to do the editing.  VS Code lets
+you edit code `remotely over ssh <https://code.visualstudio.com/docs/remote/ssh>`_
+(i.e. edit code on your laptop that lives on HPC) and provides many plugins
+that can be used to lint and debug your code on the fly.  This helps ensure
+that code follows the preferred coding style guidelines known as
+`PEP8 <https://peps.python.org/pep-0008/>`_.
 
 6. Running MPAS-Analysis on a laptop
 ------------------------------------
