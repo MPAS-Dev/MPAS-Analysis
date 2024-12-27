@@ -61,7 +61,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">User: Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#setting-up-a-conda-environment">1 Setting up a Conda Environment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#installing-miniconda">1.1 Installing Miniconda</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-miniforge3">1.1 Installing Miniforge3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#creating-a-conda-environment">1.2 Creating a conda environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#activating-the-environment">1.3 Activating the environment</a></li>
 </ul>
@@ -124,37 +124,43 @@
   <section id="user-getting-started">
 <span id="tutorial-getting-started"></span><h1>User: Getting Started<a class="headerlink" href="#user-getting-started" title="Link to this heading"></a></h1>
 <p>This tutorial walks a new user through the basics of using MPAS-Analysis.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Beware of hyphens and underscores. The conda package name and some
+environment names use a hyphen (<code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>). The python package and
+the command name use an underscore (<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>).</p>
+</div>
 <section id="setting-up-a-conda-environment">
 <h2>1 Setting up a Conda Environment<a class="headerlink" href="#setting-up-a-conda-environment" title="Link to this heading"></a></h2>
 <p>MPAS-Analysis relies on several packages that are only available as conda
 packages from the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel.  The first step for running
 MPAS-Analysis is to create a conda environment with all the needed packages.</p>
-<section id="installing-miniconda">
-<h3>1.1 Installing Miniconda<a class="headerlink" href="#installing-miniconda" title="Link to this heading"></a></h3>
-<p>If you have not yet installed Anaconda or Miniconda, you will need to begin
-there.  The concept behind Anaconda is that just about everything you would
-need for a typical python workflow is included.  The concept behind Miniconda
-is that you create different environments for different purposes.  This allows
-for greater flexibility and tends to lead to fewer conflicts between
-incompatible packages, particularly when using a channel other than the
-<code class="docutils literal notranslate"><span class="pre">defaults</span></code> supplied by Anaconda.  Since we will use the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code>
-channel, the Miniconda approach is strongly recommended.</p>
-<p>First download the <a class="reference external" href="https://docs.conda.io/en/latest/miniconda.html">Miniconda3 installer</a> for your operating system, then run
+<section id="installing-miniforge3">
+<h3>1.1 Installing Miniforge3<a class="headerlink" href="#installing-miniforge3" title="Link to this heading"></a></h3>
+<p>If you have not yet installed Anaconda, Miniconda or Miniforge, you will need
+to begin there.  The concept behind Anaconda is that just about everything you
+would need for a typical python workflow is included.  The concept behind
+Miniconda and Miniforg3 is that you create different environments for different
+purposes.  This allows for greater flexibility and tends to lead to fewer
+conflicts between incompatible packages, particularly when using a channel
+other than the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> supplied by Anaconda.  Since we will use the
+<code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel, the Miniforge approach is strongly recommended.</p>
+<p>First download the <a class="reference external" href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3">Miniforge3 installer</a> for your operating system, then run
 it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Miniconda3-latest-Linux-x86_64.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Miniforge3-Linux-x86_64.sh
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>MPAS-Analysis and many of the packages it depends on support OSX and Linux
-but not Windows.</p>
+but not Windows.  Typically, HPC machines need the Linux-x86_64 version.</p>
 </div>
-<p>In this tutorial, we assume that Miniconda is installed in the default location,
-<code class="docutils literal notranslate"><span class="pre">~/miniconda3</span></code>.  If you choose to install it somewhere else, just make sure
-to make the appropriate substitution whenever you see a reference to this path
-below.</p>
+<p>In this tutorial, we assume that Miniforge3 is installed in the default
+location, <code class="docutils literal notranslate"><span class="pre">~/miniforge3</span></code>.  If you choose to install it somewhere else, just
+make sure to make the appropriate substitution whenever you see a reference to
+this path below.</p>
 <p>You will see prompt like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you wish the installer to initialize Miniconda3
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you wish the installer to initialize Miniforge3
 by running conda init? [yes|no]
 </pre></div>
 </div>
@@ -162,11 +168,11 @@ by running conda init? [yes|no]
 where you will also be using other conda environments.  This means you have to
 manually activate <code class="docutils literal notranslate"><span class="pre">conda</span></code> whenever you need it.  For <code class="docutils literal notranslate"><span class="pre">bash</span></code> and similar
 shells, this is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniconda3/etc/profile.d/conda.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
 </pre></div>
 </div>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or related shells, this becomes:</p>
-<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniconda3/etc/profile.d/conda.csh
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh
 </pre></div>
 </div>
 </section>
@@ -188,16 +194,16 @@ install the latest version of the <code class="docutils literal notranslate"><sp
 <h3>1.3 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Link to this heading"></a></h3>
 <p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>
 environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniconda3/etc/profile.d/conda.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
 $<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas-analysis
 </pre></div>
 </div>
 <p>or for <code class="docutils literal notranslate"><span class="pre">csh</span></code>:</p>
-<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniconda3/etc/profile.d/conda.csh
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh
 &gt; conda activate mpas-analysis
 </pre></div>
 </div>
-<p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Miniconda3 so it
+<p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Miniforge3 so it
 loads automatically.</p>
 </section>
 </section>
@@ -541,6 +547,11 @@ unless the following environment variable is set as follows in bash:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mpas_analysis<span class="w"> </span>myrun.cfg
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adding <code class="docutils literal notranslate"><span class="pre">--purge</span></code> and/or <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> flags to the <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>
+command can be helpful, see the troubleshooting section below.</p>
+</div>
 <p>Typical output is the analysis is running correctly looks something like:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>running: /home/xylar/Desktop/miniconda3/envs/mpas-analysis/bin/ESMF_RegridWeight
 Gen --source /tmp/tmph58_hgz4/src_mesh.nc --destination /tmp/tmph58_hgz4/dst_mes
@@ -620,6 +631,11 @@ MPAS-Analysis.  This tutorial cannot hope to provide a comprehensive guide to
 troubleshooting these errors.  Please search the documentation, Google the error
 online, or get in touch with the MPAS-Analysis developer team (by
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/issues">posting an issue</a> on GitHub) if you are experiencing an error.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When all else fails, manually remove the entire MPAS-Analysis data output
+directories and the public html pages.</p>
+</div>
 <section id="purging-old-analysis">
 <h3>7.1 Purging old Analysis<a class="headerlink" href="#purging-old-analysis" title="Link to this heading"></a></h3>
 <p>One thing you might want to try first if you are experiencing problems is to

@@ -198,6 +198,13 @@ specify a different year to use for computing anomalies:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anomalyRefYear</span> <span class="o">=</span> <span class="mi">249</span>
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Simulations that branch from another run should use the start year of the
+branch, not the start year of the simulation that was branched from as
+<code class="docutils literal notranslate"><span class="pre">anomalyRefYear</span></code>, since MPAS-Analysis will not be able to find data from
+the original run.</p>
+</div>
 </section>
 <section id="remapping-options">
 <span id="config-remapping"></span><h2>Remapping Options<a class="headerlink" href="#remapping-options" title="Link to this heading"></a></h2>
