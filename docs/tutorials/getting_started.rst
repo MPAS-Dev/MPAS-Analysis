@@ -5,6 +5,12 @@ User: Getting Started
 
 This tutorial walks a new user through the basics of using MPAS-Analysis.
 
+.. warning::
+
+   Beware of hyphens and underscores. The conda package name and some
+   environment names use a hyphen (``mpas-analysis``). The python package and
+   the command name use an underscore (``mpas_analysis``).
+
 1 Setting up a Conda Environment
 ---------------------------------
 
@@ -12,38 +18,38 @@ MPAS-Analysis relies on several packages that are only available as conda
 packages from the ``conda-forge`` channel.  The first step for running
 MPAS-Analysis is to create a conda environment with all the needed packages.
 
-1.1 Installing Miniconda
-~~~~~~~~~~~~~~~~~~~~~~~~
+1.1 Installing Miniforge3
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have not yet installed Anaconda or Miniconda, you will need to begin
-there.  The concept behind Anaconda is that just about everything you would
-need for a typical python workflow is included.  The concept behind Miniconda
-is that you create different environments for different purposes.  This allows
-for greater flexibility and tends to lead to fewer conflicts between
-incompatible packages, particularly when using a channel other than the
-``defaults`` supplied by Anaconda.  Since we will use the ``conda-forge``
-channel, the Miniconda approach is strongly recommended.
+If you have not yet installed Anaconda, Miniconda or Miniforge, you will need
+to begin there.  The concept behind Anaconda is that just about everything you
+would need for a typical python workflow is included.  The concept behind
+Miniconda and Miniforg3 is that you create different environments for different
+purposes.  This allows for greater flexibility and tends to lead to fewer
+conflicts between incompatible packages, particularly when using a channel
+other than the ``defaults`` supplied by Anaconda.  Since we will use the
+``conda-forge`` channel, the Miniforge approach is strongly recommended.
 
-First download the `Miniconda3 installer`_ for your operating system, then run
+First download the `Miniforge3 installer`_ for your operating system, then run
 it:
 
 .. code-block:: bash
 
-   $ /bin/bash Miniconda3-latest-Linux-x86_64.sh
+   $ /bin/bash Miniforge3-Linux-x86_64.sh
 
 .. note::
 
    MPAS-Analysis and many of the packages it depends on support OSX and Linux
-   but not Windows.
+   but not Windows.  Typically, HPC machines need the Linux-x86_64 version.
 
-In this tutorial, we assume that Miniconda is installed in the default location,
-``~/miniconda3``.  If you choose to install it somewhere else, just make sure
-to make the appropriate substitution whenever you see a reference to this path
-below.
+In this tutorial, we assume that Miniforge3 is installed in the default
+location, ``~/miniforge3``.  If you choose to install it somewhere else, just
+make sure to make the appropriate substitution whenever you see a reference to
+this path below.
 
 You will see prompt like this::
 
-   Do you wish the installer to initialize Miniconda3
+   Do you wish the installer to initialize Miniforge3
    by running conda init? [yes|no]
 
 You may wish to skip the step (answer "no") if you are working on a system
@@ -53,13 +59,13 @@ shells, this is:
 
 .. code-block:: bash
 
-   $ source ~/miniconda3/etc/profile.d/conda.sh
+   $ source ~/miniforge3/etc/profile.d/conda.sh
 
 If you use ``csh``, ``tcsh`` or related shells, this becomes:
 
 .. code-block:: csh
 
-   > source ~/miniconda3/etc/profile.d/conda.csh
+   > source ~/miniforge3/etc/profile.d/conda.csh
 
 1.2 Creating a conda environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,17 +93,17 @@ environment, you will need to run either for ``bash``:
 
 .. code-block:: bash
 
-   $ source ~/miniconda3/etc/profile.d/conda.sh
+   $ source ~/miniforge3/etc/profile.d/conda.sh
    $ conda activate mpas-analysis
 
 or for ``csh``:
 
 .. code-block:: csh
 
-   > source ~/miniconda3/etc/profile.d/conda.csh
+   > source ~/miniforge3/etc/profile.d/conda.csh
    > conda activate mpas-analysis
 
-You can skip the ``source`` command if you chose to initialize Miniconda3 so it
+You can skip the ``source`` command if you chose to initialize Miniforge3 so it
 loads automatically.
 
 2 Downloading observations
@@ -489,6 +495,10 @@ Then, running MPAS-Analysis is as simple as:
 
     $ mpas_analysis myrun.cfg
 
+.. note::
+   Adding ``--purge`` and/or ``--verbose`` flags to the ``mpas_analysis``
+   command can be helpful, see the troubleshooting section below.
+
 Typical output is the analysis is running correctly looks something like:
 
 .. code-block:: none
@@ -580,6 +590,11 @@ troubleshooting these errors.  Please search the documentation, Google the error
 online, or get in touch with the MPAS-Analysis developer team (by
 `posting an issue`_ on GitHub) if you are experiencing an error.
 
+
+.. note::
+   When all else fails, manually remove the entire MPAS-Analysis data output
+   directories and the public html pages.
+
 7.1 Purging old Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -622,7 +637,7 @@ determine the cause of the error.  If not, please include them if you are
 `posting an issue`_ on GitHub.
 
 
-.. _`Miniconda3 installer`: https://docs.conda.io/en/latest/miniconda.html
+.. _`Miniforge3 installer`: https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3
 .. _`conda-forge channel`: https://conda-forge.org/
 .. _`config file`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs
 .. _`Ultra-low-res ocean and sea-ice dataset`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/test_output/20200305.A_WCYCL1850.ne4_oQU480.anvil/20200305.A_WCYCL1850.ne4_oQU480.anvil.ocean_seaice.tar.gz

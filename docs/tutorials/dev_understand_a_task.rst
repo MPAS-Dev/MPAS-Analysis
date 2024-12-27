@@ -132,7 +132,7 @@ Guide.
 
 It will be useful to open the following links in your browser to have a look
 at the code directly:
-`ClimatologyMapOHCAnomaly <https://github.com/xylar/MPAS-Analysis/blob/add_developer_task_tutorial/mpas_analysis/ocean/climatology_map_ohc_anomaly.py>`_
+`ClimatologyMapOHCAnomaly <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/ocean/climatology_map_ohc_anomaly.py>`_
 
 ..
    To do: switch the previous URL to https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop
