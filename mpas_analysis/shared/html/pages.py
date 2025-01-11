@@ -17,7 +17,7 @@ import subprocess
 import os
 import sys
 
-import mpas_analysis
+import mpas_analysis.version
 from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
 
 
@@ -264,7 +264,7 @@ class MainPage(object):
         replacements = {'@runName': runName,
                         '@controlRunText': controlRunText,
                         '@components': componentsText,
-                        '@version': mpas_analysis.__version__,
+                        '@version': mpas_analysis.version.__version__,
                         '@gitHash': githash,
                         '@command': command,
                         '@configs': configsText}

@@ -19,6 +19,7 @@ specifying analysis options.
 # Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
 
 import mpas_analysis
+import mpas_analysis.version
 
 import argparse
 import traceback
@@ -902,7 +903,7 @@ def main():
     parser.add_argument('-v', '--version',
                         action='version',
                         version='mpas_analysis {}'.format(
-                                mpas_analysis.__version__),
+                                mpas_analysis.version.__version__),
                         help="Show version number and exit")
     parser.add_argument("--setup_only", dest="setup_only", action='store_true',
                         help="If only the setup phase, not the run or HTML "
