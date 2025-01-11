@@ -27,7 +27,7 @@ requirements:
     - esmf >=8.4.2,<8.7.0
     - esmf=*=mpi_mpich_*
     - f90nml
-    - geometric_features >=1.6.0
+    - geometric_features >=1.6.1
     - gsw
     - lxml
     - mache >=1.11.0
