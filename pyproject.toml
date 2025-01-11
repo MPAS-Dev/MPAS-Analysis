@@ -74,7 +74,7 @@ build-backend = "setuptools.build_meta"
 exclude = ["deploy*", "docs*", "e3sm_submodules*", "licenses*", "utils*"]
 
 [tool.setuptools.dynamic]
-version = { attr = "mpas_analysis.__init__.__version__" }
+version = { attr = "mpas_analysis.version.__version__" }
 
 # evolution of options.entry-points
 [project.scripts]

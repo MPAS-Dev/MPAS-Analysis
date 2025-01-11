@@ -1,0 +1,11 @@
+include mpas_analysis/*.cfg
+include mpas_analysis/obs/analysis_input_files
+include mpas_analysis/obs/sose_10000km_input_files
+include mpas_analysis/obs/observational_datasets.xml
+
+include mpas_analysis/configuration/*.cfg
+include mpas_analysis/shared/html/templates/*
+include mpas_analysis/shared/plot/ScientificColourMaps7/*/*.xml
+include mpas_analysis/shared/plot/SciVisColorColormaps/*.xml
+include mpas_analysis/test/test*/*
+include mpas_analysis/test/test*/*/*

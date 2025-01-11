@@ -12,14 +12,12 @@ build:
     number: 0
     script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
     noarch: python
-    entry_points:
-        - mpas_analysis = mpas_analysis.__main__:main
-        - download_analysis_data = mpas_analysis.download_data:download_analysis_data
 
 requirements:
   host:
     - python >=3.9
     - pip
+    - setuptools
   run:
     - python >=3.9
     - cartopy >=0.18.0
@@ -29,7 +27,7 @@ requirements:
     - esmf >=8.4.2,<8.7.0
     - esmf=*=mpi_mpich_*
     - f90nml
-    - geometric_features >=1.6.0
+    - geometric_features >=1.6.1
     - gsw
     - lxml
     - mache >=1.11.0
