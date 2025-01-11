@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Generalize Calendar supported by Analysis &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -174,7 +174,7 @@ This is reasonable because the smallest unit of time output in MPAS components i
 seconds (and unlikely to ever be shorter than ms).  We note that a date specified
 as a 64-bit float has a precision high enough to represent seconds for dates up
 to +/- 100 million years:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span><span class="o">*</span><span class="mi">365</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
 <span class="go">142808207.36207813</span>
 </pre></div>
@@ -211,7 +211,7 @@ Contributors: Xylar Asay-Davis
 <p><strong>Note: the current implementation breaks the convention that ``mpas_xarray`` remains
 separate from the rest of MPAS-Analyis by using 3 functions from ``timekeeping.utility``
 in ``mpas_xarray``:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..timekeeping.utility</span> <span class="kn">import</span> <span class="n">string_to_days_since_date</span><span class="p">,</span> \
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">string_to_days_since_date</span><span class="p">,</span> \
     <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">datetime_to_days</span>
 </pre></div>
 </div>
@@ -230,10 +230,10 @@ times.  This involves removing the <code class="docutils literal notranslate"><s
 like <code class="docutils literal notranslate"><span class="pre">daysSinceStartOfSim</span></code> to days since 0001-01-01.</p>
 <p>An example of opening a data set and manipulating times withe the new approach in
 the OHC script is:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">..shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span><span class="p">,</span> \
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_simulation_start_time</span><span class="p">,</span> \
     <span class="n">date_to_days</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> <span class="n">string_to_datetime</span>
 <span class="o">...</span>
-<span class="k">def</span> <span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ohc_timeseries</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="o">...</span>
     <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">)</span>
 <span class="o">...</span>
@@ -306,7 +306,7 @@ the OHC script is:</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">replicate_cycles</span></code> function in <code class="docutils literal notranslate"><span class="pre">sea_ice.timeseries</span></code> has been a particular
 challenge with the existing calendar.  Here is that function with the new ‘Time’
 coordinate:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">replicate_cycle</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsToReplicate</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">replicate_cycle</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">dsToReplicate</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
     <span class="n">dsStartTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
     <span class="n">dsEndTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
     <span class="n">repStartTime</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsToReplicate</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
@@ -409,18 +409,8 @@ for MPAS-Analysis with the previous calendar.</p>
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/design_docs/generalize_calendar.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/design_docs/generalize_calendar.html">1.11.0</a></dd>
-      <dd><a href="../../1.12.0/design_docs/generalize_calendar.html">1.12.0</a></dd>
-      <dd><a href="../../1.8.0/design_docs/generalize_calendar.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/design_docs/generalize_calendar.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/design_docs/generalize_calendar.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="generalize_calendar.html">develop</a></dd>
-      <dd><a href="../../main/design_docs/generalize_calendar.html">main</a></dd>
     </dl>
   </div>
 </div>

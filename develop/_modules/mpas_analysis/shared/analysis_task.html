@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.analysis_task &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -109,20 +109,20 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Value</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">traceback</span>
-<span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Value</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">traceback</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">NameList</span><span class="p">,</span> <span class="n">StreamsFile</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameList</span><span class="p">,</span> <span class="n">StreamsFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span>
 
 
 <div class="viewcode-block" id="AnalysisTask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask">[docs]</a>
-<span class="k">class</span> <span class="nc">AnalysisTask</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalysisTask</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for analysis tasks.</span>
 
@@ -196,7 +196,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
                  <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -269,7 +269,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.setup_and_check">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html#mpas_analysis.shared.AnalysisTask.setup_and_check">[docs]</a>
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis (e.g. reading namelists and</span>
 <span class="sd">        streams files).</span>
@@ -335,7 +335,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.run_task">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_task.html#mpas_analysis.shared.AnalysisTask.run_task">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Run the analysis.  Each task should override this function to do the</span>
 <span class="sd">        work of computing and/or plotting analysis</span>
@@ -349,7 +349,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.run_after">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_after.html#mpas_analysis.shared.AnalysisTask.run_after">[docs]</a>
-    <span class="k">def</span> <span class="nf">run_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Only run this task after the given task has completed.  This allows a</span>
 <span class="sd">        task to be constructed of multiple subtasks, some of which may block</span>
@@ -372,7 +372,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.add_subtask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.add_subtask.html#mpas_analysis.shared.AnalysisTask.add_subtask">[docs]</a>
-    <span class="k">def</span> <span class="nf">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subtask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subtask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add a subtask to this tasks.  This task always runs after the subtask</span>
 <span class="sd">        has finished.  However, this task gets set up *before* the subtask,</span>
@@ -394,7 +394,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.run">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run.html#mpas_analysis.shared.AnalysisTask.run">[docs]</a>
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeLogFile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeLogFile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets up logging and then runs the analysis task.</span>
 
@@ -460,7 +460,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.check_generate">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_generate.html#mpas_analysis.shared.AnalysisTask.check_generate">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if this analysis should be generated, based on the</span>
@@ -529,7 +529,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.check_analysis_enabled">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_analysis_enabled.html#mpas_analysis.shared.AnalysisTask.check_analysis_enabled">[docs]</a>
-    <span class="k">def</span> <span class="nf">check_analysis_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysisOptionName</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_analysis_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysisOptionName</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check to make sure a given analysis is turned on, issuing a warning or</span>
@@ -587,7 +587,7 @@
 
 <div class="viewcode-block" id="AnalysisTask.set_start_end_date">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.set_start_end_date.html#mpas_analysis.shared.AnalysisTask.set_start_end_date">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_start_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_start_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set the start and end dates in the ``config`` correspond to the start</span>
 <span class="sd">        and end years in a given category of analysis</span>
@@ -618,7 +618,7 @@
 <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">AnalysisFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalysisFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A custom formatter for logging</span>
 
@@ -635,10 +635,10 @@
     <span class="n">info_fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(msg)s</span><span class="s2">&quot;</span>
     <span class="n">err_fmt</span> <span class="o">=</span> <span class="n">info_fmt</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">info_fmt</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">info_fmt</span><span class="p">):</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">record</span><span class="p">):</span>
 
         <span class="c1"># Save the original format configured by the user</span>
         <span class="c1"># when the logger formatter was instantiated</span>
@@ -666,7 +666,7 @@
 <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">StreamToLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StreamToLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modified based on code by:</span>
 <span class="sd">    https://www.electricmonk.nl/log/2011/08/14/redirect-stdout-and-stderr-to-a-logger-in-python/</span>
@@ -679,20 +679,20 @@
 <span class="sd">    Fake file-like stream object that redirects writes to a logger instance.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="n">log_level</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">linebuf</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">buf</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_level</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()))</span>
 
-    <span class="k">def</span> <span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">pass</span>
 
 
-<span class="k">def</span> <span class="nf">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the start and end years and dates for time series, climatologies or</span>
 <span class="sd">    climate indices based on the years actually available in the list of files.</span>
@@ -812,18 +812,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="analysis_task.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

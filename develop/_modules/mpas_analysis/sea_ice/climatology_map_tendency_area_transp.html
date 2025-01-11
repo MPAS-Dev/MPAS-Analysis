@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.sea_ice.climatology_map_tendency_area_transp &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -100,22 +100,22 @@
 <span class="c1"># distributed with this code, or at http://mpas-dev.github.com/license.html</span>
 <span class="c1">#</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLon2DGridDescriptor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLon2DGridDescriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_obs_path</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapSeaIceAreaTendencyTransp">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp">[docs]</a>
-<span class="k">class</span> <span class="nc">ClimatologyMapSeaIceAreaTendencyTransp</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapSeaIceAreaTendencyTransp</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for sea ice area tendency due to transport</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -125,7 +125,7 @@
 
 <div class="viewcode-block" id="ClimatologyMapSeaIceAreaTendencyTransp.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
                  <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -267,11 +267,11 @@
 
 
 
-<span class="k">class</span> <span class="nc">RemapMpasSeaIceTendencyClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasSeaIceTendencyClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of sea ice tendencies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span>
                  <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparison_grid_names</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -309,7 +309,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span> <span class="o">=</span> <span class="n">variable_list</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -324,7 +324,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the tendency</span>
 <span class="sd">        Parameters</span>
@@ -347,7 +347,7 @@
 
         <span class="k">return</span> <span class="n">climatology</span>
 
-    <span class="k">def</span> <span class="nf">_compute_tendency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_tendency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the tendency in fraction/yr</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -389,18 +389,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map_tendency_area_transp.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>hovmollerOceanRegions &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -193,18 +193,18 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
 <span class="na">fields</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="na">[{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialTemperature&#39;,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
+<span class="w">    </span><span class="na">[{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialTemperature&#39;</span><span class="na">,</span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="na">,</span>
 <span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$\degree$C&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Temperature&#39;},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Temperature&#39;</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="na">,</span>
 <span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;PSU&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_potentialDensity&#39;,</span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
+<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="na">,</span>
 <span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;kg m$^{-3}$&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;}]</span>
+<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">}]</span>
 
 <span class="c1"># a list of region names from the region masks file to plot</span>
 <span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
@@ -414,18 +414,8 @@ range.  The default is the full range.</p>
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../1.10.0/users_guide/tasks/hovmollerOceanRegions.html">1.10.0</a></dd>
-      <dd><a href="../../../1.11.0/users_guide/tasks/hovmollerOceanRegions.html">1.11.0</a></dd>
-      <dd><a href="../../../1.12.0/users_guide/tasks/hovmollerOceanRegions.html">1.12.0</a></dd>
-      <dd><a href="../../../1.8.0/users_guide/tasks/hovmollerOceanRegions.html">1.8.0</a></dd>
-      <dd><a href="../../../1.9.0/users_guide/tasks/hovmollerOceanRegions.html">1.9.0</a></dd>
-      <dd><a href="../../../1.9.1/users_guide/tasks/hovmollerOceanRegions.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="hovmollerOceanRegions.html">develop</a></dd>
-      <dd><a href="../../../main/users_guide/tasks/hovmollerOceanRegions.html">main</a></dd>
     </dl>
   </div>
 </div>

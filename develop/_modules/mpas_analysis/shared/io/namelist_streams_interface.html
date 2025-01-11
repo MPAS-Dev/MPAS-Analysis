@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.io.namelist_streams_interface &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -111,20 +111,20 @@
 <span class="c1"># -------</span>
 <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
-<span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">os.path</span>
-<span class="kn">import</span> <span class="nn">f90nml</span>
-<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lxml</span><span class="w"> </span><span class="kn">import</span> <span class="n">etree</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os.path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">f90nml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.containers</span> <span class="kn">import</span> <span class="n">ReadOnlyDict</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">paths</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">string_to_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.containers</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReadOnlyDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">paths</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">string_to_datetime</span>
 
 
 <div class="viewcode-block" id="convert_namelist_to_dict">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a namelist file to key-value pairs in dictionary.</span>
 
@@ -161,7 +161,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">NameList</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NameList</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class for fortran manipulation of namelist files, provides</span>
 <span class="sd">    read and write functionality</span>
@@ -174,7 +174,7 @@
     <span class="c1"># constructor</span>
 <div class="viewcode-block" id="NameList.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the namelist file</span>
 
@@ -206,7 +206,7 @@
     <span class="c1"># note following accessors do not do type casting</span>
 <div class="viewcode-block" id="NameList.__getattr__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for dot noation, e.g., nml.field</span>
 
@@ -230,7 +230,7 @@
     <span class="c1"># provide accessor for dictionary notation (returns string)</span>
 <div class="viewcode-block" id="NameList.__getitem__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Accessor for bracket notation, e.g., nml[&#39;field&#39;]</span>
 
@@ -255,7 +255,7 @@
     <span class="c1"># casting for comparable behavior with config files #{{{</span>
 <div class="viewcode-block" id="NameList.get">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.get">[docs]</a>
-    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value associated with a given key</span>
 
@@ -278,7 +278,7 @@
 
 <div class="viewcode-block" id="NameList.getint">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getint">[docs]</a>
-    <span class="k">def</span> <span class="nf">getint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the integer value associated with a given key</span>
 
@@ -301,7 +301,7 @@
 
 <div class="viewcode-block" id="NameList.getfloat">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat">[docs]</a>
-    <span class="k">def</span> <span class="nf">getfloat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getfloat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the float value associated with a given key</span>
 
@@ -324,7 +324,7 @@
 
 <div class="viewcode-block" id="NameList.getbool">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool">[docs]</a>
-    <span class="k">def</span> <span class="nf">getbool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">getbool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the boolean value associated with a given key</span>
 
@@ -347,7 +347,7 @@
         <span class="k">return</span> <span class="n">value</span></div>
 
 
-    <span class="k">def</span> <span class="nf">find_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleOptions</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleOptions</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If one (or more) of the names in ``possibleOptions`` is an option in</span>
 <span class="sd">        this namelist file, returns the first match.</span>
@@ -380,7 +380,7 @@
                          <span class="s1">&#39;file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleOptions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span>
 
 
-<span class="k">class</span> <span class="nc">StreamsFile</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StreamsFile</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to read in streams configuration file, provdies</span>
 <span class="sd">    read and write functionality</span>
@@ -392,7 +392,7 @@
 
 <div class="viewcode-block" id="StreamsFile.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parse the streams file.</span>
 
@@ -430,7 +430,7 @@
 
 <div class="viewcode-block" id="StreamsFile.read">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read">[docs]</a>
-    <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">,</span> <span class="n">attribname</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">,</span> <span class="n">attribname</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
@@ -460,7 +460,7 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-    <span class="k">def</span> <span class="nf">read_datetime_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_datetime_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
@@ -496,7 +496,7 @@
 
 <div class="viewcode-block" id="StreamsFile.readpath">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath">[docs]</a>
-    <span class="k">def</span> <span class="nf">readpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">readpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Given the name of a stream and optionally start and end dates and a</span>
@@ -604,7 +604,7 @@
 
 <div class="viewcode-block" id="StreamsFile.has_stream">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">has_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Does the stream file have the given stream?</span>
 
@@ -635,7 +635,7 @@
 
 <div class="viewcode-block" id="StreamsFile.find_stream">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream">[docs]</a>
-    <span class="k">def</span> <span class="nf">find_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleStreams</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleStreams</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        If one (or more) of the names in ``possibleStreams`` is an stream in</span>
 <span class="sd">        this streams file, returns the first match.</span>
@@ -698,18 +698,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="namelist_streams_interface.html">develop</a></dd>
-      <dd><a href="../../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

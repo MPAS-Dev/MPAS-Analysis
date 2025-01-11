@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Analysis Task Template &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -249,11 +249,11 @@ of individual lines easier:</p>
 <span class="sd">03/16/2017</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">..shared.io</span> <span class="kn">import</span> <span class="n">NameList</span><span class="p">,</span> <span class="n">StreamsFile</span>
-<span class="kn">from</span> <span class="nn">..shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> <span class="n">make_directories</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">NameList</span><span class="p">,</span> <span class="n">StreamsFile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> <span class="n">make_directories</span>
 
 
-<span class="k">class</span> <span class="nc">AnalysisTask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">AnalysisTask</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The base class for analysis tasks.</span>
 
@@ -265,7 +265,7 @@ of individual lines easier:</p>
 <span class="sd">    -------------</span>
 <span class="sd">    03/16/2017</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -298,7 +298,7 @@ of individual lines easier:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">streamMap</span> <span class="o">=</span> <span class="n">streamMap</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">variableMap</span> <span class="o">=</span> <span class="n">variableMap</span>  <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis (e.g. reading namelists and</span>
 <span class="sd">        streams files).</span>
@@ -343,7 +343,7 @@ of individual lines easier:</p>
         <span class="n">make_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">)</span>
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the analysis task.</span>
 
@@ -361,7 +361,7 @@ of individual lines easier:</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span>  <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Determines if this analysis should be generated, based on the</span>
@@ -450,10 +450,10 @@ of individual lines easier:</p>
 
 <span class="c1"># import mpas_analysis module here (those with relative paths starting with</span>
 <span class="c1"># dots)</span>
-<span class="kn">from</span> <span class="nn">..shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..shared.analysis_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
 
-<span class="k">class</span> <span class="nc">MyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MyTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    &lt;Describe the analysis task here.&gt;</span>
 
@@ -465,7 +465,7 @@ of individual lines easier:</p>
 <span class="sd">    -------------</span>
 <span class="sd">    &lt;MM/DD/YYYY&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">myArg</span><span class="o">=</span><span class="s1">&#39;myDefaultValue&#39;</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -511,7 +511,7 @@ of individual lines easier:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">myArg</span> <span class="o">=</span> <span class="n">myArg</span>
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -555,7 +555,7 @@ of individual lines easier:</p>
 
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Runs the analysis task.</span>
 
@@ -586,7 +586,7 @@ of individual lines easier:</p>
     <span class="c1"># you can either pass arguments (with or without defaults) or you can</span>
     <span class="c1"># &quot;save&quot; arguments as member variables of `self` and then get them back</span>
     <span class="c1"># (like `self.myArg` here).</span>
-    <span class="k">def</span> <span class="nf">_my_sub_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_my_sub_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg1</span><span class="p">,</span> <span class="n">arg2</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        &lt;Performs my favority subtask&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -608,7 +608,7 @@ Date last modified: 2017/03/08 <br>
 Contributors: Xylar Asay-Davis
 </h4><p>Here is an example (from <code class="docutils literal notranslate"><span class="pre">ocean.climatology_map.ClimatologyMap</span></code>) of what
 the new <code class="docutils literal notranslate"><span class="pre">__init__</span></code> and <code class="docutils literal notranslate"><span class="pre">setup_and_check</span></code> methods :</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">variableMap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">fieldName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task.</span>
@@ -669,7 +669,7 @@ the new <code class="docutils literal notranslate"><span class="pre">__init__</s
 
     <span class="c1"># }}}</span>
 
-<span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -733,14 +733,14 @@ Contributors: Xylar Asay-Davis
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">analyses</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># Ocean Analyses</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.time_series_ohc</span> <span class="kn">import</span> <span class="n">TimeSeriesOHC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.time_series_ohc</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeriesOHC</span>
 <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TimeSeriesOHC</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="n">oceanStreamMap</span><span class="p">,</span>
                               <span class="n">variableMap</span><span class="o">=</span><span class="n">oceanVariableMap</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.time_series_sst</span> <span class="kn">import</span> <span class="n">TimeSeriesSST</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.time_series_sst</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeriesSST</span>
 <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TimeSeriesSST</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="n">oceanStreamMap</span><span class="p">,</span>
                               <span class="n">variableMap</span><span class="o">=</span><span class="n">oceanVariableMap</span><span class="p">))</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map</span> <span class="kn">import</span> <span class="n">ClimatologyMap</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.climatology_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClimatologyMap</span> \
     <span class="k">as</span> <span class="n">ClimatologyMapOcean</span>
 <span class="k">for</span> <span class="n">fieldName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;sst&#39;</span><span class="p">,</span> <span class="s1">&#39;mld&#39;</span><span class="p">,</span> <span class="s1">&#39;sss&#39;</span><span class="p">]:</span>
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClimatologyMapOcean</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="n">oceanStreamMap</span><span class="p">,</span>
@@ -748,10 +748,10 @@ Contributors: Xylar Asay-Davis
                                         <span class="n">fieldName</span><span class="o">=</span><span class="n">fieldName</span><span class="p">))</span>
 
 <span class="c1"># Sea Ice Analyses</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.sea_ice.timeseries</span> <span class="kn">import</span> <span class="n">TimeSeries</span> <span class="k">as</span> <span class="n">TimeSeriesSeaIce</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.sea_ice.timeseries</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeSeries</span> <span class="k">as</span> <span class="n">TimeSeriesSeaIce</span>
 <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TimeSeriesSeaIce</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="n">seaIceStreamMap</span><span class="p">,</span>
                                  <span class="n">variableMap</span><span class="o">=</span><span class="n">seaIceVariableMap</span><span class="p">))</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.sea_ice.climatology_map</span> <span class="kn">import</span> <span class="n">ClimatologyMap</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.sea_ice.climatology_map</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClimatologyMap</span> \
     <span class="k">as</span> <span class="n">ClimatologyMapSeaIce</span>
 <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClimatologyMapSeaIce</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">streamMap</span><span class="o">=</span><span class="n">seaIceStreamMap</span><span class="p">,</span>
                                      <span class="n">variableMap</span><span class="o">=</span><span class="n">seaIceVariableMap</span><span class="p">))</span>
@@ -831,18 +831,8 @@ her or his task to the analysis.  I think this requirement has been satisfied wi
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/design_docs/analysis_task_template.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/design_docs/analysis_task_template.html">1.11.0</a></dd>
-      <dd><a href="../../1.12.0/design_docs/analysis_task_template.html">1.12.0</a></dd>
-      <dd><a href="../../1.8.0/design_docs/analysis_task_template.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/design_docs/analysis_task_template.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/design_docs/analysis_task_template.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="analysis_task_template.html">develop</a></dd>
-      <dd><a href="../../main/design_docs/analysis_task_template.html">main</a></dd>
     </dl>
   </div>
 </div>

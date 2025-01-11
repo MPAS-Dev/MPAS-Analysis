@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.meridional_heat_transport &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -103,24 +103,24 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">plot_1D</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_vertical_section</span><span class="p">,</span> <span class="n">plot_1D</span><span class="p">,</span> <span class="n">savefig</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.climatology</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology.climatology</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">get_climatology_op_directory</span>
 
 
 <div class="viewcode-block" id="MeridionalHeatTransport">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport">[docs]</a>
-<span class="k">class</span> <span class="nc">MeridionalHeatTransport</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeridionalHeatTransport</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot meridional heat transport from the analysis member output.</span>
 
@@ -140,7 +140,7 @@
 
 <div class="viewcode-block" id="MeridionalHeatTransport.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -172,7 +172,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -239,7 +239,7 @@
                                                         <span class="n">filePrefix</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="n">filePrefix</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process MHT analysis member data if available.</span>
 <span class="sd">        Plots MHT as:</span>
@@ -460,7 +460,7 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">):</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Meridional Heat Transport&#39;</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
@@ -503,18 +503,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="meridional_heat_transport.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.climatology_map_eke &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -102,22 +102,22 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_obs_path</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapEKE">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE">[docs]</a>
-<span class="k">class</span> <span class="nc">ClimatologyMapEKE</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapEKE</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of eddy kinetic energy (eke) against</span>
 <span class="sd">    observations</span>
@@ -128,7 +128,7 @@
 
 <div class="viewcode-block" id="ClimatologyMapEKE.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -253,7 +253,7 @@
 
 
 <span class="c1"># adds to the functionality of RemapDepthSlicesSubtask</span>
-<span class="k">class</span> <span class="nc">RemapMpasEKEClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasEKEClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of eddy kinetic energy from means of</span>
 <span class="sd">    velocity and velocity-squared.</span>
@@ -262,7 +262,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Kevin Rosa</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct velocity magnitude as part of the climatology</span>
 
@@ -311,7 +311,7 @@
         <span class="k">return</span> <span class="n">climatology</span>
 
 
-<span class="k">class</span> <span class="nc">RemapObservedEKEClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapObservedEKEClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping EKE observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -319,7 +319,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Kevin Rosa</span>
 
-    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
@@ -345,7 +345,7 @@
 
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
@@ -411,18 +411,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map_eke.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

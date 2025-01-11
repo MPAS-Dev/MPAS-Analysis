@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.ocean_regional_profiles &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,30 +105,30 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
-<span class="kn">from</span> <span class="nn">geometric_features.aggregation</span> <span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features.aggregation</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_aggregator_by_name</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">decode_strings</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">get_region_mask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">compute_climatology</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">savefig</span><span class="p">,</span> <span class="n">add_inset</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions.compute_region_masks_subtask</span> <span class="kn">import</span> <span class="n">get_feature_list</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_region_mask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">days_to_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_climatology</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefig</span><span class="p">,</span> <span class="n">add_inset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.regions.compute_region_masks_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_feature_list</span>
 
 
 <div class="viewcode-block" id="OceanRegionalProfiles">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanRegionalProfiles.html#mpas_analysis.ocean.OceanRegionalProfiles">[docs]</a>
-<span class="k">class</span> <span class="nc">OceanRegionalProfiles</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OceanRegionalProfiles</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute and plot vertical profiles of regionally analyzed data.  The</span>
 <span class="sd">    mean and standard deviation of the data are computed over each region.</span>
@@ -142,7 +142,7 @@
 
 <div class="viewcode-block" id="OceanRegionalProfiles.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanRegionalProfiles.html#mpas_analysis.ocean.OceanRegionalProfiles.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -223,7 +223,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotSubtask</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">add_region_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_region_group</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span>
                          <span class="n">fields</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">max_bottom_depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                          <span class="n">seasons</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -285,7 +285,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">ComputeRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute regional statistics on each layer and time point of a set of</span>
 <span class="sd">    MPAS fields</span>
@@ -305,7 +305,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span>
                  <span class="n">fields</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">max_bottom_depth</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -359,7 +359,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_bottom_depth</span> <span class="o">=</span> <span class="n">max_bottom_depth</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -383,7 +383,7 @@
             <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_timeseriesstatsmonthly_enable&#39;</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute time series of regional profiles</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -554,7 +554,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">_masked_area_sum</span><span class="p">(</span><span class="n">cellMasks</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_masked_area_sum</span><span class="p">(</span><span class="n">cellMasks</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">var</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;sum a variable over the masked areas&quot;&quot;&quot;</span>
         <span class="n">nRegions</span> <span class="o">=</span> <span class="n">cellMasks</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nRegions&#39;</span><span class="p">]</span>
         <span class="n">totals</span> <span class="o">=</span> <span class="p">[]</span>
@@ -566,7 +566,7 @@
         <span class="k">return</span> <span class="n">total</span>
 
 
-<span class="k">class</span> <span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series into a single data set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -574,7 +574,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fields</span><span class="p">,</span>
                  <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -618,7 +618,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span> <span class="o">=</span> <span class="n">seasons</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -702,7 +702,7 @@
                 <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsSeason</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PlotRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot a profile averaged over an ocean region and in time, along with</span>
 <span class="sd">    variability in both space and time.</span>
@@ -728,7 +728,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span>
                  <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -788,7 +788,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -810,7 +810,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)]</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot a depth profile with variability</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -945,7 +945,7 @@
             <span class="n">gallery</span><span class="o">=</span><span class="n">titleFieldName</span><span class="p">,</span>
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zArrays</span><span class="p">,</span> <span class="n">fieldArrays</span><span class="p">,</span> <span class="n">errArrays</span><span class="p">,</span> <span class="n">lineColors</span><span class="p">,</span> <span class="n">lineWidths</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zArrays</span><span class="p">,</span> <span class="n">fieldArrays</span><span class="p">,</span> <span class="n">errArrays</span><span class="p">,</span> <span class="n">lineColors</span><span class="p">,</span> <span class="n">lineWidths</span><span class="p">,</span>
              <span class="n">legendText</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">xLabel</span><span class="p">,</span> <span class="n">yLabel</span><span class="p">,</span> <span class="n">xLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yLim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
              <span class="n">figureSize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1049,7 +1049,7 @@
         <span class="k">return</span> <span class="n">fig</span>
 
 
-<span class="k">def</span> <span class="nf">_update_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">newFields</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_update_fields</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">newFields</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">outer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">newFields</span><span class="p">)):</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)):</span>
@@ -1095,18 +1095,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="ocean_regional_profiles.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

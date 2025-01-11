@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.io.utility &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -108,19 +108,19 @@
 <span class="sd">Phillip J. Wolfram, Xylar Asay-Davis</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">string</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">string</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 
 
 <div class="viewcode-block" id="paths">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a>
-<span class="k">def</span> <span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns glob&#39;d paths in list for arbitrary number of function arguments.</span>
 <span class="sd">    Note, each expanded set of paths is sorted.</span>
@@ -146,7 +146,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">fingerprint_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fingerprint_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
                           <span class="n">chars</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a random string that can be used as a unique fingerprint</span>
@@ -177,7 +177,7 @@
 
 <div class="viewcode-block" id="make_directories">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a>
-<span class="k">def</span> <span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Make the given path if it does not already exist.</span>
 
@@ -205,7 +205,7 @@
 
 <div class="viewcode-block" id="build_config_full_path">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.build_config_full_path.html#mpas_analysis.shared.io.utility.build_config_full_path">[docs]</a>
-<span class="k">def</span> <span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
                            <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">defaultPath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">):</span>
@@ -260,7 +260,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the full path for a region mask with a given file name</span>
 
@@ -320,7 +320,7 @@
     <span class="k">return</span> <span class="n">fullFileName</span>
 
 
-<span class="k">def</span> <span class="nf">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativePath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
@@ -382,7 +382,7 @@
 
 <div class="viewcode-block" id="check_path_exists">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a>
-<span class="k">def</span> <span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Raise an exception if the given path does not exist.</span>
 
@@ -405,7 +405,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract the year and month from file names associated with a stream</span>
 
@@ -440,7 +440,7 @@
     <span class="k">return</span> <span class="n">years</span><span class="p">,</span> <span class="n">months</span>
 
 
-<span class="k">def</span> <span class="nf">decode_strings</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decode_strings</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decode to unicode strings an array that might either be char or string type</span>
 <span class="sd">    in the NetCDF file.</span>
@@ -467,7 +467,7 @@
     <span class="k">return</span> <span class="n">strings</span>
 
 
-<span class="k">def</span> <span class="nf">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Copy a file, retrying if temporarily unavailable &quot;&quot;&quot;</span>
 
     <span class="k">try</span><span class="p">:</span>
@@ -508,18 +508,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="utility.html">develop</a></dd>
-      <dd><a href="../../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.time_series_temperature_anomaly &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -105,15 +105,15 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span> <span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
 
 
 <div class="viewcode-block" id="TimeSeriesTemperatureAnomaly">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeSeriesTemperatureAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesTemperatureAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of time series of potential temperature anomalies from</span>
 <span class="sd">    a reference simulation year as a function of depth.</span>
@@ -124,7 +124,7 @@
 
 <div class="viewcode-block" id="TimeSeriesTemperatureAnomaly.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.html#mpas_analysis.ocean.TimeSeriesTemperatureAnomaly.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -218,18 +218,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="time_series_temperature_anomaly.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

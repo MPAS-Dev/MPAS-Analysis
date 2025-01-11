@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
@@ -184,16 +184,16 @@ to do.</p>
 <p>Here’s the script for computing the BSF:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">,</span>
@@ -228,7 +228,7 @@ to do.</p>
     <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsBSF</span><span class="p">,</span> <span class="n">out_filename</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 
     <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">innerEdges</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
@@ -256,7 +256,7 @@ to do.</p>
     <span class="k">return</span> <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
     <span class="n">innerEdges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="n">_compute_transport</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
 
@@ -324,7 +324,7 @@ to do.</p>
     <span class="k">return</span> <span class="n">bsfVertex</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="n">dsMesh</span><span class="p">,</span> <span class="n">bsfVertex</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">    &#39;&#39;&#39;</span>
@@ -366,23 +366,23 @@ to do.</p>
 <p>And here’s the one for plotting it:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">cols</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
-<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
-<span class="kn">import</span> <span class="nn">cmocean</span>
-<span class="kn">import</span> <span class="nn">cartopy</span>
-<span class="kn">import</span> <span class="nn">pyproj</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mticker</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cols</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">ProjectionGridDescriptor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProjectionGridDescriptor</span>
 
 
-<span class="k">def</span> <span class="nf">get_antarctic_stereographic_projection</span><span class="p">():</span>  <span class="c1"># {{{</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_antarctic_stereographic_projection</span><span class="p">():</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a projection for an Antarctic steregraphic comparison grid</span>
 
@@ -401,7 +401,7 @@ to do.</p>
     <span class="k">return</span> <span class="n">projection</span>  <span class="c1"># }}}</span>
 
 
-<span class="k">def</span> <span class="nf">get_fris_stereographic_comparison_descriptor</span><span class="p">():</span>  <span class="c1"># {{{</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_fris_stereographic_comparison_descriptor</span><span class="p">():</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a descriptor of a region of a polar stereographic grid centered on the</span>
 <span class="sd">    Filchner-Ronne Ice Shelf, used for remapping and determining the grid name</span>
@@ -429,7 +429,7 @@ to do.</p>
     <span class="k">return</span> <span class="n">descriptor</span>  <span class="c1"># }}}</span>
 
 
-<span class="k">def</span> <span class="nf">add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
     <span class="n">land_50m</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
             <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -441,7 +441,7 @@ to do.</p>
     <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">lakes_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">100e3</span><span class="p">,):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_arrow_to_line2D</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">100e3</span><span class="p">,):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    https://stackoverflow.com/a/27637925/7728169</span>
 <span class="sd">    Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
@@ -475,7 +475,7 @@ to do.</p>
     <span class="k">return</span> <span class="n">arrows</span>
 
 
-<span class="k">def</span> <span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">plot_pdf</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">savefig</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">plot_pdf</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves the current plot to a file, then closes it.</span>
 <span class="sd">    Parameters</span>
@@ -656,7 +656,7 @@ environment.</p>
 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> and task name from <code class="docutils literal notranslate"><span class="pre">climatologyMapOHCAnomaly</span></code> to
 <code class="docutils literal notranslate"><span class="pre">climatologyMapBSF</span></code>.</p>
 <p>Then, I update the docstring right away because otherwise I’ll forget!</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
 <span class="sd">    streamfunction (BSF)</span>
@@ -682,7 +682,7 @@ renaming the task are:</p>
 <li><p>get rid of <code class="docutils literal notranslate"><span class="pre">ref_year_climatology_task</span></code> since I’m not computing anomalies.</p></li>
 <li><p>get rid of <code class="docutils literal notranslate"><span class="pre">depth_range</span></code> because I’m using only the full ocean column.</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     Construct the analysis task.</span>
 
@@ -836,7 +836,7 @@ reconstructed velocity components) would be woefully inaccurate.</p>
 <p>We start by renaming the class from <code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code> to
 <code class="docutils literal notranslate"><span class="pre">RemapMpasBSFClimatology</span></code>, updating the docstring, removing the unneeded
 attributes:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
 <span class="sd">    from climatologies of normal velocity and layer thickness</span>
@@ -885,7 +885,7 @@ to make some changes.</p>
 <code class="docutils literal notranslate"><span class="pre">_compute_barotropic_streamfunction_cell()</span></code> from my example script.  Other
 than making them methods instead of functions and cleaning up the syntax a bit
 so they conform to the PEP8 style guide, I leave them unchanged:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 
     <span class="n">cells_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
@@ -908,7 +908,7 @@ so they conform to the PEP8 style guide, I leave them unchanged:</p>
 
     <span class="k">return</span> <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span>
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
     <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_transport</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
 
@@ -975,7 +975,7 @@ so they conform to the PEP8 style guide, I leave them unchanged:</p>
 
     <span class="k">return</span> <span class="n">bsf_vertex</span>
 
-<span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1013,20 +1013,20 @@ so they conform to the PEP8 style guide, I leave them unchanged:</p>
 </pre></div>
 </div>
 <p>I also add some missing imports and delete an unused one at the top:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 </pre></div>
 </div>
 <p>Finally, I substitute the functionality of the <code class="docutils literal notranslate"><span class="pre">main()</span></code> function in my
 script into the <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">    and layer thickness fields.</span>
@@ -1136,10 +1136,10 @@ similar to the plot script I used above:</p>
 <p>There is one last step required to add this task to MPAS-Analysis.  You should
 add the task to the <code class="docutils literal notranslate"><span class="pre">mpas_analysis/&lt;component&gt;/__init__.py</span></code> so it is a little
 easier to import the task.  Try to add it near similar tasks:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_eke</span> <span class="kn">import</span> <span class="n">ClimatologyMapEKE</span>
-<span class="hll">  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_bsf</span> <span class="kn">import</span> \
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.climatology_map_eke</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClimatologyMapEKE</span>
+<span class="hll">  <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.climatology_map_bsf</span><span class="w"> </span><span class="kn">import</span> \
 </span><span class="hll">      <span class="n">ClimatologyMapBSF</span>
-</span>  <span class="kn">from</span> <span class="nn">mpas_analysis.ocean.climatology_map_ohc_anomaly</span> <span class="kn">import</span> \
+</span>  <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.climatology_map_ohc_anomaly</span><span class="w"> </span><span class="kn">import</span> \
       <span class="n">ClimatologyMapOHCAnomaly</span>
 </pre></div>
 </div>
@@ -1196,18 +1196,18 @@ described in this tutorial:</p>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse</span>
-<span class="kn">import</span> <span class="nn">scipy.sparse.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
 
 
-<span class="k">class</span> <span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapBSF</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for computing and plotting maps of the barotropic</span>
 <span class="sd">    streamfunction (BSF)</span>
@@ -1218,7 +1218,7 @@ described in this tutorial:</p>
 <span class="sd">        The task that produced the climatology to be remapped and plotted</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -1314,13 +1314,13 @@ described in this tutorial:</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasBSFClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of the barotropic streamfunction</span>
 <span class="sd">    from climatologies of normal velocity and layer thickness</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
@@ -1363,7 +1363,7 @@ described in this tutorial:</p>
 
         <span class="k">return</span> <span class="n">climatology</span>
 
-    <span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 
         <span class="n">cells_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="n">inner_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cells_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span>
@@ -1386,7 +1386,7 @@ described in this tutorial:</p>
 
         <span class="k">return</span> <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span>
 
-    <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
         <span class="n">inner_edges</span><span class="p">,</span> <span class="n">transport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_transport</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">ds</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;transport computed.&#39;</span><span class="p">)</span>
 
@@ -1453,7 +1453,7 @@ described in this tutorial:</p>
 
         <span class="k">return</span> <span class="n">bsf_vertex</span>
 
-    <span class="k">def</span> <span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_barotropic_streamfunction_cell</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="p">,</span> <span class="n">bsf_vertex</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Interpolate the barotropic streamfunction from vertices to cells</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1526,18 +1526,8 @@ described in this tutorial:</p>
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/tutorials/dev_add_task.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/tutorials/dev_add_task.html">1.11.0</a></dd>
-      <dd><a href="../../1.12.0/tutorials/dev_add_task.html">1.12.0</a></dd>
-      <dd><a href="../../1.8.0/tutorials/dev_add_task.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/tutorials/dev_add_task.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/tutorials/dev_add_task.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="dev_add_task.html">develop</a></dd>
-      <dd><a href="../../main/tutorials/dev_add_task.html">main</a></dd>
     </dl>
   </div>
 </div>

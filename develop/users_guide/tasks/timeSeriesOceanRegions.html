@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>timeSeriesOceanRegions &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -193,31 +193,31 @@ potential density and other fields of interest averaged over ocean regions.</p>
 
 <span class="c1"># a list of variables available to plot</span>
 <span class="na">availableVariables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;temperature&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Temperature&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;temperature&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Temperature&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;PSU&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;PSU&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_salinity&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;kg m$$^{-3}$$&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;kg m$$^{-3}$$&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_potentialDensity&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;thermalForcing&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Thermal Forcing&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;thermalForcing&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Thermal Forcing&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
 <span class="w">              </span><span class="na">&#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
 <span class="w">              </span><span class="na">&#39;timeMonthly_avg_density&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;oceanHeatContent&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Ocean Heat Content&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;oceanHeatContent&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Ocean Heat Content&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$10^{22}$$ J&#39;,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;mixedLayerDepth&#39;,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Mixed Layer Depth&#39;,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;m&#39;,</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;mixedLayerDepth&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Mixed Layer Depth&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;m&#39;</span><span class="na">,</span>
 <span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_dThreshMLD&#39;]}]</span>
 
 <span class="c1"># allow for longer plot titles</span>
@@ -410,18 +410,8 @@ list can be provided if no observations should be plotted.</p>
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../1.10.0/users_guide/tasks/timeSeriesOceanRegions.html">1.10.0</a></dd>
-      <dd><a href="../../../1.11.0/users_guide/tasks/timeSeriesOceanRegions.html">1.11.0</a></dd>
-      <dd><a href="../../../1.12.0/users_guide/tasks/timeSeriesOceanRegions.html">1.12.0</a></dd>
-      <dd><a href="../../../1.8.0/users_guide/tasks/timeSeriesOceanRegions.html">1.8.0</a></dd>
-      <dd><a href="../../../1.9.0/users_guide/tasks/timeSeriesOceanRegions.html">1.9.0</a></dd>
-      <dd><a href="../../../1.9.1/users_guide/tasks/timeSeriesOceanRegions.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="timeSeriesOceanRegions.html">develop</a></dd>
-      <dd><a href="../../../main/users_guide/tasks/timeSeriesOceanRegions.html">main</a></dd>
     </dl>
   </div>
 </div>

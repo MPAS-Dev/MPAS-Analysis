@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.time_series_ocean_regions &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -102,29 +102,29 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.analysis_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
     <span class="n">add_inset</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">get_simulation_start_time</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">compute_zmid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_simulation_start_time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_zmid</span>
 
 
 <div class="viewcode-block" id="TimeSeriesOceanRegions">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of the time-series output of regionoal mean temperature,</span>
 <span class="sd">    salinity, etc.</span>
@@ -135,7 +135,7 @@
 
 <div class="viewcode-block" id="TimeSeriesOceanRegions.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -293,7 +293,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">ComputeRegionDepthMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionDepthMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute masks for regional and depth mean</span>
 
@@ -312,7 +312,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -351,7 +351,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="n">regionNames</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the regional-mean time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -475,7 +475,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute regional and depth mean at a function of time for a set of MPAS</span>
 <span class="sd">    fields</span>
@@ -498,7 +498,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
                  <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -543,7 +543,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="n">regionNames</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -567,7 +567,7 @@
             <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_timeseriesstatsmonthly_enable&#39;</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the regional-mean time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -745,7 +745,7 @@
 
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_thermal_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_thermal_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; compute the thermal forcing &quot;&quot;&quot;</span>
 
         <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
@@ -777,7 +777,7 @@
 
         <span class="k">return</span> <span class="n">timeSeries</span>
 
-    <span class="k">def</span> <span class="nf">_add_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; compute the ocean heat content &quot;&quot;&quot;</span>
 
         <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
@@ -799,7 +799,7 @@
         <span class="k">return</span> <span class="n">ohc</span>
 
 
-<span class="k">class</span> <span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series into a single data set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -807,7 +807,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -843,7 +843,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -882,7 +882,7 @@
             <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the regional mean of the obs climatology</span>
 
@@ -893,7 +893,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
                  <span class="n">obsDict</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -946,7 +946,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;maskTask&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute time-series output of properties in an ocean region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1123,7 +1123,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PlotRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots time-series output of properties in an ocean region.</span>
 
@@ -1149,7 +1149,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">obsSubtasks</span><span class="p">,</span>
                  <span class="n">geojsonFileName</span><span class="p">):</span>
 
@@ -1211,7 +1211,7 @@
         <span class="k">for</span> <span class="n">obsName</span> <span class="ow">in</span> <span class="n">obsSubtasks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">obsSubtasks</span><span class="p">[</span><span class="n">obsName</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -1238,7 +1238,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots time-series output of properties in an ocean region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1464,7 +1464,7 @@
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_get_variables_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_variables_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get a list of dict of variables for the given region</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1490,7 +1490,7 @@
     <span class="k">return</span> <span class="n">variables</span>
 
 
-<span class="k">def</span> <span class="nf">get_anomaly_ref_year</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">runStreams</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_anomaly_ref_year</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">runStreams</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the reference year for anomalies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1533,18 +1533,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="time_series_ocean_regions.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

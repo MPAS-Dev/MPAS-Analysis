@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.woa_transects &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -102,29 +102,29 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">OrderedDict</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_transects_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.compute_transects_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">TransectsObservations</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_transects_with_vel_mag</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.compute_transects_with_vel_mag</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">ComputeTransectsWithVelMag</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_transect_subtask</span> <span class="kn">import</span> <span class="n">PlotTransectSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_transect_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotTransectSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">build_obs_path</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf_with_fill</span>
 
 
 <div class="viewcode-block" id="WoaTransects">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoaTransects.html#mpas_analysis.ocean.WoaTransects">[docs]</a>
-<span class="k">class</span> <span class="nc">WoaTransects</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WoaTransects</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plot model output at transects and various longitudes around Antarctica,</span>
 <span class="sd">    compared against the WOA23 climatology</span>
@@ -136,7 +136,7 @@
 
 <div class="viewcode-block" id="WoaTransects.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoaTransects.html#mpas_analysis.ocean.WoaTransects.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
@@ -279,7 +279,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">WoaTransectsObservations</span><span class="p">(</span><span class="n">TransectsObservations</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WoaTransectsObservations</span><span class="p">(</span><span class="n">TransectsObservations</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A class for loading and manipulating WOA transect data</span>
 
@@ -294,7 +294,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
                  <span class="n">transectCollectionName</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -331,7 +331,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
 
-    <span class="k">def</span> <span class="nf">get_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Read in and set up the observations.</span>
 
@@ -352,7 +352,7 @@
         <span class="c1"># then, call the method from the parent class</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_observations</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">extract_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">extract_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extract WOA23 observations over the range of lat and lon requested</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -414,7 +414,7 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">transectName</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">transectName</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
@@ -461,7 +461,7 @@
         <span class="k">return</span> <span class="n">dsObs</span>
 
 
-<span class="k">def</span> <span class="nf">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;longitudes&#39;</span><span class="p">,</span>
                                       <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span>
@@ -499,18 +499,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="woa_transects.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

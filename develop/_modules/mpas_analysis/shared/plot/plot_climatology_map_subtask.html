@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.plot_climatology_map_subtask &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -103,26 +103,26 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">capwords</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">capwords</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_global_comparison</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_global_comparison</span><span class="p">,</span> \
     <span class="n">plot_projection_comparison</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">get_remapped_mpas_climatology_file_name</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology.comparison_descriptors</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">get_comparison_descriptor</span>
 
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask">[docs]</a>
-<span class="k">class</span> <span class="nc">PlotClimatologyMapSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotClimatologyMapSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for plotting 2D model fields against observations.</span>
 
@@ -206,7 +206,7 @@
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparisonGridName</span><span class="p">,</span>
                  <span class="n">remapMpasClimatologySubtask</span><span class="p">,</span> <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">secondRemapMpasClimatologySubtask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">depth</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">removeMean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -322,7 +322,7 @@
 
 <div class="viewcode-block" id="PlotClimatologyMapSubtask.set_plot_info">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_plot_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span> <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_plot_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outFileLabel</span><span class="p">,</span> <span class="n">fieldNameInTitle</span><span class="p">,</span> <span class="n">mpasFieldName</span><span class="p">,</span>
                       <span class="n">refFieldName</span><span class="p">,</span> <span class="n">refTitleLabel</span><span class="p">,</span> <span class="n">unitsLabel</span><span class="p">,</span>
                       <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span> <span class="n">groupLink</span><span class="p">,</span>
                       <span class="n">galleryName</span><span class="p">,</span> <span class="n">diffTitleLabel</span><span class="o">=</span><span class="s1">&#39;Model - Observations&#39;</span><span class="p">,</span>
@@ -435,7 +435,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prependComparisonGrid</span> <span class="o">=</span> <span class="n">prependComparisonGrid</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -471,7 +471,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">.xml&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD</span>
 <span class="sd">        observations or a control run</span>
@@ -590,7 +590,7 @@
                                   <span class="n">remappedRefClimatology</span><span class="p">,</span>
                                   <span class="n">componentName</span><span class="p">,</span> <span class="n">componentSubdirectory</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_latlon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span> <span class="n">remappedRefClimatology</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_latlon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span> <span class="n">remappedRefClimatology</span><span class="p">,</span>
                      <span class="n">componentName</span><span class="p">,</span> <span class="n">componentSubdirectory</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; plotting a global lat-lon data set &quot;&quot;&quot;</span>
 
@@ -668,7 +668,7 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remappedModelClimatology</span><span class="p">,</span>
                          <span class="n">remappedRefClimatology</span><span class="p">,</span>
                          <span class="n">componentName</span><span class="p">,</span> <span class="n">componentSubdirectory</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; plotting a dataset on a projection grid &quot;&quot;&quot;</span>
@@ -777,7 +777,7 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_mask_with_thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mask_with_thresholds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">maskMinThreshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">maskMaxThreshold</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">mask</span>
@@ -791,7 +791,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_nans_to_numpy_mask</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_nans_to_numpy_mask</span><span class="p">(</span><span class="n">field</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Convert a numpy array with NaNs to a masked numpy array</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -829,18 +829,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="plot_climatology_map_subtask.html">develop</a></dd>
-      <dd><a href="../../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

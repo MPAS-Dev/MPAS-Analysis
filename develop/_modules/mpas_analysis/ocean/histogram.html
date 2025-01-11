@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.histogram &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -104,27 +104,27 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">make_directories</span><span class="p">,</span> <span class="n">decode_strings</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">compute_climatology</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_climatology</span><span class="p">,</span> \
     <span class="n">get_unmasked_mpas_climatology_file_name</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">histogram_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">histogram_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
 
 
 <div class="viewcode-block" id="OceanHistogram">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram">[docs]</a>
-<span class="k">class</span> <span class="nc">OceanHistogram</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OceanHistogram</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a histogram of a 2-d ocean variable.</span>
 
@@ -132,7 +132,7 @@
 
 <div class="viewcode-block" id="OceanHistogram.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.OceanHistogram.html#mpas_analysis.ocean.OceanHistogram.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -247,7 +247,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotRegionSubtask</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -276,13 +276,13 @@
 
 
 
-<span class="k">class</span> <span class="nc">ComputeHistogramWeightsSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeHistogramWeightsSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Fetches weight variables from MPAS output files for each variable in</span>
 <span class="sd">    variableList.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
                  <span class="n">variableList</span><span class="p">,</span> <span class="n">weightList</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize weights task</span>
@@ -329,7 +329,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="n">variableList</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span> <span class="o">=</span> <span class="n">weightList</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply the region mask to each weight variable and save in a file common</span>
 <span class="sd">        to that region.</span>
@@ -376,7 +376,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds_weights</span><span class="p">,</span> <span class="n">weights_filename</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PlotRegionHistogramSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotRegionHistogramSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a histogram diagram for a given ocean region</span>
 
@@ -411,7 +411,7 @@
 <span class="sd">        The season to compute the climatology for</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
                  <span class="n">sectionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">mpasMasksSubtask</span><span class="p">,</span> <span class="n">obsMasksSubtask</span><span class="p">,</span> <span class="n">obsDicts</span><span class="p">,</span> <span class="n">variableList</span><span class="p">,</span>
                  <span class="n">weightList</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
@@ -477,7 +477,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">season</span> <span class="o">=</span> <span class="n">season</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="n">fullSuffix</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -499,7 +499,7 @@
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">_&#39;</span>
                 <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">season</span><span class="si">}</span><span class="s1">.xml&#39;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots histograms of properties in an ocean region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -727,18 +727,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="histogram.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

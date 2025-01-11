@@ -6,7 +6,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.conservation &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
@@ -107,27 +107,27 @@
 <span class="c1"># -------</span>
 <span class="c1"># Carolyn Begeman</span>
 
-<span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="kn">import</span> <span class="n">find_executable</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">distutils.spawn</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_executable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.analysis_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">date_to_days</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">date_to_days</span><span class="p">,</span> \
     <span class="n">days_to_datetime</span>
 
 
 <div class="viewcode-block" id="ConservationTask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ConservationTask.html#mpas_analysis.ocean.ConservationTask">[docs]</a>
-<span class="k">class</span> <span class="nc">ConservationTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ConservationTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This task generates time series plots from output from the conservation</span>
 <span class="sd">    analysis member. A number of different plot types are supported, as indicated</span>
@@ -190,7 +190,7 @@
 
 <div class="viewcode-block" id="ConservationTask.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ConservationTask.html#mpas_analysis.ocean.ConservationTask.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -212,7 +212,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        Also, adds attributes to the task that will be needed later.</span>
@@ -338,7 +338,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="n">plot_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">filePrefix</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="n">plot_type</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">masterVariableList</span><span class="p">[</span><span class="n">plot_type</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create an output netCDF file that has all of the requested conservation AM variables</span>
 <span class="sd">        in the requested time window. Then generate all requested conservation plot types.</span>
@@ -355,7 +355,7 @@
         <span class="k">for</span> <span class="n">plot_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotTypes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_make_plot</span><span class="p">(</span><span class="n">plot_type</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_variable_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_variable_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Add one or more variables to extract as a time series.</span>
 
@@ -402,7 +402,7 @@
 
         <span class="k">return</span> <span class="n">variable_list</span>
 
-    <span class="k">def</span> <span class="nf">_make_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plot_type</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate time series plots from conservation AM output.</span>
 
@@ -618,7 +618,7 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_variable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">varname</span><span class="p">,</span> <span class="n">mks</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">varname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">derivedVariableList</span><span class="p">:</span>
             <span class="n">variable</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varname</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -703,7 +703,7 @@
 
         <span class="k">return</span> <span class="n">variable</span>
 
-    <span class="k">def</span> <span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Uses ncrcat to extact time series from conservationCheckOutput files</span>
@@ -841,18 +841,8 @@
   </span>
   <div class="rst-other-versions">
     <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.12.0/index.html">1.12.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
-    <dl>
       <dt>Branches</dt>
       <dd><a href="conservation.html">develop</a></dd>
-      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>
