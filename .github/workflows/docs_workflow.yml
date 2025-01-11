@@ -43,7 +43,7 @@ jobs:
           miniforge-version: latest
           channels: conda-forge
           channel-priority: strict
-          auto-update-conda: true
+          auto-update-conda: false
           python-version: ${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
