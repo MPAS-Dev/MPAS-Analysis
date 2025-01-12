@@ -7,7 +7,7 @@ cartopy >=0.18.0
 cartopy_offlinedata
 cmocean
 dask
-esmf >=8.4.2,<8.7.0
+esmf >=8.4.2,<9.0.0
 esmf=*=mpi_mpich_*
 f90nml
 geometric_features>=1.6.1
