@@ -38,6 +38,7 @@ Observational Dataset         Source                                            
 :ref:`drifter_eke`            `NOAA/AOML`_                                                                                              `Laurindo et al. (2017)`_
 :ref:`era5_waves`             `Copernicus Climate Data Store`_                                                                          - `Hersback et al. 2020`_
 :ref:`sscci_waves`            - `CEDA Archive`_                                                                                         - `Dodet et al. 2020`_
+:ref:`osnap_t_s`              `Overturning in the Subpolar North Atlantic Program (OSNAP) website`_
 ============================  ========================================================================================================  ========================================
 
 .. _`NCAR Hadley-NOAA/OI SST website`: https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008
@@ -100,4 +101,5 @@ Observational Dataset         Source                                            
 .. _`Hersback et al. 2020`: https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.3803
 .. _`CEDA Archive`: http://dx.doi.org/10.5285/47140d618dcc40309e1edbca7e773478
 .. _`Dodet et al. 2020`: https://essd.copernicus.org/articles/12/1929/2020/
+.. _`Overturning in the Subpolar North Atlantic Program (OSNAP) website`: https://www.o-snap.org/data-access/
 

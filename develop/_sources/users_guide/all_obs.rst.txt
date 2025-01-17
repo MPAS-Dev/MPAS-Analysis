@@ -25,6 +25,7 @@
    obs/drifter_eke.rst
    obs/era5_waves.rst
    obs/sscci_waves.rst
+   obs/osnap_t_s.rst
    obs/nasateam_conc.rst
    obs/bootstrap_conc.rst
    obs/ssmi_ice_area.rst

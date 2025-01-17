@@ -322,8 +322,12 @@
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">WoceTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                         <span class="n">controlConfig</span><span class="p">))</span>
 
-    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">AntshipTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
-                                        <span class="n">controlConfig</span><span class="p">))</span>
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">AntshipTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span>
+                                           <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+                                           <span class="n">controlConfig</span><span class="p">))</span>
+
+    <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">OsnapTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
+                                         <span class="n">controlConfig</span><span class="p">))</span>
 
     <span class="n">analyses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ocean</span><span class="o">.</span><span class="n">SoseTransects</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">oceanClimatologyTasks</span><span class="p">[</span><span class="s1">&#39;avg&#39;</span><span class="p">],</span>
                                         <span class="n">controlConfig</span><span class="p">))</span>
