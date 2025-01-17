@@ -1597,6 +1597,66 @@
     </nameInDocs>
   </observation>
 
+  <observation>
+    <name>
+      OSNAP Temperature Salinity and Velocity Climatology
+    </name>
+    <component>
+      ocean
+    </component>
+    <description>
+      OSNAP is designed to provide a continuous record of the full-water 
+      column, trans-basin fluxes of heat, mass and freshwater in the subpolar 
+      North Atlantic. It consists of two legs: one extending from southern 
+      Labrador to the southwestern tip of Greenland across the mouth of the 
+      Labrador Sea (OSNAP West), and the second from the southeastern tip of 
+      Greenland to Scotland (OSNAP East). The observing system also includes 
+      subsurface floats (OSNAP Floats) in order to trace the pathways of 
+      overflow waters in the basin and to assess the connectivity of currents 
+      crossing the OSNAP line. The location of the OSNAP East and West legs 
+      purposefully melds with a number of long-term observational efforts in 
+      the North Atlantic: the Canadian repeat AR7W program in the Labrador 
+      Sea; the German Labrador Sea western boundary array at 53°N; the 
+      global Ocean Observatories Initiative node to be placed in the 
+      southwestern Irminger Sea; the repeat A1E/AR7E hydrographic sections 
+      across the Irminger and Iceland basins; and the Ellett line in the 
+      Rockall region. Importantly, this observing system, in conjunction with 
+      the RAPID/MOCHA array at 26ºN and the EU THOR/NACLIM program, will 
+      provide a comprehensive measure of the Atlantic Meridional Overturning 
+      Circulation (AMOC) and provide a means to evaluate intergyre 
+      connectivity in the North Atlantic. OSNAP is a collaborative effort, 
+      which includes several countries including US, Canada, China, France, 
+      Germany, Netherlands and the UK.
+    </description>
+    <source>
+      [Overturning in the Subpolar North Atlantic Program (OSNAP) website]
+      (https://www.o-snap.org/data-access/)
+    </source>
+    <releasePolicy>
+      Acknowledgment: OSNAP data were collected and made freely available by the OSNAP (Overturning in the Subpolar North Atlantic Program) project and all the national programs that contribute to it (www.o-snap.org).
+    </releasePolicy>
+    <references>
+    </references>
+    <bibtex>
+    </bibtex>
+    <dataUrls>
+      - https://duke.app.box.com/s/4qbi9ocpvmxdv44wnx2g5rgoyy85jmz6
+    </dataUrls>
+    <preprocessing>
+      - preprocess_observations/preprocessingOSNAP30day.ipynb
+    </preprocessing>
+    <tasks>
+      - climatologyMapOSNAP
+    </tasks>
+    <subdirectory>
+      Ocean/OSNAP
+    </subdirectory>
+    <nameInDocs>
+      osnap_t_s
+    </nameInDocs>
+  </observation>
+
+
 <!--
   <observation>
     <name>

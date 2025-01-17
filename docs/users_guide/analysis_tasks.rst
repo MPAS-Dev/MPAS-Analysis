@@ -34,6 +34,7 @@ Analysis Tasks
    tasks/meridionalHeatTransport
    tasks/streamfunctionMOC
    tasks/indexNino34
+   tasks/osnapTransects
    tasks/woceTransects
    tasks/soseTransects
    tasks/woaTransects
