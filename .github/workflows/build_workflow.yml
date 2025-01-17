@@ -46,7 +46,7 @@ jobs:
           # Increase this value to reset cache if conda-dev-spec.template has not changed in the workflow
           CACHE_NUMBER: 0
         with:
-          path: ~/conda_pkgs_dir
+          path: ~/conda_pkgs_dir_py${{ matrix.python-version }}
           key:
             ${{ runner.os }}-${{ matrix.python-version }}-conda-${{ env.CACHE_NUMBER }}-${{
             hashFiles('dev-spec.txt,pyproject.toml') }}
