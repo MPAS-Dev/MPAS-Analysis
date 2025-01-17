@@ -612,10 +612,9 @@ def plot_projection_comparison(
                             colors=lineColor, linewidths=lineWidth)
             # add arrows to streamlines
             if arrows is not None:
-                for collection in cs.collections:
-                    for path in collection.get_paths():
-                        for poly in path.to_polygons():
-                            add_arrow_to_line_2d(ax, poly)
+                for path in cs.get_paths():
+                    for poly in path.to_polygons():
+                        add_arrow_to_line_2d(ax, poly)
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
