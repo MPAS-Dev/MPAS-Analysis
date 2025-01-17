@@ -712,10 +712,9 @@
                             <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
             <span class="c1"># add arrows to streamlines</span>
             <span class="k">if</span> <span class="n">arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
-                        <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">():</span>
-                            <span class="n">add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">():</span>
+                        <span class="n">add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
         <span class="c1"># create an axes on the right side of ax. The width of cax will be 5%</span>
         <span class="c1"># of ax and the padding between cax and ax will be fixed at 0.05 inch.</span>
         <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
