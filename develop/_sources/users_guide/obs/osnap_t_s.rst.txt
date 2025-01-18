@@ -42,7 +42,7 @@ References
 
 MPAS-Analysis Tasks
 -------------------
-- :ref:`task_climatologyMapOSNAP`
+- :ref:`task_osnapTransects`
 
 .. _`Overturning in the Subpolar North Atlantic Program (OSNAP) website`: https://www.o-snap.org/data-access/
 

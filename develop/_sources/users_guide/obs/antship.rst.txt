@@ -5,11 +5,16 @@ AntShip sections
 
 Description
 -----------
-AntShip
-----
-Southern Ocean (90°S-45°S) conservative temperature and absolute salinity profiles compilation (OCEAN ICE D1.1)
+Southern Ocean (90°S-45°S) conservative temperature and absolute salinity
+profiles compilation (OCEAN ICE D1.1)
 
-This profile compilation contains conservative temperature and absolute salinity profiles computed from ship CTD, Argo floats and seal-borne profilers in the Southern Ocean (90°S-45°S) since 1972, using the GSW toolbox. It provides with an opportunity to investigate the broad scale climatology of the Southern Ocean hydrography on and off the continental shelf and facilitate localized timeseries analysis of the variability across various timescales.
+This profile compilation contains conservative temperature and absolute
+salinity profiles computed from ship CTD, Argo floats and seal-borne
+profilers in the Southern Ocean (90°S-45°S) since 1972, using the GSW
+toolbox. It provides with an opportunity to investigate the broad scale
+climatology of the Southern Ocean hydrography on and off the continental
+shelf and facilitate localized timeseries analysis of the variability
+across various timescales.
 
 Source
 ------

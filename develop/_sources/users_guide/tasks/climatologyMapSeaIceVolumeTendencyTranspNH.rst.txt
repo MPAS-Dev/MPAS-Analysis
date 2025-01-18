@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceVolumeTendencyTranspNH:
 
 climatologyMapSeaIceVolumeTendencyTranspNH
-========================================
+==========================================
 
 An analysis task for plotting maps of Arctic sea ice volume tendency due to transport.
 

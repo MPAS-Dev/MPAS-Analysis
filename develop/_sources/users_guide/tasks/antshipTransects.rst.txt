@@ -1,7 +1,7 @@
 .. _task_antshipTransects:
 
 antshipTransects
-=============
+================
 
 An analysis task for interpolating MPAS fields to transects from ship-based observations around Antarctica and comparing them.
 
@@ -15,7 +15,6 @@ Configuration Options
 
 The following configuration options are available for this task::
 
-    [antshipTransects]
     [antshipTransects]
     ## options related to plotting model ship CTD transects.
 

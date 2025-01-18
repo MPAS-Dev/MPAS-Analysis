@@ -490,6 +490,14 @@ following:</p>
 </pre></div>
 </div>
 <p>If you find that new jobs are being lanuched for ncremap tasks, set:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+
+<span class="na">...</span>
+<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># possibly with some flags if it should be run with that command</span>
+<span class="na">ncremapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
 <p>If you are running into trouble with MPAS-Analysis, such as running out of
 memory, you may want to explore other config options from this section.</p>
 </section>

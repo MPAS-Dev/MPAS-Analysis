@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceVolumeTendencyThermoNH:
 
 climatologyMapSeaIceVolumeTendencyThermoNH
-========================================
+==========================================
 
 An analysis task for plotting maps of Arctic sea ice volume tendency due to thermodynamics.
 

@@ -1,10 +1,10 @@
 .. _task_osnapTransects:
 
 osnapTransects
-=============
+==============
 
 An analysis task for interpolating MPAS fields to
-`Overturning in the Subpolar North Atlantic Program (OSNAP)`_ transects 
+`Overturning in the Subpolar North Atlantic Program (OSNAP)`_ transects
 and comparing them with ship-based observations.
 
 Component and Tags::
@@ -121,7 +121,7 @@ For details on these configuration options, see:
 Observations
 ------------
 
-:ref:`osnap`
+:ref:`osnap_t_s`
 
 Example Result
 --------------
