@@ -1,7 +1,7 @@
 .. _task_climatologyMapSeaIceAlbedoNH:
 
 climatologyMapSeaIceAlbedoNH
-==========================
+============================
 
 An analysis task for plotting maps of Arctic sea ice broadband albedo.
 Care must be taken when evaluating albedo - long-time averages do not
