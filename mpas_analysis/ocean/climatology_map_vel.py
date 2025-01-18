@@ -9,8 +9,8 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 """
-Analysis tasks for comparing Antarctic climatology maps against observations
-and reanalysis data.
+An analysis task for plotting climatologies of velocity components and
+magnitude
 """
 # Authors
 # -------
@@ -32,8 +32,8 @@ from mpas_analysis.shared.io.utility import build_obs_path
 
 class ClimatologyMapVel(AnalysisTask):
     """
-    An analysis task for comparison of antarctic field against the Southern
-    Ocean State Estimate
+    An analysis task for plotting climatologies of velocity components and
+    magnitude
     """
     # Authors
     # -------
@@ -185,12 +185,11 @@ class ClimatologyMapVel(AnalysisTask):
             outFileLabel = fieldPrefix
             refTitleLabel = None
             diffTitleLabel = None
-            galleryName = 'Velocity'
+            galleryGroup = 'Velocity'
             if controlConfig is not None:
                 refFieldName = field['mpas']
                 controlRunName = controlConfig.get('runs', 'mainRunName')
-                galleryName = f'Control: {controlRunName}'
-                refTitleLabel = galleryName
+                refTitleLabel = f'Control: {controlRunName}'
                 diffTitleLabel = 'Main - Control'
 
             if field['3D']:
@@ -243,7 +242,7 @@ class ClimatologyMapVel(AnalysisTask):
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=field['units'],
                             imageCaption=field['titleName'],
-                            galleryGroup=galleryName,
+                            galleryGroup=galleryGroup,
                             groupSubtitle=None,
                             groupLink=f'{fieldPrefix}Vel',
                             galleryName=field['titleName'],
