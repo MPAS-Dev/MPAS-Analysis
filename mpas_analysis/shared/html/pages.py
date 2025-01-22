@@ -9,13 +9,15 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
-import pkg_resources
-from os import makedirs
-from lxml import etree
-from collections import OrderedDict
-import subprocess
 import os
+import subprocess
 import sys
+from collections import OrderedDict
+from os import makedirs
+from pathlib import Path
+
+import pkg_resources
+from lxml import etree
 
 import mpas_analysis.version
 from mpas_analysis.shared.io.utility import build_config_full_path, copyfile
@@ -222,7 +224,7 @@ class MainPage(object):
 
         for componentName, componentDict in self.components.items():
             subdirectory = componentDict['subdirectory']
-            imageFileName = componentDict['imageFileName']
+            imageFileName = _to_jpg(componentDict['imageFileName'])
             replacements = {'@componentDir': subdirectory,
                             '@componentName': componentName,
                             '@firstImage': imageFileName}
@@ -555,7 +557,9 @@ class ComponentPage(object):
 
     def _generate_image_text(self, imageFileName, imageDict):
         """fill in the template for a given image with the desired content"""
-        replacements = {'@imageFileName': imageFileName}
+        thumbnailFileName = _to_jpg(imageFileName)
+        replacements = {'@imageFileName': imageFileName,
+                        '@thumbnailFileName': thumbnailFileName}
         for tag in ['imageSize', 'imageDescription', 'imageCaption',
                     'thumbnailDescription', 'orientation', 'thumbnailWidth',
                     'thumbnailHeight']:
@@ -627,11 +631,11 @@ class ComponentPage(object):
         """
 
         firstGallery = next(iter(groupDict['galleries'].values()))
-        firstImageFileName = next(iter(firstGallery['images']))
+        thumbnailFileName = _to_jpg(next(iter(firstGallery['images'])))
 
         replacements = {'@analysisGroupName': groupName,
                         '@analysisGroupLink': groupDict['link'],
-                        '@imageFileName': firstImageFileName}
+                        '@thumbnailFileName': thumbnailFileName}
 
         quickLinkText = _replace_tempate_text(self.templates['quicklink'],
                                               replacements)
@@ -666,3 +670,11 @@ def _get_git_hash():
 
     githash = githash.decode('utf-8').strip('\n').replace('"', '')
     return githash
+
+
+def _to_jpg(filename):
+    """
+    change the file extention to jpg (presumably from png)
+    """
+    filename = str(Path(filename).with_suffix('.jpg'))
+    return filename
