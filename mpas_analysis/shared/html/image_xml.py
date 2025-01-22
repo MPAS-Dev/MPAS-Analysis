@@ -198,6 +198,9 @@ def _generate_thumbnails(imageFileName, directory):
     fixedWidth = 480
     fixedHeight = 360
 
+    # more vertical than horizontal
+    aspectRatioThreshold = 0.75
+
     directory = Path(directory)
 
     image = Image.open(directory / imageFileName)
@@ -207,8 +210,9 @@ def _generate_thumbnails(imageFileName, directory):
     fixedFilename = f'fixed_{str(thumbnailFilename)}'
 
     imageSize = image.size
+    aspectRatio = imageSize[0] / float(imageSize[1])
 
-    if imageSize[0] < imageSize[1]:
+    if aspectRatio < aspectRatioThreshold:
         orientation = 'vert'
         thumbnailHeight = 320
     else:
