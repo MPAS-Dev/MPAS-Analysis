@@ -31,6 +31,8 @@ import progressbar
 import logging
 import xarray
 import time
+import json
+from importlib.metadata import Distribution
 from importlib.resources import contents
 
 from mache import discover_machine, MachineInfo
@@ -897,10 +899,90 @@ def symlink_main_run(config, shared_configs, machine_info):
             link_dir(section=section, option=option)
 
 
+def get_editable_install_dir(package_name):
+    """
+    Get the directory that the package is installed in if it is installed in
+    editable mode, or None if it is not.
+
+    Parameters
+    ----------
+    package_name : str
+        The name of the package
+
+    Returns
+    -------
+    install_dir : str or None
+        The directory the package is installed in if in editable mode, or None
+    """
+
+    direct_url = Distribution.from_name(package_name).read_text(
+        'direct_url.json')
+    contents = json.loads(direct_url)
+    pkg_is_editable = contents.get("dir_info", {}).get("editable", False)
+    if pkg_is_editable and 'url' in contents:
+        url = contents['url']
+        if url.startswith('file://'):
+            return url[7:]
+    return None
+
+
+def is_mpas_analysis_git_base():
+    """
+    Check if the current working directory is the base of an mpas_analysis git
+    branch or a git worktree.
+
+    Returns
+    -------
+    is_git_base : bool
+        True if the current working directory is the base of an mpas_analysis
+        git branch or a git worktree, False otherwise
+    """
+    mpas_analysis_dir = os.path.join(os.getcwd(), 'mpas_analysis')
+    if not os.path.isdir(mpas_analysis_dir):
+        # no package mpas_analysis, so can't be an mpas_analysis git base
+        return False
+
+    git_dir = os.path.join(os.getcwd(), '.git')
+    if os.path.isdir(git_dir):
+        # It's a git repository
+        head_file = os.path.join(git_dir, 'HEAD')
+    elif os.path.isfile(git_dir):
+        # It's a git worktree
+        with open(git_dir, 'r') as f:
+            git_dir_path = f.read().strip().split(': ')[1]
+        head_file = os.path.join(git_dir_path, 'HEAD')
+    else:
+        return False
+
+    if not os.path.isfile(head_file):
+        return False
+
+    with open(head_file, 'r') as f:
+        head_content = f.read()
+        if 'ref: refs/heads/' in head_content:
+            return True
+
+    return False
+
+
 def main():
     """
     Entry point for the main script ``mpas_analysis``
     """
+
+    mpas_analysis_dir = get_editable_install_dir('mpas_analysis')
+    if is_mpas_analysis_git_base() and mpas_analysis_dir is not None:
+        # mpas_analysis is installed in editable mode and this is the base
+        # of an mpas_analysis git branch
+        if os.path.abspath(mpas_analysis_dir) != os.getcwd():
+            raise OSError(
+"""
+The current working directory is the base of an mpas_analysis git branch,
+but the package is installed in editable mode in a different directory.
+Please reinstall mpas_analysis in editable mode using:
+    python -m pip install --no-deps --no-build-isolation -e .
+"""
+            )
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
