@@ -11,7 +11,7 @@ part of the averaging period and albedo is not well-defined.
 Component and Tags::
 
   component: seaIce
-  tags: climatology, horizontalMap, seaIceBroadbandAlbedo, publicObs, snow
+  tags: climatology, horizontalMap, seaIceBroadbandAlbedo, publicObs, snow_on_sea_ice
 
 Configuration Options
 ---------------------

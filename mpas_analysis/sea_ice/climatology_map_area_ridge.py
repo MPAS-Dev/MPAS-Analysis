@@ -164,7 +164,7 @@ class ClimatologyMapSeaIceAreaFractionRidge(AnalysisTask):
 #                    groupLink=f'{hemisphere.lower()}_ridgearea',
                     groupLink=f'{hemisphere.lower()}_ridge',
                     galleryName=gallery_name,
-                    extend='neither',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)

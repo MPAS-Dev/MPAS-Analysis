@@ -54,7 +54,7 @@ class ClimatologyMapSeaIceSnowDepth(AnalysisTask):
 
         field_name = 'seaIceSnowDepth'
 
-        tags = ['climatology', 'horizontalMap', field_name, 'publicObs', 'snow']
+        tags = ['climatology', 'horizontalMap', field_name, 'publicObs']
         if hemisphere == 'NH':
             tags = tags + ['arctic']
         else:
@@ -161,7 +161,7 @@ class ClimatologyMapSeaIceSnowDepth(AnalysisTask):
                     groupSubtitle=None,
                     groupLink=f'{hemisphere.lower()}_snowdepth',
                     galleryName=gallery_name,
-                    extend='max',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
