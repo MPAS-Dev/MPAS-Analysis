@@ -129,7 +129,7 @@ Sea ice tasks
    ClimatologyMapSeaIceSnowDepth
    ClimatologyMapSeaIceSnowiceFormation
    ClimatologyMapSeaIceSnowMelt
-   ClimatologyMapSeaIceSeaIcePondArea
+   ClimatologyMapSeaIcePondArea
    ClimatologyMapSeaIceAreaFractionRidge
    ClimatologyMapSeaIceVolumeRidge
    ClimatologyMapSeaIceAlbedo

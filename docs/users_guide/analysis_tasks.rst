@@ -56,8 +56,8 @@ Analysis Tasks
    tasks/climatologyMapSeaIceSnowiceFormationSH
    tasks/climatologyMapSeaIceSnowMeltNH
    tasks/climatologyMapSeaIceSnowMeltSH
-   tasks/climatologyMapSeaIceSeaIcePondAreaNH
-   tasks/climatologyMapSeaIceSeaIcePondAreaSH
+   tasks/climatologyMapSeaIcePondAreaNH
+   tasks/climatologyMapSeaIcePondAreaSH
    tasks/climatologyMapSeaIceAreaFractionRidgeNH
    tasks/climatologyMapSeaIceAreaFractionRidgeSH
    tasks/climatologyMapSeaIceVolumeRidgeNH
