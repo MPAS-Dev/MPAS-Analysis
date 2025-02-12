@@ -78,7 +78,7 @@ sbatch --dependency=afterok:${RES##* } --kill-on-invalid-dep=yes job_script.bash
 cd ..
 
 for run in main_py${alt_py} wc_defaults moc_am no_ncclimo no_polar_regions \
-    mesh_rename xarray_main QU480
+    mesh_rename xarray_main
 do
     cd ${run}
     echo ${run}
