@@ -127,6 +127,9 @@ Sea ice tasks
    ClimatologyMapSeaIceConc
    ClimatologyMapSeaIceThick
    ClimatologyMapSeaIceSnowDepth
+   ClimatologyMapSeaIceSnowiceFormation
+   ClimatologyMapSeaIceSnowMelt
+   ClimatologyMapSeaIcePondArea
    ClimatologyMapSeaIceAreaFractionRidge
    ClimatologyMapSeaIceVolumeRidge
    ClimatologyMapSeaIceAlbedo

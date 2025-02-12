@@ -152,7 +152,7 @@
 
         <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;seaIceBroadbandAlbedo&#39;</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;snow&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;snow_on_sea_ice&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
             <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -258,7 +258,7 @@
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                     <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_albedo&#39;</span><span class="p">,</span>
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">gallery_name</span><span class="p">,</span>
-                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;neither&#39;</span><span class="p">,</span>
+                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
                     <span class="n">prependComparisonGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
