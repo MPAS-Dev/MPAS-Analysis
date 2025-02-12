@@ -268,6 +268,15 @@ def build_analysis_list(config, controlConfig):
     analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowiceFormation(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowMelt(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIcePondArea(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceAreaFractionRidge(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='NH', control_config=controlConfig))
@@ -302,6 +311,15 @@ def build_analysis_list(config, controlConfig):
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowiceFormation(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowMelt(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIcePondArea(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceAreaFractionRidge(

@@ -163,7 +163,7 @@ class ClimatologyMapSeaIceVolumeRidge(AnalysisTask):
 #                    groupLink=f'{hemisphere.lower()}_ridgevolume',
                     groupLink=f'{hemisphere.lower()}_ridge',
                     galleryName=gallery_name,
-                    extend='max',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)

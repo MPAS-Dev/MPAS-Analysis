@@ -25,3 +25,9 @@ from mpas_analysis.sea_ice.climatology_map_production import \
     ClimatologyMapSeaIceProduction
 from mpas_analysis.sea_ice.climatology_map_melting import \
     ClimatologyMapSeaIceMelting
+from mpas_analysis.sea_ice.climatology_map_snowice import \
+    ClimatologyMapSeaIceSnowiceFormation
+from mpas_analysis.sea_ice.climatology_map_snowmelt import \
+    ClimatologyMapSeaIceSnowMelt
+from mpas_analysis.sea_ice.climatology_map_area_pond import \
+    ClimatologyMapSeaIcePondArea
