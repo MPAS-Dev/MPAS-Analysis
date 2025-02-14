@@ -4,76 +4,74 @@ Analysis Tasks
 .. toctree::
    :maxdepth: 1
 
-   tasks/climatologyMapMassFluxes
+   tasks/climatologyMapAntarcticMelt
+   tasks/climatologyMapArgoSalinity
+   tasks/climatologyMapArgoTemperature
+   tasks/climatologyMapBGC
+   tasks/climatologyMapBSF
+   tasks/climatologyMapEKE
    tasks/climatologyMapHeatFluxes
+   tasks/climatologyMapMassFluxes
    tasks/climatologyMapMLD
    tasks/climatologyMapMLDMinMax
+   tasks/climatologyMapOHCAnomaly
+   tasks/climatologyMapSchmidtko
+   tasks/climatologyMapSose
    tasks/climatologyMapSST
    tasks/climatologyMapSSS
    tasks/climatologyMapSSH
-   tasks/climatologyMapEKE
-   tasks/climatologyMapOHCAnomaly
-   tasks/climatologyMapSose
    tasks/climatologyMapVel
-   tasks/climatologyMapBGC
-   tasks/climatologyMapArgoTemperature
-   tasks/climatologyMapArgoSalinity
-   tasks/climatologyMapWoa
-   tasks/climatologyMapSchmidtko
-   tasks/climatologyMapAntarcticMelt
    tasks/climatologyMapWaves
+   tasks/climatologyMapWoa
 
-   tasks/hovmollerOceanRegions
-   tasks/timeSeriesAntarcticMelt
-   tasks/timeSeriesOceanRegions
-   tasks/timeSeriesTemperatureAnomaly
-   tasks/timeSeriesSalinityAnomaly
-   tasks/timeSeriesOHCAnomaly
-   tasks/timeSeriesSST
-   tasks/timeSeriesTransport
-   tasks/meridionalHeatTransport
-   tasks/streamfunctionMOC
-   tasks/indexNino34
-   tasks/osnapTransects
-   tasks/woceTransects
-   tasks/soseTransects
-   tasks/woaTransects
    tasks/antshipTransects
-   tasks/geojsonTransects
-   tasks/oceanRegionalProfiles
-   tasks/regionalTSDiagrams
-   tasks/oceanHistogram
    tasks/conservation
+   tasks/geojsonTransects
+   tasks/hovmollerOceanRegions
+   tasks/indexNino34
+   tasks/meridionalHeatTransport
+   tasks/oceanHistogram
+   tasks/oceanRegionalProfiles
+   tasks/osnapTransects
+   tasks/regionalTSDiagrams
+   tasks/soseTransects
+   tasks/streamfunctionMOC
+   tasks/timeSeriesAntarcticMelt
+   tasks/timeSeriesOHCAnomaly
+   tasks/timeSeriesOceanRegions
+   tasks/timeSeriesSalinityAnomaly
+   tasks/timeSeriesSST
+   tasks/timeSeriesTemperatureAnomaly
+   tasks/timeSeriesTransport
+   tasks/woaTransects
+   tasks/woceTransects
 
-   tasks/climatologyMapSeaIceConcNH
-   tasks/climatologyMapSeaIceConcSH
-   tasks/climatologyMapSeaIceThickNH
-   tasks/climatologyMapSeaIceThickSH
-   tasks/climatologyMapSeaIceSnowDepthNH
-   tasks/climatologyMapSeaIceSnowDepthSH
-
-   tasks/climatologyMapSeaIceSnowiceFormationNH
-   tasks/climatologyMapSeaIceSnowiceFormationSH
-   tasks/climatologyMapSeaIceSnowMeltNH
-   tasks/climatologyMapSeaIceSnowMeltSH
-   tasks/climatologyMapSeaIcePondAreaNH
-   tasks/climatologyMapSeaIcePondAreaSH
-   tasks/climatologyMapSeaIceAreaFractionRidgeNH
-   tasks/climatologyMapSeaIceAreaFractionRidgeSH
-   tasks/climatologyMapSeaIceVolumeRidgeNH
-   tasks/climatologyMapSeaIceVolumeRidgeSH
    tasks/climatologyMapSeaIceAlbedoNH
    tasks/climatologyMapSeaIceAlbedoSH
-
-   tasks/climatologyMapSeaIceProductionNH
-   tasks/climatologyMapSeaIceProductionSH
-   tasks/climatologyMapSeaIceMeltingNH
-   tasks/climatologyMapSeaIceMeltingSH
-
+   tasks/climatologyMapSeaIceAreaFractionRidgeNH
+   tasks/climatologyMapSeaIceAreaFractionRidgeSH
    tasks/climatologyMapSeaIceAreaTendencyThermoNH
    tasks/climatologyMapSeaIceAreaTendencyThermoSH
    tasks/climatologyMapSeaIceAreaTendencyTranspNH
    tasks/climatologyMapSeaIceAreaTendencyTranspSH
+   tasks/climatologyMapSeaIceConcNH
+   tasks/climatologyMapSeaIceConcSH
+   tasks/climatologyMapSeaIceMeltingNH
+   tasks/climatologyMapSeaIceMeltingSH
+   tasks/climatologyMapSeaIcePondAreaNH
+   tasks/climatologyMapSeaIcePondAreaSH
+   tasks/climatologyMapSeaIceProductionNH
+   tasks/climatologyMapSeaIceProductionSH
+   tasks/climatologyMapSeaIceSnowDepthNH
+   tasks/climatologyMapSeaIceSnowDepthSH
+   tasks/climatologyMapSeaIceSnowiceFormationNH
+   tasks/climatologyMapSeaIceSnowiceFormationSH
+   tasks/climatologyMapSeaIceSnowMeltNH
+   tasks/climatologyMapSeaIceSnowMeltSH
+   tasks/climatologyMapSeaIceThickNH
+   tasks/climatologyMapSeaIceThickSH
+   tasks/climatologyMapSeaIceVolumeRidgeNH
+   tasks/climatologyMapSeaIceVolumeRidgeSH
    tasks/climatologyMapSeaIceVolumeTendencyThermoNH
    tasks/climatologyMapSeaIceVolumeTendencyThermoSH
    tasks/climatologyMapSeaIceVolumeTendencyTranspNH
