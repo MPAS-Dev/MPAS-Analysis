@@ -28,7 +28,7 @@ class ClimatologyMapBSF(AnalysisTask):
     ----------
     mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
         The task that produced the climatology to be remapped and plotted
-    """
+    """  # noqa: E501
 
     def __init__(self, config, mpas_climatology_task, control_config=None):
         """
@@ -44,7 +44,7 @@ class ClimatologyMapBSF(AnalysisTask):
 
         control_config : mpas_tools.config.MpasConfigParser, optional
             Configuration options for a control run (if any)
-        """
+        """  # noqa: E501
         field_name = 'barotropicStreamfunction'
         # call the constructor from the base class (AnalysisTask)
         super().__init__(config=config, taskName='climatologyMapBSF',
@@ -74,8 +74,6 @@ class ClimatologyMapBSF(AnalysisTask):
 
         mpas_field_name = field_name
 
-        variable_list = ['timeMonthly_avg_normalVelocity',
-                         'timeMonthly_avg_layerThickness']
         for min_depth, max_depth in depth_ranges:
             depth_range_string = \
                 f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
@@ -83,14 +81,13 @@ class ClimatologyMapBSF(AnalysisTask):
                 fname_title = f'Streamfunction over {depth_range_string}'
                 fname_clim = f'{field_name}_{depth_range_string}'
             else:
-                fname_title = f'Barotropic Streamfunction'
+                fname_title = 'Barotropic Streamfunction'
                 fname_clim = field_name
 
             remap_climatology_subtask = RemapMpasBSFClimatology(
                 mpas_climatology_task=mpas_climatology_task,
                 parent_task=self,
                 climatology_name=fname_clim,
-                variable_list=variable_list,
                 comparison_grid_names=comparison_grid_names,
                 seasons=seasons,
                 min_depth=min_depth,
@@ -113,7 +110,8 @@ class ClimatologyMapBSF(AnalysisTask):
             for comparison_grid_name in comparison_grid_names:
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
-                    subtask_name = f'plot{season}_{comparison_grid_name}_{depth_range_string}'
+                    subtask_name = f'plot{season}_{comparison_grid_name}' \
+                                   f'_{depth_range_string}'
 
                     subtask = PlotClimatologyMapSubtask(
                         self, season, comparison_grid_name,
@@ -140,10 +138,24 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
     """
     A subtask for computing climatologies of the barotropic /subpolar gyre
     streamfunction from climatologies of normal velocity and layer thickness
+
+    Attributes
+    ----------
+    min_depth : float
+        The minimum depth for integration
+
+    max_depth : float
+        The maximum depth for integration
+
+    include_bolus : bool
+        Whether to include the bolus velocity in the streamfunction
+
+    include_submesoscale : bool
+        Whether to include the submesoscale velocity in the streamfunction
     """
     def __init__(self, mpas_climatology_task, parent_task,
-                 climatology_name, variable_list, seasons,
-                 comparison_grid_names, min_depth, max_depth):
+                 climatology_name, seasons, comparison_grid_names, min_depth,
+                 max_depth):
 
         """
         Construct the analysis task and adds it as a subtask of the
@@ -163,10 +175,6 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             the important field(s) in the climatology) used to name the
             subdirectories for each stage of the climatology
 
-        variable_list : list of str
-            A list of variable names in ``timeSeriesStatsMonthly`` to be
-            included in the climatologies
-
         seasons : list of str, optional
             A list of seasons (keys in ``shared.constants.monthDictionary``)
             to be computed or ['none'] (not ``None``) if only monthly
@@ -177,7 +185,10 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         min_depth, max_depth : float
             The minimum and maximum depths for integration
-        """
+        """  # noqa: E501
+
+        # we'll fill this in at setup time
+        variable_list = []
 
         depth_range_string = f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
         subtask_name = f'remapMpasClimatology_{depth_range_string}'
@@ -190,6 +201,43 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         self.min_depth = min_depth
         self.max_depth = max_depth
+        self.include_bolus = None
+        self.include_submesoscale = None
+
+    def setup_and_check(self):
+        """
+        Perform steps to set up the analysis and check for errors in the setup.
+        """
+        super().setup_and_check()
+
+        variable_list = ['timeMonthly_avg_normalVelocity',
+                         'timeMonthly_avg_layerThickness']
+
+        # Add the bolus velocity if GM is enabled
+        try:
+            # the new name
+            self.include_bolus = self.namelist.getbool('config_use_gm')
+        except KeyError:
+            # the old name
+            self.include_bolus = self.namelist.getbool(
+                'config_use_standardgm')
+        try:
+            self.include_submesoscale = \
+                self.namelist.getbool('config_submesoscale_enable')
+        except KeyError:
+            # an old run without submesoscale
+            self.include_submesoscale = False
+
+        if self.include_bolus:
+            variable_list.append('timeMonthly_avg_normalGMBolusVelocity')
+
+        if self.include_submesoscale:
+            variable_list.append('timeMonthly_avg_normalMLEvelocity')
+
+        self.variableList = variable_list
+
+        # Add the variables and seasons, now that we have the variable list
+        self.mpasClimatologyTask.add_variables(self.variableList, self.seasons)
 
     def customize_masked_climatology(self, climatology, season):
         """
@@ -215,7 +263,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
                            'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
                            'dcEdge', 'dvEdge', 'bottomDepth', 'layerThickness',
-                           'maxLevelCell']]
+                           'maxLevelCell', 'latVertex']]
         ds_mesh = ds_mesh.isel(Time=0)
         ds_mesh.load()
         bsf_vertex = self._compute_barotropic_streamfunction_vertex(
@@ -250,14 +298,20 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
                              ds_mesh.layerThickness)
         z_mid_edge = 0.5*(z_mid.isel(nCells=cell0) +
                           z_mid.isel(nCells=cell1))
-        normal_velocity = \
-            ds.timeMonthly_avg_normalVelocity.isel(nEdges=inner_edges)
+
+        normal_velocity = ds.timeMonthly_avg_normalVelocity
+        if self.include_bolus:
+            normal_velocity += ds.timeMonthly_avg_normalGMBolusVelocity
+        if self.include_submesoscale:
+            normal_velocity += ds.timeMonthly_avg_normalMLEvelocity
+        normal_velocity = normal_velocity.isel(nEdges=inner_edges)
+
         layer_thickness = ds.timeMonthly_avg_layerThickness
         layer_thickness_edge = 0.5*(layer_thickness.isel(nCells=cell0) +
                                     layer_thickness.isel(nCells=cell1))
         mask_bottom = (vert_index < ds_mesh.maxLevelCell).T
-        mask_bottom_edge = 0.5*(mask_bottom.isel(nCells=cell0) +
-                                mask_bottom.isel(nCells=cell1))
+        mask_bottom_edge = np.logical_and(mask_bottom.isel(nCells=cell0),
+                                          mask_bottom.isel(nCells=cell1))
         masks = [mask_bottom_edge,
                  z_mid_edge <= self.min_depth,
                  z_mid_edge >= self.max_depth]
@@ -273,24 +327,32 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         inner_edges, transport = self._compute_transport(ds_mesh, ds)
         self.logger.info('transport computed.')
 
+        config = self.config
+        min_lat = config.getfloat(
+            'climatologyMapBSF', 'minLatitudeForZeroBSF')
+
         nvertices = ds_mesh.sizes['nVertices']
 
         cells_on_vertex = ds_mesh.cellsOnVertex - 1
         vertices_on_edge = ds_mesh.verticesOnEdge - 1
         is_boundary_cov = cells_on_vertex == -1
-        boundary_vertices = np.logical_or(is_boundary_cov.isel(vertexDegree=0),
-                                          is_boundary_cov.isel(vertexDegree=1))
-        boundary_vertices = np.logical_or(boundary_vertices,
-                                          is_boundary_cov.isel(vertexDegree=2))
+        boundary_vertices = is_boundary_cov.sum(dim='vertexDegree') > 0
+
+        boundary_vertices = np.logical_and(
+            boundary_vertices,
+            ds_mesh.latVertex > np.deg2rad(min_lat)
+        )
 
         # convert from boolean mask to indices
         boundary_vertices = np.flatnonzero(boundary_vertices.values)
 
         n_boundary_vertices = len(boundary_vertices)
+
         n_inner_edges = len(inner_edges)
 
-        indices = np.zeros((2, 2*n_inner_edges+n_boundary_vertices), dtype=int)
-        data = np.zeros(2*n_inner_edges+n_boundary_vertices, dtype=float)
+        indices = np.zeros((2, 2 * n_inner_edges + n_boundary_vertices),
+                           dtype=int)
+        data = np.zeros(2 * n_inner_edges + n_boundary_vertices, dtype=float)
 
         # The difference between the streamfunction at vertices on an inner
         # edge should be equal to the transport
@@ -298,32 +360,32 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         v1 = vertices_on_edge.isel(nEdges=inner_edges, TWO=1).values
 
         ind = np.arange(n_inner_edges)
-        indices[0, 2*ind] = ind
-        indices[1, 2*ind] = v1
+        indices[0, 2 * ind] = ind
+        indices[1, 2 * ind] = v1
         data[2*ind] = 1.
 
-        indices[0, 2*ind+1] = ind
-        indices[1, 2*ind+1] = v0
+        indices[0, 2 * ind + 1] = ind
+        indices[1, 2 * ind + 1] = v0
         data[2*ind+1] = -1.
 
-        # the streamfunction should be zero at all boundary vertices
+        # Make the average of the stream function at boundary vertices north
+        # of min_lat equal to zero
         ind = np.arange(n_boundary_vertices)
-        indices[0, 2*n_inner_edges + ind] = n_inner_edges + ind
-        indices[1, 2*n_inner_edges + ind] = boundary_vertices
-        data[2*n_inner_edges + ind] = 1.
+        indices[0, 2 * n_inner_edges + ind] = n_inner_edges
+        indices[1, 2 * n_inner_edges + ind] = ind
+        data[2 * n_inner_edges + ind] = 1.
 
-        rhs = np.zeros(n_inner_edges+n_boundary_vertices, dtype=float)
+        rhs = np.zeros(n_inner_edges + 1, dtype=float)
 
         # convert to Sv
         ind = np.arange(n_inner_edges)
-        rhs[ind] = 1e-6*transport
+        rhs[ind] = 1e-6 * transport
 
-        ind = np.arange(n_boundary_vertices)
-        rhs[n_inner_edges + ind] = 0.
+        rhs[n_inner_edges] = 0.
 
         matrix = scipy.sparse.csr_matrix(
             (data, indices),
-            shape=(n_inner_edges+n_boundary_vertices, nvertices))
+            shape=(n_inner_edges + 1, nvertices))
 
         solution = scipy.sparse.linalg.lsqr(matrix, rhs)
         bsf_vertex = xr.DataArray(-solution[0],
