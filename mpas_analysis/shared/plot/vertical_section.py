@@ -18,8 +18,6 @@ runs or with observations
 
 import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib.tri import Triangulation
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import xarray as xr
 import numpy as np
 
@@ -38,13 +36,6 @@ def plot_vertical_section_comparison(
         colorMapSectionName,
         xCoords=None,
         zCoord=None,
-        triangulation_args=None,
-        xOutlineModel=None,
-        zOutlineModel=None,
-        xOutlineRef=None,
-        zOutlineRef=None,
-        xOutlineDiff=None,
-        zOutlineDiff=None,
         colorbarLabel=None,
         xlabels=None,
         ylabel=None,
@@ -117,28 +108,6 @@ def plot_vertical_section_comparison(
 
     zCoord : xarray.DataArray, optional
         The z coordinates for the model, ref and diff arrays
-
-    triangulation_args : dict, optional
-        A dict of arguments to create a matplotlib.tri.Triangulation of the
-        transect that does not rely on it being on a logically rectangular grid.
-        The arguments rather than the triangulation itself are passed because
-        multiple triangulations with different masks are needed internally and
-        there is not an obvious mechanism for copying an existing triangulation.
-        If this option is provided, ``xCoords`` is only used for tick marks if
-        more than one x axis is requested, and ``zCoord`` will be ignored.
-
-    xOutlineModel, zOutlineModel : numpy.ndarray, optional
-        pairs of points defining line segments that are used to outline the
-        valid region of the mesh for the model panel if ``outlineValid = True``
-        and ``triangulation_args`` is not ``None``
-
-    xOutlineRef, zOutlineRef : numpy.ndarray, optional
-        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the reference
-        panel
-
-    xOutlineDiff, zOutlineDiff : numpy.ndarray, optional
-        Same as ``xOutlineModel`` and ``zOutlineModel`` but for the difference
-        panel
 
     colorMapSectionName : str
         section name in ``config`` where color map info can be found.
@@ -410,9 +379,6 @@ def plot_vertical_section_comparison(
         colorMapSectionName,
         xCoords=xCoords,
         zCoord=zCoord,
-        triangulation_args=triangulation_args,
-        xOutline=xOutlineModel,
-        zOutline=zOutlineModel,
         suffix=resultSuffix,
         colorbarLabel=colorbarLabel,
         title=title,
@@ -461,9 +427,6 @@ def plot_vertical_section_comparison(
             colorMapSectionName,
             xCoords=xCoords,
             zCoord=zCoord,
-            triangulation_args=triangulation_args,
-            xOutline=xOutlineRef,
-            zOutline=zOutlineRef,
             suffix=resultSuffix,
             colorbarLabel=colorbarLabel,
             title=refTitle,
@@ -504,9 +467,6 @@ def plot_vertical_section_comparison(
             colorMapSectionName,
             xCoords=xCoords,
             zCoord=zCoord,
-            triangulation_args=triangulation_args,
-            xOutline=xOutlineDiff,
-            zOutline=zOutlineDiff,
             suffix=diffSuffix,
             colorbarLabel=colorbarLabel,
             title=diffTitle,
@@ -557,9 +517,6 @@ def plot_vertical_section(
         colorMapSectionName,
         xCoords=None,
         zCoord=None,
-        triangulation_args=None,
-        xOutline=None,
-        zOutline=None,
         suffix='',
         colorbarLabel=None,
         title=None,
@@ -638,22 +595,6 @@ def plot_vertical_section(
 
     zCoord : xarray.DataArray, optional
         The z coordinates for the ``field``
-
-    triangulation_args : dict, optional
-        A dict of arguments to create a matplotlib.tri.Triangulation of the
-        transect that does not rely on it being on a logically rectangular grid.
-        The arguments rather than the triangulation itself are passed because
-        multiple triangulations with different masks are needed internally and
-        there is not an obvious mechanism for copying an existing triangulation.
-        If this option is provided, ``xCoords`` is only used for tick marks if
-        more than one x axis is requested, and ``zCoord`` will be ignored.
-
-    xOutline, zOutline : numpy.ndarray, optional
-        pairs of points defining line segments that are used to outline the
-        valid region of the mesh if ``outlineValid = True`` and
-        ``triangulation_args`` is not ``None``
-
-
 
     suffix : str, optional
         the suffix used for colorbar config options
@@ -849,68 +790,38 @@ def plot_vertical_section(
         if len(xCoords) != len(xlabels):
             raise ValueError('Expected the same number of xCoords and xlabels')
 
-    if triangulation_args is None:
+    x, y = xr.broadcast(xCoords[0], zCoord)
+    dims_in_field = all([dim in field.dims for dim in x.dims])
 
-        x, y = xr.broadcast(xCoords[0], zCoord)
-        dims_in_field = all([dim in field.dims for dim in x.dims])
-
-        if dims_in_field:
-            x = x.transpose(*field.dims)
-            y = y.transpose(*field.dims)
-        else:
-            xsize = list(x.sizes.values())
-            fieldsize = list(field.sizes.values())
-            if xsize[0] == fieldsize[0] + 1 and xsize[1] == fieldsize[1] + 1:
-                pass
-            elif xsize[0] == fieldsize[1] + 1 and xsize[1] == fieldsize[0] + 1:
-                x = x.transpose(x.dims[1], x.dims[0])
-                y = y.transpose(y.dims[1], y.dims[0])
-            else:
-                raise ValueError('Sizes of coords {}x{} and field {}x{} not '
-                                 'compatible.'.format(xsize[0], xsize[1],
-                                                      fieldsize[0],
-                                                      fieldsize[1]))
-
-        # compute moving averages with respect to the x dimension
-        if movingAveragePoints is not None and movingAveragePoints != 1:
-            dim = field.dims[0]
-            field = field.rolling(dim={dim: movingAveragePoints},
-                                  center=True).mean().dropna(dim, how='all')
-            x = x.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim, how='all')
-            y = y.rolling(dim={dim: movingAveragePoints},
-                          center=True).mean().dropna(dim, how='all')
-
-        mask = field.notnull()
-        maskedTriangulation, unmaskedTriangulation = _get_triangulation(
-            x, y, mask)
-        if contourComparisonField is not None:
-            mask = field.notnull()
-            maskedComparisonTriangulation, _ = _get_triangulation(x, y, mask)
-        else:
-            maskedComparisonTriangulation = None
+    if dims_in_field:
+        x = x.transpose(*field.dims)
+        y = y.transpose(*field.dims)
     else:
-        mask = field.notnull()
-        triMask = np.logical_not(mask.values)
-        # if any node of a triangle is masked, the triangle is masked
-        triMask = np.amax(triMask, axis=1)
-        unmaskedTriangulation = Triangulation(**triangulation_args)
-        anythingToPlot = not np.all(triMask)
-        if anythingToPlot:
-            mask_args = dict(triangulation_args)
-            mask_args['mask'] = triMask
-            maskedTriangulation = Triangulation(**mask_args)
+        xsize = list(x.sizes.values())
+        fieldsize = list(field.sizes.values())
+        if xsize[0] == fieldsize[0] + 1 and xsize[1] == fieldsize[1] + 1:
+            pass
+        elif xsize[0] == fieldsize[1] + 1 and xsize[1] == fieldsize[0] + 1:
+            x = x.transpose(x.dims[1], x.dims[0])
+            y = y.transpose(y.dims[1], y.dims[0])
         else:
-            maskedTriangulation = None
-        if contourComparisonField is not None:
-            mask = contourComparisonField.notnull()
-            triMask = np.logical_not(mask.values)
-            triMask = np.amax(triMask, axis=1)
-            mask_args = dict(triangulation_args)
-            mask_args['mask'] = triMask
-            maskedComparisonTriangulation = Triangulation(**mask_args)
-        else:
-            maskedComparisonTriangulation = None
+            raise ValueError(f'Sizes of coords {xsize[0]}x{xsize[1]} and '
+                             f'field {fieldsize[0]}x{fieldsize[1]} not '
+                             f'compatible.')
+
+    # compute moving averages with respect to the x dimension
+    if movingAveragePoints is not None and movingAveragePoints != 1:
+        dim = field.dims[0]
+        field = field.rolling(dim={dim: movingAveragePoints},
+                              center=True).mean().dropna(dim, how='all')
+        x = x.rolling(dim={dim: movingAveragePoints},
+                      center=True).mean().dropna(dim, how='all')
+        y = y.rolling(dim={dim: movingAveragePoints},
+                      center=True).mean().dropna(dim, how='all')
+
+    mask = field.notnull()
+
+    anythingToPlot = np.any(mask)
 
     # set up figure
     if dpi is None:
@@ -926,27 +837,25 @@ def plot_vertical_section(
     # fill the unmasked region with the invalid color so it will show through
     # any masked regions
     zeroArray = xr.zeros_like(field)
-    plt.tricontourf(unmaskedTriangulation, zeroArray.values.ravel(),
-                    colors=invalidColor)
+    plt.contourf(x.values, y.values, zeroArray.values,
+                 colors=invalidColor)
 
-    if maskedTriangulation is not None:
+    if anythingToPlot:
         # there's something to plot
         if not plotAsContours:
             # display a heatmap of fieldArray
-            fieldMasked = field.where(mask, 0.0).values.ravel()
-
             if colormapDict['levels'] is None:
 
-                plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
-                                           cmap=colormapDict['colormap'],
-                                           norm=colormapDict['norm'],
-                                           rasterized=True, shading='gouraud')
+                plotHandle = plt.pcolormesh(x.values, y.values, field.values,
+                                            cmap=colormapDict['colormap'],
+                                            norm=colormapDict['norm'],
+                                            rasterized=True, shading='gouraud')
             else:
-                plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
-                                             cmap=colormapDict['colormap'],
-                                             norm=colormapDict['norm'],
-                                             levels=colormapDict['levels'],
-                                             extend='both')
+                plotHandle = plt.contourf(x.values, y.values, field.values,
+                                          cmap=colormapDict['colormap'],
+                                          norm=colormapDict['norm'],
+                                          levels=colormapDict['levels'],
+                                          extend='both')
 
             cbar = plt.colorbar(plotHandle,
                                 orientation='vertical',
@@ -960,21 +869,16 @@ def plot_vertical_section(
         else:
             # display a white heatmap to get a white background for non-land
             zeroArray = xr.zeros_like(field)
-            plt.tricontourf(maskedTriangulation, zeroArray.values.ravel(),
-                            colors='white')
+            plt.contourf(x.values, y.values, zeroArray.values, colors='white')
 
     ax = plt.gca()
     ax.set_facecolor(backgroundColor)
     if outlineValid:
-        if xOutline is not None and zOutline is not None:
-            # also outline the domain if provided
-            plt.plot(xOutline, zOutline, color='black', linewidth=1)
-        else:
-            # do a contour to outline the boundary between valid and invalid
-            # values
-            landMask = np.isnan(field.values).ravel()
-            plt.tricontour(unmaskedTriangulation, landMask, levels=[0.0001],
-                           colors='black', linewidths=1)
+        # do a contour to outline the boundary between valid and invalid
+        # values
+        landMask = np.isnan(field.values)
+        plt.contour(x.values, y.values, landMask, levels=[0.0001],
+                    colors='black', linewidths=1)
 
     # plot contours, if they were requested
     contourLevels = colormapDict['contours']
@@ -983,19 +887,19 @@ def plot_vertical_section(
     cs2 = None
     plotLegend = False
 
-    if contourLevels is not None and maskedTriangulation is not None:
+    if contourLevels is not None and anythingToPlot:
         if len(contourLevels) == 0:
             # automatic calculation of contour levels
             contourLevels = None
-        mask = field.notnull()
-        fieldMasked = field.where(mask, 0.0).values.ravel()
 
-        cs1 = plt.tricontour(maskedTriangulation, fieldMasked,
-                             levels=contourLevels,
-                             colors=lineColor,
-                             linestyles=lineStyle,
-                             linewidths=lineWidth,
-                             cmap=contourColormap)
+        cs1 = plt.contour(x.values,
+                          y.values,
+                          field.values,
+                          levels=contourLevels,
+                          colors=lineColor,
+                          linestyles=lineStyle,
+                          linewidths=lineWidth,
+                          cmap=contourColormap)
         if labelContours:
             fmt_string = "%%1.%df" % int(contourLabelPrecision)
             plt.clabel(cs1, fmt=fmt_string)
@@ -1004,23 +908,23 @@ def plot_vertical_section(
             if comparisonContourLineWidth is None:
                 comparisonContourLineWidth = lineWidth
             mask = contourComparisonField.notnull()
-            fieldMasked = contourComparisonField.where(mask, 0.0).values.ravel()
-            cs2 = plt.tricontour(maskedComparisonTriangulation,
-                                 fieldMasked,
-                                 levels=contourLevels,
-                                 colors=comparisonContourLineColor,
-                                 linestyles=comparisonContourLineStyle,
-                                 linewidths=comparisonContourLineWidth,
-                                 cmap=contourColormap)
+            cs2 = plt.contour(x.values,
+                              y.values,
+                              contourComparisonField.values,
+                              levels=contourLevels,
+                              colors=comparisonContourLineColor,
+                              linestyles=comparisonContourLineStyle,
+                              linewidths=comparisonContourLineWidth,
+                              cmap=contourColormap)
 
             if labelContours:
                 plt.clabel(cs2, fmt=fmt_string)
 
         plotLegend = (((lineColor is not None and
                         comparisonContourLineColor is not None) or
-                    (lineWidth is not None and
+                       (lineWidth is not None and
                         comparisonContourLineWidth is not None)) and
-                    (plotAsContours and contourComparisonField is not None))
+                      (plotAsContours and contourComparisonField is not None))
 
     if plotLegend:
         h1, _ = cs1.legend_elements()
@@ -1098,7 +1002,8 @@ def plot_vertical_section(
         xticks = None
         if numUpperTicks is not None:
             xticks = np.linspace(xlimits[0], xlimits[1], numUpperTicks)
-            tickValues = np.interp(xticks, xCoords[0].values, xCoords[1].values)
+            tickValues = np.interp(xticks, xCoords[0].values,
+                                   xCoords[1].values)
             ax2.set_xticks(xticks)
             formatString = "{{0:.{:d}f}}{}".format(
                 upperXAxisTickLabelPrecision, r'$\degree$')
@@ -1120,49 +1025,3 @@ def plot_vertical_section(
                 ax3.spines['top'].set_position(('outward', 36))
 
     return fig, ax
-
-
-def _get_triangulation(x, y, mask):
-    """divide each quad in the x/y mesh into 2 triangles"""
-
-    nx = x.sizes[x.dims[0]] - 1
-    ny = x.sizes[x.dims[1]] - 1
-    nTriangles = 2 * nx * ny
-
-    mask = mask.values
-    mask = np.logical_and(np.logical_and(mask[0:-1, 0:-1], mask[1:, 0:-1]),
-                          np.logical_and(mask[0:-1, 1:], mask[1:, 1:]))
-    triMask = np.zeros((nx, ny, 2), bool)
-    triMask[:, :, 0] = np.logical_not(mask)
-    triMask[:, :, 1] = triMask[:, :, 0]
-
-    triMask = triMask.ravel()
-
-    xIndices, yIndices = np.meshgrid(np.arange(nx), np.arange(ny),
-                                     indexing='ij')
-
-    tris = np.zeros((nx, ny, 2, 3), int)
-    # upper triangles:
-    tris[:, :, 0, 0] = (ny + 1) * xIndices + yIndices
-    tris[:, :, 0, 1] = (ny + 1) * (xIndices + 1) + yIndices
-    tris[:, :, 0, 2] = (ny + 1) * xIndices + yIndices + 1
-    # lower triangle
-    tris[:, :, 1, 0] = (ny + 1) * xIndices + yIndices + 1
-    tris[:, :, 1, 1] = (ny + 1) * (xIndices + 1) + yIndices
-    tris[:, :, 1, 2] = (ny + 1) * (xIndices + 1) + yIndices + 1
-
-    tris = tris.reshape((nTriangles, 3))
-
-    x = x.values.ravel()
-    y = y.values.ravel()
-
-    anythingToPlot = not np.all(triMask)
-    if anythingToPlot:
-        maskedTriangulation = Triangulation(x=x, y=y, triangles=tris,
-                                            mask=triMask)
-    else:
-        maskedTriangulation = None
-
-    unmaskedTriangulation = Triangulation(x=x, y=y, triangles=tris)
-
-    return maskedTriangulation, unmaskedTriangulation
