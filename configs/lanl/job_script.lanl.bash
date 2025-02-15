@@ -8,7 +8,7 @@
 
 source /users/xylar/climate/mambaforge/etc/profile.d/conda.sh
 source /users/xylar/climate/mambaforge/etc/profile.d/mamba.sh
-mamba activate mpas_dev
+mamba activate mpas_analysis_dev
 
 export HDF5_USE_FILE_LOCKING=FALSE
 

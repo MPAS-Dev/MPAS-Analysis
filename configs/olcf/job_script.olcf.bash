@@ -10,7 +10,7 @@
 source /gpfs/alpine/proj-shared/cli115/e3sm-unified/load_latest_e3sm_unified_andes.csh
 # alternatively, you can load your own development environment
 # source ~/mambaforge/etc/profile.d/conda.sh
-# conda activate mpas_dev
+# conda activate mpas_analysis_dev
 # export E3SMU_MACHINE=anvil
 
 export HDF5_USE_FILE_LOCKING=FALSE

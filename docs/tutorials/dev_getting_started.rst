@@ -249,13 +249,13 @@ If you installed Miniforge3, these steps will happen automatically.
 4.3 Create a development environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can create a new conda environment called ``mpas_dev`` and install the
+You can create a new conda environment called ``mpas_analysis_dev`` and install the
 dependencies that MPAS-Analysis needs by running the following in the worktree
 where you are doing your development:
 
 .. code-block:: bash
 
-   $ conda create -y -n mpas_dev --file dev-spec.txt
+   $ conda create -y -n mpas_analysis_dev --file dev-spec.txt
 
 The last argument is only needed on HPC machines because the conda version of
 MPI doesn't work properly on these machines.  You can omit it if you're
@@ -266,21 +266,21 @@ mode by running:
 
 .. code-block:: bash
 
-   $ conda activate mpas_dev
+   $ conda activate mpas_analysis_dev
    $ python -m pip install --no-deps --no-build-isolation -e .
 
 In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run ``mpas_analysis`` on the command line,
 it will know about the changes.
 
-This command only needs to be done once after the ``mpas_dev`` environment is
+This command only needs to be done once after the ``mpas_analysis_dev`` environment is
 built if you are not using worktrees.
 
 .. note::
 
    If you do use worktrees, rerun the ``python -m pip install ...`` command
    each time you switch to developing a new branch, since otherwise the
-   version of ``mpas_analysis`` in the ``mpas_dev`` environment will be the
+   version of ``mpas_analysis`` in the ``mpas_analysis_dev`` environment will be the
    one you were developing previously.
 
 .. _tutorial_dev_get_started_activ_env:
@@ -288,20 +288,20 @@ built if you are not using worktrees.
 4.4 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each time you open a new terminal window, to activate the ``mpas_dev``
+Each time you open a new terminal window, to activate the ``mpas_analysis_dev``
 environment, you will need to run either for ``bash``:
 
 .. code-block:: bash
 
    $ source ~/miniforge3/etc/profile.d/conda.sh
-   $ conda activate mpas_dev
+   $ conda activate mpas_analysis_dev
 
 or for ``csh``:
 
 .. code-block:: csh
 
    > source ~/miniforge3/etc/profile.d/conda.csh
-   > conda activate mpas_dev
+   > conda activate mpas_analysis_dev
 
 You can skip the ``source`` command if you chose to initialize Miniforge3 or
 Miniconda3 so it loads automatically.  You can also use the ``init_conda``
@@ -311,8 +311,8 @@ alias for this step if you defined one.
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 If you switch to a different worktree, it is safest to rerun the whole
-process for creating the ``mpas_dev`` conda environment.  If you know that
-the dependencies are the same as the worktree used to create ``mpas_dev``,
+process for creating the ``mpas_analysis_dev`` conda environment.  If you know that
+the dependencies are the same as the worktree used to create ``mpas_analysis_dev``,
 You can just reinstall ``mpas_analysis`` itself by rerunning
 
 .. code-block:: bash
@@ -320,7 +320,7 @@ You can just reinstall ``mpas_analysis`` itself by rerunning
     python -m pip install --no-deps --no-build-isolation -e .
 
 in the new worktree.  If you forget this step, you will find that changes you
-make in the worktree don't affect the ``mpas_dev`` conda environment you are
+make in the worktree don't affect the ``mpas_analysis_dev`` conda environment you are
 using.
 
 5. Editing code
@@ -348,7 +348,7 @@ need to follow steps 2-6 of the :ref:`tutorial_getting_started` tutorial.
 
    Run ``mpas_analysis`` on a compute node, not on an HPC login nodes (front
    ends), because it uses too many resources to be safely run on a login node.
-   When using a compute node interactively, activate the ``mpas_dev``
+   When using a compute node interactively, activate the ``mpas_analysis_dev``
    environment, even if it was activated on the login node. Be sure to
 
 7.1 Configuring MPAS-Analysis
@@ -688,7 +688,7 @@ also be displayed over the full 5 years.)
 The hard work is done.  Now that we have a config file, we are ready to run.
 
 To run MPAS-Analysis, you should either create a job script or log into
-an interactive session on a compute node.  Then, activate the ``mpas_dev``
+an interactive session on a compute node.  Then, activate the ``mpas_analysis_dev``
 conda environment as in :ref:`tutorial_dev_get_started_activ_env`.
 
 On many file systems, MPAS-Analysis and other python-based software that used
@@ -724,15 +724,15 @@ Typical output is the analysis is running correctly looks something like:
     Detected E3SM supported machine: anvil
     Using the following config files:
        /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/default.cfg
-       /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/lib/python3.10/site-packages/mache/machines/anvil.cfg
+       /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/lib/python3.10/site-packages/mache/machines/anvil.cfg
        /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/configuration/anvil.cfg
        /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/__main__.py
        /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/myrun.cfg
     copying /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/myrun.cfg to HTML dir.
 
-    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_0.5x0.5degree_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --ignore_unmapped
-    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
-    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_WOCE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_0.5x0.5degree_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --ignore_unmapped
+    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_WOCE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
     Preprocessing SOSE transect data...
       temperature
       salinity
@@ -741,7 +741,7 @@ Typical output is the analysis is running correctly looks something like:
       meridionalVelocity
       velMag
       Done.
-    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_SOSE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+    running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_SOSE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
 
     Running tasks: 100% |##########################################| Time:  0:06:42
 

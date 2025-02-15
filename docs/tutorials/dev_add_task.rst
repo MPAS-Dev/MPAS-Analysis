@@ -34,7 +34,7 @@ the code to MPAS-Analysis.
    If one just wishes to add a new field that already exists in MPAS-Ocean or
    MPAS-Seaice output, only a few of the steps below are necessary:
 
-   1. Follow step 1 to set up an ```mpas_dev``` environment.
+   1. Follow step 1 to set up an ```mpas_analysis_dev``` environment.
    2. Copy an existing `ocean <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean>`_
       or `sea_ice <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice>`_
       python module to a new name and edit it as needed for the new fields.
@@ -58,7 +58,7 @@ testing your new MPAS-Analysis development, and running MPAS-Analysis.
    Make sure you follow the tutorial for developers, not for users, since the
    tutorial for users installs the latest release of MPAS-Analysis, which you
    cannot modify. Similarly, changes must be tested in your own development
-   environment (often called ``mpas_dev``) rather than the in a shared
+   environment (often called ``mpas_analysis_dev``) rather than the in a shared
    environment like `E3SM-Unified <https://github.com/E3SM-Project/e3sm-unified>`_.
 
 Then, please follow the :ref:`tutorial_understand_a_task`.  This will give
@@ -550,12 +550,12 @@ whatever editor you like.)
 
     code .
 
-I'll create or recreate my ``mpas_dev`` environment as in
+I'll create or recreate my ``mpas_analysis_dev`` environment as in
 :ref:`tutorial_dev_getting_started`, and then make sure to at least do:
 
 .. code-block:: bash
 
-    conda activate mpas_dev
+    conda activate mpas_analysis_dev
     python -m pip install --no-deps --no-build-isolation -e .
 
 This last command installs the ``mpas_analysis`` package into the conda
@@ -1138,7 +1138,7 @@ You also need to add the tasks class and public methods to the
 in the developer's guide.  Again, the easiest approach is to copy the section
 for a similar task and modify as needed.
 
-With the ``mpas_dev`` environment activated, you can run:
+With the ``mpas_analysis_dev`` environment activated, you can run:
 
 .. code-block:: bash
 
