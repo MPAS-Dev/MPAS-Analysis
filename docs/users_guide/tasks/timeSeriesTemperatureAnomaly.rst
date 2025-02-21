@@ -20,8 +20,8 @@ The following configuration options are available for this task::
   [hovmollerTemperatureAnomaly]
   ## options related to plotting time series of potential temperature vs. depth
 
-  # list of regions to plot from the region list in [regions] below
-  regions = ['global']
+  # list of region shrot names to plot from the region list in [regions] above
+  regionShortNames = ['global']
 
   # Number of points over which to compute moving average(e.g., for monthly
   # output, movingAveragePoints=12 corresponds to a 12-month moving average
