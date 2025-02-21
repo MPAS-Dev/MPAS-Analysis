@@ -23,6 +23,11 @@ from mpas_analysis.shared.io.utility import build_config_full_path, \
     make_directories, check_path_exists
 from mpas_analysis.shared.html import write_image_xml
 
+from mpas_analysis.ocean.utility import (
+    add_standard_regions_and_subset,
+    get_standard_region_names
+)
+
 
 class TimeSeriesSST(AnalysisTask):
     """
@@ -109,13 +114,16 @@ class TimeSeriesSST(AnalysisTask):
         self.inputFile = self.mpasTimeSeriesTask.outputFile
 
         mainRunName = config.get('runs', 'mainRunName')
-        regions = config.getexpression('timeSeriesSST', 'regions')
+        regionShortNames = config.getexpression('timeSeriesSST',
+                                                'regionShortNames')
 
         self.xmlFileNames = []
         self.filePrefixes = {}
 
+        regions = get_standard_region_names(config, regionShortNames)
         for region in regions:
-            filePrefix = 'sst_{}_{}'.format(region, mainRunName)
+            regionSuffix = region.replace(' ', '_')
+            filePrefix = 'sst_{}_{}'.format(regionSuffix, mainRunName)
             self.xmlFileNames.append('{}/{}.xml'.format(self.plotsDirectory,
                                                         filePrefix))
             self.filePrefixes[region] = filePrefix
@@ -147,12 +155,8 @@ class TimeSeriesSST(AnalysisTask):
         movingAveragePoints = config.getint('timeSeriesSST',
                                             'movingAveragePoints')
 
-        regions = config.getexpression('regions', 'regions')
-        plotTitles = config.getexpression('regions', 'plotTitles')
-        regionsToPlot = config.getexpression('timeSeriesSST', 'regions')
-
-        regionIndicesToPlot = [regions.index(region) for region in
-                               regionsToPlot]
+        regionShortNames = config.getexpression('timeSeriesSST',
+                                                'regionShortNames')
 
         outputDirectory = build_config_full_path(config, 'output',
                                                  'timeseriesSubdirectory')
@@ -164,6 +168,9 @@ class TimeSeriesSST(AnalysisTask):
                                   variableList=self.variableList,
                                   startDate=self.startDate,
                                   endDate=self.endDate)
+
+        dsSST = add_standard_regions_and_subset(
+            dsSST, config, regionShortNames=regionShortNames)
 
         yearStart = days_to_datetime(dsSST.Time.min(), calendar=calendar).year
         yearEnd = days_to_datetime(dsSST.Time.max(), calendar=calendar).year
@@ -191,6 +198,9 @@ class TimeSeriesSST(AnalysisTask):
                 variableList=self.variableList,
                 startDate=controlStartDate,
                 endDate=controlEndDate)
+            dsRefSST = add_standard_regions_and_subset(
+                dsRefSST, self.controlConfig,
+                regionShortNames=regionShortNames)
         else:
             dsRefSST = None
 
@@ -221,17 +231,16 @@ class TimeSeriesSST(AnalysisTask):
                 preprocessedReferenceRunName = 'None'
 
         self.logger.info('  Make plots...')
-        for regionIndex in regionIndicesToPlot:
-            region = regions[regionIndex]
-
-            title = '{} SST'.format(plotTitles[regionIndex])
+        for regionName in dsSST.regionNames.values:
+            title = f'{regionName} SST'
             xLabel = 'Time [years]'
             yLabel = r'[$\degree$C]'
 
             varName = self.variableList[0]
-            SST = dsSST[varName].isel(nOceanRegions=regionIndex)
+            dsSST = dsSST.set_xindex('regionNames')
+            SST = dsSST[varName].sel(regionNames=regionName)
 
-            filePrefix = self.filePrefixes[region]
+            filePrefix = self.filePrefixes[regionName]
 
             outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
 
@@ -242,7 +251,9 @@ class TimeSeriesSST(AnalysisTask):
             legendText = [mainRunName]
 
             if dsRefSST is not None:
-                refSST = dsRefSST[varName].isel(nOceanRegions=regionIndex)
+
+                dsRefSST = dsRefSST.set_xindex('regionNames')
+                refSST = dsRefSST[varName].sel(regionNames=regionName)
                 fields.append(refSST)
                 lineColors.append(config.get('timeSeries', 'controlColor'))
                 lineWidths.append(1.5)
@@ -279,8 +290,7 @@ class TimeSeriesSST(AnalysisTask):
 
             savefig(outFileName, config)
 
-            caption = 'Running Mean of {} Sea Surface Temperature'.format(
-                region)
+            caption = f'Running Mean of {regionName} Sea Surface Temperature'
             write_image_xml(
                 config=config,
                 filePrefix=filePrefix,
@@ -288,7 +298,7 @@ class TimeSeriesSST(AnalysisTask):
                 componentSubdirectory='ocean',
                 galleryGroup='Time Series',
                 groupLink='timeseries',
-                thumbnailDescription='{} SST'.format(region),
+                thumbnailDescription=f'{regionName} SST',
                 imageDescription=caption,
                 imageCaption=caption)
 
