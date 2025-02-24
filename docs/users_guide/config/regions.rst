@@ -15,10 +15,10 @@ within MPAS-Analysis using region mask files::
 
   # list of region names (needs to be in the same order as region indices in
   # time-series stats)
-  regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
-  # list of plot titles (needs to be in the same order as region indices in
-  # time-series stats)
-  plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
+  regionShortNames = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4',
+                      'global']
+  # list of full names (e.g. for plot titles) same order as regionShortNames
+  regionNames = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
                 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
 

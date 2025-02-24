@@ -31,6 +31,8 @@ from mpas_analysis.shared.html import write_image_xml
 from mpas_analysis.shared.time_series import compute_moving_avg, \
     combine_time_series_with_ncrcat
 
+from mpas_analysis.ocean.utility import add_standard_regions_and_subset
+
 
 class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
     """
@@ -157,7 +159,8 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
-            subtaskName = 'plotDepthIntegratedTimeSeries{}'.format(suffix)
+            suffix = suffix.replace(' ', '_')
+            subtaskName = f'plotDepthIntegratedTimeSeries{suffix}'
 
         # first, call the constructor from the base class (AnalysisTask)
         super(PlotDepthIntegratedTimeSeriesSubtask, self).__init__(
@@ -205,7 +208,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
         if self.controlConfig is not None:
             # we need to know what file to read from the control run so
             # an absolute path won't work
-            assert(not os.path.isabs(self.inFileName))
+            assert not os.path.isabs(self.inFileName)
 
             baseDirectory = build_config_full_path(
                 self.controlConfig, 'output', 'timeSeriesSubdirectory')
@@ -217,7 +220,7 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
             'runs', 'preprocessedReferenceRunName')
         if preprocessedReferenceRunName != 'None':
 
-            assert(not os.path.isabs(self.inFileName))
+            assert not os.path.isabs(self.inFileName)
 
             baseDirectory = build_config_full_path(
                 config, 'output', 'timeSeriesSubdirectory')
@@ -263,11 +266,6 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         mainRunName = config.get('runs', 'mainRunName')
 
-        plotTitles = config.getexpression('regions', 'plotTitles')
-        allRegionNames = config.getexpression('regions', 'regions')
-        regionIndex = allRegionNames.index(self.regionName)
-        regionNameInTitle = plotTitles[regionIndex]
-
         startDate = config.get('timeSeries', 'startDate')
         endDate = config.get('timeSeries', 'endDate')
 
@@ -279,7 +277,17 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                timeVariableNames=None,
                                startDate=startDate,
                                endDate=endDate)
-        ds = ds.isel(nOceanRegionsTmp=regionIndex)
+        if 'regionNames' in ds.coords:
+            # we added region names already
+            ds = ds.set_xindex('regionNames')
+            ds = ds.sel(regionNames=self.regionName)
+            regionNameInTitle = ds.regionNames.values
+        else:
+            # we need to add region names and select the right region by short
+            # name
+            ds = add_standard_regions_and_subset(
+                ds, config, regionShortNames=[self.regionName])
+            regionNameInTitle = ds.regionNames.values[0]
 
         depths = ds.depth.values
 
@@ -436,7 +444,17 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
                                       timeVariableNames=None,
                                       startDate=controlStartDate,
                                       endDate=controlEndDate)
-            dsRef = dsRef.isel(nOceanRegionsTmp=regionIndex)
+
+            if 'regionNames' in dsRef.coords:
+                # we added region names already
+                dsRef = dsRef.set_xindex('regionNames')
+                dsRef = dsRef.sel(regionNames=self.regionName)
+            else:
+                # we need to add region names and select the right region by
+                # short name
+                dsRef = add_standard_regions_and_subset(
+                    dsRef,  self.controlConfig,
+                    regionShortNames=[self.regionName])
 
             color = config.get('timeSeries', 'controlColor')
 
@@ -468,8 +486,9 @@ class PlotDepthIntegratedTimeSeriesSubtask(AnalysisTask):
 
         fig = timeseries_analysis_plot(
             config=config, dsvalues=timeSeries, calendar=calendar,
-            title=title, xlabel=xLabel, ylabel=yLabel, movingAveragePoints=None,
-            lineColors=lineColors, lineStyles=lineStyles, markers=lineMarkers,
+            title=title, xlabel=xLabel, ylabel=yLabel,
+            movingAveragePoints=None, lineColors=lineColors,
+            lineStyles=lineStyles, markers=lineMarkers,
             lineWidths=lineWidths, legendText=legendText, maxPoints=maxPoints,
             firstYearXTicks=firstYearXTicks, yearStrideXTicks=yearStrideXTicks)
 

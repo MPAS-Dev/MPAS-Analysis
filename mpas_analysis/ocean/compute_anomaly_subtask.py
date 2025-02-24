@@ -28,6 +28,8 @@ from mpas_analysis.shared.io.utility import build_config_full_path
 from mpas_analysis.shared.time_series import \
     compute_moving_avg_anomaly_from_start
 
+from mpas_analysis.ocean.utility import add_standard_regions_and_subset
+
 
 class ComputeAnomalySubtask(AnalysisTask):
     """
@@ -183,6 +185,9 @@ class ComputeAnomalySubtask(AnalysisTask):
             calendar=self.calendar,
             movingAveragePoints=self.movingAveragePoints,
             alter_dataset=self.alter_dataset)
+
+        if 'nOceanRegions' in ds.dims or 'nOceanRegionsTmp' in ds.dims:
+            ds = add_standard_regions_and_subset(ds, config)
 
         outFileName = self.outFileName
         if not os.path.isabs(outFileName):

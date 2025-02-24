@@ -94,6 +94,9 @@ Ocean tasks
    WoaTransects
    WoceTransects
 
+Ocean subtasks
+--------------
+
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
 .. autosummary::
@@ -114,6 +117,19 @@ Ocean tasks
    :toctree: generated/
 
    PlotHovmollerSubtask
+
+
+Ocean utilities
+---------------
+
+.. currentmodule:: mpas_analysis.ocean.utility
+
+.. autosummary::
+   :toctree: generated/
+
+   add_standard_regions_and_subset
+   get_standard_region_names
+   compute_zmid
 
 
 Sea ice tasks
