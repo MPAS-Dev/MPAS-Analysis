@@ -119,6 +119,7 @@
     <span class="n">PlotDepthIntegratedTimeSeriesSubtask</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">mpas_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_standard_region_names</span>
 
 
 <div class="viewcode-block" id="TimeSeriesOHCAnomaly">
@@ -161,7 +162,8 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;ohc&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span>
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">regionShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -183,6 +185,7 @@
             <span class="n">alter_dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
 
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
             <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Trend of </span><span class="si">{}</span><span class="s1"> OHC Anomaly vs depth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionName</span><span class="p">)</span>
@@ -232,10 +235,6 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC time series.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># regionNames = self.config.getexpression(&#39;regions&#39;, &#39;regions&#39;)</span>
-        <span class="c1"># ds[&#39;regionNames&#39;] = (&#39;nOceanRegionsTmp&#39;, regionNames)</span>
-
         <span class="c1"># for convenience, rename the variables to simpler, shorter names</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span><span class="p">)</span>
 

@@ -259,6 +259,7 @@
 
         <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
             <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plotHovmoller</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
@@ -307,7 +308,7 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
 
@@ -350,21 +351,12 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load ocean data...&#39;</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
 
-            <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
-            <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
-            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
-            <span class="n">regionDim</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
-            <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
-            <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
-            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
-            <span class="n">regionDim</span> <span class="o">=</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span>
-
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">regionDim</span><span class="p">:</span> <span class="n">regionIndex</span><span class="p">})</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
 
         <span class="c1"># Note: restart file, not a mesh file because we need refBottomDepth,</span>
         <span class="c1"># not in a mesh file</span>
@@ -389,6 +381,7 @@
 
         <span class="c1"># drop any NaN values, because this causes issues with rolling averages</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 
         <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (years)&#39;</span>
         <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Depth (m)&#39;</span>
@@ -427,21 +420,9 @@
             <span class="n">controlConfig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span>
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlFileName</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
-                <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRef</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
-                <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
-                <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
-                <span class="n">regionDim</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
-                <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span>
-                                                             <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
-                <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
-                <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
-                <span class="n">regionDim</span> <span class="o">=</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span>
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
 
-            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">regionDim</span><span class="p">:</span> <span class="n">regionIndex</span><span class="p">})</span>
             <span class="n">refField</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">]</span>
             <span class="c1"># drop any NaN values, because this causes issues with rolling</span>
             <span class="c1"># averages</span>
@@ -451,16 +432,16 @@
             <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">refField</span> <span class="o">=</span> <span class="n">refField</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">assert</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">refField</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">refField</span><span class="o">.</span><span class="n">shape</span>
             <span class="c1"># make sure the start and end time sare the same</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
-            <span class="k">assert</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">refField</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
             <span class="c1"># we&#39;re seeing issues with slightly different times between runs</span>
             <span class="c1"># so let&#39;s copy them</span>
             <span class="n">refField</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">Time</span>
             <span class="n">diff</span> <span class="o">=</span> <span class="n">field</span> <span class="o">-</span> <span class="n">refField</span>
             <span class="k">assert</span> <span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">diff</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-            <span class="n">refTitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">refTitle</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
             <span class="n">diffTitle</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>

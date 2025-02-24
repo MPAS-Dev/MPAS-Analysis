@@ -115,9 +115,18 @@
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.TimeSeriesTransport.html">mpas_analysis.ocean.TimeSeriesTransport</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.WoaTransects.html">mpas_analysis.ocean.WoaTransects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.WoceTransects.html">mpas_analysis.ocean.WoceTransects</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ocean-subtasks">Ocean subtasks</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html">mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask</a></li>
 <li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html">mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#ocean-utilities">Ocean utilities</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.utility.add_standard_regions_and_subset.html">mpas_analysis.ocean.utility.add_standard_regions_and_subset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.utility.get_standard_region_names.html">mpas_analysis.ocean.utility.get_standard_region_names</a></li>
+<li class="toctree-l4"><a class="reference internal" href="generated/mpas_analysis.ocean.utility.compute_zmid.html">mpas_analysis.ocean.utility.compute_zmid</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#sea-ice-tasks">Sea ice tasks</a><ul>
@@ -476,6 +485,9 @@ the documentation.</p>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="ocean-subtasks">
+<h3>Ocean subtasks<a class="headerlink" href="#ocean-subtasks" title="Link to this heading"></a></h3>
 <table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask" title="mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ComputeAnomalySubtask</span></code></a>(parentTask, ...[, ...])</p></td>
@@ -494,6 +506,22 @@ the documentation.</p>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask.html#mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask" title="mpas_analysis.ocean.plot_hovmoller_subtask.PlotHovmollerSubtask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PlotHovmollerSubtask</span></code></a>(parentTask, regionName, ...)</p></td>
 <td><p>Plots a time series vs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="ocean-utilities">
+<h3>Ocean utilities<a class="headerlink" href="#ocean-utilities" title="Link to this heading"></a></h3>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.utility.add_standard_regions_and_subset.html#mpas_analysis.ocean.utility.add_standard_regions_and_subset" title="mpas_analysis.ocean.utility.add_standard_regions_and_subset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_standard_regions_and_subset</span></code></a>(ds, config)</p></td>
+<td><p>Add standard region names (<code class="docutils literal notranslate"><span class="pre">regionNames</span></code> coordinate) to a dataset and rename <code class="docutils literal notranslate"><span class="pre">nOceanRegionsTmp</span></code> dimension to <code class="docutils literal notranslate"><span class="pre">nOceanRegions</span></code> (if present).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.utility.get_standard_region_names.html#mpas_analysis.ocean.utility.get_standard_region_names" title="mpas_analysis.ocean.utility.get_standard_region_names"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_standard_region_names</span></code></a>(config, ...)</p></td>
+<td><p>Add standard region names from the short names</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="generated/mpas_analysis.ocean.utility.compute_zmid.html#mpas_analysis.ocean.utility.compute_zmid" title="mpas_analysis.ocean.utility.compute_zmid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_zmid</span></code></a>(bottomDepth, maxLevelCell, ...)</p></td>
+<td><p>Computes zMid given data arrays for bottomDepth, maxLevelCell and layerThickness</p></td>
 </tr>
 </tbody>
 </table>

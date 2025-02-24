@@ -125,6 +125,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.time_series</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_moving_avg</span><span class="p">,</span> \
     <span class="n">combine_time_series_with_ncrcat</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_standard_regions_and_subset</span>
+
 
 <div class="viewcode-block" id="PlotDepthIntegratedTimeSeriesSubtask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html#mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask">[docs]</a>
@@ -255,7 +257,8 @@
 
         <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">subtaskName</span> <span class="o">=</span> <span class="s1">&#39;plotDepthIntegratedTimeSeries</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plotDepthIntegratedTimeSeries</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -304,7 +307,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># we need to know what file to read from the control run so</span>
             <span class="c1"># an absolute path won&#39;t work</span>
-            <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
@@ -316,7 +319,7 @@
             <span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
 
-            <span class="k">assert</span><span class="p">(</span><span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
@@ -362,11 +365,6 @@
 
         <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
 
-        <span class="n">plotTitles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;plotTitles&#39;</span><span class="p">)</span>
-        <span class="n">allRegionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
-        <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">allRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
-        <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span>
-
         <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
         <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
 
@@ -378,7 +376,17 @@
                                <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegionsTmp</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="c1"># we added region names already</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># we need to add region names and select the right region by short</span>
+            <span class="c1"># name</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span>
+                <span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">])</span>
+            <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
         <span class="n">depths</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">depth</span><span class="o">.</span><span class="n">values</span>
 
@@ -535,7 +543,17 @@
                                       <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                       <span class="n">startDate</span><span class="o">=</span><span class="n">controlStartDate</span><span class="p">,</span>
                                       <span class="n">endDate</span><span class="o">=</span><span class="n">controlEndDate</span><span class="p">)</span>
-            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegionsTmp</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+                <span class="c1"># we added region names already</span>
+                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># we need to add region names and select the right region by</span>
+                <span class="c1"># short name</span>
+                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span>
+                    <span class="n">dsRef</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span>
+                    <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">])</span>
 
             <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">)</span>
 
@@ -567,8 +585,9 @@
 
         <span class="n">fig</span> <span class="o">=</span> <span class="n">timeseries_analysis_plot</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dsvalues</span><span class="o">=</span><span class="n">timeSeries</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-            <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span> <span class="n">lineStyles</span><span class="o">=</span><span class="n">lineStyles</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">lineMarkers</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
+            <span class="n">movingAveragePoints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span>
+            <span class="n">lineStyles</span><span class="o">=</span><span class="n">lineStyles</span><span class="p">,</span> <span class="n">markers</span><span class="o">=</span><span class="n">lineMarkers</span><span class="p">,</span>
             <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span> <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span> <span class="n">maxPoints</span><span class="o">=</span><span class="n">maxPoints</span><span class="p">,</span>
             <span class="n">firstYearXTicks</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="n">yearStrideXTicks</span><span class="p">)</span>
 

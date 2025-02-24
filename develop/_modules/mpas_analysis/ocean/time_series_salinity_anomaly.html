@@ -110,6 +110,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_standard_region_names</span>
+
 
 <div class="viewcode-block" id="TimeSeriesSalinityAnomaly">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesSalinityAnomaly.html#mpas_analysis.ocean.TimeSeriesSalinityAnomaly">[docs]</a>
@@ -148,7 +150,8 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;hovmollerSalinityAnomaly&#39;</span>
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">regionShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_avgValueWithinOceanLayerRegion_&#39;</span> \
@@ -164,9 +167,10 @@
             <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
 
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
-            <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Trend of </span><span class="si">{}</span><span class="s1"> Salinity Anomaly vs depth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">regionName</span><span class="p">)</span>
+            <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Trend of </span><span class="si">{</span><span class="n">regionName</span><span class="si">}</span><span class="s1"> Salinity Anomaly vs depth&#39;</span>
             <span class="n">plotTask</span> <span class="o">=</span> <span class="n">PlotHovmollerSubtask</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                 <span class="n">regionName</span><span class="o">=</span><span class="n">regionName</span><span class="p">,</span>

@@ -132,6 +132,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_standard_regions_and_subset</span>
+
 
 <div class="viewcode-block" id="IndexNino34">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a>
@@ -228,7 +230,7 @@
         <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">regionToPlot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpectes El Nino Index region </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected El Nino Index region </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionToPlot</span><span class="p">))</span>
         <span class="n">ninoIndexNumber</span> <span class="o">=</span> <span class="n">regionToPlot</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
 
@@ -292,9 +294,7 @@
 
         <span class="c1"># regionIndex should correspond to NINO34 in surface weighted Average</span>
         <span class="c1"># AM</span>
-        <span class="n">regions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
         <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
-        <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">regions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">regionToPlot</span><span class="p">)</span>
 
         <span class="c1"># Load data:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">,</span>
@@ -302,6 +302,11 @@
                                <span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                                             <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
+        <span class="c1"># we want to collapse the nOceanRegions dimension</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Observations have been processed to the nino34Index prior to reading</span>
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">dataPath</span><span class="p">,</span> <span class="n">decode_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -314,7 +319,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Compute El Nino </span><span class="si">{}</span><span class="s1"> Index...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
         <span class="n">varName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+        <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
         <span class="n">nino34Main</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
         <span class="c1"># Compute the observational index over the entire time range</span>
@@ -361,7 +366,10 @@
                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
-            <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span>
+                <span class="n">dsRef</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
+
+            <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
             <span class="n">nino34Ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
             <span class="n">nino34s</span> <span class="o">=</span> <span class="p">[</span><span class="n">nino34Subset</span><span class="p">,</span> <span class="n">nino34Main</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">nino34Ref</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
