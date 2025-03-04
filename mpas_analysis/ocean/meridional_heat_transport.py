@@ -213,7 +213,7 @@ class MeridionalHeatTransport(AnalysisTask):
                     raise IOError('At least one file from stream {} is needed '
                                   'to compute MHT'.format(streamName))
 
-                with xr.open_dataset(inputFile) as ds:
+                with xr.open_dataset(inputFile, decode_timedelta=False) as ds:
                     if 'binBoundaryMerHeatTrans' in ds.data_vars:
                         binBoundaryMerHeatTrans = \
                             ds.binBoundaryMerHeatTrans

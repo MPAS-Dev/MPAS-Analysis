@@ -203,7 +203,8 @@ class MpasTimeSeriesTask(AnalysisTask):
 
         self.inputFiles = sorted(self.inputFiles)
 
-        with xr.open_dataset(self.inputFiles[0]) as ds:
+        with xr.open_dataset(self.inputFiles[0],
+                             decode_timedelta=False) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
     def run_task(self):
