@@ -312,7 +312,7 @@
                     <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;At least one file from stream </span><span class="si">{}</span><span class="s1"> is needed &#39;</span>
                                   <span class="s1">&#39;to compute MHT&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">))</span>
 
-                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inputFile</span><span class="p">,</span> <span class="n">decode_timedelta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
                     <span class="k">if</span> <span class="s1">&#39;binBoundaryMerHeatTrans&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
                         <span class="n">binBoundaryMerHeatTrans</span> <span class="o">=</span> \
                             <span class="n">ds</span><span class="o">.</span><span class="n">binBoundaryMerHeatTrans</span>
