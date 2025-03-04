@@ -294,6 +294,16 @@ def register_custom_colormaps():
         xml_file = pkg_resources.resource_filename(__name__, xml_file)
         _read_xml_colormap(xml_file, map_name)
 
+    # add SciVisColor colormaps created by hand using
+    # https://sciviscolor.org/color-moves-app/
+    for map_name in ['3wave-green-red-purple', '3wave-blue-red-brown',
+                     'div-one-third-blue-two-thirds-red',
+                     'div-one-third-green-two-thirds-red',]:
+
+        xml_file = f'SciVisColorCustom/{map_name}.xml'
+        xml_file = pkg_resources.resource_filename(__name__, xml_file)
+        _read_xml_colormap(xml_file, map_name)
+
     name = 'white_cmo_deep'
     # modify cmo.deep to start at white
     colors2 = plt.get_cmap('cmo.deep')(np.linspace(0, 1, 224))
