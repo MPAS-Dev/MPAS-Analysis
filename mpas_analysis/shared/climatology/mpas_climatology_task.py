@@ -12,7 +12,7 @@
 import xarray
 import os
 import subprocess
-from distutils.spawn import find_executable
+import shutil
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
@@ -463,7 +463,7 @@ class MpasClimatologyTask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        if find_executable('ncclimo') is None:
+        if shutil.which('ncclimo') is None:
             raise OSError('ncclimo not found. Make sure the latest nco '
                           'package is installed: \n'
                           'conda install nco\n'

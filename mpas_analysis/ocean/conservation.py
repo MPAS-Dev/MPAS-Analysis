@@ -13,7 +13,7 @@
 # -------
 # Carolyn Begeman
 
-from distutils.spawn import find_executable
+import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -565,7 +565,7 @@ class ConservationTask(AnalysisTask):
                 ts_file = ts_files[0]
                 if not os.path.exists(ts_file):
                    raise ValueError(f'Could not find timeMonthlyStats file {ts_file}')
-                var = 'timeMonthly_avg_areaCellGlobal' 
+                var = 'timeMonthly_avg_areaCellGlobal'
                 ds_ts = open_mpas_dataset(fileName=ts_file,
                                           calendar=self.calendar,
                                           variableList=[var])
@@ -615,7 +615,7 @@ class ConservationTask(AnalysisTask):
             If ``ncrcat`` is not in the system path.
         """
 
-        if find_executable('ncrcat') is None:
+        if shutil.which('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '
                           'package is installed: \n'
                           'conda install nco\n'
