@@ -17,6 +17,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.ocean.utility import compute_zmid
+from mpas_analysis.shared.projection import comparison_grid_option_suffixes
 
 
 class ClimatologyMapBSF(AnalysisTask):
@@ -72,8 +73,6 @@ class ClimatologyMapBSF(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        mpas_field_name = field_name
-
         for min_depth, max_depth in depth_ranges:
             depth_range_string = f'{min_depth:g}_to_{max_depth:g}m'
             if max_depth >= -6000. or min_depth < 0.:
@@ -99,15 +98,29 @@ class ClimatologyMapBSF(AnalysisTask):
             remap_observations_subtask = None
             if control_config is None:
                 ref_title_label = None
-                ref_field_name = None
                 diff_title_label = 'Model - Observations'
 
             else:
                 control_run_name = control_config.get('runs', 'mainRunName')
                 ref_title_label = f'Control: {control_run_name}'
-                ref_field_name = mpas_field_name
                 diff_title_label = 'Main - Control'
             for comparison_grid_name in comparison_grid_names:
+                grid_suffix = \
+                    comparison_grid_option_suffixes[comparison_grid_name]
+                config_section_name = f'{self.taskName}{grid_suffix}'
+                if config.has_section(config_section_name):
+                    # if this comparison grid has its own section, there is a
+                    # version of the BSF that has been offset for this region
+                    # and an associated colorbar/colormap
+                    mpas_field_name = f'{field_name}{grid_suffix}'
+                else:
+                    config_section_name = self.taskName
+                    mpas_field_name = field_name
+                if control_config is None:
+                    ref_field_name = None
+                else:
+                    ref_field_name = mpas_field_name
+
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
                     subtask_name = f'plot{season}_{comparison_grid_name}' \
@@ -129,7 +142,8 @@ class ClimatologyMapBSF(AnalysisTask):
                         galleryGroup='Horizontal Streamfunction',
                         groupSubtitle=None,
                         groupLink='bsf',
-                        galleryName=None)
+                        galleryName=None,
+                        configSectionName=config_section_name)
 
                     self.add_subtask(subtask)
 
@@ -258,6 +272,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
         logger = self.logger
+        config = self.config
 
         ds_mesh = xr.open_dataset(self.restartFileName)
         ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
@@ -275,6 +290,28 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             'barotropic streamfunction at vertices'
 
         climatology = climatology.drop_vars(self.variableList)
+
+        # offset the BSF for specific comparison grids if defined
+        for comparison_grid_name in self.comparisonDescriptors.keys():
+            grid_suffix = \
+                comparison_grid_option_suffixes[comparison_grid_name]
+            config_section_name = f'{self.taskName}{grid_suffix}'
+            if config.has_section(config_section_name):
+                # if this comparison grid has its own section, there is a
+                # version of the BSF that has been offset for this region
+                # and an associated colorbar/colormap
+                mpas_field_name = \
+                    f'barotropicStreamfunction{grid_suffix}'
+
+                lat_range = config.getexpression(
+                    config_section_name, 'latitudeRangeForZeroBSF')
+                climatology[mpas_field_name] = _shift_bsf(
+                    bsf_vertex, lat_range, ds_mesh.cellsOnVertex - 1,
+                    ds_mesh.latVertex)
+                climatology[mpas_field_name].attrs['units'] = 'Sv'
+                climatology[mpas_field_name].attrs['description'] = \
+                    f'barotropic streamfunction at vertices, offset for ' \
+                    f'{grid_suffix} plots'
 
         return climatology
 
@@ -384,8 +421,8 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         self.logger.info('vertically integrated vorticity computed.')
 
         config = self.config
-        min_lat = config.getfloat(
-            'climatologyMapBSF', 'minLatitudeForZeroBSF')
+        lat_range = config.getexpression(
+            'climatologyMapBSF', 'latitudeRangeForZeroBSF')
 
         nvertices = ds_mesh.sizes['nVertices']
         vertex_degree = ds_mesh.sizes['vertexDegree']
@@ -468,25 +505,34 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         bsf_vertex = xr.DataArray(-1e-6 * solution[0:-1],
                                   dims=('nVertices',))
 
-        # Now, we actually want the value of the streamfunciton to be
-        # as close as possible to zero at boundaries north of the ACC
-        is_boundary_cov = cells_on_vertex == -1
-        boundary_vertices = is_boundary_cov.sum(dim='vertexDegree') > 0
-
-        boundary_vertices = np.logical_and(
-            boundary_vertices,
-            ds_mesh.latVertex > np.deg2rad(min_lat)
-        )
-
-        # convert from boolean mask to indices
-        boundary_vertices = np.flatnonzero(boundary_vertices.values)
-
-        mean_boundary_bsf = bsf_vertex.isel(nVertices=boundary_vertices).mean()
-        print()
-        print(f'Mean BSF on boundary north of {min_lat}:')
-        print(f'  {mean_boundary_bsf.values}')
-        print('Subtracting this mean.')
-
-        bsf_vertex -= mean_boundary_bsf
+        bsf_vertex = _shift_bsf(bsf_vertex, lat_range, cells_on_vertex,
+                                ds_mesh.latVertex)
 
         return bsf_vertex
+
+
+def _shift_bsf(bsf_vertex, lat_range, cells_on_vertex, lat_vertex):
+    """
+    Shift the barotropic streamfunction to be zero at the boundary over
+    the given latitude range
+    """
+    is_boundary_cov = cells_on_vertex == -1
+    boundary_vertices = is_boundary_cov.sum(dim='vertexDegree') > 0
+
+    boundary_vertices = np.logical_and(
+        boundary_vertices,
+        lat_vertex >= np.deg2rad(lat_range[0])
+    )
+    boundary_vertices = np.logical_and(
+        boundary_vertices,
+        lat_vertex <= np.deg2rad(lat_range[1])
+    )
+
+    # convert from boolean mask to indices
+    boundary_vertices = np.flatnonzero(boundary_vertices.values)
+
+    mean_boundary_bsf = bsf_vertex.isel(nVertices=boundary_vertices).mean()
+
+    bsf_shifted = bsf_vertex - mean_boundary_bsf
+
+    return bsf_shifted
