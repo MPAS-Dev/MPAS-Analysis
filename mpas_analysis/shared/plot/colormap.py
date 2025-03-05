@@ -62,6 +62,11 @@ def setup_colormap(config, configSectionName, suffix=''):
         'lineWidth' is the width of contour lines or ``None`` if not specified
 
         'lineColor' is the color of contour lines or ``None`` if not specified
+
+        `arrowWidth` is the width of the arrows or ``None`` if not specified
+
+        `arrowSpacing` is the spacing between arrows or ``None`` if not
+        specified
     """
     # Authors
     # -------
@@ -69,7 +74,7 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     register_custom_colormaps()
 
-    option = 'colormapType{}'.format(suffix)
+    option = f'colormapType{suffix}'
     if config.has_option(configSectionName, option):
         colormapType = config.get(configSectionName, option)
         if colormapType == 'indexed':
@@ -88,35 +93,43 @@ def setup_colormap(config, configSectionName, suffix=''):
         levels = None
         ticks = None
 
-    option = 'contourLevels{}'.format(suffix)
+    contours = None
+    lineWidth = None
+    lineColor = None
+    arrowWidth = None
+    arrowSpacing = None
+
+    option = f'contourLevels{suffix}'
     if config.has_option(configSectionName, option):
         contours = config.getexpression(configSectionName,
                                         option,
                                         use_numpyfunc=True)
         if isinstance(contours, str) and contours == 'none':
             contours = None
-    else:
-        contours = None
 
-    option = 'contourThickness{}'.format(suffix)
+    option = f'contourThickness{suffix}'
     if config.has_option(configSectionName, option):
         lineWidth = config.getfloat(configSectionName, option)
-    else:
-        lineWidth = None
 
-    option = 'contourColor{}'.format(suffix)
+    option = f'contourColor{suffix}'
     if config.has_option(configSectionName, option):
         lineColor = config.get(configSectionName, option)
-    else:
-        lineColor = None
-    option = 'arrowsOnContour{}'.format(suffix)
+
+    option = f'arrowWidth{suffix}'
     if config.has_option(configSectionName, option):
-        arrows = config.getboolean(configSectionName, option)
-    else:
-        arrows = None
+        arrowWidth = config.getexpression(configSectionName, option)
+        if isinstance(arrowWidth, str) and arrowWidth == 'None':
+            arrowWidth = None
+    option = f'arrowSpacing{suffix}'
+    if config.has_option(configSectionName, option):
+        arrowSpacing = config.getexpression(configSectionName, option)
+        if isinstance(arrowSpacing, str) and arrowSpacing == 'None':
+            arrowSpacing = None
+
     return {'colormap': colormap, 'norm': norm, 'levels': levels,
             'ticks': ticks, 'contours': contours, 'lineWidth': lineWidth,
-            'lineColor': lineColor, 'arrows': arrows}
+            'lineColor': lineColor, 'arrowWidth': arrowWidth,
+            'arrowSpacing': arrowSpacing}
 
 
 def register_custom_colormaps():
@@ -354,12 +367,12 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     register_custom_colormaps()
 
     colormap = plt.get_cmap(config.get(configSectionName,
-                                       'colormapName{}'.format(suffix)))
+                                       f'colormapName{suffix}'))
 
-    normType = config.get(configSectionName, 'normType{}'.format(suffix))
+    normType = config.get(configSectionName, f'normType{suffix}')
 
     kwargs = config.getexpression(configSectionName,
-                                  'normArgs{}'.format(suffix))
+                                  f'normArgs{suffix}')
 
     if normType == 'symLog':
         norm = cols.SymLogNorm(**kwargs)
@@ -368,12 +381,12 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     elif normType == 'linear':
         norm = cols.Normalize(**kwargs)
     else:
-        raise ValueError('Unsupported norm type {} in section {}'.format(
-            normType, configSectionName))
+        raise ValueError(f'Unsupported norm type {normType} in section '
+                         f'{configSectionName}')
 
     try:
         ticks = config.getexpression(
-            configSectionName, 'colorbarTicks{}'.format(suffix),
+            configSectionName, f'colorbarTicks{suffix}',
             use_numpyfunc=True)
     except configparser.NoOptionError:
         ticks = None
@@ -413,15 +426,15 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     # Xylar Asay-Davis, Milena Veneziani, Greg Streletz
 
     colormap = plt.get_cmap(config.get(configSectionName,
-                                       'colormapName{}'.format(suffix)))
+                                       f'colormapName{suffix}'))
 
     indices = config.getexpression(configSectionName,
-                                   'colormapIndices{}'.format(suffix),
+                                   f'colormapIndices{suffix}',
                                    use_numpyfunc=True)
 
     try:
         levels = config.getexpression(
-            configSectionName, 'colorbarLevels{}'.format(suffix),
+            configSectionName, f'colorbarLevels{suffix}',
             use_numpyfunc=True)
     except configparser.NoOptionError:
         levels = None
@@ -440,7 +453,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
             raise ValueError('length mismatch between indices and '
                              'colorbarLevels')
         colormap = cols.ListedColormap(colormap(indices),
-                                       'colormapName{}'.format(suffix))
+                                       f'colormapName{suffix}')
         colormap.set_under(underColor)
         colormap.set_over(overColor)
 
@@ -448,7 +461,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     try:
         ticks = config.getexpression(
-            configSectionName, 'colorbarTicks{}'.format(suffix),
+            configSectionName, f'colorbarTicks{suffix}',
             use_numpyfunc=True)
     except configparser.NoOptionError:
         ticks = levels

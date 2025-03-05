@@ -938,15 +938,15 @@ def plot_vertical_section(
             if colormapDict['levels'] is None:
 
                 plotHandle = plt.tripcolor(maskedTriangulation, fieldMasked,
-                                        cmap=colormapDict['colormap'],
-                                        norm=colormapDict['norm'],
-                                        rasterized=True, shading='gouraud')
+                                           cmap=colormapDict['colormap'],
+                                           norm=colormapDict['norm'],
+                                           rasterized=True, shading='gouraud')
             else:
                 plotHandle = plt.tricontourf(maskedTriangulation, fieldMasked,
-                                            cmap=colormapDict['colormap'],
-                                            norm=colormapDict['norm'],
-                                            levels=colormapDict['levels'],
-                                            extend='both')
+                                             cmap=colormapDict['colormap'],
+                                             norm=colormapDict['norm'],
+                                             levels=colormapDict['levels'],
+                                             extend='both')
 
             cbar = plt.colorbar(plotHandle,
                                 orientation='vertical',
