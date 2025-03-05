@@ -17,6 +17,30 @@ known_comparison_grids = ['latlon', 'antarctic', 'antarctic_extended',
                           'arctic', 'arctic_extended', 'north_atlantic',
                           'north_pacific', 'subpolar_north_atlantic', 'fris']
 
+comparison_grid_option_suffixes = {
+    'latlon': 'LatLon',
+    'antarctic': 'AntarcticStereo',
+    'arctic': 'ArcticStereo',
+    'antarctic_extended': 'AntarcticExtended',
+    'arctic_extended': 'ArcticExtended',
+    'north_atlantic': 'NorthAtlantic',
+    'north_pacific': 'NorthPacific',
+    'subpolar_north_atlantic': 'SubpolarNorthAtlantic',
+    'fris': 'Fris',
+}
+
+comparison_grid_file_suffixes = {
+    'latlon': 'latlon',
+    'antarctic': 'Antarctic_stereo',
+    'arctic': 'Arctic_stereo',
+    'antarctic_extended': 'Antarctic_stereo',
+    'arctic_extended': 'Arctic_stereo',
+    'north_atlantic': 'North_Atlantic',
+    'north_pacific': 'North_Pacific',
+    'subpolar_north_atlantic': 'Subpolar_North_Atlantic',
+    'fris': 'Fris',
+}
+
 
 def get_pyproj_projection(comparison_grid_name):
     """
