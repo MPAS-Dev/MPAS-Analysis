@@ -109,7 +109,7 @@
 
 <span class="n">known_comparison_grids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]</span>
+                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="get_pyproj_projection">
@@ -145,7 +145,7 @@
 
     <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]:</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
             <span class="s1">&#39;+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 &#39;</span>
             <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
@@ -204,7 +204,7 @@
     <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]:</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Stereographic</span><span class="p">(</span>
             <span class="n">central_latitude</span><span class="o">=-</span><span class="mf">90.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
             <span class="n">true_scale_latitude</span><span class="o">=-</span><span class="mf">71.0</span><span class="p">)</span>
