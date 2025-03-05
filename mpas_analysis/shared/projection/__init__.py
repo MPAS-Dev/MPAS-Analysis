@@ -29,6 +29,19 @@ comparison_grid_option_suffixes = {
     'fris': 'Fris',
 }
 
+comparison_grid_titles = {
+    'latlon': 'Global',
+    'antarctic': 'Antarctic',
+    'arctic': 'Arctic',
+    'antarctic_extended': 'Antarctic',
+    'arctic_extended': 'Arctic',
+    'north_atlantic': 'North Atlantic',
+    'north_pacific': 'North Pacific',
+    'subpolar_north_atlantic': 'Subpolar North Atlantic',
+    'fris': 'Filchner-Ronne',
+}
+
+
 comparison_grid_file_suffixes = {
     'latlon': 'latlon',
     'antarctic': 'Antarctic_stereo',
