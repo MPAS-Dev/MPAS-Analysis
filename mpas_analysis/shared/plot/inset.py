@@ -20,6 +20,7 @@ import matplotlib.ticker as mticker
 import cartopy
 import cartopy.crs as ccrs
 import numpy
+import shapely
 import shapely.geometry
 
 from geometric_features.plot import subdivide_geom
@@ -182,11 +183,7 @@ def _set_circular_boundary(ax):
 
 def _get_bounds(fc):
     """Compute the lon/lat bounding box for all transects and regions"""
-
-    bounds = shapely.geometry.GeometryCollection()
-    for feature in fc.features:
-        shape = shapely.geometry.shape(feature['geometry'])
-        shape_bounds = shapely.geometry.box(*shape.bounds)
-        bounds = shapely.geometry.box(*bounds.union(shape_bounds).bounds)
-
-    return bounds.bounds
+    geometries = [shapely.geometry.shape(feature['geometry']) for feature
+                  in fc.features]
+    unified_geometry = shapely.union_all(geometries)
+    return unified_geometry.bounds
