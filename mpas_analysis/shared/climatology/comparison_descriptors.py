@@ -18,8 +18,12 @@ Functions for creating climatologies from monthly time series data
 import numpy
 
 from mpas_analysis.shared.constants import constants
-from mpas_analysis.shared.projection import known_comparison_grids, \
-    get_pyproj_projection
+from mpas_analysis.shared.projection import (
+    comparison_grid_file_suffixes,
+    comparison_grid_option_suffixes,
+    get_pyproj_projection,
+    known_comparison_grids,
+)
 
 from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor
 
@@ -119,23 +123,9 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     section = 'climatology'
 
-    option_suffixes = {'antarctic': 'AntarcticStereo',
-                       'arctic': 'ArcticStereo',
-                       'antarctic_extended': 'AntarcticExtended',
-                       'arctic_extended': 'ArcticExtended',
-                       'north_atlantic': 'NorthAtlantic',
-                       'north_pacific': 'NorthPacific',
-                       'subpolar_north_atlantic': 'SubpolarNorthAtlantic',
-                       'fris': 'Fris'}
+    option_suffixes = comparison_grid_option_suffixes
 
-    grid_suffixes = {'antarctic': 'Antarctic_stereo',
-                     'arctic': 'Arctic_stereo',
-                     'antarctic_extended': 'Antarctic_stereo',
-                     'arctic_extended': 'Arctic_stereo',
-                     'north_atlantic': 'North_Atlantic',
-                     'north_pacific': 'North_Pacific',
-                     'subpolar_north_atlantic': 'Subpolar_North_Atlantic',
-                     'fris': 'Fris'}
+    grid_suffixes = comparison_grid_file_suffixes
 
     if comparison_grid_name not in option_suffixes:
         raise ValueError(f'{comparison_grid_name} is not one of the supported '

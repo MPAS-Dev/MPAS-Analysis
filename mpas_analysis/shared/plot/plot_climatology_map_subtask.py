@@ -11,7 +11,6 @@
 
 import xarray as xr
 import numpy as np
-from string import capwords
 
 from mpas_analysis.shared import AnalysisTask
 
@@ -24,6 +23,8 @@ from mpas_analysis.shared.climatology import \
     get_remapped_mpas_climatology_file_name
 from mpas_analysis.shared.climatology.comparison_descriptors import \
     get_comparison_descriptor
+
+from mpas_analysis.shared.projection import comparison_grid_titles
 
 
 class PlotClimatologyMapSubtask(AnalysisTask):
@@ -656,8 +657,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             extend=self.extend)
 
         if self.prependComparisonGrid:
-            upperGridName = capwords(comparisonGridName.replace('_', ' '))
-            galleryGroup = f'{upperGridName} {self.galleryGroup}'
+            gridTitle = comparison_grid_titles[comparisonGridName]
+            galleryGroup = f'{gridTitle} {self.galleryGroup}'
         else:
             galleryGroup = self.galleryGroup
 

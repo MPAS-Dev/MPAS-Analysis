@@ -17,6 +17,7 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 from mpas_analysis.ocean.utility import compute_zmid
+from mpas_analysis.shared.projection import comparison_grid_option_suffixes
 
 
 class ClimatologyMapBSF(AnalysisTask):
@@ -72,13 +73,11 @@ class ClimatologyMapBSF(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        mpas_field_name = field_name
-
         for min_depth, max_depth in depth_ranges:
-            depth_range_string = \
-                f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
-            if np.abs(max_depth) < 6000.:
-                fname_title = f'Streamfunction over {depth_range_string}'
+            depth_range_string = f'{min_depth:g}_to_{max_depth:g}m'
+            if max_depth >= -6000. or min_depth < 0.:
+                title_depth = depth_range_string.replace('_', ' ')
+                fname_title = f'Streamfunction over {title_depth}'
                 fname_clim = f'{field_name}_{depth_range_string}'
             else:
                 fname_title = 'Barotropic Streamfunction'
@@ -99,15 +98,29 @@ class ClimatologyMapBSF(AnalysisTask):
             remap_observations_subtask = None
             if control_config is None:
                 ref_title_label = None
-                ref_field_name = None
                 diff_title_label = 'Model - Observations'
 
             else:
                 control_run_name = control_config.get('runs', 'mainRunName')
                 ref_title_label = f'Control: {control_run_name}'
-                ref_field_name = mpas_field_name
                 diff_title_label = 'Main - Control'
             for comparison_grid_name in comparison_grid_names:
+                grid_suffix = \
+                    comparison_grid_option_suffixes[comparison_grid_name]
+                config_section_name = f'{self.taskName}{grid_suffix}'
+                if config.has_section(config_section_name):
+                    # if this comparison grid has its own section, there is a
+                    # version of the BSF that has been offset for this region
+                    # and an associated colorbar/colormap
+                    mpas_field_name = f'{field_name}{grid_suffix}'
+                else:
+                    config_section_name = self.taskName
+                    mpas_field_name = field_name
+                if control_config is None:
+                    ref_field_name = None
+                else:
+                    ref_field_name = mpas_field_name
+
                 for season in seasons:
                     # make a new subtask for this season and comparison grid
                     subtask_name = f'plot{season}_{comparison_grid_name}' \
@@ -129,7 +142,8 @@ class ClimatologyMapBSF(AnalysisTask):
                         galleryGroup='Horizontal Streamfunction',
                         groupSubtitle=None,
                         groupLink='bsf',
-                        galleryName=None)
+                        galleryName=None,
+                        configSectionName=config_section_name)
 
                     self.add_subtask(subtask)
 
@@ -190,7 +204,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         # we'll fill this in at setup time
         variable_list = []
 
-        depth_range_string = f'{np.abs(min_depth):g}-{np.abs(max_depth):g}m'
+        depth_range_string = f'{min_depth:g}_to_{max_depth:g}m'
         subtask_name = f'remapMpasClimatology_{depth_range_string}'
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
@@ -258,13 +272,13 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             the modified climatology data set
         """
         logger = self.logger
+        config = self.config
 
         ds_mesh = xr.open_dataset(self.restartFileName)
         ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
                            'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
-                           'dcEdge', 'dvEdge', 'bottomDepth', 'layerThickness',
-                           'maxLevelCell', 'latVertex']]
-        ds_mesh = ds_mesh.isel(Time=0)
+                           'edgesOnVertex', 'dcEdge', 'dvEdge', 'bottomDepth',
+                           'maxLevelCell', 'latVertex', 'areaTriangle',]]
         ds_mesh.load()
         bsf_vertex = self._compute_barotropic_streamfunction_vertex(
             ds_mesh, climatology)
@@ -277,9 +291,31 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         climatology = climatology.drop_vars(self.variableList)
 
+        # offset the BSF for specific comparison grids if defined
+        for comparison_grid_name in self.comparisonDescriptors.keys():
+            grid_suffix = \
+                comparison_grid_option_suffixes[comparison_grid_name]
+            config_section_name = f'{self.taskName}{grid_suffix}'
+            if config.has_section(config_section_name):
+                # if this comparison grid has its own section, there is a
+                # version of the BSF that has been offset for this region
+                # and an associated colorbar/colormap
+                mpas_field_name = \
+                    f'barotropicStreamfunction{grid_suffix}'
+
+                lat_range = config.getexpression(
+                    config_section_name, 'latitudeRangeForZeroBSF')
+                climatology[mpas_field_name] = _shift_bsf(
+                    bsf_vertex, lat_range, ds_mesh.cellsOnVertex - 1,
+                    ds_mesh.latVertex)
+                climatology[mpas_field_name].attrs['units'] = 'Sv'
+                climatology[mpas_field_name].attrs['description'] = \
+                    f'barotropic streamfunction at vertices, offset for ' \
+                    f'{grid_suffix} plots'
+
         return climatology
 
-    def _compute_transport(self, ds_mesh, ds):
+    def _compute_vert_integ_velocity(self, ds_mesh, ds):
 
         cells_on_edge = ds_mesh.cellsOnEdge - 1
         inner_edges = np.logical_and(cells_on_edge.isel(TWO=0) >= 0,
@@ -292,10 +328,13 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         cell1 = cells_on_edge.isel(nEdges=inner_edges, TWO=1)
         n_vert_levels = ds.sizes['nVertLevels']
 
+        layer_thickness = ds.timeMonthly_avg_layerThickness
+        max_level_cell = ds_mesh.maxLevelCell - 1
+
         vert_index = xr.DataArray.from_dict(
             {'dims': ('nVertLevels',), 'data': np.arange(n_vert_levels)})
-        z_mid = compute_zmid(ds_mesh.bottomDepth, ds_mesh.maxLevelCell-1,
-                             ds_mesh.layerThickness)
+        z_mid = compute_zmid(ds_mesh.bottomDepth, max_level_cell,
+                             layer_thickness)
         z_mid_edge = 0.5*(z_mid.isel(nCells=cell0) +
                           z_mid.isel(nCells=cell1))
 
@@ -306,10 +345,9 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             normal_velocity += ds.timeMonthly_avg_normalMLEvelocity
         normal_velocity = normal_velocity.isel(nEdges=inner_edges)
 
-        layer_thickness = ds.timeMonthly_avg_layerThickness
         layer_thickness_edge = 0.5*(layer_thickness.isel(nCells=cell0) +
                                     layer_thickness.isel(nCells=cell1))
-        mask_bottom = (vert_index < ds_mesh.maxLevelCell).T
+        mask_bottom = (vert_index <= max_level_cell).T
         mask_bottom_edge = np.logical_and(mask_bottom.isel(nCells=cell0),
                                           mask_bottom.isel(nCells=cell1))
         masks = [mask_bottom_edge,
@@ -318,77 +356,183 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         for mask in masks:
             normal_velocity = normal_velocity.where(mask)
             layer_thickness_edge = layer_thickness_edge.where(mask)
-        transport = ds_mesh.dvEdge[inner_edges] * \
-            (layer_thickness_edge * normal_velocity).sum(dim='nVertLevels')
 
-        return inner_edges, transport
+        vert_integ_velocity = np.zeros(ds_mesh.dims['nEdges'], dtype=float)
+        inner_vert_integ_vel = (
+            (layer_thickness_edge * normal_velocity).sum(dim='nVertLevels'))
+        vert_integ_velocity[inner_edges] = inner_vert_integ_vel.values
 
-    def _compute_barotropic_streamfunction_vertex(self, ds_mesh, ds):
-        inner_edges, transport = self._compute_transport(ds_mesh, ds)
-        self.logger.info('transport computed.')
+        vert_integ_velocity = xr.DataArray(vert_integ_velocity,
+                                           dims=('nEdges',))
 
-        config = self.config
-        min_lat = config.getfloat(
-            'climatologyMapBSF', 'minLatitudeForZeroBSF')
+        return vert_integ_velocity
+
+    def _compute_edge_sign_on_vertex(self, ds_mesh):
+        edges_on_vertex = ds_mesh.edgesOnVertex - 1
+        vertices_on_edge = ds_mesh.verticesOnEdge - 1
 
         nvertices = ds_mesh.sizes['nVertices']
+        vertex_degree = ds_mesh.sizes['vertexDegree']
+
+        edge_sign_on_vertex = np.zeros((nvertices, vertex_degree), dtype=int)
+        vertices = np.arange(nvertices)
+        for iedge in range(vertex_degree):
+            eov = edges_on_vertex.isel(vertexDegree=iedge)
+            valid_edge = eov >= 0
+
+            v0_on_edge = vertices_on_edge.isel(nEdges=eov, TWO=0)
+            v1_on_edge = vertices_on_edge.isel(nEdges=eov, TWO=1)
+            valid_edge = np.logical_and(valid_edge, v0_on_edge >= 0)
+            valid_edge = np.logical_and(valid_edge, v1_on_edge >= 0)
+
+            mask = np.logical_and(valid_edge, v0_on_edge == vertices)
+            edge_sign_on_vertex[mask, iedge] = -1
+
+            mask = np.logical_and(valid_edge, v1_on_edge == vertices)
+            edge_sign_on_vertex[mask, iedge] = 1
+
+        return edge_sign_on_vertex
+
+    def _compute_vert_integ_vorticity(self, ds_mesh, vert_integ_velocity,
+                                      edge_sign_on_vertex):
+
+        area_vertex = ds_mesh.areaTriangle
+        dc_edge = ds_mesh.dcEdge
+        edges_on_vertex = ds_mesh.edgesOnVertex - 1
+
+        vertex_degree = ds_mesh.sizes['vertexDegree']
+
+        vert_integ_vorticity = xr.zeros_like(ds_mesh.latVertex)
+        for iedge in range(vertex_degree):
+            eov = edges_on_vertex.isel(vertexDegree=iedge)
+            edge_sign = edge_sign_on_vertex[:, iedge]
+            dc = dc_edge.isel(nEdges=eov)
+            vert_integ_vel = vert_integ_velocity.isel(nEdges=eov)
+            vert_integ_vorticity += (
+                dc / area_vertex * edge_sign * vert_integ_vel)
+
+        return vert_integ_vorticity
+
+    def _compute_barotropic_streamfunction_vertex(self, ds_mesh, ds):
+        edge_sign_on_vertex = self._compute_edge_sign_on_vertex(ds_mesh)
+        vert_integ_velocity = self._compute_vert_integ_velocity(ds_mesh, ds)
+        vert_integ_vorticity = self._compute_vert_integ_vorticity(
+            ds_mesh, vert_integ_velocity, edge_sign_on_vertex)
+        self.logger.info('vertically integrated vorticity computed.')
+
+        config = self.config
+        lat_range = config.getexpression(
+            'climatologyMapBSF', 'latitudeRangeForZeroBSF')
+
+        nvertices = ds_mesh.sizes['nVertices']
+        vertex_degree = ds_mesh.sizes['vertexDegree']
 
         cells_on_vertex = ds_mesh.cellsOnVertex - 1
+        edges_on_vertex = ds_mesh.edgesOnVertex - 1
         vertices_on_edge = ds_mesh.verticesOnEdge - 1
-        is_boundary_cov = cells_on_vertex == -1
-        boundary_vertices = is_boundary_cov.sum(dim='vertexDegree') > 0
+        area_vertex = ds_mesh.areaTriangle
+        dc_edge = ds_mesh.dcEdge
+        dv_edge = ds_mesh.dvEdge
 
-        boundary_vertices = np.logical_and(
-            boundary_vertices,
-            ds_mesh.latVertex > np.deg2rad(min_lat)
-        )
+        # one equation involving vertex degree + 1 vertices for each vertex
+        # plus 2 entries for the boundary condition and Lagrange multiplier
+        ndata = (vertex_degree + 1) * nvertices + 2
+        indices = np.zeros((2, ndata), dtype=int)
+        data = np.zeros(ndata, dtype=float)
 
-        # convert from boolean mask to indices
-        boundary_vertices = np.flatnonzero(boundary_vertices.values)
+        # the laplacian on the dual mesh of the streamfunction is the
+        # vertically integrated vorticity
+        vertices = np.arange(nvertices, dtype=int)
+        idata = (vertex_degree + 1) * vertices + 1
+        indices[0, idata] = vertices
+        indices[1, idata] = vertices
+        for iedge in range(vertex_degree):
+            eov = edges_on_vertex.isel(vertexDegree=iedge)
+            dc = dc_edge.isel(nEdges=eov)
+            dv = dv_edge.isel(nEdges=eov)
 
-        n_boundary_vertices = len(boundary_vertices)
+            v0 = vertices_on_edge.isel(nEdges=eov, TWO=0)
+            v1 = vertices_on_edge.isel(nEdges=eov, TWO=1)
 
-        n_inner_edges = len(inner_edges)
+            edge_sign = edge_sign_on_vertex[:, iedge]
 
-        indices = np.zeros((2, 2 * n_inner_edges + n_boundary_vertices),
-                           dtype=int)
-        data = np.zeros(2 * n_inner_edges + n_boundary_vertices, dtype=float)
+            mask = v0 == vertices
+            # the difference is v1 - v0, so we want to subtract this vertex
+            # when it is v0 and add it when it is v1
+            this_vert_sign = np.where(mask, -1., 1.)
+            # the other vertex is obviously whichever one this is not
+            other_vert_index = np.where(mask, v1, v0)
+            # if there are invalid vertices, we need to make sure we don't
+            # index out of bounds.  The edge_sign will mask these out
+            other_vert_index = np.where(other_vert_index >= 0,
+                                        other_vert_index, 0)
 
-        # The difference between the streamfunction at vertices on an inner
-        # edge should be equal to the transport
-        v0 = vertices_on_edge.isel(nEdges=inner_edges, TWO=0).values
-        v1 = vertices_on_edge.isel(nEdges=inner_edges, TWO=1).values
+            idata_other = idata + iedge + 1
 
-        ind = np.arange(n_inner_edges)
-        indices[0, 2 * ind] = ind
-        indices[1, 2 * ind] = v1
-        data[2*ind] = 1.
+            indices[0, idata] = vertices
+            indices[1, idata] = vertices
+            indices[0, idata_other] = vertices
+            indices[1, idata_other] = other_vert_index
 
-        indices[0, 2 * ind + 1] = ind
-        indices[1, 2 * ind + 1] = v0
-        data[2*ind+1] = -1.
+            this_data = this_vert_sign * edge_sign * dc / (dv * area_vertex)
+            data[idata] += this_data
+            data[idata_other] = -this_data
 
-        # Make the average of the stream function at boundary vertices north
-        # of min_lat equal to zero
-        ind = np.arange(n_boundary_vertices)
-        indices[0, 2 * n_inner_edges + ind] = n_inner_edges
-        indices[1, 2 * n_inner_edges + ind] = ind
-        data[2 * n_inner_edges + ind] = 1.
+        # Now, the boundary condition: To begin with, we set the BSF at the
+        # frist vertext to zero
+        indices[0, -2] = nvertices
+        indices[1, -2] = 0
+        data[-2] = 1.
 
-        rhs = np.zeros(n_inner_edges + 1, dtype=float)
+        # The same in the final column
+        indices[0, -1] = 0
+        indices[1, -1] = nvertices
+        data[-1] = 1.
 
-        # convert to Sv
-        ind = np.arange(n_inner_edges)
-        rhs[ind] = 1e-6 * transport
+        # one extra spot for the Lagrange multiplier
+        rhs = np.zeros(nvertices + 1, dtype=float)
 
-        rhs[n_inner_edges] = 0.
+        rhs[0:-1] = vert_integ_vorticity.values
 
         matrix = scipy.sparse.csr_matrix(
             (data, indices),
-            shape=(n_inner_edges + 1, nvertices))
+            shape=(nvertices + 1, nvertices + 1))
 
-        solution = scipy.sparse.linalg.lsqr(matrix, rhs)
-        bsf_vertex = xr.DataArray(-solution[0],
+        solution = scipy.sparse.linalg.spsolve(matrix, rhs)
+
+        # drop the Lagrange multiplier and convert to Sv with the desired sign
+        # convention
+        bsf_vertex = xr.DataArray(-1e-6 * solution[0:-1],
                                   dims=('nVertices',))
 
+        bsf_vertex = _shift_bsf(bsf_vertex, lat_range, cells_on_vertex,
+                                ds_mesh.latVertex)
+
         return bsf_vertex
+
+
+def _shift_bsf(bsf_vertex, lat_range, cells_on_vertex, lat_vertex):
+    """
+    Shift the barotropic streamfunction to be zero at the boundary over
+    the given latitude range
+    """
+    is_boundary_cov = cells_on_vertex == -1
+    boundary_vertices = is_boundary_cov.sum(dim='vertexDegree') > 0
+
+    boundary_vertices = np.logical_and(
+        boundary_vertices,
+        lat_vertex >= np.deg2rad(lat_range[0])
+    )
+    boundary_vertices = np.logical_and(
+        boundary_vertices,
+        lat_vertex <= np.deg2rad(lat_range[1])
+    )
+
+    # convert from boolean mask to indices
+    boundary_vertices = np.flatnonzero(boundary_vertices.values)
+
+    mean_boundary_bsf = bsf_vertex.isel(nVertices=boundary_vertices).mean()
+
+    bsf_shifted = bsf_vertex - mean_boundary_bsf
+
+    return bsf_shifted
