@@ -1037,15 +1037,15 @@
             <span class="k">if</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
                 <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
-                                        <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
-                                        <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
-                                        <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+                                           <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                           <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                           <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
-                                            <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
-                                            <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
-                                            <span class="n">levels</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">],</span>
-                                            <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+                                             <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                             <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                             <span class="n">levels</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">],</span>
+                                             <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
 
             <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span>
                                 <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>

@@ -190,22 +190,25 @@
 <span class="c1">## (if available)</span>
 
 <span class="c1"># colormap for model/observations</span>
-<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">blue</span><span class="o">-</span><span class="n">orange</span><span class="o">-</span><span class="n">div</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="mi">3</span><span class="n">wave</span><span class="o">-</span><span class="n">blue</span><span class="o">-</span><span class="n">red</span><span class="o">-</span><span class="n">brown</span>
 <span class="c1"># whether the colormap is indexed or continuous</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="c1"># the type of norm used in the colormap</span>
-<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">symLog</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">30.</span><span class="p">,</span> <span class="s1">&#39;linscale&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">100.</span><span class="p">}</span>
-<span class="n">colorbarTicksResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">100.</span><span class="p">,</span><span class="o">-</span><span class="mf">40.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">]</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">200.</span><span class="p">}</span>
 <span class="c1"># Adding contour lines to the figure</span>
-<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">101.0</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="mf">201.0</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
 <span class="n">contourThicknessResult</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="n">contourColorResult</span> <span class="o">=</span> <span class="n">black</span>
-<span class="c1"># Add arrows to contour lines</span>
-<span class="c1"># whether to include arrows on the contour lines showing the direction of flow</span>
-<span class="n">arrowsOnContourResult</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="c1"># The spacing (in meters) between arrows on contours in projection plots</span>
+<span class="c1"># (None to disable)</span>
+<span class="n">arrowSpacingResult</span> <span class="o">=</span> <span class="mf">8e5</span>
+<span class="c1"># The width (in meters) of arrows on contours in projection plots (None to</span>
+<span class="c1"># disable)</span>
+<span class="n">arrowWidthResult</span> <span class="o">=</span> <span class="mf">1.5e4</span>
+
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">cmo</span><span class="o">.</span><span class="n">balance</span>
 <span class="c1"># whether the colormap is indexed or continuous</span>
@@ -223,18 +226,74 @@
 <span class="c1"># comparison grid(s) on which to plot analysis</span>
 <span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]</span>
 
-<span class="c1"># list of tuples(pairs) of depths (min, max) to integrate horizontal transport over</span>
-<span class="n">depthRanges</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2000.0</span><span class="p">)]</span>
+<span class="c1"># list of tuples(pairs) of depths (min, max) to integrate horizontal transport</span>
+<span class="c1"># over</span>
+<span class="n">depthRanges</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10000.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">2000.0</span><span class="p">)]</span>
 
-<span class="c1"># minimum latitude (degrees) above which the mean BSF on boundary vertices</span>
-<span class="c1"># averages to zero</span>
-<span class="n">minLatitudeForZeroBSF</span> <span class="o">=</span> <span class="o">-</span><span class="mf">45.0</span>
+<span class="c1"># minimum and maximum latitude (degrees) between which the mean BSF on boundary</span>
+<span class="c1"># vertices averages to zero</span>
+<span class="n">latitudeRangeForZeroBSF</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">45.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, the BSF is computed over two depth ranges—the full depth of
 the ocean and only to 2000 m.  By default, global and subpolar North Atlantic
 plots are produced.  The BSF is constrained to have a mean value on coastal
-boundaries of zero north of <code class="docutils literal notranslate"><span class="pre">minLatitudeForZeroBSF</span></code>.</p>
+boundaries between the bounds set in <code class="docutils literal notranslate"><span class="pre">latitudeRangeForZeroBSF</span></code>.</p>
+<p>You can set config options for individual comparison grids in a separate
+seciton with the suffix associated with the comparison grid appended, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapBSF</span><span class="p">]</span>
+<span class="c1">## options related to plotting horizontally remapped climatologies of</span>
+<span class="c1">## the barotropic streamfunction (BSF) against control model results</span>
+<span class="c1">## (if available)</span>
+
+<span class="c1"># comparison grid(s) on which to plot analysis</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]</span>
+
+<span class="p">[</span><span class="n">climatologyMapBSFAntarcticExtended</span><span class="p">]</span>
+<span class="c1">## options related to plotting Antarctic climatologies of the barotropic</span>
+<span class="c1">## streamfunction (BSF)</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">blue</span><span class="o">-</span><span class="n">orange</span><span class="o">-</span><span class="n">div</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">symLog</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">30.</span><span class="p">,</span> <span class="s1">&#39;linscale&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">150.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">150.</span><span class="p">}</span>
+<span class="n">colorbarTicksResult</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">150.</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.</span><span class="p">,</span><span class="o">-</span><span class="mf">60.</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">40.</span><span class="p">,</span> <span class="mf">60.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">150.</span><span class="p">]</span>
+<span class="c1"># Adding contour lines to the figure</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">150.</span><span class="p">,</span> <span class="mf">150.1</span><span class="p">,</span> <span class="mf">10.</span><span class="p">)</span>
+<span class="n">contourThicknessResult</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">contourColorResult</span> <span class="o">=</span> <span class="n">black</span>
+<span class="c1"># The spacing (in meters) between arrows on contours in projection plots</span>
+<span class="c1"># (None to disable)</span>
+<span class="n">arrowSpacingResult</span> <span class="o">=</span> <span class="mf">8e5</span>
+<span class="c1"># The width (in meters) of arrows on contours in projection plots (None to</span>
+<span class="c1"># disable)</span>
+<span class="n">arrowWidthResult</span> <span class="o">=</span> <span class="mf">1.5e4</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">cmo</span><span class="o">.</span><span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">}</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-10., 10., 9)</span>
+
+<span class="c1"># minimum and maximum latitude (degrees) between which the mean BSF on boundary</span>
+<span class="c1"># vertices averages to zero</span>
+<span class="n">latitudeRangeForZeroBSF</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">60.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You must define both a new set of colormaps, norms, etc. and a new range of
+latitudes over which the BSF is constrained to have a mean value of zero.</p>
+<p>This is useful because plots are more intuitive if the BSF is close to zero
+at local boundaries.</p>
 <dl class="simple">
 <dt>For more details, see:</dt><dd><ul class="simple">
 <li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>

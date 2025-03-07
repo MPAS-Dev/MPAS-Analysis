@@ -117,7 +117,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">xml.etree</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementTree</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cmocean</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pkg_resources</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.resources</span>
 
 
 <div class="viewcode-block" id="setup_colormap">
@@ -158,6 +158,11 @@
 <span class="sd">        &#39;lineWidth&#39; is the width of contour lines or ``None`` if not specified</span>
 
 <span class="sd">        &#39;lineColor&#39; is the color of contour lines or ``None`` if not specified</span>
+
+<span class="sd">        `arrowWidth` is the width of the arrows or ``None`` if not specified</span>
+
+<span class="sd">        `arrowSpacing` is the spacing between arrows or ``None`` if not</span>
+<span class="sd">        specified</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -165,7 +170,7 @@
 
     <span class="n">register_custom_colormaps</span><span class="p">()</span>
 
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;colormapType</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;colormapType</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">colormapType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">colormapType</span> <span class="o">==</span> <span class="s1">&#39;indexed&#39;</span><span class="p">:</span>
@@ -184,35 +189,43 @@
         <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;contourLevels</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="n">contours</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">lineWidth</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">lineColor</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">arrowWidth</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">arrowSpacing</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;contourLevels</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">contours</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
                                         <span class="n">option</span><span class="p">,</span>
                                         <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">contours</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">contours</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
             <span class="n">contours</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">contours</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;contourThickness</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;contourThickness</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">lineWidth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">lineWidth</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;contourColor</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;contourColor</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
         <span class="n">lineColor</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">lineColor</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">option</span> <span class="o">=</span> <span class="s1">&#39;arrowsOnContour</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;arrowWidth</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
-        <span class="n">arrows</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">arrows</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">arrowWidth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arrowWidth</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">arrowWidth</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">arrowWidth</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">option</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;arrowSpacing</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">):</span>
+        <span class="n">arrowSpacing</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="n">option</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arrowSpacing</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="n">arrowSpacing</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="n">arrowSpacing</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;colormap&#39;</span><span class="p">:</span> <span class="n">colormap</span><span class="p">,</span> <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">norm</span><span class="p">,</span> <span class="s1">&#39;levels&#39;</span><span class="p">:</span> <span class="n">levels</span><span class="p">,</span>
             <span class="s1">&#39;ticks&#39;</span><span class="p">:</span> <span class="n">ticks</span><span class="p">,</span> <span class="s1">&#39;contours&#39;</span><span class="p">:</span> <span class="n">contours</span><span class="p">,</span> <span class="s1">&#39;lineWidth&#39;</span><span class="p">:</span> <span class="n">lineWidth</span><span class="p">,</span>
-            <span class="s1">&#39;lineColor&#39;</span><span class="p">:</span> <span class="n">lineColor</span><span class="p">,</span> <span class="s1">&#39;arrows&#39;</span><span class="p">:</span> <span class="n">arrows</span><span class="p">}</span></div>
+            <span class="s1">&#39;lineColor&#39;</span><span class="p">:</span> <span class="n">lineColor</span><span class="p">,</span> <span class="s1">&#39;arrowWidth&#39;</span><span class="p">:</span> <span class="n">arrowWidth</span><span class="p">,</span>
+            <span class="s1">&#39;arrowSpacing&#39;</span><span class="p">:</span> <span class="n">arrowSpacing</span><span class="p">}</span></div>
 
 
 
@@ -373,9 +386,9 @@
                      <span class="s1">&#39;grayC&#39;</span><span class="p">,</span> <span class="s1">&#39;hawaii&#39;</span><span class="p">,</span> <span class="s1">&#39;imola&#39;</span><span class="p">,</span> <span class="s1">&#39;lajolla&#39;</span><span class="p">,</span> <span class="s1">&#39;lapaz&#39;</span><span class="p">,</span> <span class="s1">&#39;lisbon&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;nuuk&#39;</span><span class="p">,</span> <span class="s1">&#39;oleron&#39;</span><span class="p">,</span> <span class="s1">&#39;oslo&#39;</span><span class="p">,</span> <span class="s1">&#39;roma&#39;</span><span class="p">,</span> <span class="s1">&#39;romaO&#39;</span><span class="p">,</span> <span class="s1">&#39;tofino&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;tokyo&#39;</span><span class="p">,</span> <span class="s1">&#39;turku&#39;</span><span class="p">,</span> <span class="s1">&#39;vanimo&#39;</span><span class="p">,</span> <span class="s1">&#39;vik&#39;</span><span class="p">,</span> <span class="s1">&#39;vikO&#39;</span><span class="p">]:</span>
-        <span class="n">xml_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ScientificColourMaps7/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">_PARAVIEW.xml&#39;</span>
-        <span class="n">xml_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">xml_file</span><span class="p">)</span>
-        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;ScientificColourMaps7/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">_PARAVIEW.xml&#39;</span>
+        <span class="k">with</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span>  <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
+            <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
 
     <span class="c1"># add SciVisColor colormaps from</span>
     <span class="c1"># https://sciviscolor.org/home/colormaps/</span>
@@ -386,10 +399,18 @@
                      <span class="s1">&#39;green-7&#39;</span><span class="p">,</span> <span class="s1">&#39;green-8&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-5&#39;</span><span class="p">,</span> <span class="s1">&#39;orange-6&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;orange-green-blue-gray&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-7&#39;</span><span class="p">,</span> <span class="s1">&#39;purple-8&#39;</span><span class="p">,</span> <span class="s1">&#39;red-1&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;red-3&#39;</span><span class="p">,</span> <span class="s1">&#39;red-4&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-1&#39;</span><span class="p">,</span> <span class="s1">&#39;yellow-7&#39;</span><span class="p">]:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SciVisColorColormaps/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">.xml&#39;</span>
+        <span class="k">with</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span>  <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
+            <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
 
-        <span class="n">xml_file</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SciVisColorColormaps/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">.xml&#39;</span>
-        <span class="n">xml_file</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">xml_file</span><span class="p">)</span>
-        <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
+    <span class="c1"># add SciVisColor colormaps created by hand using</span>
+    <span class="c1"># https://sciviscolor.org/color-moves-app/</span>
+    <span class="k">for</span> <span class="n">map_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;3wave-green-red-purple&#39;</span><span class="p">,</span> <span class="s1">&#39;3wave-blue-red-brown&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;div-one-third-blue-two-thirds-red&#39;</span><span class="p">,</span>
+                     <span class="s1">&#39;div-one-third-green-two-thirds-red&#39;</span><span class="p">,]:</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;SciVisColorCustom/</span><span class="si">{</span><span class="n">map_name</span><span class="si">}</span><span class="s1">.xml&#39;</span>
+        <span class="k">with</span> <span class="n">importlib</span><span class="o">.</span><span class="n">resources</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">__package__</span><span class="p">,</span>  <span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">xml_file</span><span class="p">:</span>
+            <span class="n">_read_xml_colormap</span><span class="p">(</span><span class="n">xml_file</span><span class="p">,</span> <span class="n">map_name</span><span class="p">)</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;white_cmo_deep&#39;</span>
     <span class="c1"># modify cmo.deep to start at white</span>
@@ -443,12 +464,12 @@
     <span class="n">register_custom_colormaps</span><span class="p">()</span>
 
     <span class="n">colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
-                                       <span class="s1">&#39;colormapName</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)))</span>
+                                       <span class="sa">f</span><span class="s1">&#39;colormapName</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
 
-    <span class="n">normType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;normType</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+    <span class="n">normType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;normType</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">kwargs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
-                                  <span class="s1">&#39;normArgs</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                                  <span class="sa">f</span><span class="s1">&#39;normArgs</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">normType</span> <span class="o">==</span> <span class="s1">&#39;symLog&#39;</span><span class="p">:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">SymLogNorm</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -457,12 +478,12 @@
     <span class="k">elif</span> <span class="n">normType</span> <span class="o">==</span> <span class="s1">&#39;linear&#39;</span><span class="p">:</span>
         <span class="n">norm</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported norm type </span><span class="si">{}</span><span class="s1"> in section </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">normType</span><span class="p">,</span> <span class="n">configSectionName</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unsupported norm type </span><span class="si">{</span><span class="n">normType</span><span class="si">}</span><span class="s1"> in section &#39;</span>
+                         <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">configSectionName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-            <span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;colorbarTicks</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+            <span class="n">configSectionName</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;colorbarTicks</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="kc">None</span>
@@ -502,15 +523,15 @@
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
     <span class="n">colormap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
-                                       <span class="s1">&#39;colormapName</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)))</span>
+                                       <span class="sa">f</span><span class="s1">&#39;colormapName</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">))</span>
 
     <span class="n">indices</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
-                                   <span class="s1">&#39;colormapIndices</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+                                   <span class="sa">f</span><span class="s1">&#39;colormapIndices</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                                    <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-            <span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;colorbarLevels</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+            <span class="n">configSectionName</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;colorbarLevels</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="n">levels</span> <span class="o">=</span> <span class="kc">None</span>
@@ -529,7 +550,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;length mismatch between indices and &#39;</span>
                              <span class="s1">&#39;colorbarLevels&#39;</span><span class="p">)</span>
         <span class="n">colormap</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">ListedColormap</span><span class="p">(</span><span class="n">colormap</span><span class="p">(</span><span class="n">indices</span><span class="p">),</span>
-                                       <span class="s1">&#39;colormapName</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+                                       <span class="sa">f</span><span class="s1">&#39;colormapName</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">colormap</span><span class="o">.</span><span class="n">set_under</span><span class="p">(</span><span class="n">underColor</span><span class="p">)</span>
         <span class="n">colormap</span><span class="o">.</span><span class="n">set_over</span><span class="p">(</span><span class="n">overColor</span><span class="p">)</span>
 
@@ -537,7 +558,7 @@
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-            <span class="n">configSectionName</span><span class="p">,</span> <span class="s1">&#39;colorbarTicks</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">),</span>
+            <span class="n">configSectionName</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;colorbarTicks</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
             <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">except</span> <span class="n">configparser</span><span class="o">.</span><span class="n">NoOptionError</span><span class="p">:</span>
         <span class="n">ticks</span> <span class="o">=</span> <span class="n">levels</span>

@@ -112,8 +112,12 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.projection</span><span class="w"> </span><span class="kn">import</span> <span class="n">known_comparison_grids</span><span class="p">,</span> \
-    <span class="n">get_pyproj_projection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.projection</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">comparison_grid_file_suffixes</span><span class="p">,</span>
+    <span class="n">comparison_grid_option_suffixes</span><span class="p">,</span>
+    <span class="n">get_pyproj_projection</span><span class="p">,</span>
+    <span class="n">known_comparison_grids</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLonGridDescriptor</span><span class="p">,</span> <span class="n">ProjectionGridDescriptor</span>
 
@@ -216,23 +220,9 @@
 
     <span class="n">section</span> <span class="o">=</span> <span class="s1">&#39;climatology&#39;</span>
 
-    <span class="n">option_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticStereo&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticStereo&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticExtended&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticExtended&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthAtlantic&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthPacific&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;SubpolarNorthAtlantic&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;fris&#39;</span><span class="p">:</span> <span class="s1">&#39;Fris&#39;</span><span class="p">}</span>
+    <span class="n">option_suffixes</span> <span class="o">=</span> <span class="n">comparison_grid_option_suffixes</span>
 
-    <span class="n">grid_suffixes</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Atlantic&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Pacific&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;Subpolar_North_Atlantic&#39;</span><span class="p">,</span>
-                     <span class="s1">&#39;fris&#39;</span><span class="p">:</span> <span class="s1">&#39;Fris&#39;</span><span class="p">}</span>
+    <span class="n">grid_suffixes</span> <span class="o">=</span> <span class="n">comparison_grid_file_suffixes</span>
 
     <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">option_suffixes</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1"> is not one of the supported &#39;</span>
