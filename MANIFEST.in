@@ -7,5 +7,6 @@ include mpas_analysis/configuration/*.cfg
 include mpas_analysis/shared/html/templates/*
 include mpas_analysis/shared/plot/ScientificColourMaps7/*/*.xml
 include mpas_analysis/shared/plot/SciVisColorColormaps/*.xml
+include mpas_analysis/shared/plot/SciVisColorCustom/*.xml
 include mpas_analysis/test/test*/*
 include mpas_analysis/test/test*/*/*
