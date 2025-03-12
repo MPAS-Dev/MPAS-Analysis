@@ -59,6 +59,8 @@ test:
     - pip check
     - pytest --pyargs mpas_analysis
     - mpas_analysis --help
+    - mpas_analysis --list
+    - mpas_analysis --plot_colormaps
     - download_analysis_data --help
 
 about:
