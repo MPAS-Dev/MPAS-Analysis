@@ -289,8 +289,9 @@ def register_custom_colormaps():
                      'grayC', 'hawaii', 'imola', 'lajolla', 'lapaz', 'lisbon',
                      'nuuk', 'oleron', 'oslo', 'roma', 'romaO', 'tofino',
                      'tokyo', 'turku', 'vanimo', 'vik', 'vikO']:
-        filename = f'ScientificColourMaps7/{map_name}/{map_name}_PARAVIEW.xml'
-        with importlib.resources.path(__package__,  filename) as xml_file:
+        package = f'mpas_analysis.shared.plot.ScientificColourMaps7.{map_name}'
+        filename = f'{map_name}_PARAVIEW.xml'
+        with importlib.resources.path(package,  filename) as xml_file:
             _read_xml_colormap(xml_file, map_name)
 
     # add SciVisColor colormaps from
@@ -302,8 +303,9 @@ def register_custom_colormaps():
                      'green-7', 'green-8', 'orange-5', 'orange-6',
                      'orange-green-blue-gray', 'purple-7', 'purple-8', 'red-1',
                      'red-3', 'red-4', 'yellow-1', 'yellow-7']:
-        filename = f'SciVisColorColormaps/{map_name}.xml'
-        with importlib.resources.path(__package__,  filename) as xml_file:
+        package = 'mpas_analysis.shared.plot.SciVisColorColormaps'
+        filename = f'{map_name}.xml'
+        with importlib.resources.path(package,  filename) as xml_file:
             _read_xml_colormap(xml_file, map_name)
 
     # add SciVisColor colormaps created by hand using
@@ -311,8 +313,9 @@ def register_custom_colormaps():
     for map_name in ['3wave-green-red-purple', '3wave-blue-red-brown',
                      'div-one-third-blue-two-thirds-red',
                      'div-one-third-green-two-thirds-red',]:
-        filename = f'SciVisColorCustom/{map_name}.xml'
-        with importlib.resources.path(__package__,  filename) as xml_file:
+        package = 'mpas_analysis.shared.plot.SciVisColorCustom'
+        filename = f'{map_name}.xml'
+        with importlib.resources.path(package,  filename) as xml_file:
             _read_xml_colormap(xml_file, map_name)
 
     name = 'white_cmo_deep'
