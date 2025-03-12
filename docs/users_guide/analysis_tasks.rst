@@ -9,6 +9,7 @@ Analysis Tasks
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapBGC
    tasks/climatologyMapBSF
+   tasks/climatologyMapCustom
    tasks/climatologyMapEKE
    tasks/climatologyMapHeatFluxes
    tasks/climatologyMapMassFluxes

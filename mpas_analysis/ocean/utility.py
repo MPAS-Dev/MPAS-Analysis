@@ -126,3 +126,54 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):
     zMid = zLayerBot + 0.5 * layerThickness
 
     return zMid
+
+
+def compute_zinterface(bottomDepth, maxLevelCell, layerThickness):
+    """
+    Computes zInterface given data arrays for bottomDepth, maxLevelCell and
+    layerThickness
+
+    Parameters
+    ----------
+    bottomDepth : ``xarray.DataArray``
+        the depth of the ocean bottom (positive)
+
+    maxLevelCell : ``xarray.DataArray``
+        the 0-based vertical index of the bottom of the ocean
+
+    layerThickness : ``xarray.DataArray``
+        the thickness of MPAS-Ocean layers (possibly as a function of time)
+
+    Returns
+    -------
+    zInterface : ``xarray.DataArray``
+        the vertical coordinate defining the interfaces between layers, masked
+        below the bathymetry
+    """
+    # Authors
+    # -------
+    # Xylar Asay-Davis
+
+    nVertLevels = layerThickness.sizes['nVertLevels']
+
+    vertIndex = \
+        xarray.DataArray.from_dict({'dims': ('nVertLevels',),
+                                    'data': numpy.arange(nVertLevels)})
+
+    layerThickness = layerThickness.where(vertIndex <= maxLevelCell)
+    thicknessSum = layerThickness.sum(dim='nVertLevels')
+
+    zSurface = -bottomDepth + thicknessSum
+
+    zInterfaceList = [zSurface]
+
+    zTop = zSurface
+
+    for zIndex in range(nVertLevels):
+        zBot = zTop - layerThickness.isel(nVertLevels=zIndex)
+        zInterfaceList.append(zBot)
+        zTop = zBot
+
+    zInterface = xarray.concat(zInterfaceList, dim='nVertLevelsP1').transpose(
+        'nCells', 'nVertLevelsP1')
+    return zInterface
