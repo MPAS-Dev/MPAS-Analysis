@@ -55,7 +55,7 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
 
         task_name = f'climatologyMapRiskIndexOutcome{hemisphere}'
 
-        field_name = 'riskIndexOutcome'
+        field_name = 'RiskIndexOutcome'
 
         tags = ['climatology', 'horizontalMap', field_name]
         if hemisphere == 'NH':
@@ -81,17 +81,53 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
 
         if len(seasons) == 0:
             raise ValueError(f'config section {section_name} does not contain '
-                             f'valid list of seasons')
+                             f'a valid list of seasons')
 
         comparison_grid_names = config.getexpression(section_name,
                                                    'comparisonGrids')
 
         if len(comparison_grid_names) == 0:
             raise ValueError(f'config section {section_name} does not contain '
-                             f'valid list of comparison grids')
+                             f'a valid list of comparison grids')
 
-        variable_list = ['timeMonthly_avg_iceAreaCell',
-                         'timeMonthly_avg_iceVolumeCell']
+        # read in what polar class of vessel we want to plot
+        polarclass = config.getexpression(section_name, 'polarClass')
+
+        if polarclass < 0 or polarclass > 12:
+            raise ValueError(f'config section {section_name} does not contain '
+                             f'a valid instance of Polar Class')
+
+        # convert to 0-based array index
+        polarclass = np.int_(polarclass) - 1
+
+        # read in table of Risk Index Values
+        #riv_csv = 'riv_MSC.1_Circ.1519_6_June_2016.csv'
+        riv_csv = build_obs_path(config, 'seaIce',
+                                 relativePathOption='riv{}'.format(hemisphere),
+                                 relativePathSection=section_name)
+        IceClassLabels = np.genfromtxt(riv_csv, delimiter=',', skip_header=1,
+                                       dtype=str, usecols=(0,))
+        redClassLabels = np.char.replace(IceClassLabels, ' ', '')
+        redClassLabels = np.array([s[:9] for s in redClassLabels])
+        riskindexvalue = np.genfromtxt(riv_csv, delimiter=',', skip_header=1)
+        riskindexvalue = riskindexvalue[:, 1:]
+        riskindexvalue = np.array(riskindexvalue)
+
+        # read in reference floe thicknesses for calculation of Risk Index Values
+        # Default values: [0.0, 0.5, 10, 15, 30, 50, 70, 100, 120, 170, 200, 250]/100
+        # (the default values were agreed upon by Elizabeth Hunke, Andrew Roberts,
+        # and Gennaro D'Angelo based on literature and IMO description)
+        h_to_typeofice = config.getexpression(section_name, 'h_to_typeofice')
+        h_to_typeofice = np.array(h_to_typeofice)
+
+        # read in what type of variables we want to plot
+        useIceCategories = config.getexpression(section_name, 'useIceCategories')
+        if useIceCategories:
+            variable_list = ['timeMonthly_avg_iceAreaCategory',
+                             'timeMonthly_avg_iceVolumeCategory']
+        else:
+            variable_list = ['timeMonthly_avg_iceAreaCell',
+                             'timeMonthly_avg_iceVolumeCell']
 
         remap_climatology_subtask = RemapMpasRiskIndexOutcomeClimatology(
             mpas_climatology_task=mpas_climatology_task,
@@ -99,8 +135,11 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
             climatology_name=f'{field_name}{hemisphere}',
             variable_list=variable_list,
             comparison_grid_names=comparison_grid_names,
-            seasons=seasons)
-
+            seasons=seasons,
+            polarclass = polarclass,
+            riskindexvalue=riskindexvalue,
+            h_to_typeofice=h_to_typeofice)
+        
         self.add_subtask(remap_climatology_subtask)
 
         for season in seasons:
@@ -120,9 +159,12 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
                     field_name = field_name
                     diff_title_label = 'Main - Control'
 
-                image_caption = f'{season} Climatology Map of ' \
-                                f'{hemisphere_long}-Hemisphere Risk Index Outcome'
-                gallery_group = f'{hemisphere_long}-Hemisphere Risk Index Outcome'
+                image_caption = f'Climatology Map of ' \
+                                f'{hemisphere_long}-Hemisphere Risk Index Outcome, ' \
+                                f'{IceClassLabels[polarclass]}'
+                gallery_group = f'{hemisphere_long}-Hemisphere Risk Index Outcome, ' \
+                                f'{IceClassLabels[polarclass]}'
+
                 # make a new subtask for this season and comparison grid
                 subtask = PlotClimatologyMapSubtask(
                     parentTask=self, season=season,
@@ -132,8 +174,10 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
                     controlConfig=control_config)
 
                 subtask.set_plot_info(
-                    outFileLabel=f'risk_index_outcome{hemisphere}',
-                    fieldNameInTitle='Risk Index Outcome',
+                    outFileLabel=f'risk_index_outcome{hemisphere}_' \
+                                 f'{redClassLabels[polarclass]}',
+                    fieldNameInTitle=f'Risk Index Outcome, ' \
+                                     f'{IceClassLabels[polarclass]}',
                     mpasFieldName=field_name,
                     refFieldName=field_name,
                     refTitleLabel=ref_title_label,
@@ -144,18 +188,19 @@ class ClimatologyMapRiskIndexOutcome(AnalysisTask):
                     groupSubtitle=None,
                     groupLink=f'{hemisphere.lower()}_rio',
                     galleryName=gallery_name,
-                    extend=None)
+                    extend='min')
 
                 self.add_subtask(subtask)
 
 
 class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
     """
-    A subtask for computing climatologies of risk index outcome from
+    A subtask for computing climatologies of Risk Index Outcome from
     climatologies of sea-ice concentration and thickness.
     """
     def __init__(self, mpas_climatology_task, parent_task, climatology_name,
-                 variable_list, seasons, comparison_grid_names):
+                 variable_list, seasons, comparison_grid_names,
+                 polarclass, riskindexvalue, h_to_typeofice):
 
         """
         Construct the analysis task and adds it as a subtask of the
@@ -180,6 +225,15 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
             climatologies are needed.
         comparison_grid_names : list of {'latlon', 'antarctic'}
             The name(s) of the comparison grid to use for remapping.
+        polarclass : integer
+            Polar Class of vessel for which Risk Index Outcomes are computed 
+        riskindexvalue : list of integers
+            Risk Index Values for a vessel of given Polar Class and type of
+            sea ice (values defined by the International Maritime Organization,
+            IMO).
+        h_to_typeofice: list of reference ice thicknesses
+            Values that establish an equvalence between IMO type of ice 
+            (and age of ice) and ice floe thickness
         """
 
         subtask_name = f'remapMpasClimatology_RiskIndexOutcome'
@@ -191,6 +245,9 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
         self.mpas_climatology_task = mpas_climatology_task
         self.variable_list = variable_list
+        self.polarclass = polarclass
+        self.riskindexvalue = riskindexvalue
+        self.h_to_typeofice = h_to_typeofice
 
     def setup_and_check(self):
         """
@@ -209,7 +266,7 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
     def customize_masked_climatology(self, climatology, season):
         """
-        Compute the risk index outcome from sea-ice concentration and (floe) thickness.
+        Compute the Risk Index Outcome from sea-ice concentration and (floe) thickness.
 
         Parameters
         ----------
@@ -225,76 +282,78 @@ class RemapMpasRiskIndexOutcomeClimatology(RemapMpasClimatologySubtask):
 
         rio = self._compute_risk_index_outcome(climatology)
 
-        climatology['riskIndexOutcome'] = rio
-        climatology.riskIndexOutcome.attrs['units'] = ''
+        climatology['RiskIndexOutcome'] = rio
+        climatology.RiskIndexOutcome.attrs['units'] = ''
         climatology = climatology.drop_vars(self.variable_list)
 
         return climatology
 
     def _compute_risk_index_outcome(self, climatology):
         """
-        Compute the risk index outcome from sea-ice concentration and (floe) thickness,
+        Compute the Risk Index Outcome from sea-ice concentration and (floe) thickness,
         as outlined in the International Maritime Organization (IMO) document.
         (https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html)
         """
+
+        # whether to use sea-ice categories for sea-ice concentration and thickness
+        useIceCategories = self.config.getexpression(self.taskName,
+                                                     'useIceCategories')
+
         ds_restart = xr.open_dataset(self.restartFileName)
         ds_restart = ds_restart.isel(Time=0)
 
+        riv = self.riskindexvalue
+        h2toi = self.h_to_typeofice
+        pc = self.polarclass
+
         # sea-ice concentration conversion from range [0,1] to range [0,10]
         scale_factor = 10
-        # polar class array index should be in the range [0,11], but not checked!
-        pc = self.config.getint(self.taskName, 'polarClass') - 1
 
-# this are labels that should appear in the plot, to indicate the Polar Class of the vessel (included here for the moment)
-#       pic = ["PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "IA Super",\
-#              "IA", "IB", "IC", "Not Ice Strengthened"]
+        if useIceCategories:
+            concentration = climatology['timeMonthly_avg_iceAreaCategory']
+            thickness = climatology['timeMonthly_avg_iceVolumeCategory']
+        else:
+            concentration = climatology['timeMonthly_avg_iceAreaCell']
+            thickness = climatology['timeMonthly_avg_iceVolumeCell']
 
-        # reference floe thicknesses for calculation of Risk Index Values 
-        # (this values were agreed upon by Elizabeth Hunke, Andrew Roberts,
-        # and Gennaro D'Angelo based on literature and IMO description)
-        h_riv = np.array([0.5, 10, 15, 30, 50, 70, 100, 120, 170, 200, 250]) * 0.01 
-        # table of Risk Index Values (defined by IMO)
-        riv = np.array([[ 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 1, 1 ],\
-                        [ 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 1, 0 ],\
-                        [ 3, 3, 3, 3, 2, 2, 2, 2, 2, 1, 0,-1 ],\
-                        [ 3, 3, 3, 3, 2, 2, 2, 2, 1, 0,-1,-2 ],\
-                        [ 3, 3, 3, 3, 2, 2, 1, 1, 0,-1,-2,-2 ],\
-                        [ 3, 2, 2, 2, 2, 1, 1, 0,-1,-2,-3,-3 ],\
-                        [ 3, 2, 2, 2, 1, 1, 0,-1,-2,-3,-3,-3 ],\
-                        [ 3, 2, 2, 2, 2, 1, 0,-1,-2,-3,-4,-4 ],\
-                        [ 3, 2, 2, 2, 1, 0,-1,-2,-3,-4,-5,-5 ],\
-                        [ 3, 2, 2, 1, 0,-1,-2,-3,-4,-5,-6,-6 ],\
-                        [ 3, 2, 1, 0,-1,-2,-3,-4,-5,-6,-7,-8 ],\
-                        [ 3, 1, 0,-1,-2,-3,-4,-5,-6,-7,-8,-8 ]])
+        # remove 1-dimensional coordinates
+        concentration = concentration.squeeze()
+        thickness = thickness.squeeze()
 
-        concentration = climatology['timeMonthly_avg_iceAreaCell']
-        thickness = climatology['timeMonthly_avg_iceVolumeCell']
+        # correct out-of-range values
+        concentration = np.clip(concentration, a_min=0, a_max=1)
+        # compute sea-ice floe thickness (ice thickness averaged
+        # over the fraction of the cell area covered by ice)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            thickness = np.where(concentration > 0,
+                                 np.divide(thickness, concentration), 0)
 
-        # these lines may not be required, but rio should not be used
-        # to check concentration and thickness
-        concentration[np.where(concentration<0.0)] = 0.0
-        concentration[np.where(concentration>1.0)] = 1.0
-        thickness[np.where(concentration==0.0)] = 0.0 
+        # define RIV array and set RIV values according to sea-ice
+        # floe thickness and reference values. There are as many RIV
+        # values as there are cells and ice categories
+        riv_iceCell = np.full_like(thickness, np.nan)
+        for ind in range(len(h2toi)):
+            riv_mask = np.where(thickness >= h2toi[ind])
+            riv_iceCell[riv_mask] = riv[pc, ind]
 
-        # introduce riv array and set values in open water
-        riv_iceCell = np.nan*np.ones(np.shape(thickness))
-        riv_mask = np.where(thickness < h_riv[0])
-        riv_iceCell[riv_mask] = riv[pc, 0]
+        if concentration.ndim > 1:
+            # Risk Index Outcome for multi-category ice. The RIO is derived
+            # as a concentration-weighted sum of RIVs over each ice category
+            siconc = concentration.sum(dim='nCategories')
+            siconc = np.clip(siconc, a_min=0, a_max=1)
+            rio_ow = (1.0 - siconc) * riv[pc, 0]
+            rio_si = concentration * riv_iceCell
+            rio_si = rio_si.sum(dim='nCategories')
+            rio = rio_ow + rio_si
+        else:
+            # Risk Index Outcome for single-category ice. There are only two
+            # terms per cell: one coming from the fraction of the cell covered
+            # by open water and one coming from the fraction covered by sea ice
+            rio = (1.0 - concentration) * riv[pc, 0] + concentration * riv_iceCell
 
-        # set riv values for chosen Polar Class of vessel
-        for ind in range(len(h_riv)-1):
-#           riv_mask = np.logical_and(thickness >= h_riv[ind], thickness < h_riv[ind+1])
-            riv_mask = np.where(thickness >= h_riv[ind])
-            riv_iceCell[riv_mask] = riv[pc, ind+1]
-
-        # set riv for highest floe thickness
-        riv_mask = np.where(thickness >= h_riv[-1])
-        riv_iceCell[riv_mask] = riv[pc, -1]
-
-        # Risk Index Outcome for single-category ice. There are only
-        # two terms per cell: one coming from the fraction of the cell
-        # covered by open water and one coming from the fraction covered
-        # by sea ice (rio <= 30 by IMO definition)
-        rio = scale_factor * ((1.0 - concentration) * riv[pc, 0] + concentration * riv_iceCell)
+        # out-of-range corrections
+        rio = np.clip(rio, a_min=riv[pc, -1], a_max=riv[pc, 0])
+        # re-scaling
+        rio *= scale_factor
 
         return rio
