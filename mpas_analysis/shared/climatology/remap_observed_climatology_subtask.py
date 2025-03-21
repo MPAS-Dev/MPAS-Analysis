@@ -159,8 +159,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
                         stage='climatology',
                         season=season,
                         comparisonGridName=comparisonGridName)
-                    if 'month' in ds.variables.keys() and \
-                            'year' in ds.variables.keys():
+                    if 'month' in ds.coords and 'year' in ds.coords:
                         # this data set is not yet a climatology, so compute
                         # the climatology
                         monthValues = constants.monthDictionary[season]
@@ -171,7 +170,8 @@ class RemapObservedClimatologySubtask(AnalysisTask):
                         # climatology so assume this already is one
                         seasonalClimatology = ds
 
-                    write_netcdf_with_fill(seasonalClimatology, climatologyFileName)
+                    write_netcdf_with_fill(seasonalClimatology,
+                                           climatologyFileName)
 
                     remapper = self.remappers[comparisonGridName]
 

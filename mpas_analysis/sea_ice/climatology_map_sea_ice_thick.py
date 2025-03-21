@@ -138,7 +138,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
 
                 imageCaption = \
                     f'Climatology Map of {hemisphereLong}-Hemisphere ' \
-                    f'Sea-Ice Thickness.'
+                    f'Cell-Averaged Sea-Ice Thickness.'
                 galleryGroup = \
                     f'{hemisphereLong}-Hemisphere Sea-Ice Thickness'
                 # make a new subtask for this season and comparison grid
@@ -166,7 +166,8 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
                     groupLink=f'{hemisphere.lower()}_thick',
                     galleryName=galleryName,
                     maskMinThreshold=0,
-                    extend='neither')
+                    extend='neither',
+                    prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
 

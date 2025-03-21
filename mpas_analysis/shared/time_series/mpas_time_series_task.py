@@ -11,7 +11,7 @@
 
 import os
 import subprocess
-from distutils.spawn import find_executable
+import shutil
 import xarray as xr
 import numpy
 
@@ -203,7 +203,8 @@ class MpasTimeSeriesTask(AnalysisTask):
 
         self.inputFiles = sorted(self.inputFiles)
 
-        with xr.open_dataset(self.inputFiles[0]) as ds:
+        with xr.open_dataset(self.inputFiles[0],
+                             decode_timedelta=False) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
     def run_task(self):
@@ -237,7 +238,7 @@ class MpasTimeSeriesTask(AnalysisTask):
         Xylar Asay-Davis
         """
 
-        if find_executable('ncrcat') is None:
+        if shutil.which('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '
                           'package is installed: \n'
                           'conda install nco\n'

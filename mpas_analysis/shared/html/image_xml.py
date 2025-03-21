@@ -9,11 +9,13 @@
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
+import datetime
 import os
-import sys
 import socket
 import subprocess
-import datetime
+import sys
+from pathlib import Path
+
 from lxml import etree
 from PIL import Image
 
@@ -196,12 +198,21 @@ def _generate_thumbnails(imageFileName, directory):
     fixedWidth = 480
     fixedHeight = 360
 
-    image = Image.open('{}/{}'.format(directory, imageFileName))
-    thumbnailDir = '{}/thumbnails'.format(directory)
+    # more vertical than horizontal
+    aspectRatioThreshold = 0.75
+
+    directory = Path(directory)
+
+    image = Image.open(directory / imageFileName)
+    image = image.convert('RGB')
+    thumbnailDir = directory / 'thumbnails'
+    thumbnailFilename = Path(imageFileName).with_suffix('.jpg')
+    fixedFilename = f'fixed_{str(thumbnailFilename)}'
 
     imageSize = image.size
+    aspectRatio = imageSize[0] / float(imageSize[1])
 
-    if imageSize[0] < imageSize[1]:
+    if aspectRatio < aspectRatioThreshold:
         orientation = 'vert'
         thumbnailHeight = 320
     else:
@@ -212,7 +223,8 @@ def _generate_thumbnails(imageFileName, directory):
     factor = image.size[1] / float(thumbnailHeight)
     thumbnailSize = [int(dim / factor + 0.5) for dim in image.size]
     thumbnail = image.resize(thumbnailSize, Image.LANCZOS)
-    thumbnail.save('{}/{}'.format(thumbnailDir, imageFileName))
+
+    thumbnail.save(thumbnailDir / thumbnailFilename)
 
     # second, make a thumbnail with a fixed size
     widthFactor = image.size[0] / float(fixedWidth)
@@ -233,7 +245,7 @@ def _generate_thumbnails(imageFileName, directory):
         # crop out the left side of the thubnail
         thumbnail = thumbnail.crop([0, 0, fixedWidth, fixedHeight])
 
-    thumbnail.save('{}/fixed_{}'.format(thumbnailDir, imageFileName))
+    thumbnail.save(thumbnailDir / fixedFilename)
 
     return imageSize, thumbnailSize, orientation
 

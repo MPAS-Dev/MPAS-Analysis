@@ -17,20 +17,15 @@ from geometric_features import FeatureCollection, read_feature_collection
 from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.shared.analysis_task import AnalysisTask
-
+from mpas_analysis.shared.constants import constants
+from mpas_analysis.shared.html import write_image_xml
+from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
+from mpas_analysis.shared.io.utility import build_config_full_path, \
+    build_obs_path, get_files_year_month, decode_strings
 from mpas_analysis.shared.plot import timeseries_analysis_plot, savefig, \
     add_inset
-
-from mpas_analysis.shared.io import open_mpas_dataset, write_netcdf_with_fill
-
-from mpas_analysis.shared.io.utility import build_config_full_path, \
-    build_obs_path, get_files_year_month, decode_strings, get_region_mask
-
-from mpas_analysis.shared.html import write_image_xml
-
+from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
 from mpas_analysis.ocean.utility import compute_zmid
-
-from mpas_analysis.shared.constants import constants
 
 
 class TimeSeriesOceanRegions(AnalysisTask):
@@ -74,6 +69,7 @@ class TimeSeriesOceanRegions(AnalysisTask):
 
         regionGroups = config.getexpression(self.taskName, 'regionGroups')
 
+        woaFilename = 'WOA23/woa23_decav_04_pt_s_mon_ann.20241101.nc'
         obsDicts = {
             'SOSE': {
                 'suffix': 'SOSE',
@@ -94,21 +90,21 @@ class TimeSeriesOceanRegions(AnalysisTask):
                 'zVar': 'z',
                 'tDim': 'Time',
                 'legend': 'SOSE 2005-2010 ANN mean'},
-            'WOA18': {
-                'suffix': 'WOA18',
+            'WOA23': {
+                'suffix': 'WOA23',
                 'gridName': 'Global_0.25x0.25degree',
-                'gridFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'TFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
-                'SFileName': 'WOA18/woa18_decav_04_TS_mon_20190829.nc',
+                'gridFileName': woaFilename,
+                'TFileName': woaFilename,
+                'SFileName': woaFilename,
                 'volFileName': None,
                 'lonVar': 'lon',
                 'latVar': 'lat',
-                'TVar': 't_an',
+                'TVar': 'pt_an',
                 'SVar': 's_an',
                 'volVar': 'volume',
                 'zVar': 'depth',
-                'tDim': 'month',
-                'legend': 'WOA18 1955-2017 ANN mean'}}
+                'tDim': 'time',
+                'legend': 'WOA23 1991-2020 ANN mean'}}
 
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
@@ -185,7 +181,8 @@ class TimeSeriesOceanRegions(AnalysisTask):
                     localObsDict = dict(groupObsDicts[obsName])
 
                     obsSubtask = ComputeObsRegionalTimeSeriesSubtask(
-                        self, regionGroup, regionName, fullSuffix, localObsDict)
+                        self, regionGroup, regionName, fullSuffix,
+                        localObsDict)
                     obsSubtasks[obsName] = obsSubtask
 
                 plotRegionSubtask = PlotRegionTimeSeriesSubtask(
@@ -263,8 +260,9 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
         # Xylar Asay-Davis
 
         config = self.config
+        logger = self.logger
 
-        self.logger.info("\nCompute depth mask for regional means...")
+        logger.info("\nCompute depth mask for regional means...")
 
         regionGroup = self.regionGroup
         sectionSuffix = regionGroup[0].upper() + \
@@ -284,7 +282,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
                                                    timeSeriesName)
 
         if os.path.exists(outFileName):
-            self.logger.info('  Mask file exists -- Done.')
+            logger.info('  Mask file exists -- Done.')
             return
 
         # Load mesh related variables
@@ -332,8 +330,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
 
         datasets = []
         for regionIndex in range(nRegions):
-            self.logger.info('    region: {}'.format(
-                self.regionNames[regionIndex]))
+            logger.info(f'    region: {self.regionNames[regionIndex]}')
             dsRegion = dsRegionMask.isel(nRegions=regionIndex)
             cellMask = dsRegion.regionCellMasks == 1
 
@@ -341,8 +338,8 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
                 cellMask = numpy.logical_and(cellMask, openOceanMask)
 
             totalArea = areaCell.where(cellMask).sum()
-            self.logger.info('      totalArea: {} mil. km^2'.format(
-                1e-12 * totalArea.values))
+            logger.info(
+                f'      totalArea: {1e-12 * totalArea.values} mil. km^2')
 
             if config_zmin is None:
                 if 'zminRegions' in dsRegion:
@@ -479,8 +476,9 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
         # Xylar Asay-Davis
 
         config = self.config
+        logger = self.logger
 
-        self.logger.info("\nCompute time series of regional means...")
+        logger.info("\nCompute time series of regional means...")
 
         startDate = '{:04d}-01-01_00:00:00'.format(self.startYear)
         endDate = '{:04d}-12-31_23:59:59'.format(self.endYear)
@@ -510,19 +508,14 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        variables = config.getexpression(sectionName, 'variables')
+        variables = _get_variables_list(config, sectionName)
 
         variableList = {'timeMonthly_avg_layerThickness'}
 
         for var in variables:
             mpas_var = var['mpas']
-            if mpas_var == 'none':
-                continue
-            if isinstance(mpas_var, (list, tuple)):
-                for v in mpas_var:
-                    variableList.add(v)
-            else:
-                variableList.add(mpas_var)
+            for v in mpas_var:
+                variableList.add(v)
 
         outputExists = os.path.exists(outFileName)
         outputValid = outputExists
@@ -544,11 +537,11 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                         break
 
         if outputValid:
-            self.logger.info('  Time series exists -- Done.')
+            logger.info('  Time series exists -- Done.')
             return
 
-        regionMaskFileName = '{}/depthMasks_{}.nc'.format(outputDirectory,
-                                                          timeSeriesName)
+        regionMaskFileName = \
+            f'{outputDirectory}/depthMasks_{timeSeriesName}.nc'
         dsRegionMask = xarray.open_dataset(regionMaskFileName)
         nRegions = dsRegionMask.sizes['nRegions']
         areaCell = dsRegionMask.areaCell
@@ -556,7 +549,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
         datasets = []
         nTime = len(inputFiles)
         for tIndex in range(nTime):
-            self.logger.info('  {}/{}'.format(tIndex + 1, nTime))
+            logger.info(f'  {tIndex + 1}/{nTime}')
 
             dsIn = open_mpas_dataset(
                 fileName=inputFiles[tIndex],
@@ -570,8 +563,7 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
 
             innerDatasets = []
             for regionIndex in range(nRegions):
-                self.logger.info('    region: {}'.format(
-                    self.regionNames[regionIndex]))
+                logger.info(f'    region: {self.regionNames[regionIndex]}')
                 dsRegion = dsRegionMask.isel(nRegions=regionIndex)
                 dsRegion.load()
                 cellMask = dsRegion.cellMask
@@ -583,8 +575,8 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                 volCell = (localArea*localThickness).where(depthMask)
                 volCell = volCell.transpose('nCells', 'nVertLevels')
                 totalVol = volCell.sum(dim='nVertLevels').sum(dim='nCells')
-                self.logger.info('      totalVol (mil. km^3): {}'.format(
-                    1e-15*totalVol.values))
+                logger.info(
+                    f'      totalVol (mil. km^3): {1e-15*totalVol.values}')
 
                 dsOut = xarray.Dataset()
                 dsOut['totalVol'] = totalVol
@@ -592,14 +584,23 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
 
                 for var in variables:
                     outName = var['name']
-                    self.logger.info('      {}'.format(outName))
+                    logger.info(f'      {outName}')
+                    integrated = False
                     if outName == 'thermalForcing':
                         timeSeries = self._add_thermal_forcing(dsIn, cellMask)
                         units = 'degrees Celsius'
                         description = 'potential temperature minus the ' \
                                       'potential freezing temperature'
+                    elif outName == 'oceanHeatContent':
+                        timeSeries = self._add_ohc(dsIn, cellMask)
+                        units = '10^22 J'
+                        description = 'ocean heat content'
+                        integrated = True
                     else:
-                        mpasVarName = var['mpas']
+                        mpasVarNames = var['mpas']
+                        assert len(mpasVarNames) == 1
+                        mpasVarName = mpasVarNames[0]
+
                         timeSeries = \
                             dsIn[mpasVarName].where(cellMask, drop=True)
                         units = timeSeries.units
@@ -609,16 +610,20 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
                     if is3d:
                         timeSeries = \
                             (volCell*timeSeries.where(depthMask)).sum(
-                                dim='nVertLevels').sum(dim='nCells') / totalVol
+                                dim='nVertLevels').sum(dim='nCells')
+                        if not integrated:
+                            timeSeries = timeSeries / totalVol
                     else:
                         timeSeries = \
-                            (localArea*timeSeries).sum(
-                                dim='nCells') / totalArea
+                            (localArea*timeSeries).sum(dim='nCells')
+                        if not integrated:
+                            timeSeries = timeSeries / totalArea
 
                     dsOut[outName] = timeSeries
                     dsOut[outName].attrs['units'] = units
                     dsOut[outName].attrs['description'] = description
                     dsOut[outName].attrs['is3d'] = str(is3d)
+                    dsOut[outName].attrs['integrated'] = str(integrated)
 
                 innerDatasets.append(dsOut)
 
@@ -671,6 +676,27 @@ class ComputeRegionTimeSeriesSubtask(AnalysisTask):
         timeSeries = temp - tempFreeze
 
         return timeSeries
+
+    def _add_ohc(self, dsIn, cellMask):
+        """ compute the ocean heat content """
+
+        vars = ['timeMonthly_avg_activeTracers_temperature',
+                'timeMonthly_avg_layerThickness']
+        ds = dsIn[vars].where(cellMask, drop=True)
+
+        # specific heat [J/(kg*degC)]
+        cp = self.namelist.getfloat('config_specific_heat_sea_water')
+        # [kg/m3]
+        rho = self.namelist.getfloat('config_density0')
+
+        temp = ds.timeMonthly_avg_activeTracers_temperature
+        thick = ds.timeMonthly_avg_layerThickness
+
+        units_scale_factor = 1e-22
+
+        ohc = units_scale_factor * rho * cp * thick * temp
+
+        return ohc
 
 
 class CombineRegionalProfileTimeSeriesSubtask(AnalysisTask):
@@ -828,8 +854,8 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        self.logger.info("\nAveraging T and S for {}...".format(
-            self.regionName))
+        logger = self.logger
+        logger.info(f"\nAveraging T and S for {self.regionName}...")
 
         obsDict = self.obsDict
         config = self.config
@@ -839,20 +865,19 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
 
         sectionSuffix = regionGroup[0].upper() + \
             regionGroup[1:].replace(' ', '')
-        sectionName = 'timeSeries{}'.format(sectionSuffix)
+        sectionName = f'timeSeries{sectionSuffix}'
 
-        outputDirectory = '{}/{}/'.format(
-            build_config_full_path(self.config, 'output',
-                                   'timeseriesSubdirectory'),
-            timeSeriesName)
+        baseDir = build_config_full_path(self.config, 'output',
+                                         'timeseriesSubdirectory')
+        outputDirectory = f'{baseDir}/{timeSeriesName}/'
 
         try:
             os.makedirs(outputDirectory)
         except OSError:
             pass
 
-        outFileName = '{}/TS_{}_{}.nc'.format(
-            outputDirectory, obsDict['suffix'], self.prefix)
+        outFileName = \
+            f"{outputDirectory}/TS_{obsDict['suffix']}_{self.prefix}.nc"
 
         if os.path.exists(outFileName):
             return
@@ -868,7 +893,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         dsRegionMask = dsRegionMask.reset_index('nCells').drop_vars(
             [obsDict['latVar'], obsDict['lonVar']])
         if 'nCells' in dsRegionMask.data_vars:
-            dsRegionMaks = dsRegionMask.drop_vars(['nCells'])
+            dsRegionMask = dsRegionMask.drop_vars(['nCells'])
 
         maskRegionNames = decode_strings(dsRegionMask.regionNames)
         regionIndex = maskRegionNames.index(self.regionName)
@@ -914,20 +939,20 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
         obsFileName = build_obs_path(
             config, component=self.componentName,
             relativePath=obsDict['TFileName'])
-        self.logger.info('  Reading from {}...'.format(obsFileName))
+        logger.info(f'  Reading from {obsFileName}...')
 
         ds = xarray.open_dataset(obsFileName)
         if obsDict['SFileName'] != obsDict['TFileName']:
             obsFileName = build_obs_path(
                 config, component=self.componentName,
                 relativePath=obsDict['SFileName'])
-            self.logger.info('  Reading from {}...'.format(obsFileName))
+            logger.info(f'  Reading from {obsFileName}...')
             dsS = xarray.open_dataset(obsFileName)
             ds[SVarName] = dsS[SVarName]
 
         if obsDict['volFileName'] is None:
             # compute volume from lat, lon, depth bounds
-            self.logger.info('  Computing volume...'.format(obsFileName))
+            logger.info('  Computing volume...')
             latBndsName = ds[latVarName].attrs['bounds']
             lonBndsName = ds[lonVarName].attrs['bounds']
             zBndsName = ds[zVarName].attrs['bounds']
@@ -938,7 +963,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             dLon = numpy.deg2rad(lonBnds[:, 1] - lonBnds[:, 0])
             lat = numpy.deg2rad(ds[latVarName])
             dz = zBnds[:, 1] - zBnds[:, 0]
-            radius = 6378137.0
+            radius = cime_constants['SHR_CONST_REARTH']
             area = radius**2*numpy.cos(lat)*dLat*dLon
             volume = dz*area
             ds[volVarName] = volume
@@ -947,7 +972,7 @@ class ComputeObsRegionalTimeSeriesSubtask(AnalysisTask):
             obsFileName = build_obs_path(
                 config, component=self.componentName,
                 relativePath=obsDict['volFileName'])
-            self.logger.info('  Reading from {}...'.format(obsFileName))
+            logger.info(f'  Reading from {obsFileName}...')
             dsVol = xarray.open_dataset(obsFileName)
             ds[volVarName] = dsVol[volVarName]
 
@@ -1105,8 +1130,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         #   self.calendar
         super(PlotRegionTimeSeriesSubtask, self).setup_and_check()
 
-        self.variables = self.config.getexpression(self.sectionName,
-                                                   'variables')
+        self.variables = _get_variables_list(self.config, self.sectionName)
 
         self.xmlFileNames = []
         for var in self.variables:
@@ -1122,19 +1146,23 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        self.logger.info("\nPlotting time series of ocean properties of {}"
-                         "...".format(self.regionName))
+        regionName = self.regionName
+        logger = self.logger
 
-        self.logger.info('  Load time series...')
+        logger.info(f"\nPlotting time series of ocean properties of "
+                    f"{regionName}...")
+
+        logger.info('  Load time series...')
 
         config = self.config
         calendar = self.calendar
+        movingAveragePoints = 1
 
         fcAll = read_feature_collection(self.geojsonFileName)
 
         fc = FeatureCollection()
         for feature in fcAll.features:
-            if feature['properties']['name'] == self.regionName:
+            if feature['properties']['name'] == regionName:
                 fc.add_feature(feature)
                 break
 
@@ -1146,10 +1174,35 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionGroup = self.regionGroup
         timeSeriesName = regionGroup.replace(' ', '')
 
-        inFileName = '{}/{}/{}_{:04d}-{:04d}.nc'.format(
-            baseDirectory, timeSeriesName, timeSeriesName, startYear, endYear)
+        inFileName = os.path.join(
+            baseDirectory,
+            timeSeriesName,
+            f'{timeSeriesName}_{startYear:04d}-{endYear:04d}.nc')
+
+        maxTitleLength = config.getint('timeSeriesOceanRegions',
+                                       'maxTitleLength')
+
+        sectionName = self.sectionName
+
+        anomalyVars = config.getexpression(sectionName, 'anomalies')
 
         dsIn = xarray.open_dataset(inFileName).isel(nRegions=self.regionIndex)
+
+        dsStart = None
+        dsStartRef = None
+        if len(anomalyVars) > 0:
+            anomalyRefYear = get_anomaly_ref_year(config, self.runStreams)
+            if anomalyRefYear < startYear or anomalyRefYear > endYear:
+                raise ValueError(f'Cannot plot anomalies with respect to a '
+                                 f'year {anomalyRefYear:04d} not in the time '
+                                 f'series {startYear:04d}-{endYear:04d}.')
+            anomalyRefFileName = os.path.join(
+                baseDirectory,
+                timeSeriesName,
+                f'{timeSeriesName}_{anomalyRefYear:04d}-'
+                f'{anomalyRefYear:04d}.nc')
+            dsStart = xarray.open_dataset(anomalyRefFileName).isel(
+                nRegions=self.regionIndex)
 
         zbounds = dsIn.zbounds.values
 
@@ -1163,39 +1216,68 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             startYear = controlConfig.getint('timeSeries', 'startYear')
             endYear = controlConfig.getint('timeSeries', 'endYear')
 
-            inFileName = '{}/{}/{}_{:04d}-{:04d}.nc'.format(
-                baseDirectory, timeSeriesName, timeSeriesName, startYear,
-                endYear)
+            inFileName = os.path.join(
+                baseDirectory,
+                timeSeriesName,
+                f'{timeSeriesName}_{startYear:04d}-{endYear:04d}.nc')
+
             dsRef = xarray.open_dataset(inFileName).isel(
                 nRegions=self.regionIndex)
 
             zboundsRef = dsRef.zbounds.values
 
-        mainRunName = config.get('runs', 'mainRunName')
-        movingAveragePoints = 1
+            if len(anomalyVars) > 0:
+                anomalyRefYear = get_anomaly_ref_year(controlConfig,
+                                                      self.runStreams)
+                anomalyRefFileName = os.path.join(
+                    baseDirectory,
+                    timeSeriesName,
+                    f'{timeSeriesName}_{anomalyRefYear:04d}-'
+                    f'{anomalyRefYear:04d}.nc')
+                dsStartRef = xarray.open_dataset(anomalyRefFileName).isel(
+                    nRegions=self.regionIndex)
 
-        self.logger.info('  Make plots...')
+        mainRunName = config.get('runs', 'mainRunName')
+
+        logger.info('  Make plots...')
 
         groupLink = self.regionGroup.replace(' ', '')
 
         for var in self.variables:
             varName = var['name']
             mainArray = dsIn[varName]
+            anomaly = varName in anomalyVars
+
+            varTitle = var['title']
+            varUnits = var['units']
+
             is3d = mainArray.attrs['is3d'] == 'True'
+            integrated = mainArray.attrs['integrated'] == 'True'
+            if anomaly:
+                mainArray = mainArray - dsStart[varName].isel(Time=0)
+                varTitle = f'{varTitle} Anomaly'
+
             if is3d:
-                title = 'Volume-Mean {} in {}'.format(
-                    var['title'],  self.regionName)
+                volArea = 'Volume'
             else:
-                title = 'Area-Mean {} in {}'.format(var['title'],
-                                                    self.regionName)
+                volArea = 'Area'
+
+            if integrated:
+                meanInteg = 'Integrated'
+            else:
+                meanInteg = 'Mean'
+            title = f'{volArea}-{meanInteg} {varTitle} in {regionName}'
 
             if plotControl:
                 refArray = dsRef[varName]
+                if anomaly:
+                    refArray = refArray - dsStartRef[varName].isel(Time=0)
             xLabel = 'Time (yr)'
-            yLabel = '{} ({})'.format(var['title'], var['units'])
+            yLabel = f'{varTitle} ({varUnits})'
 
-            filePrefix = '{}_{}'.format(self.prefix, varName)
-            outFileName = '{}/{}.png'.format(self.plotsDirectory, filePrefix)
+            filePrefix = f'{self.prefix}_{varName}'
+            outFileName = os.path.join(self.plotsDirectory,
+                                       f'{filePrefix}.png')
 
             fields = [mainArray]
             lineColors = [config.get('timeSeries', 'mainColor')]
@@ -1207,9 +1289,9 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 lineWidths.append(1.2)
                 legendText.append(controlRunName)
 
-            if varName in ['temperature', 'salinity']:
+            if varName in ['temperature', 'salinity'] and not anomaly:
                 obsColors = [
-                    config.get('timeSeries', 'obsColor{}'.format(index + 1))
+                    config.get('timeSeries', f'obsColor{index + 1}')
                     for index in range(5)]
                 daysInMonth = constants.daysInMonth
                 for obsName in self.obsSubtasks:
@@ -1235,15 +1317,12 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             if is3d:
                 if not plotControl or numpy.all(zbounds == zboundsRef):
-                    title = '{} ({} < z < {} m)'.format(title, zbounds[0],
-                                                        zbounds[1])
+                    title = f'{title} ({zbounds[0]} < z < {zbounds[1]} m)'
                 else:
-                    legendText[0] = '{} ({} < z < {} m)'.format(
-                        legendText[0], zbounds[0], zbounds[1])
-                    legendText[1] = '{} ({} < z < {} m)'.format(
-                        legendText[1], zboundsRef[0], zboundsRef[1])
-
-            sectionName = self.sectionName
+                    legendText[0] = \
+                        f'{legendText[0]} ({zbounds[0]} < z < {zbounds[1]} m)'
+                    legendText[1] = \
+                        f'{legendText[1]} ({zbounds[0]} < z < {zbounds[1]} m)'
             if config.has_option(sectionName, 'titleFontSize'):
                 titleFontSize = config.getint(sectionName, 'titleFontSize')
             else:
@@ -1259,7 +1338,8 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
                 ylabel=yLabel, movingAveragePoints=movingAveragePoints,
                 lineColors=lineColors, lineWidths=lineWidths,
                 legendText=legendText, titleFontSize=titleFontSize,
-                defaultFontSize=defaultFontSize)
+                defaultFontSize=defaultFontSize,
+                maxTitleLength=maxTitleLength)
 
             # do this before the inset because otherwise it moves the inset
             # and cartopy doesn't play too well with tight_layout anyway
@@ -1269,15 +1349,56 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
 
             savefig(outFileName, config, tight=False)
 
-            caption = 'Regional mean of {}'.format(title)
+            caption = f'Regional {title}'
+
             write_image_xml(
                 config=config,
                 filePrefix=filePrefix,
                 componentName='Ocean',
                 componentSubdirectory='ocean',
-                galleryGroup='{} Time Series'.format(self.regionGroup),
+                galleryGroup=f'{self.regionGroup} Time Series',
                 groupLink=groupLink,
-                gallery=var['title'],
-                thumbnailDescription=self.regionName,
+                gallery=varTitle,
+                thumbnailDescription=regionName,
                 imageDescription=caption,
                 imageCaption=caption)
+
+
+def _get_variables_list(config, sectionName):
+    """
+    Get a list of dict of variables for the given region
+    """
+    availableVariables = config.getexpression('timeSeriesOceanRegions',
+                                              'availableVariables')
+
+    variableList = config.getexpression(sectionName, 'variables')
+
+    variables = []
+
+    for varName in variableList:
+        found = False
+        for var in availableVariables:
+            if varName == var['name']:
+                found = True
+                break
+        if not found:
+            raise ValueError(f'Did not find {varName} in config option '
+                             f'availableVariables in '
+                             f'[timeSeriesOceanRegions]')
+        variables.append(var)
+
+    return variables
+
+
+def get_anomaly_ref_year(config, runStreams):
+    """
+    Get the reference year for anomalies
+    """
+
+    if config.has_option('timeSeries', 'anomalyRefYear'):
+        anomalyYear = config.getint('timeSeries', 'anomalyRefYear')
+    else:
+        anomalyRefDate = get_simulation_start_time(runStreams)
+        anomalyYear = int(anomalyRefDate[0:4])
+
+    return anomalyYear

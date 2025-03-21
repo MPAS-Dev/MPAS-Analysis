@@ -30,8 +30,8 @@ from mpas_analysis.shared.io import write_netcdf_with_fill
 
 class SoseTransects(AnalysisTask):
     """
-    Plot model output at WOCE transects and compare it against WOCE
-    observations
+    Plot model output at transects and various longitudes around Antarctica,
+    compared against SOSE
     """
 
     # Authors
@@ -287,7 +287,7 @@ class SoseTransectsObservations(TransectsObservations):
 
     def combine_observations(self):
         """
-        Combine SOSE oservations into a single file
+        Combine SOSE observations into a single file
         """
         # Authors
         # -------

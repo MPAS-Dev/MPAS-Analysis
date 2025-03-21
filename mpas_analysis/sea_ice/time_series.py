@@ -107,7 +107,8 @@ class TimeSeriesSeaIce(AnalysisTask):
         self.endDate = self.config.get('timeSeries', 'endDate')
 
         self.variableList = ['timeMonthly_avg_iceAreaCell',
-                             'timeMonthly_avg_iceVolumeCell']
+                             'timeMonthly_avg_iceVolumeCell',
+                             'timeMonthly_avg_snowVolumeCell']
         self.mpasTimeSeriesTask.add_variables(variableList=self.variableList)
 
         self.inputFile = self.mpasTimeSeriesTask.outputFile
@@ -156,7 +157,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         if (not compareWithObservations and
                 preprocessedReferenceRunName == 'None'):
-            for variableName in ['iceArea', 'iceVolume']:
+            for variableName in ['iceArea', 'iceVolume', 'snowVolume']:
                 filePrefix = '{}.{}'.format(mainRunName,
                                             variableName)
 
@@ -167,7 +168,7 @@ class TimeSeriesSeaIce(AnalysisTask):
         else:
 
             for hemisphere in ['NH', 'SH']:
-                for variableName in ['iceArea', 'iceVolume']:
+                for variableName in ['iceArea', 'iceVolume', 'snowVolume']:
                     filePrefix = '{}{}_{}'.format(variableName,
                                                   hemisphere,
                                                   mainRunName)
@@ -198,11 +199,15 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         plotTitles = {'iceArea': 'Sea-ice area',
                       'iceVolume': 'Sea-ice volume',
-                      'iceThickness': 'Sea-ice mean thickness'}
+                      'snowVolume': 'Snow volume',
+                      'iceThickness': 'Sea-ice mean thickness',
+                      'snowDepth': 'Snow mean depth'}
 
         units = {'iceArea': '[km$^2$]',
                  'iceVolume': '[10$^3$ km$^3$]',
-                 'iceThickness': '[m]'}
+                 'snowVolume': '[10$^3$ km$^3$]',
+                 'iceThickness': '[m]',
+                 'snowDepth': '[m]'}
 
         obsFileNames = {
             'iceArea': {'NH': build_obs_path(
@@ -220,6 +225,14 @@ class TimeSeriesSeaIce(AnalysisTask):
                 'SH': build_obs_path(
                 config, 'seaIce',
                 relativePathOption='volSH',
+                relativePathSection=sectionName)},
+            'snowVolume': {'NH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='snowNH',
+                relativePathSection=sectionName),
+                'SH': build_obs_path(
+                config, 'seaIce',
+                relativePathOption='snowSH',
                 relativePathSection=sectionName)}}
 
         # Some plotting rules
@@ -284,6 +297,27 @@ class TimeSeriesSeaIce(AnalysisTask):
                                     'plotted.')
                 preprocessedReferenceRunName = 'None'
 
+            inFilesPreprocessed = '{}/snowvol.{}.year*.nc'.format(
+                preprocessedReferenceDirectory, preprocessedReferenceRunName)
+            outFileName = '{}/snowVolume.nc'.format(outFolder)
+
+            combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                            outFileName,
+                                            logger=self.logger)
+            dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                               calendar=calendar,
+                                               timeVariableNames='xtime')
+            preprocessedYearEnd = days_to_datetime(dsPreprocessed.Time.max(),
+                                                   calendar=calendar).year
+            if yearStart <= preprocessedYearEnd:
+                dsPreprocessedTimeSlice = \
+                    dsPreprocessed.sel(Time=slice(timeStart, timeEnd))
+            else:
+                self.logger.warning('Preprocessed time series ends before the '
+                                    'timeSeries startYear and will not be '
+                                    'plotted.')
+                preprocessedReferenceRunName = 'None'
+
         if self.controlConfig is not None:
 
             dsTimeSeriesRef = {}
@@ -300,7 +334,9 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         norm = {'iceArea': 1e-6,  # m^2 to km^2
                 'iceVolume': 1e-12,  # m^3 to 10^3 km^3
-                'iceThickness': 1.}
+                'snowVolume': 1e-12,  # m^3 to 10^3 km^3
+                'iceThickness': 1.,
+                'snowDepth': 1.}
 
         xLabel = 'Time [years]'
 
@@ -320,7 +356,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
             self.logger.info('  Make {} plots...'.format(hemisphere))
 
-            for variableName in ['iceArea', 'iceVolume']:
+            for variableName in ['iceArea', 'iceVolume', 'snowVolume']:
                 key = (hemisphere, variableName)
 
                 # apply the norm to each variable
@@ -350,7 +386,7 @@ class TimeSeriesSeaIce(AnalysisTask):
                     obsLegend[key] = 'PIOMAS, annual cycle (blue)'
 
             if preprocessedReferenceRunName != 'None':
-                for variableName in ['iceArea', 'iceVolume']:
+                for variableName in ['iceArea', 'iceVolume', 'snowVolume']:
                     key = (hemisphere, variableName)
 
             if compareWithObservations:
@@ -384,6 +420,9 @@ class TimeSeriesSeaIce(AnalysisTask):
                                                      calendar)
                 else:
                     obs[key] = None
+
+                key = (hemisphere, 'snowVolume')
+                obs[key] = None
 
             if preprocessedReferenceRunName != 'None':
                 outFolder = '{}/preprocessed'.format(outputDirectory)
@@ -422,7 +461,24 @@ class TimeSeriesSeaIce(AnalysisTask):
                 preprocessed[key] = dsPreprocessedTimeSlice[
                     'icevolume_{}'.format(hemisphere.lower())]
 
-            for variableName in ['iceArea', 'iceVolume']:
+                inFilesPreprocessed = '{}/snowvol.{}.year*.nc'.format(
+                    preprocessedReferenceDirectory,
+                    preprocessedReferenceRunName)
+                outFileName = '{}/snowVolume.nc'.format(outFolder)
+
+                combine_time_series_with_ncrcat(inFilesPreprocessed,
+                                                outFileName,
+                                                logger=self.logger)
+                dsPreprocessed = open_mpas_dataset(fileName=outFileName,
+                                                   calendar=calendar,
+                                                   timeVariableNames='xtime')
+                dsPreprocessedTimeSlice = dsPreprocessed.sel(
+                    Time=slice(timeStart, timeEnd))
+                key = (hemisphere, 'snowVolume')
+                preprocessed[key] = dsPreprocessedTimeSlice[
+                    'snowvolume_{}'.format(hemisphere.lower())]
+
+            for variableName in ['iceArea', 'iceVolume', 'snowVolume']:
                 key = (hemisphere, variableName)
                 dsvalues = [plotVars[key]]
                 legendText = [mainRunName]
@@ -623,7 +679,8 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         ds = ds.rename(
             {'timeMonthly_avg_iceAreaCell': 'iceConc',
-                'timeMonthly_avg_iceVolumeCell': 'iceThick'})
+                'timeMonthly_avg_iceVolumeCell': 'iceThick',
+                'timeMonthly_avg_snowVolumeCell': 'snowDepth'})
 
         nTime = ds.sizes['Time']
         # chunk into 10-year seguments so we don't run out of memory
@@ -644,9 +701,12 @@ class TimeSeriesSeaIce(AnalysisTask):
             dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
                 {'iceConc': 'iceArea',
-                 'iceThick': 'iceVolume'})
+                 'iceThick': 'iceVolume',
+                 'snowDepth': 'snowVolume'})
             dsAreaSum['iceThickness'] = (dsAreaSum.iceVolume /
                                          dsMesh.areaCell.sum('nCells'))
+            dsAreaSum['snowDepth'] = (dsAreaSum.snowVolume /
+                                      dsMesh.areaCell.sum('nCells'))
 
             dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
             dsAreaSum['iceArea'].attrs['description'] = \
@@ -654,9 +714,15 @@ class TimeSeriesSeaIce(AnalysisTask):
             dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
             dsAreaSum['iceVolume'].attrs['description'] = \
                 f'Total {hemisphere} sea ice volume'
+            dsAreaSum['snowVolume'].attrs['units'] = 'm$^3$'
+            dsAreaSum['snowVolume'].attrs['description'] = \
+                f'Total {hemisphere} snow volume'
             dsAreaSum['iceThickness'].attrs['units'] = 'm'
             dsAreaSum['iceThickness'].attrs['description'] = \
-                f'Mean {hemisphere} sea ice volume'
+                f'Mean {hemisphere} sea ice thickness'
+            dsAreaSum['snowDepth'].attrs['units'] = 'm'
+            dsAreaSum['snowDepth'].attrs['description'] = \
+                f'Mean {hemisphere} snow depth'
 
             dsTimeSeries[hemisphere] = dsAreaSum
 

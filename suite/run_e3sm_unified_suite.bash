@@ -41,13 +41,3 @@ do
 done
 
 cd ..
-
-# only LCRC machines have a separate QU480 run
-if [[ "$machine" == "anvil" || "$machine" == "chrysalis" ]]
-then
-  ./suite/setup.py -p ${py} -r QU480 -b ${branch}
-  cd ${machine}_test_suite/QU480
-  echo QU480
-  sbatch job_script.bash
-  cd ../..
-fi

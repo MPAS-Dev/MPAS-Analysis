@@ -18,8 +18,12 @@ Functions for creating climatologies from monthly time series data
 import numpy
 
 from mpas_analysis.shared.constants import constants
-from mpas_analysis.shared.projection import known_comparison_grids, \
-    get_pyproj_projection
+from mpas_analysis.shared.projection import (
+    comparison_grid_file_suffixes,
+    comparison_grid_option_suffixes,
+    get_pyproj_projection,
+    known_comparison_grids,
+)
 
 from pyremap import LatLonGridDescriptor, ProjectionGridDescriptor
 
@@ -34,7 +38,7 @@ def get_comparison_descriptor(config, comparison_grid_name):
         Contains configuration options
 
     comparison_grid_name : {'latlon', 'antarctic', 'arctic', 'north_atlantic',
-                            'north_pacific', 'subpolar_north_atlantic'}
+                            'north_pacific', 'subpolar_north_atlantic', 'fris'}
         The name of the comparison grid to use for remapping.
 
     Raises
@@ -119,21 +123,9 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     section = 'climatology'
 
-    option_suffixes = {'antarctic': 'AntarcticStereo',
-                       'arctic': 'ArcticStereo',
-                       'antarctic_extended': 'AntarcticExtended',
-                       'arctic_extended': 'ArcticExtended',
-                       'north_atlantic': 'NorthAtlantic',
-                       'north_pacific': 'NorthPacific',
-                       'subpolar_north_atlantic': 'SubpolarNorthAtlantic'}
+    option_suffixes = comparison_grid_option_suffixes
 
-    grid_suffixes = {'antarctic': 'Antarctic_stereo',
-                     'arctic': 'Arctic_stereo',
-                     'antarctic_extended': 'Antarctic_stereo',
-                     'arctic_extended': 'Arctic_stereo',
-                     'north_atlantic': 'North_Atlantic',
-                     'north_pacific': 'North_Pacific',
-                     'subpolar_north_atlantic': 'Subpolar_North_Atlantic'}
+    grid_suffixes = comparison_grid_file_suffixes
 
     if comparison_grid_name not in option_suffixes:
         raise ValueError(f'{comparison_grid_name} is not one of the supported '
@@ -143,23 +135,32 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     option_suffix = option_suffixes[comparison_grid_name]
     grid_suffix = grid_suffixes[comparison_grid_name]
-    width = config.getfloat(
-        section, f'comparison{option_suffix}Width')
-    option = f'comparison{option_suffix}Height'
+    option = f'comparison{option_suffix}Bounds'
     if config.has_option(section, option):
-        height = config.getfloat(section, option)
+        bounds = config.getexpression(section, option)
+        bounds = [1e3 * bound for bound in bounds]
     else:
-        height = width
+        width = config.getfloat(
+            section, f'comparison{option_suffix}Width')
+        option = f'comparison{option_suffix}Height'
+
+        if config.has_option(section, option):
+            height = config.getfloat(section, option)
+        else:
+            height = width
+        xmax = 0.5 * width * 1e3
+        ymax = 0.5 * height * 1e3
+        bounds = [-xmax, xmax, -ymax, ymax]
+    width = (bounds[1] - bounds[0]) / 1e3
+    height = (bounds[3] - bounds[2]) / 1e3
     res = config.getfloat(
         section, f'comparison{option_suffix}Resolution')
 
-    xmax = 0.5 * width * 1e3
     nx = int(width / res) + 1
-    x = numpy.linspace(-xmax, xmax, nx)
+    x = numpy.linspace(bounds[0], bounds[1], nx)
 
-    ymax = 0.5 * height * 1e3
     ny = int(height / res) + 1
-    y = numpy.linspace(-ymax, ymax, ny)
+    y = numpy.linspace(bounds[2], bounds[3], ny)
 
     mesh_name = f'{width}x{height}km_{res}km_{grid_suffix}'
     descriptor = ProjectionGridDescriptor.create(projection, x, y, mesh_name)

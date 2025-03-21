@@ -18,7 +18,7 @@ Utility functions related to time-series data sets
 import xarray as xr
 import numpy
 import os
-from distutils.spawn import find_executable
+import shutil
 import glob
 import subprocess
 
@@ -53,7 +53,7 @@ def combine_time_series_with_ncrcat(inFileNames, outFileName,
     Xylar Asay-Davis
     """
 
-    if find_executable('ncrcat') is None:
+    if shutil.which('ncrcat') is None:
         raise OSError('ncrcat not found. Make sure the latest nco '
                       'package is installed: \n'
                       'conda install nco\n'

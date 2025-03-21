@@ -161,6 +161,7 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         if subtaskName is None:
             suffix = regionName[0].upper() + regionName[1:]
+            suffix = suffix.replace(' ', '_')
             subtaskName = 'plotHovmoller{}'.format(suffix)
 
         # first, call the constructor from the base class (AnalysisTask)
@@ -208,7 +209,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         config = self.config
 
         if self.controlConfig is not None:
-            assert(not os.path.isabs(self.inFileName))
+            assert not os.path.isabs(self.inFileName)
             baseDirectory = build_config_full_path(
                 self.controlConfig, 'output', 'timeSeriesSubdirectory')
 
@@ -251,21 +252,12 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         self.logger.info('  Load ocean data...')
         ds = xr.open_dataset(self.inFileName)
+        print(self.inFileName)
 
-        if 'regionNames' in ds.coords:
+        regionNameInTitle = self.regionName.replace('_', ' ')
 
-            allRegionNames = decode_strings(ds.regionNames)
-            regionIndex = allRegionNames.index(self.regionName)
-            regionNameInTitle = self.regionName.replace('_', ' ')
-            regionDim = ds.regionNames.dims[0]
-        else:
-            plotTitles = config.getexpression('regions', 'plotTitles')
-            allRegionNames = config.getexpression('regions', 'regions')
-            regionIndex = allRegionNames.index(self.regionName)
-            regionNameInTitle = plotTitles[regionIndex]
-            regionDim = 'nOceanRegionsTmp'
-
-        ds = ds.isel(**{regionDim: regionIndex})
+        ds = ds.set_xindex('regionNames')
+        ds = ds.sel(regionNames=self.regionName)
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
@@ -290,6 +282,7 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         # drop any NaN values, because this causes issues with rolling averages
         mask = field.notnull().all(dim='Time')
+        print(mask)
 
         xLabel = 'Time (years)'
         yLabel = 'Depth (m)'
@@ -328,21 +321,9 @@ class PlotHovmollerSubtask(AnalysisTask):
             controlConfig = self.controlConfig
             dsRef = xr.open_dataset(self.controlFileName)
 
-            if 'regionNames' in dsRef.coords:
-                allRegionNames = decode_strings(dsRef.regionNames)
-                regionIndex = allRegionNames.index(self.regionName)
-                regionNameInTitle = self.regionName.replace('_', ' ')
-                regionDim = dsRef.regionNames.dims[0]
-            else:
-                plotTitles = controlConfig.getexpression('regions',
-                                                         'plotTitles')
-                allRegionNames = controlConfig.getexpression('regions',
-                                                             'regions')
-                regionIndex = allRegionNames.index(self.regionName)
-                regionNameInTitle = plotTitles[regionIndex]
-                regionDim = 'nOceanRegionsTmp'
+            dsRef = dsRef.set_xindex('regionNames')
+            dsRef = dsRef.sel(regionNames=self.regionName)
 
-            dsRef = dsRef.isel(**{regionDim: regionIndex})
             refField = dsRef[self.mpasFieldName]
             # drop any NaN values, because this causes issues with rolling
             # averages
@@ -352,16 +333,16 @@ class PlotHovmollerSubtask(AnalysisTask):
             z = z.where(mask, drop=True)
             field = field.where(mask, drop=True)
             refField = refField.where(mask, drop=True)
-            assert (field.shape == refField.shape)
+            assert field.shape == refField.shape
             # make sure the start and end time sare the same
-            assert(int(field.Time.values[0]) == int(refField.Time.values[0]))
-            assert(int(field.Time.values[-1]) == int(refField.Time.values[-1]))
+            assert int(field.Time.values[0]) == int(refField.Time.values[0])
+            assert int(field.Time.values[-1]) == int(refField.Time.values[-1])
             # we're seeing issues with slightly different times between runs
             # so let's copy them
             refField['Time'] = field.Time
             diff = field - refField
             assert (field.shape == diff.shape)
-            refTitle = self.controlConfig.get('runs', 'mainRunName')
+            refTitle = controlConfig.get('runs', 'mainRunName')
             diffTitle = 'Main - Control'
 
         if config.has_option(sectionName, 'titleFontSize'):

@@ -16,6 +16,8 @@ from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.ocean.compute_anomaly_subtask import ComputeAnomalySubtask
 from mpas_analysis.ocean.plot_hovmoller_subtask import PlotHovmollerSubtask
 
+from mpas_analysis.ocean.utility import get_standard_region_names
+
 
 class TimeSeriesSalinityAnomaly(AnalysisTask):
     """
@@ -50,7 +52,8 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
             tags=['timeSeries', 'salinity', 'publicObs', 'anomaly'])
 
         sectionName = 'hovmollerSalinityAnomaly'
-        regionNames = config.getexpression(sectionName, 'regions')
+        regionShortNames = config.getexpression(sectionName,
+                                                'regionShortNames')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         mpasFieldName = 'timeMonthly_avg_avgValueWithinOceanLayerRegion_' \
@@ -66,9 +69,10 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
             movingAveragePoints=movingAveragePoints)
         self.add_subtask(anomalyTask)
 
+        regionNames = get_standard_region_names(config, regionShortNames)
+
         for regionName in regionNames:
-            caption = 'Trend of {} Salinity Anomaly vs depth'.format(
-                regionName)
+            caption = f'Trend of {regionName} Salinity Anomaly vs depth'
             plotTask = PlotHovmollerSubtask(
                 parentTask=self,
                 regionName=regionName,

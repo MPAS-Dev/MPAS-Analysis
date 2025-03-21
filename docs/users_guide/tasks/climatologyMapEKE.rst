@@ -3,10 +3,7 @@
 climatologyMapEKE
 =================
 
-An analysis task for comparison of global maps of sea surface height (SSH)
-with zero mean against observations.  The mean has been subtracted because the
-initial sea level is somewhat arbitrary and will lead to a systematic offset
-when compared with the observations.
+An analysis task for comparison of global maps of eddy kinetic energy (EKE).
 
 Component and Tags::
 

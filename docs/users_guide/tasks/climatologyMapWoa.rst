@@ -4,7 +4,7 @@ climatologyMapWoa
 =================
 
 An analysis task for comparing potential temperature and salinity
-at various depths against WOA18 climatology.
+at various depths against WOA23 climatology.
 
 Component and Tags::
 
@@ -40,7 +40,7 @@ The following configuration options are available for this task::
   [climatologyMapWoaTemperature]
   ## options related to plotting climatology maps of potential temperature
   ## at various levels, including the sea floor against control model results
-  ## and WOA18 climatological data
+  ## and WOA23 climatological data
 
   # colormap for model/observations
   colormapNameResult = RdYlBu_r
@@ -66,8 +66,8 @@ The following configuration options are available for this task::
 
   [climatologyMapWoaSalinity]
   ## options related to plotting climatology maps of salinity
-  ## at various levels, including the sea floor against control model results 
-  ## and WOA18 climatological data
+  ## at various levels, including the sea floor against control model results
+  ## and WOA23 climatological data
 
   # colormap for model/observations
   colormapNameResult = haline
@@ -98,14 +98,14 @@ For more details, see:
 
 The option ``depths`` is a list of (approximate) depths at which to sample
 the temperature and salinity fields.  A value of ``'top'`` indicates the sea
-surface. Note that, for the annual climatology, WOA18 data is available down
-to 5500 m, whereas, for the seasonal or monthly climatologies, WOA18 data
+surface. Note that, for the annual climatology, WOA23 data is available down
+to 5500 m, whereas, for the seasonal or monthly climatologies, WOA23 data
 is only available down to 1500 m.
 
 Observations
 ------------
 
-:ref:`woa18_t_s`
+:ref:`woa23_t_s`
 
 Example Result
 --------------

@@ -15,10 +15,10 @@ within MPAS-Analysis using region mask files::
 
   # list of region names (needs to be in the same order as region indices in
   # time-series stats)
-  regions = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4', 'global']
-  # list of plot titles (needs to be in the same order as region indices in
-  # time-series stats)
-  plotTitles = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
+  regionShortNames = ['arctic', 'equatorial', 'so', 'nino3', 'nino4', 'nino3.4',
+                      'global']
+  # list of full names (e.g. for plot titles) same order as regionShortNames
+  regionNames = ['Arctic', 'Equatorial (15S-15N)', 'Southern Ocean', 'Nino 3',
                 'Nino 4', 'Nino 3.4', 'Global Ocean']
 
 
@@ -46,7 +46,7 @@ Several tasks (:ref:`task_hovmollerOceanRegions`, :ref:`task_oceanHistogram`,
 :ref:`task_oceanRegionalProfiles`, :ref:`task_regionalTSDiagrams`, and
 :ref:`task_timeSeriesOceanRegions`) can use any of the defined region groups.
 Currently, available region groups are: ``Artic Ocean Regions``, ``Antarctic Regions``,
-``Greenland Regions``, ``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
+``ISMIP6 Greenland Regions``, ``Ocean Basins``, ``Ice Shelves``, and ``Ocean Subbasins``.
 
 The option ``regionMaskSubdirectory`` in the ``[diagnostics]`` section specifies
 the path to cached mask files for these region groups, typically

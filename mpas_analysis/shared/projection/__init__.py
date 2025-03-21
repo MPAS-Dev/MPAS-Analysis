@@ -15,7 +15,44 @@ import cartopy
 
 known_comparison_grids = ['latlon', 'antarctic', 'antarctic_extended',
                           'arctic', 'arctic_extended', 'north_atlantic',
-                          'north_pacific', 'subpolar_north_atlantic']
+                          'north_pacific', 'subpolar_north_atlantic', 'fris']
+
+comparison_grid_option_suffixes = {
+    'latlon': 'LatLon',
+    'antarctic': 'AntarcticStereo',
+    'arctic': 'ArcticStereo',
+    'antarctic_extended': 'AntarcticExtended',
+    'arctic_extended': 'ArcticExtended',
+    'north_atlantic': 'NorthAtlantic',
+    'north_pacific': 'NorthPacific',
+    'subpolar_north_atlantic': 'SubpolarNorthAtlantic',
+    'fris': 'Fris',
+}
+
+comparison_grid_titles = {
+    'latlon': 'Global',
+    'antarctic': 'Antarctic',
+    'arctic': 'Arctic',
+    'antarctic_extended': 'Antarctic',
+    'arctic_extended': 'Arctic',
+    'north_atlantic': 'North Atlantic',
+    'north_pacific': 'North Pacific',
+    'subpolar_north_atlantic': 'Subpolar North Atlantic',
+    'fris': 'Filchner-Ronne',
+}
+
+
+comparison_grid_file_suffixes = {
+    'latlon': 'latlon',
+    'antarctic': 'Antarctic_stereo',
+    'arctic': 'Arctic_stereo',
+    'antarctic_extended': 'Antarctic_stereo',
+    'arctic_extended': 'Arctic_stereo',
+    'north_atlantic': 'North_Atlantic',
+    'north_pacific': 'North_Pacific',
+    'subpolar_north_atlantic': 'Subpolar_North_Atlantic',
+    'fris': 'Fris',
+}
 
 
 def get_pyproj_projection(comparison_grid_name):
@@ -49,7 +86,7 @@ def get_pyproj_projection(comparison_grid_name):
 
     if comparison_grid_name == 'latlon':
         raise ValueError('latlon is not a projection grid.')
-    elif comparison_grid_name in ['antarctic', 'antarctic_extended']:
+    elif comparison_grid_name in ['antarctic', 'antarctic_extended', 'fris']:
         projection = pyproj.Proj(
             '+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 '
             '+x_0=0.0 +y_0=0.0 +ellps=WGS84')
@@ -105,7 +142,7 @@ def get_cartopy_projection(comparison_grid_name):
     if comparison_grid_name == 'latlon':
         raise ValueError('latlon is not a projection grid.')
 
-    elif comparison_grid_name in ['antarctic', 'antarctic_extended']:
+    elif comparison_grid_name in ['antarctic', 'antarctic_extended', 'fris']:
         projection = cartopy.crs.Stereographic(
             central_latitude=-90., central_longitude=0.0,
             true_scale_latitude=-71.0)

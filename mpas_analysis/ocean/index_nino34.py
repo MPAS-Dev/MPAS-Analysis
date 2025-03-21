@@ -38,6 +38,8 @@ from mpas_analysis.shared.plot.save import savefig
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.html import write_image_xml
 
+from mpas_analysis.ocean.utility import add_standard_regions_and_subset
+
 
 class IndexNino34(AnalysisTask):
     """
@@ -129,7 +131,7 @@ class IndexNino34(AnalysisTask):
         regionToPlot = config.get('indexNino34', 'region')
 
         if regionToPlot not in ['nino3.4', 'nino3', 'nino4']:
-            raise ValueError('Unexpectes El Nino Index region {}'.format(
+            raise ValueError('Unexpected El Nino Index region {}'.format(
                 regionToPlot))
         ninoIndexNumber = regionToPlot[4:]
 
@@ -193,9 +195,7 @@ class IndexNino34(AnalysisTask):
 
         # regionIndex should correspond to NINO34 in surface weighted Average
         # AM
-        regions = config.getexpression('regions', 'regions')
         regionToPlot = config.get('indexNino34', 'region')
-        regionIndex = regions.index(regionToPlot)
 
         # Load data:
         ds = open_mpas_dataset(fileName=self.inputFile,
@@ -203,6 +203,11 @@ class IndexNino34(AnalysisTask):
                                variableList=self.variableList,
                                startDate=startDate,
                                endDate=endDate)
+
+        ds = add_standard_regions_and_subset(ds, config,
+                                             regionShortNames=[regionToPlot])
+        # we want to collapse the nOceanRegions dimension
+        ds = ds.isel(nOceanRegions=0)
 
         # Observations have been processed to the nino34Index prior to reading
         dsObs = xr.open_dataset(dataPath, decode_cf=False, decode_times=False)
@@ -215,7 +220,7 @@ class IndexNino34(AnalysisTask):
         self.logger.info('  Compute El Nino {} Index...'.format(
             ninoIndexNumber))
         varName = self.variableList[0]
-        regionSST = ds[varName].isel(nOceanRegions=regionIndex)
+        regionSST = ds[varName]
         nino34Main = self._compute_nino34_index(regionSST, calendar)
 
         # Compute the observational index over the entire time range
@@ -262,7 +267,10 @@ class IndexNino34(AnalysisTask):
                 calendar=calendar,
                 variableList=self.variableList)
 
-            regionSSTRef = dsRef[varName].isel(nOceanRegions=regionIndex)
+            dsRef = add_standard_regions_and_subset(
+                dsRef, self.controlConfig, regionShortNames=[regionToPlot])
+
+            regionSSTRef = dsRef[varName]
             nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
 
             nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]

@@ -12,7 +12,7 @@
 import xarray
 import os
 import subprocess
-from distutils.spawn import find_executable
+import shutil
 import dask
 import multiprocessing
 from multiprocessing.pool import ThreadPool
@@ -287,7 +287,8 @@ class MpasClimatologyTask(AnalysisTask):
 
         self.symlinkDirectory = self._create_symlinks()
 
-        with xarray.open_dataset(self.inputFiles[0]) as ds:
+        with xarray.open_dataset(self.inputFiles[0],
+                                 decode_timedelta=False) as ds:
             self.allVariables = list(ds.data_vars.keys())
 
     def run_task(self):
@@ -463,7 +464,7 @@ class MpasClimatologyTask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        if find_executable('ncclimo') is None:
+        if shutil.which('ncclimo') is None:
             raise OSError('ncclimo not found. Make sure the latest nco '
                           'package is installed: \n'
                           'conda install nco\n'

@@ -19,6 +19,70 @@ import numpy
 import xarray
 
 
+def add_standard_regions_and_subset(ds, config, regionShortNames=None):
+    """
+    Add standard region names (``regionNames`` coordinate) to a dataset and
+    rename ``nOceanRegionsTmp`` dimension to ``nOceanRegions`` (if present).
+    Shorter standard region names are in ``regionNamesShort``.
+
+    Parameters
+    ----------
+    ds : xarray.Dataset
+        the dataset to which region names should be added
+
+    config : mpas_tools.config.MpasConfigParser
+        Configuration options
+
+    regionShortNames : list of str, optional
+        A list of a subset of the short region names to use to subset the
+        dataset
+
+    Returns
+    -------
+    ds : xarray.Dataset
+        the dataset with region names added and possibly subsetted
+    """
+    ds = ds.copy()
+    if 'nOceanRegionsTmp' in ds.dims:
+        ds = ds.rename({'nOceanRegionsTmp': 'nOceanRegions'})
+
+    allShortNames = config.getexpression('regions', 'regionShortNames')
+    regionNames = config.getexpression('regions', 'regionNames')
+    ds.coords['regionShortNames'] = ('nOceanRegions', allShortNames)
+    ds.coords['regionNames'] = ('nOceanRegions', regionNames)
+    if regionShortNames is not None:
+        regionIndices = \
+            [allShortNames.index(name) for name in regionShortNames]
+        ds = ds.isel(nOceanRegions=regionIndices)
+    return ds
+
+
+def get_standard_region_names(config, regionShortNames):
+    """
+    Add standard region names from the short names
+
+    Parameters
+    ----------
+    config : mpas_tools.config.MpasConfigParser
+        Configuration options
+
+    regionShortNames : list of str
+        A list of short region names
+
+    Returns
+    -------
+    regionNames : list of str
+        A list of full standard region names
+    """
+    allShortNames = config.getexpression('regions', 'regionShortNames')
+    regionNames = config.getexpression('regions', 'regionNames')
+    regionNameMap = {shortName: regionName for shortName, regionName in
+                     zip(allShortNames, regionNames)}
+    regionNames = [regionNameMap[shortName] for shortName in regionShortNames]
+
+    return regionNames
+
+
 def compute_zmid(bottomDepth, maxLevelCell, layerThickness):
     """
     Computes zMid given data arrays for bottomDepth, maxLevelCell and

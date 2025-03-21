@@ -13,7 +13,7 @@
 # -------
 # Carolyn Begeman
 
-from distutils.spawn import find_executable
+import shutil
 import numpy as np
 import matplotlib.pyplot as plt
 import os
@@ -199,7 +199,7 @@ class ConservationTask(AnalysisTask):
             'land_ice_ssh_change': ['landIceSshChange'],
             'land_ice_mass_flux': ['landIceMassFlux'],
             'land_ice_mass_flux_components': ['accumulatedIcebergFlux',
-                                              'accumulatedLandIceFlux',
+                                              'accumulatedLandIceFluxTotal',
                                               'accumulatedRemovedRiverRunoffFlux',
                                               'accumulatedRemovedIceRunoffFlux']}
 
@@ -208,16 +208,21 @@ class ConservationTask(AnalysisTask):
             'massAnomaly': ['massChange', 'netMassFlux'],
             'energyAnomaly': ['energyChange', 'netEnergyFlux'],
             'saltAnomaly': ['saltChange', 'netSaltFlux'],
+            'accumulatedLandIceFluxTotal': ['accumulatedLandIceFlux',
+                                            'accumulatedLandIceFrazilFlux'],
             'landIceMassFlux': ['accumulatedIcebergFlux',
                                 'accumulatedLandIceFlux',
+                                'accumulatedLandIceFrazilFlux',
                                 'accumulatedRemovedRiverRunoffFlux',
                                 'accumulatedRemovedIceRunoffFlux'],
             'landIceSshChange': ['accumulatedIcebergFlux',
                                  'accumulatedLandIceFlux',
+                                  'accumulatedLandIceFrazilFlux',
                                  'accumulatedRemovedRiverRunoffFlux',
                                  'accumulatedRemovedIceRunoffFlux'],
             'landIceMassChange': ['accumulatedIcebergFlux',
                                   'accumulatedLandIceFlux',
+                                  'accumulatedLandIceFrazilFlux',
                                   'accumulatedRemovedRiverRunoffFlux',
                                   'accumulatedRemovedIceRunoffFlux']}
 
@@ -537,9 +542,14 @@ class ConservationTask(AnalysisTask):
                 # Convert from kg/month to kg
                 variable = np.cumsum(land_ice_mass_flux)
 
+            elif varname == 'accumulatedLandIceFluxTotal':
+                variable = self._get_variable(ds, 'accumulatedLandIceFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedLandIceFrazilFlux', mks=True)
+
             elif varname == 'landIceMassFlux':
                 variable = self._get_variable(ds, 'accumulatedIcebergFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedLandIceFlux', mks=True) + \
+                           self._get_variable(ds, 'accumulatedLandIceFrazilFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedRemovedRiverRunoffFlux', mks=True) + \
                            self._get_variable(ds, 'accumulatedRemovedIceRunoffFlux', mks=True)
 
@@ -555,7 +565,7 @@ class ConservationTask(AnalysisTask):
                 ts_file = ts_files[0]
                 if not os.path.exists(ts_file):
                    raise ValueError(f'Could not find timeMonthlyStats file {ts_file}')
-                var = 'timeMonthly_avg_areaCellGlobal' 
+                var = 'timeMonthly_avg_areaCellGlobal'
                 ds_ts = open_mpas_dataset(fileName=ts_file,
                                           calendar=self.calendar,
                                           variableList=[var])
@@ -605,7 +615,7 @@ class ConservationTask(AnalysisTask):
             If ``ncrcat`` is not in the system path.
         """
 
-        if find_executable('ncrcat') is None:
+        if shutil.which('ncrcat') is None:
             raise OSError('ncrcat not found. Make sure the latest nco '
                           'package is installed: \n'
                           'conda install nco\n'

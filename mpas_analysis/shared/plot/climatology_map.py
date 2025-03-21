@@ -125,8 +125,8 @@ def plot_polar_comparison(
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
-    def do_subplot(ax, field, title, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor, arrows):
+    def _do_subplot(ax, field, title, colormap, norm, levels, ticks, contours,
+                    lineWidth, lineColor, **kwargs):
         """
         Make a subplot within the figure.
         """
@@ -230,14 +230,14 @@ def plot_polar_comparison(
                 plotProjection))
 
     ax = plt.subplot(subplots[0], projection=projection)
-    do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
+    _do_subplot(ax=ax, field=modelArray, title=modelTitle, **dictModelRef)
 
     if refArray is not None:
         ax = plt.subplot(subplots[1], projection=projection)
-        do_subplot(ax=ax, field=refArray, title=refTitle, **dictModelRef)
+        _do_subplot(ax=ax, field=refArray, title=refTitle, **dictModelRef)
 
         ax = plt.subplot(subplots[2], projection=projection)
-        do_subplot(ax=ax, field=diffArray, title=diffTitle, **dictDiff)
+        _do_subplot(ax=ax, field=diffArray, title=diffTitle, **dictDiff)
 
     fig.canvas.draw()
     plt.tight_layout(pad=4.)
@@ -343,8 +343,8 @@ def plot_global_comparison(
     # -------
     # Xylar Asay-Davis, Milena Veneziani
 
-    def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor, arrows):
+    def _plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
+                    lineWidth, lineColor, **kwargs):
 
         ax.set_extent(extent, crs=projection)
 
@@ -428,16 +428,16 @@ def plot_global_comparison(
 
     axes = []
     ax = plt.subplot(subplots[0], projection=projection)
-    plot_panel(ax, modelTitle, modelArray, **dictModelRef)
+    _plot_panel(ax, modelTitle, modelArray, **dictModelRef)
     axes.append(ax)
 
     if refArray is not None:
         ax = plt.subplot(subplots[1], projection=projection)
-        plot_panel(ax, refTitle, refArray, **dictModelRef)
+        _plot_panel(ax, refTitle, refArray, **dictModelRef)
         axes.append(ax)
 
         ax = plt.subplot(subplots[2], projection=projection)
-        plot_panel(ax, diffTitle, diffArray, **dictDiff)
+        _plot_panel(ax, diffTitle, diffArray, **dictDiff)
         axes.append(ax)
 
     _add_stats(modelArray, refArray, diffArray, Lats, axes)
@@ -543,7 +543,7 @@ def plot_projection_comparison(
     # -------
     # Xylar Asay-Davis
 
-    def add_arrow_to_line_2d(ax, poly, arrow_spacing=8e5, arrow_width=1.5e4):
+    def _add_arrow_to_line_2d(ax, poly, arrow_spacing, arrow_width):
         """
         https://stackoverflow.com/a/27637925/7728169
         Add arrows to a matplotlib.lines.Line2D at selected locations.
@@ -568,8 +568,8 @@ def plot_projection_comparison(
             arrows.append(p)
         return arrows
 
-    def plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
-                   lineWidth, lineColor, arrows):
+    def _plot_panel(ax, title, array, colormap, norm, levels, ticks, contours,
+                    lineWidth, lineColor, arrowSpacing, arrowWidth):
 
         title = limit_title(title, maxTitleLength)
         ax.set_title(title, **plottitle_font)
@@ -605,17 +605,27 @@ def plot_projection_comparison(
                         linewidths=0.5)
 
         if contours is not None:
+            # add arrows to streamlines
+            arrows = arrowSpacing is not None and arrowWidth is not None
+            special_zero = arrows and 0. in contours
+
+            if special_zero:
+                # treat the zero contour as a special case
+                contours = [contour for contour in contours if contour != 0.]
+
             matplotlib.rcParams['contour.negative_linestyle'] = 'solid'
             x_center = 0.5*(x[0:-1] + x[1:])
             y_center = 0.5*(y[0:-1] + y[1:])
             cs = ax.contour(x_center, y_center, array, levels=contours,
                             colors=lineColor, linewidths=lineWidth)
-            # add arrows to streamlines
-            if arrows is not None:
-                for collection in cs.collections:
-                    for path in collection.get_paths():
-                        for poly in path.to_polygons():
-                            add_arrow_to_line_2d(ax, poly)
+            for path in cs.get_paths():
+                for poly in path.to_polygons():
+                    _add_arrow_to_line_2d(ax, poly, arrowSpacing, arrowWidth)
+
+            if special_zero:
+                ax.contour(x_center, y_center, array, levels=[0.],
+                           colors=lineColor, linewidths=1.5 * lineWidth)
+
         # create an axes on the right side of ax. The width of cax will be 5%
         # of ax and the padding between cax and ax will be fixed at 0.05 inch.
         divider = make_axes_locatable(ax)
@@ -678,7 +688,8 @@ def plot_projection_comparison(
     # set up land colormap
     if not useCartopyCoastline:
         colorList = [(0.8, 0.8, 0.8), (0.8, 0.8, 0.8)]
-        landColorMap = cols.LinearSegmentedColormap.from_list('land', colorList)
+        landColorMap = cols.LinearSegmentedColormap.from_list('land',
+                                                              colorList)
 
     # locations of centers for contour plots
     xCenter = 0.5 * (x[1:] + x[0:-1])
@@ -689,14 +700,14 @@ def plot_projection_comparison(
     extent = [x[0], x[-1], y[0], y[-1]]
 
     ax = plt.subplot(subplots[0], projection=projection)
-    plot_panel(ax, modelTitle, modelArray, **dictModelRef)
+    _plot_panel(ax, modelTitle, modelArray, **dictModelRef)
 
     if refArray is not None:
         ax = plt.subplot(subplots[1], projection=projection)
-        plot_panel(ax, refTitle, refArray, **dictModelRef)
+        _plot_panel(ax, refTitle, refArray, **dictModelRef)
 
         ax = plt.subplot(subplots[2], projection=projection)
-        plot_panel(ax, diffTitle, diffArray, **dictDiff)
+        _plot_panel(ax, diffTitle, diffArray, **dictDiff)
 
     if fileout is not None:
         savefig(fileout, config)
@@ -792,7 +803,7 @@ def _add_land_lakes_coastline(ax, ice_shelves=True):
     ax.add_feature(land_50m, zorder=2)
     if ice_shelves:
         ice_50m = cartopy.feature.NaturalEarthFeature(
-                'physical', 'antarctic_ice_shelves_polys', '50m', edgecolor='k',
-                facecolor='lightgray', linewidth=0.5)
+                'physical', 'antarctic_ice_shelves_polys', '50m',
+                edgecolor='k', facecolor='lightgray', linewidth=0.5)
         ax.add_feature(ice_50m, zorder=3)
     ax.add_feature(lakes_50m, zorder=4)

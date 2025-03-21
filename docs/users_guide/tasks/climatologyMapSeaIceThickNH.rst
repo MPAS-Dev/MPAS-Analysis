@@ -4,7 +4,8 @@ climatologyMapSeaIceThickNH
 ===========================
 
 An analysis task for plotting maps of Arctic sea ice thickness against
-observations.
+observations.  Cell-averaged thickness is plotted (rather than thickness
+averaged over the sea ice-covered area).
 
 Component and Tags::
 

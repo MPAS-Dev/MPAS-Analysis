@@ -19,6 +19,7 @@ specifying analysis options.
 # Xylar Asay-Davis, Phillip J. Wolfram, Milena Veneziani
 
 import mpas_analysis
+import mpas_analysis.version
 
 import argparse
 import traceback
@@ -30,6 +31,8 @@ import progressbar
 import logging
 import xarray
 import time
+import json
+from importlib.metadata import Distribution
 from importlib.resources import contents
 
 from mache import discover_machine, MachineInfo
@@ -225,8 +228,18 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.WoceTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
 
+    analyses.append(ocean.AntshipTransects(config,
+                                           oceanClimatologyTasks['avg'],
+                                           controlConfig))
+
+    analyses.append(ocean.OsnapTransects(config, oceanClimatologyTasks['avg'],
+                                         controlConfig))
+
     analyses.append(ocean.SoseTransects(config, oceanClimatologyTasks['avg'],
                                         controlConfig))
+
+    analyses.append(ocean.WoaTransects(config, oceanClimatologyTasks['avg'],
+                                       controlConfig))
 
     analyses.append(ocean.GeojsonTransects(config,
                                            oceanClimatologyTasks['avg'],
@@ -252,26 +265,92 @@ def build_analysis_list(config, controlConfig):
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='NH', controlConfig=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowiceFormation(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowMelt(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIcePondArea(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaFractionRidge(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeRidge(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAlbedo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaTendencyThermo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaTendencyTransp(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeTendencyTransp(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='NH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceConc(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceThick(
         config=config, mpasClimatologyTask=seaIceClimatologyTask,
         hemisphere='SH', controlConfig=controlConfig))
-    analyses.append(seaIceTimeSeriesTask)
-    analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowDepth(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
-        hemisphere='NH', control_config=controlConfig))
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowiceFormation(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceSnowMelt(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIcePondArea(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaFractionRidge(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeRidge(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAlbedo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceProduction(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
     analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
-        hemisphere='NH', control_config=controlConfig))
-    analyses.append(sea_ice.ClimatologyMapSeaIceMelting(
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaTendencyThermo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceAreaTendencyTransp(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo(
+        config=config, mpas_climatology_task=seaIceClimatologyTask,
+        hemisphere='SH', control_config=controlConfig))
+    analyses.append(sea_ice.ClimatologyMapSeaIceVolumeTendencyTransp(
         config=config, mpas_climatology_task=seaIceClimatologyTask,
         hemisphere='SH', control_config=controlConfig))
 
+    analyses.append(seaIceTimeSeriesTask)
     analyses.append(sea_ice.TimeSeriesSeaIce(config, seaIceTimeSeriesTask,
                                              controlConfig))
 
@@ -838,17 +917,97 @@ def symlink_main_run(config, shared_configs, machine_info):
             link_dir(section=section, option=option)
 
 
+def get_editable_install_dir(package_name):
+    """
+    Get the directory that the package is installed in if it is installed in
+    editable mode, or None if it is not.
+
+    Parameters
+    ----------
+    package_name : str
+        The name of the package
+
+    Returns
+    -------
+    install_dir : str or None
+        The directory the package is installed in if in editable mode, or None
+    """
+
+    direct_url = Distribution.from_name(package_name).read_text(
+        'direct_url.json')
+    contents = json.loads(direct_url)
+    pkg_is_editable = contents.get("dir_info", {}).get("editable", False)
+    if pkg_is_editable and 'url' in contents:
+        url = contents['url']
+        if url.startswith('file://'):
+            return url[7:]
+    return None
+
+
+def is_mpas_analysis_git_base():
+    """
+    Check if the current working directory is the base of an mpas_analysis git
+    branch or a git worktree.
+
+    Returns
+    -------
+    is_git_base : bool
+        True if the current working directory is the base of an mpas_analysis
+        git branch or a git worktree, False otherwise
+    """
+    mpas_analysis_dir = os.path.join(os.getcwd(), 'mpas_analysis')
+    if not os.path.isdir(mpas_analysis_dir):
+        # no package mpas_analysis, so can't be an mpas_analysis git base
+        return False
+
+    git_dir = os.path.join(os.getcwd(), '.git')
+    if os.path.isdir(git_dir):
+        # It's a git repository
+        head_file = os.path.join(git_dir, 'HEAD')
+    elif os.path.isfile(git_dir):
+        # It's a git worktree
+        with open(git_dir, 'r') as f:
+            git_dir_path = f.read().strip().split(': ')[1]
+        head_file = os.path.join(git_dir_path, 'HEAD')
+    else:
+        return False
+
+    if not os.path.isfile(head_file):
+        return False
+
+    with open(head_file, 'r') as f:
+        head_content = f.read()
+        if 'ref: refs/heads/' in head_content:
+            return True
+
+    return False
+
+
 def main():
     """
     Entry point for the main script ``mpas_analysis``
     """
+
+    mpas_analysis_dir = get_editable_install_dir('mpas_analysis')
+    if is_mpas_analysis_git_base() and mpas_analysis_dir is not None:
+        # mpas_analysis is installed in editable mode and this is the base
+        # of an mpas_analysis git branch
+        if os.path.abspath(mpas_analysis_dir) != os.getcwd():
+            raise OSError(
+"""
+The current working directory is the base of an mpas_analysis git branch,
+but the package is installed in editable mode in a different directory.
+Please reinstall mpas_analysis in editable mode using:
+    python -m pip install --no-deps --no-build-isolation -e .
+"""
+            )
 
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-v', '--version',
                         action='version',
                         version='mpas_analysis {}'.format(
-                                mpas_analysis.__version__),
+                                mpas_analysis.version.__version__),
                         help="Show version number and exit")
     parser.add_argument("--setup_only", dest="setup_only", action='store_true',
                         help="If only the setup phase, not the run or HTML "

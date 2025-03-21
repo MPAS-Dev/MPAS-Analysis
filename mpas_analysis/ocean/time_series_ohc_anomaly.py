@@ -25,6 +25,7 @@ from mpas_analysis.ocean.plot_depth_integrated_time_series_subtask import \
     PlotDepthIntegratedTimeSeriesSubtask
 
 from mpas_analysis.shared.constants import constants as mpas_constants
+from mpas_analysis.ocean.utility import get_standard_region_names
 
 
 class TimeSeriesOHCAnomaly(AnalysisTask):
@@ -63,7 +64,8 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             tags=['timeSeries', 'ohc', 'publicObs', 'anomaly'])
 
         sectionName = 'timeSeriesOHCAnomaly'
-        regionNames = config.getexpression(sectionName, 'regions')
+        regionShortNames = config.getexpression(sectionName,
+                                                'regionShortNames')
         movingAveragePoints = config.getint(sectionName, 'movingAveragePoints')
 
         self.variableDict = {}
@@ -85,6 +87,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             alter_dataset=self._compute_ohc)
         self.add_subtask(anomalyTask)
 
+        regionNames = get_standard_region_names(config, regionShortNames)
         for regionName in regionNames:
             caption = 'Trend of {} OHC Anomaly vs depth'.format(
                 regionName)
@@ -133,10 +136,6 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         """
         Compute the OHC time series.
         """
-
-        # regionNames = self.config.getexpression('regions', 'regions')
-        # ds['regionNames'] = ('nOceanRegionsTmp', regionNames)
-
         # for convenience, rename the variables to simpler, shorter names
         ds = ds.rename(self.variableDict)
 

@@ -237,7 +237,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         self.logger.info('\nRemapping climatology {}'.format(
             self.climatologyName))
 
-        dsMask = xr.open_dataset(self.mpasClimatologyTask.inputFiles[0])
+        dsMask = xr.open_dataset(self.mpasClimatologyTask.inputFiles[0],
+                                 decode_timedelta=False)
         dsMask = dsMask[self.variableList]
         iselValues = {'Time': 0}
         if self.iselValues is not None:
