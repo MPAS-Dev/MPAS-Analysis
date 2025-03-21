@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.RegionalTSDiagrams
+=======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: RegionalTSDiagrams
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~RegionalTSDiagrams.__init__
+      ~RegionalTSDiagrams.add_subtask
+      ~RegionalTSDiagrams.check_analysis_enabled
+      ~RegionalTSDiagrams.check_generate
+      ~RegionalTSDiagrams.close
+      ~RegionalTSDiagrams.is_alive
+      ~RegionalTSDiagrams.join
+      ~RegionalTSDiagrams.kill
+      ~RegionalTSDiagrams.run
+      ~RegionalTSDiagrams.run_after
+      ~RegionalTSDiagrams.run_task
+      ~RegionalTSDiagrams.set_start_end_date
+      ~RegionalTSDiagrams.setup_and_check
+      ~RegionalTSDiagrams.start
+      ~RegionalTSDiagrams.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~RegionalTSDiagrams.BLOCKED
+      ~RegionalTSDiagrams.FAIL
+      ~RegionalTSDiagrams.READY
+      ~RegionalTSDiagrams.RUNNING
+      ~RegionalTSDiagrams.SUCCESS
+      ~RegionalTSDiagrams.UNSET
+      ~RegionalTSDiagrams.authkey
+      ~RegionalTSDiagrams.daemon
+      ~RegionalTSDiagrams.exitcode
+      ~RegionalTSDiagrams.ident
+      ~RegionalTSDiagrams.name
+      ~RegionalTSDiagrams.pid
+      ~RegionalTSDiagrams.sentinel
+   
+   

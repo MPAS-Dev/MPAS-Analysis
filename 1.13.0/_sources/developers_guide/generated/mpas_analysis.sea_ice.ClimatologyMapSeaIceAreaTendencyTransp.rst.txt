@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceAreaTendencyTransp
+==============================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceAreaTendencyTransp
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAreaTendencyTransp.__init__
+      ~ClimatologyMapSeaIceAreaTendencyTransp.add_subtask
+      ~ClimatologyMapSeaIceAreaTendencyTransp.check_analysis_enabled
+      ~ClimatologyMapSeaIceAreaTendencyTransp.check_generate
+      ~ClimatologyMapSeaIceAreaTendencyTransp.close
+      ~ClimatologyMapSeaIceAreaTendencyTransp.is_alive
+      ~ClimatologyMapSeaIceAreaTendencyTransp.join
+      ~ClimatologyMapSeaIceAreaTendencyTransp.kill
+      ~ClimatologyMapSeaIceAreaTendencyTransp.run
+      ~ClimatologyMapSeaIceAreaTendencyTransp.run_after
+      ~ClimatologyMapSeaIceAreaTendencyTransp.run_task
+      ~ClimatologyMapSeaIceAreaTendencyTransp.set_start_end_date
+      ~ClimatologyMapSeaIceAreaTendencyTransp.setup_and_check
+      ~ClimatologyMapSeaIceAreaTendencyTransp.start
+      ~ClimatologyMapSeaIceAreaTendencyTransp.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAreaTendencyTransp.BLOCKED
+      ~ClimatologyMapSeaIceAreaTendencyTransp.FAIL
+      ~ClimatologyMapSeaIceAreaTendencyTransp.READY
+      ~ClimatologyMapSeaIceAreaTendencyTransp.RUNNING
+      ~ClimatologyMapSeaIceAreaTendencyTransp.SUCCESS
+      ~ClimatologyMapSeaIceAreaTendencyTransp.UNSET
+      ~ClimatologyMapSeaIceAreaTendencyTransp.authkey
+      ~ClimatologyMapSeaIceAreaTendencyTransp.daemon
+      ~ClimatologyMapSeaIceAreaTendencyTransp.exitcode
+      ~ClimatologyMapSeaIceAreaTendencyTransp.ident
+      ~ClimatologyMapSeaIceAreaTendencyTransp.name
+      ~ClimatologyMapSeaIceAreaTendencyTransp.pid
+      ~ClimatologyMapSeaIceAreaTendencyTransp.sentinel
+   
+   

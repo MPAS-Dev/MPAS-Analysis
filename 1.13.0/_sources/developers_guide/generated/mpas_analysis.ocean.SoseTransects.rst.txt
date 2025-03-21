@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.SoseTransects
+==================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: SoseTransects
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~SoseTransects.__init__
+      ~SoseTransects.add_subtask
+      ~SoseTransects.check_analysis_enabled
+      ~SoseTransects.check_generate
+      ~SoseTransects.close
+      ~SoseTransects.is_alive
+      ~SoseTransects.join
+      ~SoseTransects.kill
+      ~SoseTransects.run
+      ~SoseTransects.run_after
+      ~SoseTransects.run_task
+      ~SoseTransects.set_start_end_date
+      ~SoseTransects.setup_and_check
+      ~SoseTransects.start
+      ~SoseTransects.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SoseTransects.BLOCKED
+      ~SoseTransects.FAIL
+      ~SoseTransects.READY
+      ~SoseTransects.RUNNING
+      ~SoseTransects.SUCCESS
+      ~SoseTransects.UNSET
+      ~SoseTransects.authkey
+      ~SoseTransects.daemon
+      ~SoseTransects.exitcode
+      ~SoseTransects.ident
+      ~SoseTransects.name
+      ~SoseTransects.pid
+      ~SoseTransects.sentinel
+   
+   

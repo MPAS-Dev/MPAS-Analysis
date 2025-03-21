@@ -1,0 +1,280 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.ocean.utility &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.ocean.utility</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.ocean.utility</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This software is open source software available under the BSD-3 license.</span>
+<span class="c1">#</span>
+<span class="c1"># Copyright (c) 2022 Triad National Security, LLC. All rights reserved.</span>
+<span class="c1"># Copyright (c) 2022 Lawrence Livermore National Security, LLC. All rights</span>
+<span class="c1"># reserved.</span>
+<span class="c1"># Copyright (c) 2022 UT-Battelle, LLC. All rights reserved.</span>
+<span class="c1">#</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at</span>
+<span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A utility for computing common ocean fields (e.g. zMid) from datasets</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Authors</span>
+<span class="c1"># -------</span>
+<span class="c1"># Xylar Asay-Davis</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+
+
+<div class="viewcode-block" id="add_standard_regions_and_subset">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.add_standard_regions_and_subset.html#mpas_analysis.ocean.utility.add_standard_regions_and_subset">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_standard_regions_and_subset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add standard region names (``regionNames`` coordinate) to a dataset and</span>
+<span class="sd">    rename ``nOceanRegionsTmp`` dimension to ``nOceanRegions`` (if present).</span>
+<span class="sd">    Shorter standard region names are in ``regionNamesShort``.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds : xarray.Dataset</span>
+<span class="sd">        the dataset to which region names should be added</span>
+
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Configuration options</span>
+
+<span class="sd">    regionShortNames : list of str, optional</span>
+<span class="sd">        A list of a subset of the short region names to use to subset the</span>
+<span class="sd">        dataset</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ds : xarray.Dataset</span>
+<span class="sd">        the dataset with region names added and possibly subsetted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;nOceanRegionsTmp&#39;</span><span class="p">:</span> <span class="s1">&#39;nOceanRegions&#39;</span><span class="p">})</span>
+
+    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
+    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;regionShortNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nOceanRegions&#39;</span><span class="p">,</span> <span class="n">allShortNames</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nOceanRegions&#39;</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">regionShortNames</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">regionIndices</span> <span class="o">=</span> \
+            <span class="p">[</span><span class="n">allShortNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">regionShortNames</span><span class="p">]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="n">regionIndices</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ds</span></div>
+
+
+
+<div class="viewcode-block" id="get_standard_region_names">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.get_standard_region_names.html#mpas_analysis.ocean.utility.get_standard_region_names">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Add standard region names from the short names</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        Configuration options</span>
+
+<span class="sd">    regionShortNames : list of str</span>
+<span class="sd">        A list of short region names</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    regionNames : list of str</span>
+<span class="sd">        A list of full standard region names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
+    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+    <span class="n">regionNameMap</span> <span class="o">=</span> <span class="p">{</span><span class="n">shortName</span><span class="p">:</span> <span class="n">regionName</span> <span class="k">for</span> <span class="n">shortName</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span>
+                     <span class="nb">zip</span><span class="p">(</span><span class="n">allShortNames</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">)}</span>
+    <span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">regionNameMap</span><span class="p">[</span><span class="n">shortName</span><span class="p">]</span> <span class="k">for</span> <span class="n">shortName</span> <span class="ow">in</span> <span class="n">regionShortNames</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">regionNames</span></div>
+
+
+
+<div class="viewcode-block" id="compute_zmid">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.compute_zmid.html#mpas_analysis.ocean.utility.compute_zmid">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_zmid</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes zMid given data arrays for bottomDepth, maxLevelCell and</span>
+<span class="sd">    layerThickness</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bottomDepth : ``xarray.DataArray``</span>
+<span class="sd">        the depth of the ocean bottom (positive)</span>
+
+<span class="sd">    maxLevelCell : ``xarray.DataArray``</span>
+<span class="sd">        the 0-based vertical index of the bottom of the ocean</span>
+
+<span class="sd">    layerThickness : ``xarray.DataArray``</span>
+<span class="sd">        the thickness of MPAS-Ocean layers (possibly as a function of time)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    zMid : ``xarray.DataArray``</span>
+<span class="sd">        the vertical coordinate defining the middle of each layer, masked below</span>
+<span class="sd">        the bathymetry</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+
+    <span class="n">vertIndex</span> <span class="o">=</span> \
+        <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)})</span>
+
+    <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
+
+    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">thicknessCumSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">zSurface</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottomDepth</span> <span class="o">+</span> <span class="n">thicknessSum</span>
+
+    <span class="n">zLayerBot</span> <span class="o">=</span> <span class="n">zSurface</span> <span class="o">-</span> <span class="n">thicknessCumSum</span>
+
+    <span class="n">zMid</span> <span class="o">=</span> <span class="n">zLayerBot</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">layerThickness</span>
+
+    <span class="k">return</span> <span class="n">zMid</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: 1.13.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="utility.html">1.13.0</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="../../../../develop/index.html">develop</a></dd>
+      <dd><a href="../../../../main/index.html">main</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>climatologyMapBGC &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="climatologyMapBSF" href="climatologyMapBSF.html" />
+    <link rel="prev" title="climatologyMapArgoTemperature" href="climatologyMapArgoTemperature.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">climatologyMapBGC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapVel.html">climatologyMapVel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osnapTransects.html">osnapTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woaTransects.html">woaTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoNH.html">climatologyMapSeaIceAlbedoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoSH.html">climatologyMapSeaIceAlbedoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeNH.html">climatologyMapSeaIceAreaFractionRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeSH.html">climatologyMapSeaIceAreaFractionRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoNH.html">climatologyMapSeaIceAreaTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoSH.html">climatologyMapSeaIceAreaTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspNH.html">climatologyMapSeaIceAreaTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspSH.html">climatologyMapSeaIceAreaTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaNH.html">climatologyMapSeaIcePondAreaNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaSH.html">climatologyMapSeaIcePondAreaSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthNH.html">climatologyMapSeaIceSnowDepthNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthSH.html">climatologyMapSeaIceSnowDepthSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationNH.html">climatologyMapSeaIceSnowiceFormationNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationSH.html">climatologyMapSeaIceSnowiceFormationSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltNH.html">climatologyMapSeaIceSnowMeltNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltSH.html">climatologyMapSeaIceSnowMeltSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeNH.html">climatologyMapSeaIceVolumeRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeSH.html">climatologyMapSeaIceVolumeRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoNH.html">climatologyMapSeaIceVolumeTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoSH.html">climatologyMapSeaIceVolumeTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspNH.html">climatologyMapSeaIceVolumeTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspSH.html">climatologyMapSeaIceVolumeTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
+      <li class="breadcrumb-item active">climatologyMapBGC</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/tasks/climatologyMapBGC.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="climatologymapbgc">
+<span id="task-climatologymapbgc"></span><h1>climatologyMapBGC<a class="headerlink" href="#climatologymapbgc" title="Link to this heading"></a></h1>
+<p>An analysis task for comparison of global maps of biogeochemistry (BGC) fields
+against observations.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">horizontalMap</span><span class="p">,</span> <span class="n">BGC</span><span class="p">,</span> <span class="n">PO4</span><span class="p">,</span> <span class="n">NO3</span><span class="p">,</span> <span class="n">SiO3</span><span class="p">,</span> <span class="n">CO2_gas_flux</span><span class="p">,</span> <span class="n">pH_3D</span><span class="p">,</span>
+      <span class="n">DIC</span><span class="p">,</span> <span class="n">ALK</span><span class="p">,</span> <span class="n">O2</span><span class="p">,</span> <span class="n">pCO2surface</span><span class="p">,</span> <span class="n">Chl</span>
+</pre></div>
+</div>
+<section id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>[climatologyMapBGC]
+## options related to plotting climatology mpas of BGC
+
+# Variables to plot:
+# pH : &#39;pH_3D&#39;
+# DIC : &#39;DIC&#39;
+# ALK : &#39;ALK&#39;
+# PO4 : &#39;PO4&#39;
+# NO3 : &#39;NO3&#39;
+# SiO3 : &#39;SiO3&#39;
+# CO2 flux : &#39;CO2_gas_flux&#39;
+# O2 : &#39;O2&#39;
+variables = [&#39;PO4&#39;, &#39;NO3&#39;, &#39;SiO3&#39;, &#39;CO2_gas_flux&#39;, &#39;pH_3D&#39;, &#39;DIC&#39;, &#39;ALK&#39;,
+             &#39;O2&#39;, &#39;pCO2surface&#39;, &#39;Chl&#39;]
+
+# Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep,
+# Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
+seasons = [&#39;ANN&#39;, &#39;JFM&#39;, &#39;JAS&#39;]
+
+# comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis
+comparisonGrids = [&#39;latlon&#39;, &#39;antarctic&#39;]
+
+# Whether to compare to preindustrial observations that are available.
+preindustrial = False
+
+[climatologyMapBGC_PO4]
+# Colormap for climatology
+colormapNameResult = dense
+# Colormap for clim - obs difference
+colormapNameDifference = balance
+# linear vs. log scaling for climatology
+normTypeResult = linear
+# Colorbar bounds for climatology
+normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 2.5}
+# linear vs. log scaling for obs
+normTypeDifference = linear
+# Colorbar bounds for obs
+normArgsDifference = {&#39;vmin&#39;: -1, &#39;vmax&#39;: 1}
+# BGC property units
+units = mmol m$^{-3}$
+# Prefix to variable name in MPAS-O output
+filePrefix = timeMonthly_avg_ecosysTracers_
+# Acronym/label for observational dataset
+observationsLabel = WOA
+# Acronym/label for gallery variable (can be different from MPAS name)
+galleryLabel = PO4
+
+[climatologyMapBGC_NO3]
+colormapNameResult = dense
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 35.0}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -10, &#39;vmax&#39;: 10}
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = NO3
+
+[climatologyMapBGC_SiO3]
+colormapNameResult = dense
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 80}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -20, &#39;vmax&#39;: 20}
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = SiO3
+
+[climatologyMapBGC_CO2_gas_flux]
+colormapNameResult = BrBG_r
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: -5, &#39;vmax&#39;: 5}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -5, &#39;vmax&#39;: 5}
+units = mol m$^{-2}$ yr$^{-1}$
+filePrefix = timeMonthly_avg_
+observationsLabel = SOM-FFNv2016
+galleryLabel = CO2 Flux
+
+[climatologyMapBGC_O2]
+colormapNameResult = matter
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 2, &#39;vmax&#39;: 8}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -2, &#39;vmax&#39;: 2}
+units = mL/L
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = WOA
+galleryLabel = O2
+
+[climatologyMapBGC_pH_3D]
+colormapNameResult = PuBuGn_r
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 8, &#39;vmax&#39;: 8.2}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -0.2, &#39;vmax&#39;: 0.2}
+units =
+filePrefix = timeMonthly_avg_ecosys_diag_
+observationsLabel = GLODAPv2
+galleryLabel = pH
+
+[climatologyMapBGC_DIC]
+colormapNameResult = YlGnBu
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 1900, &#39;vmax&#39;: 2300}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -100, &#39;vmax&#39;: 100}
+units = mmol m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = GLODAPv2
+galleryLabel = DIC
+
+[climatologyMapBGC_ALK]
+colormapNameResult = PuBuGn
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 2150, &#39;vmax&#39;: 2450}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -100, &#39;vmax&#39;: 100}
+units = meq m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = GLODAPv2
+galleryLabel = Alkalinity
+
+[climatologyMapBGC_pCO2surface]
+colormapNameResult = viridis
+colormapNameDifference = balance
+normTypeResult = linear
+normArgsResult = {&#39;vmin&#39;: 300, &#39;vmax&#39;: 450}
+normTypeDifference = linear
+normArgsDifference = {&#39;vmin&#39;: -50, &#39;vmax&#39;: 50}
+units = $\mu$atm
+filePrefix = timeMonthly_avg_ecosys_diag_
+observationsLabel = SOM-FFNv2016
+galleryLabel = pCO2
+
+[climatologyMapBGC_Chl]
+colormapNameResult = viridis
+colormapNameDifference = balance
+normTypeResult = log
+normArgsResult = {&#39;vmin&#39;: 0.01, &#39;vmax&#39;: 20}
+normTypeDifference = symLog
+normArgsDifference = {&#39;linthresh&#39;: 0.1, &#39;vmin&#39;: -10, &#39;vmax&#39;: 10}
+units = mg m$^{-3}$
+filePrefix = timeMonthly_avg_ecosysTracers_
+observationsLabel = SeaWIFS
+galleryLabel = Chlorophyll
+</pre></div>
+</div>
+<dl class="simple">
+<dt>For more details, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
+<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+<li><p><a class="reference internal" href="../config/comparison_grids.html#config-comparison-grids"><span class="std std-ref">Comparison Grids</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h2>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../obs/woa.html#woa"><span class="std std-ref">World Ocean Atlas v2</span></a></p></li>
+<li><p><a class="reference internal" href="../obs/roemmich_gilson_argo.html#roemmich-gilson-argo"><span class="std std-ref">Roemmich-Gilson Argo Climatology</span></a></p></li>
+<li><p><a class="reference internal" href="../obs/seawifs.html#seawifs"><span class="std std-ref">SeaWiFS</span></a></p></li>
+<li><p><a class="reference internal" href="../obs/glodapv2.html#glodapv2"><span class="std std-ref">GLODAPv2</span></a></p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../../_images/bgc.png"><img alt="../../_images/bgc.png" class="align-center" src="../../_images/bgc.png" style="width: 500px;" />
+</a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="climatologyMapArgoTemperature.html" class="btn btn-neutral float-left" title="climatologyMapArgoTemperature" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="climatologyMapBSF.html" class="btn btn-neutral float-right" title="climatologyMapBSF" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: 1.13.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="climatologyMapBGC.html">1.13.0</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="../../../develop/users_guide/tasks/climatologyMapBGC.html">develop</a></dd>
+      <dd><a href="../../../main/users_guide/tasks/climatologyMapBGC.html">main</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

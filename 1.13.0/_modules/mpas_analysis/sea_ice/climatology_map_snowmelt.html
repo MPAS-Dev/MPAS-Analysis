@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.sea_ice.climatology_map_snowmelt &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link href="../../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.sea_ice.climatology_map_snowmelt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for mpas_analysis.sea_ice.climatology_map_snowmelt</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright (c) 2017,  Los Alamos National Security, LLC (LANS)</span>
+<span class="c1"># and the University Corporation for Atmospheric Research (UCAR).</span>
+<span class="c1">#</span>
+<span class="c1"># Unless noted otherwise source code is licensed under the BSD license.</span>
+<span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
+<span class="c1"># distributed with this code, or at http://mpas-dev.github.com/license.html</span>
+<span class="c1">#</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLon2DGridDescriptor</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+    <span class="n">RemapObservedClimatologySubtask</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_obs_path</span>
+
+
+<div class="viewcode-block" id="ClimatologyMapSeaIceSnowMelt">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapSeaIceSnowMelt</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    An analysis task for snow melt rate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Elizabeth Hunke, Xylar Asay-Davis</span>
+
+<div class="viewcode-block" id="ClimatologyMapSeaIceSnowMelt.__init__">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
+                 <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">            Configuration options</span>
+
+<span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">            The task that produced the climatology to be remapped and plotted</span>
+
+<span class="sd">        hemisphere : {&#39;NH&#39;, &#39;SH&#39;}</span>
+<span class="sd">            The hemisphere to plot</span>
+
+<span class="sd">        control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">            Configuration options for a control run (if any)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Elizabeth Hunke, Xylar Asay-Davis</span>
+
+        <span class="n">task_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;climatologyMapSeaIceSnowMelt</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;snowMelt&#39;</span>
+
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
+
+        <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">task_name</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;seaIce&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
+
+        <span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
+
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
+            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">&#39;Northern&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">&#39;Southern&#39;</span>
+
+        <span class="c1"># read in what seasons we want to plot</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+
+        <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
+                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_snowMelt&#39;</span><span class="p">]</span>
+
+        <span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasSnowMeltClimatology</span><span class="p">(</span>
+            <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
+            <span class="n">parent_task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
+            <span class="n">comparison_grid_names</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remap_climatology_subtask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="n">comparison_grid_names</span><span class="p">:</span>
+
+                <span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="c1">#echmod - no observations yet</span>
+<span class="c1">#                    if hemisphere == &#39;SH&#39; and season == &#39;ANN&#39;:</span>
+<span class="c1">#                        ref_title_label = &#39;Observations (AnIceFlux)&#39;</span>
+<span class="c1">#                        gallery_name = &#39;Snow Melt Rate&#39;</span>
+<span class="c1">#                        diff_title_label = &#39;Model - Observations&#39;</span>
+<span class="c1">#                        obs_file_name = build_obs_path(</span>
+<span class="c1">#                                config, &#39;seaIce&#39;,</span>
+<span class="c1">#                                relativePathOption=f&#39;melting{hemisphere}&#39;,</span>
+<span class="c1">#                                relativePathSection=section_name)</span>
+
+<span class="c1">#                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(</span>
+<span class="c1">#                            parentTask=self, seasons=seasons,</span>
+<span class="c1">#                            fileName=obs_file_name,</span>
+<span class="c1">#                            outFilePrefix=f&#39;{field_name}{hemisphere}&#39;,</span>
+<span class="c1">#                            comparisonGridNames=comparison_grid_names)</span>
+<span class="c1">#                        self.add_subtask(remap_observations_subtask)</span>
+<span class="c1">#                    else:</span>
+                        <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">&#39;Snow Melt Rate&#39;</span>
+                        <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+                    <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">&#39;Snow Melt Rate&#39;</span>
+                    <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span>
+                    <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+
+                    <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="n">image_caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Climatology Map of &#39;</span> \
+                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere &#39;</span> \
+                                <span class="sa">f</span><span class="s1">&#39;Snow Melt Rate&#39;</span>
+                <span class="n">gallery_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere Snow Loss Processes&#39;</span>
+                <span class="c1"># make a new subtask for this season and comparison grid</span>
+                <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
+                    <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
+                    <span class="n">comparisonGridName</span><span class="o">=</span><span class="n">comparison_grid_name</span><span class="p">,</span>
+                    <span class="n">remapMpasClimatologySubtask</span><span class="o">=</span><span class="n">remap_climatology_subtask</span><span class="p">,</span>
+                    <span class="n">remapObsClimatologySubtask</span><span class="o">=</span><span class="n">remap_observations_subtask</span><span class="p">,</span>
+                    <span class="n">controlConfig</span><span class="o">=</span><span class="n">control_config</span><span class="p">)</span>
+
+                <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;seaice_snowmelt</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Snow melt rate&#39;</span><span class="p">,</span>
+                    <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
+                    <span class="n">refFieldName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
+                    <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
+                    <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m yr$^{-1}$&#39;</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="n">image_caption</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="n">gallery_group</span><span class="p">,</span>
+                    <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_snowmelt&#39;</span><span class="p">,</span>
+                    <span class="n">galleryName</span><span class="o">=</span><span class="n">gallery_name</span><span class="p">,</span>
+                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                    <span class="n">prependComparisonGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasSnowMeltClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A subtask for computing climatologies of snow melt rate</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span>
+                 <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparison_grid_names</span><span class="p">):</span>
+
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Construct the analysis task and add it as a subtask of the</span>
+<span class="sd">        ``parent_task``.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
+<span class="sd">            The task that produced the climatology to be remapped</span>
+<span class="sd">        parent_task :  mpas_analysis.shared.AnalysisTask</span>
+<span class="sd">            The parent task, used to get the ``taskName``, ``config`` and</span>
+<span class="sd">            ``componentName``</span>
+<span class="sd">        climatology_name : str</span>
+<span class="sd">            A name that describes the climatology (e.g. a short version of</span>
+<span class="sd">            the important field(s) in the climatology) used to name the</span>
+<span class="sd">            subdirectories for each stage of the climatology</span>
+<span class="sd">        variable_list : list of str</span>
+<span class="sd">            A list of variable names in ``timeSeriesStatsMonthly`` to be</span>
+<span class="sd">            included in the climatologies</span>
+<span class="sd">        seasons : list of str, optional</span>
+<span class="sd">            A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
+<span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">            climatologies are needed.</span>
+<span class="sd">        comparison_grid_names : list of {&#39;latlon&#39;, &#39;antarctic&#39;}</span>
+<span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;remapMpasClimatology_SnowMelt&#39;</span>
+        <span class="c1"># call the constructor from the base class</span>
+        <span class="c1"># (RemapMpasClimatologySubtask)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span>
+            <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparison_grid_names</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span> <span class="o">=</span> <span class="n">variable_list</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># first, call setup_and_check from the base class</span>
+        <span class="c1"># (RemapMpasClimatologySubtask), which will set up remappers and add</span>
+        <span class="c1"># variables to mpas_climatology_task</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="c1"># don&#39;t add the variables and seasons to mpas_climatology_task until</span>
+        <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">,</span>
+                                                     <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the snow melt rate.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            the climatology data set</span>
+<span class="sd">        season : str</span>
+<span class="sd">            The name of the season to be masked</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        climatology : xarray.Dataset</span>
+<span class="sd">            the modified climatology data set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">snowmelt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_snowmelt</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
+
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;snowMelt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">snowmelt</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">snowMelt</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m s-1&#39;</span>
+        <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">climatology</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_snowmelt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the snow melt rate in m yr^-1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span>
+
+        <span class="n">rate</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_snowMelt&#39;</span><span class="p">]</span>
+
+        <span class="n">snowmelt</span> <span class="o">=</span> <span class="n">rate</span> <span class="o">*</span> <span class="n">units_scale_factor</span>
+        <span class="k">return</span> <span class="n">snowmelt</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: 1.13.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="climatology_map_snowmelt.html">1.13.0</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="../../../../develop/index.html">develop</a></dd>
+      <dd><a href="../../../../main/index.html">main</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

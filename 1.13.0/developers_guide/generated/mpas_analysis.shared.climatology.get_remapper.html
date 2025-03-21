@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>mpas_analysis.shared.climatology.get_remapper &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="mpas_analysis.shared.climatology.compute_monthly_climatology" href="mpas_analysis.shared.climatology.compute_monthly_climatology.html" />
+    <link rel="prev" title="mpas_analysis.shared.climatology.get_comparison_descriptor" href="mpas_analysis.shared.climatology.get_comparison_descriptor.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#shared-modules">Shared modules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../api.html#reading-mpas-datasets">Reading MPAS Datasets</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../api.html#climatology">Climatology</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_comparison_descriptor.html">mpas_analysis.shared.climatology.get_comparison_descriptor</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.shared.climatology.get_remapper</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.compute_monthly_climatology.html">mpas_analysis.shared.climatology.compute_monthly_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.compute_climatology.html">mpas_analysis.shared.climatology.compute_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.add_years_months_days_in_month.html">mpas_analysis.shared.climatology.add_years_months_days_in_month</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory.html">mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_unmasked_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_masked_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html">mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.html">mpas_analysis.shared.climatology.MpasClimatologyTask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables.html">mpas_analysis.shared.climatology.MpasClimatologyTask.add_variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name.html">mpas_analysis.shared.climatology.MpasClimatologyTask.get_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.add_comparison_grid_descriptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_masked_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology.html">mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.customize_remapped_climatology</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.build_observational_dataset</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name.html">mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_file_name</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#time-series">Time Series</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#namelist-and-streams-files">Namelist and Streams Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#i-o-utilities">I/O Utilities</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#plotting">Plotting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#projection">Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#regions">Regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#timekeeping">Timekeeping</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#transects">Transects</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API reference</a></li>
+      <li class="breadcrumb-item active">mpas_analysis.shared.climatology.get_remapper</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/developers_guide/generated/mpas_analysis.shared.climatology.get_remapper.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="mpas-analysis-shared-climatology-get-remapper">
+<h1>mpas_analysis.shared.climatology.get_remapper<a class="headerlink" href="#mpas-analysis-shared-climatology-get-remapper" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="mpas_analysis.shared.climatology.get_remapper">
+<span class="sig-prename descclassname"><span class="pre">mpas_analysis.shared.climatology.</span></span><span class="sig-name descname"><span class="pre">get_remapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceDescriptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comparisonDescriptor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mappingFilePrefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/shared/climatology/climatology.html#get_remapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.shared.climatology.get_remapper" title="Link to this definition"></a></dt>
+<dd><p>Given config options and descriptions of the source and comparison grids,
+returns a <code class="docutils literal notranslate"><span class="pre">pyremap.Remapper</span></code> object that can be used to remap from source
+files or data sets to corresponding data sets on the comparison grid.</p>
+<p>If necessary, creates the mapping file containing weights and indices
+needed to perform remapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools v0.36.0)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options</p></li>
+<li><p><strong>sourceDescriptor</strong> (<em>pyremap.MeshDescriptor</em>) – A description of the source mesh or grid</p></li>
+<li><p><strong>comparisonDescriptor</strong> (<em>pyremap.MeshDescriptor</em>) – A description of the comparison grid</p></li>
+<li><p><strong>mappingFilePrefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A prefix to be prepended to the mapping file name</p></li>
+<li><p><strong>method</strong> (<em>{'bilinear'</em><em>, </em><em>'neareststod'</em><em>, </em><em>'conserve'}</em>) – The method of interpolation used.</p></li>
+<li><p><strong>logger</strong> (<a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.13)"><em>logging.Logger</em></a><em>, </em><em>optional</em>) – A logger to which ncclimo output should be redirected</p></li>
+<li><p><strong>vertices</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to remap from vertices, rather than cells</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>remapper</strong> (<em>pyremap.Remapper</em>) – A remapper that can be used to remap files or data sets from the source
+grid or mesh to the comparison grid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="mpas_analysis.shared.climatology.get_comparison_descriptor.html" class="btn btn-neutral float-left" title="mpas_analysis.shared.climatology.get_comparison_descriptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mpas_analysis.shared.climatology.compute_monthly_climatology.html" class="btn btn-neutral float-right" title="mpas_analysis.shared.climatology.compute_monthly_climatology" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: 1.13.0
+    <span class="fa fa-caret-down"></span>
+  </span>
+  <div class="rst-other-versions">
+    <dl>
+      <dt>Tags</dt>
+      <dd><a href="mpas_analysis.shared.climatology.get_remapper.html">1.13.0</a></dd>
+    </dl>
+    <dl>
+      <dt>Branches</dt>
+      <dd><a href="../../../develop/index.html">develop</a></dd>
+      <dd><a href="../../../main/index.html">main</a></dd>
+    </dl>
+  </div>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

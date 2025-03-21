@@ -1,0 +1,39 @@
+.. _woa23_t_s:
+
+WOA23 Temperature and Salinity Climatology
+==========================================
+
+Description
+-----------
+The World Ocean Atlas 2023 (WOA23) was released on February 14, 2024 and
+includes temperature, salinity, oxygen (and parameters Apparent Oxygen
+Utilization and percent oxygen saturation) and inorganic nutrients
+(phosphate, silicate, and nitrate). WOA23 includes approximately 1.8
+million new oceanographic casts added to the WOD since WOA18’s release,
+as well as renewed and updated quality controls.
+
+Source
+------
+`NOAA National Centers for Environmental Information (NCEI) website`_
+
+Release Policy
+--------------
+These data are openly available to the public. Please acknowledge the
+use of these data with the text given in the acknowledgment attribute.
+
+References
+----------
+- `Locarnini et al. (2024)`_
+- `Reagan et al. (2024)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapWoa`
+
+.. _`NOAA National Centers for Environmental Information (NCEI) website`: https://www.ncei.noaa.gov/products/world-ocean-atlas
+.. _`Locarnini et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60599
+.. _`Reagan et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60600
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/WOA23/obs.bib
+

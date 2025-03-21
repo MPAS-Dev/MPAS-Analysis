@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceAlbedo
+==================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceAlbedo
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAlbedo.__init__
+      ~ClimatologyMapSeaIceAlbedo.add_subtask
+      ~ClimatologyMapSeaIceAlbedo.check_analysis_enabled
+      ~ClimatologyMapSeaIceAlbedo.check_generate
+      ~ClimatologyMapSeaIceAlbedo.close
+      ~ClimatologyMapSeaIceAlbedo.is_alive
+      ~ClimatologyMapSeaIceAlbedo.join
+      ~ClimatologyMapSeaIceAlbedo.kill
+      ~ClimatologyMapSeaIceAlbedo.run
+      ~ClimatologyMapSeaIceAlbedo.run_after
+      ~ClimatologyMapSeaIceAlbedo.run_task
+      ~ClimatologyMapSeaIceAlbedo.set_start_end_date
+      ~ClimatologyMapSeaIceAlbedo.setup_and_check
+      ~ClimatologyMapSeaIceAlbedo.start
+      ~ClimatologyMapSeaIceAlbedo.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAlbedo.BLOCKED
+      ~ClimatologyMapSeaIceAlbedo.FAIL
+      ~ClimatologyMapSeaIceAlbedo.READY
+      ~ClimatologyMapSeaIceAlbedo.RUNNING
+      ~ClimatologyMapSeaIceAlbedo.SUCCESS
+      ~ClimatologyMapSeaIceAlbedo.UNSET
+      ~ClimatologyMapSeaIceAlbedo.authkey
+      ~ClimatologyMapSeaIceAlbedo.daemon
+      ~ClimatologyMapSeaIceAlbedo.exitcode
+      ~ClimatologyMapSeaIceAlbedo.ident
+      ~ClimatologyMapSeaIceAlbedo.name
+      ~ClimatologyMapSeaIceAlbedo.pid
+      ~ClimatologyMapSeaIceAlbedo.sentinel
+   
+   
