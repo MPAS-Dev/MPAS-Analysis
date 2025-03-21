@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis 1.12.0 documentation</title>
+  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis 1.13.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -841,11 +841,11 @@ namelist options available from the <code class="docutils literal notranslate"><
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">layer_thickness</span></code> from the <code class="docutils literal notranslate"><span class="pre">climatology</span></code> dataset itself.  As the
 docstring for <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> states, <code class="docutils literal notranslate"><span class="pre">climatology</span></code> is
-and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.1.3.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
+and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_activeTracers_temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_layerThickness</span></code> because we requested them back in the
 constructor of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
-We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.1.3.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
+We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
 this helper method.</p>
 <p>Back to <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>, we have:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
