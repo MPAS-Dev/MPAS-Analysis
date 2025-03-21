@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.plot.climatology_map &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.plot.climatology_map &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -110,26 +110,26 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">cols</span>
-<span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">mticker</span>
-<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1.inset_locator</span> <span class="kn">import</span> <span class="n">inset_axes</span>
-<span class="kn">import</span> <span class="nn">cartopy</span>
-<span class="kn">from</span> <span class="nn">cartopy.util</span> <span class="kn">import</span> <span class="n">add_cyclic_point</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cols</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mticker</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.patches</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpatches</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1.inset_locator</span><span class="w"> </span><span class="kn">import</span> <span class="n">inset_axes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">cartopy.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_cyclic_point</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">setup_colormap</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.save</span> <span class="kn">import</span> <span class="n">savefig</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.projection</span> <span class="kn">import</span> <span class="n">get_cartopy_projection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.colormap</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_colormap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.title</span><span class="w"> </span><span class="kn">import</span> <span class="n">limit_title</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.projection</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_cartopy_projection</span>
 
 
 <div class="viewcode-block" id="plot_polar_comparison">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_polar_comparison.html#mpas_analysis.shared.plot.plot_polar_comparison">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_polar_comparison</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_polar_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">lon</span><span class="p">,</span>
         <span class="n">lat</span><span class="p">,</span>
@@ -221,8 +221,8 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
-    <span class="k">def</span> <span class="nf">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
+                    <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Make a subplot within the figure.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -326,14 +326,14 @@
                 <span class="n">plotProjection</span><span class="p">))</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-    <span class="n">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">modelTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+    <span class="n">_do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">modelTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">refArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+        <span class="n">_do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">refArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">refTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">diffArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
+        <span class="n">_do_subplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">field</span><span class="o">=</span><span class="n">diffArray</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="n">diffTitle</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
 
     <span class="n">fig</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">pad</span><span class="o">=</span><span class="mf">4.</span><span class="p">)</span>
@@ -349,7 +349,7 @@
 
 <div class="viewcode-block" id="plot_global_comparison">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_global_comparison.html#mpas_analysis.shared.plot.plot_global_comparison">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_global_comparison</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_global_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">Lons</span><span class="p">,</span>
         <span class="n">Lats</span><span class="p">,</span>
@@ -442,8 +442,8 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
-    <span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
+                    <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
 
@@ -527,16 +527,16 @@
 
     <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-    <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+    <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
     <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
     <span class="n">_add_stats</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="n">Lats</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
@@ -548,7 +548,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">plot_projection_comparison</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_projection_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">x</span><span class="p">,</span>
         <span class="n">y</span><span class="p">,</span>
@@ -643,7 +643,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="nf">add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="o">=</span><span class="mf">8e5</span><span class="p">,</span> <span class="n">arrow_width</span><span class="o">=</span><span class="mf">1.5e4</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">arrow_spacing</span><span class="p">,</span> <span class="n">arrow_width</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        https://stackoverflow.com/a/27637925/7728169</span>
 <span class="sd">        Add arrows to a matplotlib.lines.Line2D at selected locations.</span>
@@ -668,8 +668,8 @@
             <span class="n">arrows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">arrows</span>
 
-    <span class="k">def</span> <span class="nf">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
-                   <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrows</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">colormap</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">levels</span><span class="p">,</span> <span class="n">ticks</span><span class="p">,</span> <span class="n">contours</span><span class="p">,</span>
+                    <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrowSpacing</span><span class="p">,</span> <span class="n">arrowWidth</span><span class="p">):</span>
 
         <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">plottitle_font</span><span class="p">)</span>
@@ -705,17 +705,27 @@
                         <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">contours</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># add arrows to streamlines</span>
+            <span class="n">arrows</span> <span class="o">=</span> <span class="n">arrowSpacing</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">arrowWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="n">special_zero</span> <span class="o">=</span> <span class="n">arrows</span> <span class="ow">and</span> <span class="mf">0.</span> <span class="ow">in</span> <span class="n">contours</span>
+
+            <span class="k">if</span> <span class="n">special_zero</span><span class="p">:</span>
+                <span class="c1"># treat the zero contour as a special case</span>
+                <span class="n">contours</span> <span class="o">=</span> <span class="p">[</span><span class="n">contour</span> <span class="k">for</span> <span class="n">contour</span> <span class="ow">in</span> <span class="n">contours</span> <span class="k">if</span> <span class="n">contour</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">]</span>
+
             <span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;contour.negative_linestyle&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
             <span class="n">x_center</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
             <span class="n">y_center</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
             <span class="n">cs</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x_center</span><span class="p">,</span> <span class="n">y_center</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">contours</span><span class="p">,</span>
                             <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
-            <span class="c1"># add arrows to streamlines</span>
-            <span class="k">if</span> <span class="n">arrows</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">collection</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">collections</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">collection</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
-                        <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">():</span>
-                            <span class="n">add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">cs</span><span class="o">.</span><span class="n">get_paths</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">poly</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">to_polygons</span><span class="p">():</span>
+                    <span class="n">_add_arrow_to_line_2d</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">poly</span><span class="p">,</span> <span class="n">arrowSpacing</span><span class="p">,</span> <span class="n">arrowWidth</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">special_zero</span><span class="p">:</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x_center</span><span class="p">,</span> <span class="n">y_center</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mf">0.</span><span class="p">],</span>
+                           <span class="n">colors</span><span class="o">=</span><span class="n">lineColor</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.5</span> <span class="o">*</span> <span class="n">lineWidth</span><span class="p">)</span>
+
         <span class="c1"># create an axes on the right side of ax. The width of cax will be 5%</span>
         <span class="c1"># of ax and the padding between cax and ax will be fixed at 0.05 inch.</span>
         <span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
@@ -778,7 +788,8 @@
     <span class="c1"># set up land colormap</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">useCartopyCoastline</span><span class="p">:</span>
         <span class="n">colorList</span> <span class="o">=</span> <span class="p">[(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)]</span>
-        <span class="n">landColorMap</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="n">colorList</span><span class="p">)</span>
+        <span class="n">landColorMap</span> <span class="o">=</span> <span class="n">cols</span><span class="o">.</span><span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="s1">&#39;land&#39;</span><span class="p">,</span>
+                                                              <span class="n">colorList</span><span class="p">)</span>
 
     <span class="c1"># locations of centers for contour plots</span>
     <span class="n">xCenter</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -789,14 +800,14 @@
     <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-    <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+    <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
 
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-        <span class="n">plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">fileout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">savefig</span><span class="p">(</span><span class="n">fileout</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
@@ -804,7 +815,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<span class="k">def</span> <span class="nf">_add_stats</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="n">Lats</span><span class="p">,</span> <span class="n">axes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_add_stats</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="n">Lats</span><span class="p">,</span> <span class="n">axes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; compute the means, std devs. and Pearson correlation &quot;&quot;&quot;</span>
     <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">Lats</span><span class="p">))</span>
 
@@ -862,7 +873,7 @@
             <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_add_stats_text</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_add_stats_text</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">loc</span> <span class="o">==</span> <span class="s1">&#39;upper&#39;</span><span class="p">:</span>
         <span class="n">text_ax</span> <span class="o">=</span> <span class="n">inset_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;17%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;20%&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
                              <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
@@ -881,7 +892,7 @@
     <span class="n">text_ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ice_shelves</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_add_land_lakes_coastline</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ice_shelves</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
     <span class="n">land_50m</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
             <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;land&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
             <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;#cccccc&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
@@ -892,8 +903,8 @@
     <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">land_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">ice_shelves</span><span class="p">:</span>
         <span class="n">ice_50m</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">NaturalEarthFeature</span><span class="p">(</span>
-                <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_ice_shelves_polys&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
-                <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+                <span class="s1">&#39;physical&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_ice_shelves_polys&#39;</span><span class="p">,</span> <span class="s1">&#39;50m&#39;</span><span class="p">,</span>
+                <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;lightgray&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">ice_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">lakes_50m</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </pre></div>
@@ -926,14 +937,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map.html">main</a></dd>

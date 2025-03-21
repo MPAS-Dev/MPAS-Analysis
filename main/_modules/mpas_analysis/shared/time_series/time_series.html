@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.time_series.time_series &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.time_series.time_series &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -109,17 +109,17 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">distutils.spawn</span> <span class="kn">import</span> <span class="n">find_executable</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">days_to_datetime</span>
 
 
-<span class="k">def</span> <span class="nf">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                                     <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Uses ncrcat to extact time series from a series of files</span>
@@ -147,7 +147,7 @@
 <span class="sd">    Xylar Asay-Davis</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">find_executable</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
                       <span class="s1">&#39;package is installed: </span><span class="se">\n</span><span class="s1">&#39;</span>
                       <span class="s1">&#39;conda install nco</span><span class="se">\n</span><span class="s1">&#39;</span>
@@ -203,7 +203,7 @@
 
 <div class="viewcode-block" id="cache_time_series">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.time_series.cache_time_series.html#mpas_analysis.shared.time_series.cache_time_series">[docs]</a>
-<span class="k">def</span> <span class="nf">cache_time_series</span><span class="p">(</span><span class="n">timesInDataSet</span><span class="p">,</span> <span class="n">timeSeriesCalcFunction</span><span class="p">,</span> <span class="n">cacheFileName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cache_time_series</span><span class="p">(</span><span class="n">timesInDataSet</span><span class="p">,</span> <span class="n">timeSeriesCalcFunction</span><span class="p">,</span> <span class="n">cacheFileName</span><span class="p">,</span>
                       <span class="n">calendar</span><span class="p">,</span> <span class="n">yearsPerCacheUpdate</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                       <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -359,14 +359,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="time_series.html">main</a></dd>

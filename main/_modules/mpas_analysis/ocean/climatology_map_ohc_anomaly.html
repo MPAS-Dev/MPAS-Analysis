@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.climatology_map_ohc_anomaly &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.climatology_map_ohc_anomaly &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -102,18 +102,18 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">compute_zmid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_zmid</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapOHCAnomaly">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly">[docs]</a>
-<span class="k">class</span> <span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of the anomaly from a reference year</span>
 <span class="sd">    (typically the start of the simulation) of ocean heat content (OHC)</span>
@@ -130,7 +130,7 @@
 
 <div class="viewcode-block" id="ClimatologyMapOHCAnomaly.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
                  <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -242,7 +242,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">        in which case the analysis will not be meaningful.</span>
@@ -269,7 +269,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
@@ -284,7 +284,7 @@
 <span class="sd">        The minimum and maximum depths for integration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
                  <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
                  <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
@@ -340,7 +340,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span> <span class="o">=</span> <span class="n">min_depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -355,7 +355,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
@@ -390,7 +390,7 @@
 
         <span class="k">return</span> <span class="n">climatology</span>
 
-    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
@@ -456,14 +456,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map_ohc_anomaly.html">main</a></dd>

@@ -6,21 +6,20 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Analysis Tasks &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Analysis Tasks &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="climatologyMapMassFluxes" href="tasks/climatologyMapMassFluxes.html" />
+    <link rel="next" title="climatologyMapAntarcticMelt" href="tasks/climatologyMapAntarcticMelt.html" />
     <link rel="prev" title="Output Grids for Transects" href="config/transects.html" />
     <link href="../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -50,51 +49,77 @@
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="configuration.html">Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis Tasks</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSST.html">climatologyMapSST</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSSS.html">climatologyMapSSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSSH.html">climatologyMapSSH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapVel.html">climatologyMapVel</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapWaves.html">climatologyMapWaves</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSST.html">timeSeriesSST</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/indexNino34.html">indexNino34</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/woceTransects.html">woceTransects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/soseTransects.html">soseTransects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/geojsonTransects.html">geojsonTransects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/regionalTSDiagrams.html">regionalTSDiagrams</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/conservation.html">conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/osnapTransects.html">osnapTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/woaTransects.html">woaTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAlbedoNH.html">climatologyMapSeaIceAlbedoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAlbedoSH.html">climatologyMapSeaIceAlbedoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaFractionRidgeNH.html">climatologyMapSeaIceAreaFractionRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaFractionRidgeSH.html">climatologyMapSeaIceAreaFractionRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyThermoNH.html">climatologyMapSeaIceAreaTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyThermoSH.html">climatologyMapSeaIceAreaTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyTranspNH.html">climatologyMapSeaIceAreaTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyTranspSH.html">climatologyMapSeaIceAreaTendencyTranspSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
-<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIcePondAreaNH.html">climatologyMapSeaIcePondAreaNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIcePondAreaSH.html">climatologyMapSeaIcePondAreaSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowDepthNH.html">climatologyMapSeaIceSnowDepthNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowDepthSH.html">climatologyMapSeaIceSnowDepthSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowiceFormationNH.html">climatologyMapSeaIceSnowiceFormationNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowiceFormationSH.html">climatologyMapSeaIceSnowiceFormationSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowMeltNH.html">climatologyMapSeaIceSnowMeltNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowMeltSH.html">climatologyMapSeaIceSnowMeltSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeRidgeNH.html">climatologyMapSeaIceVolumeRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeRidgeSH.html">climatologyMapSeaIceVolumeRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyThermoNH.html">climatologyMapSeaIceVolumeTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyThermoSH.html">climatologyMapSeaIceVolumeTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyTranspNH.html">climatologyMapSeaIceVolumeTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyTranspSH.html">climatologyMapSeaIceVolumeTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tasks/timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tasks/climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
 </ul>
 </li>
@@ -147,51 +172,77 @@
 <h1>Analysis Tasks<a class="headerlink" href="#analysis-tasks" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMLD.html">climatologyMapMLD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSST.html">climatologyMapSST</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSSS.html">climatologyMapSSS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSSH.html">climatologyMapSSH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSose.html">climatologyMapSose</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapVel.html">climatologyMapVel</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapWaves.html">climatologyMapWaves</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSST.html">timeSeriesSST</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/indexNino34.html">indexNino34</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/woceTransects.html">woceTransects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/soseTransects.html">soseTransects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/geojsonTransects.html">geojsonTransects</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/regionalTSDiagrams.html">regionalTSDiagrams</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/conservation.html">conservation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/indexNino34.html">indexNino34</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/osnapTransects.html">osnapTransects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/soseTransects.html">soseTransects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/woaTransects.html">woaTransects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/woceTransects.html">woceTransects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAlbedoNH.html">climatologyMapSeaIceAlbedoNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAlbedoSH.html">climatologyMapSeaIceAlbedoSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaFractionRidgeNH.html">climatologyMapSeaIceAreaFractionRidgeNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaFractionRidgeSH.html">climatologyMapSeaIceAreaFractionRidgeSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyThermoNH.html">climatologyMapSeaIceAreaTendencyThermoNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyThermoSH.html">climatologyMapSeaIceAreaTendencyThermoSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyTranspNH.html">climatologyMapSeaIceAreaTendencyTranspNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceAreaTendencyTranspSH.html">climatologyMapSeaIceAreaTendencyTranspSH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
-<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIcePondAreaNH.html">climatologyMapSeaIcePondAreaNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIcePondAreaSH.html">climatologyMapSeaIcePondAreaSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowDepthNH.html">climatologyMapSeaIceSnowDepthNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowDepthSH.html">climatologyMapSeaIceSnowDepthSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowiceFormationNH.html">climatologyMapSeaIceSnowiceFormationNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowiceFormationSH.html">climatologyMapSeaIceSnowiceFormationSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowMeltNH.html">climatologyMapSeaIceSnowMeltNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceSnowMeltSH.html">climatologyMapSeaIceSnowMeltSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeRidgeNH.html">climatologyMapSeaIceVolumeRidgeNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeRidgeSH.html">climatologyMapSeaIceVolumeRidgeSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyThermoNH.html">climatologyMapSeaIceVolumeTendencyThermoNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyThermoSH.html">climatologyMapSeaIceVolumeTendencyThermoSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyTranspNH.html">climatologyMapSeaIceVolumeTendencyTranspNH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapSeaIceVolumeTendencyTranspSH.html">climatologyMapSeaIceVolumeTendencyTranspSH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tasks/timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tasks/climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
 </ul>
 </div>
@@ -202,7 +253,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="config/transects.html" class="btn btn-neutral float-left" title="Output Grids for Transects" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="tasks/climatologyMapMassFluxes.html" class="btn btn-neutral float-right" title="climatologyMapMassFluxes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="tasks/climatologyMapAntarcticMelt.html" class="btn btn-neutral float-right" title="climatologyMapAntarcticMelt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -229,14 +280,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/users_guide/analysis_tasks.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/users_guide/analysis_tasks.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/users_guide/analysis_tasks.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/users_guide/analysis_tasks.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/users_guide/analysis_tasks.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="analysis_tasks.html">main</a></dd>

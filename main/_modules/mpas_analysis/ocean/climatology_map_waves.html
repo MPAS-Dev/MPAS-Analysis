@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.climatology_map_waves &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.climatology_map_waves &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -102,28 +102,28 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span><span class="p">,</span> \
     <span class="n">unicode_literals</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">from</span> <span class="nn">pyremap</span> <span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_obs_path</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> \
     <span class="n">RemapObservedClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.interpolation.utility</span> <span class="kn">import</span> <span class="n">add_periodic_lon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.interpolation.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_periodic_lon</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapWaves">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves">[docs]</a>
-<span class="k">class</span> <span class="nc">ClimatologyMapWaves</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapWaves</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for the computation of wave climatologies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -134,7 +134,7 @@
 
 <div class="viewcode-block" id="ClimatologyMapWaves.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -328,7 +328,7 @@
 
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -353,7 +353,7 @@
     <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">RemapMpasWavesClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasWavesClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping wave climatology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -361,7 +361,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Steven Brus, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Convert peak freqency to peak period</span>
 
@@ -398,7 +398,7 @@
     <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">RemapEra5ObservedWaveClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapEra5ObservedWaveClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping ERA5 wave observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -406,7 +406,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Steven Brus, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
                  <span class="n">variableList</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">,</span>
                  <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]):</span>
         <span class="c1"># {{{</span>
@@ -452,7 +452,7 @@
                          <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
@@ -478,7 +478,7 @@
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;longitude&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>  <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
@@ -519,7 +519,7 @@
     <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">RemapSscciObservedWaveClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapSscciObservedWaveClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for reading and remapping SS_CCI wave observations</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -527,7 +527,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Steven Brus, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
                  <span class="n">variableList</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">,</span>
                  <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]):</span>
         <span class="c1"># {{{</span>
@@ -573,7 +573,7 @@
                          <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
         <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
@@ -599,7 +599,7 @@
                                                   <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>  <span class="c1"># }}}</span>
 
-    <span class="k">def</span> <span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>  <span class="c1"># {{{</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
@@ -670,14 +670,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map_waves.html">main</a></dd>

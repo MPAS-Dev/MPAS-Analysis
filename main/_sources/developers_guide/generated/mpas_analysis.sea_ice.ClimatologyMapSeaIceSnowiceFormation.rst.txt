@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceSnowiceFormation
+============================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceSnowiceFormation
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowiceFormation.__init__
+      ~ClimatologyMapSeaIceSnowiceFormation.add_subtask
+      ~ClimatologyMapSeaIceSnowiceFormation.check_analysis_enabled
+      ~ClimatologyMapSeaIceSnowiceFormation.check_generate
+      ~ClimatologyMapSeaIceSnowiceFormation.close
+      ~ClimatologyMapSeaIceSnowiceFormation.is_alive
+      ~ClimatologyMapSeaIceSnowiceFormation.join
+      ~ClimatologyMapSeaIceSnowiceFormation.kill
+      ~ClimatologyMapSeaIceSnowiceFormation.run
+      ~ClimatologyMapSeaIceSnowiceFormation.run_after
+      ~ClimatologyMapSeaIceSnowiceFormation.run_task
+      ~ClimatologyMapSeaIceSnowiceFormation.set_start_end_date
+      ~ClimatologyMapSeaIceSnowiceFormation.setup_and_check
+      ~ClimatologyMapSeaIceSnowiceFormation.start
+      ~ClimatologyMapSeaIceSnowiceFormation.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowiceFormation.BLOCKED
+      ~ClimatologyMapSeaIceSnowiceFormation.FAIL
+      ~ClimatologyMapSeaIceSnowiceFormation.READY
+      ~ClimatologyMapSeaIceSnowiceFormation.RUNNING
+      ~ClimatologyMapSeaIceSnowiceFormation.SUCCESS
+      ~ClimatologyMapSeaIceSnowiceFormation.UNSET
+      ~ClimatologyMapSeaIceSnowiceFormation.authkey
+      ~ClimatologyMapSeaIceSnowiceFormation.daemon
+      ~ClimatologyMapSeaIceSnowiceFormation.exitcode
+      ~ClimatologyMapSeaIceSnowiceFormation.ident
+      ~ClimatologyMapSeaIceSnowiceFormation.name
+      ~ClimatologyMapSeaIceSnowiceFormation.pid
+      ~ClimatologyMapSeaIceSnowiceFormation.sentinel
+   
+   

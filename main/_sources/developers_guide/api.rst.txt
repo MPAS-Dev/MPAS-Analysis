@@ -73,12 +73,16 @@ Ocean tasks
    ClimatologyMapAntarcticMelt
    ClimatologyMapSose
    ClimatologyMapVel
+   ClimatologyMapWoa
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    ClimatologyMapWaves
    IndexNino34
    MeridionalHeatTransport
    OceanHistogram
+   OceanRegionalProfiles
+   RegionalTSDiagrams
+   SoseTransects
    StreamfunctionMOC
    TimeSeriesOHCAnomaly
    TimeSeriesTemperatureAnomaly
@@ -87,6 +91,11 @@ Ocean tasks
    TimeSeriesAntarcticMelt
    TimeSeriesOceanRegions
    TimeSeriesTransport
+   WoaTransects
+   WoceTransects
+
+Ocean subtasks
+--------------
 
 .. currentmodule:: mpas_analysis.ocean.compute_anomaly_subtask
 
@@ -110,6 +119,19 @@ Ocean tasks
    PlotHovmollerSubtask
 
 
+Ocean utilities
+---------------
+
+.. currentmodule:: mpas_analysis.ocean.utility
+
+.. autosummary::
+   :toctree: generated/
+
+   add_standard_regions_and_subset
+   get_standard_region_names
+   compute_zmid
+
+
 Sea ice tasks
 -------------
 
@@ -120,6 +142,19 @@ Sea ice tasks
 
    ClimatologyMapSeaIceConc
    ClimatologyMapSeaIceThick
+   ClimatologyMapSeaIceSnowDepth
+   ClimatologyMapSeaIceSnowiceFormation
+   ClimatologyMapSeaIceSnowMelt
+   ClimatologyMapSeaIcePondArea
+   ClimatologyMapSeaIceAreaFractionRidge
+   ClimatologyMapSeaIceVolumeRidge
+   ClimatologyMapSeaIceAlbedo
+   ClimatologyMapSeaIceProduction
+   ClimatologyMapSeaIceMelting
+   ClimatologyMapSeaIceAreaTendencyThermo
+   ClimatologyMapSeaIceAreaTendencyTransp
+   ClimatologyMapSeaIceVolumeTendencyThermo
+   ClimatologyMapSeaIceVolumeTendencyTransp
    TimeSeriesSeaIce
    ClimatologyMapIcebergConc
 

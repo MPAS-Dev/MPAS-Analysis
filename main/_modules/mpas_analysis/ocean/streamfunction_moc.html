@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.streamfunction_moc &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.streamfunction_moc &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -105,36 +105,36 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">netCDF4</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.ocean.moc</span> <span class="kn">import</span> <span class="n">add_moc_southern_boundary_transects</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.io</span> <span class="kn">import</span> <span class="n">write_netcdf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.ocean.moc</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_moc_southern_boundary_transects</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_netcdf</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants.constants</span> <span class="kn">import</span> <span class="n">m3ps_to_Sv</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">plot_vertical_section_comparison</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">m3ps_to_Sv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_vertical_section_comparison</span><span class="p">,</span> \
     <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">make_directories</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">get_region_mask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">days_to_datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">days_to_datetime</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology.climatology</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology.climatology</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">get_climatology_op_directory</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.regions</span> <span class="kn">import</span> <span class="n">ComputeRegionMasksSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.regions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComputeRegionMasksSubtask</span>
 
 
 <div class="viewcode-block" id="StreamfunctionMOC">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC">[docs]</a>
-<span class="k">class</span> <span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StreamfunctionMOC</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation and plotting of model meridional overturning circulation.</span>
 <span class="sd">    Will eventually support:</span>
@@ -150,7 +150,7 @@
 
 <div class="viewcode-block" id="StreamfunctionMOC.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.StreamfunctionMOC.html#mpas_analysis.ocean.StreamfunctionMOC.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -208,7 +208,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="n">ComputeRegionMasksSubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeMOCMasksSubtask</span><span class="p">(</span><span class="n">ComputeRegionMasksSubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis subtasks for computing cell masks and southern transects for</span>
 <span class="sd">    MOC regions</span>
@@ -217,7 +217,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
@@ -247,7 +247,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">maskAndTransectFileName</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -269,7 +269,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_mocBasinsAndTransects</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">meshName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the requested climatologies</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -296,7 +296,7 @@
 <span class="c1"># }}}</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a climatology of the model meridional overturning</span>
 <span class="sd">    circulation.</span>
@@ -312,7 +312,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -350,7 +350,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -424,7 +424,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                                                <span class="n">seasons</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process MOC analysis member data if available, or compute MOC at</span>
 <span class="sd">        post-processing if not.</span>
@@ -442,7 +442,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compute_moc_climo_postprocess</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_compute_moc_climo_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_moc_climo_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -573,7 +573,7 @@
         <span class="n">depthVar</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="n">ncFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_compute_moc_climo_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_moc_climo_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction as a post-process&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -725,7 +725,7 @@
         <span class="n">ncFile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 
-<span class="k">class</span> <span class="nc">PlotMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotMOCClimatologySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a climatology of the model meridional overturning</span>
 <span class="sd">    circulation.</span>
@@ -734,7 +734,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -762,7 +762,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -806,7 +806,7 @@
                                                         <span class="n">filePrefix</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="n">filePrefix</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC climatology</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -895,7 +895,7 @@
                 <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
@@ -920,7 +920,7 @@
         <span class="k">return</span> <span class="n">depth</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">moc</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computation of a time series of max Atlantic MOC at 26.5N.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -928,7 +928,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">maskSubtask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -970,7 +970,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">includeBolus</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">includeSubmesoscale</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -1036,7 +1036,7 @@
                     <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalMLEvelocity&#39;</span><span class="p">,</span>
                      <span class="s1">&#39;timeMonthly_avg_vertMLEBolusVelocityTop&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Process MOC analysis member data if available, or compute MOC at</span>
 <span class="sd">        post-processing if not.</span>
@@ -1057,7 +1057,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compute_moc_time_series_postprocess</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_compute_moc_time_series_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_moc_time_series_analysismember</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute MOC time series from analysis member&quot;&quot;&quot;</span>
 
         <span class="c1"># Compute and plot time series of Atlantic MOC at 26.5N (RAPID array)</span>
@@ -1237,7 +1237,7 @@
         <span class="n">dsMOCTimeSeries</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">dictionary</span><span class="p">)</span>
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMOCTimeSeries</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_moc_time_series_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_moc_time_series_postprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute MOC time series as a post-process&quot;&quot;&quot;</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -1432,7 +1432,7 @@
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">dsMOCTimeSeries</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">CombineMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CombineMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series of max Atlantic MOC at 26.5N into a single</span>
 <span class="sd">    data set</span>
@@ -1441,7 +1441,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -1469,7 +1469,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">startYears</span> <span class="o">=</span> <span class="n">startYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1505,7 +1505,7 @@
         <span class="n">write_netcdf</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outputFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PlotMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotMOCTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots a time series of max Atlantic MOC at 26.5N.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1513,7 +1513,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani, Mark Petersen, Phillip Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -1541,7 +1541,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -1572,7 +1572,7 @@
                                                 <span class="n">filePrefix</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="n">filePrefix</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plot the MOC time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1654,7 +1654,7 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_load_moc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;compute mean MOC streamfunction from analysis member&quot;&quot;&quot;</span>
 
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
@@ -1670,7 +1670,7 @@
         <span class="k">return</span> <span class="n">dsMOCTimeSeries</span>
 
 
-<span class="k">def</span> <span class="nf">_load_mesh</span><span class="p">(</span><span class="n">runStreams</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_mesh</span><span class="p">(</span><span class="n">runStreams</span><span class="p">):</span>
     <span class="c1"># Load mesh related variables</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">restartFile</span> <span class="o">=</span> <span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -1697,7 +1697,7 @@
         <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span>
 
 
-<span class="k">def</span> <span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_region_mask_dict</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">,</span> <span class="n">mpasMeshName</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;Regional masking file </span><span class="si">{}</span><span class="s1"> for MOC calculation &#39;</span>
                       <span class="s1">&#39;does not exist&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">))</span>
@@ -1735,7 +1735,7 @@
     <span class="k">return</span> <span class="n">dictRegion</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_transport</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">,</span> <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_transport</span><span class="p">(</span><span class="n">maxEdgesInTransect</span><span class="p">,</span> <span class="n">transectEdgeGlobalIDs</span><span class="p">,</span>
                        <span class="n">transectEdgeMaskSigns</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">dvEdge</span><span class="p">,</span>
                        <span class="n">horizontalVel</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;compute mass transport across southern transect of ocean basin&quot;&quot;&quot;</span>
@@ -1758,7 +1758,7 @@
     <span class="k">return</span> <span class="n">transportZ</span>
 
 
-<span class="k">def</span> <span class="nf">_compute_moc</span><span class="p">(</span><span class="n">latBins</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">regionCellMask</span><span class="p">,</span> <span class="n">transportZ</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_compute_moc</span><span class="p">(</span><span class="n">latBins</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">regionCellMask</span><span class="p">,</span> <span class="n">transportZ</span><span class="p">,</span>
                  <span class="n">velArea</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;compute meridionally integrated MOC streamfunction&quot;&quot;&quot;</span>
 
@@ -1777,7 +1777,7 @@
     <span class="k">return</span> <span class="n">mocTop</span>
 
 
-<span class="k">def</span> <span class="nf">_interp_moc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refX</span><span class="p">,</span> <span class="n">refZ</span><span class="p">,</span> <span class="n">refMOC</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_interp_moc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">regionMOC</span><span class="p">,</span> <span class="n">refX</span><span class="p">,</span> <span class="n">refZ</span><span class="p">,</span> <span class="n">refMOC</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span>
     <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">values</span>
     <span class="n">dims</span> <span class="o">=</span> <span class="n">regionMOC</span><span class="o">.</span><span class="n">dims</span>
@@ -1830,14 +1830,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="streamfunction_moc.html">main</a></dd>

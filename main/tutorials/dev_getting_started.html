@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developer: Getting Started &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Developer: Getting Started &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -70,7 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">2. Cloning the repository</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#making-a-worktree">3. Making a worktree</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#making-a-conda-environment">4. Making a conda environment</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#installing-mambaforge">4.1 Installing Mambaforge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#installing-miniforge3">4.1 Installing Miniforge3</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#one-time-miniconda-setup">4.2 One-time Miniconda setup</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#create-a-development-environment">4.3 Create a development environment</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#activating-the-environment">4.4 Activating the environment</a></li>
@@ -135,6 +135,12 @@ repo, cloning the repository (and your fork) locally, making a git worktree for
 development, and creating a conda environment that includes the
 <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package and all of its dependencies, installed in a mode
 appropriate for development.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Beware of hyphens and underscores. The conda package name and some
+environment names use a hyphen (<code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>). The python package and
+the command name use an underscore (<code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code>).</p>
+</div>
 <section id="getting-started-on-github">
 <h2>1. Getting started on GitHub<a class="headerlink" href="#getting-started-on-github" title="Link to this heading"></a></h2>
 <section id="forking-mpas-analysis">
@@ -240,23 +246,22 @@ branch you will be developing.</p>
 <p>MPAS-Analysis relies on several packages that are only available as conda
 packages from the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel.  The first step for running
 MPAS-Analysis is to create a conda environment with all the needed packages.</p>
-<section id="installing-mambaforge">
-<h3>4.1 Installing Mambaforge<a class="headerlink" href="#installing-mambaforge" title="Link to this heading"></a></h3>
-<p>If you have not yet installed Anaconda, Miniconda or Mambaforge, you will need
+<section id="installing-miniforge3">
+<h3>4.1 Installing Miniforge3<a class="headerlink" href="#installing-miniforge3" title="Link to this heading"></a></h3>
+<p>If you have not yet installed Anaconda, Miniconda or Miniforge, you will need
 to begin there.  The concept behind Anaconda is that just about everything you
 would need for a typical python workflow is included.  The concept behind
-Miniconda and Mambaforge is that you create different environments for
+Miniconda and Miniforge is that you create different environments for
 different purposes.  This allows for greater flexibility and tends to lead to
 fewer conflicts between incompatible packages, particularly when using a
 channel other than the <code class="docutils literal notranslate"><span class="pre">defaults</span></code> supplied by Anaconda.  Since we will use
-the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel and the <code class="docutils literal notranslate"><span class="pre">mamba</span></code> tools to speed up installation,
-the Mambaforge approach is strongly recommended.  The main advantage of
-Mambaforge over Miniconda is that it automatically takes care of a few steps
-that we otherwise need to do manually.</p>
+the <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel, the Miniforge3 approach is strongly recommended.
+The main advantage of Miniforge3 over Miniconda is that it automatically takes
+care of a few steps that we otherwise need to do manually.</p>
 <p>First download the
-<a class="reference external" href="https://github.com/conda-forge/miniforge#mambaforge">Mambaforge installer</a>
+<a class="reference external" href="https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3">Miniforge3 installer</a>
 for your operating system, then run it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Mambaforge-Linux-x86_64.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>/bin/bash<span class="w"> </span>Miniforge3-Linux-x86_64.sh
 </pre></div>
 </div>
 <div class="admonition note">
@@ -274,64 +279,60 @@ MPAS-Analysis on ARM or Power8/9 architectures.</p>
 <p>You will be asked to agree to the terms and conditions. Type <code class="docutils literal notranslate"><span class="pre">yes</span></code> to
 continue.</p>
 <p>You will be prompted with a location to install. In this tutorial, we assume
-that Mambaforge is installed in the default location, <code class="docutils literal notranslate"><span class="pre">~/mambaforge</span></code>.  If
-you are using Miniconda or chose to install Mambaforge somewhere else, just
+that Miniforge3 is installed in the default location, <code class="docutils literal notranslate"><span class="pre">~/miniforge3</span></code>.  If
+you are using Miniconda or chose to install Miniforge3 somewhere else, just
 make sure to make the appropriate substitution whenever you see a reference to
 this path below.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>On some HPC machines (particularly at LANL Institutional Computing and
 NERSC) the space in your home directory is quite limited.  You may want to
-install Mambaforge in an alternative location to avoid running out of
+install Miniforge3 in an alternative location to avoid running out of
 space.</p>
 </div>
 <p>You will see prompt like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you wish the installer to initialize Mambaforge
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you wish the installer to initialize Miniforge3
 by running conda init? [yes|no]
 [no] &gt;&gt;&gt;
 </pre></div>
 </div>
 <p>You may wish to skip the step (answer <code class="docutils literal notranslate"><span class="pre">no</span></code>) if you are working on a system
 where you will also be using other conda environments, most notably
-E3SM-Unified (which has its own Miniconda installation).  If you do not run
+E3SM-Unified (which has its own Miniforge3 installation).  If you do not run
 conda init, you have to manually activate <code class="docutils literal notranslate"><span class="pre">conda</span></code> whenever you need it.
 For <code class="docutils literal notranslate"><span class="pre">bash</span></code> and similar shells, this is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/mambaforge/etc/profile.d/conda.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
 $<span class="w"> </span>conda<span class="w"> </span>activate
 </pre></div>
 </div>
 <p>If you use <code class="docutils literal notranslate"><span class="pre">csh</span></code>, <code class="docutils literal notranslate"><span class="pre">tcsh</span></code> or related shells, this becomes:</p>
-<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/mambaforge/etc/profile.d/conda.csh
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh
 &gt; conda activate
 </pre></div>
 </div>
 <p>You may wish to create an alias in your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.cshrc</span></code> to make
 this easier.  For example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">init_conda</span><span class="o">=</span><span class="s2">&quot;source ~/mambaforge/etc/profile.d/conda.sh; conda activate&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">init_conda</span><span class="o">=</span><span class="s2">&quot;source ~/miniforge3/etc/profile.d/conda.sh; conda activate&quot;</span>
 </pre></div>
 </div>
 </section>
 <section id="one-time-miniconda-setup">
 <h3>4.2 One-time Miniconda setup<a class="headerlink" href="#one-time-miniconda-setup" title="Link to this heading"></a></h3>
-<p>If you installed Miniconda, rather than Mambaforge, you will need to add the
+<p>If you installed Miniconda, rather than Miniforge3, you will need to add the
 <a class="reference external" href="https://conda-forge.org/">conda-forge channel</a> and make sure it always takes
 precedence for packages available on that channel:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
 $<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
 </pre></div>
 </div>
-<p>Then, you will need to install the <code class="docutils literal notranslate"><span class="pre">mamba</span></code> package:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mamba
-</pre></div>
-</div>
-<p>If you installed Mambaforge, these steps will happen automatically.</p>
+<p>If you installed Miniforge3, these steps will happen automatically.</p>
 </section>
 <section id="create-a-development-environment">
 <h3>4.3 Create a development environment<a class="headerlink" href="#create-a-development-environment" title="Link to this heading"></a></h3>
 <p>You can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> and install the
 dependencies that MPAS-Analysis needs by running the following in the worktree
 where you are doing your development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>mamba<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt<span class="w"> </span><span class="s2">&quot;esmf=*=nompi_*&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt
 </pre></div>
 </div>
 <p>The last argument is only needed on HPC machines because the conda version of
@@ -346,29 +347,30 @@ $<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span
 <p>In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> on the command line,
 it will know about the changes.</p>
+<p>This command only needs to be done once after the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment is
+built if you are not using worktrees.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If you add or remove files in the code, you will need to re-install
-MPAS-Analysis in the conda environment by rerunning</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
+<p>If you do use worktrees, rerun the <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">...</span></code> command
+each time you switch to developing a new branch, since otherwise the
+version of <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment will be the
+one you were developing previously.</p>
 </div>
 </section>
 <section id="activating-the-environment">
 <span id="tutorial-dev-get-started-activ-env"></span><h3>4.4 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Link to this heading"></a></h3>
 <p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
 environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/mambaforge/etc/profile.d/conda.sh
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
 $<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
 </pre></div>
 </div>
 <p>or for <code class="docutils literal notranslate"><span class="pre">csh</span></code>:</p>
-<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/mambaforge/etc/profile.d/conda.csh
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh
 &gt; conda activate mpas_dev
 </pre></div>
 </div>
-<p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Mambaforge or
+<p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Miniforge3 or
 Miniconda3 so it loads automatically.  You can also use the <code class="docutils literal notranslate"><span class="pre">init_conda</span></code>
 alias for this step if you defined one.</p>
 </section>
@@ -390,11 +392,12 @@ using.</p>
 <h2>5. Editing code<a class="headerlink" href="#editing-code" title="Link to this heading"></a></h2>
 <p>You may, of course, edit the MPAS-Analysis code using whatever tool you like.
 I strongly recommend editing on your laptop and using
-<a class="reference external" href="https://www.jetbrains.com/pycharm/download/">PyCharm community edition</a>
-to do the editing.  PyCharm provides many features including flagging
-deviations from preferred coding style guidelines known as
-<a class="reference external" href="https://peps.python.org/pep-0008/">PEP8</a> and syntax error detection using
-the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment you created.</p>
+<a class="reference external" href="https://code.visualstudio.com/">VS Code</a> to do the editing.  VS Code lets
+you edit code <a class="reference external" href="https://code.visualstudio.com/docs/remote/ssh">remotely over ssh</a>
+(i.e. edit code on your laptop that lives on HPC) and provides many plugins
+that can be used to lint and debug your code on the fly.  This helps ensure
+that code follows the preferred coding style guidelines known as
+<a class="reference external" href="https://peps.python.org/pep-0008/">PEP8</a>.</p>
 </section>
 <section id="running-mpas-analysis-on-a-laptop">
 <h2>6. Running MPAS-Analysis on a laptop<a class="headerlink" href="#running-mpas-analysis-on-a-laptop" title="Link to this heading"></a></h2>
@@ -403,6 +406,13 @@ need to follow steps 2-6 of the <a class="reference internal" href="getting_star
 </section>
 <section id="running-mpas-analysis-on-an-e3sm-supported-machine">
 <h2>7. Running MPAS-Analysis on an E3SM supported machine<a class="headerlink" href="#running-mpas-analysis-on-an-e3sm-supported-machine" title="Link to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Run <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> on a compute node, not on an HPC login nodes (front
+ends), because it uses too many resources to be safely run on a login node.
+When using a compute node interactively, activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
+environment, even if it was activated on the login node. Be sure to</p>
+</div>
 <section id="configuring-mpas-analysis">
 <h3>7.1 Configuring MPAS-Analysis<a class="headerlink" href="#configuring-mpas-analysis" title="Link to this heading"></a></h3>
 <p>We configure MPAS-Analysis is with Python <code class="docutils literal notranslate"><span class="pre">cfg</span></code> (also called <code class="docutils literal notranslate"><span class="pre">ini</span></code>) files:</p>
@@ -477,6 +487,15 @@ following:</p>
 <span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or in</span>
 <span class="c1"># serial but with a command)</span>
 <span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
+</pre></div>
+</div>
+<p>If you find that new jobs are being lanuched for ncremap tasks, set:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
+
+<span class="na">...</span>
+<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># possibly with some flags if it should be run with that command</span>
+<span class="na">ncremapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 </pre></div>
 </div>
 <p>If you are running into trouble with MPAS-Analysis, such as running out of
@@ -822,14 +841,6 @@ and how it was configured.</p>
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/tutorials/dev_getting_started.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/tutorials/dev_getting_started.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/tutorials/dev_getting_started.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/tutorials/dev_getting_started.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/tutorials/dev_getting_started.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="dev_getting_started.html">main</a></dd>

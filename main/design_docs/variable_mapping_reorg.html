@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Moving variable mapping outside of mpas_xarray &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Moving variable mapping outside of mpas_xarray &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -180,8 +180,8 @@ these examples should make it clear which version of
 documentation of <code class="docutils literal notranslate"><span class="pre">generalized_reader</span></code> and <code class="docutils literal notranslate"><span class="pre">mpas_xarray</span></code>, and their
 differences are needed.</p>
 <p>Here is a typical usage of <code class="docutils literal notranslate"><span class="pre">generalized_reader.open_multifile_dataset</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_analysis.shared.generalized_reader.generalized_reader</span> \
-    <span class="kn">import</span> <span class="nn">open_multifile_dataset</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.generalized_reader.generalized_reader</span> \
+    <span class="kn">import</span><span class="w"> </span><span class="nn">open_multifile_dataset</span>
 
 <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
 <span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
@@ -207,8 +207,8 @@ differences are needed.</p>
 </div>
 <p>Here is the same for <code class="docutils literal notranslate"><span class="pre">mpas_xarray.open_multifile_dataset</span></code> without the
 variable map, start and end dates:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray.mpas_xarray</span> \
-    <span class="kn">import</span> <span class="nn">open_multifile_dataset</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.mpas_xarray.mpas_xarray</span> \
+    <span class="kn">import</span><span class="w"> </span><span class="nn">open_multifile_dataset</span>
 
 <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
 <span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
@@ -338,14 +338,6 @@ Contributors: Xylar Asay-Davis
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/design_docs/variable_mapping_reorg.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/design_docs/variable_mapping_reorg.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/design_docs/variable_mapping_reorg.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/design_docs/variable_mapping_reorg.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/design_docs/variable_mapping_reorg.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="variable_mapping_reorg.html">main</a></dd>

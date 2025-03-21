@@ -21,8 +21,8 @@ The following configuration options are available for this task::
   ## options related to plotting time series of ocean heat content (OHC)
   ## anomalies from year 1
 
-  # list of regions to plot from the region list in [regions] below
-  regions = ['global']
+  # list of region shrot names to plot from the region list in [regions] above
+  regionShortNames = ['global']
 
   # approximate depths (m) separating plots of the upper, middle and lower ocean
   depths = [700, 2000]

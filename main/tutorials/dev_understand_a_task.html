@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -230,7 +230,7 @@ You can read more about <a class="reference internal" href="../users_guide/tasks
 Guide.</p>
 <p>It will be useful to open the following links in your browser to have a look
 at the code directly:
-<a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/add_developer_task_tutorial/mpas_analysis/ocean/climatology_map_ohc_anomaly.py">ClimatologyMapOHCAnomaly</a></p>
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/ocean/climatology_map_ohc_anomaly.py">ClimatologyMapOHCAnomaly</a></p>
 <p>If you want to be a little more adventurous, you can also pull up the code
 for the base class:
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/mpas_analysis/shared/analysis_task.py">AnalysisTask</a></p>
@@ -291,7 +291,7 @@ in this case).  So we’ll talk about the constructor for
 to <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>.</p>
 <p>The constructor for <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>
 starts off like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
              <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 </pre></div>
 </div>
@@ -309,7 +309,7 @@ constructor, we store references to these tasks as attributes:</p>
 </div>
 <p>Returning to the constructor above, the first thing we do it to call the
 super class’s <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
              <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Construct the analysis task.</span>
@@ -529,7 +529,7 @@ determine if it should run or not.</p>
 <p>In this method, we would typically perform checks to make sure the simulation
 has been configured properly to run the analysis.  For example, is the
 necessary analysis member enabled.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">    in which case the analysis will not be meaningful.</span>
@@ -595,7 +595,7 @@ includes.  (It also has all the attributes of its super class,
 and that class’ super class, <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>,
 but we don’t redundantly document these in the docstring in part because that
 would be a maintenance nightmare.)</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
@@ -618,7 +618,7 @@ integrated.</p>
 </section>
 <section id="id2">
 <h3>3.2 Constructor<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
              <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
              <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
@@ -697,7 +697,7 @@ will also add this task as a subtask of the parent task.</p>
 <section id="id3">
 <h3>3.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>As in the parent task, we need to define the <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -736,7 +736,7 @@ happy to inherit the
 method from its super class,
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.</p>
 <p>An abbreviated version of that method looks like this:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the requested climatologies</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -747,7 +747,7 @@ method from its super class,
 </pre></div>
 </div>
 <p>It calls a private helper method:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    For each season, creates a masked version of the climatology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -770,7 +770,7 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 <section id="customize-masked-climatology-method">
 <h3>3.5 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Link to this heading"></a></h3>
 <p>Here is how we compute the OHC itself:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">    and layer thickness fields.</span>
@@ -796,7 +796,7 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 </div>
 <p>We call a private helper method to do the actual work, so let’s take a look
 at that before we continue with <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">    climatology data sets.</span>
@@ -841,14 +841,14 @@ namelist options available from the <code class="docutils literal notranslate"><
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">layer_thickness</span></code> from the <code class="docutils literal notranslate"><span class="pre">climatology</span></code> dataset itself.  As the
 docstring for <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> states, <code class="docutils literal notranslate"><span class="pre">climatology</span></code> is
-and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2024.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
+and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_activeTracers_temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_layerThickness</span></code> because we requested them back in the
 constructor of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
-We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2024.10.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
+We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
 this helper method.</p>
 <p>Back to <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>, we have:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
     <span class="o">...</span>
     <span class="n">ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
 
@@ -889,17 +889,17 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_climatology_map_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">PlotClimatologyMapSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">compute_zmid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_zmid</span>
 
 
-<span class="k">class</span> <span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    An analysis task for comparison of the anomaly from a reference year</span>
 <span class="sd">    (typically the start of the simulation) of ocean heat content (OHC)</span>
@@ -914,7 +914,7 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">        remapped and then subtracted from the main climatology</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
                  <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -1025,7 +1025,7 @@ here is the full analysis task as described in this tutorial:</p>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">        in which case the analysis will not be meaningful.</span>
@@ -1051,7 +1051,7 @@ here is the full analysis task as described in this tutorial:</p>
                              <span class="s1">&#39;when climatology and ref year are the same.&#39;</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
@@ -1066,7 +1066,7 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">        The minimum and maximum depths for integration</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
                  <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
                  <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
@@ -1122,7 +1122,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span> <span class="o">=</span> <span class="n">min_depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1137,7 +1137,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
@@ -1172,7 +1172,7 @@ here is the full analysis task as described in this tutorial:</p>
 
         <span class="k">return</span> <span class="n">climatology</span>
 
-    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
@@ -1245,14 +1245,6 @@ here is the full analysis task as described in this tutorial:</p>
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/tutorials/dev_understand_a_task.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/tutorials/dev_understand_a_task.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/tutorials/dev_understand_a_task.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/tutorials/dev_understand_a_task.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/tutorials/dev_understand_a_task.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="dev_understand_a_task.html">main</a></dd>

@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.WoaTransects
+=================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: WoaTransects
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WoaTransects.__init__
+      ~WoaTransects.add_subtask
+      ~WoaTransects.check_analysis_enabled
+      ~WoaTransects.check_generate
+      ~WoaTransects.close
+      ~WoaTransects.is_alive
+      ~WoaTransects.join
+      ~WoaTransects.kill
+      ~WoaTransects.run
+      ~WoaTransects.run_after
+      ~WoaTransects.run_task
+      ~WoaTransects.set_start_end_date
+      ~WoaTransects.setup_and_check
+      ~WoaTransects.start
+      ~WoaTransects.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~WoaTransects.BLOCKED
+      ~WoaTransects.FAIL
+      ~WoaTransects.READY
+      ~WoaTransects.RUNNING
+      ~WoaTransects.SUCCESS
+      ~WoaTransects.UNSET
+      ~WoaTransects.authkey
+      ~WoaTransects.daemon
+      ~WoaTransects.exitcode
+      ~WoaTransects.ident
+      ~WoaTransects.name
+      ~WoaTransects.pid
+      ~WoaTransects.sentinel
+   
+   

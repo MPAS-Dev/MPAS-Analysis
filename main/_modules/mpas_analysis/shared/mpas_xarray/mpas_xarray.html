@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.mpas_xarray.mpas_xarray &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.mpas_xarray.mpas_xarray &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -103,11 +103,11 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">string_to_datetime</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> \
     <span class="n">datetime_to_days</span>
 
@@ -126,7 +126,7 @@
 
 <div class="viewcode-block" id="open_multifile_dataset">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset">[docs]</a>
-<span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -219,7 +219,7 @@
 
 <div class="viewcode-block" id="subset_variables">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a>
-<span class="k">def</span> <span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a data set and a list of variable names, returns a new data set that</span>
 <span class="sd">    contains only variables with those names.</span>
@@ -268,7 +268,7 @@
 
 <div class="viewcode-block" id="preprocess">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">[docs]</a>
-<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
                <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Builds correct time specification for MPAS, allowing a date offset</span>
@@ -365,7 +365,7 @@
 
 <div class="viewcode-block" id="remove_repeated_time_index">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a>
-<span class="k">def</span> <span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Remove repeated times from xarray dataset.</span>
 
@@ -406,7 +406,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that dataset selections are compatable.</span>
 
@@ -421,7 +421,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="nf">test_vals_in_ds</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_vals_in_ds</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">dims</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">vals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">assert</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">,</span> \
@@ -441,7 +441,7 @@
     <span class="k">return</span>
 
 
-<span class="k">def</span> <span class="nf">_ensure_list</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_ensure_list</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Ensure that variables used as a list are actually lists.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -456,7 +456,7 @@
     <span class="k">return</span> <span class="n">alist</span>
 
 
-<span class="k">def</span> <span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                         <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">outTimeVariableName</span><span class="p">,</span>
                         <span class="n">referenceDate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -617,7 +617,7 @@
     <span class="k">return</span> <span class="n">dsOut</span>
 
 
-<span class="k">def</span> <span class="nf">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes chunking for a dataset.</span>
 
@@ -698,14 +698,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="mpas_xarray.html">main</a></dd>

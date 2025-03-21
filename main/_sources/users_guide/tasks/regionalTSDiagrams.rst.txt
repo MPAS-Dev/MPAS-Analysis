@@ -80,7 +80,7 @@ The following configuration options are available for this task:
     # volMax = 1e12
 
     # Obserational data sets to compare against
-    obs = ['SOSE', 'WOA18']
+    obs = ['SOSE', 'WOA23']
 
     [TSDiagramsForOceanBasins]
     ## options related to plotting T/S diagrams of major ocean basins
@@ -119,7 +119,7 @@ The following configuration options are available for this task:
     zmax = 0
 
     # Obserational data sets to compare against
-    obs = ['WOA18']
+    obs = ['WOA23']
 
 Similar config sections are included for other region groups.
 
@@ -193,11 +193,11 @@ default is to read them from geojson file.
 Observations
 ------------
 The ``obs`` option contains a list of the names of observational data sets.
-Currently, "SOSE" and "WOA18" are the only data sets available, but we
+Currently, "SOSE" and "WOA23" are the only data sets available, but we
 anticipate adding several additional data sets in the near future.
 
 :ref:`sose`
-:ref:`woa18_t_s`
+:ref:`woa23_t_s`
 
 Other Config Options
 --------------------

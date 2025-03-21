@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.generalized_reader.generalized_reader &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.generalized_reader.generalized_reader &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -116,18 +116,18 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">import</span> <span class="nn">resource</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">resource</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.mpas_xarray</span> <span class="kn">import</span> <span class="n">mpas_xarray</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.mpas_xarray</span><span class="w"> </span><span class="kn">import</span> <span class="n">mpas_xarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">days_to_datetime</span>
 
 
 <div class="viewcode-block" id="open_multifile_dataset">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html#mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset">[docs]</a>
-<span class="k">def</span> <span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -269,7 +269,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">,</span>
                 <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -377,7 +377,7 @@
     <span class="k">return</span> <span class="n">ds</span>
 
 
-<span class="k">def</span> <span class="nf">_map_variable_name</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_map_variable_name</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a `variableName` in a `variableMap` and an xarray `ds`,</span>
 <span class="sd">    return the name of the the first variable in `variableMap[variableName]`</span>
@@ -438,7 +438,7 @@
                          <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 
 
-<span class="k">def</span> <span class="nf">_rename_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_rename_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableMap</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given an `xarray.DataSet` object `ds` and a dictionary mapping</span>
 <span class="sd">    variable names `variableMap`, returns a new data set in which variables</span>
@@ -506,14 +506,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="generalized_reader.html">main</a></dd>

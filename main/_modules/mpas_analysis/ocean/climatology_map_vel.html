@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.climatology_map_vel &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.climatology_map_vel &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -103,33 +103,33 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Analysis tasks for comparing Antarctic climatology maps against observations</span>
-<span class="sd">and reanalysis data.</span>
+<span class="sd">An analysis task for plotting climatologies of velocity components and</span>
+<span class="sd">magnitude</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Carolyn Begeman</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapMpasClimatologySubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.remap_depth_slices_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">RemapDepthSlicesSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.remap_sose_climatology</span> <span class="kn">import</span> <span class="n">RemapSoseClimatology</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotClimatologyMapSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.remap_sose_climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">RemapSoseClimatology</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_obs_path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_obs_path</span>
 
 
 <div class="viewcode-block" id="ClimatologyMapVel">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapVel.html#mpas_analysis.ocean.ClimatologyMapVel">[docs]</a>
-<span class="k">class</span> <span class="nc">ClimatologyMapVel</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapVel</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    An analysis task for comparison of antarctic field against the Southern</span>
-<span class="sd">    Ocean State Estimate</span>
+<span class="sd">    An analysis task for plotting climatologies of velocity components and</span>
+<span class="sd">    magnitude</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -137,7 +137,7 @@
 
 <div class="viewcode-block" id="ClimatologyMapVel.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapVel.html#mpas_analysis.ocean.ClimatologyMapVel.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -283,12 +283,11 @@
             <span class="n">outFileLabel</span> <span class="o">=</span> <span class="n">fieldPrefix</span>
             <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Velocity&#39;</span>
+            <span class="n">galleryGroup</span> <span class="o">=</span> <span class="s1">&#39;Velocity&#39;</span>
             <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
                 <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-                <span class="n">galleryName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
-                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="n">galleryName</span>
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
                 <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
 
             <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;3D&#39;</span><span class="p">]:</span>
@@ -341,7 +340,7 @@
                             <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
                             <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
                             <span class="n">imageCaption</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
-                            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
+                            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
                             <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                             <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">Vel&#39;</span><span class="p">,</span>
                             <span class="n">galleryName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
@@ -352,7 +351,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">RemapMpasVelMagClimatology</span><span class="p">(</span><span class="n">RemapDepthSlicesSubtask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasVelMagClimatology</span><span class="p">(</span><span class="n">RemapDepthSlicesSubtask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A subtask for computing climatologies of velocity magnitude from zonal</span>
 <span class="sd">    and meridional components</span>
@@ -361,7 +360,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Carolyn Begeman</span>
 
-    <span class="k">def</span> <span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct velocity magnitude as part of the climatology</span>
 
@@ -427,14 +426,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="climatology_map_vel.html">main</a></dd>

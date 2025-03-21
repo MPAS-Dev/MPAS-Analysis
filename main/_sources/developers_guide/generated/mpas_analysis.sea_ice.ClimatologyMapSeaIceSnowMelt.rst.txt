@@ -1,0 +1,54 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceSnowMelt
+====================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceSnowMelt
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowMelt.__init__
+      ~ClimatologyMapSeaIceSnowMelt.add_subtask
+      ~ClimatologyMapSeaIceSnowMelt.check_analysis_enabled
+      ~ClimatologyMapSeaIceSnowMelt.check_generate
+      ~ClimatologyMapSeaIceSnowMelt.close
+      ~ClimatologyMapSeaIceSnowMelt.is_alive
+      ~ClimatologyMapSeaIceSnowMelt.join
+      ~ClimatologyMapSeaIceSnowMelt.kill
+      ~ClimatologyMapSeaIceSnowMelt.run
+      ~ClimatologyMapSeaIceSnowMelt.run_after
+      ~ClimatologyMapSeaIceSnowMelt.run_task
+      ~ClimatologyMapSeaIceSnowMelt.set_start_end_date
+      ~ClimatologyMapSeaIceSnowMelt.setup_and_check
+      ~ClimatologyMapSeaIceSnowMelt.start
+      ~ClimatologyMapSeaIceSnowMelt.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowMelt.BLOCKED
+      ~ClimatologyMapSeaIceSnowMelt.FAIL
+      ~ClimatologyMapSeaIceSnowMelt.READY
+      ~ClimatologyMapSeaIceSnowMelt.RUNNING
+      ~ClimatologyMapSeaIceSnowMelt.SUCCESS
+      ~ClimatologyMapSeaIceSnowMelt.UNSET
+      ~ClimatologyMapSeaIceSnowMelt.authkey
+      ~ClimatologyMapSeaIceSnowMelt.daemon
+      ~ClimatologyMapSeaIceSnowMelt.exitcode
+      ~ClimatologyMapSeaIceSnowMelt.ident
+      ~ClimatologyMapSeaIceSnowMelt.name
+      ~ClimatologyMapSeaIceSnowMelt.pid
+      ~ClimatologyMapSeaIceSnowMelt.sentinel
+   
+   

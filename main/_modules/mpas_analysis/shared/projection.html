@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.projection &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.projection &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -103,18 +103,55 @@
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 
-<span class="kn">import</span> <span class="nn">pyproj</span>
-<span class="kn">import</span> <span class="nn">cartopy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cartopy</span>
 
 
 <span class="n">known_comparison_grids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;north_atlantic&#39;</span><span class="p">,</span>
-                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">]</span>
+                          <span class="s1">&#39;north_pacific&#39;</span><span class="p">,</span> <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]</span>
+
+<span class="n">comparison_grid_option_suffixes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;latlon&#39;</span><span class="p">:</span> <span class="s1">&#39;LatLon&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticStereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticStereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;AntarcticExtended&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;ArcticExtended&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthAtlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;NorthPacific&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;SubpolarNorthAtlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fris&#39;</span><span class="p">:</span> <span class="s1">&#39;Fris&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">comparison_grid_titles</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;latlon&#39;</span><span class="p">:</span> <span class="s1">&#39;Global&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;North Atlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;North Pacific&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;Subpolar North Atlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fris&#39;</span><span class="p">:</span> <span class="s1">&#39;Filchner-Ronne&#39;</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="n">comparison_grid_file_suffixes</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;latlon&#39;</span><span class="p">:</span> <span class="s1">&#39;latlon&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Antarctic_stereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;arctic_extended&#39;</span><span class="p">:</span> <span class="s1">&#39;Arctic_stereo&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Atlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;north_pacific&#39;</span><span class="p">:</span> <span class="s1">&#39;North_Pacific&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;subpolar_north_atlantic&#39;</span><span class="p">:</span> <span class="s1">&#39;Subpolar_North_Atlantic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fris&#39;</span><span class="p">:</span> <span class="s1">&#39;Fris&#39;</span><span class="p">,</span>
+<span class="p">}</span>
 
 
 <div class="viewcode-block" id="get_pyproj_projection">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection">[docs]</a>
-<span class="k">def</span> <span class="nf">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the projection from the comparison_grid_name.</span>
 
@@ -145,7 +182,7 @@
 
     <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]:</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">pyproj</span><span class="o">.</span><span class="n">Proj</span><span class="p">(</span>
             <span class="s1">&#39;+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0  +k_0=1.0 &#39;</span>
             <span class="s1">&#39;+x_0=0.0 +y_0=0.0 +ellps=WGS84&#39;</span><span class="p">)</span>
@@ -172,7 +209,7 @@
 
 <div class="viewcode-block" id="get_cartopy_projection">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.projection.get_cartopy_projection.html#mpas_analysis.shared.projection.get_cartopy_projection">[docs]</a>
-<span class="k">def</span> <span class="nf">get_cartopy_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_cartopy_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the projection from the comparison_grid_name.</span>
 
@@ -204,7 +241,7 @@
     <span class="k">if</span> <span class="n">comparison_grid_name</span> <span class="o">==</span> <span class="s1">&#39;latlon&#39;</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;latlon is not a projection grid.&#39;</span><span class="p">)</span>
 
-    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">]:</span>
+    <span class="k">elif</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic_extended&#39;</span><span class="p">,</span> <span class="s1">&#39;fris&#39;</span><span class="p">]:</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">Stereographic</span><span class="p">(</span>
             <span class="n">central_latitude</span><span class="o">=-</span><span class="mf">90.</span><span class="p">,</span> <span class="n">central_longitude</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
             <span class="n">true_scale_latitude</span><span class="o">=-</span><span class="mf">71.0</span><span class="p">)</span>
@@ -260,14 +297,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="projection.html">main</a></dd>

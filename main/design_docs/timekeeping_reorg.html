@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reorganize Timekeeping &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Reorganize Timekeeping &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -154,7 +154,7 @@ Contributors: Xylar Asay-Davis
 <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg">https://github.com/xylar/MPAS-Analysis/tree/timekeeping_reorg</a>
 and in PR #102</p>
 <p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> is documented as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">stringToDatetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">stringToDatetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a date string and a calendar, returns a `datetime.datetime`</span>
 
@@ -209,7 +209,7 @@ and in PR #102</p>
 <code class="docutils literal notranslate"><span class="pre">dateutil.relativedelta.relativedelta</span></code> to compute the expected
 increments in years and months (as well as days, hours, minutes and seconds, as needed).
 The class is documented as follows</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MpasRelativeDelta</span><span class="p">(</span><span class="n">relativedelta</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MpasRelativeDelta</span><span class="p">(</span><span class="n">relativedelta</span><span class="p">):</span>
     <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">    MpasRelativeDelta is a subclass of dateutil.relativedelta for relative time</span>
 <span class="s2">    intervals with different MPAS calendars.</span>
@@ -229,9 +229,9 @@ The class is documented as follows</p>
 </pre></div>
 </div>
 <p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> is documented as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dateutil.relativedelta</span> <span class="kn">import</span> <span class="n">relativedelta</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dateutil.relativedelta</span><span class="w"> </span><span class="kn">import</span> <span class="n">relativedelta</span>
 <span class="o">...</span>
-<span class="k">def</span> <span class="nf">stringToRelativedelta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stringToRelativedelta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given a date string and a calendar, returns an instance of</span>
 <span class="sd">    `MpasRelativeDelta`</span>
@@ -328,14 +328,6 @@ Contributors: Xylar Asay-Davis
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/design_docs/timekeeping_reorg.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/design_docs/timekeeping_reorg.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/design_docs/timekeeping_reorg.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/design_docs/timekeeping_reorg.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/design_docs/timekeeping_reorg.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="timekeeping_reorg.html">main</a></dd>

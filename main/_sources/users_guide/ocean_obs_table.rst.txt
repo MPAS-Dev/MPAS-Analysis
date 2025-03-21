@@ -5,6 +5,8 @@ Observational Dataset         Source                                            
 :ref:`aquarius_sss`           `NASA Aquarius Website`_                                                                                  `Lagerloef et al. (2015)`_
 :ref:`woa18_t_s`              `NOAA National Oceanographic Data Center (NODC) website`_                                                 - `Locarnini et al. (2019)`_
                                                                                                                                         - `Zweng et al. (2019)`_
+:ref:`woa23_t_s`              `NOAA National Centers for Environmental Information (NCEI) website`_                                     - `Locarnini et al. (2024)`_
+                                                                                                                                        - `Reagan et al. (2024)`_
 :ref:`aviso_ssh`              `NASA JPL AVISO website`_                                                                                 `AVISO: Sea Surface Height above Geoid`_
 :ref:`argo_mld`               `UCSD Mixed Layer Website`_                                                                               - `Holte et al. (2017)`_
                                                                                                                                         - `Holte and Talley (2009)`_
@@ -22,6 +24,7 @@ Observational Dataset         Source                                            
 :ref:`schmidtko`              `ASCII data file`_                                                                                        `Schmidtko et al. (2014)`_
 :ref:`woce`                   - `WOCE Atlas Website`_                                                                                   `Orsi and Whitworth (2005)`_
                               - `CCHDO`_
+:ref:`antship`                - `OCEAN ICE D1.1`_                                                                                       `Zhou et al. (2024)`_
 :ref:`woa`                    - `World Ocean Atlas v2 Website`_                                                                         - `Oxygen: Garcia et al. 2014a`_
                                                                                                                                         - `Nutrients: Garcia et al. 2014b`_
 :ref:`landschuetzer-som-ffn`  `SOM-FFN Website`_                                                                                        - `Landschuetzer et al. 2013`_
@@ -35,6 +38,7 @@ Observational Dataset         Source                                            
 :ref:`drifter_eke`            `NOAA/AOML`_                                                                                              `Laurindo et al. (2017)`_
 :ref:`era5_waves`             `Copernicus Climate Data Store`_                                                                          - `Hersback et al. 2020`_
 :ref:`sscci_waves`            - `CEDA Archive`_                                                                                         - `Dodet et al. 2020`_
+:ref:`osnap_t_s`              `Overturning in the Subpolar North Atlantic Program (OSNAP) website`_
 ============================  ========================================================================================================  ========================================
 
 .. _`NCAR Hadley-NOAA/OI SST website`: https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008
@@ -44,6 +48,9 @@ Observational Dataset         Source                                            
 .. _`NOAA National Oceanographic Data Center (NODC) website`: https://www.nodc.noaa.gov/OC5/woa18
 .. _`Locarnini et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol1.pdf
 .. _`Zweng et al. (2019)`: https://data.nodc.noaa.gov/woa/WOA18/DOC/woa18_vol2.pdf
+.. _`NOAA National Centers for Environmental Information (NCEI) website`: https://www.ncei.noaa.gov/products/world-ocean-atlas
+.. _`Locarnini et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60599
+.. _`Reagan et al. (2024)`: https://repository.library.noaa.gov/view/noaa/60600
 .. _`NASA JPL AVISO website`: https://podaac.jpl.nasa.gov/dataset/AVISO_L4_DYN_TOPO_1DEG_1MO
 .. _`AVISO: Sea Surface Height above Geoid`: ftp://podaac.jpl.nasa.gov/allData/aviso/L4/dynamic_topo_1deg_1mo/docs/zosTechNote_AVISO_L4_199210-201012.pdf
 .. _`UCSD Mixed Layer Website`: http://mixedlayer.ucsd.edu/
@@ -72,6 +79,8 @@ Observational Dataset         Source                                            
 .. _`WOCE Atlas Website`: http://woceatlas.ucsd.edu/
 .. _`CCHDO`: https://cchdo.ucsd.edu/
 .. _`Orsi and Whitworth (2005)`: https://doi.org/10.21976/C6BC78
+.. _`OCEAN ICE D1.1`: https://www.seanoe.org/data/00886/99787/
+.. _`Zhou et al. (2024)`: https://doi.org/10.17882/99787
 .. _`World Ocean Atlas v2 Website`: https://www.nodc.noaa.gov/OC5/woa13/
 .. _`Oxygen: Garcia et al. 2014a`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol3.pdf
 .. _`Nutrients: Garcia et al. 2014b`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol4.pdf
@@ -92,4 +101,5 @@ Observational Dataset         Source                                            
 .. _`Hersback et al. 2020`: https://rmets.onlinelibrary.wiley.com/doi/10.1002/qj.3803
 .. _`CEDA Archive`: http://dx.doi.org/10.5285/47140d618dcc40309e1edbca7e773478
 .. _`Dodet et al. 2020`: https://essd.copernicus.org/articles/12/1929/2020/
+.. _`Overturning in the Subpolar North Atlantic Program (OSNAP) website`: https://www.o-snap.org/data-access/
 

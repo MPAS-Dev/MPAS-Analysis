@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.plot.vertical_section &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.shared.plot.vertical_section &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
@@ -110,23 +110,23 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
 
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.tri</span> <span class="kn">import</span> <span class="n">Triangulation</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.tri</span><span class="w"> </span><span class="kn">import</span> <span class="n">Triangulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.axes_grid1</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">date_to_days</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">date_to_days</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.colormap</span> <span class="kn">import</span> <span class="n">setup_colormap</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.title</span> <span class="kn">import</span> <span class="n">limit_title</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.colormap</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_colormap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.ticks</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.title</span><span class="w"> </span><span class="kn">import</span> <span class="n">limit_title</span>
 
 
 <div class="viewcode-block" id="plot_vertical_section_comparison">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section_comparison.html#mpas_analysis.shared.plot.plot_vertical_section_comparison">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_vertical_section_comparison</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">modelArray</span><span class="p">,</span>
         <span class="n">refArray</span><span class="p">,</span>
@@ -650,7 +650,7 @@
 
 <div class="viewcode-block" id="plot_vertical_section">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.plot.plot_vertical_section.html#mpas_analysis.shared.plot.plot_vertical_section">[docs]</a>
-<span class="k">def</span> <span class="nf">plot_vertical_section</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_vertical_section</span><span class="p">(</span>
         <span class="n">config</span><span class="p">,</span>
         <span class="n">field</span><span class="p">,</span>
         <span class="n">colorMapSectionName</span><span class="p">,</span>
@@ -994,9 +994,13 @@
         <span class="c1"># if any node of a triangle is masked, the triangle is masked</span>
         <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">triMask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">triangulation_args</span><span class="p">)</span>
-        <span class="n">mask_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">triangulation_args</span><span class="p">)</span>
-        <span class="n">mask_args</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triMask</span>
-        <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">mask_args</span><span class="p">)</span>
+        <span class="n">anythingToPlot</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">triMask</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">anythingToPlot</span><span class="p">:</span>
+            <span class="n">mask_args</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">triangulation_args</span><span class="p">)</span>
+            <span class="n">mask_args</span><span class="p">[</span><span class="s1">&#39;mask&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triMask</span>
+            <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="o">**</span><span class="n">mask_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">mask</span> <span class="o">=</span> <span class="n">contourComparisonField</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span>
             <span class="n">triMask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -1024,37 +1028,39 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">unmaskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
                     <span class="n">colors</span><span class="o">=</span><span class="n">invalidColor</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">plotAsContours</span><span class="p">:</span>
-        <span class="c1"># display a heatmap of fieldArray</span>
-        <span class="n">fieldMasked</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">maskedTriangulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># there&#39;s something to plot</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">plotAsContours</span><span class="p">:</span>
+            <span class="c1"># display a heatmap of fieldArray</span>
+            <span class="n">fieldMasked</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
-            <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
-                                       <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
-                                       <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
-                                       <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+                <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tripcolor</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
+                                           <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                           <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                           <span class="n">rasterized</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shading</span><span class="o">=</span><span class="s1">&#39;gouraud&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
+                                             <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
+                                             <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
+                                             <span class="n">levels</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">],</span>
+                                             <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
+
+            <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span>
+                                <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
+                                <span class="n">spacing</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
+                                <span class="n">aspect</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
+                                <span class="n">ticks</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">colorbarLabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)</span>
+
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">plotHandle</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">fieldMasked</span><span class="p">,</span>
-                                         <span class="n">cmap</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;colormap&#39;</span><span class="p">],</span>
-                                         <span class="n">norm</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">],</span>
-                                         <span class="n">levels</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;levels&#39;</span><span class="p">],</span>
-                                         <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">)</span>
-
-        <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plotHandle</span><span class="p">,</span>
-                            <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span>
-                            <span class="n">spacing</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">,</span>
-                            <span class="n">aspect</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span>
-                            <span class="n">ticks</span><span class="o">=</span><span class="n">colormapDict</span><span class="p">[</span><span class="s1">&#39;ticks&#39;</span><span class="p">])</span>
-
-        <span class="k">if</span> <span class="n">colorbarLabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="n">colorbarLabel</span><span class="p">)</span>
-
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># display a white heatmap to get a white background for non-land</span>
-        <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
-                        <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+            <span class="c1"># display a white heatmap to get a white background for non-land</span>
+            <span class="n">zeroArray</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">tricontourf</span><span class="p">(</span><span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">zeroArray</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span>
+                            <span class="n">colors</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">backgroundColor</span><span class="p">)</span>
@@ -1074,8 +1080,9 @@
     <span class="n">fmt_string</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">cs1</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">cs2</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">plotLegend</span> <span class="o">=</span> <span class="kc">False</span>
 
-    <span class="k">if</span> <span class="n">contourLevels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">contourLevels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">maskedTriangulation</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">contourLevels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="c1"># automatic calculation of contour levels</span>
             <span class="n">contourLevels</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1108,11 +1115,11 @@
             <span class="k">if</span> <span class="n">labelContours</span><span class="p">:</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">cs2</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">fmt_string</span><span class="p">)</span>
 
-    <span class="n">plotLegend</span> <span class="o">=</span> <span class="p">(((</span><span class="n">lineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                    <span class="n">comparisonContourLineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
-                   <span class="p">(</span><span class="n">lineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
-                    <span class="n">comparisonContourLineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">and</span>
-                  <span class="p">(</span><span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="n">plotLegend</span> <span class="o">=</span> <span class="p">(((</span><span class="n">lineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                        <span class="n">comparisonContourLineColor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span>
+                    <span class="p">(</span><span class="n">lineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span>
+                        <span class="n">comparisonContourLineWidth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span> <span class="ow">and</span>
+                    <span class="p">(</span><span class="n">plotAsContours</span> <span class="ow">and</span> <span class="n">contourComparisonField</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">plotLegend</span><span class="p">:</span>
         <span class="n">h1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cs1</span><span class="o">.</span><span class="n">legend_elements</span><span class="p">()</span>
@@ -1215,7 +1222,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">_get_triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_triangulation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;divide each quad in the x/y mesh into 2 triangles&quot;&quot;&quot;</span>
 
     <span class="n">nx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-</span> <span class="mi">1</span>
@@ -1249,7 +1256,13 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-    <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">triangles</span><span class="o">=</span><span class="n">tris</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">triMask</span><span class="p">)</span>
+    <span class="n">anythingToPlot</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">triMask</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">anythingToPlot</span><span class="p">:</span>
+        <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">triangles</span><span class="o">=</span><span class="n">tris</span><span class="p">,</span>
+                                            <span class="n">mask</span><span class="o">=</span><span class="n">triMask</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">maskedTriangulation</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="n">unmaskedTriangulation</span> <span class="o">=</span> <span class="n">Triangulation</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">triangles</span><span class="o">=</span><span class="n">tris</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">maskedTriangulation</span><span class="p">,</span> <span class="n">unmaskedTriangulation</span>
@@ -1283,14 +1296,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="vertical_section.html">main</a></dd>

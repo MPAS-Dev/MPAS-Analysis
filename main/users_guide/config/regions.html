@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Regions &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+  <title>Regions &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -133,10 +133,10 @@ within MPAS-Analysis using region mask files:</p>
 
 <span class="c1"># list of region names (needs to be in the same order as region indices in</span>
 <span class="c1"># time-series stats)</span>
-<span class="n">regions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;equatorial&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;global&#39;</span><span class="p">]</span>
-<span class="c1"># list of plot titles (needs to be in the same order as region indices in</span>
-<span class="c1"># time-series stats)</span>
-<span class="n">plotTitles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;Equatorial (15S-15N)&#39;</span><span class="p">,</span> <span class="s1">&#39;Southern Ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3&#39;</span><span class="p">,</span>
+<span class="n">regionShortNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;equatorial&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;global&#39;</span><span class="p">]</span>
+<span class="c1"># list of full names (e.g. for plot titles) same order as regionShortNames</span>
+<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;Equatorial (15S-15N)&#39;</span><span class="p">,</span> <span class="s1">&#39;Southern Ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3&#39;</span><span class="p">,</span>
               <span class="s1">&#39;Nino 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;Global Ocean&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -155,12 +155,12 @@ web page.</p>
 <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>, <a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) use masks that define regions in an MPAS
 mesh as part of their analysis.  Most of these region group are defined in
-<code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code>.
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/main/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features v1.6.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
 Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>,
 <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.
 Currently, available region groups are: <code class="docutils literal notranslate"><span class="pre">Artic</span> <span class="pre">Ocean</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>,
-<code class="docutils literal notranslate"><span class="pre">Greenland</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">ISMIP6</span> <span class="pre">Greenland</span> <span class="pre">Regions</span></code>, <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Basins</span></code>, <code class="docutils literal notranslate"><span class="pre">Ice</span> <span class="pre">Shelves</span></code>, and <code class="docutils literal notranslate"><span class="pre">Ocean</span> <span class="pre">Subbasins</span></code>.</p>
 <p>The option <code class="docutils literal notranslate"><span class="pre">regionMaskSubdirectory</span></code> in the <code class="docutils literal notranslate"><span class="pre">[diagnostics]</span></code> section specifies
 the path to cached mask files for these region groups, typically
 <code class="docutils literal notranslate"><span class="pre">diagnostics/mpas_analysis/region_masks</span></code>. Region masks for common MPAS Ocean
@@ -211,14 +211,6 @@ process), see the example utility script <code class="docutils literal notransla
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../1.10.0/users_guide/config/regions.html">1.10.0</a></dd>
-      <dd><a href="../../../1.11.0/users_guide/config/regions.html">1.11.0</a></dd>
-      <dd><a href="../../../1.8.0/users_guide/config/regions.html">1.8.0</a></dd>
-      <dd><a href="../../../1.9.0/users_guide/config/regions.html">1.9.0</a></dd>
-      <dd><a href="../../../1.9.1/users_guide/config/regions.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="regions.html">main</a></dd>

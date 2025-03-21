@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.index_nino34 &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.index_nino34 &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -105,37 +105,39 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
-<span class="kn">from</span> <span class="nn">scipy.signal.windows</span> <span class="kn">import</span> <span class="n">tukey</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">signal</span><span class="p">,</span> <span class="n">stats</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.signal.windows</span><span class="w"> </span><span class="kn">import</span> <span class="n">tukey</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.climatology</span> <span class="kn">import</span> <span class="n">climatology</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.climatology</span><span class="w"> </span><span class="kn">import</span> <span class="n">climatology</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
     <span class="n">build_obs_path</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.utility</span> <span class="kn">import</span> <span class="n">datetime_to_days</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime_to_days</span><span class="p">,</span> \
     <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">string_to_datetime</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.timekeeping.MpasRelativeDelta</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.MpasRelativeDelta</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">MpasRelativeDelta</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.ticks</span> <span class="kn">import</span> <span class="n">plot_xtick_format</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot.save</span> <span class="kn">import</span> <span class="n">savefig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.ticks</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_xtick_format</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot.save</span><span class="w"> </span><span class="kn">import</span> <span class="n">savefig</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">add_standard_regions_and_subset</span>
 
 
 <div class="viewcode-block" id="IndexNino34">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a>
-<span class="k">class</span> <span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    A task for computing and plotting time series and spectra of the El Nino</span>
 <span class="sd">    3.4 climate index</span>
@@ -155,7 +157,7 @@
 
 <div class="viewcode-block" id="IndexNino34.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -188,7 +190,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasTimeSeriesTask</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -228,7 +230,7 @@
         <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">regionToPlot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpectes El Nino Index region </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected El Nino Index region </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionToPlot</span><span class="p">))</span>
         <span class="n">ninoIndexNumber</span> <span class="o">=</span> <span class="n">regionToPlot</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
 
@@ -239,7 +241,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                         <span class="n">filePrefix</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes NINO34 index and plots the time series and power spectrum with</span>
 <span class="sd">        95 and 99% confidence bounds</span>
@@ -292,9 +294,7 @@
 
         <span class="c1"># regionIndex should correspond to NINO34 in surface weighted Average</span>
         <span class="c1"># AM</span>
-        <span class="n">regions</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
         <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
-        <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">regions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">regionToPlot</span><span class="p">)</span>
 
         <span class="c1"># Load data:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">,</span>
@@ -302,6 +302,11 @@
                                <span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
+
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span>
+                                             <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
+        <span class="c1"># we want to collapse the nOceanRegions dimension</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Observations have been processed to the nino34Index prior to reading</span>
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">dataPath</span><span class="p">,</span> <span class="n">decode_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -314,7 +319,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Compute El Nino </span><span class="si">{}</span><span class="s1"> Index...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
         <span class="n">varName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+        <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
         <span class="n">nino34Main</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
         <span class="c1"># Compute the observational index over the entire time range</span>
@@ -361,7 +366,10 @@
                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
-            <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
+            <span class="n">dsRef</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span>
+                <span class="n">dsRef</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
+
+            <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
             <span class="n">nino34Ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
             <span class="n">nino34s</span> <span class="o">=</span> <span class="p">[</span><span class="n">nino34Subset</span><span class="p">,</span> <span class="n">nino34Main</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">nino34Ref</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
@@ -410,7 +418,7 @@
                         <span class="n">plotType</span><span class="o">=</span><span class="s1">&#39;Spectra&#39;</span><span class="p">,</span>
                         <span class="n">ninoIndexNumber</span><span class="o">=</span><span class="n">ninoIndexNumber</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes nino34 index time series.  It follow the standard nino34</span>
 <span class="sd">        algorithm, i.e.,</span>
@@ -461,7 +469,7 @@
         <span class="n">wgts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">5.</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_mean</span><span class="p">(</span><span class="n">anomaly</span><span class="p">,</span> <span class="n">wgts</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes power spectra of Nino34 index.</span>
 
@@ -547,7 +555,7 @@
                    <span class="s1">&#39;redNoise&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">spectra</span>
 
-    <span class="k">def</span> <span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes lag one auto-correlation for the NINO34 spectra calculation</span>
 
@@ -567,7 +575,7 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]]))</span>
 
-    <span class="k">def</span> <span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Calculates a generic weighted running mean</span>
 
@@ -594,7 +602,7 @@
 
         <span class="k">return</span> <span class="n">runningMean</span>
 
-    <span class="k">def</span> <span class="nf">_nino34_spectra_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spectra</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_nino34_spectra_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spectra</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span>
                              <span class="n">outFileName</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Period (years)&#39;</span><span class="p">,</span>
                              <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Power ($^o$C / cycles mo$^{-1}$)&#39;</span><span class="p">,</span>
                              <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -701,7 +709,7 @@
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_nino34_timeseries_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34s</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_nino34_timeseries_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34s</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                                 <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (years)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;($\degree$C)&#39;</span><span class="p">,</span>
                                 <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
@@ -780,7 +788,7 @@
 
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_plot_nino_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ninoIndex</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_nino_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ninoIndex</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
                               <span class="n">panelTitle</span><span class="p">,</span> <span class="n">title_font</span><span class="p">,</span> <span class="n">axis_font</span><span class="p">,</span>
                               <span class="n">lineWidth</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -830,7 +838,7 @@
         <span class="k">if</span> <span class="n">ylabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">plotType</span><span class="p">,</span> <span class="n">ninoIndexNumber</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">plotType</span><span class="p">,</span> <span class="n">ninoIndexNumber</span><span class="p">):</span>
         <span class="n">caption</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> of El Niño </span><span class="si">{}</span><span class="s1"> Climate Index&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotType</span><span class="p">,</span>
                                                            <span class="n">ninoIndexNumber</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
@@ -844,7 +852,7 @@
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_plot_size_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_plot_size_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get the maximum y value over the given range of x values</span>
 
@@ -911,14 +919,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="index_nino34.html">main</a></dd>

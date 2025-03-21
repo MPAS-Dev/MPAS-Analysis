@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.sea_ice.ClimatologyMapIcebergConc &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.sea_ice.ClimatologyMapIcebergConc &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -60,9 +60,24 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../api.html#analysis-tasks">Analysis tasks</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="../api.html#base-class">Base Class</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#ocean-tasks">Ocean tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#ocean-subtasks">Ocean subtasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api.html#ocean-utilities">Ocean utilities</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a><ul class="current">
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceConc</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceThick</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowDepth.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowDepth</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowiceFormation.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowiceFormation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIcePondArea.html">mpas_analysis.sea_ice.ClimatologyMapSeaIcePondArea</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaFractionRidge.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaFractionRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeRidge.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeRidge</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceAlbedo.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceAlbedo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceProduction.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceProduction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceMelting.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceMelting</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyThermo.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyThermo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyTransp.html">mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyTransp</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.sea_ice.TimeSeriesSeaIce.html">mpas_analysis.sea_ice.TimeSeriesSeaIce</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.sea_ice.ClimatologyMapIcebergConc</a></li>
 </ul>
@@ -116,7 +131,7 @@
 <h1>mpas_analysis.sea_ice.ClimatologyMapIcebergConc<a class="headerlink" href="#mpas-analysis-sea-ice-climatologymapicebergconc" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="mpas_analysis.sea_ice.ClimatologyMapIcebergConc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.sea_ice.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapIcebergConc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemisphere</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/sea_ice/climatology_map_berg_conc.html#ClimatologyMapIcebergConc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.sea_ice.ClimatologyMapIcebergConc" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mpas_analysis.sea_ice.</span></span><span class="sig-name descname"><span class="pre">ClimatologyMapIcebergConc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpasClimatologyTask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hemisphere</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">controlConfig</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/mpas_analysis/sea_ice/climatology_map_berg_conc.html#ClimatologyMapIcebergConc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mpas_analysis.sea_ice.ClimatologyMapIcebergConc" title="Link to this definition"></a></dt>
 <dd><p>An analysis task for comparison of iceberg concentration against
 observations</p>
 <dl class="py method">
@@ -126,10 +141,10 @@ observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options</p></li>
+<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools v0.36.0)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Configuration options</p></li>
 <li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped and plotted</p></li>
 <li><p><strong>hemisphere</strong> (<em>{'NH'</em><em>, </em><em>'SH'}</em>) – The hemisphere to plot</p></li>
-<li><p><strong>controlconfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/stable/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools vstable)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
+<li><p><strong>controlconfig</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools v0.36.0)"><em>mpas_tools.config.MpasConfigParser</em></a><em>, </em><em>optional</em>) – Configuration options for a control run (if any)</p></li>
 </ul>
 </dd>
 </dl>
@@ -265,14 +280,6 @@ observations</p>
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="mpas_analysis.sea_ice.ClimatologyMapIcebergConc.html">main</a></dd>

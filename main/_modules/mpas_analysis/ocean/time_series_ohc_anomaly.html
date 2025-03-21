@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.time_series_ohc_anomaly &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.time_series_ohc_anomaly &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -105,25 +105,26 @@
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
 <span class="c1">#</span>
 
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span> <span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span> <span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask</span> <span class="kn">import</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.compute_anomaly_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComputeAnomalySubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_hovmoller_subtask</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlotHovmollerSubtask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.plot_depth_integrated_time_series_subtask</span><span class="w"> </span><span class="kn">import</span> \
     <span class="n">PlotDepthIntegratedTimeSeriesSubtask</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">mpas_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">mpas_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_standard_region_names</span>
 
 
 <div class="viewcode-block" id="TimeSeriesOHCAnomaly">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeSeriesOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of ocean heat content (OHC) from time-series output.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -133,7 +134,7 @@
 
 <div class="viewcode-block" id="TimeSeriesOHCAnomaly.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -161,7 +162,8 @@
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;ohc&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span>
-        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regions&#39;</span><span class="p">)</span>
+        <span class="n">regionShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
+                                                <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
         <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -183,6 +185,7 @@
             <span class="n">alter_dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
 
+        <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
             <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Trend of </span><span class="si">{}</span><span class="s1"> OHC Anomaly vs depth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionName</span><span class="p">)</span>
@@ -228,14 +231,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the OHC time series.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># regionNames = self.config.getexpression(&#39;regions&#39;, &#39;regions&#39;)</span>
-        <span class="c1"># ds[&#39;regionNames&#39;] = (&#39;nOceanRegionsTmp&#39;, regionNames)</span>
-
         <span class="c1"># for convenience, rename the variables to simpler, shorter names</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span><span class="p">)</span>
 
@@ -271,19 +270,19 @@
 
 
 
-<span class="k">class</span> <span class="nc">PlotOHCAnomaly</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">customize_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotOHCAnomaly</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        A function to override to customize the figure.</span>
 
 <span class="sd">        fig : matplotlib.pyplot.Figure</span>
 <span class="sd">            The figure</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">def</span> <span class="nf">joules_to_watts_m2</span><span class="p">(</span><span class="n">joules</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">joules_to_watts_m2</span><span class="p">(</span><span class="n">joules</span><span class="p">):</span>
             <span class="n">watts_m2</span> <span class="o">=</span> <span class="n">joules</span><span class="o">/</span><span class="n">factor</span>
             <span class="k">return</span> <span class="n">watts_m2</span>
 
-        <span class="k">def</span> <span class="nf">watts_m2_to_joules</span><span class="p">(</span><span class="n">watts_m2</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">watts_m2_to_joules</span><span class="p">(</span><span class="n">watts_m2</span><span class="p">):</span>
             <span class="n">joules</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="n">watts_m2</span>
             <span class="k">return</span> <span class="n">joules</span>
 
@@ -339,14 +338,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="time_series_ohc_anomaly.html">main</a></dd>

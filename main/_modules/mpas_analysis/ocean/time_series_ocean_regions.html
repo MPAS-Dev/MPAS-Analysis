@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.time_series_ocean_regions &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+  <title>mpas_analysis.ocean.time_series_ocean_regions &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -102,34 +102,29 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">xarray</span>
-<span class="kn">import</span> <span class="nn">numpy</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">geometric_features</span> <span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
-<span class="kn">from</span> <span class="nn">mpas_tools.cime.constants</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">geometric_features</span><span class="w"> </span><span class="kn">import</span> <span class="n">FeatureCollection</span><span class="p">,</span> <span class="n">read_feature_collection</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.cime.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">cime_constants</span>
 
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.analysis_task</span> <span class="kn">import</span> <span class="n">AnalysisTask</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.plot</span> <span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.analysis_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.constants</span><span class="w"> </span><span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.html</span><span class="w"> </span><span class="kn">import</span> <span class="n">write_image_xml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.io.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
+    <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">timeseries_analysis_plot</span><span class="p">,</span> <span class="n">savefig</span><span class="p">,</span> \
     <span class="n">add_inset</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io</span> <span class="kn">import</span> <span class="n">open_mpas_dataset</span><span class="p">,</span> <span class="n">write_netcdf_with_fill</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.io.utility</span> <span class="kn">import</span> <span class="n">build_config_full_path</span><span class="p">,</span> \
-    <span class="n">build_obs_path</span><span class="p">,</span> <span class="n">get_files_year_month</span><span class="p">,</span> <span class="n">decode_strings</span><span class="p">,</span> <span class="n">get_region_mask</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.html</span> <span class="kn">import</span> <span class="n">write_image_xml</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.ocean.utility</span> <span class="kn">import</span> <span class="n">compute_zmid</span>
-
-<span class="kn">from</span> <span class="nn">mpas_analysis.shared.constants</span> <span class="kn">import</span> <span class="n">constants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.timekeeping.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_simulation_start_time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.ocean.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_zmid</span>
 
 
 <div class="viewcode-block" id="TimeSeriesOceanRegions">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions">[docs]</a>
-<span class="k">class</span> <span class="nc">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesOceanRegions</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of the time-series output of regionoal mean temperature,</span>
 <span class="sd">    salinity, etc.</span>
@@ -140,7 +135,7 @@
 
 <div class="viewcode-block" id="TimeSeriesOceanRegions.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOceanRegions.html#mpas_analysis.ocean.TimeSeriesOceanRegions.__init__">[docs]</a>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionMasksTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -172,6 +167,7 @@
 
         <span class="n">regionGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;regionGroups&#39;</span><span class="p">)</span>
 
+        <span class="n">woaFilename</span> <span class="o">=</span> <span class="s1">&#39;WOA23/woa23_decav_04_pt_s_mon_ann.20241101.nc&#39;</span>
         <span class="n">obsDicts</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s1">&#39;SOSE&#39;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;SOSE&#39;</span><span class="p">,</span>
@@ -192,21 +188,21 @@
                 <span class="s1">&#39;zVar&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;SOSE 2005-2010 ANN mean&#39;</span><span class="p">},</span>
-            <span class="s1">&#39;WOA18&#39;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;WOA23&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s1">&#39;suffix&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA23&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;gridName&#39;</span><span class="p">:</span> <span class="s1">&#39;Global_0.25x0.25degree&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;gridFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;TFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;SFileName&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18/woa18_decav_04_TS_mon_20190829.nc&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;gridFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
+                <span class="s1">&#39;TFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
+                <span class="s1">&#39;SFileName&#39;</span><span class="p">:</span> <span class="n">woaFilename</span><span class="p">,</span>
                 <span class="s1">&#39;volFileName&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
                 <span class="s1">&#39;lonVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lon&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;latVar&#39;</span><span class="p">:</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;TVar&#39;</span><span class="p">:</span> <span class="s1">&#39;t_an&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;TVar&#39;</span><span class="p">:</span> <span class="s1">&#39;pt_an&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;SVar&#39;</span><span class="p">:</span> <span class="s1">&#39;s_an&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;volVar&#39;</span><span class="p">:</span> <span class="s1">&#39;volume&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;zVar&#39;</span><span class="p">:</span> <span class="s1">&#39;depth&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;month&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA18 1955-2017 ANN mean&#39;</span><span class="p">}}</span>
+                <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA23 1991-2020 ANN mean&#39;</span><span class="p">}}</span>
 
         <span class="k">for</span> <span class="n">regionGroup</span> <span class="ow">in</span> <span class="n">regionGroups</span><span class="p">:</span>
             <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
@@ -283,7 +279,8 @@
                     <span class="n">localObsDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">groupObsDicts</span><span class="p">[</span><span class="n">obsName</span><span class="p">])</span>
 
                     <span class="n">obsSubtask</span> <span class="o">=</span> <span class="n">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">localObsDict</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+                        <span class="n">localObsDict</span><span class="p">)</span>
                     <span class="n">obsSubtasks</span><span class="p">[</span><span class="n">obsName</span><span class="p">]</span> <span class="o">=</span> <span class="n">obsSubtask</span>
 
                 <span class="n">plotRegionSubtask</span> <span class="o">=</span> <span class="n">PlotRegionTimeSeriesSubtask</span><span class="p">(</span>
@@ -296,7 +293,7 @@
 
 
 
-<span class="k">class</span> <span class="nc">ComputeRegionDepthMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionDepthMasksSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute masks for regional and depth mean</span>
 
@@ -315,7 +312,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -354,7 +351,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="n">regionNames</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the regional-mean time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -363,8 +360,9 @@
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Compute depth mask for regional means...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Compute depth mask for regional means...&quot;</span><span class="p">)</span>
 
         <span class="n">regionGroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span>
         <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
@@ -384,7 +382,7 @@
                                                    <span class="n">timeSeriesName</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Mask file exists -- Done.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Mask file exists -- Done.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="c1"># Load mesh related variables</span>
@@ -432,8 +430,7 @@
 
         <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">regionIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRegions</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    region: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    region: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">dsRegion</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
             <span class="n">cellMask</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
 
@@ -441,8 +438,8 @@
                 <span class="n">cellMask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">openOceanMask</span><span class="p">)</span>
 
             <span class="n">totalArea</span> <span class="o">=</span> <span class="n">areaCell</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;      totalArea: </span><span class="si">{}</span><span class="s1"> mil. km^2&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="mf">1e-12</span> <span class="o">*</span> <span class="n">totalArea</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;      totalArea: </span><span class="si">{</span><span class="mf">1e-12</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">totalArea</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1"> mil. km^2&#39;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">config_zmin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="k">if</span> <span class="s1">&#39;zminRegions&#39;</span> <span class="ow">in</span> <span class="n">dsRegion</span><span class="p">:</span>
@@ -478,7 +475,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute regional and depth mean at a function of time for a set of MPAS</span>
 <span class="sd">    fields</span>
@@ -501,7 +498,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span> <span class="n">masksSubtask</span><span class="p">,</span>
                  <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
@@ -546,7 +543,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span> <span class="o">=</span> <span class="n">regionNames</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -570,7 +567,7 @@
             <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_timeseriesstatsmonthly_enable&#39;</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the regional-mean time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -579,8 +576,9 @@
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Compute time series of regional means...&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Compute time series of regional means...&quot;</span><span class="p">)</span>
 
         <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span>
         <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
@@ -610,19 +608,14 @@
                                              <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="p">,</span>
                                              <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
 
-        <span class="n">variables</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="n">_get_variables_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">)</span>
 
         <span class="n">variableList</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
             <span class="n">mpas_var</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">mpas_var</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mpas_var</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)):</span>
-                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mpas_var</span><span class="p">:</span>
-                    <span class="n">variableList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">variableList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mpas_var</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mpas_var</span><span class="p">:</span>
+                <span class="n">variableList</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 
         <span class="n">outputExists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
         <span class="n">outputValid</span> <span class="o">=</span> <span class="n">outputExists</span>
@@ -644,11 +637,11 @@
                         <span class="k">break</span>
 
         <span class="k">if</span> <span class="n">outputValid</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
             <span class="k">return</span>
 
-        <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/depthMasks_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">,</span>
-                                                          <span class="n">timeSeriesName</span><span class="p">)</span>
+        <span class="n">regionMaskFileName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/depthMasks_</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">.nc&#39;</span>
         <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">regionMaskFileName</span><span class="p">)</span>
         <span class="n">nRegions</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nRegions&#39;</span><span class="p">]</span>
         <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">areaCell</span>
@@ -656,7 +649,7 @@
         <span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">nTime</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">tIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nTime</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">nTime</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  </span><span class="si">{</span><span class="n">tIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">nTime</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
             <span class="n">dsIn</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
                 <span class="n">fileName</span><span class="o">=</span><span class="n">inputFiles</span><span class="p">[</span><span class="n">tIndex</span><span class="p">],</span>
@@ -670,8 +663,7 @@
 
             <span class="n">innerDatasets</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">regionIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nRegions</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    region: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    region: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionNames</span><span class="p">[</span><span class="n">regionIndex</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="n">dsRegion</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">regionIndex</span><span class="p">)</span>
                 <span class="n">dsRegion</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
                 <span class="n">cellMask</span> <span class="o">=</span> <span class="n">dsRegion</span><span class="o">.</span><span class="n">cellMask</span>
@@ -683,8 +675,8 @@
                 <span class="n">volCell</span> <span class="o">=</span> <span class="p">(</span><span class="n">localArea</span><span class="o">*</span><span class="n">localThickness</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">depthMask</span><span class="p">)</span>
                 <span class="n">volCell</span> <span class="o">=</span> <span class="n">volCell</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
                 <span class="n">totalVol</span> <span class="o">=</span> <span class="n">volCell</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;      totalVol (mil. km^3): </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="mf">1e-15</span><span class="o">*</span><span class="n">totalVol</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s1">&#39;      totalVol (mil. km^3): </span><span class="si">{</span><span class="mf">1e-15</span><span class="o">*</span><span class="n">totalVol</span><span class="o">.</span><span class="n">values</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
                 <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
                 <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;totalVol&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totalVol</span>
@@ -692,14 +684,23 @@
 
                 <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">:</span>
                     <span class="n">outName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;      </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outName</span><span class="p">))</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;      </span><span class="si">{</span><span class="n">outName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">integrated</span> <span class="o">=</span> <span class="kc">False</span>
                     <span class="k">if</span> <span class="n">outName</span> <span class="o">==</span> <span class="s1">&#39;thermalForcing&#39;</span><span class="p">:</span>
                         <span class="n">timeSeries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_thermal_forcing</span><span class="p">(</span><span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">)</span>
                         <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;degrees Celsius&#39;</span>
                         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;potential temperature minus the &#39;</span> \
                                       <span class="s1">&#39;potential freezing temperature&#39;</span>
+                    <span class="k">elif</span> <span class="n">outName</span> <span class="o">==</span> <span class="s1">&#39;oceanHeatContent&#39;</span><span class="p">:</span>
+                        <span class="n">timeSeries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_add_ohc</span><span class="p">(</span><span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">)</span>
+                        <span class="n">units</span> <span class="o">=</span> <span class="s1">&#39;10^22 J&#39;</span>
+                        <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;ocean heat content&#39;</span>
+                        <span class="n">integrated</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                        <span class="n">mpasVarNames</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mpasVarNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+                        <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">mpasVarNames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
                         <span class="n">timeSeries</span> <span class="o">=</span> \
                             <span class="n">dsIn</span><span class="p">[</span><span class="n">mpasVarName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                         <span class="n">units</span> <span class="o">=</span> <span class="n">timeSeries</span><span class="o">.</span><span class="n">units</span>
@@ -709,16 +710,20 @@
                     <span class="k">if</span> <span class="n">is3d</span><span class="p">:</span>
                         <span class="n">timeSeries</span> <span class="o">=</span> \
                             <span class="p">(</span><span class="n">volCell</span><span class="o">*</span><span class="n">timeSeries</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">depthMask</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                                <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">totalVol</span>
+                                <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">integrated</span><span class="p">:</span>
+                            <span class="n">timeSeries</span> <span class="o">=</span> <span class="n">timeSeries</span> <span class="o">/</span> <span class="n">totalVol</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="n">timeSeries</span> <span class="o">=</span> \
-                            <span class="p">(</span><span class="n">localArea</span><span class="o">*</span><span class="n">timeSeries</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                                <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">totalArea</span>
+                            <span class="p">(</span><span class="n">localArea</span><span class="o">*</span><span class="n">timeSeries</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">integrated</span><span class="p">:</span>
+                            <span class="n">timeSeries</span> <span class="o">=</span> <span class="n">timeSeries</span> <span class="o">/</span> <span class="n">totalArea</span>
 
                     <span class="n">dsOut</span><span class="p">[</span><span class="n">outName</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeSeries</span>
                     <span class="n">dsOut</span><span class="p">[</span><span class="n">outName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">units</span>
                     <span class="n">dsOut</span><span class="p">[</span><span class="n">outName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">description</span>
                     <span class="n">dsOut</span><span class="p">[</span><span class="n">outName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;is3d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">is3d</span><span class="p">)</span>
+                    <span class="n">dsOut</span><span class="p">[</span><span class="n">outName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;integrated&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">integrated</span><span class="p">)</span>
 
                 <span class="n">innerDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
@@ -740,7 +745,7 @@
 
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_thermal_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_thermal_forcing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; compute the thermal forcing &quot;&quot;&quot;</span>
 
         <span class="n">c0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
@@ -772,8 +777,29 @@
 
         <span class="k">return</span> <span class="n">timeSeries</span>
 
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dsIn</span><span class="p">,</span> <span class="n">cellMask</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; compute the ocean heat content &quot;&quot;&quot;</span>
 
-<span class="k">class</span> <span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+        <span class="nb">vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="nb">vars</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cellMask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># specific heat [J/(kg*degC)]</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+        <span class="c1"># [kg/m3]</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_activeTracers_temperature</span>
+        <span class="n">thick</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span>
+
+        <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-22</span>
+
+        <span class="n">ohc</span> <span class="o">=</span> <span class="n">units_scale_factor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">thick</span> <span class="o">*</span> <span class="n">temp</span>
+
+        <span class="k">return</span> <span class="n">ohc</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CombineRegionalProfileTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Combine individual time series into a single data set</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -781,7 +807,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Construct the analysis task.</span>
 
@@ -817,7 +843,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span> <span class="o">=</span> <span class="n">regionGroup</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Combine the time series</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -856,7 +882,7 @@
             <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ComputeObsRegionalTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute the regional mean of the obs climatology</span>
 
@@ -867,7 +893,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span>
                  <span class="n">obsDict</span><span class="p">):</span>
 
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -920,7 +946,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;maskTask&#39;</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute time-series output of properties in an ocean region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -928,8 +954,8 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Averaging T and S for </span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">))</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Averaging T and S for </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
 
         <span class="n">obsDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsDict</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
@@ -939,20 +965,19 @@
 
         <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
             <span class="n">regionGroup</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeries</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionSuffix</span><span class="p">)</span>
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">sectionSuffix</span><span class="si">}</span><span class="s1">&#39;</span>
 
-        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">),</span>
-            <span class="n">timeSeriesName</span><span class="p">)</span>
+        <span class="n">baseDir</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
+                                         <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">baseDir</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">/&#39;</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/TS_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">outputDirectory</span><span class="p">,</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;suffix&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">outFileName</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s2">/TS_</span><span class="si">{</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;suffix&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s2">.nc&quot;</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
             <span class="k">return</span>
@@ -968,7 +993,7 @@
         <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span>
             <span class="p">[</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;latVar&#39;</span><span class="p">],</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;lonVar&#39;</span><span class="p">]])</span>
         <span class="k">if</span> <span class="s1">&#39;nCells&#39;</span> <span class="ow">in</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
-            <span class="n">dsRegionMaks</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
+            <span class="n">dsRegionMask</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;nCells&#39;</span><span class="p">])</span>
 
         <span class="n">maskRegionNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span><span class="p">)</span>
         <span class="n">regionIndex</span> <span class="o">=</span> <span class="n">maskRegionNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
@@ -1014,20 +1039,20 @@
         <span class="n">obsFileName</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">relativePath</span><span class="o">=</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;TFileName&#39;</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Reading from </span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Reading from </span><span class="si">{</span><span class="n">obsFileName</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;SFileName&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;TFileName&#39;</span><span class="p">]:</span>
             <span class="n">obsFileName</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
                 <span class="n">relativePath</span><span class="o">=</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;SFileName&#39;</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Reading from </span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Reading from </span><span class="si">{</span><span class="n">obsFileName</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
             <span class="n">dsS</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">)</span>
             <span class="n">ds</span><span class="p">[</span><span class="n">SVarName</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsS</span><span class="p">[</span><span class="n">SVarName</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;volFileName&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># compute volume from lat, lon, depth bounds</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing volume...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing volume...&#39;</span><span class="p">)</span>
             <span class="n">latBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">latVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
             <span class="n">lonBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">lonVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
             <span class="n">zBndsName</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">zVarName</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;bounds&#39;</span><span class="p">]</span>
@@ -1038,7 +1063,7 @@
             <span class="n">dLon</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">lonBnds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lonBnds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
             <span class="n">lat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="n">latVarName</span><span class="p">])</span>
             <span class="n">dz</span> <span class="o">=</span> <span class="n">zBnds</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">zBnds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
-            <span class="n">radius</span> <span class="o">=</span> <span class="mf">6378137.0</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="n">cime_constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span>
             <span class="n">area</span> <span class="o">=</span> <span class="n">radius</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">numpy</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat</span><span class="p">)</span><span class="o">*</span><span class="n">dLat</span><span class="o">*</span><span class="n">dLon</span>
             <span class="n">volume</span> <span class="o">=</span> <span class="n">dz</span><span class="o">*</span><span class="n">area</span>
             <span class="n">ds</span><span class="p">[</span><span class="n">volVarName</span><span class="p">]</span> <span class="o">=</span> <span class="n">volume</span>
@@ -1047,7 +1072,7 @@
             <span class="n">obsFileName</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
                 <span class="n">relativePath</span><span class="o">=</span><span class="n">obsDict</span><span class="p">[</span><span class="s1">&#39;volFileName&#39;</span><span class="p">])</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Reading from </span><span class="si">{}</span><span class="s1">...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;  Reading from </span><span class="si">{</span><span class="n">obsFileName</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
             <span class="n">dsVol</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">obsFileName</span><span class="p">)</span>
             <span class="n">ds</span><span class="p">[</span><span class="n">volVarName</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsVol</span><span class="p">[</span><span class="n">volVarName</span><span class="p">]</span>
 
@@ -1098,7 +1123,7 @@
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PlotRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlotRegionTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots time-series output of properties in an ocean region.</span>
 
@@ -1124,7 +1149,7 @@
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">regionName</span><span class="p">,</span> <span class="n">regionIndex</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">obsSubtasks</span><span class="p">,</span>
                  <span class="n">geojsonFileName</span><span class="p">):</span>
 
@@ -1186,7 +1211,7 @@
         <span class="k">for</span> <span class="n">obsName</span> <span class="ow">in</span> <span class="n">obsSubtasks</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">obsSubtasks</span><span class="p">[</span><span class="n">obsName</span><span class="p">])</span>
 
-    <span class="k">def</span> <span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
@@ -1205,8 +1230,7 @@
         <span class="c1">#   self.calendar</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotRegionTimeSeriesSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                                   <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variables</span> <span class="o">=</span> <span class="n">_get_variables_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
@@ -1214,7 +1238,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
         <span class="k">return</span>
 
-    <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots time-series output of properties in an ocean region.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1222,19 +1246,23 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting time series of ocean properties of </span><span class="si">{}</span><span class="s2">&quot;</span>
-                         <span class="s2">&quot;...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">))</span>
+        <span class="n">regionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load time series...&#39;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting time series of ocean properties of &quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">regionName</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load time series...&#39;</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="mi">1</span>
 
         <span class="n">fcAll</span> <span class="o">=</span> <span class="n">read_feature_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">)</span>
 
         <span class="n">fc</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">fcAll</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">regionName</span><span class="p">:</span>
                 <span class="n">fc</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
                 <span class="k">break</span>
 
@@ -1246,10 +1274,35 @@
         <span class="n">regionGroup</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span>
         <span class="n">timeSeriesName</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
-        <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">baseDirectory</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">)</span>
+        <span class="n">inFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="n">timeSeriesName</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesOceanRegions&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
+
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
+
+        <span class="n">anomalyVars</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;anomalies&#39;</span><span class="p">)</span>
 
         <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span><span class="p">)</span>
+
+        <span class="n">dsStart</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">dsStartRef</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">anomalyVars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">anomalyRefYear</span> <span class="o">=</span> <span class="n">get_anomaly_ref_year</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">anomalyRefYear</span> <span class="o">&lt;</span> <span class="n">startYear</span> <span class="ow">or</span> <span class="n">anomalyRefYear</span> <span class="o">&gt;</span> <span class="n">endYear</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cannot plot anomalies with respect to a &#39;</span>
+                                 <span class="sa">f</span><span class="s1">&#39;year </span><span class="si">{</span><span class="n">anomalyRefYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1"> not in the time &#39;</span>
+                                 <span class="sa">f</span><span class="s1">&#39;series </span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+            <span class="n">anomalyRefFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">baseDirectory</span><span class="p">,</span>
+                <span class="n">timeSeriesName</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">anomalyRefYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-&#39;</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">anomalyRefYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+            <span class="n">dsStart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">anomalyRefFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">nRegions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span><span class="p">)</span>
 
         <span class="n">zbounds</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">zbounds</span><span class="o">.</span><span class="n">values</span>
 
@@ -1263,39 +1316,68 @@
             <span class="n">startYear</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
             <span class="n">endYear</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
 
-            <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">baseDirectory</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">timeSeriesName</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span>
-                <span class="n">endYear</span><span class="p">)</span>
+            <span class="n">inFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="n">baseDirectory</span><span class="p">,</span>
+                <span class="n">timeSeriesName</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
                 <span class="n">nRegions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span><span class="p">)</span>
 
             <span class="n">zboundsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">zbounds</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">anomalyVars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">anomalyRefYear</span> <span class="o">=</span> <span class="n">get_anomaly_ref_year</span><span class="p">(</span><span class="n">controlConfig</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+                <span class="n">anomalyRefFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                    <span class="n">baseDirectory</span><span class="p">,</span>
+                    <span class="n">timeSeriesName</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">timeSeriesName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">anomalyRefYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-&#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">anomalyRefYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span><span class="p">)</span>
+                <span class="n">dsStartRef</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">anomalyRefFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                    <span class="n">nRegions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Make plots...&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Make plots...&#39;</span><span class="p">)</span>
 
         <span class="n">groupLink</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">:</span>
             <span class="n">varName</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
             <span class="n">mainArray</span> <span class="o">=</span> <span class="n">dsIn</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
+            <span class="n">anomaly</span> <span class="o">=</span> <span class="n">varName</span> <span class="ow">in</span> <span class="n">anomalyVars</span>
+
+            <span class="n">varTitle</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span>
+            <span class="n">varUnits</span> <span class="o">=</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span>
+
             <span class="n">is3d</span> <span class="o">=</span> <span class="n">mainArray</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;is3d&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span>
+            <span class="n">integrated</span> <span class="o">=</span> <span class="n">mainArray</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;integrated&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;True&#39;</span>
+            <span class="k">if</span> <span class="n">anomaly</span><span class="p">:</span>
+                <span class="n">mainArray</span> <span class="o">=</span> <span class="n">mainArray</span> <span class="o">-</span> <span class="n">dsStart</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">varTitle</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">varTitle</span><span class="si">}</span><span class="s1"> Anomaly&#39;</span>
+
             <span class="k">if</span> <span class="n">is3d</span><span class="p">:</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Volume-Mean </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                    <span class="n">var</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>  <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+                <span class="n">volArea</span> <span class="o">=</span> <span class="s1">&#39;Volume&#39;</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Area-Mean </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
-                                                    <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
+                <span class="n">volArea</span> <span class="o">=</span> <span class="s1">&#39;Area&#39;</span>
+
+            <span class="k">if</span> <span class="n">integrated</span><span class="p">:</span>
+                <span class="n">meanInteg</span> <span class="o">=</span> <span class="s1">&#39;Integrated&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">meanInteg</span> <span class="o">=</span> <span class="s1">&#39;Mean&#39;</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">volArea</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">meanInteg</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">varTitle</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">regionName</span><span class="si">}</span><span class="s1">&#39;</span>
 
             <span class="k">if</span> <span class="n">plotControl</span><span class="p">:</span>
                 <span class="n">refArray</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">anomaly</span><span class="p">:</span>
+                    <span class="n">refArray</span> <span class="o">=</span> <span class="n">refArray</span> <span class="o">-</span> <span class="n">dsStartRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
             <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (yr)&#39;</span>
-            <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">])</span>
+            <span class="n">yLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">varTitle</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">varUnits</span><span class="si">}</span><span class="s1">)&#39;</span>
 
-            <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="p">,</span> <span class="n">varName</span><span class="p">)</span>
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
+            <span class="n">filePrefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">varName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+                                       <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">.png&#39;</span><span class="p">)</span>
 
             <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainArray</span><span class="p">]</span>
             <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)]</span>
@@ -1307,9 +1389,9 @@
                 <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
                 <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="n">varName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">varName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">anomaly</span><span class="p">:</span>
                 <span class="n">obsColors</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;obsColor</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;obsColor</span><span class="si">{</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
                     <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
                 <span class="n">daysInMonth</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">daysInMonth</span>
                 <span class="k">for</span> <span class="n">obsName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">obsSubtasks</span><span class="p">:</span>
@@ -1335,15 +1417,12 @@
 
             <span class="k">if</span> <span class="n">is3d</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">plotControl</span> <span class="ow">or</span> <span class="n">numpy</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">zbounds</span> <span class="o">==</span> <span class="n">zboundsRef</span><span class="p">):</span>
-                    <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> &lt; z &lt; </span><span class="si">{}</span><span class="s1"> m)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">zbounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                        <span class="n">zbounds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> &lt; z &lt; </span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> m)&#39;</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">legendText</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> &lt; z &lt; </span><span class="si">{}</span><span class="s1"> m)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">legendText</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zbounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zbounds</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-                    <span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> &lt; z &lt; </span><span class="si">{}</span><span class="s1"> m)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                        <span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">zboundsRef</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zboundsRef</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-            <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
+                    <span class="n">legendText</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">legendText</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> &lt; z &lt; </span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> m)&#39;</span>
+                    <span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">legendText</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> &lt; z &lt; </span><span class="si">{</span><span class="n">zbounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1"> m)&#39;</span>
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">):</span>
                 <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -1359,7 +1438,8 @@
                 <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="o">=</span><span class="n">movingAveragePoints</span><span class="p">,</span>
                 <span class="n">lineColors</span><span class="o">=</span><span class="n">lineColors</span><span class="p">,</span> <span class="n">lineWidths</span><span class="o">=</span><span class="n">lineWidths</span><span class="p">,</span>
                 <span class="n">legendText</span><span class="o">=</span><span class="n">legendText</span><span class="p">,</span> <span class="n">titleFontSize</span><span class="o">=</span><span class="n">titleFontSize</span><span class="p">,</span>
-                <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+                <span class="n">defaultFontSize</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">,</span>
+                <span class="n">maxTitleLength</span><span class="o">=</span><span class="n">maxTitleLength</span><span class="p">)</span>
 
             <span class="c1"># do this before the inset because otherwise it moves the inset</span>
             <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
@@ -1369,18 +1449,59 @@
 
             <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">tight</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-            <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Regional mean of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+            <span class="n">caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Regional </span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">&#39;</span>
+
             <span class="n">write_image_xml</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
                 <span class="n">filePrefix</span><span class="o">=</span><span class="n">filePrefix</span><span class="p">,</span>
                 <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
                 <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> Time Series&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span><span class="p">),</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionGroup</span><span class="si">}</span><span class="s1"> Time Series&#39;</span><span class="p">,</span>
                 <span class="n">groupLink</span><span class="o">=</span><span class="n">groupLink</span><span class="p">,</span>
-                <span class="n">gallery</span><span class="o">=</span><span class="n">var</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">],</span>
-                <span class="n">thumbnailDescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">,</span>
+                <span class="n">gallery</span><span class="o">=</span><span class="n">varTitle</span><span class="p">,</span>
+                <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">regionName</span><span class="p">,</span>
                 <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_variables_list</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">sectionName</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get a list of dict of variables for the given region</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">availableVariables</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesOceanRegions&#39;</span><span class="p">,</span>
+                                              <span class="s1">&#39;availableVariables&#39;</span><span class="p">)</span>
+
+    <span class="n">variableList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
+
+    <span class="n">variables</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span> <span class="n">variableList</span><span class="p">:</span>
+        <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">availableVariables</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">varName</span> <span class="o">==</span> <span class="n">var</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]:</span>
+                <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Did not find </span><span class="si">{</span><span class="n">varName</span><span class="si">}</span><span class="s1"> in config option &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;availableVariables in &#39;</span>
+                             <span class="sa">f</span><span class="s1">&#39;[timeSeriesOceanRegions]&#39;</span><span class="p">)</span>
+        <span class="n">variables</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">variables</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_anomaly_ref_year</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">runStreams</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the reference year for anomalies</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">):</span>
+        <span class="n">anomalyYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">anomalyRefDate</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="n">runStreams</span><span class="p">)</span>
+        <span class="n">anomalyYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">anomalyRefDate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">anomalyYear</span>
 </pre></div>
 
            </div>
@@ -1411,14 +1532,6 @@
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../../../1.10.0/index.html">1.10.0</a></dd>
-      <dd><a href="../../../../1.11.0/index.html">1.11.0</a></dd>
-      <dd><a href="../../../../1.8.0/index.html">1.8.0</a></dd>
-      <dd><a href="../../../../1.9.0/index.html">1.9.0</a></dd>
-      <dd><a href="../../../../1.9.1/index.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="time_series_ocean_regions.html">main</a></dd>

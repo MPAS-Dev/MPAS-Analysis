@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Remapper for “online” remapping of data sets &mdash; MPAS-Analysis 1.12.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+  <title>Remapper for “online” remapping of data sets &mdash; MPAS-Analysis 1.13.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fe8e256b"></script>
+      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -179,15 +179,15 @@ methods:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">to_scrip</span></code> method: used to write out a SCRIP file defining the mesh.</p></li>
 </ul>
 <h4> Remapper class </h4><p>Below is a skeleton of the <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> public API.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Remapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">destinationDescriptor</span><span class="p">,</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">Remapper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="p">,</span> <span class="n">destinationDescriptor</span><span class="p">,</span>
                  <span class="n">mappingFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Create the remapper and read weights and indices from the given file</span>
 <span class="sd">        for later used in remapping fields.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_mapping_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;bilinear&#39;</span><span class="p">,</span>
                            <span class="n">additionalArgs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
@@ -196,7 +196,7 @@ methods:</p>
 <span class="sd">        destination grids.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">remap_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remap_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inFileName</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                    <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source file defining either an MPAS mesh or a lat-lon grid and</span>
@@ -205,7 +205,7 @@ methods:</p>
 <span class="sd">        destination grids.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-    <span class="k">def</span> <span class="nf">remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Given a source data set, returns a remapped version of the data set,</span>
 <span class="sd">        possibly masked and renormalized.</span>
@@ -259,14 +259,6 @@ perform remapping with stereographic grids.</p>
     <span class="fa fa-caret-down"></span>
   </span>
   <div class="rst-other-versions">
-    <dl>
-      <dt>Tags</dt>
-      <dd><a href="../../1.10.0/design_docs/remapper.html">1.10.0</a></dd>
-      <dd><a href="../../1.11.0/design_docs/remapper.html">1.11.0</a></dd>
-      <dd><a href="../../1.8.0/design_docs/remapper.html">1.8.0</a></dd>
-      <dd><a href="../../1.9.0/design_docs/remapper.html">1.9.0</a></dd>
-      <dd><a href="../../1.9.1/design_docs/remapper.html">1.9.1</a></dd>
-    </dl>
     <dl>
       <dt>Branches</dt>
       <dd><a href="remapper.html">main</a></dd>
