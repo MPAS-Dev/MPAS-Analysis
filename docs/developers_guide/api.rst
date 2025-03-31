@@ -157,6 +157,7 @@ Sea ice tasks
    ClimatologyMapSeaIceVolumeTendencyTransp
    TimeSeriesSeaIce
    ClimatologyMapIcebergConc
+   ClimatologyMapRiskIndexOutcome
 
 
 Shared modules
