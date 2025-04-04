@@ -351,7 +351,7 @@
         <span class="k">for</span> <span class="n">plot_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotTypes</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">varname</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="n">plot_type</span><span class="p">]:</span>
                 <span class="n">all_plots_variable_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">varname</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="n">all_plots_variable_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_time_series_with_xarray</span><span class="p">(</span><span class="n">all_plots_variable_list</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">plot_type</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plotTypes</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_make_plot</span><span class="p">(</span><span class="n">plot_type</span><span class="p">)</span>
 
@@ -703,28 +703,27 @@
 
         <span class="k">return</span> <span class="n">variable</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="nf">_check_output_safe_to_append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Uses ncrcat to extact time series from conservationCheckOutput files</span>
+<span class="sd">        Check if the output file is safe to append to by verifying the presence</span>
+<span class="sd">        of necessary variables and determining if new input files are needed.</span>
 
-<span class="sd">        Raises</span>
-<span class="sd">        ------</span>
-<span class="sd">        OSError</span>
-<span class="sd">            If ``ncrcat`` is not in the system path.</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable_list : list of str</span>
+<span class="sd">            List of variables to include in the time series.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        append : bool</span>
+<span class="sd">            True if the output file can be safely appended to, False otherwise.</span>
+<span class="sd">        inputFiles : list of str</span>
+<span class="sd">            Updated list of input files to process.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
-                          <span class="s1">&#39;package is installed: </span><span class="se">\n</span><span class="s1">&#39;</span>
-                          <span class="s1">&#39;conda install nco</span><span class="se">\n</span><span class="s1">&#39;</span>
-                          <span class="s1">&#39;Note: this presumes use of the conda-forge &#39;</span>
-                          <span class="s1">&#39;channel.&#39;</span><span class="p">)</span>
-
-        <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span>
         <span class="n">append</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span>
+
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">):</span>
-            <span class="c1"># make sure all the necessary variables are also present</span>
             <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">updateSubset</span> <span class="o">=</span> <span class="kc">False</span>
@@ -736,11 +735,7 @@
                             <span class="k">break</span>
 
                 <span class="k">if</span> <span class="n">updateSubset</span><span class="p">:</span>
-                    <span class="c1"># add only input files with times that aren&#39;t already in</span>
-                    <span class="c1"># the output file</span>
-
                     <span class="n">append</span> <span class="o">=</span> <span class="kc">True</span>
-
                     <span class="n">fileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">)</span>
                     <span class="n">inYears</span><span class="p">,</span> <span class="n">inMonths</span> <span class="o">=</span> <span class="n">get_files_year_month</span><span class="p">(</span>
                         <span class="n">fileNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="p">,</span>
@@ -751,33 +746,51 @@
                     <span class="n">totalMonths</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">inYears</span> <span class="o">+</span> <span class="n">inMonths</span>
 
                     <span class="n">dates</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">xtime</span><span class="p">)</span>
-
                     <span class="n">lastDate</span> <span class="o">=</span> <span class="n">dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
                     <span class="n">lastYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lastDate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
                     <span class="n">lastMonth</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">lastDate</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">])</span>
                     <span class="n">lastTotalMonths</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">lastYear</span> <span class="o">+</span> <span class="n">lastMonth</span>
 
-                    <span class="n">inputFiles</span> <span class="o">=</span> <span class="p">[]</span>
-                    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">inputFile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fileNames</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">totalMonths</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lastTotalMonths</span><span class="p">:</span>
-                            <span class="n">inputFiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inputFile</span><span class="p">)</span>
+                    <span class="n">inputFiles</span> <span class="o">=</span> <span class="p">[</span>
+                        <span class="n">inputFile</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">inputFile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fileNames</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">totalMonths</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">lastTotalMonths</span>
+                    <span class="p">]</span>
 
                     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="c1"># nothing to do</span>
-                        <span class="k">return</span>
+                        <span class="k">return</span> <span class="n">append</span><span class="p">,</span> <span class="n">inputFiles</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># there is an output file but it has the wrong variables</span>
-                    <span class="c1"># so we need ot delete it.</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning: deleting file </span><span class="si">{self.outputFile}</span><span class="s1">&#39;</span>
-                                        <span class="s1">&#39; because it is empty or some variables&#39;</span>
-                                        <span class="s1">&#39; were missing&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Warning: deleting file </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="si">}</span><span class="s1"> because it &#39;</span>
+                        <span class="s1">&#39;is empty or some variables were missing&#39;</span><span class="p">)</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="n">variable_list</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">append</span><span class="p">,</span> <span class="n">inputFiles</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses ncrcat to extract time series from conservationCheckOutput files.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        OSError</span>
+<span class="sd">            If ``ncrcat`` is not in the system path.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
+                          <span class="s1">&#39;package is installed: </span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="s1">&#39;conda install nco</span><span class="se">\n</span><span class="s1">&#39;</span>
+                          <span class="s1">&#39;Note: this presumes use of the conda-forge &#39;</span>
+                          <span class="s1">&#39;channel.&#39;</span><span class="p">)</span>
+
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="n">variable_list</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span>
+        <span class="n">append</span><span class="p">,</span> <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_output_safe_to_append</span><span class="p">(</span><span class="n">variable_list</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># nothing to do</span>
+            <span class="k">return</span>
 
         <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">,</span> <span class="s1">&#39;-4&#39;</span><span class="p">,</span> <span class="s1">&#39;--no_tmp_fl&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variableList</span><span class="p">)]</span>
+                <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variable_list</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="n">append</span><span class="p">:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--record_append&#39;</span><span class="p">)</span>
@@ -808,7 +821,71 @@
 
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
-                                                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
+                                                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_series_with_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Uses xarray to extract time series from conservationCheckOutput files,</span>
+<span class="sd">        handling redundant `xtime` entries and sorting by `xtime`.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        variable_list : list of str</span>
+<span class="sd">            List of variables to include in the time series.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Authors</span>
+        <span class="c1"># -------</span>
+        <span class="c1"># Xylar Asay-Davis</span>
+
+        <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span>
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="n">variable_list</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span>
+
+        <span class="n">append</span><span class="p">,</span> <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_output_safe_to_append</span><span class="p">(</span><span class="n">variable_list</span><span class="p">)</span>
+
+        <span class="c1"># Open all input files as a single dataset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Opening input files with xarray: </span><span class="si">{</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> ... &#39;</span>
+            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
+            <span class="n">inputFiles</span><span class="p">,</span>
+            <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
+            <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+            <span class="n">data_vars</span><span class="o">=</span><span class="s1">&#39;minimal&#39;</span><span class="p">,</span>
+            <span class="n">coords</span><span class="o">=</span><span class="s1">&#39;minimal&#39;</span><span class="p">,</span>
+            <span class="n">compat</span><span class="o">=</span><span class="s1">&#39;override&#39;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Select only the requested variables</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variable_list</span><span class="p">]</span>
+
+        <span class="c1"># Handle redundant `xtime` entries by keeping the last occurrence</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Removing redundant xtime entries...&#39;</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">unique_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">unique_indices</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_indices</span><span class="p">)</span>  <span class="c1"># Ensure ascending order</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">unique_indices</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">append</span><span class="p">:</span>
+            <span class="c1"># Load the existing dataset and combine it with the new dataset</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Appending to existing dataset in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">existing_ds</span><span class="p">:</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">existing_ds</span><span class="p">,</span> <span class="n">ds</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+                <span class="c1"># Remove redundant `xtime` entries again after concatenation</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">unique_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span>
+                    <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;xtime&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">return_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">unique_indices</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_indices</span><span class="p">)</span>
+                <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">unique_indices</span><span class="p">)</span>
+
+        <span class="c1"># Sort by `xtime` to ensure the time series is in ascending order</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Sorting by xtime...&#39;</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save the resulting dataset to the output file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s1">&#39;Saving concatenated dataset to </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="si">}</span><span class="s1">...&#39;</span><span class="p">)</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">to_netcdf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;NETCDF4&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Time series successfully created with xarray.&#39;</span><span class="p">)</span></div>
 
 </pre></div>
 
@@ -841,8 +918,13 @@
   </span>
   <div class="rst-other-versions">
     <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../../../1.13.0/index.html">1.13.0</a></dd>
+    </dl>
+    <dl>
       <dt>Branches</dt>
       <dd><a href="conservation.html">develop</a></dd>
+      <dd><a href="../../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

@@ -841,11 +841,11 @@ namelist options available from the <code class="docutils literal notranslate"><
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">layer_thickness</span></code> from the <code class="docutils literal notranslate"><span class="pre">climatology</span></code> dataset itself.  As the
 docstring for <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> states, <code class="docutils literal notranslate"><span class="pre">climatology</span></code> is
-and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
+and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.3.2.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_activeTracers_temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_layerThickness</span></code> because we requested them back in the
 constructor of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
-We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
+We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.2.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
 this helper method.</p>
 <p>Back to <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>, we have:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
@@ -1246,8 +1246,13 @@ here is the full analysis task as described in this tutorial:</p>
   </span>
   <div class="rst-other-versions">
     <dl>
+      <dt>Tags</dt>
+      <dd><a href="../../1.13.0/tutorials/dev_understand_a_task.html">1.13.0</a></dd>
+    </dl>
+    <dl>
       <dt>Branches</dt>
       <dd><a href="dev_understand_a_task.html">develop</a></dd>
+      <dd><a href="../../main/tutorials/dev_understand_a_task.html">main</a></dd>
     </dl>
   </div>
 </div>
