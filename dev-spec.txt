@@ -32,8 +32,6 @@ shapely>=2.0,<3.0
 xarray>=0.14.1
 
 # Development
-flake8
-git
 pip
 pytest
 
