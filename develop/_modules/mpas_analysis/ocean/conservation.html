@@ -842,6 +842,10 @@
 
         <span class="n">append</span><span class="p">,</span> <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_output_safe_to_append</span><span class="p">(</span><span class="n">variable_list</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># nothing to do</span>
+            <span class="k">return</span>
+
         <span class="c1"># Open all input files as a single dataset</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
             <span class="sa">f</span><span class="s1">&#39;Opening input files with xarray: </span><span class="si">{</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> ... &#39;</span>
