@@ -158,13 +158,16 @@ def remap_paolo(in_filename, out_prefix, date, task_count=128):
 
         map_filename = f'map_{in_grid_name}_to_{out_grid_name}_{method}.nc'
 
-        remapper = Remapper(in_descriptor, out_descriptor, map_filename)
+        remapper = Remapper(
+            ntasks=task_count, map_filename=map_filename, method=method)
+        remapper.src_descriptor = in_descriptor
+        remapper.dst_descriptor = out_descriptor
+        remapper.parallel_exec = 'srun'
 
         if not os.path.exists(map_filename):
-            remapper.build_mapping_file(method=method, mpiTasks=task_count,
-                                        esmf_parallel_exec='srun')
+            remapper.build_map()
 
-        ds_out = remapper.remap(ds)
+        ds_out = remapper.remap_numpy(ds)
         mask = ds_out.meltMask > 0.
         ds_out['meltRate'] = ds_out.meltRate.where(mask)
         ds_out.meltRate.attrs = melt_attrs
