@@ -211,8 +211,8 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
                  'data': x})
 
             self.collectionDescriptor = PointCollectionDescriptor(
-                lats, lons, collectionName=self.transectCollectionName,
-                units='degrees', outDimension='nPoints')
+                lats, lons, collection_name=self.transectCollectionName,
+                units='degrees', out_dimension='nPoints')
 
             self.add_comparison_grid_descriptor(self.transectCollectionName,
                                                 self.collectionDescriptor)

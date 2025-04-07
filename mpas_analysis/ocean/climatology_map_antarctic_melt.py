@@ -407,7 +407,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         # stereographic coordinates
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
+            projection, filename=fileName, x_var_name='x', y_var_name='y')
 
         # update the mesh name to match the format used elsewhere in
         # MPAS-Analysis
@@ -416,7 +416,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         width = 1e-3 * (x[-1] - x[0])
         height = 1e-3 * (y[-1] - y[0])
         res = 1e-3 * (x[1] - x[0])
-        obsDescriptor.meshName = f'{width}x{height}km_{res}km_Antarctic_stereo'
+        obsDescriptor.mesh_name = f'{width}x{height}km_{res}km_Antarctic_stereo'
 
         return obsDescriptor
 

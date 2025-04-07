@@ -394,8 +394,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         # create a descriptor of the observation grid using Lat/Lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='latCoord',
-                                                  lonVarName='lonCoord')
+                                                  lat_var_name='latCoord',
+                                                  lon_var_name='lonCoord')
         dsObs.close()
         return obsDescriptor
 

@@ -310,8 +310,8 @@ class RemapWoaClimatology(RemapObservedClimatologySubtask):
         # create a descriptor of the observation grid using Lat/Lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
         dsObs.close()
         return obsDescriptor
 

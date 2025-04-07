@@ -114,7 +114,7 @@ class RemapSoseClimatology(RemapObservedClimatologySubtask):
         # stereographic coordinates
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
+            projection, filename=fileName, x_var_name='x', y_var_name='y')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

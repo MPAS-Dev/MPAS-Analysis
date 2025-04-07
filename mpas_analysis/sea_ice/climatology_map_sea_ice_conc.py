@@ -265,9 +265,9 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='t_lat',
-                                                  lonVarName='t_lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='t_lat',
+                                                  lon_var_name='t_lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
