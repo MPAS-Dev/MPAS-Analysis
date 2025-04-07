@@ -166,7 +166,7 @@ class ClimatologyMapSeaIceThick(AnalysisTask):
                     groupLink=f'{hemisphere.lower()}_thick',
                     galleryName=galleryName,
                     maskMinThreshold=0,
-                    extend='neither',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
