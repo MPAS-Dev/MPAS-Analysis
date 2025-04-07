@@ -77,6 +77,7 @@ Ocean tasks
    ClimatologyMapArgoTemperature
    ClimatologyMapArgoSalinity
    ClimatologyMapWaves
+   ClimatologyMapCustom
    IndexNino34
    MeridionalHeatTransport
    OceanHistogram
