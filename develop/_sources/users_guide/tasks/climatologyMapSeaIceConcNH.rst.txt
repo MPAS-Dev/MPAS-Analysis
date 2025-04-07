@@ -18,11 +18,13 @@ The following configuration options are available for this task::
 
   [climatologyMapSeaIceConcNH]
   ## options related to plotting horizontally remapped climatologies of
-  ## sea ice concentration against reference model results and observations
+  ## sea ice concentration against control model results and observations
   ## in the northern hemisphere (NH)
 
   # colormap for model/observations
   colormapNameResult = ice
+  # whether the colormap is indexed or continuous
+  colormapTypeResult = indexed
   # color indices into colormapName for filled contours
   colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
   # colormap levels/values for contour boundaries
@@ -30,29 +32,28 @@ The following configuration options are available for this task::
 
   # colormap for differences
   colormapNameDifference = balance
+  # whether the colormap is indexed or continuous
+  colormapTypeDifference = indexed
   # color indices into colormapName for filled contours
-  colormapIndicesDifference = [0, 32, 64, 96, 112, 128, 128, 144, 160, 192,
-                               224, 255]
+  colormapIndicesDifference = [0, 0,  26,  51,  77, 102, 128, 128, 153, 179, 204, 230, 255, 255]
   # colormap levels/values for contour boundaries
-  colorbarLevelsDifference = [-1., -0.8, -0.6, -0.4, -0.2, -0.1, 0, 0.1, 0.2,
-                              0.4, 0.6, 0.8, 1.]
+  colorbarLevelsDifference = [-0.5, -0.4, -0.3, -0.2, -0.1, -0.05, 0, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5]
 
   # Months or seasons to plot (These should be left unchanged, since
   # observations are only available for these seasons)
   seasons =  ['JFM', 'JAS']
 
-  # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
-  comparisonGrids = ['latlon']
-
-  # reference lat/lon for sea ice plots in the northern hemisphere
-  minimumLatitude = 50
-  referenceLongitude = 0
+  # comparison grid(s) (typically 'arctic_extended') on which to plot analysis
+  comparisonGrids = ['arctic_extended']
 
   # a list of prefixes describing the sources of the observations to be used
   observationPrefixes = ['NASATeam', 'Bootstrap']
 
   # arrange subplots vertically?
   vertical = False
+
+  # the minimum threshold below which concentration is masked out
+  minConcentration = 0.15
 
   # observations files
   concentrationNASATeamNH_JFM = SSMI/NASATeam_NSIDC0051/SSMI_NASATeam_gridded_concentration_NH_jfm.interp0.5x0.5_20180710.nc

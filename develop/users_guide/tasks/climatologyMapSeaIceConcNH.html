@@ -189,11 +189,13 @@ observations.</p>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapSeaIceConcNH</span><span class="p">]</span>
 <span class="c1">## options related to plotting horizontally remapped climatologies of</span>
-<span class="c1">## sea ice concentration against reference model results and observations</span>
+<span class="c1">## sea ice concentration against control model results and observations</span>
 <span class="c1">## in the northern hemisphere (NH)</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">ice</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">indexed</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -201,29 +203,28 @@ observations.</p>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">indexed</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">144</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span>
-                             <span class="mi">224</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">26</span><span class="p">,</span>  <span class="mi">51</span><span class="p">,</span>  <span class="mi">77</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span> <span class="mi">204</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span>
-                            <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
 
 <span class="c1"># Months or seasons to plot (These should be left unchanged, since</span>
 <span class="c1"># observations are only available for these seasons)</span>
 <span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">]</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
-
-<span class="c1"># reference lat/lon for sea ice plots in the northern hemisphere</span>
-<span class="n">minimumLatitude</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">referenceLongitude</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="c1"># comparison grid(s) (typically &#39;arctic_extended&#39;) on which to plot analysis</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arctic_extended&#39;</span><span class="p">]</span>
 
 <span class="c1"># a list of prefixes describing the sources of the observations to be used</span>
 <span class="n">observationPrefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NASATeam&#39;</span><span class="p">,</span> <span class="s1">&#39;Bootstrap&#39;</span><span class="p">]</span>
 
 <span class="c1"># arrange subplots vertically?</span>
 <span class="n">vertical</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># the minimum threshold below which concentration is masked out</span>
+<span class="n">minConcentration</span> <span class="o">=</span> <span class="mf">0.15</span>
 
 <span class="c1"># observations files</span>
 <span class="n">concentrationNASATeamNH_JFM</span> <span class="o">=</span> <span class="n">SSMI</span><span class="o">/</span><span class="n">NASATeam_NSIDC0051</span><span class="o">/</span><span class="n">SSMI_NASATeam_gridded_concentration_NH_jfm</span><span class="o">.</span><span class="n">interp0</span><span class="mf">.5</span><span class="n">x0</span><span class="mf">.5_20180710</span><span class="o">.</span><span class="n">nc</span>
