@@ -743,6 +743,10 @@ class ConservationTask(AnalysisTask):
 
         append, inputFiles = self._check_output_safe_to_append(variable_list)
 
+        if len(inputFiles) == 0:
+            # nothing to do
+            return
+
         # Open all input files as a single dataset
         self.logger.info(
             f'Opening input files with xarray: {inputFiles[0]} ... '
