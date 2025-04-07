@@ -8,6 +8,8 @@
 # Additional copyright and license information can be found in the LICENSE file
 # distributed with this code, or at
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
+import os
+
 import xarray as xr
 import numpy as np
 import scipy.sparse
@@ -252,6 +254,39 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
 
         # Add the variables and seasons, now that we have the variable list
         self.mpasClimatologyTask.add_variables(self.variableList, self.seasons)
+
+    def run_task(self):
+        """
+        Compute the requested climatologies
+        """
+        config = self.config
+        # check if climatology exists and if all comparison grids are present
+        for season in self.seasons:
+            masked_climatology_filename = self.get_masked_file_name(season)
+            if not os.path.exists(masked_climatology_filename):
+                continue
+            all_found = True
+            with xr.open_dataset(masked_climatology_filename) as ds:
+                for comparison_grid_name in self.comparisonDescriptors.keys():
+                    grid_suffix = \
+                        comparison_grid_option_suffixes[comparison_grid_name]
+                    config_section_name = f'{self.taskName}{grid_suffix}'
+                    if config.has_section(config_section_name):
+                        mpas_field_name = \
+                            f'barotropicStreamfunction{grid_suffix}'
+                        if mpas_field_name not in ds:
+                            all_found = False
+                            break
+            if not all_found:
+                # if not, remove the files and recompute/remap
+                os.remove(masked_climatology_filename)
+                for comparison_grid_name in self.comparisonDescriptors.keys():
+                    remapped_filename = self.get_remapped_file_name(
+                        season, comparison_grid_name)
+                    if os.path.exists(remapped_filename):
+                        os.remove(remapped_filename)
+
+        super().run_task()
 
     def customize_masked_climatology(self, climatology, season):
         """
