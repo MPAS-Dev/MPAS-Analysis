@@ -417,8 +417,8 @@ And here's the one for plotting it:
 
     matplotlib.rc('font', size=14)
 
-    x = descriptor.xCorner
-    y = descriptor.yCorner
+    x = descriptor.x_corner
+    y = descriptor.y_corner
 
     extent = [x[0], x[-1], y[0], y[-1]]
 
