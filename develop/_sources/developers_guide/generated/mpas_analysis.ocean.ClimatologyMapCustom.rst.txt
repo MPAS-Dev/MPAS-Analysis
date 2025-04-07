@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.ClimatologyMapCustom
+=========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapCustom
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapCustom.__init__
+      ~ClimatologyMapCustom.add_subtask
+      ~ClimatologyMapCustom.check_analysis_enabled
+      ~ClimatologyMapCustom.check_generate
+      ~ClimatologyMapCustom.close
+      ~ClimatologyMapCustom.is_alive
+      ~ClimatologyMapCustom.join
+      ~ClimatologyMapCustom.kill
+      ~ClimatologyMapCustom.run
+      ~ClimatologyMapCustom.run_after
+      ~ClimatologyMapCustom.run_task
+      ~ClimatologyMapCustom.set_start_end_date
+      ~ClimatologyMapCustom.setup_and_check
+      ~ClimatologyMapCustom.start
+      ~ClimatologyMapCustom.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapCustom.BLOCKED
+      ~ClimatologyMapCustom.FAIL
+      ~ClimatologyMapCustom.READY
+      ~ClimatologyMapCustom.RUNNING
+      ~ClimatologyMapCustom.SUCCESS
+      ~ClimatologyMapCustom.UNSET
+      ~ClimatologyMapCustom.authkey
+      ~ClimatologyMapCustom.daemon
+      ~ClimatologyMapCustom.exitcode
+      ~ClimatologyMapCustom.ident
+      ~ClimatologyMapCustom.name
+      ~ClimatologyMapCustom.pid
+      ~ClimatologyMapCustom.sentinel
+   
+   

@@ -229,6 +229,57 @@
 
     <span class="k">return</span> <span class="n">zMid</span></div>
 
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">compute_zinterface</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes zInterface given data arrays for bottomDepth, maxLevelCell and</span>
+<span class="sd">    layerThickness</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    bottomDepth : ``xarray.DataArray``</span>
+<span class="sd">        the depth of the ocean bottom (positive)</span>
+
+<span class="sd">    maxLevelCell : ``xarray.DataArray``</span>
+<span class="sd">        the 0-based vertical index of the bottom of the ocean</span>
+
+<span class="sd">    layerThickness : ``xarray.DataArray``</span>
+<span class="sd">        the thickness of MPAS-Ocean layers (possibly as a function of time)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    zInterface : ``xarray.DataArray``</span>
+<span class="sd">        the vertical coordinate defining the interfaces between layers, masked</span>
+<span class="sd">        below the bathymetry</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Authors</span>
+    <span class="c1"># -------</span>
+    <span class="c1"># Xylar Asay-Davis</span>
+
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+
+    <span class="n">vertIndex</span> <span class="o">=</span> \
+        <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)})</span>
+
+    <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
+    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+
+    <span class="n">zSurface</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottomDepth</span> <span class="o">+</span> <span class="n">thicknessSum</span>
+
+    <span class="n">zInterfaceList</span> <span class="o">=</span> <span class="p">[</span><span class="n">zSurface</span><span class="p">]</span>
+
+    <span class="n">zTop</span> <span class="o">=</span> <span class="n">zSurface</span>
+
+    <span class="k">for</span> <span class="n">zIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">):</span>
+        <span class="n">zBot</span> <span class="o">=</span> <span class="n">zTop</span> <span class="o">-</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nVertLevels</span><span class="o">=</span><span class="n">zIndex</span><span class="p">)</span>
+        <span class="n">zInterfaceList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zBot</span><span class="p">)</span>
+        <span class="n">zTop</span> <span class="o">=</span> <span class="n">zBot</span>
+
+    <span class="n">zInterface</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zInterfaceList</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+        <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">zInterface</span>
 </pre></div>
 
            </div>
