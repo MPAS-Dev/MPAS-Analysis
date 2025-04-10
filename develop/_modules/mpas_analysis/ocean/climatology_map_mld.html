@@ -294,8 +294,8 @@
         <span class="c1"># create a descriptor of the observation grid using the lat/lon</span>
         <span class="c1"># coordinates</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ds</span><span class="o">=</span><span class="n">dsObs</span><span class="p">,</span>
-                                                  <span class="n">latVarName</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-                                                  <span class="n">lonVarName</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
+                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
         <span class="n">dsObs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 

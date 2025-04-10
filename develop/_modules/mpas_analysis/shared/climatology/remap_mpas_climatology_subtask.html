@@ -535,15 +535,15 @@
         <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">:</span>
             <span class="n">comparisonDescriptor</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comparisonGridName</span> <span class="o">=</span> <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">mesh_name</span>
             <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
                 <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasVertexMeshDescriptor</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">mpasDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">mpasDescriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_remapper</span><span class="p">(</span>
                 <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">sourceDescriptor</span><span class="o">=</span><span class="n">mpasDescriptor</span><span class="p">,</span>
@@ -571,7 +571,7 @@
             <span class="n">comparisonDescriptor</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">comparisonDescriptors</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span>
             <span class="n">comparisonFullMeshNames</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">meshName</span>
+                <span class="n">comparisonDescriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
         <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
@@ -708,7 +708,7 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">if</span> <span class="n">remapper</span><span class="o">.</span><span class="n">mappingFileName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">remapper</span><span class="o">.</span><span class="n">map_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># no remapping is needed</span>
             <span class="k">return</span>
 
@@ -723,20 +723,21 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span><span class="p">:</span>
             <span class="n">basename</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
             <span class="n">ncremapFilename</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s1">_ncremap</span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">remapper</span><span class="o">.</span><span class="n">remap_file</span><span class="p">(</span><span class="n">inFileName</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
-                                <span class="n">outFileName</span><span class="o">=</span><span class="n">ncremapFilename</span><span class="p">,</span>
-                                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-                                <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
-                                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
-                                <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
+            <span class="n">remapper</span><span class="o">.</span><span class="n">ncremap</span><span class="p">(</span>
+                <span class="n">in_filename</span><span class="o">=</span><span class="n">inFileName</span><span class="p">,</span>
+                <span class="n">out_filename</span><span class="o">=</span><span class="n">ncremapFilename</span><span class="p">,</span>
+                <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">renormalize</span><span class="o">=</span><span class="n">renormalizationThreshold</span><span class="p">,</span>
+                <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+                <span class="n">parallel_exec</span><span class="o">=</span><span class="n">parallel_exec</span><span class="p">)</span>
 
             <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">ncremapFilename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
 
             <span class="n">climatologyDataSet</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
 
-            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span><span class="n">climatologyDataSet</span><span class="p">,</span>
-                                                 <span class="n">renormalizationThreshold</span><span class="p">)</span>
+            <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="n">remapper</span><span class="o">.</span><span class="n">remap_numpy</span><span class="p">(</span>
+                <span class="n">climatologyDataSet</span><span class="p">,</span> <span class="n">renormalizationThreshold</span><span class="p">)</span>
 
         <span class="c1"># customize (if this function has been overridden)</span>
         <span class="n">remappedClimatology</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">customize_remapped_climatology</span><span class="p">(</span>
