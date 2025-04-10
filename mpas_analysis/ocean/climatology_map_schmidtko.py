@@ -270,7 +270,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         mesh_name = ds_obs.attrs['meshName']
 
         obs_descriptor = ProjectionGridDescriptor.create(
-            projection, x=x, y=y, meshName=mesh_name)
+            projection, x=x, y=y, mesh_name=mesh_name)
         return obs_descriptor
 
     def build_observational_dataset(self, fileName):

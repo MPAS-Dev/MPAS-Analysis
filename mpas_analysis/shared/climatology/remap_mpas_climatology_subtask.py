@@ -415,15 +415,15 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         for comparisonGridName in self.comparisonDescriptors:
             comparisonDescriptor = \
                 self.comparisonDescriptors[comparisonGridName]
-            self.comparisonGridName = comparisonDescriptor.meshName
+            self.comparisonGridName = comparisonDescriptor.mesh_name
             meshName = config.get('input', 'mpasMeshName')
             if self.vertices:
                 mpasDescriptor = MpasVertexMeshDescriptor(
-                    self.restartFileName, meshName=meshName)
+                    self.restartFileName, mesh_name=meshName)
             else:
                 mpasDescriptor = MpasCellMeshDescriptor(
-                    self.restartFileName, meshName=meshName)
-            self.mpasMeshName = mpasDescriptor.meshName
+                    self.restartFileName, mesh_name=meshName)
+            self.mpasMeshName = mpasDescriptor.mesh_name
 
             self.remappers[comparisonGridName] = get_remapper(
                 config=config, sourceDescriptor=mpasDescriptor,
@@ -451,7 +451,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             comparisonDescriptor = \
                 self.comparisonDescriptors[comparisonGridName]
             comparisonFullMeshNames[comparisonGridName] = \
-                comparisonDescriptor.meshName
+                comparisonDescriptor.mesh_name
 
         keys = []
         for season in self.seasons:
@@ -588,7 +588,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         # -------
         # Xylar Asay-Davis
 
-        if remapper.mappingFileName is None:
+        if remapper.map_filename is None:
             # no remapping is needed
             return
 
@@ -603,20 +603,21 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         if self.useNcremap:
             basename, ext = os.path.splitext(outFileName)
             ncremapFilename = f'{basename}_ncremap{ext}'
-            remapper.remap_file(inFileName=inFileName,
-                                outFileName=ncremapFilename,
-                                overwrite=True,
-                                renormalize=renormalizationThreshold,
-                                logger=self.logger,
-                                parallel_exec=parallel_exec)
+            remapper.ncremap(
+                in_filename=inFileName,
+                out_filename=ncremapFilename,
+                overwrite=True,
+                renormalize=renormalizationThreshold,
+                logger=self.logger,
+                parallel_exec=parallel_exec)
 
             remappedClimatology = xr.open_dataset(ncremapFilename)
         else:
 
             climatologyDataSet = xr.open_dataset(inFileName)
 
-            remappedClimatology = remapper.remap(climatologyDataSet,
-                                                 renormalizationThreshold)
+            remappedClimatology = remapper.remap_numpy(
+                climatologyDataSet, renormalizationThreshold)
 
         # customize (if this function has been overridden)
         remappedClimatology = self.customize_remapped_climatology(

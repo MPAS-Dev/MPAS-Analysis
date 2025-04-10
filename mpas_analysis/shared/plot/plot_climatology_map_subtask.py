@@ -603,8 +603,8 @@ class PlotClimatologyMapSubtask(AnalysisTask):
 
         comparisonDescriptor = get_comparison_descriptor(
             config, comparisonGridName)
-        x = comparisonDescriptor.xCorner
-        y = comparisonDescriptor.yCorner
+        x = comparisonDescriptor.x_corner
+        y = comparisonDescriptor.y_corner
 
         aspectRatio = (x[-1] - x[0])/(y[-1] - y[0])
 

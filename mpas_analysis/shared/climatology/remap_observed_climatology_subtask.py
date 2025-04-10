@@ -175,7 +175,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
 
                     remapper = self.remappers[comparisonGridName]
 
-                    if remapper.mappingFileName is None:
+                    if remapper.map_filename is None:
                         # no need to remap because the observations are on the
                         # comparison grid already
                         os.symlink(climatologyFileName, remappedFileName)
@@ -266,7 +266,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
         else:
             remapper = self.remappers[comparisonGridName]
 
-        obsGridName = remapper.sourceDescriptor.meshName
+        obsGridName = remapper.src_descriptor.mesh_name
 
         outFilePrefix = self.outFilePrefix
 
@@ -293,7 +293,7 @@ class RemapObservedClimatologySubtask(AnalysisTask):
 
             make_directories(remappedDirectory)
 
-            comparisonGridName = remapper.destinationDescriptor.meshName
+            comparisonGridName = remapper.dst_descriptor.mesh_name
             fileName = '{}/{}_{}_to_{}_{}.nc'.format(
                 remappedDirectory, outFilePrefix, obsGridName,
                 comparisonGridName, season)

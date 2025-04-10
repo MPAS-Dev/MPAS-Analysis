@@ -8,7 +8,7 @@
 export OMP_NUM_THREADS=1
 
 source ~/mambaforge/etc/profile.d/conda.sh
-conda activate mpas_dev
+conda activate mpas_analysis_dev
 # if you are on an E3SM supported machine, you can specify it:
 # export E3SMU_MACHINE=chrysalis
 

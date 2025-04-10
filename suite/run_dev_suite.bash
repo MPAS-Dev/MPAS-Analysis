@@ -2,7 +2,7 @@
 
 set -e
 
-env_name=mpas_dev
+env_name=mpas_analysis_dev
 
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh

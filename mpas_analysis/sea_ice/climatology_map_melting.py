@@ -295,9 +295,9 @@ class RemapAnIceFluxMeltingClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLon2DGridDescriptor.read(fileName=fileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
+        obsDescriptor = LatLon2DGridDescriptor.read(filename=fileName,
+                                                    lat_var_name='lat',
+                                                    lon_var_name='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

@@ -23,8 +23,6 @@ import matplotlib.pyplot as plt
 
 from geometric_features import FeatureCollection
 
-from mpas_tools.ocean.transects import get_outline_segments
-
 from mpas_analysis.shared.plot import plot_vertical_section_comparison, \
     savefig, add_inset
 
@@ -397,17 +395,11 @@ class PlotTransectSubtask(AnalysisTask):
 
         else:
             x = 1e-3*remappedModelClimatology.dNode
-            z = None
+            z = remappedModelClimatology.zTransectNode
             lon = remappedModelClimatology.lonNode
             lat = remappedModelClimatology.latNode
 
             remappedModelClimatology['dNode'] = x
-
-            # flatten the x, lon and lat arrays because this is what
-            # vertical_section is expecting
-            x = xr.DataArray(data=x.values.ravel(), dims=('nx',))
-            lon = xr.DataArray(data=lon.values.ravel(), dims=('nx',))
-            lat = xr.DataArray(data=lat.values.ravel(), dims=('nx',))
 
         # This will do strange things at the antemeridian but there's little
         # we can do about that.
@@ -436,12 +428,6 @@ class PlotTransectSubtask(AnalysisTask):
                  "coordinates": list(map(list, zip(inset_lon, inset_lat)))}})
 
         modelOutput = remappedModelClimatology[self.mpasFieldName]
-
-        if remap:
-            triangulation_args = None
-        else:
-            triangulation_args = self._get_ds_triangulation(
-                remappedModelClimatology)
 
         if remappedRefClimatology is None:
             refOutput = None
@@ -578,12 +564,11 @@ class PlotTransectSubtask(AnalysisTask):
             configSectionName,
             xCoords=xs,
             zCoord=z,
-            triangulation_args=triangulation_args,
             colorbarLabel=self.unitsLabel,
             xlabels=xLabels,
             ylabel=yLabel,
             title=title,
-            modelTitle='{}'.format(mainRunName),
+            modelTitle=mainRunName,
             refTitle=self.refTitleLabel,
             diffTitle=self.diffTitleLabel,
             numUpperTicks=numUpperTicks,
@@ -694,7 +679,7 @@ class PlotTransectSubtask(AnalysisTask):
             maxes = []
             last_idx = 0
 
-            while(len(lon_r) > 0 and len(lon_l) > 0):
+            while len(lon_r) > 0 and len(lon_l) > 0:
                 if lon_r[0] < lon_l[0]:
                     mins.append(numpy.min(lon[last_idx:lon_r[0]]))
                     last_idx = lon_r[0]
@@ -741,7 +726,8 @@ class PlotTransectSubtask(AnalysisTask):
         # Greg Streletz, Xylar Asay-Davis
 
         coord_diff = numpy.diff(coord.values)
-        coord_diff = numpy.where(coord_diff > 180, coord_diff - 360, coord_diff)
+        coord_diff = numpy.where(coord_diff > 180, coord_diff - 360,
+                                 coord_diff)
         coord_diff = numpy.where(coord_diff < -180, coord_diff + 360,
                                  coord_diff)
         return numpy.all(coord_diff > 0) or numpy.all(coord_diff < 0)
@@ -837,24 +823,6 @@ class PlotTransectSubtask(AnalysisTask):
             return True
         else:
             return False
-
-    def _get_ds_triangulation(self, dsTransectTriangles):
-        """get matplotlib Triangulation from triangulation dataset"""
-
-        nTransectTriangles = dsTransectTriangles.sizes['nTransectTriangles']
-        dNode = dsTransectTriangles.dNode.isel(
-            nSegments=dsTransectTriangles.segmentIndices,
-            nHorizBounds=dsTransectTriangles.nodeHorizBoundsIndices)
-        x = dNode.values.ravel()
-
-        zTransectNode = dsTransectTriangles.zTransectNode
-        y = zTransectNode.values.ravel()
-
-        tris = numpy.arange(3 * nTransectTriangles).reshape(
-            (nTransectTriangles, 3))
-        triangulation_args = dict(x=x, y=y, triangles=tris)
-
-        return triangulation_args
 
     @staticmethod
     def _get_contour_colormap():
