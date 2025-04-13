@@ -868,6 +868,9 @@
         <span class="n">unique_indices</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">unique_indices</span><span class="p">)</span>  <span class="c1"># Ensure ascending order</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">unique_indices</span><span class="p">)</span>
 
+        <span class="c1"># seeing hanging during saving.  Let&#39;s try loading</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
         <span class="k">if</span> <span class="n">append</span><span class="p">:</span>
             <span class="c1"># Load the existing dataset and combine it with the new dataset</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
@@ -883,6 +886,9 @@
         <span class="c1"># Sort by `xtime` to ensure the time series is in ascending order</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Sorting by xtime...&#39;</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sortby</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+
+        <span class="c1"># again, seeing hanging during saving.  Let&#39;s try loading</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
 
         <span class="c1"># Save the resulting dataset to the output file</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
