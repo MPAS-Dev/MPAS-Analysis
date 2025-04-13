@@ -769,6 +769,9 @@ class ConservationTask(AnalysisTask):
         unique_indices = sorted(unique_indices)  # Ensure ascending order
         ds = ds.isel(Time=unique_indices)
 
+        # seeing hanging during saving.  Let's try loading
+        ds.load()
+
         if append:
             # Load the existing dataset and combine it with the new dataset
             self.logger.info(
@@ -784,6 +787,9 @@ class ConservationTask(AnalysisTask):
         # Sort by `xtime` to ensure the time series is in ascending order
         self.logger.info('Sorting by xtime...')
         ds = ds.sortby('xtime')
+
+        # again, seeing hanging during saving.  Let's try loading
+        ds.load()
 
         # Save the resulting dataset to the output file
         self.logger.info(
