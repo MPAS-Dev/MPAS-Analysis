@@ -15,7 +15,7 @@ gsw
 lxml
 mache >=1.11.0
 matplotlib-base>=3.9.0
-mpas_tools >=1.0.0,<2.0.0
+mpas_tools >=1.1.0,<2.0.0
 nco>=4.8.1,!=5.2.6
 netcdf4
 numpy>=2.0,<3.0
