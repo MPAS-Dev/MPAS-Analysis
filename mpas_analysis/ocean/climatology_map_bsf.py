@@ -216,6 +216,11 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             variable_list, seasons, comparison_grid_names,
             subtaskName=subtask_name, vertices=True)
 
+        # this reequires a lot of memory so let's reserve all the available
+        # tasks
+        parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
+        self.subprocessCount = parallelTaskCount
+
         self.min_depth = min_depth
         self.max_depth = max_depth
         self.include_bolus = None
