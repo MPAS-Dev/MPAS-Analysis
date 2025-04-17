@@ -512,9 +512,8 @@ class ConservationTask(AnalysisTask):
             filePrefix=filePrefix,
             componentName='Ocean',
             componentSubdirectory='ocean',
-            galleryGroup='Time Series',
-            groupLink='timeseries',
-            gallery='Conservation',
+            galleryGroup='Conservation Time Series',
+            groupLink='conserv_timeseries',
             thumbnailDescription=title,
             imageDescription=caption,
             imageCaption=caption)
