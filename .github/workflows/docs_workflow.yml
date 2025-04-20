@@ -37,28 +37,28 @@ jobs:
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Conda Environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: mamba-org/setup-micromamba@v2
         with:
-          activate-environment: "mpas_analysis_ci"
-          miniforge-version: latest
-          channels: conda-forge
-          channel-priority: strict
-          auto-update-conda: false
-          python-version: ${{ env.PYTHON_VERSION }}
+          environment-name: mpas_analysis_dev
+          init-shell: bash
+          condarc: |
+            channel_priority: strict
+            channels: 
+                - conda-forge
+          create-args: >-
+            python=${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install mpas_analysis
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
-          conda create -n mpas_analysis_dev --file dev-spec.txt \
+          conda install -y --file dev-spec.txt \
             python=${{ env.PYTHON_VERSION }}
-          conda activate mpas_analysis_dev
           python -m pip install -vv --no-deps --no-build-isolation -e .
 
       - name: Build Sphinx Docs
         run: |
           set -e
-          conda activate mpas_analysis_dev
           pip check
           mpas_analysis sync diags --help
           cd docs
@@ -66,7 +66,6 @@ jobs:
       - name: Copy Docs and Commit
         run: |
           set -e
-          conda activate mpas_analysis_dev
           pip check
           mpas_analysis sync diags --help
           cd docs
