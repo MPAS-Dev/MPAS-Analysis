@@ -80,7 +80,12 @@ class GeojsonNetcdfTransects(AnalysisTask):
             verticalComparisonGrid = config.getexpression(
                 sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
 
-        fields = config.getexpression(sectionName, 'fields')
+        availableVariables = config.getexpression(
+            sectionName, 'availableVariables')
+
+        prefixes = config.getexpression(sectionName, 'variables')
+        fields = [field for field in availableVariables
+                  if field['prefix'] in prefixes]
 
         geojsonFileNames = {}
         netcdfFileNames = {}
