@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>geojsonTransects &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>geojsonNetcdfTransects &mdash; MPAS-Analysis 1.13.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
@@ -71,9 +71,10 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">geojsonTransects</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">geojsonNetcdfTransects</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#geojson-files">Geojson Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#netcdf-files">NetCDF Files</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#fields">Fields</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#other-options">Other Options</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
@@ -167,9 +168,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
-      <li class="breadcrumb-item active">geojsonTransects</li>
+      <li class="breadcrumb-item active">geojsonNetcdfTransects</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../../_sources/users_guide/tasks/geojsonTransects.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../../_sources/users_guide/tasks/geojsonNetcdfTransects.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -177,21 +178,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="geojsontransects">
-<span id="task-geojsontransects"></span><h1>geojsonTransects<a class="headerlink" href="#geojsontransects" title="Link to this heading"></a></h1>
+  <section id="geojsonnetcdftransects">
+<span id="task-geojsonnetcdftransects"></span><h1>geojsonNetcdfTransects<a class="headerlink" href="#geojsonnetcdftransects" title="Link to this heading"></a></h1>
 <p>An analysis task for interpolating MPAS fields to transects specified by files
-in <code class="docutils literal notranslate"><span class="pre">geojson</span></code> format..</p>
+in geojson or NetDF format.</p>
 <p>Component and Tags:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
-<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">geojson</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">geojson</span><span class="p">,</span> <span class="n">netcdf</span>
 </pre></div>
 </div>
 <section id="configuration-options">
 <h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
 <p>The following configuration options are available for this task:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">geojsonTransects</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">geojsonNetcdfTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting model transects at points determined by a</span>
-<span class="c1">## geojson file.  To generate your own geojson file, go to:</span>
+<span class="c1">## user-specified geojson or NetCDF file.</span>
+<span class="c1">##</span>
+<span class="c1">## To generate your own geojson file, go to:</span>
 <span class="c1">##   http://geojson.io/</span>
 <span class="c1">## and draw one or more polylines, then add a name to each:</span>
 <span class="c1">##</span>
@@ -202,12 +205,20 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 <span class="c1">## option:</span>
 <span class="c1">##      geojsonFiles = [&#39;transects.geojson&#39;]</span>
 <span class="c1">## (giving an absolute path if necessary) in your custom config file.</span>
+<span class="c1">##</span>
+<span class="c1">## If you provide a NetCDF file instead, it simply needs to have &#39;lat` and</span>
+<span class="c1">## `lon` variables.  The `lat` and `lon` variables should be 1D arrays</span>
+<span class="c1">## with the same dimension name (e.g. &#39;nPoints&#39;).  The name of the file</span>
+<span class="c1">## (without the base path or extension) will serve as the transect name with</span>
+<span class="c1">## underscores converted to spaces.</span>
 
-<span class="c1"># a list of geojson files containing lat/lon points in LineStrings to be</span>
-<span class="c1"># plotted.  If relative paths are given, they are relative to the current</span>
-<span class="c1"># working directory.  The files must be listed in quotes, e.g.:</span>
-<span class="c1"># geojsonFiles = [&#39;file1.geojson&#39;, &#39;/path/to/file2.geojson&#39;]</span>
-<span class="n">geojsonFiles</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="c1"># a list of geojson and/or NetCDF files.  The geojson files must contain</span>
+<span class="c1"># lat/lon points in LineStrings to be plotted.  The NetCDF files need &#39;lat&#39;</span>
+<span class="c1"># and &#39;lon&#39; variables with the same dimesion name.  If relative paths are</span>
+<span class="c1"># given, they are relative to the current working directory.  The files must</span>
+<span class="c1"># be listed in quotes, e.g.:</span>
+<span class="c1">#     geojsonOrNetcdfFiles = [&#39;file1.geojson&#39;, &#39;/path/to/file2.geojson&#39;, &#39;file3.nc&#39;]</span>
+<span class="n">geojsonOrNetcdfFiles</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># a list of dictionaries for each field to plot.  The dictionary includes</span>
 <span class="c1"># prefix (used for file names, task names and sections) as well as the mpas</span>
@@ -216,24 +227,37 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 <span class="n">fields</span> <span class="o">=</span>
     <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
       <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$\degree$$C&#39;</span><span class="p">,</span>
       <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
       <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
       <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
       <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
       <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$$^{-3}$$&#39;</span><span class="p">,</span>
       <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
       <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
       <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Zonal Velocity&#39;</span><span class="p">},</span>
-     <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span>
       <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$^{-1}$&#39;</span><span class="p">,</span>
-      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Meridional Velocity&#39;</span><span class="p">}]</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Meridional Velocity&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;vertVelocity&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Velocity&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;vertDiff&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_vertDiffTopOfCell&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Diffusivity&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;vertVisc&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_vertViscTopOfCell&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
+      <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Viscosity&#39;</span><span class="p">},</span>
+    <span class="p">]</span>
 
 <span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
@@ -241,7 +265,10 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 
 <span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
 <span class="c1"># longitude between observation points will be subsampled at this interval.</span>
-<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
+<span class="c1"># Use &#39;obs&#39; to indicate no subsampling. Use &#39;mpas&#39; to indicate plotting of</span>
+<span class="c1"># model data on the native grid.</span>
+<span class="c1">#horizontalResolution = mpas</span>
+<span class="c1">#horizontalResolution = obs</span>
 <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
@@ -252,136 +279,282 @@ in <code class="docutils literal notranslate"><span class="pre">geojson</span></
 
 <span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39;.</span>
 <span class="c1"># This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="c1"># The first and last entries are used as axis bounds for &#39;mpas&#39; vertical</span>
+<span class="c1"># comparison grids</span>
 <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># A range for the y axis (if any)</span>
+<span class="n">verticalBounds</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># The minimum weight of a destination cell after remapping. Any cell with</span>
 <span class="c1"># weights lower than this threshold will therefore be masked out.</span>
 <span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="mf">0.01</span>
 
 
-<span class="p">[</span><span class="n">geojsonTemperatureTransects</span><span class="p">]</span>
+<span class="p">[</span><span class="n">geojsonNetcdfTemperatureTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting geojson transects of potential temperature</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">30.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-2., 2., 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-2., 2., 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="p">[]</span>
 
 
-<span class="p">[</span><span class="n">geojsonSalinityTransects</span><span class="p">]</span>
+<span class="p">[</span><span class="n">geojsonNetcdfSalinityTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting geojson transects of salinity</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">39.0</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="c1"># A dictionary with keywords for the SemiLogNorm</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="p">[]</span>
 
 
-<span class="p">[</span><span class="n">geojsonPotentialDensityTransects</span><span class="p">]</span>
+<span class="p">[</span><span class="n">geojsonNetcdfPotentialDensityTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting geojson transects of potential density</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">Spectral_r</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(1026., 1028., 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
 <span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="p">[]</span>
 
 
-<span class="p">[</span><span class="n">geojsonZonalVelocityTransects</span><span class="p">]</span>
+<span class="p">[</span><span class="n">geojsonNetcdfZonalVelocityTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting geojson transects of zonal velocity</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 
 
-<span class="p">[</span><span class="n">geojsonMeridionalVelocityTransects</span><span class="p">]</span>
+<span class="p">[</span><span class="n">geojsonNetcdfMeridionalVelocityTransects</span><span class="p">]</span>
 <span class="c1">## options related to plotting geojson transects of meridional velocity</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
-<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="p">[</span><span class="n">geojsonNetcdfVertVelocityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of meridional velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="p">[</span><span class="n">geojsonNetcdfVertDiffTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of meridional velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">diff</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="p">[</span><span class="n">geojsonNetcdfVertViscTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting geojson transects of meridional velocity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">diff</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
+<span class="c1"># the type of norm used in the colormap</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour lines)</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span>
 </pre></div>
 </div>
 </section>
 <section id="geojson-files">
 <h2>Geojson Files<a class="headerlink" href="#geojson-files" title="Link to this heading"></a></h2>
-<p>This task takes a list of geojson file names (supplied as a python list of
-<code class="docutils literal notranslate"><span class="pre">str</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geojsonFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file1.geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file2.geojson&#39;</span><span class="p">]</span>
+<p>This task takes a list of geojson or NetCDF file names (supplied as a python
+list of <code class="docutils literal notranslate"><span class="pre">str</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geojsonOrNetcdfFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file1.geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file2.geojson&#39;</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Transects are specified by <code class="docutils literal notranslate"><span class="pre">LineString</span></code> objects in the files.  Some examples
-are provided in the <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features">MPAS geometric features repository</a>.  You can also
-generate your own very easily at To generate your own geojson file, go to
+<p>Geojson transects are specified by <code class="docutils literal notranslate"><span class="pre">LineString</span></code> objects in the files.  Some
+examples are provided in the <a class="reference external" href="https://github.com/MPAS-Dev/geometric_features">MPAS geometric features repository</a>.  You can
+also generate your own very easily at To generate your own geojson file, go to
 <a class="reference external" href="http://geojson.io/">geojson.io</a> and draw one or more polylines, then add a name to each:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
 <span class="s2">&quot;properties&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -397,6 +570,19 @@ option:</p>
 </div>
 <p>(giving an absolute path if necessary) in your custom config file.</p>
 </section>
+<section id="netcdf-files">
+<h2>NetCDF Files<a class="headerlink" href="#netcdf-files" title="Link to this heading"></a></h2>
+<p>As an alternative to (or in addition to) geojson files, you may supply files in
+NetCDF format.  As before, you provide a list of file names as a python
+list of <code class="docutils literal notranslate"><span class="pre">str</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geojsonOrNetcdfFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;file1.nc&#39;</span><span class="p">,</span> <span class="s1">&#39;/path/to/file2.nc&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>In this case, the stem of the filename (<code class="docutils literal notranslate"><span class="pre">file1</span></code> and <code class="docutils literal notranslate"><span class="pre">file2</span></code> in the example)
+also serves as the name of the transect.  The NetCDF files must contain
+<code class="docutils literal notranslate"><span class="pre">lat</span></code> and <code class="docutils literal notranslate"><span class="pre">lon</span></code> variables.  These variables should be 1D arrays with the
+same dimension name (e.g. <code class="docutils literal notranslate"><span class="pre">nPoints</span></code>).</p>
+</section>
 <section id="fields">
 <h2>Fields<a class="headerlink" href="#fields" title="Link to this heading"></a></h2>
 <p>Since there are no observations associated with geojson transects, you are
@@ -410,7 +596,7 @@ colorbar.  The <code class="docutils literal notranslate"><span class="pre">titl
 in plot titles and captions.</p>
 <p>Each field must have a corresponding section in the config file defining its
 color maps.  For example, <code class="docutils literal notranslate"><span class="pre">temperature</span></code> has an associated
-<code class="docutils literal notranslate"><span class="pre">[geojsonTemperatureTransect]</span></code> section.</p>
+<code class="docutils literal notranslate"><span class="pre">[geojsonNetcdfTemperatureTransect]</span></code> section.</p>
 </section>
 <section id="other-options">
 <h2>Other Options<a class="headerlink" href="#other-options" title="Link to this heading"></a></h2>
@@ -465,12 +651,12 @@ color maps.  For example, <code class="docutils literal notranslate"><span class
   <div class="rst-other-versions">
     <dl>
       <dt>Tags</dt>
-      <dd><a href="../../../1.13.0/users_guide/tasks/geojsonTransects.html">1.13.0</a></dd>
+      <dd><a href="../../../1.13.0/index.html">1.13.0</a></dd>
     </dl>
     <dl>
       <dt>Branches</dt>
-      <dd><a href="geojsonTransects.html">develop</a></dd>
-      <dd><a href="../../../main/users_guide/tasks/geojsonTransects.html">main</a></dd>
+      <dd><a href="geojsonNetcdfTransects.html">develop</a></dd>
+      <dd><a href="../../../main/index.html">main</a></dd>
     </dl>
   </div>
 </div>

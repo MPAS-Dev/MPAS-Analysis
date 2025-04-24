@@ -1,0 +1,54 @@
+﻿mpas\_analysis.ocean.GeojsonNetcdfTransects
+===========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: GeojsonNetcdfTransects
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~GeojsonNetcdfTransects.__init__
+      ~GeojsonNetcdfTransects.add_subtask
+      ~GeojsonNetcdfTransects.check_analysis_enabled
+      ~GeojsonNetcdfTransects.check_generate
+      ~GeojsonNetcdfTransects.close
+      ~GeojsonNetcdfTransects.is_alive
+      ~GeojsonNetcdfTransects.join
+      ~GeojsonNetcdfTransects.kill
+      ~GeojsonNetcdfTransects.run
+      ~GeojsonNetcdfTransects.run_after
+      ~GeojsonNetcdfTransects.run_task
+      ~GeojsonNetcdfTransects.set_start_end_date
+      ~GeojsonNetcdfTransects.setup_and_check
+      ~GeojsonNetcdfTransects.start
+      ~GeojsonNetcdfTransects.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GeojsonNetcdfTransects.BLOCKED
+      ~GeojsonNetcdfTransects.FAIL
+      ~GeojsonNetcdfTransects.READY
+      ~GeojsonNetcdfTransects.RUNNING
+      ~GeojsonNetcdfTransects.SUCCESS
+      ~GeojsonNetcdfTransects.UNSET
+      ~GeojsonNetcdfTransects.authkey
+      ~GeojsonNetcdfTransects.daemon
+      ~GeojsonNetcdfTransects.exitcode
+      ~GeojsonNetcdfTransects.ident
+      ~GeojsonNetcdfTransects.name
+      ~GeojsonNetcdfTransects.pid
+      ~GeojsonNetcdfTransects.sentinel
+   
+   
