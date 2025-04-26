@@ -434,6 +434,8 @@ class PlotTransectSubtask(AnalysisTask):
             bias = None
         else:
             refOutput = remappedRefClimatology[self.refFieldName]
+            # make sure the dimension order is the same
+            refOutput = refOutput.transpose(*modelOutput.dims)
             bias = modelOutput - refOutput
 
         filePrefix = self.filePrefix
