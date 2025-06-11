@@ -10,6 +10,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import numpy as np
+import xarray as xr
 from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.ocean.remap_depth_slices_subtask import (
@@ -339,9 +340,13 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         thick = climatology.timeMonthly_avg_layerThickness
 
         dp = cime_constants['SHR_CONST_G']*dens*thick
-        # NOTE: this is missing the surface pressure, which is not available
-        # in the timeSeriesStatsMonthly output
         press = dp.cumsum(dim='nVertLevels') - 0.5*dp
+
+        # add land ice pressure if available
+        ds_restart = xr.open_dataset(self.restartFileName)
+        ds_restart = ds_restart.isel(Time=0)
+        if 'landIcePressure' in ds_restart:
+            press += ds_restart.landIcePressure
 
         tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
 
