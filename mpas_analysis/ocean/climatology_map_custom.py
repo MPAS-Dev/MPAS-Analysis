@@ -269,14 +269,19 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
             the modified climatology data set
         """
 
-        # first, call the base class's version of this function so we extract
-        # the desired slices.
-        climatology = super().customize_masked_climatology(climatology,
-                                                           season)
+        # first, compute the derived variables, which may rely on having the
+        # full 3D variables available
+
         derivedVars = []
         self._add_vel_mag(climatology, derivedVars)
         self._add_thermal_forcing(climatology, derivedVars)
 
+        # then, call the superclass's version of this function so we extract
+        # the desired slices (but before renaming because it expects the
+        # original MPAS variable names)
+        climatology = super().customize_masked_climatology(climatology,
+                                                           season)
+        # finally, rename the variables and add metadata
         for varName, variable in self.variables.items():
             if varName not in derivedVars:
                 # rename variables from MPAS names to shorter names
@@ -334,6 +339,8 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         thick = climatology.timeMonthly_avg_layerThickness
 
         dp = cime_constants['SHR_CONST_G']*dens*thick
+        # NOTE: this is missing the surface pressure, which is not available
+        # in the timeSeriesStatsMonthly output
         press = dp.cumsum(dim='nVertLevels') - 0.5*dp
 
         tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
