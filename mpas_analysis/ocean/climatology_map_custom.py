@@ -303,7 +303,7 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         """
         variables = self.variables
 
-        varName = 'verlocityMagnitude'
+        varName = 'velocityMagnitude'
         if varName not in variables:
             return
 
