@@ -174,7 +174,7 @@ class ClimatologyMapCustom(AnalysisTask):
                             subtaskName=subtaskName)
 
                         subtask.set_plot_info(
-                            outFileLabel=varName,
+                            outFileLabel=f'cust_{varName}',
                             fieldNameInTitle=title,
                             mpasFieldName=mpasVarName,
                             refFieldName=mpasVarName,
