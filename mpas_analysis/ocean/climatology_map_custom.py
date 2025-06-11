@@ -301,10 +301,8 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         """
         Add the velocity magnitude to the climatology if requested
         """
-        variables = self.variables
-
         varName = 'velocityMagnitude'
-        if varName not in variables:
+        if varName not in self.variables:
             return
 
         derivedVars.append(varName)
@@ -317,10 +315,8 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         """
         Add thermal forcing to the climatology if requested
         """
-        variables = self.variables
-
         varName = 'thermalForcing'
-        if varName not in variables:
+        if varName not in self.variables:
             return
 
         derivedVars.append(varName)
