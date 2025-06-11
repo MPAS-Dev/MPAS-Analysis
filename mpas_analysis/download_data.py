@@ -19,7 +19,7 @@ Entry points for downloading data for MPAS-Analysis
 
 
 import argparse
-import pkg_resources
+import importlib.resources as resources
 import os
 
 from mpas_analysis.shared.io.download import download_files
@@ -49,9 +49,10 @@ def download_analysis_data():
         pass
 
     urlBase = 'https://web.lcrc.anl.gov/public/e3sm/diagnostics'
-    analysisFileList = pkg_resources.resource_string(
-        'mpas_analysis',
-        'obs/{}_input_files'.format(args.dataset)).decode('utf-8')
+    resource = resources.files('mpas_analysis.obs').joinpath(
+        f'{args.dataset}_input_files')
+    with resource.open('r') as f:
+        analysisFileList = f.read()
 
     # remove any empty strings from the list
     analysisFileList = list(filter(None, analysisFileList.split('\n')))
