@@ -23,12 +23,14 @@ from mpas_analysis.shared.plot import PlotClimatologyMapSubtask
 
 class ClimatologyMapCustom(AnalysisTask):
     """
-    A felxible analysis task for plotting climatologies of any MPAS-Ocean field
+    A flexible analysis task for plotting climatologies of any MPAS-Ocean field
     on cells from timeSeriesStatsMonthly at various depths (if the field has
-    vertical levels) and for various seasons. Various derived fields are also
-    supported:
-      * velocity magnitude
-      * thermal forcing (temperature - freezing temperature)
+    vertical levels) and for various seasons.
+
+    Various derived fields are also supported:
+
+    * velocity magnitude
+    * thermal forcing (temperature - freezing temperature)
     """
 
     def __init__(self, config, mpasClimatologyTask, controlConfig=None):
