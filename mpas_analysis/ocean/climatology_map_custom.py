@@ -286,7 +286,7 @@ class RemapMpasDerived3DVariableClimatology(RemapDepthSlicesSubtask):
         # original MPAS variable names)
         climatology = super().customize_masked_climatology(climatology,
                                                            season)
-        # finally, rename the variables and add metadata
+        # next, rename the variables and add metadata
         for varName, variable in self.variables.items():
             if varName not in derivedVars:
                 # rename variables from MPAS names to shorter names
@@ -298,6 +298,11 @@ class RemapMpasDerived3DVariableClimatology(RemapDepthSlicesSubtask):
 
             climatology[varName].attrs['units'] = variable['units']
             climatology[varName].attrs['description'] = variable['title']
+
+        # finally, drop unused variables
+        for varName in climatology.data_vars:
+            if varName not in self.variables:
+                climatology.drop_vars(varName)
 
         return climatology
 
@@ -439,12 +444,15 @@ class RemapMpasDerived2DVariableClimatology(RemapMpasClimatologySubtask):
         # no need to call the superclass's version of this function since
         # it does nothing
 
+        # no need to call the superclass's version of this function since
+        # it does nothing
+
         # first, compute the derived variables, which may rely on having the
         # full 3D variables available
         derivedVars = []
         self._add_temp_depth_ave(climatology, derivedVars)
 
-        # finally, rename the variables and add metadata
+        # next, rename the variables and add metadata
         for varName, variable in self.variables.items():
             if varName not in derivedVars:
                 # rename variables from MPAS names to shorter names
@@ -456,6 +464,11 @@ class RemapMpasDerived2DVariableClimatology(RemapMpasClimatologySubtask):
 
             climatology[varName].attrs['units'] = variable['units']
             climatology[varName].attrs['description'] = variable['title']
+
+        # finally, drop unused variables
+        for varName in climatology.data_vars:
+            if varName not in self.variables:
+                climatology.drop_vars(varName)
 
         return climatology
 
