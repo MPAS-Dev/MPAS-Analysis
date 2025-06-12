@@ -106,10 +106,16 @@ class TimeSeriesOceanRegions(AnalysisTask):
                 'tDim': 'time',
                 'legend': 'WOA23 1991-2020 ANN mean'}}
 
+        anyAnomalies = False
+
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
+
+            anomalyVars = config.getexpression(sectionName, 'anomalies')
+            if len(anomalyVars) > 0:
+                anyAnomalies = True
 
             regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
@@ -191,6 +197,9 @@ class TimeSeriesOceanRegions(AnalysisTask):
                     masksSubtask.geojsonFileName)
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
+
+        if anyAnomalies:
+            self.tags.append('anomaly')
 
 
 class ComputeRegionDepthMasksSubtask(AnalysisTask):
