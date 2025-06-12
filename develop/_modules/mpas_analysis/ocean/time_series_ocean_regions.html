@@ -204,10 +204,16 @@
                 <span class="s1">&#39;tDim&#39;</span><span class="p">:</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span>
                 <span class="s1">&#39;legend&#39;</span><span class="p">:</span> <span class="s1">&#39;WOA23 1991-2020 ANN mean&#39;</span><span class="p">}}</span>
 
+        <span class="n">anyAnomalies</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">for</span> <span class="n">regionGroup</span> <span class="ow">in</span> <span class="n">regionGroups</span><span class="p">:</span>
             <span class="n">sectionSuffix</span> <span class="o">=</span> <span class="n">regionGroup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> \
                 <span class="n">regionGroup</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
             <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeries</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionSuffix</span><span class="p">)</span>
+
+            <span class="n">anomalyVars</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;anomalies&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">anomalyVars</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">anyAnomalies</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">regionNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
@@ -288,7 +294,10 @@
                     <span class="n">sectionName</span><span class="p">,</span> <span class="n">fullSuffix</span><span class="p">,</span> <span class="n">obsSubtasks</span><span class="p">,</span>
                     <span class="n">masksSubtask</span><span class="o">.</span><span class="n">geojsonFileName</span><span class="p">)</span>
                 <span class="n">plotRegionSubtask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">combineSubtask</span><span class="p">)</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotRegionSubtask</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotRegionSubtask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">anyAnomalies</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;anomaly&#39;</span><span class="p">)</span></div>
 </div>
 
 
