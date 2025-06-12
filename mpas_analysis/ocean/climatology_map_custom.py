@@ -10,6 +10,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import numpy as np
+import xarray as xr
 from mpas_tools.cime.constants import constants as cime_constants
 
 from mpas_analysis.ocean.remap_depth_slices_subtask import (
@@ -173,7 +174,7 @@ class ClimatologyMapCustom(AnalysisTask):
                             subtaskName=subtaskName)
 
                         subtask.set_plot_info(
-                            outFileLabel=varName,
+                            outFileLabel=f'cust_{varName}',
                             fieldNameInTitle=title,
                             mpasFieldName=mpasVarName,
                             refFieldName=mpasVarName,
@@ -269,14 +270,19 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
             the modified climatology data set
         """
 
-        # first, call the base class's version of this function so we extract
-        # the desired slices.
-        climatology = super().customize_masked_climatology(climatology,
-                                                           season)
+        # first, compute the derived variables, which may rely on having the
+        # full 3D variables available
+
         derivedVars = []
         self._add_vel_mag(climatology, derivedVars)
         self._add_thermal_forcing(climatology, derivedVars)
 
+        # then, call the superclass's version of this function so we extract
+        # the desired slices (but before renaming because it expects the
+        # original MPAS variable names)
+        climatology = super().customize_masked_climatology(climatology,
+                                                           season)
+        # finally, rename the variables and add metadata
         for varName, variable in self.variables.items():
             if varName not in derivedVars:
                 # rename variables from MPAS names to shorter names
@@ -295,10 +301,8 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         """
         Add the velocity magnitude to the climatology if requested
         """
-        variables = self.variables
-
-        varName = 'verlocityMagnitude'
-        if varName not in variables:
+        varName = 'velocityMagnitude'
+        if varName not in self.variables:
             return
 
         derivedVars.append(varName)
@@ -311,10 +315,8 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         """
         Add thermal forcing to the climatology if requested
         """
-        variables = self.variables
-
         varName = 'thermalForcing'
-        if varName not in variables:
+        if varName not in self.variables:
             return
 
         derivedVars.append(varName)
@@ -335,6 +337,12 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
 
         dp = cime_constants['SHR_CONST_G']*dens*thick
         press = dp.cumsum(dim='nVertLevels') - 0.5*dp
+
+        # add land ice pressure if available
+        ds_restart = xr.open_dataset(self.restartFileName)
+        ds_restart = ds_restart.isel(Time=0)
+        if 'landIcePressure' in ds_restart:
+            press += ds_restart.landIcePressure
 
         tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
 

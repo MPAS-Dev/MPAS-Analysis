@@ -248,7 +248,9 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         interfaceIndices = self.dsSlice.interfaceIndices
         interfaceIndexMask = self.dsSlice.interfaceIndexMask
 
-        for variableName in self.variableList:
+        # iterate over all variables since some new ones may have been
+        # added by a subclass
+        for variableName in climatology.data_vars:
             if 'nVertLevels' in climatology[variableName].dims:
                 # mask only the values with the right vertical index
                 da = climatology[variableName].where(
