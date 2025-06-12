@@ -78,11 +78,15 @@ class ClimatologyMapCustom(AnalysisTask):
                 # we assume variables have depth unless otherwise specified
                 variables[varName]['has_depth'] = True
 
-        variables3D = {varName: variables[varName] for varName in
-                       variables if variables[varName]['has_depth']}
+        variables3D = {
+            varName: variables[varName] for varName in
+            variables if variables[varName]['has_depth']
+        }
 
-        variableList2D = [variables[varName]['mpas'][0] for varName in
-                          variables if not variables[varName]['has_depth']]
+        variableList2D = {
+            varName: variables[varName] for varName in
+            variables if not variables[varName]['has_depth']
+        }
 
         # read in what seasons we want to plot
         seasons = config.getexpression(sectionName, 'seasons')
@@ -105,7 +109,7 @@ class ClimatologyMapCustom(AnalysisTask):
                              f'contain valid list of depths')
 
         if variables3D:
-            remapMpasSubtask3D = RemapMpasDerivedVariableClimatology(
+            remapMpasSubtask3D = RemapMpasDerived3DVariableClimatology(
                 mpasClimatologyTask=mpasClimatologyTask,
                 parentTask=self,
                 climatologyName='custom3D',
@@ -117,14 +121,13 @@ class ClimatologyMapCustom(AnalysisTask):
             remapMpasSubtask3D = None
 
         if len(variableList2D) > 0:
-            remapMpasSubtask2D = RemapMpasClimatologySubtask(
+            remapMpasSubtask2D = RemapMpasDerived2DVariableClimatology(
                 mpasClimatologyTask=mpasClimatologyTask,
                 parentTask=self,
                 climatologyName='custom2D',
-                variableList=variableList2D,
+                variables=variableList2D,
                 seasons=seasons,
-                comparisonGridNames=comparisonGridNames,
-                subtaskName='remap2DVariables')
+                comparisonGridNames=comparisonGridNames)
         else:
             remapMpasSubtask2D = None
 
@@ -193,10 +196,10 @@ class ClimatologyMapCustom(AnalysisTask):
                         self.add_subtask(subtask)
 
 
-class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
+class RemapMpasDerived3DVariableClimatology(RemapDepthSlicesSubtask):
     """
-    A subtask for computing derived variables (such as velocity magnitude and
-    thermal forcing) as part of remapping climatologies at depth slices
+    A subtask for computing derived 3D variables (such as velocity magnitude
+    and thermal forcing) as part of remapping climatologies at depth slices
 
     Attributes
     ----------
@@ -248,8 +251,7 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
             for mpasVariable in variable['mpas']:
                 mpasVariables.add(mpasVariable)
 
-        # call the constructor from the base class
-        # (RemapMpasClimatologySubtask)
+        # call the constructor from the super class
         super().__init__(
             mpasClimatologyTask, parentTask, climatologyName, mpasVariables,
             seasons, depths, comparisonGridNames, iselValues=None)
@@ -349,3 +351,128 @@ class RemapMpasDerivedVariableClimatology(RemapDepthSlicesSubtask):
         tempFreeze = c0 + cs*salin + cp*press + cps*press*salin
 
         climatology[varName] = temp - tempFreeze
+
+
+class RemapMpasDerived2DVariableClimatology(RemapMpasClimatologySubtask):
+    """
+    A subtask for computing derived 2D variables (such as depth averages) as
+    part of remapping climatologies
+
+    Attributes
+    ----------
+    variables : dict of dict
+        A dictionary of variable definitions, with variable names as keys
+
+    """
+
+    def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
+                 variables, seasons, comparisonGridNames):
+
+        """
+        Construct the analysis task and adds it as a subtask of the
+        ``parentTask``.
+
+        Parameters
+        ----------
+        mpasClimatologyTask : MpasClimatologyTask
+            The task that produced the climatology to be remapped
+
+        parentTask : AnalysisTask
+            The parent task, used to get the ``taskName``, ``config`` and
+            ``componentName``
+
+        climatologyName : str
+            A name that describes the climatology (e.g. a short version of
+            the important field(s) in the climatology) used to name the
+            subdirectories for each stage of the climatology
+
+        variables : dict of dict
+            A dictionary of variable definitions, with variable names as keys
+
+        seasons : list of str, optional
+            A list of seasons (keys in ``shared.constants.monthDictionary``)
+            to be computed or ['none'] (not ``None``) if only monthly
+            climatologies are needed.
+
+        depths : list of {None, float, 'top', 'bot'}
+            A list of depths at which the climatology will be sliced in the
+            vertical.
+
+        comparisonGridNames : list of {'latlon', 'antarctic'}, optional
+            The name(s) of the comparison grid to use for remapping.
+        """
+        self.variables = variables
+
+        mpasVariables = set()
+        for variable in variables.values():
+            for mpasVariable in variable['mpas']:
+                mpasVariables.add(mpasVariable)
+
+        # call the constructor from the super class
+        super().__init__(
+            mpasClimatologyTask,
+            parentTask,
+            climatologyName,
+            mpasVariables,
+            seasons,
+            comparisonGridNames,
+            subtaskName='remap2DVariables',
+        )
+
+    def customize_masked_climatology(self, climatology, season):
+        """
+        Construct velocity magnitude as part of the climatology
+
+        Parameters
+        ----------
+        climatology : ``xarray.Dataset`` object
+            the climatology data set
+
+        season : str
+            The name of the season to be masked
+
+        Returns
+        -------
+        climatology : ``xarray.Dataset`` object
+            the modified climatology data set
+        """
+        # no need to call the superclass's version of this function since
+        # it does nothing
+
+        # first, compute the derived variables, which may rely on having the
+        # full 3D variables available
+        derivedVars = []
+        self._add_temp_depth_ave(climatology, derivedVars)
+
+        # finally, rename the variables and add metadata
+        for varName, variable in self.variables.items():
+            if varName not in derivedVars:
+                # rename variables from MPAS names to shorter names
+                mpasvarNames = variable['mpas']
+                if len(mpasvarNames) == 1:
+                    mpasvarName = mpasvarNames[0]
+                    climatology[varName] = climatology[mpasvarName]
+                    climatology.drop_vars(mpasvarName)
+
+            climatology[varName].attrs['units'] = variable['units']
+            climatology[varName].attrs['description'] = variable['title']
+
+        return climatology
+
+    def _add_temp_depth_ave(self, climatology, derivedVars):
+        """
+        Add thermal forcing to the climatology if requested
+        """
+        varName = 'tempDepthAverage'
+        if varName not in self.variables:
+            return
+
+        derivedVars.append(varName)
+
+        temp = climatology.timeMonthly_avg_activeTracers_temperature
+        layerThick = climatology.timeMonthly_avg_layerThickness
+
+        climatology[varName] = (
+            (temp * layerThick).sum(dim='nVertLevels') /
+            layerThick.sum(dim='nVertLevels')
+        )
