@@ -294,8 +294,7 @@ developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html
 ```
 The results can be viewed in your web browser by opening:
 ```
