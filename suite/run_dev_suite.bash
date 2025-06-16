@@ -14,8 +14,7 @@ branch=$(git symbolic-ref --short HEAD)
 # test building the docs
 conda activate ${env_name}
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html
 cd ..
 
 machine=$(python -c "from mache import discover_machine; print(discover_machine())")
