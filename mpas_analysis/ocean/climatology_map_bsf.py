@@ -12,7 +12,7 @@ import os
 
 import xarray as xr
 
-from mpas_tools.ocean.barotropic_streamfunction import (
+from mpas_tools.ocean import (
     compute_barotropic_streamfunction,
     shift_barotropic_streamfunction
 )
@@ -216,7 +216,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             variable_list, seasons, comparison_grid_names,
             subtaskName=subtask_name, vertices=True)
 
-        # this reequires a lot of memory so let's reserve all the available
+        # this requires a lot of memory so let's reserve all the available
         # tasks
         parallelTaskCount = self.config.getint('execute', 'parallelTaskCount')
         self.subprocessCount = parallelTaskCount
@@ -316,11 +316,26 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         config = self.config
 
         ds_mesh = xr.open_dataset(self.restartFileName)
-        ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
-                           'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
-                           'edgesOnVertex', 'dcEdge', 'dvEdge', 'bottomDepth',
-                           'maxLevelCell', 'latVertex', 'areaTriangle',]]
-        ds_mesh.load()
+        var_list = [
+            'cellsOnEdge',
+            'cellsOnVertex',
+            'nEdgesOnCell',
+            'edgesOnCell',
+            'verticesOnCell',
+            'verticesOnEdge',
+            'edgesOnVertex',
+            'dcEdge',
+            'dvEdge',
+            'bottomDepth',
+            'minLevelCell',
+            'maxLevelCell',
+            'latVertex',
+            'areaTriangle',
+        ]
+        ds_mesh = ds_mesh[var_list].as_numpy()
+
+        masked_filename = self.get_masked_file_name(season)
+        masked_dir = os.path.dirname(masked_filename)
 
         cells_on_vertex = ds_mesh.cellsOnVertex - 1
         lat_vertex = ds_mesh.latVertex
@@ -332,6 +347,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             include_bolus=self.include_bolus,
             include_submesoscale=self.include_submesoscale,
             logger=logger,
+            tmp_dir=masked_dir,
         )
 
         lat_range = config.getexpression(
