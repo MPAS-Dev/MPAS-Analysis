@@ -3,3 +3,26 @@
     <link href="{{ pathto("_static/style.css", True) }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+
+{% block footer %}
+  {{ super() }}
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="{{ current_version }}">
+  <meta name="doc-site-root" content="{{ pathto('', 1) }}">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="{{ pathto('../shared/version-switcher.js', 1) }}"></script>
+{% endblock %}
+

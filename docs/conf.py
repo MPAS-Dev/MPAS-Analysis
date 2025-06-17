@@ -37,7 +37,6 @@ from mpas_analysis.docs.parse_quick_start import build_quick_start
 # ones.
 extensions = [
     'sphinx_rtd_theme',
-    'sphinx_multiversion',
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.intersphinx',
@@ -222,14 +221,6 @@ github_doc_root = 'https://github.com/rtfd/recommonmark/tree/master/doc/'
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
-html_sidebars = {
-    "**": [
-        "versions.html",
-    ],
+html_context = {
+    "current_version": os.getenv("DOCS_VERSION", "main"),
 }
-
-# -- Options sphinx-multiversion -------------------------------------------
-# Include tags like "tags/1.0.0" -- 1.7.2 doesn't build
-smv_tag_whitelist = r'^(?!1.7.2)\d+\.\d+.\d+$'
-smv_branch_whitelist = r'^(develop|main)$'
-smv_remote_whitelist = 'origin'

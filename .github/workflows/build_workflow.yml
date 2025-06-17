@@ -85,8 +85,5 @@ jobs:
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Build Sphinx Docs
         run: |
-          # sphinx-multiversion expects at least a "main" branch
-          git branch main || echo "branch main already exists."
           cd docs
-          sphinx-multiversion . _build/html
-
+          DOCS_VERSION=test make versioned-html
