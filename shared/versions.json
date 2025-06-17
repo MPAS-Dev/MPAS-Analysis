@@ -1,0 +1,86 @@
+[
+  {
+    "version": "main",
+    "url": "/MPAS-Analysis/main/"
+  },
+  {
+    "version": "develop",
+    "url": "/MPAS-Analysis/develop/"
+  },
+  {
+    "version": "1.13.0",
+    "url": "/MPAS-Analysis/1.13.0/"
+  },
+  {
+    "version": "1.12.0",
+    "url": "/MPAS-Analysis/1.12.0/"
+  },
+  {
+    "version": "1.11.0",
+    "url": "/MPAS-Analysis/1.11.0/"
+  },
+  {
+    "version": "1.10.0",
+    "url": "/MPAS-Analysis/1.10.0/"
+  },
+  {
+    "version": "1.9.1",
+    "url": "/MPAS-Analysis/1.9.1/"
+  },
+  {
+    "version": "1.9.0",
+    "url": "/MPAS-Analysis/1.9.0/"
+  },
+  {
+    "version": "1.8.0",
+    "url": "/MPAS-Analysis/1.8.0/"
+  },
+  {
+    "version": "1.7.2",
+    "url": "/MPAS-Analysis/1.7.2/"
+  },
+  {
+    "version": "1.7.1",
+    "url": "/MPAS-Analysis/1.7.1/"
+  },
+  {
+    "version": "1.7.0",
+    "url": "/MPAS-Analysis/1.7.0/"
+  },
+  {
+    "version": "1.6.1",
+    "url": "/MPAS-Analysis/1.6.1/"
+  },
+  {
+    "version": "1.6.0",
+    "url": "/MPAS-Analysis/1.6.0/"
+  },
+  {
+    "version": "1.5.0",
+    "url": "/MPAS-Analysis/1.5.0/"
+  },
+  {
+    "version": "1.4.0",
+    "url": "/MPAS-Analysis/1.4.0/"
+  },
+  {
+    "version": "1.3.0",
+    "url": "/MPAS-Analysis/1.3.0/"
+  },
+  {
+    "version": "1.2.9",
+    "url": "/MPAS-Analysis/1.2.9/"
+  },
+  {
+    "version": "1.2.8",
+    "url": "/MPAS-Analysis/1.2.8/"
+  },
+  {
+    "version": "1.2.7",
+    "url": "/MPAS-Analysis/1.2.7/"
+  },
+  {
+    "version": "1.2.6",
+    "url": "/MPAS-Analysis/1.2.6/"
+  }
+]

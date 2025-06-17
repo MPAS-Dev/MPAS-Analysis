@@ -1143,7 +1143,7 @@ With the ``mpas_analysis_dev`` environment activated, you can run:
 .. code-block:: bash
 
     cd docs
-    make clean html
+    DOCS_VERSION=test make clean versioned-html
 
 to build the docs locally in the ``_build/html`` subdirectory.  When generating
 documentation on HPC machines, you will want to copy the html output to the
