@@ -78,12 +78,6 @@ class ClimatologyMapCustom(AnalysisTask):
                 # we assume variables have depth unless otherwise specified
                 variables[varName]['has_depth'] = True
 
-        variables3D = {varName: variables[varName] for varName in
-                       variables if variables[varName]['has_depth']}
-
-        variableList2D = [variables[varName]['mpas'][0] for varName in
-                          variables if not variables[varName]['has_depth']]
-
         # read in what seasons we want to plot
         seasons = config.getexpression(sectionName, 'seasons')
 
@@ -104,29 +98,14 @@ class ClimatologyMapCustom(AnalysisTask):
             raise ValueError(f'config section {sectionName} does not '
                              f'contain valid list of depths')
 
-        if variables3D:
-            remapMpasSubtask3D = RemapMpasDerivedVariableClimatology(
-                mpasClimatologyTask=mpasClimatologyTask,
-                parentTask=self,
-                climatologyName='custom3D',
-                variables=variables3D,
-                seasons=seasons,
-                depths=depths,
-                comparisonGridNames=comparisonGridNames)
-        else:
-            remapMpasSubtask3D = None
-
-        if len(variableList2D) > 0:
-            remapMpasSubtask2D = RemapMpasClimatologySubtask(
-                mpasClimatologyTask=mpasClimatologyTask,
-                parentTask=self,
-                climatologyName='custom2D',
-                variableList=variableList2D,
-                seasons=seasons,
-                comparisonGridNames=comparisonGridNames,
-                subtaskName='remap2DVariables')
-        else:
-            remapMpasSubtask2D = None
+        remapMpasSubtask = RemapMpasDerivedVariableClimatology(
+            mpasClimatologyTask=mpasClimatologyTask,
+            parentTask=self,
+            climatologyName='custom3D',
+            variables=variables,
+            seasons=seasons,
+            depths=depths,
+            comparisonGridNames=comparisonGridNames)
 
         galleryGroup = 'Custom Climatology Maps'
         groupLink = 'custclimmaps'
@@ -149,12 +128,8 @@ class ClimatologyMapCustom(AnalysisTask):
 
             if hasDepth:
                 localDepths = depths
-                remapMpasSubtask = remapMpasSubtask3D
-                mpasVarName = varName
             else:
                 localDepths = [None]
-                remapMpasSubtask = remapMpasSubtask2D
-                mpasVarName = metadata['mpas'][0]
 
             for comparisonGridName in comparisonGridNames:
                 for depth in localDepths:
@@ -178,8 +153,8 @@ class ClimatologyMapCustom(AnalysisTask):
                         subtask.set_plot_info(
                             outFileLabel=f'cust_{varName}',
                             fieldNameInTitle=title,
-                            mpasFieldName=mpasVarName,
-                            refFieldName=mpasVarName,
+                            mpasFieldName=varName,
+                            refFieldName=varName,
                             refTitleLabel=refTitleLabel,
                             diffTitleLabel=diffTitleLabel,
                             unitsLabel=units,
