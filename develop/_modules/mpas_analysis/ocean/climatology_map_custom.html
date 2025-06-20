@@ -176,12 +176,6 @@
                 <span class="c1"># we assume variables have depth unless otherwise specified</span>
                 <span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="s1">&#39;has_depth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-        <span class="n">variables3D</span> <span class="o">=</span> <span class="p">{</span><span class="n">varName</span><span class="p">:</span> <span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span> <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span>
-                       <span class="n">variables</span> <span class="k">if</span> <span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="s1">&#39;has_depth&#39;</span><span class="p">]}</span>
-
-        <span class="n">variableList2D</span> <span class="o">=</span> <span class="p">[</span><span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="s1">&#39;mpas&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">varName</span> <span class="ow">in</span>
-                          <span class="n">variables</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">variables</span><span class="p">[</span><span class="n">varName</span><span class="p">][</span><span class="s1">&#39;has_depth&#39;</span><span class="p">]]</span>
-
         <span class="c1"># read in what seasons we want to plot</span>
         <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
 
@@ -202,29 +196,14 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not &#39;</span>
                              <span class="sa">f</span><span class="s1">&#39;contain valid list of depths&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">variables3D</span><span class="p">:</span>
-            <span class="n">remapMpasSubtask3D</span> <span class="o">=</span> <span class="n">RemapMpasDerivedVariableClimatology</span><span class="p">(</span>
-                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;custom3D&#39;</span><span class="p">,</span>
-                <span class="n">variables</span><span class="o">=</span><span class="n">variables3D</span><span class="p">,</span>
-                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
-                <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
-                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">remapMpasSubtask3D</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variableList2D</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">remapMpasSubtask2D</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
-                <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
-                <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;custom2D&#39;</span><span class="p">,</span>
-                <span class="n">variableList</span><span class="o">=</span><span class="n">variableList2D</span><span class="p">,</span>
-                <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
-                <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
-                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remap2DVariables&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">remapMpasSubtask2D</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">RemapMpasDerivedVariableClimatology</span><span class="p">(</span>
+            <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
+            <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;custom3D&#39;</span><span class="p">,</span>
+            <span class="n">variables</span><span class="o">=</span><span class="n">variables</span><span class="p">,</span>
+            <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
+            <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
+            <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
 
         <span class="n">galleryGroup</span> <span class="o">=</span> <span class="s1">&#39;Custom Climatology Maps&#39;</span>
         <span class="n">groupLink</span> <span class="o">=</span> <span class="s1">&#39;custclimmaps&#39;</span>
@@ -247,12 +226,8 @@
 
             <span class="k">if</span> <span class="n">hasDepth</span><span class="p">:</span>
                 <span class="n">localDepths</span> <span class="o">=</span> <span class="n">depths</span>
-                <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">remapMpasSubtask3D</span>
-                <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">varName</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">localDepths</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span>
-                <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">remapMpasSubtask2D</span>
-                <span class="n">mpasVarName</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
 
             <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">localDepths</span><span class="p">:</span>
@@ -276,8 +251,8 @@
                         <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                             <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;cust_</span><span class="si">{</span><span class="n">varName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
                             <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
-                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasVarName</span><span class="p">,</span>
-                            <span class="n">refFieldName</span><span class="o">=</span><span class="n">mpasVarName</span><span class="p">,</span>
+                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">varName</span><span class="p">,</span>
+                            <span class="n">refFieldName</span><span class="o">=</span><span class="n">varName</span><span class="p">,</span>
                             <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                             <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
                             <span class="n">unitsLabel</span><span class="o">=</span><span class="n">units</span><span class="p">,</span>
