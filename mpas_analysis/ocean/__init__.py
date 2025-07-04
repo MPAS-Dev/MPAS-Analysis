@@ -29,6 +29,10 @@ from mpas_analysis.ocean.climatology_map_custom import (
    ClimatologyMapCustom
 )
 
+from mpas_analysis.ocean.climatology_map_wind_stress_curl import (
+   ClimatologyMapWindStressCurl
+)
+
 from mpas_analysis.ocean.conservation import ConservationTask
 
 from mpas_analysis.ocean.time_series_temperature_anomaly import \

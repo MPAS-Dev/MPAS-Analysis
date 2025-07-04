@@ -15,8 +15,8 @@ A utility for computing common ocean fields (e.g. zMid) from datasets
 # -------
 # Xylar Asay-Davis
 
-import numpy
-import xarray
+import numpy as np
+import xarray as xr
 
 
 def add_standard_regions_and_subset(ds, config, regionShortNames=None):
@@ -111,9 +111,12 @@ def compute_zmid(bottomDepth, maxLevelCell, layerThickness):
 
     nVertLevels = layerThickness.sizes['nVertLevels']
 
-    vertIndex = \
-        xarray.DataArray.from_dict({'dims': ('nVertLevels',),
-                                    'data': numpy.arange(nVertLevels)})
+    vertIndex = xr.DataArray.from_dict(
+        {
+            'dims': ('nVertLevels',),
+            'data': np.arange(nVertLevels)
+        }
+    )
 
     layerThickness = layerThickness.where(vertIndex <= maxLevelCell)
 
@@ -156,9 +159,12 @@ def compute_zinterface(bottomDepth, maxLevelCell, layerThickness):
 
     nVertLevels = layerThickness.sizes['nVertLevels']
 
-    vertIndex = \
-        xarray.DataArray.from_dict({'dims': ('nVertLevels',),
-                                    'data': numpy.arange(nVertLevels)})
+    vertIndex = xr.DataArray.from_dict(
+        {
+            'dims': ('nVertLevels',),
+            'data': np.arange(nVertLevels)
+        }
+    )
 
     layerThickness = layerThickness.where(vertIndex <= maxLevelCell)
     thicknessSum = layerThickness.sum(dim='nVertLevels')
@@ -174,6 +180,118 @@ def compute_zinterface(bottomDepth, maxLevelCell, layerThickness):
         zInterfaceList.append(zBot)
         zTop = zBot
 
-    zInterface = xarray.concat(zInterfaceList, dim='nVertLevelsP1').transpose(
+    zInterface = xr.concat(zInterfaceList, dim='nVertLevelsP1').transpose(
         'nCells', 'nVertLevelsP1')
     return zInterface
+
+
+def vector_cell_to_edge_isotropic(ds_mesh, zonal_cell, meridional_cell):
+    """
+    Compute the zonal and meridional components of a vector at edges from
+    cell-centered components using isotropic area-weighted averaging.
+
+    Parameters
+    ----------
+    ds_mesh : xarray.Dataset
+        MPAS mesh variables, must include:
+        - verticesOnEdge
+        - cellsOnVertex
+        - kiteAreasOnVertex
+
+    zonal_cell : xarray.DataArray
+        Zonal component at cell centers (nCells,)
+
+    meridional_cell : xarray.DataArray
+        Meridional component at cell centers (nCells,)
+
+    Returns
+    -------
+    zonal_edge : xarray.DataArray
+        Zonal component at edges (nEdges,)
+
+    meridional_edge : xarray.DataArray
+        Meridional component at edges (nEdges,)
+    """
+    vertices_on_edge = ds_mesh.verticesOnEdge - 1
+    cells_on_vertex = ds_mesh.cellsOnVertex - 1
+    kite_areas_on_vertex = ds_mesh.kiteAreasOnVertex
+
+    n_edges = vertices_on_edge.sizes['nEdges']
+    vertex_degree = cells_on_vertex.sizes['vertexDegree']
+
+    zonal_edge = np.zeros(n_edges, dtype=float)
+    meridional_edge = np.zeros(n_edges, dtype=float)
+    area_sum = np.zeros(n_edges, dtype=float)
+
+    for v in range(2):
+        # all valid edges have 2 valid vertices on that edge
+        voe = vertices_on_edge.isel(TWO=v)
+        for c in range(vertex_degree):
+            # cells on vertices on edge
+            covoe = cells_on_vertex.isel(
+                vertexDegree=c,
+                nVertices=voe
+            )
+            valid = covoe >= 0
+            valid_covoe = covoe.isel(nEdges=valid)
+            valid_voe = voe.isel(nEdges=valid)
+            area = kite_areas_on_vertex.isel(
+                vertexDegree=c,
+                nVertices=valid_voe
+            ).values
+            if np.any(area == 0):
+                raise ValueError(
+                    "Some kite areas of valid cells on vertex have zero area. "
+                    "This seems to be a bug in the mesh or "
+                    "vector_cell_to_edge_isotropic()."
+                )
+            zcell = zonal_cell.isel(nCells=valid_covoe).values
+            mcell = meridional_cell.isel(nCells=valid_covoe).values
+            zonal_edge[valid] += zcell * area
+            meridional_edge[valid] += mcell * area
+            area_sum[valid] += area
+
+    if np.any(area_sum == 0):
+        raise ValueError(
+            "Some edges have zero area.  This seems to be a bug in the mesh "
+            "or vector_cell_to_edge_isotropic()."
+        )
+
+    # Normalize by the area sum to get the average
+    zonal_edge /= area_sum
+    meridional_edge /= area_sum
+
+    # Wrap as xarray DataArrays
+    zonal_edge = xr.DataArray(zonal_edge, dims=('nEdges',))
+    meridional_edge = xr.DataArray(meridional_edge, dims=('nEdges',))
+    return zonal_edge, meridional_edge
+
+
+def vector_to_edge_normal(ds_mesh, zonal_edge, meridional_edge):
+    """
+    Compute the normal component of a vector at an edge from
+    the zonal and meridional components.
+
+    Parameters
+    ----------
+    ds_mesh : xarray.Dataset
+        MPAS mesh variables, must include:
+        - angleEdge
+
+    zonal_edge : xarray.DataArray
+        Zonal component at edges (nEdges,)
+
+    meridional_edge : xarray.DataArray
+        Meridional component at edges (nEdges,)
+
+    Returns
+    -------
+    normal_edge : xarray.DataArray
+        Normal component at edges (nEdges,)
+    """
+
+    angle_edge = ds_mesh.angleEdge
+    normal_edge = (
+        np.cos(angle_edge) * zonal_edge + np.sin(angle_edge) * meridional_edge
+    )
+    return normal_edge
