@@ -121,7 +121,7 @@ class ClimatologyMapWindStressCurl(AnalysisTask):
                     refFieldName=ref_field_name,
                     refTitleLabel=ref_title_label,
                     diffTitleLabel=diff_title_label,
-                    unitsLabel=r'N m$^{-3}$ $s^{-1}$',
+                    unitsLabel=r'N m$^{-3}$',
                     imageCaption=field_title,
                     galleryGroup='Wind Stress Curl',
                     groupSubtitle=None,
@@ -204,7 +204,7 @@ class RemapMpasWindStressCurl(RemapMpasClimatologySubtask):
             ds_mesh, ws_normal_edge, logger
         )
         climatology['windStressCurl'] = wind_sress_curl
-        climatology['windStressCurl'].attrs['units'] = 'N m-3 s-1'
+        climatology['windStressCurl'].attrs['units'] = 'N m-3'
 
         # drop the original wind stress variables
         climatology = climatology.drop_vars(list(self.VARIABLES))
