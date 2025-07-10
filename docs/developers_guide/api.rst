@@ -78,6 +78,7 @@ Ocean tasks
    ClimatologyMapArgoSalinity
    ClimatologyMapWaves
    ClimatologyMapCustom
+   ClimatologyMapWindStressCurl
    GeojsonNetcdfTransects
    IndexNino34
    MeridionalHeatTransport
@@ -132,6 +133,8 @@ Ocean utilities
    add_standard_regions_and_subset
    get_standard_region_names
    compute_zmid
+   compute_zinterface
+   vector_cell_to_edge_isotropic
 
 
 Sea ice tasks
