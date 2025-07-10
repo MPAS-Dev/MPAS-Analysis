@@ -109,8 +109,8 @@
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
 
 
 <div class="viewcode-block" id="add_standard_regions_and_subset">
@@ -213,9 +213,12 @@
 
     <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-    <span class="n">vertIndex</span> <span class="o">=</span> \
-        <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
-                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)})</span>
+    <span class="n">vertIndex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
 
@@ -231,6 +234,8 @@
 
 
 
+<div class="viewcode-block" id="compute_zinterface">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.compute_zinterface.html#mpas_analysis.ocean.utility.compute_zinterface">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_zinterface</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes zInterface given data arrays for bottomDepth, maxLevelCell and</span>
@@ -259,9 +264,12 @@
 
     <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-    <span class="n">vertIndex</span> <span class="o">=</span> \
-        <span class="n">xarray</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">({</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
-                                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)})</span>
+    <span class="n">vertIndex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
+            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
     <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
     <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
@@ -277,9 +285,125 @@
         <span class="n">zInterfaceList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zBot</span><span class="p">)</span>
         <span class="n">zTop</span> <span class="o">=</span> <span class="n">zBot</span>
 
-    <span class="n">zInterface</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zInterfaceList</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+    <span class="n">zInterface</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zInterfaceList</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
         <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">zInterface</span>
+    <span class="k">return</span> <span class="n">zInterface</span></div>
+
+
+
+<div class="viewcode-block" id="vector_cell_to_edge_isotropic">
+<a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic.html#mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_cell_to_edge_isotropic</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">zonal_cell</span><span class="p">,</span> <span class="n">meridional_cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the zonal and meridional components of a vector at edges from</span>
+<span class="sd">    cell-centered components using isotropic area-weighted averaging.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Dataset</span>
+<span class="sd">        MPAS mesh variables, must include:</span>
+<span class="sd">        - verticesOnEdge</span>
+<span class="sd">        - cellsOnVertex</span>
+<span class="sd">        - kiteAreasOnVertex</span>
+
+<span class="sd">    zonal_cell : xarray.DataArray</span>
+<span class="sd">        Zonal component at cell centers (nCells,)</span>
+
+<span class="sd">    meridional_cell : xarray.DataArray</span>
+<span class="sd">        Meridional component at cell centers (nCells,)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    zonal_edge : xarray.DataArray</span>
+<span class="sd">        Zonal component at edges (nEdges,)</span>
+
+<span class="sd">    meridional_edge : xarray.DataArray</span>
+<span class="sd">        Meridional component at edges (nEdges,)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vertices_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">cells_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnVertex</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">kite_areas_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">kiteAreasOnVertex</span>
+
+    <span class="n">n_edges</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nEdges&#39;</span><span class="p">]</span>
+    <span class="n">vertex_degree</span> <span class="o">=</span> <span class="n">cells_on_vertex</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;vertexDegree&#39;</span><span class="p">]</span>
+
+    <span class="n">zonal_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">meridional_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">area_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># all valid edges have 2 valid vertices on that edge</span>
+        <span class="n">voe</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">TWO</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vertex_degree</span><span class="p">):</span>
+            <span class="c1"># cells on vertices on edge</span>
+            <span class="n">covoe</span> <span class="o">=</span> <span class="n">cells_on_vertex</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">vertexDegree</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                <span class="n">nVertices</span><span class="o">=</span><span class="n">voe</span>
+            <span class="p">)</span>
+            <span class="n">valid</span> <span class="o">=</span> <span class="n">covoe</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+            <span class="n">valid_covoe</span> <span class="o">=</span> <span class="n">covoe</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">valid</span><span class="p">)</span>
+            <span class="n">valid_voe</span> <span class="o">=</span> <span class="n">voe</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">valid</span><span class="p">)</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">kite_areas_on_vertex</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+                <span class="n">vertexDegree</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                <span class="n">nVertices</span><span class="o">=</span><span class="n">valid_voe</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">values</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;Some kite areas of valid cells on vertex have zero area. &quot;</span>
+                    <span class="s2">&quot;This seems to be a bug in the mesh or &quot;</span>
+                    <span class="s2">&quot;vector_cell_to_edge_isotropic().&quot;</span>
+                <span class="p">)</span>
+            <span class="n">zcell</span> <span class="o">=</span> <span class="n">zonal_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">valid_covoe</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">mcell</span> <span class="o">=</span> <span class="n">meridional_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">valid_covoe</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">zonal_edge</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">zcell</span> <span class="o">*</span> <span class="n">area</span>
+            <span class="n">meridional_edge</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">mcell</span> <span class="o">*</span> <span class="n">area</span>
+            <span class="n">area_sum</span><span class="p">[</span><span class="n">valid</span><span class="p">]</span> <span class="o">+=</span> <span class="n">area</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">area_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Some edges have zero area.  This seems to be a bug in the mesh &quot;</span>
+            <span class="s2">&quot;or vector_cell_to_edge_isotropic().&quot;</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Normalize by the area sum to get the average</span>
+    <span class="n">zonal_edge</span> <span class="o">/=</span> <span class="n">area_sum</span>
+    <span class="n">meridional_edge</span> <span class="o">/=</span> <span class="n">area_sum</span>
+
+    <span class="c1"># Wrap as xarray DataArrays</span>
+    <span class="n">zonal_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">zonal_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,))</span>
+    <span class="n">meridional_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">meridional_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,))</span>
+    <span class="k">return</span> <span class="n">zonal_edge</span><span class="p">,</span> <span class="n">meridional_edge</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">vector_to_edge_normal</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">zonal_edge</span><span class="p">,</span> <span class="n">meridional_edge</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute the normal component of a vector at an edge from</span>
+<span class="sd">    the zonal and meridional components.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ds_mesh : xarray.Dataset</span>
+<span class="sd">        MPAS mesh variables, must include:</span>
+<span class="sd">        - angleEdge</span>
+
+<span class="sd">    zonal_edge : xarray.DataArray</span>
+<span class="sd">        Zonal component at edges (nEdges,)</span>
+
+<span class="sd">    meridional_edge : xarray.DataArray</span>
+<span class="sd">        Meridional component at edges (nEdges,)</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    normal_edge : xarray.DataArray</span>
+<span class="sd">        Normal component at edges (nEdges,)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">angle_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">angleEdge</span>
+    <span class="n">normal_edge</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">angle_edge</span><span class="p">)</span> <span class="o">*</span> <span class="n">zonal_edge</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle_edge</span><span class="p">)</span> <span class="o">*</span> <span class="n">meridional_edge</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">normal_edge</span>
 </pre></div>
 
            </div>
