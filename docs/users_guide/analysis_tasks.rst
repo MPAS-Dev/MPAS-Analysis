@@ -23,6 +23,7 @@ Analysis Tasks
    tasks/climatologyMapSSH
    tasks/climatologyMapVel
    tasks/climatologyMapWaves
+   tasks/climatologyMapWindStressCurl
    tasks/climatologyMapWoa
 
    tasks/antshipTransects

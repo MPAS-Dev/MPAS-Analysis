@@ -189,6 +189,11 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.ClimatologyMapCustom(
         config, oceanClimatologyTasks['avg'], controlConfig))
 
+
+    analyses.append(ocean.ClimatologyMapWindStressCurl(
+        config, oceanClimatologyTasks['avg'], controlConfig)
+    )
+
     analyses.append(ocean.ConservationTask(
         config, controlConfig))
 
