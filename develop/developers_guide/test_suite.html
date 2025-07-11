@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Suite Infrastructure &mdash; MPAS-Analysis develop documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=16816911"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Releasing a New Version" href="releasing.html" />
+    <link rel="prev" title="Building the Documentation" href="docs.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Building the Documentation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Test Suite Infrastructure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-test-scripts">Overview of Test Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-machines">Supported Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modifying-the-test-suite">Modifying the Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing a New Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Test Suite Infrastructure</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/test_suite.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="test-suite-infrastructure">
+<h1>Test Suite Infrastructure<a class="headerlink" href="#test-suite-infrastructure" title="Link to this heading"></a></h1>
+<p>The <cite>suite</cite> directory provides a comprehensive infrastructure for testing
+MPAS-Analysis on supported machines (Anvil, Chrysalis, Perlmutter-CPU, and
+Compy). The suite is designed to ensure code changes do not introduce
+unexpected results and to validate MPAS-Analysis in various environments.</p>
+<section id="overview-of-test-scripts">
+<h2>Overview of Test Scripts<a class="headerlink" href="#overview-of-test-scripts" title="Link to this heading"></a></h2>
+<p>There are three main scripts for running the test suite:</p>
+<ol class="arabic">
+<li><p><strong>run_dev_suite.bash</strong> (Developer Testing)</p>
+<ul>
+<li><p>Use this script after activating your development environment
+(must be named <cite>mpas_analysis_dev</cite>).</p></li>
+<li><p>It builds the documentation and runs a series of analysis tasks on output
+from a low-resolution (QUwLI240) simulation.</p></li>
+<li><p>Each task produces a web page with results, accessible via the web portal.</p></li>
+<li><p>Example usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
+$<span class="w"> </span>./suite/run_dev_suite.bash
+</pre></div>
+</div>
+</li>
+<li><p>After completion, check for successful web page generation, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span>chrysalis_test_suite/main_py3.11/mpas_analysis.o793058
+</pre></div>
+</div>
+<p>The last lines should include:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Generating webpage for viewing results...
+Web page: https://web.lcrc.anl.gov/public/e3sm/diagnostic_output/&lt;username&gt;/analysis_testing/chrysalis/&lt;branch&gt;/main_py3.11/
+</pre></div>
+</div>
+</li>
+<li><p>To quickly identify unfinished or failed tasks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>grep<span class="w"> </span>-L<span class="w"> </span><span class="s2">&quot;Web page:&quot;</span><span class="w"> </span>chrysalis_test_suite/*/mpas_analysis.o*
+</pre></div>
+</div>
+</li>
+<li><p>Developers should run this suite manually on each pull request before
+merging and link the results in the PR.</p></li>
+</ul>
+</li>
+<li><p><strong>run_suite.bash</strong> (Package Build &amp; Test)</p>
+<ul>
+<li><p>Use this script to build the MPAS-Analysis conda package and test it in
+fresh environments.</p></li>
+<li><p>It creates conda environments for multiple Python versions, runs tests,
+builds documentation, and executes the analysis suite.</p></li>
+<li><p>Recommended for more thorough validation, especially before releases.</p></li>
+<li><p>Example usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./suite/run_suite.bash
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p><strong>run_e3sm_unified_suite.bash</strong> (E3SM-Unified Deployment Testing)</p>
+<ul>
+<li><p>Used during test deployments of E3SM-Unified to verify MPAS-Analysis
+works as expected within the deployment.</p></li>
+<li><p>Typically run by E3SM-Unified maintainers during deployment testing.</p></li>
+<li><p>Example usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./suite/run_e3sm_unified_suite.bash
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="supported-machines">
+<h2>Supported Machines<a class="headerlink" href="#supported-machines" title="Link to this heading"></a></h2>
+<p>The suite is designed to run only on supported machines:</p>
+<ul class="simple">
+<li><p>Anvil</p></li>
+<li><p>Chrysalis</p></li>
+<li><p>Perlmutter-CPU (<cite>pm-cpu</cite>)</p></li>
+<li><p>Compy</p></li>
+</ul>
+<p>If you attempt to run the suite on an unsupported machine, you will receive an
+error.</p>
+</section>
+<section id="modifying-the-test-suite">
+<h2>Modifying the Test Suite<a class="headerlink" href="#modifying-the-test-suite" title="Link to this heading"></a></h2>
+<p>Developers may need to update the suite for new requirements:</p>
+<ul class="simple">
+<li><p><strong>Python Versions</strong>:</p>
+<ul>
+<li><p>The Python versions tested are defined in the scripts (e.g.,
+<cite>main_py=3.11</cite>, <cite>alt_py=3.10</cite>).</p></li>
+<li><p>To test additional versions, add them to the relevant script variables and
+loops.</p></li>
+</ul>
+</li>
+<li><p><strong>Adding New Machines</strong>:</p>
+<ul>
+<li><p>Update the machine detection logic in <cite>suite/setup.py</cite> and add appropriate
+input/output paths for the new machine.</p></li>
+<li><p>Ensure the new machine is supported in the scripts and the web portal
+configuration.</p></li>
+</ul>
+</li>
+<li><p><strong>Adding/Modifying Tests</strong>:</p>
+<ul>
+<li><p>To add new tests, update the list of runs in the scripts and
+provide corresponding config files in the <cite>suite</cite> directory.</p></li>
+<li><p>New tests could change which analysis tasks are run, the configuration for
+running tasks overall (e.g. how climatologies are computed), or how
+individual tasks are configured (e.g. focused on polar regions vs. global)</p></li>
+</ul>
+</li>
+<li><p><strong>Changing Simulation Data</strong>:</p>
+<ul>
+<li><p>Update the simulation name and mesh in <cite>suite/setup.py</cite> if you wish to
+test on different output.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="best-practices">
+<h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Always run the test suite before merging a pull request.</p></li>
+<li><p>Link the results web page in your PR for reviewers.</p></li>
+<li><p>Use the quick check (<cite>grep -L “Web page:” …</cite>) to ensure all tasks
+completed successfully.</p></li>
+<li><p>Update the suite scripts and configs as needed to keep pace with
+MPAS-Analysis development.</p></li>
+</ul>
+<p>For more details, see the comments and documentation within each script and
+config file in the <cite>suite</cite> directory.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="docs.html" class="btn btn-neutral float-left" title="Building the Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="releasing.html" class="btn btn-neutral float-right" title="Releasing a New Version" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="develop">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
+
+</body>
+</html>
