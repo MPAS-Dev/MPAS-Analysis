@@ -239,9 +239,9 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='Lat',
-                                                  lonVarName='Lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='Lat',
+                                                  lon_var_name='Lon')
 
         return obsDescriptor
 

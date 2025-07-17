@@ -9,6 +9,7 @@ Analysis Tasks
    tasks/climatologyMapArgoTemperature
    tasks/climatologyMapBGC
    tasks/climatologyMapBSF
+   tasks/climatologyMapCustom
    tasks/climatologyMapEKE
    tasks/climatologyMapHeatFluxes
    tasks/climatologyMapMassFluxes
@@ -22,11 +23,12 @@ Analysis Tasks
    tasks/climatologyMapSSH
    tasks/climatologyMapVel
    tasks/climatologyMapWaves
+   tasks/climatologyMapWindStressCurl
    tasks/climatologyMapWoa
 
    tasks/antshipTransects
    tasks/conservation
-   tasks/geojsonTransects
+   tasks/geojsonNetcdfTransects
    tasks/hovmollerOceanRegions
    tasks/indexNino34
    tasks/meridionalHeatTransport

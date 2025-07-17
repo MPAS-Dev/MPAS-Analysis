@@ -11,7 +11,7 @@ export OMP_NUM_THREADS=1
 source /share/apps/E3SM/conda_envs/load_latest_e3sm_unified_compy.sh
 # alternatively, you can load your own development environment
 # source ~/mambaforge/etc/profile.d/conda.sh
-# conda activate mpas_dev
+# conda activate mpas_analysis_dev
 # export E3SMU_MACHINE=compy
 
 export HDF5_USE_FILE_LOCKING=FALSE

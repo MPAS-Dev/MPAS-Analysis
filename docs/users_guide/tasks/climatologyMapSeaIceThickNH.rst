@@ -19,11 +19,13 @@ The following configuration options are available for this task::
 
   [climatologyMapSeaIceThickNH]
   ## options related to plotting horizontally remapped climatologies of
-  ## sea ice thickness against reference model results and observations
+  ## sea ice thickness against control model results and observations
   ## in the northern hemisphere (NH)
 
   # colormap for model/observations
-  colormapNameResult = ice
+  colormapNameResult = davos
+  # whether the colormap is indexed or continuous
+  colormapTypeResult = indexed
   # color indices into colormapName for filled contours
   colormapIndicesResult = [20, 80, 110, 140, 170, 200, 230, 255]
   # colormap levels/values for contour boundaries
@@ -31,8 +33,10 @@ The following configuration options are available for this task::
 
   # colormap for differences
   colormapNameDifference = balance
+  # whether the colormap is indexed or continuous
+  colormapTypeDifference = indexed
   # color indices into colormapName for filled contours
-  colormapIndicesDifference = [0, 32, 64, 96, 128, 128, 160, 192, 224, 255]
+  colormapIndicesDifference = [0, 0, 32, 64, 96, 128, 128, 160, 192, 223, 255, 255]
   # colormap levels/values for contour boundaries
   colorbarLevelsDifference = [-3., -2.5, -2, -0.5, -0.1, 0, 0.1, 0.5, 2, 2.5, 3.]
 
@@ -40,12 +44,8 @@ The following configuration options are available for this task::
   # observations are only available for these seasons)
   seasons =  ['FM', 'ON']
 
-  # comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
-  comparisonGrids = ['latlon']
-
-  # reference lat/lon for sea ice plots in the northern hemisphere
-  minimumLatitude = 50
-  referenceLongitude = 0
+  # comparison grid(s) (typically 'arctic_extended') on which to plot analysis
+  comparisonGrids = ['arctic_extended']
 
   # a list of prefixes describing the sources of the observations to be used
   observationPrefixes = ['']

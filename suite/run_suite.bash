@@ -41,8 +41,7 @@ conda deactivate
 py=${main_py}
 conda activate test_mpas_analysis_py${py}
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html 
 cd ..
 
 machine=$(python -c "from mache import discover_machine; print(discover_machine())")

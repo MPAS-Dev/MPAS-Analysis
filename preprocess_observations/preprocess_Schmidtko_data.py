@@ -31,8 +31,7 @@ import gsw
 
 from mpas_analysis.shared.io.download import download_files
 
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import LatLonGridDescriptor
+from pyremap import LatLonGridDescriptor, Remapper
 from mpas_analysis.shared.climatology.comparison_descriptors \
     import get_comparison_descriptor
 from mpas_analysis.configuration \
@@ -150,11 +149,11 @@ def remap(inDir, outDir):
     inDescriptor = LatLonGridDescriptor()
 
     inDescriptor = LatLonGridDescriptor.read(inFileName,
-                                             latVarName='lat',
-                                             lonVarName='lon')
+                                             lat_var_name='lat',
+                                             lon_var_name='lon')
 
     outDescriptor = get_comparison_descriptor(config, 'antarctic')
-    outGridName = outDescriptor.meshName
+    outGridName = outDescriptor.mesh_name
 
     outFileName = '{}/Schmidtko_et_al_2014_bottom_PT_S_PD_{}.nc'.format(
         outDir, outGridName)
@@ -162,14 +161,15 @@ def remap(inDir, outDir):
     mappingFileName = '{}/map_{}_to_{}.nc'.format(inDir, inGridName,
                                                   outGridName)
 
-    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
-
-    remapper.build_mapping_file(method='bilinear')
+    remapper = Remapper(map_filename=mappingFileName, method='bilinear')
+    remapper.src_descriptor = inDescriptor
+    remapper.dst_descriptor = outDescriptor
+    remapper.build_map()
 
     if not os.path.exists(outFileName):
         print('Remapping...')
         with xarray.open_dataset(inFileName) as dsIn:
-            with remapper.remap(dsIn, renormalizationThreshold=0.01) \
+            with remapper.remap_numpy(dsIn, renormalizationThreshold=0.01) \
                     as remappedMLD:
                 print('Done.')
                 remappedMLD.attrs['history'] = ' '.join(sys.argv)

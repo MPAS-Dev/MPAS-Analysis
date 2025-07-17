@@ -506,7 +506,7 @@ class MpasClimatologyTask(AnalysisTask):
                 '-o', outDirectory] + inFiles
 
         if remapper is not None:
-            args.extend(['-r', remapper.mappingFileName])
+            args.extend(['-r', remapper.map_filename])
             if remappedDirectory is not None:
                 args.extend(['-O', remappedDirectory])
 

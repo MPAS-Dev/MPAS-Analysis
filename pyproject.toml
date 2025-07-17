@@ -66,6 +66,23 @@ dependencies = [
     "xarray>=0.14.1"
 ]
 
+[project.optional-dependencies]
+docs = [
+    # building documentation
+    "mock",
+    "m2r2>=0.3.3",
+    "mistune<2",
+    "sphinx",
+    "sphinx_rtd_theme",
+    "tabulate",
+]
+
+dev = [
+    # linting and testing
+    "pip",
+    "pytest",
+]
+
 [build-system]
 requires = ["setuptools>=60"]
 build-backend = "setuptools.build_meta"

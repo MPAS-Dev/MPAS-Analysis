@@ -12,7 +12,7 @@ export OMP_NUM_THREADS=1
 source /lcrc/soft/climate/e3sm-unified/load_latest_e3sm_unified_anvil.sh
 # alternatively, you can load your own development environment
 # source ~/mambaforge/etc/profile.d/conda.sh
-# conda activate mpas_dev
+# conda activate mpas_analysis_dev
 # export E3SMU_MACHINE=anvil
 
 export HDF5_USE_FILE_LOCKING=FALSE

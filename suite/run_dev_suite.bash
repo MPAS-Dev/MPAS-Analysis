@@ -2,7 +2,7 @@
 
 set -e
 
-env_name=mpas_dev
+env_name=mpas_analysis_dev
 
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
@@ -14,8 +14,7 @@ branch=$(git symbolic-ref --short HEAD)
 # test building the docs
 conda activate ${env_name}
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html
 cd ..
 
 machine=$(python -c "from mache import discover_machine; print(discover_machine())")

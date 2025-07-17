@@ -76,6 +76,7 @@ class HovmollerOceanRegions(AnalysisTask):
 
         regionGroups = config.getexpression('hovmollerOceanRegions',
                                             'regionGroups')
+        anyAnomalies = False
 
         for regionGroup in regionGroups:
             suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
@@ -87,6 +88,8 @@ class HovmollerOceanRegions(AnalysisTask):
 
             computeAnomaly = config.getboolean(regionGroupSection,
                                                'computeAnomaly')
+            if computeAnomaly:
+                anyAnomalies = True
 
             fields = config.getexpression(regionGroupSection, 'fields')
 
@@ -185,6 +188,8 @@ class HovmollerOceanRegions(AnalysisTask):
                     self.add_subtask(hovmollerSubtask)
 
         self.run_after(oceanRegionalProfilesTask)
+        if anyAnomalies:
+            self.tags.append('anomaly')
 
 
 class ComputeHovmollerAnomalySubtask(AnalysisTask):

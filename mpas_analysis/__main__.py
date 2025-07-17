@@ -186,6 +186,14 @@ def build_analysis_list(config, controlConfig):
         config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
 
+    analyses.append(ocean.ClimatologyMapCustom(
+        config, oceanClimatologyTasks['avg'], controlConfig))
+
+
+    analyses.append(ocean.ClimatologyMapWindStressCurl(
+        config, oceanClimatologyTasks['avg'], controlConfig)
+    )
+
     analyses.append(ocean.ConservationTask(
         config, controlConfig))
 
@@ -241,9 +249,9 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.WoaTransects(config, oceanClimatologyTasks['avg'],
                                        controlConfig))
 
-    analyses.append(ocean.GeojsonTransects(config,
-                                           oceanClimatologyTasks['avg'],
-                                           controlConfig))
+    analyses.append(ocean.GeojsonNetcdfTransects(config,
+                                                 oceanClimatologyTasks['avg'],
+                                                 controlConfig))
 
     oceanRegionalProfiles = ocean.OceanRegionalProfiles(
         config, oceanRegionMasksTask, controlConfig)

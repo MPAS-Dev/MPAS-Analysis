@@ -346,8 +346,8 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
         # coordinates
         dsObs = self.build_observational_dataset(fileName)
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

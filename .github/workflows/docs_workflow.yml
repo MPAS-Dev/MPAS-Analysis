@@ -37,52 +37,60 @@ jobs:
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Conda Environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: mamba-org/setup-micromamba@v2
         with:
-          activate-environment: "mpas_analysis_ci"
-          miniforge-version: latest
-          channels: conda-forge
-          channel-priority: strict
-          auto-update-conda: false
-          python-version: ${{ env.PYTHON_VERSION }}
+          environment-name: mpas_analysis_dev
+          init-shell: bash
+          condarc: |
+            channel_priority: strict
+            channels: 
+                - conda-forge
+          create-args: >-
+            python=${{ env.PYTHON_VERSION }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install mpas_analysis
         run: |
           git config --global url."https://github.com/".insteadOf "git@github.com:"
-          conda create -n mpas_analysis_dev --file dev-spec.txt \
+          conda install -y --file dev-spec.txt \
             python=${{ env.PYTHON_VERSION }}
-          conda activate mpas_analysis_dev
           python -m pip install -vv --no-deps --no-build-isolation -e .
 
       - name: Build Sphinx Docs
         run: |
           set -e
-          conda activate mpas_analysis_dev
           pip check
           mpas_analysis sync diags --help
           cd docs
-          sphinx-multiversion . _build/html
+          DOCS_VERSION=${{ github.ref_name }} make versioned-html
       - name: Copy Docs and Commit
         run: |
           set -e
-          conda activate mpas_analysis_dev
           pip check
           mpas_analysis sync diags --help
           cd docs
           # gh-pages branch must already exist
           git clone https://github.com/MPAS-Dev/MPAS-Analysis.git --branch gh-pages --single-branch gh-pages
+
+          # Only replace docs in a directory with the destination branch name with latest changes. Docs for
+          # releases should be untouched.
+          rm -rf gh-pages/${{ github.ref_name }}
+
+          # don't clobber existing release versions (in case we retroactively fixed them)
+          cp -r _build/html/${{ github.ref_name }} gh-pages/
+
+          mkdir -p gh-pages/shared
+          cp shared/version-switcher.js gh-pages/shared/version-switcher.js
+
+          # Update the list of versions with all versions in the gh-pages directory.
+          python generate_versions_json.py
+
           # Make sure we're in the gh-pages directory.
           cd gh-pages
           # Create `.nojekyll` (if it doesn't already exist) for proper GH Pages configuration.
           touch .nojekyll
           # Add `index.html` to point to the `develop` branch automatically.
           printf '<meta http-equiv="refresh" content="0; url=./develop/index.html" />' > index.html
-          # Only replace docs in a directory with the destination branch name with latest changes. Docs for
-          # releases should be untouched.
-          rm -rf ${{ github.head_ref || github.ref_name }}
-          # don't clobber existing release versions (in case we retroactively fixed them)
-          cp -r -n ../_build/html/* .
           # Configure git using GitHub Actions credentials.
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
