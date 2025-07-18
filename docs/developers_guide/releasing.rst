@@ -12,84 +12,96 @@ Version Bump and Dependency Updates
 
 1. **Update the Version Number**
 
-   - Open a pull request (PR) to update the version number in the following
-     two files:
+   - Manually update the version number in the following files:
 
      - ``mpas_analysis/version.py``
-
      - ``ci/recipe/meta.yaml``
 
    - Make sure the version follows `semantic versioning <https://semver.org/>`_.
+     For release candidates, use versions like ``1.3.0rc1``.
 
 2. **Check and Update Dependencies**
 
    - Ensure that dependencies and their constraints are up-to-date and
      consistent in:
 
-     - ``ci/recipe/meta.yaml`` (dependencies for the conda-forge release)
+     - ``ci/recipe/meta.yaml`` (for the conda-forge release)
+     - ``pyproject.toml`` (for PyPI; used for sanity checks)
+     - ``dev-spec.txt`` (development dependencies; should be a superset)
 
-     - ``pyproject.toml`` (dependencies for PyPI; used as a sanity check)
-
-     - ``dev-spec.txt`` (development dependencies; should be a superset of
-       those for the conda-forge release)
-
-   - The dependencies in ``meta.yaml`` are the ones that will be used for the
-     released package on conda-forge. The dependencies in ``pyproject.toml``
-     are for PyPI and should be kept in sync as much as possible but are only
-     there as a sanity check when we run ``pip check``. The ``dev-spec.txt``
-     file should include all dependencies needed for development and testing.
-
-   - Review and update dependency versions and constraints as needed.
+   - Use the GitHub "Compare" feature to check for dependency changes between releases:
+     https://github.com/MPAS-Dev/MPAS-Analysis/compare
 
 3. **Make a PR and merge it**
+
+   - Open a PR for the version bump and dependency changes and merge once
+     approved.
 
 Tagging and Publishing a Release
 ================================
 
 4. **Tag the Release on GitHub**
 
-   - Go to https://github.com/MPAS-Dev/MPAS-Analysis/releases and click on
-     "Draft a new release".
-
-   - Enter the appropriate tag for the release, following semantic versioning
-     (e.g., ``1.13.0``; **do not** include a ``v`` in front).
-
-   - Enter a release title (typically the release version **with** a ``v`` in
-     front, e.g., ``v1.13.0``).
-
-   - Write a description and/or use the "Generate release notes" button to
-     auto-generate release notes.
-
-   - If the release is ready, click "Publish release". Otherwise, save it as a
-     draft.
+   - Go to https://github.com/MPAS-Dev/MPAS-Analysis/releases
+   - Click "Draft a new release"
+   - Enter a tag:
+     - For stable releases: ``1.3.0``
+     - For release candidates: ``1.3.0rc1``
+   - Set the release title to the version prefixed with ``v`` (e.g.,
+     ``v1.3.0``)
+   - Generate or manually write release notes
+   - Mark as a pre-release if applicable
+   - Click "Publish release"
 
 Updating the conda-forge Feedstock
 ==================================
 
-5. **Update the conda-forge Feedstock**
+5. **Automatic Feedstock Update (Preferred Method)**
 
-   - After the release is published, update and merge a PR for the new release
-     at the conda-forge feedstock:
+   - Wait for the ``regro-cf-autotick-bot`` to open a PR at:
      https://github.com/conda-forge/mpas-analysis-feedstock
 
-   - The conda-forge bot should automatically create a pull request for the
-     new version within a few hours to a day after the release.
+   - This may take several hours to a day.
 
-   - Compare the dependencies in the new release to those in the previous
-     release and update the recipe as needed. To do this:
+   - Review the PR:
+     - Confirm the version bump and dependency changes
+     - Merge once CI checks pass
 
-     - Find the most recent release at
-       https://github.com/MPAS-Dev/MPAS-Analysis/releases
+6. **Manual Feedstock Update (Fallback Method)**
 
-     - Use the "Compare" feature to select the previous release.
+   If the bot PR does not appear or is too slow, update manually:
 
-     - Under "changed files", locate ``ci/recipe/meta.yaml`` to see
-       any dependency changes.
+   - Download the release tarball:
 
-   - Review and update the feedstock PR as needed, then merge it.
+     ::
 
-   - If you are not already a maintainer of the feedstock, you can request to
-     be added by creating a new issue at
-     https://github.com/conda-forge/mpas-analysis-feedstock/issues, choosing
-     "Bot command", and putting
-     ``@conda-forge-admin, please add user @username`` as the subject.
+         wget https://github.com/MPAS-Dev/MPAS-Analysis/archive/refs/tags/<version>.tar.gz
+
+   - Compute the SHA256 checksum:
+
+     ::
+
+         shasum -a 256 <version>.tar.gz
+
+   - In the ``meta.yaml`` of the feedstock recipe:
+     - Set ``{% set version = "<version>" %}``
+     - Set the new ``sha256`` value
+     - Update dependencies if needed
+
+   - Commit, push to a new branch, and open a PR against the feedstock
+   - Follow any instructions in the PR template and merge once approved
+
+Post Release Actions
+====================
+
+7. **Verify and Announce**
+
+   - Install the package in a clean environment to test:
+
+     ::
+
+         conda create -n test-mpas -c conda-forge mpas-analysis=<version>
+
+   - Optionally announce the release on relevant communication channels
+
+   - Update any documentation or release notes as needed
