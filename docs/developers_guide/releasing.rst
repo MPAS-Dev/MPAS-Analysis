@@ -26,7 +26,9 @@ Version Bump and Dependency Updates
      consistent in:
 
      - ``ci/recipe/meta.yaml`` (for the conda-forge release)
+
      - ``pyproject.toml`` (for PyPI; used for sanity checks)
+
      - ``dev-spec.txt`` (development dependencies; should be a superset)
 
    - Use the GitHub "Compare" feature to check for dependency changes between releases:
@@ -40,23 +42,51 @@ Version Bump and Dependency Updates
 Tagging and Publishing a Release
 ================================
 
-4. **Tag the Release on GitHub**
+4. **Tagging a Release Candidate**
 
-   - Go to https://github.com/MPAS-Dev/MPAS-Analysis/releases
-   - Click "Draft a new release"
-   - Enter a tag:
-     - For stable releases: ``1.3.0``
-     - For release candidates: ``1.3.0rc1``
-   - Set the release title to the version prefixed with ``v`` (e.g.,
-     ``v1.3.0``)
-   - Generate or manually write release notes
-   - Mark as a pre-release if applicable
-   - Click "Publish release"
+   - For release candidates, **do not create a GitHub release page**. Just
+     create a tag from the command line:
+
+     - Make sure your changes are merged into ``develop`` or your own update
+       branch (e.g. ``update-to-1.3.0``) and your local repo is up to date.
+
+     - Tag the release candidate (e.g., ``1.3.0rc1``):
+
+       ::
+
+           git checkout develop
+           git fetch --all -p
+           git reset --hard origin/develop
+           git tag 1.3.0rc1
+           git push origin 1.3.0rc1
+
+       (Replace ``1.3.0rc1`` with your actual version, and ``develop`` with
+       your branch if needed.)
+
+     **Note:** This will only create a tag. No release page will be created
+     on GitHub.
+
+5. **Publishing a Stable Release**
+
+   - For stable releases, create a GitHub release page as follows:
+
+     - Go to https://github.com/MPAS-Dev/pyremap/releases
+
+     - Click "Draft a new release"
+
+     - Enter a tag (e.g., ``1.3.0``)
+
+     - Set the release title to the version prefixed with ``v`` (e.g.,
+       ``v1.3.0``)
+
+     - Generate or manually write release notes
+
+     - Click "Publish release"
 
 Updating the conda-forge Feedstock
 ==================================
 
-5. **Automatic Feedstock Update (Preferred Method)**
+6. **Automatic Feedstock Update (Preferred Method)**
 
    - Wait for the ``regro-cf-autotick-bot`` to open a PR at:
      https://github.com/conda-forge/mpas-analysis-feedstock
@@ -67,7 +97,12 @@ Updating the conda-forge Feedstock
      - Confirm the version bump and dependency changes
      - Merge once CI checks pass
 
-6. **Manual Feedstock Update (Fallback Method)**
+   **Note:** If you are impatient, you can accellerate this process by creating
+   a bot issue at: https://github.com/conda-forge/mpas-analysis-feedstock/issues
+   with the subject ``@conda-forge-admin, please update version``.  This
+   will open a new PR with the version within a few minutes.
+
+7. **Manual Feedstock Update (Fallback Method)**
 
    If the bot PR does not appear or is too slow, update manually:
 
@@ -94,7 +129,7 @@ Updating the conda-forge Feedstock
 Post Release Actions
 ====================
 
-7. **Verify and Announce**
+8. **Verify and Announce**
 
    - Install the package in a clean environment to test:
 
