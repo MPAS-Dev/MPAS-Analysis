@@ -147,26 +147,51 @@ approved.</p></li>
 </section>
 <section id="tagging-and-publishing-a-release">
 <h2>Tagging and Publishing a Release<a class="headerlink" href="#tagging-and-publishing-a-release" title="Link to this heading"></a></h2>
-<ol class="arabic simple" start="4">
-<li><p><strong>Tag the Release on GitHub</strong></p>
+<ol class="arabic" start="4">
+<li><p><strong>Tagging a Release Candidate</strong></p>
+<ul>
+<li><p>For release candidates, <strong>do not create a GitHub release page</strong>. Just
+create a tag from the command line:</p>
+<ul>
+<li><p>Make sure your changes are merged into <code class="docutils literal notranslate"><span class="pre">develop</span></code> or your own update
+branch (e.g. <code class="docutils literal notranslate"><span class="pre">update-to-1.3.0</span></code>) and your local repo is up to date.</p></li>
+<li><p>Tag the release candidate (e.g., <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">develop</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="o">--</span><span class="nb">all</span> <span class="o">-</span><span class="n">p</span>
+<span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">origin</span><span class="o">/</span><span class="n">develop</span>
+<span class="n">git</span> <span class="n">tag</span> <span class="mf">1.3.0</span><span class="n">rc1</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="mf">1.3.0</span><span class="n">rc1</span>
+</pre></div>
+</div>
+<p>(Replace <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code> with your actual version, and <code class="docutils literal notranslate"><span class="pre">develop</span></code> with
+your branch if needed.)</p>
+</li>
+</ul>
+<p><strong>Note:</strong> This will only create a tag. No release page will be created
+on GitHub.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Publishing a Stable Release</strong></p>
 <ul class="simple">
-<li><p>Go to <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/releases">https://github.com/MPAS-Dev/MPAS-Analysis/releases</a></p></li>
+<li><p>For stable releases, create a GitHub release page as follows:</p>
+<ul>
+<li><p>Go to <a class="reference external" href="https://github.com/MPAS-Dev/pyremap/releases">https://github.com/MPAS-Dev/pyremap/releases</a></p></li>
 <li><p>Click “Draft a new release”</p></li>
-<li><p>Enter a tag:
-- For stable releases: <code class="docutils literal notranslate"><span class="pre">1.3.0</span></code>
-- For release candidates: <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code></p></li>
+<li><p>Enter a tag (e.g., <code class="docutils literal notranslate"><span class="pre">1.3.0</span></code>)</p></li>
 <li><p>Set the release title to the version prefixed with <code class="docutils literal notranslate"><span class="pre">v</span></code> (e.g.,
 <code class="docutils literal notranslate"><span class="pre">v1.3.0</span></code>)</p></li>
 <li><p>Generate or manually write release notes</p></li>
-<li><p>Mark as a pre-release if applicable</p></li>
 <li><p>Click “Publish release”</p></li>
+</ul>
+</li>
 </ul>
 </li>
 </ol>
 </section>
 <section id="updating-the-conda-forge-feedstock">
 <h2>Updating the conda-forge Feedstock<a class="headerlink" href="#updating-the-conda-forge-feedstock" title="Link to this heading"></a></h2>
-<ol class="arabic" start="5">
+<ol class="arabic" start="6">
 <li><p><strong>Automatic Feedstock Update (Preferred Method)</strong></p>
 <ul class="simple">
 <li><p>Wait for the <code class="docutils literal notranslate"><span class="pre">regro-cf-autotick-bot</span></code> to open a PR at:
@@ -176,6 +201,10 @@ approved.</p></li>
 - Confirm the version bump and dependency changes
 - Merge once CI checks pass</p></li>
 </ul>
+<p><strong>Note:</strong> If you are impatient, you can accellerate this process by creating
+a bot issue at: <a class="reference external" href="https://github.com/conda-forge/mpas-analysis-feedstock/issues">https://github.com/conda-forge/mpas-analysis-feedstock/issues</a>
+with the subject <code class="docutils literal notranslate"><span class="pre">&#64;conda-forge-admin,</span> <span class="pre">please</span> <span class="pre">update</span> <span class="pre">version</span></code>.  This
+will open a new PR with the version within a few minutes.</p>
 </li>
 <li><p><strong>Manual Feedstock Update (Fallback Method)</strong></p>
 <p>If the bot PR does not appear or is too slow, update manually:</p>
@@ -202,7 +231,7 @@ approved.</p></li>
 </section>
 <section id="post-release-actions">
 <h2>Post Release Actions<a class="headerlink" href="#post-release-actions" title="Link to this heading"></a></h2>
-<ol class="arabic" start="7">
+<ol class="arabic" start="8">
 <li><p><strong>Verify and Announce</strong></p>
 <ul>
 <li><p>Install the package in a clean environment to test:</p>
