@@ -31,7 +31,8 @@ Version Bump and Dependency Updates
 
      - ``dev-spec.txt`` (development dependencies; should be a superset)
 
-   - Use the GitHub "Compare" feature to check for dependency changes between releases:
+   - Use the GitHub "Compare" feature to check for dependency changes between
+     releases:
      https://github.com/MPAS-Dev/MPAS-Analysis/compare
 
 3. **Make a PR and merge it**
@@ -39,8 +40,8 @@ Version Bump and Dependency Updates
    - Open a PR for the version bump and dependency changes and merge once
      approved.
 
-Tagging and Publishing a Release
-================================
+Tagging and Publishing a Release Candidate
+==========================================
 
 4. **Tagging a Release Candidate**
 
@@ -66,45 +67,14 @@ Tagging and Publishing a Release
      **Note:** This will only create a tag. No release page will be created
      on GitHub.
 
-5. **Publishing a Stable Release**
+5. **Updating the conda-forge Feedstock for a Release Candidate**
 
-   - For stable releases, create a GitHub release page as follows:
+   - The conda-forge feedstock does **not** update automatically for release
+     candidates.
+   - You must always create a PR manually, and it must target the ``dev``
+     branch of the feedstock.
 
-     - Go to https://github.com/MPAS-Dev/pyremap/releases
-
-     - Click "Draft a new release"
-
-     - Enter a tag (e.g., ``1.3.0``)
-
-     - Set the release title to the version prefixed with ``v`` (e.g.,
-       ``v1.3.0``)
-
-     - Generate or manually write release notes
-
-     - Click "Publish release"
-
-Updating the conda-forge Feedstock
-==================================
-
-6. **Automatic Feedstock Update (Preferred Method)**
-
-   - Wait for the ``regro-cf-autotick-bot`` to open a PR at:
-     https://github.com/conda-forge/mpas-analysis-feedstock
-
-   - This may take several hours to a day.
-
-   - Review the PR:
-     - Confirm the version bump and dependency changes
-     - Merge once CI checks pass
-
-   **Note:** If you are impatient, you can accellerate this process by creating
-   a bot issue at: https://github.com/conda-forge/mpas-analysis-feedstock/issues
-   with the subject ``@conda-forge-admin, please update version``.  This
-   will open a new PR with the version within a few minutes.
-
-7. **Manual Feedstock Update (Fallback Method)**
-
-   If the bot PR does not appear or is too slow, update manually:
+   Steps:
 
    - Download the release tarball:
 
@@ -123,8 +93,51 @@ Updating the conda-forge Feedstock
      - Set the new ``sha256`` value
      - Update dependencies if needed
 
-   - Commit, push to a new branch, and open a PR against the feedstock
+   - Commit, push to a new branch, and open a PR **against the ``dev`` branch**
+     of the feedstock:
+     https://github.com/conda-forge/mpas-analysis-feedstock
+
    - Follow any instructions in the PR template and merge once approved
+
+Releasing a Stable Version
+==========================
+
+6. **Publishing a Stable Release**
+
+   - For stable releases, create a GitHub release page as follows:
+
+     - Go to https://github.com/MPAS-Dev/MPAS-Analysis/releases
+
+     - Click "Draft a new release"
+
+     - Enter a tag (e.g., ``1.3.0``)
+
+     - Set the release title to the version prefixed with ``v`` (e.g.,
+       ``v1.3.0``)
+
+     - Generate or manually write release notes
+
+     - Click "Publish release"
+
+7. **Updating the conda-forge Feedstock for a Stable Release**
+
+   - Wait for the ``regro-cf-autotick-bot`` to open a PR at:
+     https://github.com/conda-forge/mpas-analysis-feedstock
+
+   - This may take several hours to a day.
+
+   - Review the PR:
+     - Confirm the version bump and dependency changes
+     - Merge once CI checks pass
+
+   **Note:** If you are impatient, you can accelerate this process by creating
+   a bot issue at: https://github.com/conda-forge/mpas-analysis-feedstock/issues
+   with the subject ``@conda-forge-admin, please update version``.  This
+   will open a new PR with the version within a few minutes.
+
+   - If the bot PR does not appear or is too slow, you may update manually (see
+     the manual steps for release candidates above, but target the ``main``
+     branch of the feedstock).
 
 Post Release Actions
 ====================
