@@ -363,13 +363,15 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
         # Read in depth and bin latitudes
         try:
-            restartFileName = self.runStreams.readpath('restart')[0]
+            meshFilename = self.runStreams.readpath('mesh')[0]
         except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least '
-                          'one for MHT calcuation')
+            raise IOError(
+                'The MPAS-O mesh file could not be found: needed for MOC '
+                'calculation'
+            )
 
-        with xr.open_dataset(restartFileName) as dsRestart:
-            refBottomDepth = dsRestart.refBottomDepth.values
+        with xr.open_dataset(meshFilename) as dsMesh:
+            refBottomDepth = dsMesh.refBottomDepth.values
 
         nVertLevels = len(refBottomDepth)
         refLayerThickness = np.zeros(nVertLevels)
@@ -1082,13 +1084,17 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 sizes = dsLocal.sizes
                 moc = np.zeros((len(inputFiles), sizes['nVertLevels']+1,
                                 len(binBoundaryMocStreamfunction)))
+
                 try:
-                    restartFile = self.runStreams.readpath('restart')[0]
+                    meshFilename = self.runStreams.readpath('mesh')[0]
                 except ValueError:
-                    raise IOError('No MPAS-O restart file found: need at '
-                                  'least one restart file for MOC calculation')
-                with xr.open_dataset(restartFile) as dsRestart:
-                    refBottomDepth = dsRestart.refBottomDepth.values
+                    raise IOError(
+                        'The MPAS-O mesh file could not be found: needed for '
+                        'MOC calculation'
+                    )
+
+                with xr.open_dataset(meshFilename) as dsMesh:
+                    refBottomDepth = dsMesh.refBottomDepth.values
                 nVertLevels = len(refBottomDepth)
                 refTopDepth = np.zeros(nVertLevels + 1)
                 refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
@@ -1572,12 +1578,16 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):
 
 def _load_mesh(runStreams):
     # Load mesh related variables
+
     try:
-        restartFile = runStreams.readpath('restart')[0]
+        meshFilename = runStreams.readpath('mesh')[0]
     except ValueError:
-        raise IOError('No MPAS-O restart file found: need at least one '
-                      'restart file for MOC calculation')
-    ncFile = netCDF4.Dataset(restartFile, mode='r')
+        raise IOError(
+            'The MPAS-O mesh file could not be found: needed for '
+            'MOC calculation'
+        )
+
+    ncFile = netCDF4.Dataset(meshFilename, mode='r')
     dvEdge = ncFile.variables['dvEdge'][:]
     areaCell = ncFile.variables['areaCell'][:]
     refBottomDepth = ncFile.variables['refBottomDepth'][:]

@@ -124,7 +124,7 @@ class ComputeTransportSubtask(AnalysisTask):
 
     transectsToPlot : list of str
         A list of transects to plot
-    
+
     groupSuffix : str
         standard transects vs Arctic transects
     """
@@ -159,7 +159,7 @@ class ComputeTransportSubtask(AnalysisTask):
         # Authors
         # -------
         # Xylar Asay-Davis
-        subtaskName = f'compute{groupSuffix}_{startYear:04d}-{endYear:04d}' 
+        subtaskName = f'compute{groupSuffix}_{startYear:04d}-{endYear:04d}'
         # first, call the constructor from the base class (AnalysisTask)
         super().__init__(
             config=parentTask.config,
@@ -167,7 +167,7 @@ class ComputeTransportSubtask(AnalysisTask):
             componentName=parentTask.componentName,
             tags=parentTask.tags,
             subtaskName=subtaskName)
-        
+
         self.subprocessCount = self.config.getint(f'timeSeries{groupSuffix}',
                                                   'subprocessCount')
         self.startYear = startYear
@@ -177,7 +177,7 @@ class ComputeTransportSubtask(AnalysisTask):
         self.run_after(masksSubtask)
 
         self.transectsToPlot = transectsToPlot
-        self.restartFileName = None
+        self.meshFilename = None
         self.groupSuffix = groupSuffix
 
     def setup_and_check(self):
@@ -209,10 +209,12 @@ class ComputeTransportSubtask(AnalysisTask):
 
         # Load mesh related variables
         try:
-            self.restartFileName = self.runStreams.readpath('restart')[0]
+            self.meshFilename = self.runStreams.readpath('mesh')[0]
         except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for transport calculations')
+            raise IOError(
+                'The MPAS-O mesh file was not found: needed for transport '
+                'calculations'
+            )
 
     def run_task(self):
         """
@@ -293,7 +295,7 @@ class ComputeTransportSubtask(AnalysisTask):
         # figure out the indices of the transects to plot
         maskTransectNames = decode_strings(dsTransectMask.transectNames)
 
-        dsMesh = xarray.open_dataset(self.restartFileName)
+        dsMesh = xarray.open_dataset(self.meshFilename)
         dsMesh = dsMesh[['dvEdge', 'cellsOnEdge']]
         dsMesh.load()
         dvEdge = dsMesh.dvEdge
@@ -417,7 +419,7 @@ class CombineTransportSubtask(AnalysisTask):
         # Authors
         # -------
         # Xylar Asay-Davis
-     
+
         # first, call the constructor from the base class (AnalysisTask)
         super(CombineTransportSubtask, self).__init__(
             config=parentTask.config,
@@ -474,7 +476,7 @@ class PlotTransportSubtask(AnalysisTask):
     transportGroup : str (with spaces)
         standard transects (``Transport Transects``)
         vs Arctic transects (``Arctic Transport Transects``)
-        
+
     """
 
     # Authors

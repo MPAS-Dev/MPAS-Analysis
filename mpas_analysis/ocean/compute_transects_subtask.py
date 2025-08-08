@@ -247,7 +247,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
 
         # first, get maxLevelCell and zMid, needed for masking
 
-        dsMesh = xr.open_dataset(self.restartFileName)
+        dsMesh = xr.open_dataset(self.meshFilename)
         dsMesh = dsMesh.isel(Time=0)
 
         self.maxLevelCell = dsMesh.maxLevelCell - 1

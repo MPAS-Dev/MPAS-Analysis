@@ -601,17 +601,17 @@ class ComputeRegionTSSubtask(AnalysisTask):
             chunk = {'nCells': cellsChunk}
 
             try:
-                restartFileName = self.runStreams.readpath('restart')[0]
+                meshFilename = self.runStreams.readpath('mesh')[0]
             except ValueError:
-                raise IOError('No MPAS-O restart file found: need at least one'
-                              ' restart file to plot T-S diagrams')
-            dsRestart = xarray.open_dataset(restartFileName)
-            dsRestart = dsRestart.isel(Time=0)
-            if 'landIceMask' in dsRestart:
-                landIceMask = dsRestart.landIceMask
+                raise IOError('No MPAS-O mesh file found: need at least one'
+                              ' mesh file to plot T-S diagrams')
+            dsMesh = xarray.open_dataset(meshFilename)
+            dsMesh = dsMesh.isel(Time=0)
+            if 'landIceMask' in dsMesh:
+                landIceMask = dsMesh.landIceMask
             else:
                 landIceMask = None
-            dsRestart = dsRestart.chunk(chunk)
+            dsMesh = dsMesh.chunk(chunk)
 
             regionMaskFileName = self.mpasMasksSubtask.maskFileName
 
@@ -653,11 +653,11 @@ class ComputeRegionTSSubtask(AnalysisTask):
                             'timeMonthly_avg_layerThickness']
             ds = ds[variableList]
 
-            ds['zMid'] = compute_zmid(dsRestart.bottomDepth,
-                                      dsRestart.maxLevelCell-1,
-                                      dsRestart.layerThickness)
+            ds['zMid'] = compute_zmid(dsMesh.bottomDepth,
+                                      dsMesh.maxLevelCell-1,
+                                      dsMesh.layerThickness)
 
-            ds['volume'] = (dsRestart.areaCell *
+            ds['volume'] = (dsMesh.areaCell *
                             ds['timeMonthly_avg_layerThickness'])
 
             ds.load()

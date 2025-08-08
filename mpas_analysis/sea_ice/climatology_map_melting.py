@@ -254,8 +254,8 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
         Compute the total sea ice melting in m yr^-1 from the individual
         melt fields in m s^-1.
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         units_scale_factor = 60 * 60 * 24 * 365
 
@@ -265,6 +265,7 @@ class RemapMpasSeaIceMeltingClimatology(RemapMpasClimatologySubtask):
 
         melting = (basal + surface + lateral) * units_scale_factor
         return melting
+
 
 class RemapAnIceFluxMeltingClimatology(RemapObservedClimatologySubtask):
     """

@@ -182,13 +182,15 @@ class MeridionalHeatTransport(AnalysisTask):
             # Read in depth and MHT latitude points
             # Latitude is from binBoundaryMerHeatTrans
             try:
-                restartFileName = self.runStreams.readpath('restart')[0]
+                meshFilename = self.runStreams.readpath('mesh')[0]
             except ValueError:
-                raise IOError('No MPAS-O restart file found: need at least '
-                              'one for MHT calcuation')
+                raise IOError(
+                    'The MPAS-O mesh file was not found: neeeded for MHT '
+                    'calculation'
+                )
 
-            with xr.open_dataset(restartFileName) as dsRestart:
-                refBottomDepth = dsRestart.refBottomDepth
+            with xr.open_dataset(meshFilename) as dsMesh:
+                refBottomDepth = dsMesh.refBottomDepth
 
             nVertLevels = refBottomDepth.sizes['nVertLevels']
             refLayerThickness = np.zeros(nVertLevels)

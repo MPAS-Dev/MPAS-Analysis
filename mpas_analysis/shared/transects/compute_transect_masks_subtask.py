@@ -194,10 +194,12 @@ class ComputeTransectMasksSubtask(AnalysisTask):
         super(ComputeTransectMasksSubtask, self).setup_and_check()
 
         try:
-            self.obsFileName = self.runStreams.readpath('restart')[0]
+            self.obsFileName = self.runStreams.readpath('mesh')[0]
         except ValueError:
-            raise IOError('No MPAS restart file found: need at least one '
-                          'restart file to perform region masking.')
+            raise IOError(
+                'The MPAS mesh file could not be found: needed to perform '
+                'transect masking.'
+            )
 
         self.maskSubdirectory = build_config_full_path(self.config, 'output',
                                                        'maskSubdirectory')

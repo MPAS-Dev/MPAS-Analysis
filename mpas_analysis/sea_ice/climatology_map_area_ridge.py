@@ -252,14 +252,13 @@ class RemapMpasSeaIceAreaFractionRidgeClimatology(RemapMpasClimatologySubtask):
 
     def _compute_ridgefraction(self, climatology):
         """
-        Compute the mean ridge thickness in m 
+        Compute the mean ridge thickness in m
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         ridgearea = climatology['timeMonthly_avg_ridgedIceAreaAverage']
-        area = climatology['timeMonthly_avg_iceAreaCell']
 
         ridgefraction = ridgearea        # area fraction of sea ice
-#        ridgefraction = ridgearea*area   # area fraction of grid cell
+
         return ridgefraction

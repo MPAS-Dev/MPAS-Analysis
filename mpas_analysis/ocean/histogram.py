@@ -247,10 +247,10 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         ds_mask = ds_region_mask.isel(nRegions=region_index)
         cell_mask = ds_mask.regionCellMasks == 1
 
-        # Open the restart file, which contains unmasked weight variables
-        restart_filename = self.runStreams.readpath('restart')[0]
-        ds_restart = xarray.open_dataset(restart_filename)
-        ds_restart = ds_restart.isel(Time=0)
+        # Open the mesh file, which contains unmasked weight variables
+        mesh_filename = self.runStreams.readpath('mesh')[0]
+        ds_mesh = xarray.open_dataset(mesh_filename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         # Save the cell mask only for the region in its own file, which may be
         # referenced by future analysis (i.e., as a control run)
@@ -263,13 +263,15 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
             # Fetch the weight variables and mask them for each region
             for index, var in enumerate(self.variableList):
                 weight_var_name = self.weightList[index]
-                if weight_var_name in ds_restart.keys():
+                if weight_var_name in ds_mesh.keys():
                     var_name = f'timeMonthly_avg_{var}'
                     ds_weights[f'{var_name}_weight'] = \
-                        ds_restart[weight_var_name].where(cell_mask, drop=True)
+                        ds_mesh[weight_var_name].where(cell_mask, drop=True)
                 else:
-                    self.logger.warn(f'Weight variable {weight_var_name} is '
-                                     f'not in the restart file, skipping')
+                    self.logger.warning(
+                        f'Weight variable {weight_var_name} is '
+                        f'not in the mesh file, skipping'
+                    )
 
         weights_filename = \
             f'{base_directory}/{self.filePrefix}_{self.regionName}_weights.nc'

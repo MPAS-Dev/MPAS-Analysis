@@ -315,7 +315,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         logger = self.logger
         config = self.config
 
-        ds_mesh = xr.open_dataset(self.restartFileName)
+        ds_mesh = xr.open_dataset(self.meshFilename)
         var_list = [
             'cellsOnEdge',
             'cellsOnVertex',
