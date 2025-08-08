@@ -997,7 +997,7 @@ script into the ``customize_masked_climatology()`` function:
         """
         logger = self.logger
 
-        ds_mesh = xr.open_dataset(self.restartFileName)
+        ds_mesh = xr.open_dataset(self.meshFilename)
         ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
                            'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
                            'dcEdge', 'dvEdge']]
@@ -1313,7 +1313,7 @@ described in this tutorial:
             """
             logger = self.logger
 
-            ds_mesh = xr.open_dataset(self.restartFileName)
+            ds_mesh = xr.open_dataset(self.meshFilename)
             ds_mesh = ds_mesh[['cellsOnEdge', 'cellsOnVertex', 'nEdgesOnCell',
                                'edgesOnCell', 'verticesOnCell', 'verticesOnEdge',
                                'dcEdge', 'dvEdge']]
