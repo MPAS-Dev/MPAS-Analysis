@@ -152,13 +152,7 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         ds.ohc.attrs['units'] = '$10^{22}$ J'
         ds.ohc.attrs['description'] = 'Ocean heat content in each region'
 
-        try:
-            meshFile = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-O mesh file could not be found: needed for OHC '
-                'calculation'
-            )
+        meshFile = self.get_mesh_filename()
 
         # Define/read in general variables
         with xr.open_dataset(meshFile) as dsMesh:

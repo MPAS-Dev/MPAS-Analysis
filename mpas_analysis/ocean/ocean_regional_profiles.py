@@ -344,7 +344,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
             return
 
         # get areaCell
-        meshFilename = self.runStreams.readpath('mesh')[0]
+        meshFilename = self.get_mesh_filename()
 
         dsMesh = xr.open_dataset(meshFilename)
         dsMesh = dsMesh.isel(Time=0)
@@ -435,13 +435,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
-        try:
-            meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'MPAS-O mesh file not found: needed for plotting time series '
-                'vs. depth'
-            )
+        meshFilename = self.get_mesh_filename()
 
         with xr.open_dataset(meshFilename) as dsMesh:
             depths = dsMesh.refBottomDepth.values

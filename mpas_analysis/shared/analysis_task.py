@@ -491,6 +491,27 @@ class AnalysisTask(Process):
             self.config.set(section, 'endDate', endDate)
 
 
+    def get_mesh_filename(self):
+        """
+        Get the name of the MPAS mesh file for this component.
+
+        Returns
+        -------
+        meshFilename : str
+            The name of the MPAS mesh file for this component
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        meshStream = self.config.get(self.componentName, 'meshStream')
+        try:
+            return self.runStreams.readpath(meshStream)[0]
+        except ValueError:
+            raise IOError(
+                f'The MPAS mesh file could not be found: needed to '
+                f'run {self.componentName} analysis')
+
 # }}}
 
 

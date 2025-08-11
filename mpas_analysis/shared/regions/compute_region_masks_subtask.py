@@ -268,13 +268,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):
         super(ComputeRegionMasksSubtask, self).setup_and_check()
 
         if self.useMpasMesh:
-            try:
-                self.obsFileName = self.runStreams.readpath('mesh')[0]
-            except ValueError:
-                raise IOError(
-                    'The MPAS mesh file could not be found: needed to perform '
-                    'region masking.'
-                )
+            self.obsFileName = self.get_mesh_filename()
 
         maskSubdirectory = build_config_full_path(self.config, 'output',
                                                   'maskSubdirectory')

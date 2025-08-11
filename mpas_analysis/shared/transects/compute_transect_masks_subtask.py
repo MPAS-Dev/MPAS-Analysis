@@ -193,13 +193,7 @@ class ComputeTransectMasksSubtask(AnalysisTask):
         #     self.calendar
         super(ComputeTransectMasksSubtask, self).setup_and_check()
 
-        try:
-            self.obsFileName = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS mesh file could not be found: needed to perform '
-                'transect masking.'
-            )
+        self.obsFileName = self.get_mesh_filename()
 
         self.maskSubdirectory = build_config_full_path(self.config, 'output',
                                                        'maskSubdirectory')

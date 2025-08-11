@@ -555,8 +555,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 cellMasks = \
                     dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
-                meshFilename = \
-                    self.runStreams.readpath('mesh')[0]
+                meshFilename = self.get_mesh_filename()
 
                 dsMesh = xr.open_dataset(meshFilename)
                 landIceFraction = dsMesh.landIceFraction.isel(Time=0)

@@ -248,7 +248,7 @@ class ComputeHistogramWeightsSubtask(AnalysisTask):
         cell_mask = ds_mask.regionCellMasks == 1
 
         # Open the mesh file, which contains unmasked weight variables
-        mesh_filename = self.runStreams.readpath('mesh')[0]
+        mesh_filename = self.get_mesh_filename()
         ds_mesh = xarray.open_dataset(mesh_filename)
         ds_mesh = ds_mesh.isel(Time=0)
 

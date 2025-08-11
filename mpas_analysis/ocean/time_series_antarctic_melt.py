@@ -276,8 +276,7 @@ class ComputeMeltSubtask(AnalysisTask):
                                 f'Deleting it.')
             os.remove(outFileName)
 
-        meshFilename = \
-            mpasTimeSeriesTask.runStreams.readpath('mesh')[0]
+        meshFilename = self.get_mesh_filename()
 
         dsMesh = xarray.open_dataset(meshFilename)
         landIceFraction = dsMesh.landIceFraction.isel(Time=0)

@@ -206,12 +206,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         #     self.calendar
         super(RemapMpasClimatologySubtask, self).setup_and_check()
 
-        try:
-            self.meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS mesh file could not be found: needed to perform '
-                'remapping of climatologies.')
+        self.meshFilename = self.get_mesh_filename()
 
         # we set up the remapper here because ESFM_RegridWeightGen seems to
         # have trouble if it runs in another process (or in several at once)

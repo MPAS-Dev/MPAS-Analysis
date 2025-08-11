@@ -135,13 +135,7 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         self.simulationStartTime = get_simulation_start_time(self.runStreams)
 
-        try:
-            self.meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-seaice mesh file could not be found: needed to '
-                'compute sea ice time series.'
-            )
+        self.meshFilename = self.get_mesh_filename()
 
         # these are redundant for now.  Later cleanup is needed where these
         # file names are reused in run()

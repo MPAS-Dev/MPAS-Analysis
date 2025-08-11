@@ -261,13 +261,7 @@ class PlotHovmollerSubtask(AnalysisTask):
 
         # Note: mesh file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
-        try:
-            meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-O mesh file was not found: needed for '
-                'plotting time series vs. depth'
-            )
+        meshFilename = self.get_mesh_filename()
 
         # Define/read in general variables
         self.logger.info('  Read in depth...')

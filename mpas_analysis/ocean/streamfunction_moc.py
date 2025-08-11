@@ -362,13 +362,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         regionNames.append('Global')
 
         # Read in depth and bin latitudes
-        try:
-            meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-O mesh file could not be found: needed for MOC '
-                'calculation'
-            )
+        meshFilename = self.get_mesh_filename()
 
         with xr.open_dataset(meshFilename) as dsMesh:
             refBottomDepth = dsMesh.refBottomDepth.values
@@ -492,7 +486,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness, cellsOnEdge = \
-            _load_mesh(self.runStreams)
+            _load_mesh(self.get_mesh_filename())
 
         regionNames = config.getexpression(self.sectionName, 'regionNames')
 
@@ -1085,13 +1079,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 moc = np.zeros((len(inputFiles), sizes['nVertLevels']+1,
                                 len(binBoundaryMocStreamfunction)))
 
-                try:
-                    meshFilename = self.runStreams.readpath('mesh')[0]
-                except ValueError:
-                    raise IOError(
-                        'The MPAS-O mesh file could not be found: needed for '
-                        'MOC calculation'
-                    )
+                meshFilename = self.get_mesh_filename()
 
                 with xr.open_dataset(meshFilename) as dsMesh:
                     refBottomDepth = dsMesh.refBottomDepth.values
@@ -1166,7 +1154,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness, cellsOnEdge = \
-            _load_mesh(self.runStreams)
+            _load_mesh(self.get_mesh_filename())
 
         mpasMeshName = config.get('input', 'mpasMeshName')
 
@@ -1576,17 +1564,8 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):
         return dsMOCTimeSeries
 
 
-def _load_mesh(runStreams):
+def _load_mesh(meshFilename):
     # Load mesh related variables
-
-    try:
-        meshFilename = runStreams.readpath('mesh')[0]
-    except ValueError:
-        raise IOError(
-            'The MPAS-O mesh file could not be found: needed for '
-            'MOC calculation'
-        )
-
     ncFile = netCDF4.Dataset(meshFilename, mode='r')
     dvEdge = ncFile.variables['dvEdge'][:]
     areaCell = ncFile.variables['areaCell'][:]

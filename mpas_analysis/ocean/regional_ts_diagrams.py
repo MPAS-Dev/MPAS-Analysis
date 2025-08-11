@@ -600,11 +600,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
             cellsChunk = 32768
             chunk = {'nCells': cellsChunk}
 
-            try:
-                meshFilename = self.runStreams.readpath('mesh')[0]
-            except ValueError:
-                raise IOError('No MPAS-O mesh file found: need at least one'
-                              ' mesh file to plot T-S diagrams')
+            meshFilename = self.get_mesh_filename()
             dsMesh = xarray.open_dataset(meshFilename)
             dsMesh = dsMesh.isel(Time=0)
             if 'landIceMask' in dsMesh:

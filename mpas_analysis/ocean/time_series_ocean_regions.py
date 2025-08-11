@@ -295,13 +295,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
             return
 
         # Load mesh related variables
-        try:
-            meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-O mesh file could not be found: needed for ocean '
-                'region time series'
-            )
+        meshFilename = self.get_mesh_filename()
 
         if config.has_option(sectionName, 'zmin'):
             config_zmin = config.getfloat(sectionName, 'zmin')

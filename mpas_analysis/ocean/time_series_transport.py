@@ -208,13 +208,7 @@ class ComputeTransportSubtask(AnalysisTask):
             raiseException=True)
 
         # Load mesh related variables
-        try:
-            self.meshFilename = self.runStreams.readpath('mesh')[0]
-        except ValueError:
-            raise IOError(
-                'The MPAS-O mesh file was not found: needed for transport '
-                'calculations'
-            )
+        self.meshFilename = self.get_mesh_filename()
 
     def run_task(self):
         """
