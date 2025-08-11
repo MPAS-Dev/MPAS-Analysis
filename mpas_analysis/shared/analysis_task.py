@@ -19,6 +19,7 @@ from multiprocessing import Process, Value
 import time
 import traceback
 import logging
+import os
 import sys
 
 from mpas_analysis.shared.io import NameList, StreamsFile
@@ -506,11 +507,23 @@ class AnalysisTask(Process):
 
         meshStream = self.config.get(self.componentName, 'meshStream')
         try:
-            return self.runStreams.readpath(meshStream)[0]
+            meshFilename = self.runStreams.readpath(meshStream)[0]
         except ValueError:
+            meshFilename = None
+
+        if meshFilename is None or not os.path.exists(meshFilename):
+            # try again with "restart" stream
+            try:
+                meshFilename = self.runStreams.readpath('restart')[0]
+            except ValueError:
+                meshFilename = None
+
+        if meshFilename is None or not os.path.exists(meshFilename):
             raise IOError(
-                f'The MPAS mesh file could not be found: needed to '
-                f'run {self.componentName} analysis')
+                f'The MPAS mesh file could not be found via either '
+                f'"{meshStream}" or "restart" streams')
+
+        return meshFilename
 
 # }}}
 
