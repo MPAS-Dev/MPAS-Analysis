@@ -56,4 +56,10 @@ def write_netcdf_with_fill(ds, fileName, fillValues=netCDF4.default_fillvals):
         if dtype.type is numpy.bytes_:
             encodingDict[variableName] = {'dtype': str}
 
+    unlimited_dims = ds.encoding.get('unlimited_dims', None)
+    if unlimited_dims is not None:
+        if isinstance(unlimited_dims, str):
+            unlimited_dims = {unlimited_dims}
+        unlimited_dims = [dim for dim in unlimited_dims if dim in ds.dims]
+        ds.encoding['unlimited_dims'] = set(unlimited_dims)
     ds.to_netcdf(fileName, encoding=encodingDict)
