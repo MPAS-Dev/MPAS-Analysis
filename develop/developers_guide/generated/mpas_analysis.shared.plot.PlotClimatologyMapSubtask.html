@@ -228,37 +228,40 @@ depth being sliced (if any)</p></li>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code>()</p></td>
 <td><p>Close the Process object.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mesh_filename</span></code>()</p></td>
+<td><p>Get the name of the MPAS mesh file for this component.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
 <td><p>Return whether process is alive</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
 <td><p>Wait until child process terminates</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code>()</p></td>
 <td><p>Plots a comparison of E3SM/MPAS output to SST/TEMP, SSS/SALT or MLD observations or a control run</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_plot_info</span></code></a>(outFileLabel, ...[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info.html#mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info" title="mpas_analysis.shared.plot.PlotClimatologyMapSubtask.set_plot_info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_plot_info</span></code></a>(outFileLabel, ...[, ...])</p></td>
 <td><p>Store attributes related to plots, plot file names and HTML output.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code>()</p></td>
 <td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
 <td><p>Start child process</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
 <td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
 </tr>
 </tbody>

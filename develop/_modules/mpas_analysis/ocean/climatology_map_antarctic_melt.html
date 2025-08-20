@@ -437,8 +437,8 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="c1"># first, load the land-ice mask from the restart file</span>
-        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="c1"># first, load the land-ice mask from the mesh file</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="p">[[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]]</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">&gt;</span> <span class="mf">0.</span>
@@ -659,12 +659,11 @@
                 <span class="n">cellMasks</span> <span class="o">=</span> \
                     <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 
-                <span class="n">restartFileName</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
-                <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+                <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span>
+                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
 
                 <span class="c1"># convert from kg/s to kg/yr</span>
                 <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \

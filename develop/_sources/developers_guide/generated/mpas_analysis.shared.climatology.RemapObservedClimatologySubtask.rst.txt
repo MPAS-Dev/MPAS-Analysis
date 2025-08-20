@@ -20,6 +20,7 @@
       ~RemapObservedClimatologySubtask.check_generate
       ~RemapObservedClimatologySubtask.close
       ~RemapObservedClimatologySubtask.get_file_name
+      ~RemapObservedClimatologySubtask.get_mesh_filename
       ~RemapObservedClimatologySubtask.get_observation_descriptor
       ~RemapObservedClimatologySubtask.is_alive
       ~RemapObservedClimatologySubtask.join

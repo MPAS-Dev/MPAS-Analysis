@@ -18,6 +18,7 @@
       ~TimeSeriesAntarcticMelt.check_analysis_enabled
       ~TimeSeriesAntarcticMelt.check_generate
       ~TimeSeriesAntarcticMelt.close
+      ~TimeSeriesAntarcticMelt.get_mesh_filename
       ~TimeSeriesAntarcticMelt.is_alive
       ~TimeSeriesAntarcticMelt.join
       ~TimeSeriesAntarcticMelt.kill

@@ -238,12 +238,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-SeaIce restart file found: need at least &#39;</span>
-                          <span class="s1">&#39;one restart file to perform remapping of &#39;</span>
-                          <span class="s1">&#39;climatologies.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
         <span class="c1"># these are redundant for now.  Later cleanup is needed where these</span>
         <span class="c1"># file names are reused in run()</span>
@@ -770,7 +765,7 @@
             <span class="n">outFileNames</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]</span> <span class="o">=</span> <span class="n">outFileName</span>
 
         <span class="n">dsTimeSeries</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;areaCell&#39;</span><span class="p">]]</span>
         <span class="c1"># Load data</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>

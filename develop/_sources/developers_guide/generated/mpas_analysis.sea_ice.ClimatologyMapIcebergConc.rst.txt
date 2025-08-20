@@ -18,6 +18,7 @@
       ~ClimatologyMapIcebergConc.check_analysis_enabled
       ~ClimatologyMapIcebergConc.check_generate
       ~ClimatologyMapIcebergConc.close
+      ~ClimatologyMapIcebergConc.get_mesh_filename
       ~ClimatologyMapIcebergConc.is_alive
       ~ClimatologyMapIcebergConc.join
       ~ClimatologyMapIcebergConc.kill

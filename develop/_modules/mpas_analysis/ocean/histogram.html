@@ -351,10 +351,10 @@
         <span class="n">ds_mask</span> <span class="o">=</span> <span class="n">ds_region_mask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="n">region_index</span><span class="p">)</span>
         <span class="n">cell_mask</span> <span class="o">=</span> <span class="n">ds_mask</span><span class="o">.</span><span class="n">regionCellMasks</span> <span class="o">==</span> <span class="mi">1</span>
 
-        <span class="c1"># Open the restart file, which contains unmasked weight variables</span>
-        <span class="n">restart_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restart_filename</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Open the mesh file, which contains unmasked weight variables</span>
+        <span class="n">mesh_filename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">mesh_filename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># Save the cell mask only for the region in its own file, which may be</span>
         <span class="c1"># referenced by future analysis (i.e., as a control run)</span>
@@ -367,13 +367,15 @@
             <span class="c1"># Fetch the weight variables and mask them for each region</span>
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">var</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">):</span>
                 <span class="n">weight_var_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">weightList</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">weight_var_name</span> <span class="ow">in</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">weight_var_name</span> <span class="ow">in</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">var_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;timeMonthly_avg_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span>
                     <span class="n">ds_weights</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">var_name</span><span class="si">}</span><span class="s1">_weight&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                        <span class="n">ds_restart</span><span class="p">[</span><span class="n">weight_var_name</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cell_mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                        <span class="n">ds_mesh</span><span class="p">[</span><span class="n">weight_var_name</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cell_mask</span><span class="p">,</span> <span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Weight variable </span><span class="si">{</span><span class="n">weight_var_name</span><span class="si">}</span><span class="s1"> is &#39;</span>
-                                     <span class="sa">f</span><span class="s1">&#39;not in the restart file, skipping&#39;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s1">&#39;Weight variable </span><span class="si">{</span><span class="n">weight_var_name</span><span class="si">}</span><span class="s1"> is &#39;</span>
+                        <span class="sa">f</span><span class="s1">&#39;not in the mesh file, skipping&#39;</span>
+                    <span class="p">)</span>
 
         <span class="n">weights_filename</span> <span class="o">=</span> \
             <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_directory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="si">}</span><span class="s1">_weights.nc&#39;</span>

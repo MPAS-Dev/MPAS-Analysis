@@ -466,14 +466,10 @@
         <span class="n">regionNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Global&#39;</span><span class="p">)</span>
 
         <span class="c1"># Read in depth and bin latitudes</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least &#39;</span>
-                          <span class="s1">&#39;one for MHT calcuation&#39;</span><span class="p">)</span>
+        <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
-        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsRestart</span><span class="p">:</span>
-            <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+        <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
+            <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
 
         <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">refBottomDepth</span><span class="p">)</span>
         <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
@@ -594,7 +590,7 @@
 
         <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
             <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span> <span class="o">=</span> \
-            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">())</span>
 
         <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
 
@@ -1186,13 +1182,11 @@
                 <span class="n">sizes</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">sizes</span>
                 <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
                                 <span class="nb">len</span><span class="p">(</span><span class="n">binBoundaryMocStreamfunction</span><span class="p">)))</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">restartFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at &#39;</span>
-                                  <span class="s1">&#39;least one restart file for MOC calculation&#39;</span><span class="p">)</span>
-                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsRestart</span><span class="p">:</span>
-                    <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+
+                <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
+
+                <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
+                    <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
                 <span class="n">nVertLevels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">refBottomDepth</span><span class="p">)</span>
                 <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">refTopDepth</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nVertLevels</span><span class="p">]</span>
@@ -1264,7 +1258,7 @@
 
         <span class="n">dvEdge</span><span class="p">,</span> <span class="n">areaCell</span><span class="p">,</span> <span class="n">refBottomDepth</span><span class="p">,</span> <span class="n">latCell</span><span class="p">,</span> <span class="n">nVertLevels</span><span class="p">,</span> \
             <span class="n">refTopDepth</span><span class="p">,</span> <span class="n">refLayerThickness</span><span class="p">,</span> <span class="n">cellsOnEdge</span> <span class="o">=</span> \
-            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
+            <span class="n">_load_mesh</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">())</span>
 
         <span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
 
@@ -1674,14 +1668,9 @@
         <span class="k">return</span> <span class="n">dsMOCTimeSeries</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_load_mesh</span><span class="p">(</span><span class="n">runStreams</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_mesh</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">):</span>
     <span class="c1"># Load mesh related variables</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">restartFile</span> <span class="o">=</span> <span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one &#39;</span>
-                      <span class="s1">&#39;restart file for MOC calculation&#39;</span><span class="p">)</span>
-    <span class="n">ncFile</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">ncFile</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="n">dvEdge</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;dvEdge&#39;</span><span class="p">][:]</span>
     <span class="n">areaCell</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;areaCell&#39;</span><span class="p">][:]</span>
     <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">ncFile</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;refBottomDepth&#39;</span><span class="p">][:]</span>

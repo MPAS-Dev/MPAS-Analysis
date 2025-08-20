@@ -355,12 +355,15 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Compute the tendency in m/yr</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span>
 
-        <span class="n">tendency</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceVolumeTendencyTransport&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">units_scale_factor</span>
+        <span class="n">tendency</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceVolumeTendencyTransport&#39;</span><span class="p">]</span> <span class="o">*</span>
+            <span class="n">units_scale_factor</span>
+        <span class="p">)</span>
         <span class="k">return</span> <span class="n">tendency</span>
 </pre></div>
 

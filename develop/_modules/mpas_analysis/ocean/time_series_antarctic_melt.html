@@ -279,7 +279,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">iceShelvesToPlot</span> <span class="o">=</span> <span class="n">iceShelvesToPlot</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-01-01_00:00:00&#39;</span>
@@ -320,13 +319,6 @@
                              <span class="s1">&#39;    to be data, standalone or coupled. &#39;</span>
                              <span class="s1">&#39;    Otherwise, no melt rates are available </span><span class="se">\n</span><span class="s1">&#39;</span>
                              <span class="s1">&#39;    for plotting.&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Load mesh related variables</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one &#39;</span>
-                          <span class="s1">&#39;restart file for Antarctic melt calculations&#39;</span><span class="p">)</span>
 
         <span class="n">totalFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFluxTotal&#39;</span>
         <span class="n">landIceFluxVar</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_landIceFreshwaterFlux&#39;</span>
@@ -388,12 +380,11 @@
                                 <span class="sa">f</span><span class="s1">&#39;Deleting it.&#39;</span><span class="p">)</span>
             <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
 
-        <span class="n">restartFileName</span> <span class="o">=</span> \
-            <span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
-        <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
 
         <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 

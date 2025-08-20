@@ -18,6 +18,7 @@
       ~ClimatologyMapWindStressCurl.check_analysis_enabled
       ~ClimatologyMapWindStressCurl.check_generate
       ~ClimatologyMapWindStressCurl.close
+      ~ClimatologyMapWindStressCurl.get_mesh_filename
       ~ClimatologyMapWindStressCurl.is_alive
       ~ClimatologyMapWindStressCurl.join
       ~ClimatologyMapWindStressCurl.kill

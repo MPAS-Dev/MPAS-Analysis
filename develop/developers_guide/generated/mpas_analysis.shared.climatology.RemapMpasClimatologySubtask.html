@@ -165,7 +165,7 @@ over which the climatology should be computed or [‘none’] if only
 monthly climatologies are needed.</p></li>
 <li><p><strong>comparisonDescriptors</strong> (dict of <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code>) – Descriptors of the comparison grids to use for remapping, with
 grid names as the keys.</p></li>
-<li><p><strong>restartFileName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of a restart
+<li><p><strong>meshFilename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of the mesh
 file from which the MPAS mesh can be read.</p></li>
 <li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
 an internal python code that handles more grid types and extra
@@ -243,37 +243,40 @@ to <code class="docutils literal notranslate"><span class="pre">False</span></co
 <tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_masked_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_masked_file_name</span></code></a>(season)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_file_name</span></code></a>(season, ...)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_mesh_filename</span></code>()</p></td>
+<td><p>Get the name of the MPAS mesh file for this component.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_remapped_file_name</span></code></a>(season, ...)</p></td>
 <td><p>Given config options, the name of a field and a string identifying the months in a seasonal climatology, returns the full path for MPAS climatology files before and after remapping.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_alive</span></code>()</p></td>
 <td><p>Return whether process is alive</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>([timeout])</p></td>
 <td><p>Wait until child process terminates</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kill</span></code>()</p></td>
 <td><p>Terminate process; sends SIGKILL signal or uses TerminateProcess()</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run</span></code>([writeLogFile])</p></td>
 <td><p>Sets up logging and then runs the analysis task.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_after</span></code>(task)</p></td>
 <td><p>Only run this task after the given task has completed.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.run_task"><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_task</span></code></a>()</p></td>
 <td><p>Compute the requested climatologies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_start_end_date</span></code>(section)</p></td>
 <td><p>Set the start and end dates in the <code class="docutils literal notranslate"><span class="pre">config</span></code> correspond to the start and end years in a given category of analysis</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.setup_and_check"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup_and_check</span></code></a>()</p></td>
 <td><p>Perform steps to set up the analysis and check for errors in the setup.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">start</span></code>()</p></td>
 <td><p>Start child process</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">terminate</span></code>()</p></td>
 <td><p>Terminate process; sends SIGTERM signal or uses TerminateProcess()</p></td>
 </tr>
 </tbody>

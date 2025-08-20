@@ -356,16 +356,15 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ridgefraction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the mean ridge thickness in m </span>
+<span class="sd">        Compute the mean ridge thickness in m</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">ridgearea</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_ridgedIceAreaAverage&#39;</span><span class="p">]</span>
-        <span class="n">area</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceAreaCell&#39;</span><span class="p">]</span>
 
         <span class="n">ridgefraction</span> <span class="o">=</span> <span class="n">ridgearea</span>        <span class="c1"># area fraction of sea ice</span>
-<span class="c1">#        ridgefraction = ridgearea*area   # area fraction of grid cell</span>
+
         <span class="k">return</span> <span class="n">ridgefraction</span>
 </pre></div>
 

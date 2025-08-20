@@ -19,6 +19,7 @@
       ~OceanRegionalProfiles.check_analysis_enabled
       ~OceanRegionalProfiles.check_generate
       ~OceanRegionalProfiles.close
+      ~OceanRegionalProfiles.get_mesh_filename
       ~OceanRegionalProfiles.is_alive
       ~OceanRegionalProfiles.join
       ~OceanRegionalProfiles.kill

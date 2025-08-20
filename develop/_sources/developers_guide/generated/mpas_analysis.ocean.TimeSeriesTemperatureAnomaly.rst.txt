@@ -18,6 +18,7 @@
       ~TimeSeriesTemperatureAnomaly.check_analysis_enabled
       ~TimeSeriesTemperatureAnomaly.check_generate
       ~TimeSeriesTemperatureAnomaly.close
+      ~TimeSeriesTemperatureAnomaly.get_mesh_filename
       ~TimeSeriesTemperatureAnomaly.is_alive
       ~TimeSeriesTemperatureAnomaly.join
       ~TimeSeriesTemperatureAnomaly.kill

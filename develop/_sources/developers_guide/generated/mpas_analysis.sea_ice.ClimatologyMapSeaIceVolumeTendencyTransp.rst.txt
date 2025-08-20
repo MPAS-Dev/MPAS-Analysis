@@ -18,6 +18,7 @@
       ~ClimatologyMapSeaIceVolumeTendencyTransp.check_analysis_enabled
       ~ClimatologyMapSeaIceVolumeTendencyTransp.check_generate
       ~ClimatologyMapSeaIceVolumeTendencyTransp.close
+      ~ClimatologyMapSeaIceVolumeTendencyTransp.get_mesh_filename
       ~ClimatologyMapSeaIceVolumeTendencyTransp.is_alive
       ~ClimatologyMapSeaIceVolumeTendencyTransp.join
       ~ClimatologyMapSeaIceVolumeTendencyTransp.kill

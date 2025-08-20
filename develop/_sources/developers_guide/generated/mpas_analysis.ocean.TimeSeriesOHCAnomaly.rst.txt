@@ -18,6 +18,7 @@
       ~TimeSeriesOHCAnomaly.check_analysis_enabled
       ~TimeSeriesOHCAnomaly.check_generate
       ~TimeSeriesOHCAnomaly.close
+      ~TimeSeriesOHCAnomaly.get_mesh_filename
       ~TimeSeriesOHCAnomaly.is_alive
       ~TimeSeriesOHCAnomaly.join
       ~TimeSeriesOHCAnomaly.kill

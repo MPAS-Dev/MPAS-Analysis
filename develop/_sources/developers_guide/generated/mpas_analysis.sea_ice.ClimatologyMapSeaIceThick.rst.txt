@@ -18,6 +18,7 @@
       ~ClimatologyMapSeaIceThick.check_analysis_enabled
       ~ClimatologyMapSeaIceThick.check_generate
       ~ClimatologyMapSeaIceThick.close
+      ~ClimatologyMapSeaIceThick.get_mesh_filename
       ~ClimatologyMapSeaIceThick.is_alive
       ~ClimatologyMapSeaIceThick.join
       ~ClimatologyMapSeaIceThick.kill

@@ -18,6 +18,7 @@
       ~TimeSeriesSST.check_analysis_enabled
       ~TimeSeriesSST.check_generate
       ~TimeSeriesSST.close
+      ~TimeSeriesSST.get_mesh_filename
       ~TimeSeriesSST.is_alive
       ~TimeSeriesSST.join
       ~TimeSeriesSST.kill

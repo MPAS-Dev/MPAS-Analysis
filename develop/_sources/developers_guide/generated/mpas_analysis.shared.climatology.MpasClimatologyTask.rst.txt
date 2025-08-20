@@ -20,6 +20,7 @@
       ~MpasClimatologyTask.check_generate
       ~MpasClimatologyTask.close
       ~MpasClimatologyTask.get_file_name
+      ~MpasClimatologyTask.get_mesh_filename
       ~MpasClimatologyTask.get_start_and_end
       ~MpasClimatologyTask.is_alive
       ~MpasClimatologyTask.join

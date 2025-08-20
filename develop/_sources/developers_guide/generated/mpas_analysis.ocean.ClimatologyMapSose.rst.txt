@@ -18,6 +18,7 @@
       ~ClimatologyMapSose.check_analysis_enabled
       ~ClimatologyMapSose.check_generate
       ~ClimatologyMapSose.close
+      ~ClimatologyMapSose.get_mesh_filename
       ~ClimatologyMapSose.is_alive
       ~ClimatologyMapSose.join
       ~ClimatologyMapSose.kill

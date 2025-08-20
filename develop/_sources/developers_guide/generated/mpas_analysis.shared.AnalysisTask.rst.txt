@@ -18,6 +18,7 @@
       ~AnalysisTask.check_analysis_enabled
       ~AnalysisTask.check_generate
       ~AnalysisTask.close
+      ~AnalysisTask.get_mesh_filename
       ~AnalysisTask.is_alive
       ~AnalysisTask.join
       ~AnalysisTask.kill

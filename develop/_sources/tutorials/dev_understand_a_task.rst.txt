@@ -779,8 +779,8 @@ at that before we continue with ``customize_masked_climatology()``.
             Compute the OHC from the temperature and layer thicknesses in a given
             climatology data sets.
             """
-            ds_restart = xr.open_dataset(self.restartFileName)
-            ds_restart = ds_restart.isel(Time=0)
+            ds_mesh = xr.open_dataset(self.meshFilename)
+            ds_mesh = ds_mesh.isel(Time=0)
 
             # specific heat [J/(kg*degC)]
             cp = self.namelist.getfloat('config_specific_heat_sea_water')
@@ -789,10 +789,10 @@ at that before we continue with ``customize_masked_climatology()``.
 
             units_scale_factor = 1e-9
 
-            n_vert_levels = ds_restart.sizes['nVertLevels']
+            n_vert_levels = ds_mesh.sizes['nVertLevels']
 
-            z_mid = compute_zmid(ds_restart.bottomDepth, ds_restart.maxLevelCell-1,
-                                 ds_restart.layerThickness)
+            z_mid = compute_zmid(ds_mesh.bottomDepth, ds_mesh.maxLevelCell-1,
+                                 ds_mesh.layerThickness)
 
             vert_index = xr.DataArray.from_dict(
                 {'dims': ('nVertLevels',), 'data': np.arange(n_vert_levels)})
@@ -800,7 +800,7 @@ at that before we continue with ``customize_masked_climatology()``.
             temperature = climatology['timeMonthly_avg_activeTracers_temperature']
             layer_thickness = climatology['timeMonthly_avg_layerThickness']
 
-            masks = [vert_index < ds_restart.maxLevelCell,
+            masks = [vert_index < ds_mesh.maxLevelCell,
                      z_mid <= self.min_depth,
                      z_mid >= self.max_depth]
             for mask in masks:
@@ -812,7 +812,7 @@ at that before we continue with ``customize_masked_climatology()``.
             return ohc
 
 This function uses a combination of mesh information taken from an MPAS
-restart file (available from the ``self.restartFileName`` attribute inherited
+mesh file (available from the ``self.meshFilename`` attribute inherited
 from :py:class:`~mpas_analysis.shared.climatology.RemapMpasClimatologySubtask`),
 namelist options available from the ``self.namelist`` reader (inherited from
 :py:class:`~mpas_analysis.shared.AnalysisTask`), and ``temperature`` and
@@ -1160,8 +1160,8 @@ here is the full analysis task as described in this tutorial:
             Compute the OHC from the temperature and layer thicknesses in a given
             climatology data sets.
             """
-            ds_restart = xr.open_dataset(self.restartFileName)
-            ds_restart = ds_restart.isel(Time=0)
+            ds_mesh = xr.open_dataset(self.meshFilename)
+            ds_mesh = ds_mesh.isel(Time=0)
 
             # specific heat [J/(kg*degC)]
             cp = self.namelist.getfloat('config_specific_heat_sea_water')
@@ -1170,10 +1170,10 @@ here is the full analysis task as described in this tutorial:
 
             units_scale_factor = 1e-9
 
-            n_vert_levels = ds_restart.sizes['nVertLevels']
+            n_vert_levels = ds_mesh.sizes['nVertLevels']
 
-            z_mid = compute_zmid(ds_restart.bottomDepth, ds_restart.maxLevelCell-1,
-                                 ds_restart.layerThickness)
+            z_mid = compute_zmid(ds_mesh.bottomDepth, ds_mesh.maxLevelCell-1,
+                                 ds_mesh.layerThickness)
 
             vert_index = xr.DataArray.from_dict(
                 {'dims': ('nVertLevels',), 'data': np.arange(n_vert_levels)})
@@ -1181,7 +1181,7 @@ here is the full analysis task as described in this tutorial:
             temperature = climatology['timeMonthly_avg_activeTracers_temperature']
             layer_thickness = climatology['timeMonthly_avg_layerThickness']
 
-            masks = [vert_index < ds_restart.maxLevelCell,
+            masks = [vert_index < ds_mesh.maxLevelCell,
                      z_mid <= self.min_depth,
                      z_mid >= self.max_depth]
             for mask in masks:

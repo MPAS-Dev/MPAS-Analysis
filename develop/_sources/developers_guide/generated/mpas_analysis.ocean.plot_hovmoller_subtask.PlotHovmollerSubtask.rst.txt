@@ -18,6 +18,7 @@
       ~PlotHovmollerSubtask.check_analysis_enabled
       ~PlotHovmollerSubtask.check_generate
       ~PlotHovmollerSubtask.close
+      ~PlotHovmollerSubtask.get_mesh_filename
       ~PlotHovmollerSubtask.is_alive
       ~PlotHovmollerSubtask.join
       ~PlotHovmollerSubtask.kill

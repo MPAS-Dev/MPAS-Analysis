@@ -284,14 +284,10 @@
 
             <span class="c1"># Read in depth and MHT latitude points</span>
             <span class="c1"># Latitude is from binBoundaryMerHeatTrans</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least &#39;</span>
-                              <span class="s1">&#39;one for MHT calcuation&#39;</span><span class="p">)</span>
+            <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
-            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsRestart</span><span class="p">:</span>
-                <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">refBottomDepth</span>
+            <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
+                <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span>
 
             <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
             <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>

@@ -704,18 +704,14 @@
             <span class="n">cellsChunk</span> <span class="o">=</span> <span class="mi">32768</span>
             <span class="n">chunk</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nCells&#39;</span><span class="p">:</span> <span class="n">cellsChunk</span><span class="p">}</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one&#39;</span>
-                              <span class="s1">&#39; restart file to plot T-S diagrams&#39;</span><span class="p">)</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsRestart</span><span class="p">:</span>
-                <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceMask</span>
+            <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="p">:</span>
+                <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceMask</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">landIceMask</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
             <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
@@ -757,11 +753,11 @@
                             <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variableList</span><span class="p">]</span>
 
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
-                                      <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                                      <span class="n">dsRestart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
+                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span> <span class="o">*</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span> <span class="o">*</span>
                             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">])</span>
 
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>

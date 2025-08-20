@@ -805,8 +805,8 @@ at that before we continue with <code class="docutils literal notranslate"><span
 <span class="sd">    Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">    climatology data sets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-    <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># specific heat [J/(kg*degC)]</span>
     <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
@@ -815,10 +815,10 @@ at that before we continue with <code class="docutils literal notranslate"><span
 
     <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-    <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_restart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                         <span class="n">ds_restart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+    <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
     <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
         <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
@@ -826,7 +826,7 @@ at that before we continue with <code class="docutils literal notranslate"><span
     <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
     <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
-    <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+    <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
              <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
              <span class="n">z_mid</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
@@ -839,7 +839,7 @@ at that before we continue with <code class="docutils literal notranslate"><span
 </pre></div>
 </div>
 <p>This function uses a combination of mesh information taken from an MPAS
-restart file (available from the <code class="docutils literal notranslate"><span class="pre">self.restartFileName</span></code> attribute inherited
+mesh file (available from the <code class="docutils literal notranslate"><span class="pre">self.meshFilename</span></code> attribute inherited
 from <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>),
 namelist options available from the <code class="docutils literal notranslate"><span class="pre">self.namelist</span></code> reader (inherited from
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
@@ -1181,8 +1181,8 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># specific heat [J/(kg*degC)]</span>
         <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
@@ -1191,10 +1191,10 @@ here is the full analysis task as described in this tutorial:</p>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-        <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_restart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                             <span class="n">ds_restart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+        <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
         <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
@@ -1202,7 +1202,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
         <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
-        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
                  <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
                  <span class="n">z_mid</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>

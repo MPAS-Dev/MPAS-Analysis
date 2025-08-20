@@ -18,6 +18,7 @@
       ~ClimatologyMapSSS.check_analysis_enabled
       ~ClimatologyMapSSS.check_generate
       ~ClimatologyMapSSS.close
+      ~ClimatologyMapSSS.get_mesh_filename
       ~ClimatologyMapSSS.is_alive
       ~ClimatologyMapSSS.join
       ~ClimatologyMapSSS.kill

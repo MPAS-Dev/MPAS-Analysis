@@ -355,16 +355,14 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_volumeridge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Compute the mean ridge thickness in m </span>
+<span class="sd">        Compute the mean ridge thickness in m</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">volume</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_ridgedIceVolumeAverage&#39;</span><span class="p">]</span>
-        <span class="n">area</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceAreaCell&#39;</span><span class="p">]</span>
 
         <span class="n">volumeridge</span> <span class="o">=</span> <span class="n">volume</span>        <span class="c1"># volume per unit sea ice area (m)</span>
-<span class="c1">#        volumeridge = volume*area   # volume per unit grid cell area (m)</span>
         <span class="k">return</span> <span class="n">volumeridge</span>
 </pre></div>
 

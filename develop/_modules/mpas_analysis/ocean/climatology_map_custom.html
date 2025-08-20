@@ -420,10 +420,10 @@
         <span class="n">press</span> <span class="o">=</span> <span class="n">dp</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">dp</span>
 
         <span class="c1"># add land ice pressure if available</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;landIcePressure&#39;</span> <span class="ow">in</span> <span class="n">ds_restart</span><span class="p">:</span>
-            <span class="n">press</span> <span class="o">+=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">landIcePressure</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;landIcePressure&#39;</span> <span class="ow">in</span> <span class="n">ds_mesh</span><span class="p">:</span>
+            <span class="n">press</span> <span class="o">+=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">landIcePressure</span>
 
         <span class="n">tempFreeze</span> <span class="o">=</span> <span class="n">c0</span> <span class="o">+</span> <span class="n">cs</span><span class="o">*</span><span class="n">salin</span> <span class="o">+</span> <span class="n">cp</span><span class="o">*</span><span class="n">press</span> <span class="o">+</span> <span class="n">cps</span><span class="o">*</span><span class="n">press</span><span class="o">*</span><span class="n">salin</span>
 

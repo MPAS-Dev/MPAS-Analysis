@@ -18,6 +18,7 @@
       ~PlotClimatologyMapSubtask.check_analysis_enabled
       ~PlotClimatologyMapSubtask.check_generate
       ~PlotClimatologyMapSubtask.close
+      ~PlotClimatologyMapSubtask.get_mesh_filename
       ~PlotClimatologyMapSubtask.is_alive
       ~PlotClimatologyMapSubtask.join
       ~PlotClimatologyMapSubtask.kill

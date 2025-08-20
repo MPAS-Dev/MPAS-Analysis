@@ -18,6 +18,7 @@
       ~ClimatologyMapCustom.check_analysis_enabled
       ~ClimatologyMapCustom.check_generate
       ~ClimatologyMapCustom.close
+      ~ClimatologyMapCustom.get_mesh_filename
       ~ClimatologyMapCustom.is_alive
       ~ClimatologyMapCustom.join
       ~ClimatologyMapCustom.kill

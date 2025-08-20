@@ -19,6 +19,7 @@
       ~ComputeTransectMasksSubtask.check_generate
       ~ComputeTransectMasksSubtask.close
       ~ComputeTransectMasksSubtask.expand_transect_names
+      ~ComputeTransectMasksSubtask.get_mesh_filename
       ~ComputeTransectMasksSubtask.is_alive
       ~ComputeTransectMasksSubtask.join
       ~ComputeTransectMasksSubtask.kill

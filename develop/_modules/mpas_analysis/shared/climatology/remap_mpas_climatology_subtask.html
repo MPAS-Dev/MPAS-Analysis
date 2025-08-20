@@ -162,8 +162,8 @@
 <span class="sd">        Descriptors of the comparison grids to use for remapping, with</span>
 <span class="sd">        grid names as the keys.</span>
 
-<span class="sd">    restartFileName : str</span>
-<span class="sd">        If ``comparisonGridName`` is not ``None``, the name of a restart</span>
+<span class="sd">    meshFilename : str</span>
+<span class="sd">        If ``comparisonGridName`` is not ``None``, the name of the mesh</span>
 <span class="sd">        file from which the MPAS mesh can be read.</span>
 
 <span class="sd">    useNcremap : bool, optional</span>
@@ -283,7 +283,8 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">useNcremap</span> <span class="o">=</span> <span class="n">useNcremap</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="RemapMpasClimatologySubtask.setup_and_check">
@@ -310,12 +311,7 @@
         <span class="c1">#     self.calendar</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS restart file found: need at least one &#39;</span>
-                          <span class="s1">&#39;restart file to perform remapping of &#39;</span>
-                          <span class="s1">&#39;climatologies.&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
         <span class="c1"># we set up the remapper here because ESFM_RegridWeightGen seems to</span>
         <span class="c1"># have trouble if it runs in another process (or in several at once)</span>
@@ -543,10 +539,10 @@
             <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">:</span>
                 <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasVertexMeshDescriptor</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mpasDescriptor</span> <span class="o">=</span> <span class="n">MpasCellMeshDescriptor</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">,</span> <span class="n">mesh_name</span><span class="o">=</span><span class="n">meshName</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">mpasMeshName</span> <span class="o">=</span> <span class="n">mpasDescriptor</span><span class="o">.</span><span class="n">mesh_name</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">remappers</span><span class="p">[</span><span class="n">comparisonGridName</span><span class="p">]</span> <span class="o">=</span> <span class="n">get_remapper</span><span class="p">(</span>

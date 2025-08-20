@@ -18,6 +18,7 @@
       ~ClimatologyMapSSH.check_analysis_enabled
       ~ClimatologyMapSSH.check_generate
       ~ClimatologyMapSSH.close
+      ~ClimatologyMapSSH.get_mesh_filename
       ~ClimatologyMapSSH.is_alive
       ~ClimatologyMapSSH.join
       ~ClimatologyMapSSH.kill

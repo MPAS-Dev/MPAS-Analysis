@@ -18,6 +18,7 @@
       ~ClimatologyMapAntarcticMelt.check_analysis_enabled
       ~ClimatologyMapAntarcticMelt.check_generate
       ~ClimatologyMapAntarcticMelt.close
+      ~ClimatologyMapAntarcticMelt.get_mesh_filename
       ~ClimatologyMapAntarcticMelt.is_alive
       ~ClimatologyMapAntarcticMelt.join
       ~ClimatologyMapAntarcticMelt.kill

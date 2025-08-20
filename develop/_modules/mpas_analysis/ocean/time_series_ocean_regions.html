@@ -399,11 +399,7 @@
             <span class="k">return</span>
 
         <span class="c1"># Load mesh related variables</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one &#39;</span>
-                          <span class="s1">&#39;restart file for ocean region time series&#39;</span><span class="p">)</span>
+        <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">):</span>
             <span class="n">config_zmin</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">)</span>
@@ -415,13 +411,13 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">config_zmax</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                            <span class="n">dsRestart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
-        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
-        <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsRestart</span><span class="p">:</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">zMid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">dsMesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+        <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
+        <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="p">:</span>
             <span class="c1"># only the region outside of ice-shelf cavities</span>
-            <span class="n">openOceanMask</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">==</span> <span class="mi">0</span>
+            <span class="n">openOceanMask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">openOceanMask</span> <span class="o">=</span> <span class="kc">None</span>
 

@@ -18,6 +18,7 @@
       ~ClimatologyMapSeaIceAreaFractionRidge.check_analysis_enabled
       ~ClimatologyMapSeaIceAreaFractionRidge.check_generate
       ~ClimatologyMapSeaIceAreaFractionRidge.close
+      ~ClimatologyMapSeaIceAreaFractionRidge.get_mesh_filename
       ~ClimatologyMapSeaIceAreaFractionRidge.is_alive
       ~ClimatologyMapSeaIceAreaFractionRidge.join
       ~ClimatologyMapSeaIceAreaFractionRidge.kill
