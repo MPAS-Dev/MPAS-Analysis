@@ -119,7 +119,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):
         The name of the output mask file
 
     obsFileName : str
-        The name of an observations file to create masks for.  But default,
+        The name of an observations file to create masks for.  By default,
         lon/lat are taken from an MPAS restart file
 
     lonVar, latVar : str
@@ -268,11 +268,7 @@ class ComputeRegionMasksSubtask(AnalysisTask):
         super(ComputeRegionMasksSubtask, self).setup_and_check()
 
         if self.useMpasMesh:
-            try:
-                self.obsFileName = self.runStreams.readpath('restart')[0]
-            except ValueError:
-                raise IOError('No MPAS restart file found: need at least one '
-                              'restart file to perform region masking.')
+            self.obsFileName = self.get_mesh_filename()
 
         maskSubdirectory = build_config_full_path(self.config, 'output',
                                                   'maskSubdirectory')

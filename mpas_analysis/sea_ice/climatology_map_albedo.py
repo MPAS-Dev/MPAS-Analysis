@@ -250,8 +250,8 @@ class RemapMpasSeaIceAlbedoClimatology(RemapMpasClimatologySubtask):
         """
         Compute the albedo
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         albedo = climatology['timeMonthly_avg_broadbandAlbedo']
 

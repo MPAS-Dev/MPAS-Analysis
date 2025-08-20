@@ -295,11 +295,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
             return
 
         # Load mesh related variables
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for ocean region time series')
+        meshFilename = self.get_mesh_filename()
 
         if config.has_option(sectionName, 'zmin'):
             config_zmin = config.getfloat(sectionName, 'zmin')
@@ -311,13 +307,13 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
         else:
             config_zmax = None
 
-        dsRestart = xarray.open_dataset(restartFileName).isel(Time=0)
-        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell-1,
-                            dsRestart.layerThickness)
-        areaCell = dsRestart.areaCell
-        if 'landIceMask' in dsRestart:
+        dsMesh = xarray.open_dataset(meshFilename).isel(Time=0)
+        zMid = compute_zmid(dsMesh.bottomDepth, dsMesh.maxLevelCell-1,
+                            dsMesh.layerThickness)
+        areaCell = dsMesh.areaCell
+        if 'landIceMask' in dsMesh:
             # only the region outside of ice-shelf cavities
-            openOceanMask = dsRestart.landIceMask == 0
+            openOceanMask = dsMesh.landIceMask == 0
         else:
             openOceanMask = None
 

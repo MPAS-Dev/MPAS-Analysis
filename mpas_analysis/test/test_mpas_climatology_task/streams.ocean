@@ -3,7 +3,7 @@
 <immutable_stream name="mesh"
                   type="none"
                   io_type="pnetcdf"
-                  filename_template="/project/projectdirs/acme/inputdata/ocn/mpas-o/oQU240/ocean.QU.240km.151209.nc"
+                  filename_template="mpaso.rst.0001-01-06_00000.nc"
 />
 <immutable_stream name="input"
                   type="input"
@@ -558,7 +558,7 @@ the analysis data.
 All streams below this line are auxiliary streams. They are provided as
 groupings of fields that one might be interested in. You can either enable the
 stream to write a file for the fileds, or add the stream to another stream that
-will already be written.  
+will already be written.
 -->
 
 <stream name="forcing"

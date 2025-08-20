@@ -315,7 +315,7 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
         logger = self.logger
         config = self.config
 
-        ds_mesh = xr.open_dataset(self.restartFileName)
+        ds_mesh = xr.open_dataset(self.meshFilename)
         var_list = [
             'cellsOnEdge',
             'cellsOnVertex',
@@ -332,6 +332,10 @@ class RemapMpasBSFClimatology(RemapMpasClimatologySubtask):
             'latVertex',
             'areaTriangle',
         ]
+        if 'minLevelCell' not in ds_mesh:
+            # some older meshes don't have this one
+            ds_mesh['minLevelCell'] = xr.ones_like(ds_mesh.maxLevelCell)
+
         ds_mesh = ds_mesh[var_list].as_numpy()
 
         masked_filename = self.get_masked_file_name(season)

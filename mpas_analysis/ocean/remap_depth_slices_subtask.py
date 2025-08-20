@@ -111,8 +111,8 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         # -------
         # Xylar Asay-Davis
 
-        # first, load the land-ice mask from the restart file
-        ds = xr.open_dataset(self.restartFileName)
+        # first, load the land-ice mask from the mesh file
+        ds = xr.open_dataset(self.meshFilename)
         ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
         ds = ds.isel(Time=0)
 

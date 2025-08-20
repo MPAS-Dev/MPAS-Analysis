@@ -250,8 +250,8 @@ class RemapMpasSnowMeltClimatology(RemapMpasClimatologySubtask):
         """
         Compute the snow melt rate in m yr^-1
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         units_scale_factor = 60 * 60 * 24 * 365
 

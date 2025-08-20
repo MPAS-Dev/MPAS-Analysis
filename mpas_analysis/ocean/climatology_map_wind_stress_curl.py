@@ -174,7 +174,7 @@ class RemapMpasWindStressCurl(RemapMpasClimatologySubtask):
         """
         logger = self.logger
 
-        ds_mesh = xr.open_dataset(self.restartFileName)
+        ds_mesh = xr.open_dataset(self.meshFilename)
         var_list = [
             'verticesOnEdge',
             'cellsOnVertex',

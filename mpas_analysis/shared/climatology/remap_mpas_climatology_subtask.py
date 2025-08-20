@@ -62,8 +62,8 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         Descriptors of the comparison grids to use for remapping, with
         grid names as the keys.
 
-    restartFileName : str
-        If ``comparisonGridName`` is not ``None``, the name of a restart
+    meshFilename : str
+        If ``comparisonGridName`` is not ``None``, the name of the mesh
         file from which the MPAS mesh can be read.
 
     useNcremap : bool, optional
@@ -182,6 +182,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             self.useNcremap = useNcremap
 
         self.vertices = vertices
+        self.meshFilename = None
 
     def setup_and_check(self):
         """
@@ -205,12 +206,7 @@ class RemapMpasClimatologySubtask(AnalysisTask):
         #     self.calendar
         super(RemapMpasClimatologySubtask, self).setup_and_check()
 
-        try:
-            self.restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS restart file found: need at least one '
-                          'restart file to perform remapping of '
-                          'climatologies.')
+        self.meshFilename = self.get_mesh_filename()
 
         # we set up the remapper here because ESFM_RegridWeightGen seems to
         # have trouble if it runs in another process (or in several at once)
@@ -419,10 +415,10 @@ class RemapMpasClimatologySubtask(AnalysisTask):
             meshName = config.get('input', 'mpasMeshName')
             if self.vertices:
                 mpasDescriptor = MpasVertexMeshDescriptor(
-                    self.restartFileName, mesh_name=meshName)
+                    self.meshFilename, mesh_name=meshName)
             else:
                 mpasDescriptor = MpasCellMeshDescriptor(
-                    self.restartFileName, mesh_name=meshName)
+                    self.meshFilename, mesh_name=meshName)
             self.mpasMeshName = mpasDescriptor.mesh_name
 
             self.remappers[comparisonGridName] = get_remapper(

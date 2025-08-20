@@ -152,20 +152,15 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         ds.ohc.attrs['units'] = '$10^{22}$ J'
         ds.ohc.attrs['description'] = 'Ocean heat content in each region'
 
-        # Note: restart file, not a mesh file because we need refBottomDepth,
-        # not in a mesh file
-        try:
-            restartFile = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for OHC calculation')
+        meshFile = self.get_mesh_filename()
 
         # Define/read in general variables
-        with xr.open_dataset(restartFile) as dsRestart:
+        with xr.open_dataset(meshFile) as dsMesh:
             # reference depth [m]
             # add depths as a coordinate to the data set
-            ds.coords['depth'] = (('nVertLevels',),
-                                  dsRestart.refBottomDepth.values)
+            ds.coords['depth'] = (
+                ('nVertLevels',), dsMesh.refBottomDepth.values
+            )
 
         return ds
 

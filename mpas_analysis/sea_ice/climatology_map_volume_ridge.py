@@ -251,14 +251,12 @@ class RemapMpasSeaIceVolumeRidgeClimatology(RemapMpasClimatologySubtask):
 
     def _compute_volumeridge(self, climatology):
         """
-        Compute the mean ridge thickness in m 
+        Compute the mean ridge thickness in m
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         volume = climatology['timeMonthly_avg_ridgedIceVolumeAverage']
-        area = climatology['timeMonthly_avg_iceAreaCell']
 
         volumeridge = volume        # volume per unit sea ice area (m)
-#        volumeridge = volume*area   # volume per unit grid cell area (m)
         return volumeridge

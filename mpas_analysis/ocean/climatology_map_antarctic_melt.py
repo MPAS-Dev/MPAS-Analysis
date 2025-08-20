@@ -333,8 +333,8 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):
         # -------
         # Xylar Asay-Davis
 
-        # first, load the land-ice mask from the restart file
-        dsLandIceMask = xr.open_dataset(self.restartFileName)
+        # first, load the land-ice mask from the mesh file
+        dsLandIceMask = xr.open_dataset(self.meshFilename)
         dsLandIceMask = dsLandIceMask[['landIceMask']]
         dsLandIceMask = dsLandIceMask.isel(Time=0)
         self.landIceMask = dsLandIceMask.landIceMask > 0.
@@ -555,12 +555,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 cellMasks = \
                     dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
-                restartFileName = \
-                    self.runStreams.readpath('restart')[0]
+                meshFilename = self.get_mesh_filename()
 
-                dsRestart = xr.open_dataset(restartFileName)
-                landIceFraction = dsRestart.landIceFraction.isel(Time=0)
-                areaCell = dsRestart.areaCell
+                dsMesh = xr.open_dataset(meshFilename)
+                landIceFraction = dsMesh.landIceFraction.isel(Time=0)
+                areaCell = dsMesh.areaCell
 
                 # convert from kg/s to kg/yr
                 totalMeltFlux = constants.sec_per_year * \
