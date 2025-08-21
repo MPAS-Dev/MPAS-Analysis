@@ -349,7 +349,7 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         dsMesh = xr.open_dataset(meshFilename)
         dsMesh = dsMesh.isel(Time=0)
         areaCell = dsMesh.areaCell
-        landIceFraction = dsMesh.landIceFraction.isel(Time=0)
+        landIceFraction = dsMesh.landIceFraction
         landIceFraction = xr.where(landIceFraction > 0, 1, landIceFraction)
         landIceFraction = -1*(landIceFraction-1)
 
