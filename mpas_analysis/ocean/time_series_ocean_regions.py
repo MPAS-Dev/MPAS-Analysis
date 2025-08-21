@@ -1350,7 +1350,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             # and cartopy doesn't play too well with tight_layout anyway
             plt.tight_layout()
 
-            add_inset(fig, fc, width=2.0, height=2.0)
+            #add_inset(fig, fc, width=2.0, height=2.0)
 
             savefig(outFileName, config, tight=False)
 
