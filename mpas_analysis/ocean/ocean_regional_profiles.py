@@ -349,8 +349,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         dsMesh = xr.open_dataset(meshFilename)
         dsMesh = dsMesh.isel(Time=0)
         areaCell = dsMesh.areaCell
-        landIceFloatingMask = dsMesh.landIceFloatingMask.isel(Time=0)
-        landIceFloatingMask = -1*(landIceFloatingMask-1)
+        landIceFraction = dsMesh.landIceFraction.isel(Time=0)
+        landIceFraction = xr.where(landIceFraction > 0, 1, landIceFraction)
+        landIceFraction = -1*(landIceFraction-1)
 
         nVertLevels = dsMesh.sizes['nVertLevels']
 
@@ -412,8 +413,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 var_mpas = dsLocal[variableName]
                 print('DIMS-------------')
                 print(var_mpas.dims)
-                print(landIceFloatingMask.dims)
-                var_mpas_masked = var_mpas*landIceFloatingMask
+                print(landIceFraction.dims)
+                var_mpas_masked = var_mpas*landIceFraction
                 print(var_mpas_masked.dims)
                 var = var_mpas_masked.where(vertDepthMask)
                 print(var.dims)
