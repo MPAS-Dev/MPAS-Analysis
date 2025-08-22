@@ -411,13 +411,8 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 self.logger.info('      {}'.format(field['titleName']))
 
                 var_mpas = dsLocal[variableName]
-                print('DIMS-------------')
-                print(var_mpas.dims)
-                print(landIceFraction.dims)
                 var_mpas_masked = var_mpas*landIceFraction
-                print(var_mpas_masked.dims)
                 var = var_mpas_masked.where(vertDepthMask)
-                print(var.dims)
 
                 meanName = '{}_mean'.format(prefix)
                 dsLocal[meanName] = \
