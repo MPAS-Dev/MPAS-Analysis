@@ -342,7 +342,7 @@ class ComputeMeltSubtask(AnalysisTask):
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
         dsOut['regionNames'] = dsRegionMask.regionNames
-        dsOut.integratedMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+        dsOut.integratedMeltFlux.attrs['units'] = 'Gt a$^{-1}$'
         dsOut.integratedMeltFlux.attrs['description'] = \
             'Integrated melt flux summed over each ice shelf or region'
         dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
@@ -662,7 +662,7 @@ class PlotMeltSubtask(AnalysisTask):
         suffix = self.iceShelf.replace(' ', '_')
 
         xLabel = 'Time (yr)'
-        yLabel = 'Melt Flux (GT/yr)'
+        yLabel = 'Melt Flux (Gt/yr)'
 
         timeSeries = integratedMeltFlux.isel(nRegions=self.regionIndex)
 
