@@ -789,7 +789,6 @@ class PlotMeltSubtask(AnalysisTask):
         # and cartopy doesn't play too well with tight_layout anyway
         plt.tight_layout()
 
-        #add_inset(fig, fc, width=2.0, height=2.0)
         add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
         savefig(outFileName, config)
