@@ -242,7 +242,7 @@ super class's ``__init__()`` method:
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -252,7 +252,7 @@ super class's ``__init__()`` method:
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
 
@@ -303,7 +303,7 @@ find something unexpected:
 
         depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
                                             'depthRanges',
-                                            use_numpyfunc=True)
+                                            allow_numpy=True)
 
 By default, these config options look like this:
 
@@ -904,7 +904,7 @@ here is the full analysis task as described in this tutorial:
 
             Parameters
             ----------
-            config : mpas_tools.config.MpasConfigParser
+            config : tranche.Tranche
                 Configuration options
 
             mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -914,7 +914,7 @@ here is the full analysis task as described in this tutorial:
                 The task that produced the climatology from the first year to be
                 remapped and then subtracted from the main climatology
 
-            control_config : mpas_tools.config.MpasConfigParser, optional
+            control_config : tranche.Tranche, optional
                 Configuration options for a control run (if any)
             """
 
@@ -946,7 +946,7 @@ here is the full analysis task as described in this tutorial:
 
             depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
                                                 'depthRanges',
-                                                use_numpyfunc=True)
+                                                allow_numpy=True)
 
             mpas_field_name = 'deltaOHC'
 

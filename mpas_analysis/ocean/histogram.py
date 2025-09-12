@@ -42,7 +42,7 @@ class OceanHistogram(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -51,7 +51,7 @@ class OceanHistogram(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run (if any)
         """
 
@@ -293,7 +293,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     mpasClimatologyTask : ``MpasClimatologyTask``
@@ -333,7 +333,7 @@ class PlotRegionHistogramSubtask(AnalysisTask):
         regionName : str
             Name of the region to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         sectionName : str

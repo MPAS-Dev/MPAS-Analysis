@@ -50,13 +50,13 @@ class OceanRegionalProfiles(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -616,7 +616,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):
     field : dict
         Information about the field (e.g. temperature) being plotted
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any)
     """
     # Authors
@@ -653,7 +653,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):
         startYear, endYear : int
             The beginning and end of the time series to compute
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors

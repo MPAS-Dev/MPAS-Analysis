@@ -29,7 +29,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
     analysis : ``OrderedDict`` of ``AnalysisTask`` objects
@@ -38,7 +38,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
         the list of files to include on the webpage for the associated
         component.
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     customConfigFiles : list of str
@@ -108,10 +108,10 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     customConfigFiles : list of str
@@ -136,10 +136,10 @@ class MainPage(object):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Config options
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Config options for a control run
 
         customConfigFiles : list of str
@@ -302,10 +302,10 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     name : str
@@ -334,7 +334,7 @@ class ComponentPage(object):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Config options
 
         name : str
@@ -345,7 +345,7 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Config options for a control run
         """
         # Authors
@@ -387,7 +387,7 @@ class ComponentPage(object):
         xmlFileName : str
             The full path to the XML file describing the image to be added
 
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             contains config options
 
         components : OrederdDict of dict
@@ -396,7 +396,7 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Config options for a control run
         """
         # Authors

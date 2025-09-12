@@ -69,7 +69,7 @@ class RegionalTSDiagrams(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -78,7 +78,7 @@ class RegionalTSDiagrams(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -471,7 +471,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     mpasClimatologyTask : ``MpasClimatologyTask``
@@ -510,7 +510,7 @@ class ComputeRegionTSSubtask(AnalysisTask):
         regionName : str
             Name of the region to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -795,7 +795,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     mpasClimatologyTask : ``MpasClimatologyTask``
@@ -834,7 +834,7 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         regionName : str
             Name of the region to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -1010,8 +1010,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
-        Tbins = config.getexpression(sectionName, 'Tbins', use_numpyfunc=True)
-        Sbins = config.getexpression(sectionName, 'Sbins', use_numpyfunc=True)
+        Tbins = config.getexpression(sectionName, 'Tbins', allow_numpy=True)
+        Sbins = config.getexpression(sectionName, 'Sbins', allow_numpy=True)
 
         normType = config.get(sectionName, 'normType')
 
@@ -1207,9 +1207,9 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         sectionName = self.sectionName
         cmap = config.get(sectionName, 'colorMap')
         Tbins = config.getexpression(sectionName, 'Tbins',
-                                     use_numpyfunc=True)
+                                     allow_numpy=True)
         Sbins = config.getexpression(sectionName, 'Sbins',
-                                     use_numpyfunc=True)
+                                     allow_numpy=True)
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
                                        weights=volume, cmap=cmap, zorder=1,

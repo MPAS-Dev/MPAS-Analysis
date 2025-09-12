@@ -45,14 +45,14 @@ class WoaTransects(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -80,7 +80,7 @@ class WoaTransects(AnalysisTask):
             verticalComparisonGrid = None
         else:
             verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
+                sectionName, 'verticalComparisonGrid', allow_numpy=True)
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
@@ -202,7 +202,7 @@ class WoaTransectsObservations(TransectsObservations):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         horizontalResolution : str
@@ -363,7 +363,7 @@ class WoaTransectsObservations(TransectsObservations):
 
 def _get_longitudes(config):
     longitudes = config.getexpression('woaTransects', 'longitudes',
-                                      use_numpyfunc=True)
+                                      allow_numpy=True)
     longitudes = np.array(longitudes)
     # make sure longitudes are between -180 and 180
     longitudes = np.sort(np.mod(longitudes + 180., 360.) - 180.)

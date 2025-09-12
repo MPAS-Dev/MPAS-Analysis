@@ -50,7 +50,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -59,7 +59,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run
         """
         # Authors
@@ -460,7 +460,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run (if any)
 
         regionMasksTask : ``ComputeRegionMasks``

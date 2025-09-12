@@ -56,7 +56,7 @@ class PlotTransectSubtask(AnalysisTask):
     plotObs : bool, optional
         Whether to plot against observations.
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any), ignored if
         ``plotObs == True``
 
@@ -133,7 +133,7 @@ class PlotTransectSubtask(AnalysisTask):
         plotObs : bool, optional
             Whether to plot against observations.
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any), ignored if
             ``plotObs == True``
 

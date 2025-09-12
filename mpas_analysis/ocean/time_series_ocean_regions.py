@@ -44,13 +44,13 @@ class TimeSeriesOceanRegions(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1046,7 +1046,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     """
@@ -1076,7 +1076,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the region to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         sectionName : str

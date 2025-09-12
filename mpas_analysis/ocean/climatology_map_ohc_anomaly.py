@@ -39,7 +39,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -49,7 +49,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
 
@@ -81,7 +81,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
 
         depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
                                             'depthRanges',
-                                            use_numpyfunc=True)
+                                            allow_numpy=True)
 
         mpas_field_name = 'deltaOHC'
 

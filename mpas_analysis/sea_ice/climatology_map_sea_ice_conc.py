@@ -38,7 +38,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -47,7 +47,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors

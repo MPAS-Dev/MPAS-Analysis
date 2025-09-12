@@ -103,7 +103,7 @@ def setup_colormap(config, configSectionName, suffix=''):
     if config.has_option(configSectionName, option):
         contours = config.getexpression(configSectionName,
                                         option,
-                                        use_numpyfunc=True)
+                                        allow_numpy=True)
         if isinstance(contours, str) and contours == 'none':
             contours = None
 
@@ -390,7 +390,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
     try:
         ticks = config.getexpression(
             configSectionName, f'colorbarTicks{suffix}',
-            use_numpyfunc=True)
+            allow_numpy=True)
     except configparser.NoOptionError:
         ticks = None
 
@@ -433,12 +433,12 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
 
     indices = config.getexpression(configSectionName,
                                    f'colormapIndices{suffix}',
-                                   use_numpyfunc=True)
+                                   allow_numpy=True)
 
     try:
         levels = config.getexpression(
             configSectionName, f'colorbarLevels{suffix}',
-            use_numpyfunc=True)
+            allow_numpy=True)
     except configparser.NoOptionError:
         levels = None
 
@@ -465,7 +465,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     try:
         ticks = config.getexpression(
             configSectionName, f'colorbarTicks{suffix}',
-            use_numpyfunc=True)
+            allow_numpy=True)
     except configparser.NoOptionError:
         ticks = levels
 

@@ -41,7 +41,7 @@ class TimeSeriesSeaIce(AnalysisTask):
     mpasTimeSeriesTask : ``MpasTimeSeriesTask``
         The task that extracts the time series from MPAS monthly output
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any)
 
     """
@@ -56,13 +56,13 @@ class TimeSeriesSeaIce(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
             The task that extracts the time series from MPAS monthly output
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors

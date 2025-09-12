@@ -33,7 +33,7 @@ class AnalysisTask(Process):
 
     Attributes
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     taskName : str
@@ -110,7 +110,7 @@ class AnalysisTask(Process):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         taskName :  str

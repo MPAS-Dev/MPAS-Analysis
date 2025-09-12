@@ -11,7 +11,7 @@
 
 from io import StringIO
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.shared.climatology import MpasClimatologyTask
 from mpas_analysis.shared.timekeeping.utility import get_simulation_start_time
@@ -39,7 +39,7 @@ class RefYearMpasClimatologyTask(MpasClimatologyTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Contains configuration options
 
         componentName : {'ocean', 'seaIce'}

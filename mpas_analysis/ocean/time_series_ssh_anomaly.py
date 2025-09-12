@@ -36,7 +36,7 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
     timeSeriesFileName : str
         The name of the file where the ssh anomaly is stored
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Configuration options for a control run (if one is provided)
 
     filePrefix : str
@@ -53,13 +53,13 @@ class TimeSeriesSSHAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasTimeSeriesTask : mpas_analysis.shared.time_series.MpasTimeSeriesTask
             The task that extracts the time series from MPAS monthly output
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run (if any)
         """
         # Authors

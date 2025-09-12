@@ -141,7 +141,7 @@ class PlotClimatologyMapSubtask(AnalysisTask):
             A second subtask for remapping another MPAS climatology to plot
             in the second panel and compare with in the third panel
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         depth : {float, 'top', 'bot'}, optional

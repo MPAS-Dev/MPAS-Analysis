@@ -34,7 +34,7 @@ class ClimatologyMapSeaIceVolumeTendencyThermo(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -43,7 +43,7 @@ class ClimatologyMapSeaIceVolumeTendencyThermo(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
