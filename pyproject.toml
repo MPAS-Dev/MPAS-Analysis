@@ -2,7 +2,7 @@
 name = "mpas_analysis"
 dynamic = ["version"]
 authors = [
-    { name="Xylar Asay-Davis", email="xylar@lanl.gov" },
+    { name="Xylar Asay-Davis", email="xylarstorm@gmail.com" },
     { name="Carolyn Begeman" },
     { name="Phillip J. Wolfram" },
     { name="Milena Veneziani" },
