@@ -45,7 +45,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "cartopy>=0.18.0",
+    "cartopy >=0.18.0",
     "cmocean",
     "dask",
     "gsw",
@@ -59,10 +59,10 @@ dependencies = [
     "pyproj",
     "python-dateutil",
     "requests",
-    "scipy>=1.7.0",
-    "setuptools",
-    "shapely>=2.0,<3.0",
-    "xarray>=0.14.1"
+    "scipy >=1.7.0",
+    "setuptools >=60",
+    "shapely >=2.0,<3.0",
+    "xarray >=0.14.1"
 ]
 
 [project.optional-dependencies]

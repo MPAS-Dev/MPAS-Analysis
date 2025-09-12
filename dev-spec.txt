@@ -27,7 +27,7 @@ pyremap >=2.0.0,<3.0.0
 python-dateutil
 requests
 scipy >=1.7.0
-setuptools
+setuptools >=60
 shapely>=2.0,<3.0
 xarray>=0.14.1
 
