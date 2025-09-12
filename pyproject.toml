@@ -1,5 +1,5 @@
 [project]
-name = "mpas_analysis"
+name = "mpas-analysis"
 dynamic = ["version"]
 authors = [
     { name="Xylar Asay-Davis", email="xylarstorm@gmail.com" },
