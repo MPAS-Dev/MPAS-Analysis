@@ -5,8 +5,8 @@ set -e
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
 
-main_py=3.11
-alt_py=3.10
+main_py=3.13
+alt_py=3.12
 
 export HDF5_USE_FILE_LOCKING=FALSE
 
@@ -41,7 +41,7 @@ conda deactivate
 py=${main_py}
 conda activate test_mpas_analysis_py${py}
 cd docs
-DOCS_VERSION=test make clean versioned-html 
+DOCS_VERSION=test make clean versioned-html
 cd ..
 
 machine=$(python -c "from mache import discover_machine; print(discover_machine())")
