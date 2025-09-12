@@ -62,7 +62,6 @@ dependencies = [
     "scipy>=1.7.0",
     "setuptools",
     "shapely>=2.0,<3.0",
-    "six",
     "xarray>=0.14.1"
 ]
 
