@@ -301,9 +301,8 @@ find something unexpected:
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
-                                            'depthRanges',
-                                            allow_numpy=True)
+        depth_ranges = config.getnumpy('climatologyMapOHCAnomaly',
+                                       'depthRanges')
 
 By default, these config options look like this:
 
@@ -944,9 +943,8 @@ here is the full analysis task as described in this tutorial:
                 raise ValueError(f'config section {section_name} does not contain '
                                  f'valid list of comparison grids')
 
-            depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
-                                                'depthRanges',
-                                                allow_numpy=True)
+            depth_ranges = config.getnumpy('climatologyMapOHCAnomaly',
+                                           'depthRanges')
 
             mpas_field_name = 'deltaOHC'
 
