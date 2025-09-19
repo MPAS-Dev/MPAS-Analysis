@@ -67,8 +67,9 @@ class OsnapTransects(AnalysisTask):
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', allow_numpy=True)
+            verticalComparisonGrid = config.getnumpy(
+                sectionName, 'verticalComparisonGrid'
+            )
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 

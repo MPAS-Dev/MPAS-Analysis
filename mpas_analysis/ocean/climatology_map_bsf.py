@@ -62,9 +62,7 @@ class ClimatologyMapBSF(AnalysisTask):
 
         # read in what seasons we want to plot
         seasons = config.getexpression(section_name, 'seasons')
-        depth_ranges = config.getexpression(section_name,
-                                            'depthRanges',
-                                            allow_numpy=True)
+        depth_ranges = config.getnumpy(section_name, 'depthRanges')
         if len(seasons) == 0:
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of seasons')

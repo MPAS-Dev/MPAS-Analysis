@@ -663,8 +663,8 @@ def plot_projection_comparison(
     else:
         figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
-    latLines = config.getexpression(section, 'latLines', allow_numpy=True)
-    lonLines = config.getexpression(section, 'lonLines', allow_numpy=True)
+    latLines = config.getnumpy(section, 'latLines')
+    lonLines = config.getnumpy(section, 'lonLines')
 
     # put latitude labels on the left unless we're in a polar projection
     left_labels = projectionName not in ['arctic', 'antarctic']

@@ -79,8 +79,9 @@ class WoaTransects(AnalysisTask):
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', allow_numpy=True)
+            verticalComparisonGrid = config.getnumpy(
+                sectionName, 'verticalComparisonGrid'
+            )
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
@@ -362,8 +363,7 @@ class WoaTransectsObservations(TransectsObservations):
 
 
 def _get_longitudes(config):
-    longitudes = config.getexpression('woaTransects', 'longitudes',
-                                      allow_numpy=True)
+    longitudes = config.getnumpy('woaTransects', 'longitudes')
     longitudes = np.array(longitudes)
     # make sure longitudes are between -180 and 180
     longitudes = np.sort(np.mod(longitudes + 180., 360.) - 180.)

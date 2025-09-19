@@ -79,13 +79,13 @@ class SoseTransects(AnalysisTask):
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', allow_numpy=True)
+            verticalComparisonGrid = config.getnumpy(
+                sectionName, 'verticalComparisonGrid'
+            )
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        longitudes = sorted(config.getexpression(sectionName, 'longitudes',
-                                                 allow_numpy=True))
+        longitudes = sorted(config.getnumpy(sectionName, 'longitudes'))
 
         fields = \
             [{'prefix': 'temperature',
@@ -295,8 +295,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         config = self.config
 
-        longitudes = sorted(config.getexpression('soseTransects', 'longitudes',
-                                                 allow_numpy=True))
+        longitudes = sorted(config.getnumpy('soseTransects', 'longitudes'))
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'soseSubdirectory')

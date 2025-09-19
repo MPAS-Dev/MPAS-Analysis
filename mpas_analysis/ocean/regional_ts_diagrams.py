@@ -1010,8 +1010,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
             plotFields.append({'S': obsS, 'T': obsT, 'z': obsZ, 'vol': obsVol,
                                'title': obsName})
 
-        Tbins = config.getexpression(sectionName, 'Tbins', allow_numpy=True)
-        Sbins = config.getexpression(sectionName, 'Sbins', allow_numpy=True)
+        Tbins = config.getnumpy(sectionName, 'Tbins')
+        Sbins = config.getnumpy(sectionName, 'Sbins')
 
         normType = config.get(sectionName, 'normType')
 
@@ -1206,10 +1206,8 @@ class PlotRegionTSDiagramSubtask(AnalysisTask):
         config = self.config
         sectionName = self.sectionName
         cmap = config.get(sectionName, 'colorMap')
-        Tbins = config.getexpression(sectionName, 'Tbins',
-                                     allow_numpy=True)
-        Sbins = config.getexpression(sectionName, 'Sbins',
-                                     allow_numpy=True)
+        Tbins = config.getnumpy(sectionName, 'Tbins')
+        Sbins = config.getnumpy(sectionName, 'Sbins')
 
         hist, _, _, panel = plt.hist2d(S, T, bins=[Sbins, Tbins],
                                        weights=volume, cmap=cmap, zorder=1,

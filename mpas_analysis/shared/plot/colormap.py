@@ -101,9 +101,7 @@ def setup_colormap(config, configSectionName, suffix=''):
 
     option = f'contourLevels{suffix}'
     if config.has_option(configSectionName, option):
-        contours = config.getexpression(configSectionName,
-                                        option,
-                                        allow_numpy=True)
+        contours = config.getnumpy(configSectionName, option)
         if isinstance(contours, str) and contours == 'none':
             contours = None
 
@@ -388,9 +386,7 @@ def _setup_colormap_and_norm(config, configSectionName, suffix=''):
                          f'{configSectionName}')
 
     try:
-        ticks = config.getexpression(
-            configSectionName, f'colorbarTicks{suffix}',
-            allow_numpy=True)
+        ticks = config.getnumpy(configSectionName, f'colorbarTicks{suffix}')
     except configparser.NoOptionError:
         ticks = None
 
@@ -431,14 +427,10 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     colormap = plt.get_cmap(config.get(configSectionName,
                                        f'colormapName{suffix}'))
 
-    indices = config.getexpression(configSectionName,
-                                   f'colormapIndices{suffix}',
-                                   allow_numpy=True)
+    indices = config.getnumpy(configSectionName, f'colormapIndices{suffix}')
 
     try:
-        levels = config.getexpression(
-            configSectionName, f'colorbarLevels{suffix}',
-            allow_numpy=True)
+        levels = config.getnumpy(configSectionName, f'colorbarLevels{suffix}')
     except configparser.NoOptionError:
         levels = None
 
@@ -463,9 +455,7 @@ def _setup_indexed_colormap(config, configSectionName, suffix=''):
     norm = cols.BoundaryNorm(levels, colormap.N)
 
     try:
-        ticks = config.getexpression(
-            configSectionName, f'colorbarTicks{suffix}',
-            allow_numpy=True)
+        ticks = config.getnumpy(configSectionName, f'colorbarTicks{suffix}')
     except configparser.NoOptionError:
         ticks = levels
 

@@ -79,9 +79,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
-                                            'depthRanges',
-                                            allow_numpy=True)
+        depth_ranges = config.getnumpy(
+            'climatologyMapOHCAnomaly', 'depthRanges'
+        )
 
         mpas_field_name = 'deltaOHC'
 
