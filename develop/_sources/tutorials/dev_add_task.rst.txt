@@ -610,13 +610,13 @@ renaming the task are:
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
             The task that produced the climatology to be remapped and plotted
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
 
@@ -1197,13 +1197,13 @@ described in this tutorial:
 
             Parameters
             ----------
-            config : mpas_tools.config.MpasConfigParser
+            config : tranche.Tranche
                 Configuration options
 
             mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
                 The task that produced the climatology to be remapped and plotted
 
-            control_config : mpas_tools.config.MpasConfigParser, optional
+            control_config : tranche.Tranche, optional
                 Configuration options for a control run (if any)
             """
 

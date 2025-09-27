@@ -147,14 +147,14 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 <span class="sd">            as a transect</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -181,8 +181,9 @@
         <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">,</span> <span class="s1">&#39;obs&#39;</span><span class="p">]:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalComparisonGrid&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span>
+                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalComparisonGrid&#39;</span>
+            <span class="p">)</span>
 
         <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalBounds&#39;</span><span class="p">)</span>
 
@@ -306,7 +307,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        horizontalResolution : str</span>
@@ -466,8 +467,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="n">longitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;longitudes&#39;</span><span class="p">,</span>
-                                      <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">longitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;longitudes&#39;</span><span class="p">)</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span>
     <span class="c1"># make sure longitudes are between -180 and 180</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">longitudes</span> <span class="o">+</span> <span class="mf">180.</span><span class="p">,</span> <span class="mf">360.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span><span class="p">)</span>

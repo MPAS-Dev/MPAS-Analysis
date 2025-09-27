@@ -135,7 +135,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">mache</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_machine</span><span class="p">,</span> <span class="n">MachineInfo</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpas_tools.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">MpasConfigParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tranche</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tranche</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.analysis_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisFormatter</span>
 
@@ -168,7 +168,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -188,10 +188,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        contains config options</span>
 
-<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser or None</span>
+<span class="sd">    controlConfig : tranche.Tranche or None</span>
 <span class="sd">        contains config options for a control run, or ``None`` if no config</span>
 <span class="sd">        file for a control run was specified</span>
 
@@ -697,7 +697,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    generate : str</span>
@@ -727,7 +727,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        contains config options</span>
 
 <span class="sd">    analyses : OrderedDict of ``AnalysisTask`` objects</span>
@@ -985,7 +985,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">user_config_file</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;A config file </span><span class="si">{</span><span class="n">user_config_file</span><span class="si">}</span><span class="s1"> was specified but &#39;</span>
                       <span class="sa">f</span><span class="s1">&#39;the file does not exist&#39;</span><span class="p">)</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">MpasConfigParser</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Tranche</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">config_file</span> <span class="ow">in</span> <span class="n">shared_configs</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">config_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">):</span>
             <span class="c1"># we&#39;ll skip config options set in python files</span>
@@ -1171,7 +1171,7 @@
         <span class="n">parser</span><span class="o">.</span><span class="n">print_help</span><span class="p">()</span>
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-    <span class="n">config</span> <span class="o">=</span> <span class="n">MpasConfigParser</span><span class="p">()</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">Tranche</span><span class="p">()</span>
 
     <span class="c1"># add default.cfg to cover default not included in the config files</span>
     <span class="c1"># provided on the command line</span>

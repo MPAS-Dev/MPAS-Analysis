@@ -161,7 +161,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -380,7 +380,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -579,7 +579,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        the configuration, containing a [plot] section with options that</span>
 <span class="sd">        control plotting</span>
 
@@ -767,8 +767,8 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">figsize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;threePanelHorizFigSize&#39;</span><span class="p">)</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">131</span><span class="p">,</span> <span class="mi">132</span><span class="p">,</span> <span class="mi">133</span><span class="p">]</span>
-    <span class="n">latLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;latLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">lonLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;lonLines&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">latLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;latLines&#39;</span><span class="p">)</span>
+    <span class="n">lonLines</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;lonLines&#39;</span><span class="p">)</span>
 
     <span class="c1"># put latitude labels on the left unless we&#39;re in a polar projection</span>
     <span class="n">left_labels</span> <span class="o">=</span> <span class="n">projectionName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>

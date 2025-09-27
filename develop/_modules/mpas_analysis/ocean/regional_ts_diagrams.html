@@ -171,7 +171,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -180,7 +180,7 @@
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
 <span class="sd">            A task for computing region masks</span>
 
-<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlConfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -575,7 +575,7 @@
 <span class="sd">    sectionName : str</span>
 <span class="sd">        The section of the config file to get options from</span>
 
-<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    controlConfig : tranche.Tranche</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
 <span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -614,7 +614,7 @@
 <span class="sd">        regionName : str</span>
 <span class="sd">            Name of the region to plot</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        sectionName : str</span>
@@ -899,7 +899,7 @@
 <span class="sd">    sectionName : str</span>
 <span class="sd">        The section of the config file to get options from</span>
 
-<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    controlConfig : tranche.Tranche</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
 <span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -938,7 +938,7 @@
 <span class="sd">        regionName : str</span>
 <span class="sd">            Name of the region to plot</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        sectionName : str</span>
@@ -1114,8 +1114,8 @@
             <span class="n">plotFields</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">obsS</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">obsT</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">obsZ</span><span class="p">,</span> <span class="s1">&#39;vol&#39;</span><span class="p">:</span> <span class="n">obsVol</span><span class="p">,</span>
                                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">obsName</span><span class="p">})</span>
 
-        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">)</span>
+        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">)</span>
 
         <span class="n">normType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normType&#39;</span><span class="p">)</span>
 
@@ -1310,10 +1310,8 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;colorMap&#39;</span><span class="p">)</span>
-        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">,</span>
-                                     <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">,</span>
-                                     <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">)</span>
+        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">)</span>
 
         <span class="n">hist</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="n">Sbins</span><span class="p">,</span> <span class="n">Tbins</span><span class="p">],</span>
                                        <span class="n">weights</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>

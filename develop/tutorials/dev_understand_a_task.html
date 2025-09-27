@@ -320,7 +320,7 @@ super class’s <code class="docutils literal notranslate"><span class="pre">__i
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        Configuration options</span>
 
 <span class="sd">    mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
@@ -330,7 +330,7 @@ super class’s <code class="docutils literal notranslate"><span class="pre">__i
 <span class="sd">        The task that produced the climatology from the first year to be</span>
 <span class="sd">        remapped and then subtracted from the main climatology</span>
 
-<span class="sd">    control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">    control_config : tranche.Tranche, optional</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -375,9 +375,8 @@ find something unexpected:</p>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
                      <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
-<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;depthRanges&#39;</span><span class="p">,</span>
-                                    <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, these config options look like this:</p>
@@ -925,7 +924,7 @@ here is the full analysis task as described in this tutorial:</p>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
@@ -935,7 +934,7 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">            The task that produced the climatology from the first year to be</span>
 <span class="sd">            remapped and then subtracted from the main climatology</span>
 
-<span class="sd">        control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        control_config : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -965,9 +964,8 @@ here is the full analysis task as described in this tutorial:</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
                              <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
-        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;depthRanges&#39;</span><span class="p">,</span>
-                                            <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
 
         <span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
 
