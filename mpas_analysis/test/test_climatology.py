@@ -23,7 +23,7 @@ import numpy
 import xarray
 from pyremap import MpasCellMeshDescriptor, LatLonGridDescriptor
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -47,7 +47,7 @@ class TestClimatology(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasConfigParser()
+        config = Tranche()
 
         config.set('execute', 'mapParallelExec', 'None')
         config.set('execute', 'mapMpiTasks', '1')

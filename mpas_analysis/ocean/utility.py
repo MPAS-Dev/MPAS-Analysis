@@ -30,7 +30,7 @@ def add_standard_regions_and_subset(ds, config, regionShortNames=None):
     ds : xarray.Dataset
         the dataset to which region names should be added
 
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     regionShortNames : list of str, optional
@@ -63,7 +63,7 @@ def get_standard_region_names(config, regionShortNames):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     regionShortNames : list of str

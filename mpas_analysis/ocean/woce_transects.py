@@ -35,14 +35,14 @@ class WoceTransects(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -69,8 +69,9 @@ class WoceTransects(AnalysisTask):
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
+            verticalComparisonGrid = config.getnumpy(
+                sectionName, 'verticalComparisonGrid'
+            )
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 

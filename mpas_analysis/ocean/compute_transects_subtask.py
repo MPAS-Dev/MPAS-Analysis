@@ -670,7 +670,7 @@ class TransectsObservations(object):
     Attributes
     ----------
 
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     obsFileNames : OrderedDict
@@ -700,7 +700,7 @@ class TransectsObservations(object):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         obsFileNames : OrderedDict

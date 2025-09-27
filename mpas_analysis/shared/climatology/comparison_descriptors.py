@@ -34,7 +34,7 @@ def get_comparison_descriptor(config, comparison_grid_name):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     comparison_grid_name : {'latlon', 'antarctic', 'arctic', 'north_atlantic',
@@ -71,7 +71,7 @@ def _get_lat_lon_comparison_descriptor(config):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     Returns
@@ -105,7 +105,7 @@ def _get_projection_comparison_descriptor(config, comparison_grid_name):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     comparison_grid_name : str

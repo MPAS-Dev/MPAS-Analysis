@@ -45,14 +45,14 @@ class SoseTransects(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
             as a transect
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -79,13 +79,13 @@ class SoseTransects(AnalysisTask):
         if verticalComparisonGridName in ['mpas', 'obs']:
             verticalComparisonGrid = None
         else:
-            verticalComparisonGrid = config.getexpression(
-                sectionName, 'verticalComparisonGrid', use_numpyfunc=True)
+            verticalComparisonGrid = config.getnumpy(
+                sectionName, 'verticalComparisonGrid'
+            )
 
         verticalBounds = config.getexpression(sectionName, 'verticalBounds')
 
-        longitudes = sorted(config.getexpression(sectionName, 'longitudes',
-                                                 use_numpyfunc=True))
+        longitudes = sorted(config.getnumpy(sectionName, 'longitudes'))
 
         fields = \
             [{'prefix': 'temperature',
@@ -236,7 +236,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         horizontalResolution : str
@@ -295,8 +295,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         config = self.config
 
-        longitudes = sorted(config.getexpression('soseTransects', 'longitudes',
-                                                 use_numpyfunc=True))
+        longitudes = sorted(config.getnumpy('soseTransects', 'longitudes'))
 
         observationsDirectory = build_obs_path(
             config, 'ocean', 'soseSubdirectory')

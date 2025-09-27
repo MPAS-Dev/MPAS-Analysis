@@ -48,6 +48,7 @@ requirements:
     - requests
     - scipy >=1.7.0
     - shapely >=2.0,<3.0
+    - tranche >=0.2.3
     - xarray >=0.14.1
 
 test:

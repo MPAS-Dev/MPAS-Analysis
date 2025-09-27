@@ -50,7 +50,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
@@ -59,7 +59,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -431,7 +431,7 @@ class PlotMeltSubtask(AnalysisTask):
     regionIndex : int
         The index into the dimension ``nRegions`` of the ice shelf to plot
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     """
@@ -456,7 +456,7 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors

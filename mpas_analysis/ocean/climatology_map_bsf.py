@@ -40,13 +40,13 @@ class ClimatologyMapBSF(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
             The task that produced the climatology to be remapped and plotted
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """  # noqa: E501
         field_name = 'barotropicStreamfunction'
@@ -62,9 +62,7 @@ class ClimatologyMapBSF(AnalysisTask):
 
         # read in what seasons we want to plot
         seasons = config.getexpression(section_name, 'seasons')
-        depth_ranges = config.getexpression(section_name,
-                                            'depthRanges',
-                                            use_numpyfunc=True)
+        depth_ranges = config.getnumpy(section_name, 'depthRanges')
         if len(seasons) == 0:
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of seasons')

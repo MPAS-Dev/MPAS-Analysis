@@ -18,7 +18,7 @@ Xylar Asay-Davis
 import numpy
 import pytest
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -29,7 +29,7 @@ from mpas_analysis.shared.generalized_reader.generalized_reader \
 class TestGeneralizedReader(TestCase):
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasConfigParser()
+        config = Tranche()
         config.set('input', 'maxChunkSize', str(maxChunkSize))
         return config
 

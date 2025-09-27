@@ -39,7 +39,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -49,7 +49,7 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
             The task that produced the climatology from the first year to be
             remapped and then subtracted from the main climatology
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
 
@@ -79,9 +79,9 @@ class ClimatologyMapOHCAnomaly(AnalysisTask):
             raise ValueError(f'config section {section_name} does not contain '
                              f'valid list of comparison grids')
 
-        depth_ranges = config.getexpression('climatologyMapOHCAnomaly',
-                                            'depthRanges',
-                                            use_numpyfunc=True)
+        depth_ranges = config.getnumpy(
+            'climatologyMapOHCAnomaly', 'depthRanges'
+        )
 
         mpas_field_name = 'deltaOHC'
 

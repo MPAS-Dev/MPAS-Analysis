@@ -112,7 +112,7 @@ def build_config_full_path(config, section, relativePathOption,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         configuration from which to read the path
 
     section : str
@@ -163,7 +163,7 @@ def get_region_mask(config, regionMaskFile):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         configuration from which to read the path
 
     regionMaskFile : str
@@ -223,7 +223,7 @@ def build_obs_path(config, component, relativePathOption=None,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         configuration from which to read the path
 
     component : {'ocean', 'seaIce', 'iceberg'}
