@@ -1,5 +1,5 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.13.0" %}
+{% set version = "1.14.0rc2" %}
 {% set python_min = "3.10" %}
 
 package:
