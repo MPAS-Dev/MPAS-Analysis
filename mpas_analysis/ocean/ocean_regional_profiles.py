@@ -383,7 +383,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = self._masked_area_sum(cellMasks, areaCell, vertDepthMask)
+        totalArea = self._masked_area_sum(
+            cellMasks, openOceanMask, areaCell, vertDepthMask
+        )
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -408,18 +410,21 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 prefix = field['prefix']
                 self.logger.info('      {}'.format(field['titleName']))
 
-                var_mpas = dsLocal[variableName]
-                var_mpas_masked = var_mpas * openOceanMask
-                var = var_mpas_masked.where(vertDepthMask)
+                var = dsLocal[variableName].where(vertDepthMask)
 
                 meanName = '{}_mean'.format(prefix)
-                dsLocal[meanName] = \
-                    self._masked_area_sum(cellMasks, areaCell, var) / totalArea
+                dsLocal[meanName] = (
+                    self._masked_area_sum(
+                        cellMasks, openOceanMask, areaCell, var
+                    ) / totalArea
+                )
 
                 meanSquaredName = '{}_meanSquared'.format(prefix)
-                dsLocal[meanSquaredName] = \
-                    self._masked_area_sum(cellMasks, areaCell, var**2) / \
-                    totalArea
+                dsLocal[meanSquaredName] = (
+                    self._masked_area_sum(
+                        cellMasks, openOceanMask, areaCell, var**2
+                    ) / totalArea
+                )
 
             # drop the original variables
             dsLocal = dsLocal.drop_vars(variableList)
@@ -452,12 +457,15 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         write_netcdf_with_fill(dsOut, outputFileName)
 
     @staticmethod
-    def _masked_area_sum(cellMasks, areaCell, var):
+    def _masked_area_sum(cellMasks, openOceanMask, areaCell, var):
         """sum a variable over the masked areas"""
         nRegions = cellMasks.sizes['nRegions']
         totals = []
         for index in range(nRegions):
-            mask = cellMasks.isel(nRegions=slice(index, index+1))
+            mask = (
+                cellMasks.isel(nRegions=slice(index, index+1)) *
+                openOceanMask
+            )
             totals.append((mask * areaCell * var).sum('nCells'))
 
         total = xr.concat(totals, 'nRegions')
