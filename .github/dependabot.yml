@@ -8,9 +8,7 @@ updates:
       interval: "weekly"
     assignees:
       - "xylar"
-      - "altheaden"
     reviewers:
       - "xylar"
-      - "altheaden"
       - "andrewdnolan"
 
