@@ -342,7 +342,7 @@ class ComputeMeltSubtask(AnalysisTask):
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
         dsOut['regionNames'] = dsRegionMask.regionNames
-        dsOut.integratedMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+        dsOut.integratedMeltFlux.attrs['units'] = 'Gt a$^{-1}$'
         dsOut.integratedMeltFlux.attrs['description'] = \
             'Integrated melt flux summed over each ice shelf or region'
         dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
@@ -662,7 +662,7 @@ class PlotMeltSubtask(AnalysisTask):
         suffix = self.iceShelf.replace(' ', '_')
 
         xLabel = 'Time (yr)'
-        yLabel = 'Melt Flux (GT/yr)'
+        yLabel = 'Melt Flux (Gt/yr)'
 
         timeSeries = integratedMeltFlux.isel(nRegions=self.regionIndex)
 
@@ -723,7 +723,7 @@ class PlotMeltSubtask(AnalysisTask):
         # and cartopy doesn't play too well with tight_layout anyway
         plt.tight_layout()
 
-        add_inset(fig, fc, width=2.0, height=2.0)
+        add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
         savefig(outFileName, config)
 
@@ -788,7 +788,7 @@ class PlotMeltSubtask(AnalysisTask):
         # and cartopy doesn't play too well with tight_layout anyway
         plt.tight_layout()
 
-        add_inset(fig, fc, width=2.0, height=2.0)
+        add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
         savefig(outFileName, config)
 
