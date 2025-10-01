@@ -446,7 +446,7 @@
 
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">objs</span><span class="o">=</span><span class="n">datasets</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
         <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionNames</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">integratedMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GT a$^{-1}$&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">integratedMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Gt a$^{-1}$&#39;</span>
         <span class="n">dsOut</span><span class="o">.</span><span class="n">integratedMeltFlux</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
             <span class="s1">&#39;Integrated melt flux summed over each ice shelf or region&#39;</span>
         <span class="n">dsOut</span><span class="o">.</span><span class="n">meltRates</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m a$^{-1}$&#39;</span>
@@ -766,7 +766,7 @@
         <span class="n">suffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iceShelf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
 
         <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (yr)&#39;</span>
-        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Melt Flux (GT/yr)&#39;</span>
+        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Melt Flux (Gt/yr)&#39;</span>
 
         <span class="n">timeSeries</span> <span class="o">=</span> <span class="n">integratedMeltFlux</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nRegions</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionIndex</span><span class="p">)</span>
 
@@ -827,7 +827,7 @@
         <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-        <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lowerleft</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">xbuffer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">ybuffer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 
         <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
@@ -892,7 +892,7 @@
         <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
-        <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lowerleft</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">xbuffer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">ybuffer</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
 
         <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
