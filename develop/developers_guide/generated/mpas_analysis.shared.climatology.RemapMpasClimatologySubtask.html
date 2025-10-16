@@ -153,25 +153,25 @@
 <dl class="field-list simple">
 <dt class="field-odd">Variables<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
+<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
 included in the climatologies</p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to extract
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to extract
 a slice of the MPAS field.</p></li>
-<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
+<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 over which the climatology should be computed or [‘none’] if only
 monthly climatologies are needed.</p></li>
 <li><p><strong>comparisonDescriptors</strong> (dict of <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code>) – Descriptors of the comparison grids to use for remapping, with
 grid names as the keys.</p></li>
-<li><p><strong>meshFilename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of the mesh
+<li><p><strong>meshFilename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – If <code class="docutils literal notranslate"><span class="pre">comparisonGridName</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, the name of the mesh
 file from which the MPAS mesh can be read.</p></li>
-<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
+<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
 an internal python code that handles more grid types and extra
 dimensions)</p></li>
 <li><p><strong>op</strong> (<em>{'avg'</em><em>, </em><em>'min'</em><em>, </em><em>'max'}</em>) – operator for monthly stats</p></li>
-<li><p><strong>vertices</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to remap from vertices, rather than cells</p></li>
+<li><p><strong>vertices</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to remap from vertices, rather than cells</p></li>
 </ul>
 </dd>
 </dl>
@@ -186,28 +186,28 @@ dimensions)</p></li>
 <li><p><strong>mpasClimatologyTask</strong> (<code class="docutils literal notranslate"><span class="pre">MpasClimatologyTask</span></code>) – The task that produced the climatology to be remapped</p></li>
 <li><p><strong>parentTask</strong> (<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>) – The parent task, used to get the <code class="docutils literal notranslate"><span class="pre">taskName</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> and
 <code class="docutils literal notranslate"><span class="pre">componentName</span></code></p></li>
-<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
+<li><p><strong>climatologyName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A name that describes the climatology (e.g. a short version of
 the important field(s) in the climatology) used to name the
 subdirectories for each stage of the climatology</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A list of variable names in <code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthly</span></code> to be
 included in the climatologies</p></li>
-<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
+<li><p><strong>seasons</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – A list of seasons (keys in <code class="docutils literal notranslate"><span class="pre">shared.constants.monthDictionary</span></code>)
 to be computed or [‘none’] (not <code class="docutils literal notranslate"><span class="pre">None</span></code>) if only monthly
 climatologies are needed.</p></li>
-<li><p><strong>comparisonGridNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – optional
+<li><p><strong>comparisonGridNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – optional
 The name(s) of the comparison grid to use for remapping.  If none
 is supplied, <cite>add_comparison_descriptor()</cite> must be called to add
 one or more comparison grids.</p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary of dimensions and indices (or <code class="docutils literal notranslate"><span class="pre">None</span></code>) used to
 extract a slice of the MPAS field(s).</p></li>
-<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
-<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
+<li><p><strong>subtaskName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The name of the subtask</p></li>
+<li><p><strong>useNcremap</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to use ncremap to do the remapping (the other option being
 an internal python code that handles more grid types and extra
 dimensions).  This defaults to the config option <code class="docutils literal notranslate"><span class="pre">useNcremap</span></code>
 if it is not explicitly given.  If a comparison grid other than
 <code class="docutils literal notranslate"><span class="pre">latlon</span></code> is given, ncremap is not supported so this flag is set
 to <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>vertices</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to remap from vertices, rather than cells</p></li>
+<li><p><strong>vertices</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – Whether to remap from vertices, rather than cells</p></li>
 </ul>
 </dd>
 </dl>

@@ -148,83 +148,83 @@ Hovmoller plot (depth vs. time).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>config</strong> (<em>instance</em><em> of </em><em>ConfigParser</em>) – the configuration, containing a [plot] section with options that
 control plotting</p></li>
-<li><p><strong>field</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.9.2)"><em>xarray.DataArray</em></a>) – field array to plot.  For contour plots, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code>
+<li><p><strong>field</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.10.1)"><em>xarray.DataArray</em></a>) – field array to plot.  For contour plots, <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code>
 should broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>.  For heatmap plots,
 <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> and <code class="docutils literal notranslate"><span class="pre">zCoords</span></code> are the corners of the plot.  If they
 broadcast to the same shape as <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> will be bilinearly
 interpolated to center values for each plot cell.  If the coordinates
 have one extra element in each direction than <code class="docutils literal notranslate"><span class="pre">field</span></code>, <code class="docutils literal notranslate"><span class="pre">field</span></code> is
 assumed to contain cell values and no interpolation is performed.</p></li>
-<li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
-<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.9.2)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.9.2)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the <code class="docutils literal notranslate"><span class="pre">field</span></code>.  Optional second
+<li><p><strong>colorMapSectionName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – section name in <code class="docutils literal notranslate"><span class="pre">config</span></code> where color map info can be found.</p></li>
+<li><p><strong>xCoords</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.10.1)"><em>xarray.DataArray</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.10.1)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The x coordinate(s) for the <code class="docutils literal notranslate"><span class="pre">field</span></code>.  Optional second
 and third entries will be used for a second and third x axis above the
 plot.  The typical use for the second and third axis is for transects,
 for which the primary x axis represents distance along a transect, and
 the second and third x axes are used to display the corresponding
 latitudes and longitudes.</p></li>
-<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.9.2)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the <code class="docutils literal notranslate"><span class="pre">field</span></code></p></li>
-<li><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the suffix used for colorbar config options</p></li>
-<li><p><strong>colorbarLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the label for the colorbar.  If plotAsContours and labelContours are
+<li><p><strong>zCoord</strong> (<a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.10.1)"><em>xarray.DataArray</em></a><em>, </em><em>optional</em>) – The z coordinates for the <code class="docutils literal notranslate"><span class="pre">field</span></code></p></li>
+<li><p><strong>suffix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the suffix used for colorbar config options</p></li>
+<li><p><strong>colorbarLabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the label for the colorbar.  If plotAsContours and labelContours are
 both True, colorbarLabel is used as follows (typically in order to
 indicate the units that are associated with the contour labels):
 if <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> is None, the <code class="docutils literal notranslate"><span class="pre">colorbarLabel</span></code> string is
 parenthetically appended to the plot title;  if
 <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> is not None, it is parenthetically appended
 to the legend entries of the contour comparison plot.</p></li>
-<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – title of plot</p></li>
-<li><p><strong>xlabels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – labels of x-axes.  Labels correspond to entries in <code class="docutils literal notranslate"><span class="pre">xCoords</span></code>.</p></li>
-<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – label of y-axis</p></li>
-<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.13)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – size of the figure in inches, or None if the current figure should
+<li><p><strong>title</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – title of plot</p></li>
+<li><p><strong>xlabels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – labels of x-axes.  Labels correspond to entries in <code class="docutils literal notranslate"><span class="pre">xCoords</span></code>.</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – label of y-axis</p></li>
+<li><p><strong>figsize</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><em>tuple</em></a><em> of </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – size of the figure in inches, or None if the current figure should
 be used (e.g. if this is a subplot)</p></li>
-<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
+<li><p><strong>dpi</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the number of dots per inch of the figure, taken from section <code class="docutils literal notranslate"><span class="pre">plot</span></code>
 option <code class="docutils literal notranslate"><span class="pre">dpi</span></code> in the config file by default</p></li>
-<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – size of the title font</p></li>
-<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
-<li><p><strong>titleY</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – the y value to use for placing the plot title</p></li>
-<li><p><strong>axisFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – size of the axis font</p></li>
+<li><p><strong>titleFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – size of the title font</p></li>
+<li><p><strong>defaultFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the size of text other than the title</p></li>
+<li><p><strong>titleY</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – the y value to use for placing the plot title</p></li>
+<li><p><strong>axisFontSize</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – size of the axis font</p></li>
 <li><p><strong>xLim</strong> (<em>float array</em><em>, </em><em>optional</em>) – x range of plot</p></li>
 <li><p><strong>yLim</strong> (<em>float array</em><em>, </em><em>optional</em>) – y range of plot</p></li>
-<li><p><strong>lineWidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – the line width of contour lines (if specified)</p></li>
-<li><p><strong>lineStyle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the line style of contour lines (if specified); this applies to the
+<li><p><strong>lineWidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – the line width of contour lines (if specified)</p></li>
+<li><p><strong>lineStyle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the line style of contour lines (if specified); this applies to the
 style of contour lines of fieldArray (the style of the contour lines
 of contourComparisonField is set using
 contourComparisonLineStyle).</p></li>
-<li><p><strong>lineColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the color of contour lines (if specified); this applies to the
+<li><p><strong>lineColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the color of contour lines (if specified); this applies to the
 contour lines of fieldArray (the color of the contour lines of
 contourComparisonField is set using contourComparisonLineColor</p></li>
-<li><p><strong>backgroundColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the background color for the plot outside the limits of <code class="docutils literal notranslate"><span class="pre">xCoord</span></code> and
+<li><p><strong>backgroundColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the background color for the plot outside the limits of <code class="docutils literal notranslate"><span class="pre">xCoord</span></code> and
 <code class="docutils literal notranslate"><span class="pre">zCoord</span></code>.</p></li>
-<li><p><strong>invalidColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the color for invalid values (NaNs and masked areas will be
+<li><p><strong>invalidColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the color for invalid values (NaNs and masked areas will be
 shown in this color)</p></li>
-<li><p><strong>outlineValid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to outline the boundary between the valid an invalid regions
+<li><p><strong>outlineValid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – whether to outline the boundary between the valid an invalid regions
 with a black contour</p></li>
-<li><p><strong>numUpperTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the approximate number of ticks to use on the upper x axis
+<li><p><strong>numUpperTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the approximate number of ticks to use on the upper x axis
 or axes (these are the second and third x axes, which are placed above
 the plot if they have been requested by specifying the secondXAxisData
 or thirdXAxisData arrays above)</p></li>
-<li><p><strong>upperXAxisTickLabelPrecision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the number of decimal places (to the right
+<li><p><strong>upperXAxisTickLabelPrecision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the number of decimal places (to the right
 of the decimal point) to use for values at upper axis ticks.  This
 value can be adjusted (in concert with numUpperTicks) to avoid problems
 with overlapping numbers along the upper axis.</p></li>
 <li><p><strong>invertYAxis</strong> (<em>logical</em><em>, </em><em>optional</em>) – if True, invert Y axis</p></li>
 <li><p><strong>xCoordIsTime</strong> (<em>logical</em><em>, </em><em>optional</em>) – if True, format the x axis for time (this applies only to the primary
 x axis, not to the optional second or third x axes)</p></li>
-<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the number of points over which to perform a moving average
+<li><p><strong>movingAveragePoints</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the number of points over which to perform a moving average
 NOTE: this option is mostly intended for use when <code class="docutils literal notranslate"><span class="pre">xCoordIsTime</span></code> is
 True, although it will work with other data as well.  Also, the moving
 average calculation is based on number of points, not actual x axis
 values, so for best results, the values in the first entry in
 <code class="docutils literal notranslate"><span class="pre">xCoords</span></code> should be equally spaced.</p></li>
-<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
+<li><p><strong>firstYearXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – The year of the first tick on the x axis.  By default, the first time
 entry is the first tick.</p></li>
-<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
+<li><p><strong>yearStrideXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – The number of years between x ticks. By default, the stride is chosen
 automatically to have <code class="docutils literal notranslate"><span class="pre">maxXTicks</span></code> tick marks or fewer.</p></li>
-<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the primary
+<li><p><strong>maxXTicks</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the maximum number of tick marks that will be allowed along the primary
 x axis.  This may need to be adjusted depending on the figure size and
 aspect ratio.  NOTE:  maxXTicks is only used if xCoordIsTime is True</p></li>
-<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the calendar to use for formatting the time axis
+<li><p><strong>calendar</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the calendar to use for formatting the time axis
 NOTE:  calendar is only used if xCoordIsTime is True</p></li>
-<li><p><strong>plotAsContours</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – if plotAsContours is True, instead of plotting <code class="docutils literal notranslate"><span class="pre">field</span></code> as a
+<li><p><strong>plotAsContours</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – if plotAsContours is True, instead of plotting <code class="docutils literal notranslate"><span class="pre">field</span></code> as a
 heatmap, the function will plot only the contours of <code class="docutils literal notranslate"><span class="pre">field</span></code>.  In
 addition, if contourComparisonField is not None, the contours
 of this field will be plotted on the same plot.  The selection of
@@ -236,21 +236,21 @@ from another simulation run), assumed to be of the same shape as
 <code class="docutils literal notranslate"><span class="pre">countourComparisonFieldArray</span></code> is not <code class="docutils literal notranslate"><span class="pre">None</span></code>, then contours of both
 <code class="docutils literal notranslate"><span class="pre">field</span></code> and <code class="docutils literal notranslate"><span class="pre">contourComparisonField</span></code> will be plotted in order to
 enable a comparison of the two fields on the same plot.</p></li>
-<li><p><strong>comparisonFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the name for the comparison field.  If contourComparisonField is
+<li><p><strong>comparisonFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the name for the comparison field.  If contourComparisonField is
 None, this parameter is ignored.</p></li>
-<li><p><strong>originalFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the name for the <code class="docutils literal notranslate"><span class="pre">field</span></code> field (for the purposes of labeling the
+<li><p><strong>originalFieldName</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the name for the <code class="docutils literal notranslate"><span class="pre">field</span></code> field (for the purposes of labeling the
 contours on a contour comparison plot).  If contourComparisonField
 is None, this parameter is ignored.</p></li>
-<li><p><strong>comparisonContourLineWidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a><em>, </em><em>optional</em>) – the line width of contour lines of the comparisonFieldName field on
+<li><p><strong>comparisonContourLineWidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – the line width of contour lines of the comparisonFieldName field on
 a contour comparison plot</p></li>
-<li><p><strong>comparisonContourLineStyle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the line style of contour lines of the comparisonFieldName field on
+<li><p><strong>comparisonContourLineStyle</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the line style of contour lines of the comparisonFieldName field on
 a contour comparison plot</p></li>
-<li><p><strong>comparisonContourLineColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – the line color of contour lines of the comparisonFieldName field on
+<li><p><strong>comparisonContourLineColor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – the line color of contour lines of the comparisonFieldName field on
 a contour comparison plot</p></li>
-<li><p><strong>labelContours</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – whether or not to label contour lines (if specified) with their values</p></li>
-<li><p><strong>contourLabelPrecision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – the precision (in terms of number of figures to the right of the
+<li><p><strong>labelContours</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a><em>, </em><em>optional</em>) – whether or not to label contour lines (if specified) with their values</p></li>
+<li><p><strong>contourLabelPrecision</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – the precision (in terms of number of figures to the right of the
 decimal point) of contour labels</p></li>
-<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the maximum number of characters in the title, beyond which it is
+<li><p><strong>maxTitleLength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em> or </em><em>None</em><em>, </em><em>optional</em>) – the maximum number of characters in the title, beyond which it is
 truncated with a trailing ellipsis.  The default is from the
 <code class="docutils literal notranslate"><span class="pre">maxTitleLength</span></code> config option.</p></li>
 </ul>
