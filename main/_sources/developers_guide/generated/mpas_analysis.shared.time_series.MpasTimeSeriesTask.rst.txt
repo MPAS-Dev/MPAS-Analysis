@@ -19,6 +19,7 @@
       ~MpasTimeSeriesTask.check_analysis_enabled
       ~MpasTimeSeriesTask.check_generate
       ~MpasTimeSeriesTask.close
+      ~MpasTimeSeriesTask.get_mesh_filename
       ~MpasTimeSeriesTask.is_alive
       ~MpasTimeSeriesTask.join
       ~MpasTimeSeriesTask.kill

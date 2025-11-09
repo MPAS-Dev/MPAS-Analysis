@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developer: Getting Started &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>Developer: Getting Started &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -54,6 +54,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -329,10 +333,10 @@ $<span class="w"> </span>conda<span class="w"> </span>config<span class="w"> </s
 </section>
 <section id="create-a-development-environment">
 <h3>4.3 Create a development environment<a class="headerlink" href="#create-a-development-environment" title="Link to this heading"></a></h3>
-<p>You can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> and install the
+<p>You can create a new conda environment called <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> and install the
 dependencies that MPAS-Analysis needs by running the following in the worktree
 where you are doing your development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_analysis_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt
 </pre></div>
 </div>
 <p>The last argument is only needed on HPC machines because the conda version of
@@ -340,34 +344,34 @@ MPI doesn’t work properly on these machines.  You can omit it if you’re
 setting up the conda environment on your laptop.</p>
 <p>Then, you can activate the environment and install MPAS-Analysis in “edit”
 mode by running:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
 $<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>In this mode, any edits you make to the code in the worktree will be available
 in the conda environment.  If you run <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> on the command line,
 it will know about the changes.</p>
-<p>This command only needs to be done once after the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment is
+<p>This command only needs to be done once after the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment is
 built if you are not using worktrees.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If you do use worktrees, rerun the <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">...</span></code> command
 each time you switch to developing a new branch, since otherwise the
-version of <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment will be the
+version of <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> in the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment will be the
 one you were developing previously.</p>
 </div>
 </section>
 <section id="activating-the-environment">
 <span id="tutorial-dev-get-started-activ-env"></span><h3>4.4 Activating the environment<a class="headerlink" href="#activating-the-environment" title="Link to this heading"></a></h3>
-<p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
+<p>Each time you open a new terminal window, to activate the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>
 environment, you will need to run either for <code class="docutils literal notranslate"><span class="pre">bash</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
-$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
+$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
 </pre></div>
 </div>
 <p>or for <code class="docutils literal notranslate"><span class="pre">csh</span></code>:</p>
 <div class="highlight-csh notranslate"><div class="highlight"><pre><span></span>&gt; <span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh
-&gt; conda activate mpas_dev
+&gt; conda activate mpas_analysis_dev
 </pre></div>
 </div>
 <p>You can skip the <code class="docutils literal notranslate"><span class="pre">source</span></code> command if you chose to initialize Miniforge3 or
@@ -377,14 +381,14 @@ alias for this step if you defined one.</p>
 <section id="switching-worktrees">
 <h3>4.5 Switching worktrees<a class="headerlink" href="#switching-worktrees" title="Link to this heading"></a></h3>
 <p>If you switch to a different worktree, it is safest to rerun the whole
-process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment.  If you know that
-the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>,
+process for creating the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> conda environment.  If you know that
+the dependencies are the same as the worktree used to create <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>,
 You can just reinstall <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> itself by rerunning</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
 <p>in the new worktree.  If you forget this step, you will find that changes you
-make in the worktree don’t affect the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> conda environment you are
+make in the worktree don’t affect the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> conda environment you are
 using.</p>
 </section>
 </section>
@@ -410,7 +414,7 @@ need to follow steps 2-6 of the <a class="reference internal" href="getting_star
 <p class="admonition-title">Warning</p>
 <p>Run <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> on a compute node, not on an HPC login nodes (front
 ends), because it uses too many resources to be safely run on a login node.
-When using a compute node interactively, activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
+When using a compute node interactively, activate the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>
 environment, even if it was activated on the login node. Be sure to</p>
 </div>
 <section id="configuring-mpas-analysis">
@@ -703,7 +707,7 @@ also be displayed over the full 5 years.)</p>
 <h3>7.2 Running MPAS-Analysis<a class="headerlink" href="#running-mpas-analysis" title="Link to this heading"></a></h3>
 <p>The hard work is done.  Now that we have a config file, we are ready to run.</p>
 <p>To run MPAS-Analysis, you should either create a job script or log into
-an interactive session on a compute node.  Then, activate the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>
+an interactive session on a compute node.  Then, activate the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>
 conda environment as in <a class="reference internal" href="#tutorial-dev-get-started-activ-env"><span class="std std-ref">4.4 Activating the environment</span></a>.</p>
 <p>On many file systems, MPAS-Analysis and other python-based software that used
 NetCDF files based on the HDF5 file structure can experience file access errors
@@ -728,15 +732,15 @@ now, we only support CPU nodes on Perlmutter (<code class="docutils literal notr
 Detected E3SM supported machine: anvil
 Using the following config files:
    /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/default.cfg
-   /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/lib/python3.10/site-packages/mache/machines/anvil.cfg
+   /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/lib/python3.10/site-packages/mache/machines/anvil.cfg
    /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/configuration/anvil.cfg
    /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/mpas_analysis/__main__.py
    /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/myrun.cfg
 copying /gpfs/fs1/home/ac.xylar/code/mpas-analysis/add_my_fancy_task/myrun.cfg to HTML dir.
 
-running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_0.5x0.5degree_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --ignore_unmapped
-running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
-running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_WOCE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp76l7of28/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_0.5x0.5degree_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --ignore_unmapped
+running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpj94wpf9y/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_6000.0x6000.0km_10.0km_Antarctic_stereo_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmp6zm13a0s/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_WOCE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
 Preprocessing SOSE transect data...
   temperature
   salinity
@@ -745,7 +749,7 @@ Preprocessing SOSE transect data...
   meridionalVelocity
   velMag
   Done.
-running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_SOSE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
+running: /gpfs/fs1/home/ac.xylar/anvil/mambaforge/envs/mpas_analysis_dev/bin/ESMF_RegridWeightGen --source /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/src_mesh.nc --destination /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/tmpe2a9yblb/dst_mesh.nc --weight /lcrc/group/e3sm/ac.xylar/analysis/A_WCYCL1850.ne4_oQU480.anvil/clim_3-5_ts_1-5/mapping/map_oQU480_to_SOSE_transects_5km_bilinear.nc --method bilinear --netcdf4 --no_log --src_loc center --src_regional --dst_regional --ignore_unmapped
 
 Running tasks: 100% |##########################################| Time:  0:06:42
 
@@ -833,26 +837,31 @@ and how it was configured.</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="dev_getting_started.html">main</a></dd>
-      <dd><a href="../../develop/tutorials/dev_getting_started.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

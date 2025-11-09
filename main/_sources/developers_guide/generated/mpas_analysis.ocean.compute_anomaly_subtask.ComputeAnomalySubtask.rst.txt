@@ -18,6 +18,7 @@
       ~ComputeAnomalySubtask.check_analysis_enabled
       ~ComputeAnomalySubtask.check_generate
       ~ComputeAnomalySubtask.close
+      ~ComputeAnomalySubtask.get_mesh_filename
       ~ComputeAnomalySubtask.is_alive
       ~ComputeAnomalySubtask.join
       ~ComputeAnomalySubtask.kill

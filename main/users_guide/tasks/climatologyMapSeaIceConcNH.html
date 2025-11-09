@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>climatologyMapSeaIceConcNH &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>climatologyMapSeaIceConcNH &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -54,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapCustom.html">climatologyMapCustom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
@@ -67,10 +68,11 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapVel.html">climatologyMapVel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWindStressCurl.html">climatologyMapWindStressCurl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonNetcdfTransects.html">geojsonNetcdfTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
@@ -133,6 +135,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -188,11 +194,13 @@ observations.</p>
 <p>The following configuration options are available for this task:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">climatologyMapSeaIceConcNH</span><span class="p">]</span>
 <span class="c1">## options related to plotting horizontally remapped climatologies of</span>
-<span class="c1">## sea ice concentration against reference model results and observations</span>
+<span class="c1">## sea ice concentration against control model results and observations</span>
 <span class="c1">## in the northern hemisphere (NH)</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">ice</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">indexed</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="n">colormapIndicesResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -200,29 +208,28 @@ observations.</p>
 
 <span class="c1"># colormap for differences</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
+<span class="c1"># whether the colormap is indexed or continuous</span>
+<span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">indexed</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
-<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">112</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">144</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">192</span><span class="p">,</span>
-                             <span class="mi">224</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="n">colormapIndicesDifference</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>  <span class="mi">26</span><span class="p">,</span>  <span class="mi">51</span><span class="p">,</span>  <span class="mi">77</span><span class="p">,</span> <span class="mi">102</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">153</span><span class="p">,</span> <span class="mi">179</span><span class="p">,</span> <span class="mi">204</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
-<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span>
-                            <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]</span>
+<span class="n">colorbarLevelsDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
 
 <span class="c1"># Months or seasons to plot (These should be left unchanged, since</span>
 <span class="c1"># observations are only available for these seasons)</span>
 <span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span> <span class="s1">&#39;JAS&#39;</span><span class="p">]</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
-
-<span class="c1"># reference lat/lon for sea ice plots in the northern hemisphere</span>
-<span class="n">minimumLatitude</span> <span class="o">=</span> <span class="mi">50</span>
-<span class="n">referenceLongitude</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="c1"># comparison grid(s) (typically &#39;arctic_extended&#39;) on which to plot analysis</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arctic_extended&#39;</span><span class="p">]</span>
 
 <span class="c1"># a list of prefixes describing the sources of the observations to be used</span>
 <span class="n">observationPrefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;NASATeam&#39;</span><span class="p">,</span> <span class="s1">&#39;Bootstrap&#39;</span><span class="p">]</span>
 
 <span class="c1"># arrange subplots vertically?</span>
 <span class="n">vertical</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># the minimum threshold below which concentration is masked out</span>
+<span class="n">minConcentration</span> <span class="o">=</span> <span class="mf">0.15</span>
 
 <span class="c1"># observations files</span>
 <span class="n">concentrationNASATeamNH_JFM</span> <span class="o">=</span> <span class="n">SSMI</span><span class="o">/</span><span class="n">NASATeam_NSIDC0051</span><span class="o">/</span><span class="n">SSMI_NASATeam_gridded_concentration_NH_jfm</span><span class="o">.</span><span class="n">interp0</span><span class="mf">.5</span><span class="n">x0</span><span class="mf">.5_20180710</span><span class="o">.</span><span class="n">nc</span>
@@ -293,26 +300,31 @@ should typically remain unchanged.</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="climatologyMapSeaIceConcNH.html">main</a></dd>
-      <dd><a href="../../../develop/users_guide/tasks/climatologyMapSeaIceConcNH.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

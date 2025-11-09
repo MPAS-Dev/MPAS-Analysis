@@ -28,6 +28,11 @@ used those components.
    :caption: Developer's guide
    :maxdepth: 2
 
+   developers_guide/quick_start
+   developers_guide/docs
+   developers_guide/test_suite
+   developers_guide/releasing
+
    developers_guide/api
 
    design_docs/index

@@ -18,6 +18,7 @@
       ~ClimatologyMapSeaIceSnowiceFormation.check_analysis_enabled
       ~ClimatologyMapSeaIceSnowiceFormation.check_generate
       ~ClimatologyMapSeaIceSnowiceFormation.close
+      ~ClimatologyMapSeaIceSnowiceFormation.get_mesh_filename
       ~ClimatologyMapSeaIceSnowiceFormation.is_alive
       ~ClimatologyMapSeaIceSnowiceFormation.join
       ~ClimatologyMapSeaIceSnowiceFormation.kill

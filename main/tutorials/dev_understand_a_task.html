@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>Developers: Understanding an analysis task &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -54,6 +54,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -316,7 +320,7 @@ super class’s <code class="docutils literal notranslate"><span class="pre">__i
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        Configuration options</span>
 
 <span class="sd">    mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
@@ -326,7 +330,7 @@ super class’s <code class="docutils literal notranslate"><span class="pre">__i
 <span class="sd">        The task that produced the climatology from the first year to be</span>
 <span class="sd">        remapped and then subtracted from the main climatology</span>
 
-<span class="sd">    control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">    control_config : tranche.Tranche, optional</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -371,9 +375,8 @@ find something unexpected:</p>
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
                      <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
-<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                                    <span class="s1">&#39;depthRanges&#39;</span><span class="p">,</span>
-                                    <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, these config options look like this:</p>
@@ -801,8 +804,8 @@ at that before we continue with <code class="docutils literal notranslate"><span
 <span class="sd">    Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">    climatology data sets.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-    <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># specific heat [J/(kg*degC)]</span>
     <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
@@ -811,10 +814,10 @@ at that before we continue with <code class="docutils literal notranslate"><span
 
     <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-    <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_restart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                         <span class="n">ds_restart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+    <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                         <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
     <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
         <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
@@ -822,7 +825,7 @@ at that before we continue with <code class="docutils literal notranslate"><span
     <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
     <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
-    <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+    <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
              <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
              <span class="n">z_mid</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
@@ -835,17 +838,17 @@ at that before we continue with <code class="docutils literal notranslate"><span
 </pre></div>
 </div>
 <p>This function uses a combination of mesh information taken from an MPAS
-restart file (available from the <code class="docutils literal notranslate"><span class="pre">self.restartFileName</span></code> attribute inherited
+mesh file (available from the <code class="docutils literal notranslate"><span class="pre">self.meshFilename</span></code> attribute inherited
 from <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>),
 namelist options available from the <code class="docutils literal notranslate"><span class="pre">self.namelist</span></code> reader (inherited from
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask" title="mpas_analysis.shared.AnalysisTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">AnalysisTask</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">layer_thickness</span></code> from the <code class="docutils literal notranslate"><span class="pre">climatology</span></code> dataset itself.  As the
 docstring for <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> states, <code class="docutils literal notranslate"><span class="pre">climatology</span></code> is
-and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
+and <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="(in xarray v2025.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code></a>.  We know it has variables
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_activeTracers_temperature</span></code> and
 <code class="docutils literal notranslate"><span class="pre">timeMonthly_avg_layerThickness</span></code> because we requested them back in the
 constructor of <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>.
-We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.3.1.dev0)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
+We compute the <code class="docutils literal notranslate"><span class="pre">ohc</span></code> as an <a class="reference external" href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.html#xarray.DataArray" title="(in xarray v2025.10.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></a> that we return from
 this helper method.</p>
 <p>Back to <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>, we have:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
@@ -921,7 +924,7 @@ here is the full analysis task as described in this tutorial:</p>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
@@ -931,7 +934,7 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">            The task that produced the climatology from the first year to be</span>
 <span class="sd">            remapped and then subtracted from the main climatology</span>
 
-<span class="sd">        control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        control_config : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -961,9 +964,8 @@ here is the full analysis task as described in this tutorial:</p>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
                              <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
 
-        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;depthRanges&#39;</span><span class="p">,</span>
-                                            <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
+                                       <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
 
         <span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
 
@@ -1177,8 +1179,8 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
-        <span class="n">ds_restart</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># specific heat [J/(kg*degC)]</span>
         <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
@@ -1187,10 +1189,10 @@ here is the full analysis task as described in this tutorial:</p>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
 
-        <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_restart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                             <span class="n">ds_restart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+        <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                             <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
         <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
             <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
@@ -1198,7 +1200,7 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
         <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
 
-        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_restart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
+        <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
                  <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
                  <span class="n">z_mid</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">mask</span> <span class="ow">in</span> <span class="n">masks</span><span class="p">:</span>
@@ -1237,26 +1239,31 @@ here is the full analysis task as described in this tutorial:</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="dev_understand_a_task.html">main</a></dd>
-      <dd><a href="../../develop/tutorials/dev_understand_a_task.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

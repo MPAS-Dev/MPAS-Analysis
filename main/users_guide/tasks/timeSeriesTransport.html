@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>timeSeriesTransport &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>timeSeriesTransport &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -54,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapCustom.html">climatologyMapCustom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
@@ -67,10 +68,11 @@
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapVel.html">climatologyMapVel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWindStressCurl.html">climatologyMapWindStressCurl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonNetcdfTransects.html">geojsonNetcdfTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
 <li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
@@ -134,6 +136,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -270,26 +276,31 @@ the most relevant transects has been chosen in the default configuration.</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="timeSeriesTransport.html">main</a></dd>
-      <dd><a href="../../../develop/users_guide/tasks/timeSeriesTransport.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

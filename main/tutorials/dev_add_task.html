@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>Developers: Adding a new analysis task &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -54,6 +54,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -145,7 +149,7 @@ the code to MPAS-Analysis.</p>
 <p>If one just wishes to add a new field that already exists in MPAS-Ocean or
 MPAS-Seaice output, only a few of the steps below are necessary:</p>
 <ol class="arabic simple">
-<li><p>Follow step 1 to set up an <code class="docutils literal notranslate"><span class="pre">`mpas_dev`</span></code> environment.</p></li>
+<li><p>Follow step 1 to set up an <code class="docutils literal notranslate"><span class="pre">`mpas_analysis_dev`</span></code> environment.</p></li>
 <li><p>Copy an existing <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean">ocean</a>
 or <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice">sea_ice</a>
 python module to a new name and edit it as needed for the new fields.</p></li>
@@ -168,7 +172,7 @@ testing your new MPAS-Analysis development, and running MPAS-Analysis.</p>
 <p>Make sure you follow the tutorial for developers, not for users, since the
 tutorial for users installs the latest release of MPAS-Analysis, which you
 cannot modify. Similarly, changes must be tested in your own development
-environment (often called <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code>) rather than the in a shared
+environment (often called <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>) rather than the in a shared
 environment like <a class="reference external" href="https://github.com/E3SM-Project/e3sm-unified">E3SM-Unified</a>.</p>
 </div>
 <p>Then, please follow the <a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task"><span class="std std-ref">Developers: Understanding an analysis task</span></a>.  This will give
@@ -519,8 +523,8 @@ to do.</p>
 
 <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">xCorner</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">yCorner</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">x_corner</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">y_corner</span>
 
 <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
 
@@ -641,9 +645,9 @@ whatever editor you like.)</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>code<span class="w"> </span>.
 </pre></div>
 </div>
-<p>I’ll create or recreate my <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment as in
+<p>I’ll create or recreate my <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment as in
 <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a>, and then make sure to at least do:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_dev
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
@@ -688,13 +692,13 @@ renaming the task are:</p>
 
 <span class="sd">     Parameters</span>
 <span class="sd">     ----------</span>
-<span class="sd">     config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">     config : tranche.Tranche</span>
 <span class="sd">         Configuration options</span>
 
 <span class="sd">     mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
 <span class="sd">         The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">     control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">     control_config : tranche.Tranche, optional</span>
 <span class="sd">         Configuration options for a control run (if any)</span>
 <span class="sd">     &quot;&quot;&quot;</span>
 
@@ -1046,7 +1050,7 @@ script into the <code class="docutils literal notranslate"><span class="pre">cus
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+    <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
     <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">]]</span>
@@ -1171,9 +1175,9 @@ directory and then modify it.</p>
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/docs/developers_guide/api.rst">api.rst</a>
 in the developer’s guide.  Again, the easiest approach is to copy the section
 for a similar task and modify as needed.</p>
-<p>With the <code class="docutils literal notranslate"><span class="pre">mpas_dev</span></code> environment activated, you can run:</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment activated, you can run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
-make<span class="w"> </span>clean<span class="w"> </span>html
+<span class="nv">DOCS_VERSION</span><span class="o">=</span><span class="nb">test</span><span class="w"> </span>make<span class="w"> </span>clean<span class="w"> </span>versioned-html
 </pre></div>
 </div>
 <p>to build the docs locally in the <code class="docutils literal notranslate"><span class="pre">_build/html</span></code> subdirectory.  When generating
@@ -1224,13 +1228,13 @@ described in this tutorial:</p>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        control_config : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        control_config : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
@@ -1340,7 +1344,7 @@ described in this tutorial:</p>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span>
 
-        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="p">[[</span><span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnVertex&#39;</span><span class="p">,</span> <span class="s1">&#39;nEdgesOnCell&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;edgesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnCell&#39;</span><span class="p">,</span> <span class="s1">&#39;verticesOnEdge&#39;</span><span class="p">,</span>
                            <span class="s1">&#39;dcEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;dvEdge&#39;</span><span class="p">]]</span>
@@ -1517,26 +1521,31 @@ described in this tutorial:</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="dev_add_task.html">main</a></dd>
-      <dd><a href="../../develop/tutorials/dev_add_task.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

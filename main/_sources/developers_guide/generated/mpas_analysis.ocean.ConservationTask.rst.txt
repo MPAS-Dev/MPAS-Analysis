@@ -18,6 +18,7 @@
       ~ConservationTask.check_analysis_enabled
       ~ConservationTask.check_generate
       ~ConservationTask.close
+      ~ConservationTask.get_mesh_filename
       ~ConservationTask.is_alive
       ~ConservationTask.join
       ~ConservationTask.kill

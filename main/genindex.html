@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>Index &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="_static/documentation_options.js?v=a8da1a53"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -51,6 +51,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -110,6 +114,7 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  | <a href="#W"><strong>W</strong></a>
  
 </div>
@@ -126,6 +131,8 @@
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapArgoSalinity.html#mpas_analysis.ocean.ClimatologyMapArgoSalinity.__init__">(mpas_analysis.ocean.ClimatologyMapArgoSalinity method)</a>
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature.__init__">(mpas_analysis.ocean.ClimatologyMapArgoTemperature method)</a>
+</li>
+        <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapCustom.html#mpas_analysis.ocean.ClimatologyMapCustom.__init__">(mpas_analysis.ocean.ClimatologyMapCustom method)</a>
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE.__init__">(mpas_analysis.ocean.ClimatologyMapEKE method)</a>
 </li>
@@ -149,11 +156,15 @@
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves.__init__">(mpas_analysis.ocean.ClimatologyMapWaves method)</a>
 </li>
+        <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWindStressCurl.html#mpas_analysis.ocean.ClimatologyMapWindStressCurl.__init__">(mpas_analysis.ocean.ClimatologyMapWindStressCurl method)</a>
+</li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWoa.html#mpas_analysis.ocean.ClimatologyMapWoa.__init__">(mpas_analysis.ocean.ClimatologyMapWoa method)</a>
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__">(mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask method)</a>
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.ConservationTask.html#mpas_analysis.ocean.ConservationTask.__init__">(mpas_analysis.ocean.ConservationTask method)</a>
+</li>
+        <li><a href="developers_guide/generated/mpas_analysis.ocean.GeojsonNetcdfTransects.html#mpas_analysis.ocean.GeojsonNetcdfTransects.__init__">(mpas_analysis.ocean.GeojsonNetcdfTransects method)</a>
 </li>
         <li><a href="developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">(mpas_analysis.ocean.IndexNino34 method)</a>
 </li>
@@ -308,6 +319,8 @@
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapArgoTemperature.html#mpas_analysis.ocean.ClimatologyMapArgoTemperature">ClimatologyMapArgoTemperature (class in mpas_analysis.ocean)</a>
 </li>
+      <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapCustom.html#mpas_analysis.ocean.ClimatologyMapCustom">ClimatologyMapCustom (class in mpas_analysis.ocean)</a>
+</li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapEKE.html#mpas_analysis.ocean.ClimatologyMapEKE">ClimatologyMapEKE (class in mpas_analysis.ocean)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapFluxes.html#mpas_analysis.ocean.ClimatologyMapFluxes">ClimatologyMapFluxes (class in mpas_analysis.ocean)</a>
@@ -342,10 +355,10 @@
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceSnowMelt">ClimatologyMapSeaIceSnowMelt (class in mpas_analysis.sea_ice)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceThick">ClimatologyMapSeaIceThick (class in mpas_analysis.sea_ice)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeRidge.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeRidge">ClimatologyMapSeaIceVolumeRidge (class in mpas_analysis.sea_ice)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceVolumeTendencyThermo">ClimatologyMapSeaIceVolumeTendencyThermo (class in mpas_analysis.sea_ice)</a>
@@ -364,6 +377,8 @@
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWaves.html#mpas_analysis.ocean.ClimatologyMapWaves">ClimatologyMapWaves (class in mpas_analysis.ocean)</a>
 </li>
+      <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWindStressCurl.html#mpas_analysis.ocean.ClimatologyMapWindStressCurl">ClimatologyMapWindStressCurl (class in mpas_analysis.ocean)</a>
+</li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWoa.html#mpas_analysis.ocean.ClimatologyMapWoa">ClimatologyMapWoa (class in mpas_analysis.ocean)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.climatology.compute_climatology.html#mpas_analysis.shared.climatology.compute_climatology">compute_climatology() (in module mpas_analysis.shared.climatology)</a>
@@ -375,6 +390,8 @@
       <li><a href="developers_guide/generated/mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start.html#mpas_analysis.shared.time_series.compute_moving_avg_anomaly_from_start">compute_moving_avg_anomaly_from_start() (in module mpas_analysis.shared.time_series)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks.html#mpas_analysis.shared.transects.compute_transect_masks_subtask.compute_mpas_transect_masks">compute_mpas_transect_masks() (in module mpas_analysis.shared.transects.compute_transect_masks_subtask)</a>
+</li>
+      <li><a href="developers_guide/generated/mpas_analysis.ocean.utility.compute_zinterface.html#mpas_analysis.ocean.utility.compute_zinterface">compute_zinterface() (in module mpas_analysis.ocean.utility)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.ocean.utility.compute_zmid.html#mpas_analysis.ocean.utility.compute_zmid">compute_zmid() (in module mpas_analysis.ocean.utility)</a>
 </li>
@@ -426,6 +443,8 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers_guide/generated/mpas_analysis.ocean.GeojsonNetcdfTransects.html#mpas_analysis.ocean.GeojsonNetcdfTransects">GeojsonNetcdfTransects (class in mpas_analysis.ocean)</a>
+</li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.get">get() (mpas_analysis.shared.io.namelist_streams_interface.NameList method)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.projection.get_cartopy_projection.html#mpas_analysis.shared.projection.get_cartopy_projection">get_cartopy_projection() (in module mpas_analysis.shared.projection)</a>
@@ -446,10 +465,10 @@
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor.html#mpas_analysis.shared.climatology.RemapObservedClimatologySubtask.get_observation_descriptor">get_observation_descriptor() (mpas_analysis.shared.climatology.RemapObservedClimatologySubtask method)</a>
 </li>
-      <li><a href="developers_guide/generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection">get_pyproj_projection() (in module mpas_analysis.shared.projection)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers_guide/generated/mpas_analysis.shared.projection.get_pyproj_projection.html#mpas_analysis.shared.projection.get_pyproj_projection">get_pyproj_projection() (in module mpas_analysis.shared.projection)</a>
+</li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.get_remapped_file_name">get_remapped_file_name() (mpas_analysis.shared.climatology.RemapMpasClimatologySubtask method)</a>
 </li>
       <li><a href="developers_guide/generated/mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name.html#mpas_analysis.shared.climatology.get_remapped_mpas_climatology_file_name">get_remapped_mpas_climatology_file_name() (in module mpas_analysis.shared.climatology)</a>
@@ -673,6 +692,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="developers_guide/generated/mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic.html#mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic">vector_cell_to_edge_isotropic() (in module mpas_analysis.ocean.utility)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -709,26 +736,31 @@
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="genindex.html">main</a></dd>
-      <dd><a href="../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="./">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

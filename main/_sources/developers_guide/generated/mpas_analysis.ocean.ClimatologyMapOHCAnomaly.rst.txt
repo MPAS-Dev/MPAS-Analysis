@@ -18,6 +18,7 @@
       ~ClimatologyMapOHCAnomaly.check_analysis_enabled
       ~ClimatologyMapOHCAnomaly.check_generate
       ~ClimatologyMapOHCAnomaly.close
+      ~ClimatologyMapOHCAnomaly.get_mesh_filename
       ~ClimatologyMapOHCAnomaly.is_alive
       ~ClimatologyMapOHCAnomaly.join
       ~ClimatologyMapOHCAnomaly.kill

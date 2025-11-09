@@ -18,6 +18,7 @@
       ~TimeSeriesSeaIce.check_analysis_enabled
       ~TimeSeriesSeaIce.check_generate
       ~TimeSeriesSeaIce.close
+      ~TimeSeriesSeaIce.get_mesh_filename
       ~TimeSeriesSeaIce.is_alive
       ~TimeSeriesSeaIce.join
       ~TimeSeriesSeaIce.kill

@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Releasing a New Version &mdash; MPAS-Analysis main documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a8da1a53"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API reference" href="api.html" />
+    <link rel="prev" title="Test Suite Infrastructure" href="test_suite.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Releasing a New Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#version-bump-and-dependency-updates">Version Bump and Dependency Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tagging-and-publishing-a-release-candidate">Tagging and Publishing a Release Candidate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#releasing-a-stable-version">Releasing a Stable Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#post-release-actions">Post Release Actions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Releasing a New Version</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/releasing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="releasing-a-new-version">
+<span id="dev-releasing"></span><h1>Releasing a New Version<a class="headerlink" href="#releasing-a-new-version" title="Link to this heading"></a></h1>
+<p>This document describes the steps for maintainers to tag and release a new
+version of <code class="docutils literal notranslate"><span class="pre">MPAS-Analysis</span></code>, and to update the conda-forge feedstock.</p>
+<section id="version-bump-and-dependency-updates">
+<h2>Version Bump and Dependency Updates<a class="headerlink" href="#version-bump-and-dependency-updates" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p><strong>Update the Version Number</strong></p>
+<ul class="simple">
+<li><p>Manually update the version number in the following files:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">mpas_analysis/version.py</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ci/recipe/meta.yaml</span></code></p></li>
+</ul>
+</li>
+<li><p>Make sure the version follows <a class="reference external" href="https://semver.org/">semantic versioning</a>.
+For release candidates, use versions like <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Check and Update Dependencies</strong></p>
+<ul class="simple">
+<li><p>Ensure that dependencies and their constraints are up-to-date and
+consistent in:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">ci/recipe/meta.yaml</span></code> (for the conda-forge release)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> (for PyPI; used for sanity checks)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dev-spec.txt</span></code> (development dependencies; should be a superset)</p></li>
+</ul>
+</li>
+<li><p>Use the GitHub “Compare” feature to check for dependency changes between
+releases:
+<a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/compare">https://github.com/MPAS-Dev/MPAS-Analysis/compare</a></p></li>
+</ul>
+</li>
+<li><p><strong>Make a PR and merge it</strong></p>
+<ul class="simple">
+<li><p>Open a PR for the version bump and dependency changes and merge once
+approved.</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="tagging-and-publishing-a-release-candidate">
+<h2>Tagging and Publishing a Release Candidate<a class="headerlink" href="#tagging-and-publishing-a-release-candidate" title="Link to this heading"></a></h2>
+<ol class="arabic" start="4">
+<li><p><strong>Tagging a Release Candidate</strong></p>
+<ul>
+<li><p>For release candidates, <strong>do not create a GitHub release page</strong>. Just
+create a tag from the command line:</p>
+<ul>
+<li><p>Make sure your changes are merged into <code class="docutils literal notranslate"><span class="pre">develop</span></code> or your own update
+branch (e.g. <code class="docutils literal notranslate"><span class="pre">update-to-1.3.0</span></code>) and your local repo is up to date.</p></li>
+<li><p>Tag the release candidate (e.g., <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">checkout</span> <span class="n">develop</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="o">--</span><span class="nb">all</span> <span class="o">-</span><span class="n">p</span>
+<span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">origin</span><span class="o">/</span><span class="n">develop</span>
+<span class="n">git</span> <span class="n">tag</span> <span class="mf">1.3.0</span><span class="n">rc1</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="mf">1.3.0</span><span class="n">rc1</span>
+</pre></div>
+</div>
+<p>(Replace <code class="docutils literal notranslate"><span class="pre">1.3.0rc1</span></code> with your actual version, and <code class="docutils literal notranslate"><span class="pre">develop</span></code> with
+your branch if needed.)</p>
+</li>
+</ul>
+<p><strong>Note:</strong> This will only create a tag. No release page will be created
+on GitHub.</p>
+</li>
+</ul>
+</li>
+<li><p><strong>Updating the conda-forge Feedstock for a Release Candidate</strong></p>
+<ul class="simple">
+<li><p>The conda-forge feedstock does <strong>not</strong> update automatically for release
+candidates.</p></li>
+<li><p>You must always create a PR manually, and it must target the <code class="docutils literal notranslate"><span class="pre">dev</span></code>
+branch of the feedstock.</p></li>
+</ul>
+<p>Steps:</p>
+<ul>
+<li><p>Download the release tarball:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">MPAS</span><span class="o">-</span><span class="n">Dev</span><span class="o">/</span><span class="n">MPAS</span><span class="o">-</span><span class="n">Analysis</span><span class="o">/</span><span class="n">archive</span><span class="o">/</span><span class="n">refs</span><span class="o">/</span><span class="n">tags</span><span class="o">/&lt;</span><span class="n">version</span><span class="o">&gt;.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+</li>
+<li><p>Compute the SHA256 checksum:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">shasum</span> <span class="o">-</span><span class="n">a</span> <span class="mi">256</span> <span class="o">&lt;</span><span class="n">version</span><span class="o">&gt;.</span><span class="n">tar</span><span class="o">.</span><span class="n">gz</span>
+</pre></div>
+</div>
+</li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">meta.yaml</span></code> of the feedstock recipe:
+- Set <code class="docutils literal notranslate"><span class="pre">{%</span> <span class="pre">set</span> <span class="pre">version</span> <span class="pre">=</span> <span class="pre">&quot;&lt;version&gt;&quot;</span> <span class="pre">%}</span></code>
+- Set the new <code class="docutils literal notranslate"><span class="pre">sha256</span></code> value
+- Update dependencies if needed</p></li>
+<li><p>Commit, push to a new branch, and open a PR <strong>against the ``dev`` branch</strong>
+of the feedstock:
+<a class="reference external" href="https://github.com/conda-forge/mpas-analysis-feedstock">https://github.com/conda-forge/mpas-analysis-feedstock</a></p></li>
+<li><p>Follow any instructions in the PR template and merge once approved</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="releasing-a-stable-version">
+<h2>Releasing a Stable Version<a class="headerlink" href="#releasing-a-stable-version" title="Link to this heading"></a></h2>
+<ol class="arabic" start="6">
+<li><p><strong>Publishing a Stable Release</strong></p>
+<ul class="simple">
+<li><p>For stable releases, create a GitHub release page as follows:</p>
+<ul>
+<li><p>Go to <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/releases">https://github.com/MPAS-Dev/MPAS-Analysis/releases</a></p></li>
+<li><p>Click “Draft a new release”</p></li>
+<li><p>Enter a tag (e.g., <code class="docutils literal notranslate"><span class="pre">1.3.0</span></code>)</p></li>
+<li><p>Set the release title to the version prefixed with <code class="docutils literal notranslate"><span class="pre">v</span></code> (e.g.,
+<code class="docutils literal notranslate"><span class="pre">v1.3.0</span></code>)</p></li>
+<li><p>Generate or manually write release notes</p></li>
+<li><p>Click “Publish release”</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Updating the conda-forge Feedstock for a Stable Release</strong></p>
+<ul class="simple">
+<li><p>Wait for the <code class="docutils literal notranslate"><span class="pre">regro-cf-autotick-bot</span></code> to open a PR at:
+<a class="reference external" href="https://github.com/conda-forge/mpas-analysis-feedstock">https://github.com/conda-forge/mpas-analysis-feedstock</a></p></li>
+<li><p>This may take several hours to a day.</p></li>
+<li><p>Review the PR:
+- Confirm the version bump and dependency changes
+- Merge once CI checks pass</p></li>
+</ul>
+<p><strong>Note:</strong> If you are impatient, you can accelerate this process by creating
+a bot issue at: <a class="reference external" href="https://github.com/conda-forge/mpas-analysis-feedstock/issues">https://github.com/conda-forge/mpas-analysis-feedstock/issues</a>
+with the subject <code class="docutils literal notranslate"><span class="pre">&#64;conda-forge-admin,</span> <span class="pre">please</span> <span class="pre">update</span> <span class="pre">version</span></code>.  This
+will open a new PR with the version within a few minutes.</p>
+<ul class="simple">
+<li><p>If the bot PR does not appear or is too slow, you may update manually (see
+the manual steps for release candidates above, but target the <code class="docutils literal notranslate"><span class="pre">main</span></code>
+branch of the feedstock).</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="post-release-actions">
+<h2>Post Release Actions<a class="headerlink" href="#post-release-actions" title="Link to this heading"></a></h2>
+<ol class="arabic" start="8">
+<li><p><strong>Verify and Announce</strong></p>
+<ul>
+<li><p>Install the package in a clean environment to test:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">-</span><span class="n">n</span> <span class="n">test</span><span class="o">-</span><span class="n">mpas</span> <span class="o">-</span><span class="n">c</span> <span class="n">conda</span><span class="o">-</span><span class="n">forge</span> <span class="n">mpas</span><span class="o">-</span><span class="n">analysis</span><span class="o">=&lt;</span><span class="n">version</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</li>
+<li><p>Optionally announce the release on relevant communication channels</p></li>
+<li><p>Update any documentation or release notes as needed</p></li>
+</ul>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="test_suite.html" class="btn btn-neutral float-left" title="Test Suite Infrastructure" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="API reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
+
+</body>
+</html>

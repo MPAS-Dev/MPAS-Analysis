@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.regional_ts_diagrams &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>mpas_analysis.ocean.regional_ts_diagrams &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -51,6 +51,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -167,7 +171,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -176,7 +180,7 @@
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
 <span class="sd">            A task for computing region masks</span>
 
-<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlConfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -571,7 +575,7 @@
 <span class="sd">    sectionName : str</span>
 <span class="sd">        The section of the config file to get options from</span>
 
-<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    controlConfig : tranche.Tranche</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
 <span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -610,7 +614,7 @@
 <span class="sd">        regionName : str</span>
 <span class="sd">            Name of the region to plot</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        sectionName : str</span>
@@ -700,18 +704,14 @@
             <span class="n">cellsChunk</span> <span class="o">=</span> <span class="mi">32768</span>
             <span class="n">chunk</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nCells&#39;</span><span class="p">:</span> <span class="n">cellsChunk</span><span class="p">}</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">restartFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS-O restart file found: need at least one&#39;</span>
-                              <span class="s1">&#39; restart file to plot T-S diagrams&#39;</span><span class="p">)</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-            <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsRestart</span><span class="p">:</span>
-                <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceMask</span>
+            <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">&#39;landIceMask&#39;</span> <span class="ow">in</span> <span class="n">dsMesh</span><span class="p">:</span>
+                <span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceMask</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">landIceMask</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
+            <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span>
 
             <span class="n">regionMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasMasksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
@@ -753,11 +753,11 @@
                             <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">variableList</span><span class="p">]</span>
 
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
-                                      <span class="n">dsRestart</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                                      <span class="n">dsRestart</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;zMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span>
+                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span> <span class="o">*</span>
+            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span> <span class="o">*</span>
                             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">])</span>
 
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
@@ -899,7 +899,7 @@
 <span class="sd">    sectionName : str</span>
 <span class="sd">        The section of the config file to get options from</span>
 
-<span class="sd">    controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">    controlConfig : tranche.Tranche</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
 
 <span class="sd">    mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -938,7 +938,7 @@
 <span class="sd">        regionName : str</span>
 <span class="sd">            Name of the region to plot</span>
 
-<span class="sd">        controlconfig : mpas_tools.config.MpasConfigParser, optional</span>
+<span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        sectionName : str</span>
@@ -1114,8 +1114,8 @@
             <span class="n">plotFields</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;S&#39;</span><span class="p">:</span> <span class="n">obsS</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">obsT</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="n">obsZ</span><span class="p">,</span> <span class="s1">&#39;vol&#39;</span><span class="p">:</span> <span class="n">obsVol</span><span class="p">,</span>
                                <span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="n">obsName</span><span class="p">})</span>
 
-        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">,</span> <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">)</span>
+        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">)</span>
 
         <span class="n">normType</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;normType&#39;</span><span class="p">)</span>
 
@@ -1310,10 +1310,8 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;colorMap&#39;</span><span class="p">)</span>
-        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">,</span>
-                                     <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">,</span>
-                                     <span class="n">use_numpyfunc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">Tbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Tbins&#39;</span><span class="p">)</span>
+        <span class="n">Sbins</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;Sbins&#39;</span><span class="p">)</span>
 
         <span class="n">hist</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">panel</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">hist2d</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="p">[</span><span class="n">Sbins</span><span class="p">,</span> <span class="n">Tbins</span><span class="p">],</span>
                                        <span class="n">weights</span><span class="o">=</span><span class="n">volume</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -1362,26 +1360,31 @@
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="regional_ts_diagrams.html">main</a></dd>
-      <dd><a href="../../../../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

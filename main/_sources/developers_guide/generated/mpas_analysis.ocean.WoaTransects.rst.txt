@@ -18,6 +18,7 @@
       ~WoaTransects.check_analysis_enabled
       ~WoaTransects.check_generate
       ~WoaTransects.close
+      ~WoaTransects.get_mesh_filename
       ~WoaTransects.is_alive
       ~WoaTransects.join
       ~WoaTransects.kill

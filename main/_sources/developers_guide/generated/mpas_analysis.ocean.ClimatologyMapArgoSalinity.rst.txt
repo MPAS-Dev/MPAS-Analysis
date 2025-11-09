@@ -18,6 +18,7 @@
       ~ClimatologyMapArgoSalinity.check_analysis_enabled
       ~ClimatologyMapArgoSalinity.check_generate
       ~ClimatologyMapArgoSalinity.close
+      ~ClimatologyMapArgoSalinity.get_mesh_filename
       ~ClimatologyMapArgoSalinity.is_alive
       ~ClimatologyMapArgoSalinity.join
       ~ClimatologyMapArgoSalinity.kill

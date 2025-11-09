@@ -18,6 +18,7 @@
       ~ClimatologyMapVel.check_analysis_enabled
       ~ClimatologyMapVel.check_generate
       ~ClimatologyMapVel.close
+      ~ClimatologyMapVel.get_mesh_filename
       ~ClimatologyMapVel.is_alive
       ~ClimatologyMapVel.join
       ~ClimatologyMapVel.kill

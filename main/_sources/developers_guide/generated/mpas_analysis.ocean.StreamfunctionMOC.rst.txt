@@ -18,6 +18,7 @@
       ~StreamfunctionMOC.check_analysis_enabled
       ~StreamfunctionMOC.check_generate
       ~StreamfunctionMOC.close
+      ~StreamfunctionMOC.get_mesh_filename
       ~StreamfunctionMOC.is_alive
       ~StreamfunctionMOC.join
       ~StreamfunctionMOC.kill

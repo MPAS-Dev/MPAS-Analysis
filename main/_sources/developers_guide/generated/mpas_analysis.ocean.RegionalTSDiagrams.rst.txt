@@ -18,6 +18,7 @@
       ~RegionalTSDiagrams.check_analysis_enabled
       ~RegionalTSDiagrams.check_generate
       ~RegionalTSDiagrams.close
+      ~RegionalTSDiagrams.get_mesh_filename
       ~RegionalTSDiagrams.is_alive
       ~RegionalTSDiagrams.join
       ~RegionalTSDiagrams.kill

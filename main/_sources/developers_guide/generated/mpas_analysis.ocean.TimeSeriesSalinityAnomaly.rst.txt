@@ -18,6 +18,7 @@
       ~TimeSeriesSalinityAnomaly.check_analysis_enabled
       ~TimeSeriesSalinityAnomaly.check_generate
       ~TimeSeriesSalinityAnomaly.close
+      ~TimeSeriesSalinityAnomaly.get_mesh_filename
       ~TimeSeriesSalinityAnomaly.is_alive
       ~TimeSeriesSalinityAnomaly.join
       ~TimeSeriesSalinityAnomaly.kill

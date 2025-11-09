@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -54,6 +54,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
@@ -131,9 +135,9 @@ calendar name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
+<li><p><strong>fileNames</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>strings</em>) – A lsit of file paths to read</p></li>
 <li><p><strong>calendar</strong> ({<code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code>, <code class="docutils literal notranslate"><span class="pre">'noleap'</span></code>}, optional) – The name of one of the calendars supported by MPAS cores</p></li>
-<li><p><strong>config</strong> (<a class="reference external" href="http://mpas-dev.github.io/MPAS-Tools/master/generated/mpas_tools.config.MpasConfigParser.html#mpas_tools.config.MpasConfigParser" title="(in mpas_tools v0.36.0)"><em>mpas_tools.config.MpasConfigParser</em></a>) – Contains configuration options</p></li>
+<li><p><strong>config</strong> (<em>tranche.Tranche</em>) – Contains configuration options</p></li>
 <li><p><strong>simulationStartTime</strong> (<em>string</em><em>, </em><em>optional</em>) – <p>The start date of the simulation, used to convert from time variables
 expressed as days since the start of the simulation to days since the
 reference date. <code class="docutils literal notranslate"><span class="pre">simulationStartTime</span></code> takes one of the following
@@ -148,8 +152,8 @@ start of the simulation.</p>
 </p></li>
 <li><p><strong>timeVariableName</strong> (<em>string</em><em>, </em><em>optional</em>) – The name of the time variable (typically <code class="docutils literal notranslate"><span class="pre">'Time'</span></code> if using a
 <code class="docutils literal notranslate"><span class="pre">variableMap</span></code> or <code class="docutils literal notranslate"><span class="pre">'xtime'</span></code> if not using a <code class="docutils literal notranslate"><span class="pre">variableMap</span></code>)</p></li>
-<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
-<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
+<li><p><strong>variableList</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><em>list</em></a><em> of </em><em>strings</em><em>, </em><em>optional</em>) – If present, a list of variables to be included in the data set</p></li>
+<li><p><strong>selValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and values or arrays of
 values used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.sel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -157,7 +161,7 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
+<li><p><strong>iselValues</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – <p>A dictionary of coordinate names (keys) and indices, slices or
 arrays of indices used to slice the variales in the data set.  See
 <code class="docutils literal notranslate"><span class="pre">xarray.DataSet.isel()</span></code> for details on how this dictonary is used.
 An example:</p>
@@ -166,15 +170,15 @@ An example:</p>
 </pre></div>
 </div>
 </p></li>
-<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
+<li><p><strong>variableMap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – A dictionary with keys that are variable names used by
 MPAS-Analysis and values that are lists of possible names for the same
 variable in the MPAS dycore that produced the data set (which may
 differ between versions).</p></li>
-<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>startDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.13)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
+<li><p><strong>endDate</strong> (<em>string</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><em>datetime.datetime</em></a><em>, </em><em>optional</em>) – If present, the first and last dates to be used in the data set.  The
 time variable is sliced to only include dates within this range.</p></li>
-<li><p><strong>chunking</strong> (<em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
+<li><p><strong>chunking</strong> (<em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>True</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a><em>, </em><em>optional</em>) – If integer is present, applies maximum chunk size from config file
 value <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>, otherwise if None do not perform chunking.  If
 True, use automated chunking using default config value
 <code class="docutils literal notranslate"><span class="pre">maxChunkSize</span></code>. If chunking is a dict use dictionary values for
@@ -186,10 +190,10 @@ chunking.</p></li>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.13)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – If the time variable has an unsupported type (not a date string,
     a floating-pont number of days since the start of the simulation
     or a <code class="docutils literal notranslate"><span class="pre">numpy.datatime64</span></code> object).</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.13)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If the time variable is not found in the data set or if the time
     variable is a number of days since the start of the simulation but
     simulationStartTime is None.</p></li>
 </ul>
@@ -223,26 +227,31 @@ chunking.</p></li>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="mpas_analysis.shared.generalized_reader.generalized_reader.open_multifile_dataset.html">main</a></dd>
-      <dd><a href="../../../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

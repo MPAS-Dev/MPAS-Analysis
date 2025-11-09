@@ -19,6 +19,7 @@
       ~ComputeRegionMasks.check_analysis_enabled
       ~ComputeRegionMasks.check_generate
       ~ComputeRegionMasks.close
+      ~ComputeRegionMasks.get_mesh_filename
       ~ComputeRegionMasks.is_alive
       ~ComputeRegionMasks.join
       ~ComputeRegionMasks.kill

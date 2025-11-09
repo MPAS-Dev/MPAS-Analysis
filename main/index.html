@@ -6,14 +6,14 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MPAS-Analysis &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>MPAS-Analysis &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="_static/documentation_options.js?v=a8da1a53"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -53,6 +53,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -146,6 +150,7 @@ used those components.</p>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapBGC.html">climatologyMapBGC</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapCustom.html">climatologyMapCustom</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapEKE.html">climatologyMapEKE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
@@ -159,10 +164,11 @@ used those components.</p>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapSSH.html">climatologyMapSSH</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapVel.html">climatologyMapVel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapWindStressCurl.html">climatologyMapWindStressCurl</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/climatologyMapWoa.html">climatologyMapWoa</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/antshipTransects.html">antshipTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/conservation.html">conservation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/geojsonTransects.html">geojsonTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/geojsonNetcdfTransects.html">geojsonNetcdfTransects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/indexNino34.html">indexNino34</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users_guide/tasks/meridionalHeatTransport.html">meridionalHeatTransport</a></li>
@@ -232,6 +238,36 @@ used those components.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/quick_start.html">Quick Start for Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#fork-and-clone-the-repository">1. Fork and Clone the Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#configure-git">2. Configure Git</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#set-up-ssh-keys">3. Set Up SSH Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#create-a-development-worktree">4. Create a Development Worktree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#set-up-conda-environment">5. Set Up Conda Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#activate-environment-each-session">6. Activate Environment (each session)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#configure-and-run-mpas-analysis">7. Configure and Run MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#view-results">8. View Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/quick_start.html#additional-recommendations">Additional Recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/docs.html">Building the Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/docs.html#previewing-the-documentation">Previewing the Documentation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/test_suite.html">Test Suite Infrastructure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/test_suite.html#overview-of-test-scripts">Overview of Test Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/test_suite.html#supported-machines">Supported Machines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/test_suite.html#modifying-the-test-suite">Modifying the Test Suite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/test_suite.html#best-practices">Best Practices</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers_guide/releasing.html">Releasing a New Version</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/releasing.html#version-bump-and-dependency-updates">Version Bump and Dependency Updates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/releasing.html#tagging-and-publishing-a-release-candidate">Tagging and Publishing a Release Candidate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/releasing.html#releasing-a-stable-version">Releasing a Stable Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers_guide/releasing.html#post-release-actions">Post Release Actions</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="developers_guide/api.html">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="developers_guide/api.html#downloading-data">Downloading data</a></li>
@@ -295,26 +331,31 @@ used those components.</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="index.html">main</a></dd>
-      <dd><a href="../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="./">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

@@ -5,14 +5,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.climatology_map_antarctic_melt &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>mpas_analysis.ocean.climatology_map_antarctic_melt &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -51,6 +51,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../developers_guide/api.html">API reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../design_docs/index.html">Design Documents</a></li>
 </ul>
@@ -148,7 +152,7 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        config : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
@@ -157,7 +161,7 @@
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
 <span class="sd">            A task for computing region masks</span>
 
-<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        controlConfig : tranche.Tranche</span>
 <span class="sd">            Configuration options for a control run</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Authors</span>
@@ -433,8 +437,8 @@
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="c1"># first, load the land-ice mask from the restart file</span>
-        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restartFileName</span><span class="p">)</span>
+        <span class="c1"># first, load the land-ice mask from the mesh file</span>
+        <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="p">[[</span><span class="s1">&#39;landIceMask&#39;</span><span class="p">]]</span>
         <span class="n">dsLandIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">=</span> <span class="n">dsLandIceMask</span><span class="o">.</span><span class="n">landIceMask</span> <span class="o">&gt;</span> <span class="mf">0.</span>
@@ -507,7 +511,7 @@
         <span class="c1"># stereographic coordinates</span>
         <span class="n">projection</span> <span class="o">=</span> <span class="n">get_pyproj_projection</span><span class="p">(</span><span class="n">comparison_grid_name</span><span class="o">=</span><span class="s1">&#39;antarctic&#39;</span><span class="p">)</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">ProjectionGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span>
-            <span class="n">projection</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">xVarName</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">yVarName</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+            <span class="n">projection</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span> <span class="n">x_var_name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">y_var_name</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
 
         <span class="c1"># update the mesh name to match the format used elsewhere in</span>
         <span class="c1"># MPAS-Analysis</span>
@@ -516,7 +520,7 @@
         <span class="n">width</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">height</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">res</span> <span class="o">=</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">meshName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_Antarctic_stereo&#39;</span>
+        <span class="n">obsDescriptor</span><span class="o">.</span><span class="n">mesh_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s1">x</span><span class="si">{</span><span class="n">height</span><span class="si">}</span><span class="s1">km_</span><span class="si">{</span><span class="n">res</span><span class="si">}</span><span class="s1">km_Antarctic_stereo&#39;</span>
 
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
@@ -560,7 +564,7 @@
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        controlConfig : mpas_tools.config.MpasConfigParser</span>
+<span class="sd">        controlConfig : tranche.Tranche</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
 
 <span class="sd">        regionMasksTask : ``ComputeRegionMasks``</span>
@@ -655,12 +659,11 @@
                 <span class="n">cellMasks</span> <span class="o">=</span> \
                     <span class="n">dsRegionMask</span><span class="o">.</span><span class="n">regionCellMasks</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;nRegions&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">})</span>
 
-                <span class="n">restartFileName</span> <span class="o">=</span> \
-                    <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
-                <span class="n">dsRestart</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFileName</span><span class="p">)</span>
-                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsRestart</span><span class="o">.</span><span class="n">areaCell</span>
+                <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span>
+                <span class="n">landIceFraction</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">landIceFraction</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">areaCell</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
 
                 <span class="c1"># convert from kg/s to kg/yr</span>
                 <span class="n">totalMeltFlux</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span> <span class="o">*</span> \
@@ -828,26 +831,31 @@
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="climatology_map_antarctic_melt.html">main</a></dd>
-      <dd><a href="../../../../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

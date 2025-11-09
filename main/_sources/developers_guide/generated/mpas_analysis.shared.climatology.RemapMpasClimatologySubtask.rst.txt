@@ -22,6 +22,7 @@
       ~RemapMpasClimatologySubtask.customize_masked_climatology
       ~RemapMpasClimatologySubtask.customize_remapped_climatology
       ~RemapMpasClimatologySubtask.get_masked_file_name
+      ~RemapMpasClimatologySubtask.get_mesh_filename
       ~RemapMpasClimatologySubtask.get_remapped_file_name
       ~RemapMpasClimatologySubtask.is_alive
       ~RemapMpasClimatologySubtask.join

@@ -6,20 +6,20 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>mpas_analysis.ocean.utility.compute_zmid &mdash; MPAS-Analysis 1.13.0 documentation</title>
+  <title>mpas_analysis.ocean.utility.compute_zmid &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8f5b6f32"></script>
+      <script src="../../_static/documentation_options.js?v=a8da1a53"></script>
       <script src="../../_static/doctools.js?v=9bcbadda"></script>
       <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html" />
+    <link rel="next" title="mpas_analysis.ocean.utility.compute_zinterface" href="mpas_analysis.ocean.utility.compute_zinterface.html" />
     <link rel="prev" title="mpas_analysis.ocean.utility.get_standard_region_names" href="mpas_analysis.ocean.utility.get_standard_region_names.html" />
     <link href="../../_static/style.css" rel="stylesheet" type="text/css">
 
@@ -54,6 +54,10 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releasing.html">Releasing a New Version</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../api.html#top-level-script-mpas-analysis">Top-level script: mpas_analysis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api.html#downloading-data">Downloading data</a></li>
@@ -65,6 +69,8 @@
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.utility.add_standard_regions_and_subset.html">mpas_analysis.ocean.utility.add_standard_regions_and_subset</a></li>
 <li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.utility.get_standard_region_names.html">mpas_analysis.ocean.utility.get_standard_region_names</a></li>
 <li class="toctree-l4 current"><a class="current reference internal" href="#">mpas_analysis.ocean.utility.compute_zmid</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.utility.compute_zinterface.html">mpas_analysis.ocean.utility.compute_zinterface</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic.html">mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../api.html#sea-ice-tasks">Sea ice tasks</a></li>
@@ -142,7 +148,7 @@ the bathymetry</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mpas_analysis.ocean.utility.get_standard_region_names.html" class="btn btn-neutral float-left" title="mpas_analysis.ocean.utility.get_standard_region_names" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc.html" class="btn btn-neutral float-right" title="mpas_analysis.sea_ice.ClimatologyMapSeaIceConc" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpas_analysis.ocean.utility.compute_zinterface.html" class="btn btn-neutral float-right" title="mpas_analysis.ocean.utility.compute_zinterface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
@@ -161,26 +167,31 @@ the bathymetry</p>
       </div>
     </section>
   </div>
-  
-<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
-  <span class="rst-current-version" data-toggle="rst-current-version">
-    <span class="fa fa-book"> Other Versions</span>
-    v: main
-    <span class="fa fa-caret-down"></span>
-  </span>
-  <div class="rst-other-versions">
-    <dl>
-      <dt>Branches</dt>
-      <dd><a href="mpas_analysis.ocean.utility.compute_zmid.html">main</a></dd>
-      <dd><a href="../../../develop/index.html">develop</a></dd>
-    </dl>
-  </div>
-</div>
-<script>
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="main">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
 
 </body>
 </html>

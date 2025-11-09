@@ -18,6 +18,7 @@
       ~ClimatologyMapSeaIceSnowMelt.check_analysis_enabled
       ~ClimatologyMapSeaIceSnowMelt.check_generate
       ~ClimatologyMapSeaIceSnowMelt.close
+      ~ClimatologyMapSeaIceSnowMelt.get_mesh_filename
       ~ClimatologyMapSeaIceSnowMelt.is_alive
       ~ClimatologyMapSeaIceSnowMelt.join
       ~ClimatologyMapSeaIceSnowMelt.kill

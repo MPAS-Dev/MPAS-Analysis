@@ -18,6 +18,7 @@
       ~ClimatologyMapWoa.check_analysis_enabled
       ~ClimatologyMapWoa.check_generate
       ~ClimatologyMapWoa.close
+      ~ClimatologyMapWoa.get_mesh_filename
       ~ClimatologyMapWoa.is_alive
       ~ClimatologyMapWoa.join
       ~ClimatologyMapWoa.kill
