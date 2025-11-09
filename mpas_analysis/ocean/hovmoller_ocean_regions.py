@@ -48,7 +48,7 @@ class HovmollerOceanRegions(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
@@ -57,7 +57,7 @@ class HovmollerOceanRegions(AnalysisTask):
         oceanRegionalProfilesTask : mpas_analysis.ocean.OceanRegionalProfiles
             A task for computing ocean regional profiles
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -76,6 +76,7 @@ class HovmollerOceanRegions(AnalysisTask):
 
         regionGroups = config.getexpression('hovmollerOceanRegions',
                                             'regionGroups')
+        anyAnomalies = False
 
         for regionGroup in regionGroups:
             suffix = regionGroup[0].upper() + regionGroup[1:].replace(' ', '')
@@ -87,6 +88,8 @@ class HovmollerOceanRegions(AnalysisTask):
 
             computeAnomaly = config.getboolean(regionGroupSection,
                                                'computeAnomaly')
+            if computeAnomaly:
+                anyAnomalies = True
 
             fields = config.getexpression(regionGroupSection, 'fields')
 
@@ -185,6 +188,8 @@ class HovmollerOceanRegions(AnalysisTask):
                     self.add_subtask(hovmollerSubtask)
 
         self.run_after(oceanRegionalProfilesTask)
+        if anyAnomalies:
+            self.tags.append('anomaly')
 
 
 class ComputeHovmollerAnomalySubtask(AnalysisTask):

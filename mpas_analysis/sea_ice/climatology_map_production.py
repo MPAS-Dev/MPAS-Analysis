@@ -35,7 +35,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -44,7 +44,7 @@ class ClimatologyMapSeaIceProduction(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -254,8 +254,8 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
         Compute the total sea ice production in m yr^-1 from the individual
         production fields in m s^-1.
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         units_scale_factor = 60 * 60 * 24 * 365
 
@@ -265,6 +265,7 @@ class RemapMpasSeaIceProductionClimatology(RemapMpasClimatologySubtask):
 
         production = (congelation + frazil + snowice) * units_scale_factor
         return production
+
 
 class RemapAnIceFluxProductionClimatology(RemapObservedClimatologySubtask):
     """
@@ -295,9 +296,9 @@ class RemapAnIceFluxProductionClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLon2DGridDescriptor.read(fileName=fileName,
-                                                    latVarName='lat',
-                                                    lonVarName='lon')
+        obsDescriptor = LatLon2DGridDescriptor.read(filename=fileName,
+                                                    lat_var_name='lat',
+                                                    lon_var_name='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

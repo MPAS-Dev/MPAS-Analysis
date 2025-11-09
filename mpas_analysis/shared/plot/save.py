@@ -23,7 +23,7 @@ def savefig(filename, config, tight=True, pad_inches=0.1):
     filename : str
         the file name to be written
 
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     tight : bool, optional

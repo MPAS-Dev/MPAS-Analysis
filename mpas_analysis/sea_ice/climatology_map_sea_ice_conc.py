@@ -38,7 +38,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -47,7 +47,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -184,7 +184,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                         galleryName='Observations: SSM/I {}'.format(
                             prefix),
                         maskMinThreshold=minConcentration,
-                        extend='neither',
+                        extend='both',
                         prependComparisonGrid=False)
 
                     self.add_subtask(subtask)
@@ -231,7 +231,7 @@ class ClimatologyMapSeaIceConc(AnalysisTask):
                     groupLink='{}_conc'.format(hemisphere.lower()),
                     galleryName=galleryName,
                     maskMinThreshold=minConcentration,
-                    extend='neither',
+                    extend='both',
                     prependComparisonGrid=False)
 
                 self.add_subtask(subtask)
@@ -265,9 +265,9 @@ class RemapObservedConcClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='t_lat',
-                                                  lonVarName='t_lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='t_lat',
+                                                  lon_var_name='t_lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

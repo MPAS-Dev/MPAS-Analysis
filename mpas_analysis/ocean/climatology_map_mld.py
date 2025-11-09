@@ -38,13 +38,13 @@ class ClimatologyMapMLD(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -194,8 +194,8 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
         dsObs.close()
         return obsDescriptor
 

@@ -34,7 +34,7 @@ class PlotHovmollerSubtask(AnalysisTask):
     Attributes
     ----------
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any)
 
     regionName : str
@@ -148,7 +148,7 @@ class PlotHovmollerSubtask(AnalysisTask):
         subtaskName :  str, optional
             The name of the subtask (``plotHovmoller<RegionName>`` by default)
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         regionMaskFile : str, optional
@@ -259,19 +259,15 @@ class PlotHovmollerSubtask(AnalysisTask):
         ds = ds.set_xindex('regionNames')
         ds = ds.sel(regionNames=self.regionName)
 
-        # Note: restart file, not a mesh file because we need refBottomDepth,
+        # Note: mesh file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
-        try:
-            restartFile = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for plotting time series vs. depth')
+        meshFilename = self.get_mesh_filename()
 
         # Define/read in general variables
         self.logger.info('  Read in depth...')
-        with xr.open_dataset(restartFile) as dsRestart:
+        with xr.open_dataset(meshFilename) as dsMesh:
             # reference depth [m]
-            depths = dsRestart.refBottomDepth.values
+            depths = dsMesh.refBottomDepth.values
             z = np.zeros(depths.shape)
             z[0] = -0.5 * depths[0]
             z[1:] = -0.5 * (depths[0:-1] + depths[1:])

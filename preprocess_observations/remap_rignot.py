@@ -15,8 +15,7 @@ import matplotlib.colors as colors
 import pyproj
 import sys
 
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import ProjectionGridDescriptor
+from pyremap import ProjectionGridDescriptor, Remapper
 from mpas_analysis.shared.mpas_xarray.mpas_xarray import subset_variables
 from mpas_analysis.shared.climatology \
     import get_Antarctic_stereographic_comparison_descriptor
@@ -50,21 +49,22 @@ projection = pyproj.Proj('+proj=stere +lat_ts=-71.0 +lat_0=-90 +lon_0=0.0 '
 
 inDescriptor = ProjectionGridDescriptor(projection)
 
-inDescriptor.read(inFileName, xVarName='xaxis', yVarName='yaxis',
-                  meshName=inGridName)
+inDescriptor.read(inFileName, x_var_name='xaxis', y_var_name='yaxis',
+                  mesh_name=inGridName)
 
 outDescriptor = get_Antarctic_stereographic_comparison_descriptor(config)
-outGridName = outDescriptor.meshName
+outGridName = outDescriptor.mesh_name
 
 outFileName = 'Rignot_2013_melt_rates_{}.nc'.format(outGridName)
 
 mappingFileName = 'map_{}_to_{}.nc'.format(inGridName, outGridName)
 
-remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
+remapper = Remapper(map_filename=mappingFileName, method='bilinear')
+remapper.src_descriptor = inDescriptor
+remapper.dst_descriptor = outDescriptor
+remapper.build_map()
 
-remapper.build_mapping_file(method='bilinear')
-
-remappedDataset = remapper.remap(ds, renormalizationThreshold=0.01)
+remappedDataset = remapper.remap_numpy(ds, renormalizationThreshold=0.01)
 
 remappedDataset.attrs['history'] = ' '.join(sys.argv)
 remappedDataset.to_netcdf(outFileName)

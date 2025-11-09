@@ -34,7 +34,7 @@ class ClimatologyMapSeaIceVolumeRidge(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask
@@ -43,7 +43,7 @@ class ClimatologyMapSeaIceVolumeRidge(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        control_config : mpas_tools.config.MpasConfigParser, optional
+        control_config : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -251,14 +251,12 @@ class RemapMpasSeaIceVolumeRidgeClimatology(RemapMpasClimatologySubtask):
 
     def _compute_volumeridge(self, climatology):
         """
-        Compute the mean ridge thickness in m 
+        Compute the mean ridge thickness in m
         """
-        ds_restart = xr.open_dataset(self.restartFileName)
-        ds_restart = ds_restart.isel(Time=0)
+        ds_mesh = xr.open_dataset(self.meshFilename)
+        ds_mesh = ds_mesh.isel(Time=0)
 
         volume = climatology['timeMonthly_avg_ridgedIceVolumeAverage']
-        area = climatology['timeMonthly_avg_iceAreaCell']
 
         volumeridge = volume        # volume per unit sea ice area (m)
-#        volumeridge = volume*area   # volume per unit grid cell area (m)
         return volumeridge

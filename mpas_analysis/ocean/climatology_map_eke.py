@@ -37,13 +37,13 @@ class ClimatologyMapEKE(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -239,9 +239,9 @@ class RemapObservedEKEClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='Lat',
-                                                  lonVarName='Lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='Lat',
+                                                  lon_var_name='Lon')
 
         return obsDescriptor
 

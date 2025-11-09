@@ -37,13 +37,13 @@ class ClimatologyMapBGC(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         Authors
@@ -346,8 +346,8 @@ class RemapObservedBGCClimatology(RemapObservedClimatologySubtask):
         # coordinates
         dsObs = self.build_observational_dataset(fileName)
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

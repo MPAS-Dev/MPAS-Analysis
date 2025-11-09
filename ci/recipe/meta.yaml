@@ -1,5 +1,6 @@
 {% set name = "MPAS-Analysis" %}
-{% set version = "1.13.0" %}
+{% set version = "1.14.0" %}
+{% set python_min = "3.10" %}
 
 package:
   name: {{ name|lower }}
@@ -9,30 +10,32 @@ source:
   path: ../..
 
 build:
-    number: 0
-    script: {{ PYTHON }} -m pip install --no-deps --no-build-isolation -vv .
-    noarch: python
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  noarch: python
+  entry_points:
+    - mpas_analysis = mpas_analysis.__main__:main
+    - download_analysis_data = mpas_analysis.download_data:download_analysis_data
 
 requirements:
   host:
-    - python >=3.9
+    - python {{ python_min }}
     - pip
-    - setuptools
+    - setuptools >=60
   run:
-    - python >=3.9
+    - python >={{ python_min }},<3.13
     - cartopy >=0.18.0
     - cartopy_offlinedata
     - cmocean
     - dask
     - esmf >=8.4.2,<9.0.0
-    - esmf=*=mpi_mpich_*
     - f90nml
     - geometric_features >=1.6.1
     - gsw
     - lxml
     - mache >=1.11.0
     - matplotlib-base >=3.9.0
-    - mpas_tools >=0.34.1,<1.0.0
+    - mpas_tools >=1.3.0,<2.0.0
     - nco >=4.8.1,!=5.2.6
     - netcdf4
     - numpy >=2.0,<3.0
@@ -40,18 +43,19 @@ requirements:
     - pillow >=10.0.0,<11.0.0
     - progressbar2
     - pyproj
-    - pyremap >=1.2.0,<2.0.0
+    - pyremap >=2.0.0,<3.0.0
     - python-dateutil
     - requests
     - scipy >=1.7.0
-    - setuptools
     - shapely >=2.0,<3.0
+    - tranche >=0.2.3
     - xarray >=0.14.1
 
 test:
   requires:
     - pytest
     - pip
+    - python {{ python_min }}
   imports:
     - mpas_analysis
     - pytest
@@ -78,5 +82,6 @@ about:
 
 extra:
   recipe-maintainers:
+    - andrewdnolan
     - xylar
     - jhkennedy

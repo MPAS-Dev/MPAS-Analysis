@@ -44,13 +44,13 @@ class TimeSeriesOceanRegions(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -106,10 +106,16 @@ class TimeSeriesOceanRegions(AnalysisTask):
                 'tDim': 'time',
                 'legend': 'WOA23 1991-2020 ANN mean'}}
 
+        anyAnomalies = False
+
         for regionGroup in regionGroups:
             sectionSuffix = regionGroup[0].upper() + \
                 regionGroup[1:].replace(' ', '')
             sectionName = 'timeSeries{}'.format(sectionSuffix)
+
+            anomalyVars = config.getexpression(sectionName, 'anomalies')
+            if len(anomalyVars) > 0:
+                anyAnomalies = True
 
             regionNames = config.getexpression(sectionName, 'regionNames')
             if len(regionNames) == 0:
@@ -191,6 +197,9 @@ class TimeSeriesOceanRegions(AnalysisTask):
                     masksSubtask.geojsonFileName)
                 plotRegionSubtask.run_after(combineSubtask)
                 self.add_subtask(plotRegionSubtask)
+
+        if anyAnomalies:
+            self.tags.append('anomaly')
 
 
 class ComputeRegionDepthMasksSubtask(AnalysisTask):
@@ -286,11 +295,7 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
             return
 
         # Load mesh related variables
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for ocean region time series')
+        meshFilename = self.get_mesh_filename()
 
         if config.has_option(sectionName, 'zmin'):
             config_zmin = config.getfloat(sectionName, 'zmin')
@@ -302,13 +307,13 @@ class ComputeRegionDepthMasksSubtask(AnalysisTask):
         else:
             config_zmax = None
 
-        dsRestart = xarray.open_dataset(restartFileName).isel(Time=0)
-        zMid = compute_zmid(dsRestart.bottomDepth, dsRestart.maxLevelCell-1,
-                            dsRestart.layerThickness)
-        areaCell = dsRestart.areaCell
-        if 'landIceMask' in dsRestart:
+        dsMesh = xarray.open_dataset(meshFilename).isel(Time=0)
+        zMid = compute_zmid(dsMesh.bottomDepth, dsMesh.maxLevelCell-1,
+                            dsMesh.layerThickness)
+        areaCell = dsMesh.areaCell
+        if 'landIceMask' in dsMesh:
             # only the region outside of ice-shelf cavities
-            openOceanMask = dsRestart.landIceMask == 0
+            openOceanMask = dsMesh.landIceMask == 0
         else:
             openOceanMask = None
 
@@ -1041,7 +1046,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
     sectionName : str
         The section of the config file to get options from
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     """
@@ -1071,7 +1076,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the region to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
 
         sectionName : str
@@ -1345,7 +1350,7 @@ class PlotRegionTimeSeriesSubtask(AnalysisTask):
             # and cartopy doesn't play too well with tight_layout anyway
             plt.tight_layout()
 
-            add_inset(fig, fc, width=2.0, height=2.0)
+            add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
             savefig(outFileName, config, tight=False)
 

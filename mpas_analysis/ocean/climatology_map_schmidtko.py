@@ -47,13 +47,13 @@ class ClimatologyMapSchmidtko(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -270,7 +270,7 @@ class RemapSchmidtko(RemapObservedClimatologySubtask):
         mesh_name = ds_obs.attrs['meshName']
 
         obs_descriptor = ProjectionGridDescriptor.create(
-            projection, x=x, y=y, meshName=mesh_name)
+            projection, x=x, y=y, mesh_name=mesh_name)
         return obs_descriptor
 
     def build_observational_dataset(self, fileName):

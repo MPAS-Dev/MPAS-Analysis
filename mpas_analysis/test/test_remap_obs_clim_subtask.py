@@ -21,7 +21,7 @@ import os
 import xarray
 from pyremap import LatLonGridDescriptor
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.climatology import RemapObservedClimatologySubtask
@@ -59,9 +59,9 @@ class RemapObservedMLDClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):
@@ -104,7 +104,7 @@ class TestRemapObsClimSubtask(TestCase):
 
     def setup_config(self):
         configPath = self.datadir.join('remap_obs.cfg')
-        config = MpasConfigParser()
+        config = Tranche()
         config.add_from_file(str(configPath))
         config.set('input', 'baseDirectory', str(self.datadir))
         config.set('diagnostics', 'base_path', str(self.datadir))

@@ -6,7 +6,7 @@
 source /lus/theta-fs0/projects/ccsm/acme/tools/e3sm-unified/load_latest_e3sm_unified_cooley.sh
 # alternatively, you can load your own development environment
 # source ~/mambaforge/etc/profile.d/conda.sh
-# conda activate mpas_dev
+# conda activate mpas_analysis_dev
 # export E3SMU_MACHINE=cooley
 
 export HDF5_USE_FILE_LOCKING=FALSE

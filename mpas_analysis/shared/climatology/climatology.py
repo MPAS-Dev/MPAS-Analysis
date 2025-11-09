@@ -47,7 +47,7 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     sourceDescriptor : pyremap.MeshDescriptor
@@ -84,10 +84,10 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
         # we need to remap because the grids don't match
 
         if vertices:
-            srcMeshName = f'{sourceDescriptor.meshName}_vertices'
+            srcMeshName = f'{sourceDescriptor.mesh_name}_vertices'
         else:
-            srcMeshName = sourceDescriptor.meshName
-        destMeshName = comparisonDescriptor.meshName
+            srcMeshName = sourceDescriptor.mesh_name
+        destMeshName = comparisonDescriptor.mesh_name
 
         mappingBaseName = \
             f'{mappingFilePrefix}_{srcMeshName}_to_{destMeshName}_{method}.nc'
@@ -119,22 +119,33 @@ def get_remapper(config, sourceDescriptor, comparisonDescriptor,
             make_directories(mappingSubdirectory)
             mappingFileName = f'{mappingSubdirectory}/{mappingBaseName}'
 
-    remapper = Remapper(sourceDescriptor, comparisonDescriptor,
-                        mappingFileName)
-
     mpiTasks = config.getint('execute', 'mapMpiTasks')
     esmf_parallel_exec = config.get('execute', 'mapParallelExec')
     if esmf_parallel_exec == 'None':
         esmf_parallel_exec = None
 
-    mappingSubdirectory = \
-        build_config_full_path(config, 'output',
-                               'mappingSubdirectory')
-    make_directories(mappingSubdirectory)
-    with TemporaryDirectory(dir=mappingSubdirectory) as tempdir:
-        remapper.build_mapping_file(method=method, logger=logger,
-                                    mpiTasks=mpiTasks, tempdir=tempdir,
-                                    esmf_parallel_exec=esmf_parallel_exec)
+    remapper = Remapper(
+        ntasks=mpiTasks,
+        map_filename=mappingFileName,
+        method=method,
+        parallel_exec=esmf_parallel_exec,
+        src_descriptor=sourceDescriptor,
+        dst_descriptor=comparisonDescriptor,
+    )
+
+    if mappingFileName is not None and not os.path.exists(mappingFileName):
+        mappingSubdirectory = \
+            build_config_full_path(
+                config, 'output', 'mappingSubdirectory')
+        make_directories(mappingSubdirectory)
+        with TemporaryDirectory(dir=mappingSubdirectory) as tempdir:
+            remapper.src_scrip_filename = os.path.join(
+                tempdir, remapper.src_scrip_filename)
+            remapper.dst_scrip_filename = os.path.join(
+                tempdir, remapper.dst_scrip_filename)
+
+            # TEMP: logger not supported in this RC
+            remapper.build_map(logger=logger)
 
     return remapper
 
@@ -323,7 +334,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Contains configuration options
 
     climatologyDataSet : ``xarray.DataSet`` or ``xarray.DataArray`` object
@@ -358,7 +369,7 @@ def remap_and_write_climatology(config, climatologyDataSet,
 
     useNcremap = config.getboolean('climatology', 'useNcremap')
 
-    if remapper.mappingFileName is None:
+    if remapper.map_filename is None:
         # no remapping is needed
         remappedClimatology = climatologyDataSet
     else:
@@ -372,17 +383,18 @@ def remap_and_write_climatology(config, climatologyDataSet,
         if useNcremap:
             if not os.path.exists(climatologyFileName):
                 write_netcdf(climatologyDataSet, climatologyFileName)
-            remapper.remap_file(inFileName=climatologyFileName,
-                                outFileName=remappedFileName,
-                                overwrite=True,
-                                renormalize=renormalizationThreshold,
-                                logger=logger,
-                                parallel_exec=parallel_exec)
+            remapper.ncremap(
+                in_filename=climatologyFileName,
+                out_filename=remappedFileName,
+                overwrite=True,
+                renormalize=renormalizationThreshold,
+                logger=logger,
+                parallel_exec=parallel_exec)
             remappedClimatology = xr.open_dataset(remappedFileName)
         else:
 
-            remappedClimatology = remapper.remap(climatologyDataSet,
-                                                 renormalizationThreshold)
+            remappedClimatology = remapper.remap_numpy(
+                climatologyDataSet, renormalizationThreshold)
             write_netcdf_with_fill(remappedClimatology, remappedFileName)
     return remappedClimatology
 
@@ -394,7 +406,7 @@ def get_unmasked_mpas_climatology_directory(config, op='avg'):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         configuration options
 
     op : {'avg', 'min', 'max'}
@@ -422,7 +434,7 @@ def get_unmasked_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         configuration options
 
     season : str
@@ -474,7 +486,7 @@ def get_masked_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     season : str
@@ -541,7 +553,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Configuration options
 
     season : str
@@ -584,7 +596,7 @@ def get_remapped_mpas_climatology_file_name(config, season, componentName,
     if comparisonGridName in known_comparison_grids:
         comparisonDescriptor = get_comparison_descriptor(config,
                                                          comparisonGridName)
-        comparisonFullMeshName = comparisonDescriptor.meshName
+        comparisonFullMeshName = comparisonDescriptor.mesh_name
     else:
         comparisonFullMeshName = comparisonGridName.replace(' ', '_')
 
@@ -677,7 +689,7 @@ def _matches_comparison(obsDescriptor, comparisonDescriptor):
             isinstance(comparisonDescriptor, ProjectionGridDescriptor):
         # pretty hard to determine if projections are the same, so we'll rely
         # on the grid names
-        match = obsDescriptor.meshName == comparisonDescriptor.meshName and \
+        match = obsDescriptor.mesh_name == comparisonDescriptor.mesh_name and \
                 len(obsDescriptor.x) == len(comparisonDescriptor.x) and \
                 len(obsDescriptor.y) == len(comparisonDescriptor.y) and \
                 numpy.all(numpy.isclose(obsDescriptor.x,

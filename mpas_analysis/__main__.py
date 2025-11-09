@@ -37,7 +37,7 @@ from importlib.resources import contents
 
 from mache import discover_machine, MachineInfo
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.shared.analysis_task import AnalysisFormatter
 
@@ -70,7 +70,7 @@ def update_time_bounds_in_config(config):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         contains config options
 
     """
@@ -88,10 +88,10 @@ def build_analysis_list(config, controlConfig):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         contains config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser or None
+    controlConfig : tranche.Tranche or None
         contains config options for a control run, or ``None`` if no config
         file for a control run was specified
 
@@ -186,6 +186,14 @@ def build_analysis_list(config, controlConfig):
         config, oceanClimatologyTasks['avg'], oceanRegionMasksTask,
         controlConfig))
 
+    analyses.append(ocean.ClimatologyMapCustom(
+        config, oceanClimatologyTasks['avg'], controlConfig))
+
+
+    analyses.append(ocean.ClimatologyMapWindStressCurl(
+        config, oceanClimatologyTasks['avg'], controlConfig)
+    )
+
     analyses.append(ocean.ConservationTask(
         config, controlConfig))
 
@@ -241,9 +249,9 @@ def build_analysis_list(config, controlConfig):
     analyses.append(ocean.WoaTransects(config, oceanClimatologyTasks['avg'],
                                        controlConfig))
 
-    analyses.append(ocean.GeojsonTransects(config,
-                                           oceanClimatologyTasks['avg'],
-                                           controlConfig))
+    analyses.append(ocean.GeojsonNetcdfTransects(config,
+                                                 oceanClimatologyTasks['avg'],
+                                                 controlConfig))
 
     oceanRegionalProfiles = ocean.OceanRegionalProfiles(
         config, oceanRegionMasksTask, controlConfig)
@@ -580,7 +588,7 @@ def update_generate(config, generate):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         contains config options
 
     generate : str
@@ -607,7 +615,7 @@ def run_analysis(config, analyses):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         contains config options
 
     analyses : OrderedDict of ``AnalysisTask`` objects
@@ -861,7 +869,7 @@ def build_config(user_config_file, shared_configs, machine_info):
     if not os.path.exists(user_config_file):
         raise OSError(f'A config file {user_config_file} was specified but '
                       f'the file does not exist')
-    config = MpasConfigParser()
+    config = Tranche()
     for config_file in shared_configs:
         if config_file.endswith('.py'):
             # we'll skip config options set in python files
@@ -1045,7 +1053,7 @@ Please reinstall mpas_analysis in editable mode using:
         parser.print_help()
         sys.exit(0)
 
-    config = MpasConfigParser()
+    config = Tranche()
 
     # add default.cfg to cover default not included in the config files
     # provided on the command line

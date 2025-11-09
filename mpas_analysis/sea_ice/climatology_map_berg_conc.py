@@ -35,7 +35,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -44,7 +44,7 @@ class ClimatologyMapIcebergConc(AnalysisTask):
         hemisphere : {'NH', 'SH'}
             The hemisphere to plot
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -193,9 +193,9 @@ class RemapAltibergConcClimatology(RemapObservedClimatologySubtask):
 
         # create a descriptor of the observation grid using the lat/lon
         # coordinates
-        obsDescriptor = LatLonGridDescriptor.read(fileName=fileName,
-                                                  latVarName='latitude',
-                                                  lonVarName='longitude')
+        obsDescriptor = LatLonGridDescriptor.read(filename=fileName,
+                                                  lat_var_name='latitude',
+                                                  lon_var_name='longitude')
         return obsDescriptor
 
     def build_observational_dataset(self, fileName):

@@ -13,7 +13,10 @@ import numpy as np
 
 from mpas_analysis.shared.climatology import RemapMpasClimatologySubtask
 
-from mpas_analysis.ocean.utility import compute_zmid
+from mpas_analysis.ocean.utility import (
+    compute_zinterface,
+    compute_zmid
+)
 
 
 class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
@@ -27,11 +30,9 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         A list of depths at which the climatology will be sliced in the
         vertical.
 
-    maxLevelCell : xarray.DataArray
-        The vertical index of the bottom cell in MPAS results
-
-    verticalIndices : xarray.DataArray
-        The vertical indices of slice to be plotted
+    dsSlice : xarray.Dataset
+        A dataset containing information needed to index variables at the
+        designated depths
     """
     # Authors
     # -------
@@ -39,7 +40,7 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
 
     def __init__(self, mpasClimatologyTask, parentTask, climatologyName,
                  variableList, seasons, depths, comparisonGridNames=['latlon'],
-                 iselValues=None):
+                 iselValues=None, subtaskName='remapDepthSlices'):
 
         """
         Construct the analysis task and adds it as a subtask of the
@@ -78,18 +79,23 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         iselValues : dict, optional
             A dictionary of dimensions and indices (or ``None``) used to
             extract a slice of the MPAS field(s).
+
+        subtaskName : str, optional
+            The name of the subtask
         """
         # Authors
         # -------
         # Xylar Asay-Davis
 
         self.depths = depths
+        self.dsSlice = xr.Dataset()
 
         # call the constructor from the base class
         # (RemapMpasClimatologySubtask)
-        super(RemapDepthSlicesSubtask, self).__init__(
+        super().__init__(
             mpasClimatologyTask, parentTask, climatologyName, variableList,
-            seasons, comparisonGridNames, iselValues)
+            seasons, comparisonGridNames, iselValues,
+            subtaskName=subtaskName)
 
     def run_task(self):
         """
@@ -105,71 +111,98 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         # -------
         # Xylar Asay-Davis
 
-        # first, load the land-ice mask from the restart file
-        ds = xr.open_dataset(self.restartFileName)
+        # first, load the land-ice mask from the mesh file
+        ds = xr.open_dataset(self.meshFilename)
         ds = ds[['maxLevelCell', 'bottomDepth', 'layerThickness']]
         ds = ds.isel(Time=0)
 
-        self.maxLevelCell = ds.maxLevelCell - 1
-
         depthNames = [str(depth) for depth in self.depths]
 
-        zMid = compute_zmid(ds.bottomDepth, ds.maxLevelCell-1,
-                            ds.layerThickness)
-        ocean_mask = (ds.maxLevelCell > 0)
+        bottomDepth = ds.bottomDepth
+        layerThickness = ds.layerThickness
+        maxLevelCell = ds.maxLevelCell - 1
+        self.dsSlice['maxLevelCell'] = maxLevelCell
 
-        nVertLevels = zMid.shape[1]
+        zMid = compute_zmid(bottomDepth, maxLevelCell, layerThickness)
+
+        zInterface = compute_zinterface(
+            bottomDepth, maxLevelCell, layerThickness)
+
+        horizontalMask = maxLevelCell >= 0
+
+        nVertLevels = ds.sizes['nVertLevels']
         zMid.coords['verticalIndex'] = \
             ('nVertLevels',
              np.arange(nVertLevels))
 
-        zTop = zMid.isel(nVertLevels=0)
+        nVertLevelsP1 = zInterface.sizes['nVertLevelsP1']
+        zInterface.coords['verticalIndex'] = \
+            ('nVertLevelsP1',
+             np.arange(nVertLevelsP1))
+
+        zLevelTop = zMid.isel(nVertLevels=0)
         # Each vertical layer has at most one non-NaN value so the "sum"
         # over the vertical is used to collapse the array in the vertical
         # dimension
-        zBot = zMid.where(zMid.verticalIndex == self.maxLevelCell).sum(
+        zLevelBot = zMid.where(zMid.verticalIndex == maxLevelCell).sum(
             dim='nVertLevels')
 
-        verticalIndices = np.zeros((len(self.depths), ds.sizes['nCells']), int)
+        zInterfaceTop = zInterface.isel(nVertLevelsP1=0)
+        zInterfaceBot = zInterface.where(
+            zInterface.verticalIndex == maxLevelCell + 1).sum(
+                dim='nVertLevelsP1')
 
-        mask = np.zeros(verticalIndices.shape, bool)
+        levelIndices = np.zeros((len(self.depths), ds.sizes['nCells']), int)
+        levelMask = np.zeros(levelIndices.shape, bool)
+        interfaceIndices = np.zeros(levelIndices.shape, int)
+        interfaceMask = np.zeros(levelIndices.shape, bool)
 
         for depthIndex, depth in enumerate(self.depths):
             depth = self.depths[depthIndex]
             if depth == 'top':
-                # switch to zero-based index
-                verticalIndices[depthIndex, :] = 0
-                mask[depthIndex, :] = self.maxLevelCell.values >= 0
+                levelIndices[depthIndex, :] = 0
+                levelMask[depthIndex, :] = horizontalMask.values
+                interfaceIndices[depthIndex, :] = 0
+                interfaceMask[depthIndex, :] = horizontalMask.values
             elif depth == 'bot':
                 # switch to zero-based index
-                verticalIndices[depthIndex, :] = self.maxLevelCell.values
-                mask[depthIndex, :] = self.maxLevelCell.values >= 0
+                levelIndices[depthIndex, :] = maxLevelCell.values
+                levelMask[depthIndex, :] = horizontalMask.values
+                interfaceIndices[depthIndex, :] = maxLevelCell.values + 1
+                interfaceMask[depthIndex, :] = horizontalMask.values
             else:
+                levelDiff = np.abs(zMid - depth).where(horizontalMask,
+                                                       drop=True)
+                levelIndex = levelDiff.argmin(dim='nVertLevels')
 
-                diff = np.abs(zMid - depth).where(ocean_mask, drop=True)
-                verticalIndex = diff.argmin(dim='nVertLevels')
+                levelIndices[depthIndex, horizontalMask.values] = \
+                    levelIndex.values
+                levelMask[depthIndex, :] = np.logical_and(
+                    depth <= zLevelTop, depth >= zLevelBot).values
 
-                verticalIndices[depthIndex, ocean_mask.values] = \
-                    verticalIndex.values
-                mask[depthIndex, :] = np.logical_and(depth <= zTop,
-                                                     depth >= zBot).values
+                interfaceDiff = np.abs(zInterface - depth).where(
+                    horizontalMask, drop=True)
+                interfaceIndex = interfaceDiff.argmin(dim='nVertLevelsP1')
 
-        self.verticalIndices = \
-            xr.DataArray.from_dict({'dims': ('depthSlice', 'nCells'),
-                                    'coords': {'depthSlice':
-                                               {'dims': ('depthSlice',),
-                                                'data': depthNames}},
-                                    'data': verticalIndices})
-        self.verticalIndexMask = \
-            xr.DataArray.from_dict({'dims': ('depthSlice', 'nCells'),
-                                    'coords': {'depthSlice':
-                                               {'dims': ('depthSlice',),
-                                                'data': depthNames}},
-                                    'data': mask})
+                interfaceIndices[depthIndex, horizontalMask.values] = \
+                    interfaceIndex.values
+                interfaceMask[depthIndex, :] = np.logical_and(
+                    depth <= zInterfaceTop, depth >= zInterfaceBot).values
+
+        self.dsSlice.coords['depthSlice'] = ('depthSlice', depthNames)
+
+        self.dsSlice['levelIndices'] = (('depthSlice', 'nCells'),
+                                        levelIndices)
+        self.dsSlice['levelIndexMask'] = (('depthSlice', 'nCells'),
+                                          levelMask)
+        self.dsSlice['interfaceIndices'] = (('depthSlice', 'nCells'),
+                                            interfaceIndices)
+        self.dsSlice['interfaceIndexMask'] = (('depthSlice', 'nCells'),
+                                              interfaceMask)
 
         # then, call run from the base class (RemapMpasClimatologySubtask),
         # which will perform the main function of the task
-        super(RemapDepthSlicesSubtask, self).run_task()
+        super().run_task()
 
     def customize_masked_climatology(self, climatology, season):
         """
@@ -197,29 +230,48 @@ class RemapDepthSlicesSubtask(RemapMpasClimatologySubtask):
         if self.depths is None:
             return climatology
 
-        climatology.coords['verticalIndex'] = \
-            ('nVertLevels',
-             np.arange(climatology.sizes['nVertLevels']))
+        if 'nVertLevels' in climatology.dims:
+            climatology.coords['levelIndex'] = \
+                ('nVertLevels',
+                 np.arange(climatology.sizes['nVertLevels']))
+        if 'nVertLevelsP1' in climatology.dims:
+            climatology.coords['interfaceIndex'] = \
+                ('nVertLevelsP1',
+                 np.arange(climatology.sizes['nVertLevelsP1']))
 
         depthNames = [str(depth) for depth in self.depths]
 
         climatology.coords['depthSlice'] = ('depthSlice', depthNames)
 
-        for variableName in self.variableList:
-            if 'nVertLevels' not in climatology[variableName].dims:
-                continue
+        levelIndices = self.dsSlice.levelIndices
+        levelIndexMask = self.dsSlice.levelIndexMask
+        interfaceIndices = self.dsSlice.interfaceIndices
+        interfaceIndexMask = self.dsSlice.interfaceIndexMask
 
-            # mask only the values with the right vertical index
-            da = climatology[variableName].where(
-                climatology.verticalIndex == self.verticalIndices)
+        # iterate over all variables since some new ones may have been
+        # added by a subclass
+        for variableName in climatology.data_vars:
+            if 'nVertLevels' in climatology[variableName].dims:
+                # mask only the values with the right vertical index
+                da = climatology[variableName].where(
+                    climatology.levelIndex == levelIndices)
 
-            # Each vertical layer has at most one non-NaN value so the "sum"
-            # over the vertical is used to collapse the array in the vertical
-            # dimension
-            climatology[variableName] = \
-                da.sum(dim='nVertLevels').where(self.verticalIndexMask)
+                # Each vertical layer has at most one non-NaN value so the
+                # "sum" over the vertical is used to collapse the array in the
+                # vertical dimension
+                climatology[variableName] = \
+                    da.sum(dim='nVertLevels').where(levelIndexMask)
+            elif 'nVertLevelsP1' in climatology[variableName].dims:
+                da = climatology[variableName].where(
+                    climatology.interfaceIndex == interfaceIndices)
 
-        climatology = climatology.drop_vars('verticalIndex')
+                climatology[variableName] = \
+                    da.sum(dim='nVertLevelsP1').where(interfaceIndexMask)
+
+        if 'levelIndex' in climatology.coords:
+            climatology = climatology.drop_vars('levelIndex')
+        if 'interfaceIndex' in climatology.coords:
+            climatology = climatology.drop_vars('interfaceIndex')
 
         climatology = climatology.transpose('depthSlice', 'nCells')
 

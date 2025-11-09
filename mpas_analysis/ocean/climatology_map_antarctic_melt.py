@@ -50,7 +50,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
@@ -59,7 +59,7 @@ class ClimatologyMapAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run
         """
         # Authors
@@ -333,8 +333,8 @@ class RemapMpasAntarcticMeltClimatology(RemapMpasClimatologySubtask):
         # -------
         # Xylar Asay-Davis
 
-        # first, load the land-ice mask from the restart file
-        dsLandIceMask = xr.open_dataset(self.restartFileName)
+        # first, load the land-ice mask from the mesh file
+        dsLandIceMask = xr.open_dataset(self.meshFilename)
         dsLandIceMask = dsLandIceMask[['landIceMask']]
         dsLandIceMask = dsLandIceMask.isel(Time=0)
         self.landIceMask = dsLandIceMask.landIceMask > 0.
@@ -407,7 +407,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         # stereographic coordinates
         projection = get_pyproj_projection(comparison_grid_name='antarctic')
         obsDescriptor = ProjectionGridDescriptor.read(
-            projection, fileName=fileName, xVarName='x', yVarName='y')
+            projection, filename=fileName, x_var_name='x', y_var_name='y')
 
         # update the mesh name to match the format used elsewhere in
         # MPAS-Analysis
@@ -416,7 +416,7 @@ class RemapObservedAntarcticMeltClimatology(RemapObservedClimatologySubtask):
         width = 1e-3 * (x[-1] - x[0])
         height = 1e-3 * (y[-1] - y[0])
         res = 1e-3 * (x[1] - x[0])
-        obsDescriptor.meshName = f'{width}x{height}km_{res}km_Antarctic_stereo'
+        obsDescriptor.mesh_name = f'{width}x{height}km_{res}km_Antarctic_stereo'
 
         return obsDescriptor
 
@@ -460,7 +460,7 @@ class AntarcticMeltTableSubtask(AnalysisTask):
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Configuration options for a control run (if any)
 
         regionMasksTask : ``ComputeRegionMasks``
@@ -555,12 +555,11 @@ class AntarcticMeltTableSubtask(AnalysisTask):
                 cellMasks = \
                     dsRegionMask.regionCellMasks.chunk({'nRegions': 10})
 
-                restartFileName = \
-                    self.runStreams.readpath('restart')[0]
+                meshFilename = self.get_mesh_filename()
 
-                dsRestart = xr.open_dataset(restartFileName)
-                landIceFraction = dsRestart.landIceFraction.isel(Time=0)
-                areaCell = dsRestart.areaCell
+                dsMesh = xr.open_dataset(meshFilename)
+                landIceFraction = dsMesh.landIceFraction.isel(Time=0)
+                areaCell = dsMesh.areaCell
 
                 # convert from kg/s to kg/yr
                 totalMeltFlux = constants.sec_per_year * \

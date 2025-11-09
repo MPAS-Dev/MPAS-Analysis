@@ -61,7 +61,7 @@ def plot_polar_comparison(
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -277,7 +277,7 @@ def plot_global_comparison(
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -475,7 +475,7 @@ def plot_projection_comparison(
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         the configuration, containing a [plot] section with options that
         control plotting
 
@@ -663,8 +663,8 @@ def plot_projection_comparison(
     else:
         figsize = config.getexpression(section, 'threePanelHorizFigSize')
         subplots = [131, 132, 133]
-    latLines = config.getexpression(section, 'latLines', use_numpyfunc=True)
-    lonLines = config.getexpression(section, 'lonLines', use_numpyfunc=True)
+    latLines = config.getnumpy(section, 'latLines')
+    lonLines = config.getnumpy(section, 'lonLines')
 
     # put latitude labels on the left unless we're in a polar projection
     left_labels = projectionName not in ['arctic', 'antarctic']

@@ -20,7 +20,7 @@ export OMP_NUM_THREADS=1
 source /global/common/software/e3sm/anaconda_envs/load_latest_e3sm_unified_cori-haswell.sh
 # alternatively, you can load your own development environment
 # source ~/mambaforge/etc/profile.d/conda.sh
-# conda activate mpas_dev
+# conda activate mpas_analysis_dev
 # export E3SMU_MACHINE=cori-haswell
 
 export HDF5_USE_FILE_LOCKING=FALSE

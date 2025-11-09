@@ -49,13 +49,13 @@ class ClimatologyMapArgoTemperature(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -189,13 +189,13 @@ class ClimatologyMapArgoSalinity(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -394,8 +394,8 @@ class RemapArgoClimatology(RemapObservedClimatologySubtask):
         # create a descriptor of the observation grid using Lat/Lon
         # coordinates
         obsDescriptor = LatLonGridDescriptor.read(ds=dsObs,
-                                                  latVarName='latCoord',
-                                                  lonVarName='lonCoord')
+                                                  lat_var_name='latCoord',
+                                                  lon_var_name='lonCoord')
         dsObs.close()
         return obsDescriptor
 

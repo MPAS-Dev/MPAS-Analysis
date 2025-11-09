@@ -23,7 +23,7 @@ import numpy
 import xarray
 from pyremap import MpasCellMeshDescriptor, LatLonGridDescriptor
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.generalized_reader.generalized_reader \
@@ -47,7 +47,7 @@ class TestClimatology(TestCase):
         shutil.rmtree(self.test_dir)
 
     def setup_config(self, maxChunkSize=10000):
-        config = MpasConfigParser()
+        config = Tranche()
 
         config.set('execute', 'mapParallelExec', 'None')
         config.set('execute', 'mapMpiTasks', '1')
@@ -84,7 +84,7 @@ class TestClimatology(TestCase):
             get_comparison_descriptor(config, comparison_grid_name='latlon')
 
         mpasDescriptor = MpasCellMeshDescriptor(
-            mpasMeshFileName, meshName=config.get('input', 'mpasMeshName'))
+            mpasMeshFileName, mesh_name=config.get('input', 'mpasMeshName'))
 
         remapper = get_remapper(
             config=config, sourceDescriptor=mpasDescriptor,
@@ -100,9 +100,9 @@ class TestClimatology(TestCase):
         comparisonDescriptor = \
             get_comparison_descriptor(config, comparison_grid_name='latlon')
 
-        obsDescriptor = LatLonGridDescriptor.read(fileName=gridFileName,
-                                                  latVarName='lat',
-                                                  lonVarName='lon')
+        obsDescriptor = LatLonGridDescriptor.read(filename=gridFileName,
+                                                  lat_var_name='lat',
+                                                  lon_var_name='lon')
 
         remapper = \
             get_remapper(
@@ -151,12 +151,12 @@ class TestClimatology(TestCase):
             remapper = self.setup_mpas_remapper(config)
 
             assert (os.path.abspath(mappingFileName) ==
-                    os.path.abspath(remapper.mappingFileName))
+                    os.path.abspath(remapper.map_filename))
             assert os.path.exists(mappingFileName)
 
-            assert isinstance(remapper.sourceDescriptor,
+            assert isinstance(remapper.src_descriptor,
                               MpasCellMeshDescriptor)
-            assert isinstance(remapper.destinationDescriptor,
+            assert isinstance(remapper.dst_descriptor,
                               LatLonGridDescriptor)
 
             if not setName:
@@ -182,12 +182,12 @@ class TestClimatology(TestCase):
             remapper = self.setup_obs_remapper(config, fieldName)
 
             assert (os.path.abspath(mappingFileName) ==
-                    os.path.abspath(remapper.mappingFileName))
+                    os.path.abspath(remapper.map_filename))
             assert os.path.exists(mappingFileName)
 
-            assert isinstance(remapper.sourceDescriptor,
+            assert isinstance(remapper.src_descriptor,
                               LatLonGridDescriptor)
-            assert isinstance(remapper.destinationDescriptor,
+            assert isinstance(remapper.dst_descriptor,
                               LatLonGridDescriptor)
 
             if not setName:

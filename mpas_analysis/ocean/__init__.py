@@ -25,6 +25,14 @@ from mpas_analysis.ocean.climatology_map_schmidtko import \
 from mpas_analysis.ocean.climatology_map_argo import \
     ClimatologyMapArgoTemperature, ClimatologyMapArgoSalinity
 
+from mpas_analysis.ocean.climatology_map_custom import (
+   ClimatologyMapCustom
+)
+
+from mpas_analysis.ocean.climatology_map_wind_stress_curl import (
+   ClimatologyMapWindStressCurl
+)
+
 from mpas_analysis.ocean.conservation import ConservationTask
 
 from mpas_analysis.ocean.time_series_temperature_anomaly import \
@@ -57,7 +65,9 @@ from mpas_analysis.ocean.antship_transects import AntshipTransects
 from mpas_analysis.ocean.osnap_transects import OsnapTransects
 from mpas_analysis.ocean.sose_transects import SoseTransects
 from mpas_analysis.ocean.woa_transects import WoaTransects
-from mpas_analysis.ocean.geojson_transects import GeojsonTransects
+from mpas_analysis.ocean.geojson_netcdf_transects import (
+    GeojsonNetcdfTransects
+)
 
 from mpas_analysis.ocean.ocean_regional_profiles import \
     OceanRegionalProfiles

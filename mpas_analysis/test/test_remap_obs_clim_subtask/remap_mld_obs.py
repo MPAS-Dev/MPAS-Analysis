@@ -16,9 +16,9 @@ from mpas_analysis.shared.constants import constants
 inputFileName = '/media/xylar/extra_data/analysis/output/GMPAS-QU240/' \
     'remap_obs/clim/obs/mld_1.0x1.0degree.nc'
 
-obsDescriptor = LatLonGridDescriptor.read(fileName=inputFileName,
-                                          latVarName='lat',
-                                          lonVarName='lon')
+obsDescriptor = LatLonGridDescriptor.read(filename=inputFileName,
+                                          lat_var_name='lat',
+                                          lon_var_name='lon')
 
 comparisonLatRes = 4.
 comparisonLonRes = 4.
@@ -30,11 +30,17 @@ lon = numpy.linspace(constants.lonmin, constants.lonmax, nLon)
 
 comparisonDescriptor = LatLonGridDescriptor.create(lat, lon, units='degrees')
 
-remapper = Remapper(obsDescriptor, comparisonDescriptor,
-                    mappingFileName='map.nc')
+remapper = Remapper(
+    map_filename='map.nc',
+    src_descriptor=obsDescriptor,
+    dst_descriptor=comparisonDescriptor,
+)
 
-remapper.build_mapping_file()
+remapper.build_map()
 
-remapper.remap_file(inputFileName, 'mld_4.0x4.0degree.nc',
-                    ['mld', 'month', 'year'],
-                    renormalize=0.05)
+remapper.ncremap(
+    inputFileName,
+    'mld_4.0x4.0degree.nc',
+    ['mld', 'month', 'year'],
+    renormalize=0.05
+)

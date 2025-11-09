@@ -54,8 +54,8 @@ environment):
 ``` bash
 conda config --add channels conda-forge
 conda config --set channel_priority strict
-conda create -y -n mpas_dev --file dev-spec.txt
-conda activate mpas_dev
+conda create -y -n mpas_analysis_dev --file dev-spec.txt
+conda activate mpas_analysis_dev
 python -m pip install --no-deps --no-build-isolation -e .
 ```
 
@@ -64,16 +64,16 @@ for MPAS-Tools or geometric\_features), you should first comment out the other
 package in `dev-spec.txt`.  Then, you can install both packages in the same
 development environment, e.g.:
 ``` bash
-conda create -y -n mpas_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
+conda create -y -n mpas_analysis_dev --file tools/MPAS-Tools/conda_package/dev-spec.txt \
     --file analysis/MPAS-Analysis/dev-spec.txt
-conda activate mpas_dev
+conda activate mpas_analysis_dev
 cd tools/MPAS-Tools/conda_package
 python -m pip install --no-deps --no-build-isolation -e .
 cd ../../../analysis/MPAS-Analysis
 python -m pip install --no-deps --no-build-isolation -e .
 ```
 Obviously, the paths to the repos may be different in your local clones.  With
-the `mpas_dev` environment as defined above, you can make changes to both
+the `mpas_analysis_dev` environment as defined above, you can make changes to both
 `mpas_tools` and `mpas-analysis` packages in their respective branches, and
 these changes will be reflected when refer to the packages or call their
 respective entry points (command-line tools).
@@ -294,8 +294,7 @@ developers".  Then run:
 To generate the `sphinx` documentation, run:
 ```
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html
 ```
 The results can be viewed in your web browser by opening:
 ```

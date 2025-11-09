@@ -99,3 +99,6 @@ ENV/
 /chrysalis_test_suite/
 /cori_test_suite/
 /compy_test_suite/
+
+# vscode settings
+.vscode/

@@ -16,7 +16,7 @@ from collections import OrderedDict
 from os import makedirs
 from pathlib import Path
 
-import pkg_resources
+import importlib.resources as resources
 from lxml import etree
 
 import mpas_analysis.version
@@ -29,7 +29,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
 
     Parameters
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
     analysis : ``OrderedDict`` of ``AnalysisTask`` objects
@@ -38,7 +38,7 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
         the list of files to include on the webpage for the associated
         component.
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     customConfigFiles : list of str
@@ -66,13 +66,13 @@ def generate_html(config, analyses, controlConfig, customConfigFiles):
             try:
                 ComponentPage.add_image(fileName, config, components,
                                         controlConfig)
-            except IOError:
-                print('  missing file {}'.format(fileName))
+            except IOError as e:
+                print(f'Error reading {fileName}: {e}')
                 missingCount += 1
 
     if missingCount > 0:
-        print('Warning: {} XML files were missing and the analysis website'
-              ' will be incomplete.'.format(missingCount))
+        print(f'Warning: {missingCount} XML files could not be read and the '
+              f'analysis website will be incomplete.')
     # generate the page for each component and add the component to the main
     # page
     for componentName, component in components.items():
@@ -108,10 +108,10 @@ class MainPage(object):
 
     Attributes
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     customConfigFiles : list of str
@@ -136,10 +136,10 @@ class MainPage(object):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Config options
 
-        controlConfig : mpas_tools.config.MpasConfigParser
+        controlConfig : tranche.Tranche
             Config options for a control run
 
         customConfigFiles : list of str
@@ -155,24 +155,15 @@ class MainPage(object):
         self.customConfigFiles = customConfigFiles
 
         # get template text
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/main_page.html")
-
-        with open(fileName, 'r') as templateFile:
-            self.pageTemplate = templateFile.read()
-
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/main_component.html")
-        with open(fileName, 'r') as templateFile:
-            self.componentTemplate = templateFile.read()
-
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/config.html")
-        with open(fileName, 'r') as templateFile:
-            self.configTemplate = templateFile.read()
+        package = 'mpas_analysis.shared.html.templates'
+        templates = {}
+        for name in ['main_page', 'main_component', 'config']:
+            resource = resources.files(package).joinpath(f'{name}.html')
+            with resource.open('r') as templateFile:
+                templates[name] = templateFile.read()
+        self.pageTemplate = templates['main_page']
+        self.componentTemplate = templates['main_component']
+        self.configTemplate = templates['config']
 
         # start with no components
         self.components = OrderedDict()
@@ -273,45 +264,34 @@ class MainPage(object):
 
         pageText = _replace_tempate_text(self.pageTemplate, replacements)
 
-        htmlBaseDirectory = build_config_full_path(self.config, 'output',
-                                                   'htmlSubdirectory')
+        htmlBaseDirectory = build_config_full_path(
+            self.config, 'output', 'htmlSubdirectory'
+        )
 
         for subdir in ['css', 'js']:
-            try:
-                makedirs('{}/{}'.format(htmlBaseDirectory, subdir))
-            except OSError:
-                pass
+            makedirs(f'{htmlBaseDirectory}/{subdir}', exist_ok=True)
 
-        outFileName = '{}/index.html'.format(htmlBaseDirectory)
+        outFileName = f'{htmlBaseDirectory}/index.html'
 
         with open(outFileName, mode='w') as mainFile:
             mainFile.write(
-                pageText.encode('ascii',
-                                'xmlcharrefreplace').decode('ascii'))
+                pageText.encode('ascii', 'xmlcharrefreplace').decode('ascii')
+            )
 
         # copy the css and js files as well as general images
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/style.css")
-        copyfile(fileName, '{}/css/style.css'.format(htmlBaseDirectory))
+        resource_targets = [
+            ("style.css", "css/style.css"),
+            ("index.js", "js/index.js"),
+            ("mpas_logo.png", "mpas_logo.png"),
+            ("config.png", "config.png"),
+        ]
+        for resource_name, target_path in resource_targets:
+            package = 'mpas_analysis.shared.html.templates'
+            fileName = resources.files(package).joinpath(resource_name)
+            copyfile(str(fileName), f'{htmlBaseDirectory}/{target_path}')
 
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/index.js")
-        copyfile(fileName, '{}/js/index.js'.format(htmlBaseDirectory))
-
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/mpas_logo.png")
-        copyfile(fileName, '{}/mpas_logo.png'.format(htmlBaseDirectory))
-
-        fileName = \
-            pkg_resources.resource_filename(__name__,
-                                            "templates/config.png")
-        copyfile(fileName, '{}/config.png'.format(htmlBaseDirectory))
-
-        with open('{}/complete.{}.cfg'.format(htmlBaseDirectory,
-                                              runName), 'w') as configFile:
+        outFileName = f'{htmlBaseDirectory}/complete.{runName}.cfg'
+        with open(outFileName, 'w') as configFile:
             self.config.write(configFile)
 
 
@@ -322,10 +302,10 @@ class ComponentPage(object):
 
     Attributes
     ----------
-    config : mpas_tools.config.MpasConfigParser
+    config : tranche.Tranche
         Config options
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         Config options for a control run
 
     name : str
@@ -354,7 +334,7 @@ class ComponentPage(object):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Config options
 
         name : str
@@ -365,7 +345,7 @@ class ComponentPage(object):
         subdirecory : str
             The subdirectory for the component's webpage
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Config options for a control run
         """
         # Authors
@@ -386,11 +366,10 @@ class ComponentPage(object):
         for templateName in ['page', 'quicklink', 'group', 'gallery', 'image',
                              'subtitle']:
             # get template text
-            fileName = pkg_resources.resource_filename(
-                __name__,
-                "templates/component_{}.html".format(templateName))
-
-            with open(fileName, 'r') as templateFile:
+            package = 'mpas_analysis.shared.html.templates'
+            resource = resources.files(package).joinpath(
+                f'component_{templateName}.html')
+            with resource.open('r') as templateFile:
                 self.templates[templateName] = templateFile.read()
 
         # start with no groups
@@ -408,7 +387,7 @@ class ComponentPage(object):
         xmlFileName : str
             The full path to the XML file describing the image to be added
 
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             contains config options
 
         components : OrederdDict of dict
@@ -417,7 +396,7 @@ class ComponentPage(object):
             be added. ``components`` should be viewed as an input and output
             parameter, since it is modified by this function.
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Config options for a control run
         """
         # Authors

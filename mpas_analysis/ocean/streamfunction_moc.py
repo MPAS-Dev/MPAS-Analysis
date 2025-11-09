@@ -58,13 +58,13 @@ class StreamfunctionMOC(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -362,14 +362,10 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
         regionNames.append('Global')
 
         # Read in depth and bin latitudes
-        try:
-            restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least '
-                          'one for MHT calcuation')
+        meshFilename = self.get_mesh_filename()
 
-        with xr.open_dataset(restartFileName) as dsRestart:
-            refBottomDepth = dsRestart.refBottomDepth.values
+        with xr.open_dataset(meshFilename) as dsMesh:
+            refBottomDepth = dsMesh.refBottomDepth.values
 
         nVertLevels = len(refBottomDepth)
         refLayerThickness = np.zeros(nVertLevels)
@@ -490,7 +486,7 @@ class ComputeMOCClimatologySubtask(AnalysisTask):
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness, cellsOnEdge = \
-            _load_mesh(self.runStreams)
+            _load_mesh(self.get_mesh_filename())
 
         regionNames = config.getexpression(self.sectionName, 'regionNames')
 
@@ -643,7 +639,7 @@ class PlotMOCClimatologySubtask(AnalysisTask):
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1082,13 +1078,11 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 sizes = dsLocal.sizes
                 moc = np.zeros((len(inputFiles), sizes['nVertLevels']+1,
                                 len(binBoundaryMocStreamfunction)))
-                try:
-                    restartFile = self.runStreams.readpath('restart')[0]
-                except ValueError:
-                    raise IOError('No MPAS-O restart file found: need at '
-                                  'least one restart file for MOC calculation')
-                with xr.open_dataset(restartFile) as dsRestart:
-                    refBottomDepth = dsRestart.refBottomDepth.values
+
+                meshFilename = self.get_mesh_filename()
+
+                with xr.open_dataset(meshFilename) as dsMesh:
+                    refBottomDepth = dsMesh.refBottomDepth.values
                 nVertLevels = len(refBottomDepth)
                 refTopDepth = np.zeros(nVertLevels + 1)
                 refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
@@ -1160,7 +1154,7 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
         dvEdge, areaCell, refBottomDepth, latCell, nVertLevels, \
             refTopDepth, refLayerThickness, cellsOnEdge = \
-            _load_mesh(self.runStreams)
+            _load_mesh(self.get_mesh_filename())
 
         mpasMeshName = config.get('input', 'mpasMeshName')
 
@@ -1350,7 +1344,7 @@ class CombineMOCTimeSeriesSubtask(AnalysisTask):
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1422,7 +1416,7 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):
         parentTask : ``StreamfunctionMOC``
             The main task of which this is a subtask
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -1570,14 +1564,9 @@ class PlotMOCTimeSeriesSubtask(AnalysisTask):
         return dsMOCTimeSeries
 
 
-def _load_mesh(runStreams):
+def _load_mesh(meshFilename):
     # Load mesh related variables
-    try:
-        restartFile = runStreams.readpath('restart')[0]
-    except ValueError:
-        raise IOError('No MPAS-O restart file found: need at least one '
-                      'restart file for MOC calculation')
-    ncFile = netCDF4.Dataset(restartFile, mode='r')
+    ncFile = netCDF4.Dataset(meshFilename, mode='r')
     dvEdge = ncFile.variables['dvEdge'][:]
     areaCell = ncFile.variables['areaCell'][:]
     refBottomDepth = ncFile.variables['refBottomDepth'][:]

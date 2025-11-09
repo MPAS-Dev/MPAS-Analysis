@@ -34,7 +34,7 @@ class MeridionalHeatTransport(AnalysisTask):
     mpasClimatologyTask : ``MpasClimatologyTask``
         The task that produced the climatology to be remapped and plotted
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any)
     """
 
@@ -48,13 +48,13 @@ class MeridionalHeatTransport(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasClimatologyTask : ``MpasClimatologyTask``
             The task that produced the climatology to be remapped and plotted
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -181,14 +181,10 @@ class MeridionalHeatTransport(AnalysisTask):
 
             # Read in depth and MHT latitude points
             # Latitude is from binBoundaryMerHeatTrans
-            try:
-                restartFileName = self.runStreams.readpath('restart')[0]
-            except ValueError:
-                raise IOError('No MPAS-O restart file found: need at least '
-                              'one for MHT calcuation')
+            meshFilename = self.get_mesh_filename()
 
-            with xr.open_dataset(restartFileName) as dsRestart:
-                refBottomDepth = dsRestart.refBottomDepth
+            with xr.open_dataset(meshFilename) as dsMesh:
+                refBottomDepth = dsMesh.refBottomDepth
 
             nVertLevels = refBottomDepth.sizes['nVertLevels']
             refLayerThickness = np.zeros(nVertLevels)

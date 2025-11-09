@@ -27,7 +27,7 @@ jobs:
         shell: bash -l {0}
     strategy:
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
       fail-fast: false
     steps:
       - id: skip_check
@@ -37,7 +37,7 @@ jobs:
           paths_ignore: ${{ env.PATHS_IGNORE }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Cache Conda
@@ -53,21 +53,22 @@ jobs:
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Conda Environment
-        uses: conda-incubator/setup-miniconda@v3
+        uses: mamba-org/setup-micromamba@v2
         with:
-          activate-environment: "mpas_analysis_ci"
-          miniforge-version: latest
-          channels: conda-forge
-          channel-priority: strict
-          auto-update-conda: false
-          python-version: ${{ matrix.python-version }}
+          environment-name: mpas_analysis_dev
+          init-shell: bash
+          condarc: |
+            channel_priority: strict
+            channels:
+                - conda-forge
+          create-args: >-
+            python=${{ matrix.python-version }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Install mpas_analysis
         run: |
-          conda create -n mpas_analysis_dev --file dev-spec.txt \
-              python=${{ matrix.python-version }}
-          conda activate mpas_analysis_dev
+          conda install -y --file dev-spec.txt \
+            python=${{ matrix.python-version }}
           python -m pip install --no-deps --no-build-isolation -vv -e .
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
@@ -76,7 +77,6 @@ jobs:
            CHECK_IMAGES: False
         run: |
           set -e
-          conda activate mpas_analysis_dev
           pip check
           pytest --pyargs mpas_analysis
           mpas_analysis --help
@@ -85,9 +85,5 @@ jobs:
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Build Sphinx Docs
         run: |
-          conda activate mpas_analysis_dev
-          # sphinx-multiversion expects at least a "main" branch
-          git branch main || echo "branch main already exists."
           cd docs
-          sphinx-multiversion . _build/html
-
+          DOCS_VERSION=test make versioned-html

@@ -50,13 +50,13 @@ class OceanRegionalProfiles(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -344,22 +344,22 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
             return
 
         # get areaCell
-        restartFileName = \
-            self.runStreams.readpath('restart')[0]
+        meshFilename = self.get_mesh_filename()
 
-        dsRestart = xr.open_dataset(restartFileName)
-        dsRestart = dsRestart.isel(Time=0)
-        areaCell = dsRestart.areaCell
+        dsMesh = xr.open_dataset(meshFilename)
+        dsMesh = dsMesh.isel(Time=0)
+        areaCell = dsMesh.areaCell
+        openOceanMask = xr.where(dsMesh.landIceMask > 0, 0, 1)
 
-        nVertLevels = dsRestart.sizes['nVertLevels']
+        nVertLevels = dsMesh.sizes['nVertLevels']
 
         vertIndex = \
             xr.DataArray.from_dict({'dims': ('nVertLevels',),
                                     'data': np.arange(nVertLevels)})
 
-        vertMask = vertIndex < dsRestart.maxLevelCell
+        vertMask = vertIndex < dsMesh.maxLevelCell
         if self.max_bottom_depth is not None:
-            depthMask = dsRestart.bottomDepth < self.max_bottom_depth
+            depthMask = dsMesh.bottomDepth < self.max_bottom_depth
             vertDepthMask = np.logical_and(vertMask, depthMask)
         else:
             vertDepthMask = vertMask
@@ -383,7 +383,9 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         cellMasks = dsRegionMask.regionCellMasks
         regionNamesVar = dsRegionMask.regionNames
 
-        totalArea = self._masked_area_sum(cellMasks, areaCell, vertDepthMask)
+        totalArea = self._masked_area_sum(
+            cellMasks, openOceanMask, areaCell, vertDepthMask
+        )
 
         datasets = []
         for timeIndex, fileName in enumerate(inputFiles):
@@ -411,13 +413,18 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
                 var = dsLocal[variableName].where(vertDepthMask)
 
                 meanName = '{}_mean'.format(prefix)
-                dsLocal[meanName] = \
-                    self._masked_area_sum(cellMasks, areaCell, var) / totalArea
+                dsLocal[meanName] = (
+                    self._masked_area_sum(
+                        cellMasks, openOceanMask, areaCell, var
+                    ) / totalArea
+                )
 
                 meanSquaredName = '{}_meanSquared'.format(prefix)
-                dsLocal[meanSquaredName] = \
-                    self._masked_area_sum(cellMasks, areaCell, var**2) / \
-                    totalArea
+                dsLocal[meanSquaredName] = (
+                    self._masked_area_sum(
+                        cellMasks, openOceanMask, areaCell, var**2
+                    ) / totalArea
+                )
 
             # drop the original variables
             dsLocal = dsLocal.drop_vars(variableList)
@@ -436,14 +443,10 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
 
         # Note: restart file, not a mesh file because we need refBottomDepth,
         # not in a mesh file
-        try:
-            restartFile = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for plotting time series vs. depth')
+        meshFilename = self.get_mesh_filename()
 
-        with xr.open_dataset(restartFile) as dsRestart:
-            depths = dsRestart.refBottomDepth.values
+        with xr.open_dataset(meshFilename) as dsMesh:
+            depths = dsMesh.refBottomDepth.values
             z = np.zeros(depths.shape)
             z[0] = -0.5 * depths[0]
             z[1:] = -0.5 * (depths[0:-1] + depths[1:])
@@ -454,12 +457,15 @@ class ComputeRegionalProfileTimeSeriesSubtask(AnalysisTask):
         write_netcdf_with_fill(dsOut, outputFileName)
 
     @staticmethod
-    def _masked_area_sum(cellMasks, areaCell, var):
+    def _masked_area_sum(cellMasks, openOceanMask, areaCell, var):
         """sum a variable over the masked areas"""
         nRegions = cellMasks.sizes['nRegions']
         totals = []
         for index in range(nRegions):
-            mask = cellMasks.isel(nRegions=slice(index, index+1))
+            mask = (
+                cellMasks.isel(nRegions=slice(index, index+1)) *
+                openOceanMask
+            )
             totals.append((mask * areaCell * var).sum('nCells'))
 
         total = xr.concat(totals, 'nRegions')
@@ -621,7 +627,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):
     field : dict
         Information about the field (e.g. temperature) being plotted
 
-    controlconfig : mpas_tools.config.MpasConfigParser
+    controlconfig : tranche.Tranche
         Configuration options for a control run (if any)
     """
     # Authors
@@ -658,7 +664,7 @@ class PlotRegionalProfileTimeSeriesSubtask(AnalysisTask):
         startYear, endYear : int
             The beginning and end of the time series to compute
 
-        controlconfig : mpas_tools.config.MpasConfigParser, optional
+        controlconfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors

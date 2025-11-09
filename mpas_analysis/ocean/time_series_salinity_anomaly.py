@@ -34,7 +34,7 @@ class TimeSeriesSalinityAnomaly(AnalysisTask):
 
         Parameters
         ----------
-        config :  mpas_tools.config.MpasConfigParser
+        config :  tranche.Tranche
             Contains configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``

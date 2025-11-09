@@ -2,7 +2,7 @@
 
 set -e
 
-env_name=mpas_dev
+env_name=mpas_analysis_dev
 
 conda_base=$(dirname $(dirname $CONDA_EXE))
 source $conda_base/etc/profile.d/conda.sh
@@ -14,13 +14,12 @@ branch=$(git symbolic-ref --short HEAD)
 # test building the docs
 conda activate ${env_name}
 cd docs
-make clean
-make html
+DOCS_VERSION=test make clean versioned-html
 cd ..
 
 machine=$(python -c "from mache import discover_machine; print(discover_machine())")
 
-py=3.11
+py=3.13
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --copy_docs --clean -e ${env_name}
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions -e ${env_name}
 ./suite/setup.py -p ${py} -r moc_am -b ${branch} -e ${env_name}
@@ -34,7 +33,7 @@ py=3.11
 # submit the jobs
 cd ${machine}_test_suite
 
-main_py=3.11
+main_py=3.13
 cd main_py${main_py}
 echo main_py${main_py}
 RES=$(sbatch job_script.bash)

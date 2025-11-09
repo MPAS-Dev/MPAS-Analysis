@@ -32,8 +32,7 @@ import shutil
 import gsw
 
 from mpas_analysis.shared.io.download import download_files
-from mpas_analysis.shared.interpolation import Remapper
-from mpas_analysis.shared.grid import LatLonGridDescriptor
+from pyremap import LatLonGridDescriptor, Remapper
 from mpas_analysis.shared.climatology.comparison_descriptors \
     import get_comparison_descriptor
 from mpas_analysis.configuration \
@@ -486,24 +485,27 @@ def remap(ds, outDescriptor, mappingFileName, inDir, outFileName):
     ds.close()
 
     inDescriptor = LatLonGridDescriptor.read(tempFileName1,
-                                             latVarName='lat',
-                                             lonVarName='lon')
+                                             lat_var_name='lat',
+                                             lon_var_name='lon')
 
-    remapper = Remapper(inDescriptor, outDescriptor, mappingFileName)
+    remapper = Remapper(map_filename=mappingFileName, method='bilinear')
+    remapper.src_descriptor = inDescriptor
+    remapper.dst_descriptor = outDescriptor
+    remapper.build_map()
 
-    remapper.build_mapping_file(method='bilinear')
-
-    remapper.remap_file(inFileName=tempFileName1,
-                        outFileName=tempFileName2,
-                        overwrite=True,
-                        renormalize=0.01)
+    remapper.ncremap(
+        in_filename=tempFileName1,
+        out_filename=tempFileName2,
+        overwrite=True,
+        renormalize=0.01
+    )
 
     ds = xarray.open_dataset(tempFileName2)
     if 'z' in ds:
         print('  transposing back...')
         ds = ds.chunk({'Time': 4})
         ds = ds.transpose('Time', 'x', 'y', 'z', 'nvertices')
-    ds.attrs['meshName'] = outDescriptor.meshName
+    ds.attrs['meshName'] = outDescriptor.mesh_name
 
     for coord in ['x', 'y']:
         ds.coords[coord] = xarray.DataArray.from_dict(
@@ -765,7 +767,7 @@ def main():
                '{}'.format(antarcticStereoWidth))
 
     outDescriptor = get_comparison_descriptor(config, 'antarctic')
-    outGridName = '{}_{}'.format(outDescriptor.meshName, date)
+    outGridName = '{}_{}'.format(outDescriptor.mesh_name, date)
 
     inPrefixes = [inTPrefix, inSPrefix, inMLDPrefix, inUPrefix, inVPrefix,
                   inGammaNPrefix]

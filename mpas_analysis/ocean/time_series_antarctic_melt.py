@@ -50,7 +50,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
 
         Parameters
         ----------
-        config : mpas_tools.config.MpasConfigParser
+        config : tranche.Tranche
             Configuration options
 
         mpasTimeSeriesTask : ``MpasTimeSeriesTask``
@@ -59,7 +59,7 @@ class TimeSeriesAntarcticMelt(AnalysisTask):
         regionMasksTask : ``ComputeRegionMasks``
             A task for computing region masks
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -175,7 +175,6 @@ class ComputeMeltSubtask(AnalysisTask):
         self.run_after(masksSubtask)
 
         self.iceShelvesToPlot = iceShelvesToPlot
-        self.restartFileName = None
         self.startYear = startYear
         self.endYear = endYear
         self.startDate = f'{self.startYear:04d}-01-01_00:00:00'
@@ -216,13 +215,6 @@ class ComputeMeltSubtask(AnalysisTask):
                              '    to be data, standalone or coupled. '
                              '    Otherwise, no melt rates are available \n'
                              '    for plotting.')
-
-        # Load mesh related variables
-        try:
-            self.restartFileName = self.runStreams.readpath('restart')[0]
-        except ValueError:
-            raise IOError('No MPAS-O restart file found: need at least one '
-                          'restart file for Antarctic melt calculations')
 
         totalFluxVar = 'timeMonthly_avg_landIceFreshwaterFluxTotal'
         landIceFluxVar = 'timeMonthly_avg_landIceFreshwaterFlux'
@@ -284,12 +276,11 @@ class ComputeMeltSubtask(AnalysisTask):
                                 f'Deleting it.')
             os.remove(outFileName)
 
-        restartFileName = \
-            mpasTimeSeriesTask.runStreams.readpath('restart')[0]
+        meshFilename = self.get_mesh_filename()
 
-        dsRestart = xarray.open_dataset(restartFileName)
-        landIceFraction = dsRestart.landIceFraction.isel(Time=0)
-        areaCell = dsRestart.areaCell
+        dsMesh = xarray.open_dataset(meshFilename)
+        landIceFraction = dsMesh.landIceFraction.isel(Time=0)
+        areaCell = dsMesh.areaCell
 
         regionMaskFileName = self.masksSubtask.maskFileName
 
@@ -351,7 +342,7 @@ class ComputeMeltSubtask(AnalysisTask):
 
         dsOut = xarray.concat(objs=datasets, dim='Time')
         dsOut['regionNames'] = dsRegionMask.regionNames
-        dsOut.integratedMeltFlux.attrs['units'] = 'GT a$^{-1}$'
+        dsOut.integratedMeltFlux.attrs['units'] = 'Gt a$^{-1}$'
         dsOut.integratedMeltFlux.attrs['description'] = \
             'Integrated melt flux summed over each ice shelf or region'
         dsOut.meltRates.attrs['units'] = 'm a$^{-1}$'
@@ -440,7 +431,7 @@ class PlotMeltSubtask(AnalysisTask):
     regionIndex : int
         The index into the dimension ``nRegions`` of the ice shelf to plot
 
-    controlConfig : mpas_tools.config.MpasConfigParser
+    controlConfig : tranche.Tranche
         The configuration options for the control run (if any)
 
     """
@@ -465,7 +456,7 @@ class PlotMeltSubtask(AnalysisTask):
         regionIndex : int
             The index into the dimension ``nRegions`` of the ice shelf to plot
 
-        controlConfig : mpas_tools.config.MpasConfigParser, optional
+        controlConfig : tranche.Tranche, optional
             Configuration options for a control run (if any)
         """
         # Authors
@@ -671,7 +662,7 @@ class PlotMeltSubtask(AnalysisTask):
         suffix = self.iceShelf.replace(' ', '_')
 
         xLabel = 'Time (yr)'
-        yLabel = 'Melt Flux (GT/yr)'
+        yLabel = 'Melt Flux (Gt/yr)'
 
         timeSeries = integratedMeltFlux.isel(nRegions=self.regionIndex)
 
@@ -732,7 +723,7 @@ class PlotMeltSubtask(AnalysisTask):
         # and cartopy doesn't play too well with tight_layout anyway
         plt.tight_layout()
 
-        add_inset(fig, fc, width=2.0, height=2.0)
+        add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
         savefig(outFileName, config)
 
@@ -797,7 +788,7 @@ class PlotMeltSubtask(AnalysisTask):
         # and cartopy doesn't play too well with tight_layout anyway
         plt.tight_layout()
 
-        add_inset(fig, fc, width=2.0, height=2.0)
+        add_inset(fig, fc, width=1.0, height=1.0, lowerleft=[0.0, 0.0], xbuffer=0.01, ybuffer=0.01)
 
         savefig(outFileName, config)
 

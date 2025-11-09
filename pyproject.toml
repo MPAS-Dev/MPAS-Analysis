@@ -1,8 +1,8 @@
 [project]
-name = "mpas_analysis"
+name = "mpas-analysis"
 dynamic = ["version"]
 authors = [
-    { name="Xylar Asay-Davis", email="xylar@lanl.gov" },
+    { name="Xylar Asay-Davis", email="xylarstorm@gmail.com" },
     { name="Carolyn Begeman" },
     { name="Phillip J. Wolfram" },
     { name="Milena Veneziani" },
@@ -27,10 +27,9 @@ description = """\
     """
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 classifiers = [
     # these are only for searching/browsing projects on PyPI
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -45,7 +44,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "cartopy>=0.18.0",
+    "cartopy >=0.18.0",
     "cmocean",
     "dask",
     "gsw",
@@ -59,11 +58,27 @@ dependencies = [
     "pyproj",
     "python-dateutil",
     "requests",
-    "scipy>=1.7.0",
-    "setuptools",
-    "shapely>=2.0,<3.0",
-    "six",
-    "xarray>=0.14.1"
+    "scipy >=1.7.0",
+    "shapely >=2.0,<3.0",
+    "tranche >=0.2.3",
+    "xarray >=0.14.1"
+]
+
+[project.optional-dependencies]
+docs = [
+    # building documentation
+    "mock",
+    "m2r2>=0.3.3",
+    "mistune<2",
+    "sphinx",
+    "sphinx_rtd_theme",
+    "tabulate",
+]
+
+dev = [
+    # linting and testing
+    "pip",
+    "pytest",
 ]
 
 [build-system]

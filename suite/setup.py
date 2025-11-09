@@ -146,6 +146,10 @@ def main():
             [config_from_job,
              os.path.join('..', '..', 'suite', f'{args.run}.cfg')])
 
+    if args.run.startswith('main_py'):
+        config_from_job = ' '.join(
+            [config_from_job, os.path.join('..', '..', 'suite', 'main.cfg')])
+
     if args.run not in ['main', 'ctrl']:
         try:
             os.makedirs(os.path.join(suite_path, args.run))

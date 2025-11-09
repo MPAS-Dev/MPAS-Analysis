@@ -16,7 +16,7 @@ Xylar Asay-Davis
 
 import pytest
 
-from mpas_tools.config import MpasConfigParser
+from tranche import Tranche
 
 from mpas_analysis.test import TestCase
 from mpas_analysis.shared.analysis_task import AnalysisTask
@@ -27,7 +27,7 @@ class TestAnalysisTask(TestCase):
     def test_checkGenerate(self):
 
         def doTest(generate, expectedResults):
-            config = MpasConfigParser()
+            config = Tranche()
             config.set('output', 'generate', generate)
             for taskName in expectedResults:
                 genericTask = AnalysisTask(config=config,
