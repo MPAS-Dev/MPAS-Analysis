@@ -1,0 +1,56 @@
+﻿mpas\_analysis.shared.regions.compute\_region\_masks.ComputeRegionMasks
+=======================================================================
+
+.. currentmodule:: mpas_analysis.shared.regions.compute_region_masks
+
+.. autoclass:: ComputeRegionMasks
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ComputeRegionMasks.__init__
+      ~ComputeRegionMasks.add_mask_subtask
+      ~ComputeRegionMasks.add_subtask
+      ~ComputeRegionMasks.check_analysis_enabled
+      ~ComputeRegionMasks.check_generate
+      ~ComputeRegionMasks.close
+      ~ComputeRegionMasks.get_mesh_filename
+      ~ComputeRegionMasks.is_alive
+      ~ComputeRegionMasks.join
+      ~ComputeRegionMasks.kill
+      ~ComputeRegionMasks.run
+      ~ComputeRegionMasks.run_after
+      ~ComputeRegionMasks.run_task
+      ~ComputeRegionMasks.set_start_end_date
+      ~ComputeRegionMasks.setup_and_check
+      ~ComputeRegionMasks.start
+      ~ComputeRegionMasks.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComputeRegionMasks.BLOCKED
+      ~ComputeRegionMasks.FAIL
+      ~ComputeRegionMasks.READY
+      ~ComputeRegionMasks.RUNNING
+      ~ComputeRegionMasks.SUCCESS
+      ~ComputeRegionMasks.UNSET
+      ~ComputeRegionMasks.authkey
+      ~ComputeRegionMasks.daemon
+      ~ComputeRegionMasks.exitcode
+      ~ComputeRegionMasks.ident
+      ~ComputeRegionMasks.name
+      ~ComputeRegionMasks.pid
+      ~ComputeRegionMasks.sentinel
+   
+   

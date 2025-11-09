@@ -1,0 +1,55 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceSnowDepth
+=====================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceSnowDepth
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowDepth.__init__
+      ~ClimatologyMapSeaIceSnowDepth.add_subtask
+      ~ClimatologyMapSeaIceSnowDepth.check_analysis_enabled
+      ~ClimatologyMapSeaIceSnowDepth.check_generate
+      ~ClimatologyMapSeaIceSnowDepth.close
+      ~ClimatologyMapSeaIceSnowDepth.get_mesh_filename
+      ~ClimatologyMapSeaIceSnowDepth.is_alive
+      ~ClimatologyMapSeaIceSnowDepth.join
+      ~ClimatologyMapSeaIceSnowDepth.kill
+      ~ClimatologyMapSeaIceSnowDepth.run
+      ~ClimatologyMapSeaIceSnowDepth.run_after
+      ~ClimatologyMapSeaIceSnowDepth.run_task
+      ~ClimatologyMapSeaIceSnowDepth.set_start_end_date
+      ~ClimatologyMapSeaIceSnowDepth.setup_and_check
+      ~ClimatologyMapSeaIceSnowDepth.start
+      ~ClimatologyMapSeaIceSnowDepth.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceSnowDepth.BLOCKED
+      ~ClimatologyMapSeaIceSnowDepth.FAIL
+      ~ClimatologyMapSeaIceSnowDepth.READY
+      ~ClimatologyMapSeaIceSnowDepth.RUNNING
+      ~ClimatologyMapSeaIceSnowDepth.SUCCESS
+      ~ClimatologyMapSeaIceSnowDepth.UNSET
+      ~ClimatologyMapSeaIceSnowDepth.authkey
+      ~ClimatologyMapSeaIceSnowDepth.daemon
+      ~ClimatologyMapSeaIceSnowDepth.exitcode
+      ~ClimatologyMapSeaIceSnowDepth.ident
+      ~ClimatologyMapSeaIceSnowDepth.name
+      ~ClimatologyMapSeaIceSnowDepth.pid
+      ~ClimatologyMapSeaIceSnowDepth.sentinel
+   
+   

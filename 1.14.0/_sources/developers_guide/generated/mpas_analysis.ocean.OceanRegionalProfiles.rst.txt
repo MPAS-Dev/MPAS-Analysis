@@ -1,0 +1,56 @@
+﻿mpas\_analysis.ocean.OceanRegionalProfiles
+==========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: OceanRegionalProfiles
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~OceanRegionalProfiles.__init__
+      ~OceanRegionalProfiles.add_region_group
+      ~OceanRegionalProfiles.add_subtask
+      ~OceanRegionalProfiles.check_analysis_enabled
+      ~OceanRegionalProfiles.check_generate
+      ~OceanRegionalProfiles.close
+      ~OceanRegionalProfiles.get_mesh_filename
+      ~OceanRegionalProfiles.is_alive
+      ~OceanRegionalProfiles.join
+      ~OceanRegionalProfiles.kill
+      ~OceanRegionalProfiles.run
+      ~OceanRegionalProfiles.run_after
+      ~OceanRegionalProfiles.run_task
+      ~OceanRegionalProfiles.set_start_end_date
+      ~OceanRegionalProfiles.setup_and_check
+      ~OceanRegionalProfiles.start
+      ~OceanRegionalProfiles.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~OceanRegionalProfiles.BLOCKED
+      ~OceanRegionalProfiles.FAIL
+      ~OceanRegionalProfiles.READY
+      ~OceanRegionalProfiles.RUNNING
+      ~OceanRegionalProfiles.SUCCESS
+      ~OceanRegionalProfiles.UNSET
+      ~OceanRegionalProfiles.authkey
+      ~OceanRegionalProfiles.daemon
+      ~OceanRegionalProfiles.exitcode
+      ~OceanRegionalProfiles.ident
+      ~OceanRegionalProfiles.name
+      ~OceanRegionalProfiles.pid
+      ~OceanRegionalProfiles.sentinel
+   
+   

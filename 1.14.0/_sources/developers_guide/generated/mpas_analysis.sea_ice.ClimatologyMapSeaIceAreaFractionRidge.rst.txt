@@ -1,0 +1,55 @@
+﻿mpas\_analysis.sea\_ice.ClimatologyMapSeaIceAreaFractionRidge
+=============================================================
+
+.. currentmodule:: mpas_analysis.sea_ice
+
+.. autoclass:: ClimatologyMapSeaIceAreaFractionRidge
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAreaFractionRidge.__init__
+      ~ClimatologyMapSeaIceAreaFractionRidge.add_subtask
+      ~ClimatologyMapSeaIceAreaFractionRidge.check_analysis_enabled
+      ~ClimatologyMapSeaIceAreaFractionRidge.check_generate
+      ~ClimatologyMapSeaIceAreaFractionRidge.close
+      ~ClimatologyMapSeaIceAreaFractionRidge.get_mesh_filename
+      ~ClimatologyMapSeaIceAreaFractionRidge.is_alive
+      ~ClimatologyMapSeaIceAreaFractionRidge.join
+      ~ClimatologyMapSeaIceAreaFractionRidge.kill
+      ~ClimatologyMapSeaIceAreaFractionRidge.run
+      ~ClimatologyMapSeaIceAreaFractionRidge.run_after
+      ~ClimatologyMapSeaIceAreaFractionRidge.run_task
+      ~ClimatologyMapSeaIceAreaFractionRidge.set_start_end_date
+      ~ClimatologyMapSeaIceAreaFractionRidge.setup_and_check
+      ~ClimatologyMapSeaIceAreaFractionRidge.start
+      ~ClimatologyMapSeaIceAreaFractionRidge.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapSeaIceAreaFractionRidge.BLOCKED
+      ~ClimatologyMapSeaIceAreaFractionRidge.FAIL
+      ~ClimatologyMapSeaIceAreaFractionRidge.READY
+      ~ClimatologyMapSeaIceAreaFractionRidge.RUNNING
+      ~ClimatologyMapSeaIceAreaFractionRidge.SUCCESS
+      ~ClimatologyMapSeaIceAreaFractionRidge.UNSET
+      ~ClimatologyMapSeaIceAreaFractionRidge.authkey
+      ~ClimatologyMapSeaIceAreaFractionRidge.daemon
+      ~ClimatologyMapSeaIceAreaFractionRidge.exitcode
+      ~ClimatologyMapSeaIceAreaFractionRidge.ident
+      ~ClimatologyMapSeaIceAreaFractionRidge.name
+      ~ClimatologyMapSeaIceAreaFractionRidge.pid
+      ~ClimatologyMapSeaIceAreaFractionRidge.sentinel
+   
+   

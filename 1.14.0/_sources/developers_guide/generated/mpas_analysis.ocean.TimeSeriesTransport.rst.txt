@@ -1,0 +1,55 @@
+﻿mpas\_analysis.ocean.TimeSeriesTransport
+========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: TimeSeriesTransport
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~TimeSeriesTransport.__init__
+      ~TimeSeriesTransport.add_subtask
+      ~TimeSeriesTransport.check_analysis_enabled
+      ~TimeSeriesTransport.check_generate
+      ~TimeSeriesTransport.close
+      ~TimeSeriesTransport.get_mesh_filename
+      ~TimeSeriesTransport.is_alive
+      ~TimeSeriesTransport.join
+      ~TimeSeriesTransport.kill
+      ~TimeSeriesTransport.run
+      ~TimeSeriesTransport.run_after
+      ~TimeSeriesTransport.run_task
+      ~TimeSeriesTransport.set_start_end_date
+      ~TimeSeriesTransport.setup_and_check
+      ~TimeSeriesTransport.start
+      ~TimeSeriesTransport.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TimeSeriesTransport.BLOCKED
+      ~TimeSeriesTransport.FAIL
+      ~TimeSeriesTransport.READY
+      ~TimeSeriesTransport.RUNNING
+      ~TimeSeriesTransport.SUCCESS
+      ~TimeSeriesTransport.UNSET
+      ~TimeSeriesTransport.authkey
+      ~TimeSeriesTransport.daemon
+      ~TimeSeriesTransport.exitcode
+      ~TimeSeriesTransport.ident
+      ~TimeSeriesTransport.name
+      ~TimeSeriesTransport.pid
+      ~TimeSeriesTransport.sentinel
+   
+   

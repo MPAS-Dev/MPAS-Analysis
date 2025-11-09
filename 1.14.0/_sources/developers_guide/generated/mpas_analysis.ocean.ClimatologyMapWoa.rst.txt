@@ -1,0 +1,55 @@
+﻿mpas\_analysis.ocean.ClimatologyMapWoa
+======================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapWoa
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapWoa.__init__
+      ~ClimatologyMapWoa.add_subtask
+      ~ClimatologyMapWoa.check_analysis_enabled
+      ~ClimatologyMapWoa.check_generate
+      ~ClimatologyMapWoa.close
+      ~ClimatologyMapWoa.get_mesh_filename
+      ~ClimatologyMapWoa.is_alive
+      ~ClimatologyMapWoa.join
+      ~ClimatologyMapWoa.kill
+      ~ClimatologyMapWoa.run
+      ~ClimatologyMapWoa.run_after
+      ~ClimatologyMapWoa.run_task
+      ~ClimatologyMapWoa.set_start_end_date
+      ~ClimatologyMapWoa.setup_and_check
+      ~ClimatologyMapWoa.start
+      ~ClimatologyMapWoa.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapWoa.BLOCKED
+      ~ClimatologyMapWoa.FAIL
+      ~ClimatologyMapWoa.READY
+      ~ClimatologyMapWoa.RUNNING
+      ~ClimatologyMapWoa.SUCCESS
+      ~ClimatologyMapWoa.UNSET
+      ~ClimatologyMapWoa.authkey
+      ~ClimatologyMapWoa.daemon
+      ~ClimatologyMapWoa.exitcode
+      ~ClimatologyMapWoa.ident
+      ~ClimatologyMapWoa.name
+      ~ClimatologyMapWoa.pid
+      ~ClimatologyMapWoa.sentinel
+   
+   

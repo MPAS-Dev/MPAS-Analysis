@@ -1,0 +1,6 @@
+﻿mpas\_analysis.ocean.utility.add\_standard\_regions\_and\_subset
+================================================================
+
+.. currentmodule:: mpas_analysis.ocean.utility
+
+.. autofunction:: add_standard_regions_and_subset

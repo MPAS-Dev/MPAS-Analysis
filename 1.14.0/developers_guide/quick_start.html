@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Start for Developers &mdash; MPAS-Analysis 1.14.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01009efc"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Building the Documentation" href="docs.html" />
+    <link rel="prev" title="Iceberg Concentration: Altiberg" href="../users_guide/obs/altiberg.html" />
+    <link href="../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/configuration.html">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/analysis_tasks.html">Analysis Tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../users_guide/observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start for Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fork-and-clone-the-repository">1. Fork and Clone the Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-git">2. Configure Git</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-ssh-keys">3. Set Up SSH Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-development-worktree">4. Create a Development Worktree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-conda-environment">5. Set Up Conda Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#activate-environment-each-session">6. Activate Environment (each session)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configure-and-run-mpas-analysis">7. Configure and Run MPAS-Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#view-results">8. View Results</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#additional-recommendations">Additional Recommendations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releasing.html">Releasing a New Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Quick Start for Developers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developers_guide/quick_start.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="quick-start-for-developers">
+<h1>Quick Start for Developers<a class="headerlink" href="#quick-start-for-developers" title="Link to this heading"></a></h1>
+<p>This guide provides a condensed overview for developers to get started with
+MPAS-Analysis development.</p>
+<section id="fork-and-clone-the-repository">
+<h2>1. Fork and Clone the Repository<a class="headerlink" href="#fork-and-clone-the-repository" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Fork <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">MPAS-Analysis</a> on GitHub.</p></li>
+<li><p>Clone the main repo and your fork locally:
+- Create a base directory (e.g., <code class="docutils literal notranslate"><span class="pre">mpas-analysis</span></code>).
+- Clone the main repo:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/MPAS-Analysis.git<span class="w"> </span>develop
+</pre></div>
+</div>
+</div></blockquote>
+<ul>
+<li><p>Add your fork as a remote:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>&lt;username&gt;/MPAS-Analysis<span class="w"> </span>git@github.com:&lt;username&gt;/MPAS-Analysis.git
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="configure-git">
+<h2>2. Configure Git<a class="headerlink" href="#configure-git" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Set up your <code class="docutils literal notranslate"><span class="pre">~/.gitconfig</span></code> with your name and email (must match your
+GitHub account).</p></li>
+<li><p>Recommended: set editor, color, and useful aliases.</p></li>
+</ul>
+</section>
+<section id="set-up-ssh-keys">
+<h2>3. Set Up SSH Keys<a class="headerlink" href="#set-up-ssh-keys" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Add SSH keys to GitHub for push access.</p></li>
+<li><p>See: <a class="reference external" href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account</a></p></li>
+</ul>
+</section>
+<section id="create-a-development-worktree">
+<h2>4. Create a Development Worktree<a class="headerlink" href="#create-a-development-worktree" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Fetch latest changes:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>fetch<span class="w"> </span>--all<span class="w"> </span>-p
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Create a worktree for your feature branch:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>worktree<span class="w"> </span>add<span class="w"> </span>../&lt;feature_branch&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Enter the worktree directory:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>../&lt;feature_branch&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="set-up-conda-environment">
+<h2>5. Set Up Conda Environment<a class="headerlink" href="#set-up-conda-environment" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Install Miniforge3 (recommended) or Miniconda.</p></li>
+<li><p>For Miniconda, add <code class="docutils literal notranslate"><span class="pre">conda-forge</span></code> channel and set strict priority.</p></li>
+<li><p>Create environment:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-y<span class="w"> </span>-n<span class="w"> </span>mpas_analysis_dev<span class="w"> </span>--file<span class="w"> </span>dev-spec.txt
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Activate:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Install MPAS-Analysis in edit mode:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="activate-environment-each-session">
+<h2>6. Activate Environment (each session)<a class="headerlink" href="#activate-environment-each-session" title="Link to this heading"></a></h2>
+<ul>
+<li><p>For bash:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh<span class="p">;</span><span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>For csh:</p>
+<blockquote>
+<div><div class="highlight-csh notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span> ~/miniforge3/etc/profile.d/conda.csh<span class="p">;</span> conda activate mpas_analysis_dev
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="configure-and-run-mpas-analysis">
+<h2>7. Configure and Run MPAS-Analysis<a class="headerlink" href="#configure-and-run-mpas-analysis" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Copy and edit a config file (e.g., <code class="docutils literal notranslate"><span class="pre">example_e3sm.cfg</span></code>) for your run.</p></li>
+<li><p>Set required options: <code class="docutils literal notranslate"><span class="pre">mainRunName</span></code>, <code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code>, <code class="docutils literal notranslate"><span class="pre">mpasMeshName</span></code>, output paths.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">mapMpiTasks</span> <span class="pre">=</span> <span class="pre">1</span></code> and <code class="docutils literal notranslate"><span class="pre">mapParallelExec</span> <span class="pre">=</span> <span class="pre">None</span></code> for development environments.</p></li>
+<li><p>Export HDF5 file locking variable if needed:
+- Bash:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">HDF5_USE_FILE_LOCKING</span><span class="o">=</span>FALSE
+</pre></div>
+</div>
+</div></blockquote>
+<ul>
+<li><p>Csh:</p>
+<div class="highlight-csh notranslate"><div class="highlight"><pre><span></span><span class="nb">setenv </span>HDF5_USE_FILE_LOCKING FALSE
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+<li><p>Run analysis:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpas_analysis<span class="w"> </span>-m<span class="w"> </span>&lt;machine&gt;<span class="w"> </span>&lt;your_config&gt;.cfg
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="view-results">
+<h2>8. View Results<a class="headerlink" href="#view-results" title="Link to this heading"></a></h2>
+<ul>
+<li><p>Output is a set of web pages in your specified output directory.</p></li>
+<li><p>On some systems, update permissions:</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod<span class="w"> </span>-R<span class="w"> </span>ugo+rX<span class="w"> </span>&lt;output_dir&gt;
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>See the main web page for links to results and provenance info.</p></li>
+</ul>
+</section>
+<section id="additional-recommendations">
+<h2>Additional Recommendations<a class="headerlink" href="#additional-recommendations" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Use VS Code for remote editing and linting (optional).</p></li>
+</ul>
+<p>For more details, see the full <a class="reference internal" href="../tutorials/dev_getting_started.html"><span class="doc">Developer: Getting Started</span></a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../users_guide/obs/altiberg.html" class="btn btn-neutral float-left" title="Iceberg Concentration: Altiberg" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="docs.html" class="btn btn-neutral float-right" title="Building the Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="1.14.0">
+  <meta name="doc-site-root" content="../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../shared/version-switcher.js"></script>
+
+
+</body>
+</html>

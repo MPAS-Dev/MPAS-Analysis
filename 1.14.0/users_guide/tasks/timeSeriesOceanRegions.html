@@ -1,0 +1,445 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>timeSeriesOceanRegions &mdash; MPAS-Analysis 1.14.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01009efc"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="timeSeriesSalinityAnomaly" href="timeSeriesSalinityAnomaly.html" />
+    <link rel="prev" title="timeSeriesOHCAnomaly" href="timeSeriesOHCAnomaly.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapCustom.html">climatologyMapCustom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapVel.html">climatologyMapVel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWindStressCurl.html">climatologyMapWindStressCurl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonNetcdfTransects.html">geojsonNetcdfTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="osnapTransects.html">osnapTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">timeSeriesOceanRegions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-groups">Region Groups</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#available-variables">Available Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#region-names">Region Names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anomalies">Anomalies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#depth-bounds">Depth Bounds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-config-options">Other Config Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woaTransects.html">woaTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoNH.html">climatologyMapSeaIceAlbedoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoSH.html">climatologyMapSeaIceAlbedoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeNH.html">climatologyMapSeaIceAreaFractionRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeSH.html">climatologyMapSeaIceAreaFractionRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoNH.html">climatologyMapSeaIceAreaTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoSH.html">climatologyMapSeaIceAreaTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspNH.html">climatologyMapSeaIceAreaTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspSH.html">climatologyMapSeaIceAreaTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaNH.html">climatologyMapSeaIcePondAreaNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaSH.html">climatologyMapSeaIcePondAreaSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthNH.html">climatologyMapSeaIceSnowDepthNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthSH.html">climatologyMapSeaIceSnowDepthSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationNH.html">climatologyMapSeaIceSnowiceFormationNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationSH.html">climatologyMapSeaIceSnowiceFormationSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltNH.html">climatologyMapSeaIceSnowMeltNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltSH.html">climatologyMapSeaIceSnowMeltSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeNH.html">climatologyMapSeaIceVolumeRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeSH.html">climatologyMapSeaIceVolumeRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoNH.html">climatologyMapSeaIceVolumeTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoSH.html">climatologyMapSeaIceVolumeTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspNH.html">climatologyMapSeaIceVolumeTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspSH.html">climatologyMapSeaIceVolumeTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/releasing.html">Releasing a New Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
+      <li class="breadcrumb-item active">timeSeriesOceanRegions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/tasks/timeSeriesOceanRegions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="timeseriesoceanregions">
+<span id="task-timeseriesoceanregions"></span><h1>timeSeriesOceanRegions<a class="headerlink" href="#timeseriesoceanregions" title="Link to this heading"></a></h1>
+<p>An analysis task for plotting time series of of temperature, salinity,
+potential density and other fields of interest averaged over ocean regions.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">timeSeries</span><span class="p">,</span> <span class="n">regions</span>
+</pre></div>
+</div>
+<section id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="k">[timeSeriesOceanRegions]</span>
+<span class="c1">## options related to plotting time series of groups of ocean regions</span>
+
+<span class="c1"># the names of region groups to plot, each with its own section below</span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;, &#39;Arctic Ocean Regions&#39;, &#39;Antarctic Regions&#39;]</span>
+
+<span class="c1"># a list of variables available to plot</span>
+<span class="na">availableVariables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;temperature&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Temperature&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;PSU&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_salinity&#39;]},</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;kg m$$^{-3}$$&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_potentialDensity&#39;]},</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;thermalForcing&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Thermal Forcing&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
+<span class="w">              </span><span class="na">&#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
+<span class="w">              </span><span class="na">&#39;timeMonthly_avg_density&#39;]},</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;oceanHeatContent&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Ocean Heat Content&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$10^{22}$$ J&#39;,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
+<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;mixedLayerDepth&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Mixed Layer Depth&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;m&#39;</span><span class="na">,</span>
+<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_dThreshMLD&#39;]}]</span>
+
+<span class="c1"># allow for longer plot titles</span>
+<span class="na">maxTitleLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">70</span>
+
+<span class="k">[timeSeriesOceanBasins]</span>
+<span class="c1">## options related to plotting time series of Ocean Basins</span>
+
+<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
+<span class="c1"># See &quot;regionNames&quot; in the oceanBasins masks file in</span>
+<span class="c1"># regionMaskSubdirectory for details.</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;]</span>
+
+<span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+
+<span class="c1"># variables that are anomalies</span>
+<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+
+<span class="c1"># The minimum and maximum depth over which fields are averaged.</span>
+<span class="na">zmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-10000</span>
+<span class="na">zmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+
+<span class="c1"># Observational data sets to compare against</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
+
+<span class="k">[timeSeriesArcticOceanRegions]</span>
+<span class="c1">## options related to plotting time series of Arctic Ocean regions</span>
+
+<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
+<span class="c1"># See &quot;regionNames&quot; in the arcticOceanRegions masks file in</span>
+<span class="c1"># regionMaskSubdirectory for details.</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
+
+<span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;temperature&#39;, &#39;salinity&#39;, &#39;potentialDensity&#39;, &#39;mixedLayerDepth&#39;]</span>
+
+<span class="c1"># variables that are anomalies</span>
+<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
+
+<span class="c1"># The minimum and maximum depth over which fields are averaged.</span>
+<span class="na">zmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-1000</span>
+<span class="na">zmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
+
+<span class="c1"># Observational data sets to compare against</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;WOA18&#39;]</span>
+
+
+<span class="k">[timeSeriesAntarcticRegions]</span>
+<span class="c1">## options related to plotting time series of Antarctic regions</span>
+
+<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
+<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
+<span class="c1"># regionMaskSubdirectory for details.</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
+
+<span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;temperature&#39;, &#39;salinity&#39;, &#39;potentialDensity&#39;, &#39;thermalForcing&#39;,</span>
+<span class="w">            </span><span class="na">&#39;oceanHeatContent&#39;, &#39;mixedLayerDepth&#39;]</span>
+
+<span class="c1"># variables that are anomalies</span>
+<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+
+<span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
+<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
+<span class="c1"># Add these to a custom config file to override the defaults.</span>
+<span class="c1"># zmin = -1000</span>
+<span class="c1"># zmax = -400</span>
+
+<span class="c1"># Observational data sets to compare against</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;SOSE&#39;, &#39;WOA23&#39;]</span>
+</pre></div>
+</div>
+</section>
+<section id="region-groups">
+<h2>Region Groups<a class="headerlink" href="#region-groups" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">regionGroup</span></code> is a list of region groups, each of which will get its own
+gallery group on the resulting analysis webpage.  See
+<a class="reference internal" href="../config/regions.html#config-region-groups"><span class="std std-ref">Region Groups</span></a> for more information on the available region
+groups. For each region group, there should be a corresponding
+<code class="docutils literal notranslate"><span class="pre">timeSeries&lt;RegionGroup&gt;</span></code> section of the config file, with any spaces removed
+from the name of the region group.  By default, the only region group for this
+task is <code class="docutils literal notranslate"><span class="pre">'Antarctic</span> <span class="pre">Regions'</span></code>.</p>
+</section>
+<section id="available-variables">
+<h2>Available Variables<a class="headerlink" href="#available-variables" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">availableVariables</span></code> list has a python dictionary for each variable that
+is available to be plotted. A separate gallery will be produced for each
+requested variable with a title given by the <code class="docutils literal notranslate"><span class="pre">&quot;title&quot;</span></code> entry in the
+dictionary. The <code class="docutils literal notranslate"><span class="pre">&quot;units&quot;</span></code> entry is used for the y-axis label of each plot.
+The <code class="docutils literal notranslate"><span class="pre">&quot;name&quot;</span></code> is the name of the variable in the NetCDF files as well as the
+text appended to subtaks names and file names. It should contain no spaces.
+The <code class="docutils literal notranslate"><span class="pre">&quot;mpas&quot;</span></code> entry is the name of the corresponding field in the MPAS-Ocean
+<code class="docutils literal notranslate"><span class="pre">timeSeriesStatsMonthlyOutput</span></code> files.</p>
+</section>
+<section id="region-names">
+<h2>Region Names<a class="headerlink" href="#region-names" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
+region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
+<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
+</pre></div>
+</div>
+</section>
+<section id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">variables</span></code> list are the variables from <code class="docutils literal notranslate"><span class="pre">availableVariables</span></code> that
+should be plotted in a given region.</p>
+</section>
+<section id="anomalies">
+<h2>Anomalies<a class="headerlink" href="#anomalies" title="Link to this heading"></a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">anomalies</span></code> list are the variables from <code class="docutils literal notranslate"><span class="pre">variables</span></code> that should be
+plotted as anomalies from the beginning of the simulation or from
+<code class="docutils literal notranslate"><span class="pre">anomalyRefYear</span></code> for time series if that config option is defined.
+By default, this is applied to the ocean heat content in cases where it is
+being plotted.</p>
+</section>
+<section id="depth-bounds">
+<h2>Depth Bounds<a class="headerlink" href="#depth-bounds" title="Link to this heading"></a></h2>
+<p>Some region groups such as <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code> define default depth bounds
+(<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>) for each region.  For <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, this was
+done so regions on the continental shelf (ending in “Shelf”) would be averaged
+over a different range (<code class="docutils literal notranslate"><span class="pre">zmax</span></code> = -200 m, <code class="docutils literal notranslate"><span class="pre">zmin</span></code> = -1000 m) than the regions
+of the deeper ocean (ending in “Deep”, with <code class="docutils literal notranslate"><span class="pre">zmax</span></code> = -400 m,
+<code class="docutils literal notranslate"><span class="pre">zmin</span></code> = -1000 m).  The user can override these defaults by defining her own
+<code class="docutils literal notranslate"><span class="pre">zmin</span></code> and <code class="docutils literal notranslate"><span class="pre">zmax</span></code>.  Note that <code class="docutils literal notranslate"><span class="pre">zmin</span></code> is deeper and <code class="docutils literal notranslate"><span class="pre">zmax</span></code> is shallower
+since they have negative values.</p>
+</section>
+<section id="other-config-options">
+<h2>Other Config Options<a class="headerlink" href="#other-config-options" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">maxTitleLength</span></code> is used to give titles of these plots more space than
+allowed in typical plots.</p>
+<dl class="simple">
+<dt>For more details, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/regions.html#config-regions"><span class="std std-ref">Regions</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">obs</span></code> is a list of the observational data sets to plot as reference lines
+(constant in time).  Possible values are <code class="docutils literal notranslate"><span class="pre">'SOSE'</span></code> and <code class="docutils literal notranslate"><span class="pre">'WOA23'</span></code>.  An empty
+list can be provided if no observations should be plotted.</p>
+<p><a class="reference internal" href="../obs/sose.html#sose"><span class="std std-ref">2005-2010 climatology from SOSE the Southern Ocean State Estimate (SOSE)</span></a></p>
+<p><a class="reference internal" href="../obs/woa23_t_s.html#woa23-t-s"><span class="std std-ref">WOA23 Temperature and Salinity Climatology</span></a></p>
+</section>
+<section id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../../_images/west_ross_shelf_temp.png"><img alt="../../_images/west_ross_shelf_temp.png" class="align-center" src="../../_images/west_ross_shelf_temp.png" style="width: 500px;" />
+</a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="timeSeriesOHCAnomaly.html" class="btn btn-neutral float-left" title="timeSeriesOHCAnomaly" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="timeSeriesSalinityAnomaly.html" class="btn btn-neutral float-right" title="timeSeriesSalinityAnomaly" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="1.14.0">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
+
+</body>
+</html>

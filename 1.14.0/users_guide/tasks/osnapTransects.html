@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>osnapTransects &mdash; MPAS-Analysis 1.14.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=01009efc"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="regionalTSDiagrams" href="regionalTSDiagrams.html" />
+    <link rel="prev" title="oceanRegionalProfiles" href="oceanRegionalProfiles.html" />
+    <link href="../../_static/style.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            MPAS-Analysis
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User's guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../quick_start.html">Quick Start Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../configuration.html">Configuration</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../analysis_tasks.html">Analysis Tasks</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapAntarcticMelt.html">climatologyMapAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoSalinity.html">climatologyMapArgoSalinity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapArgoTemperature.html">climatologyMapArgoTemperature</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBGC.html">climatologyMapBGC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapBSF.html">climatologyMapBSF</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapCustom.html">climatologyMapCustom</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapEKE.html">climatologyMapEKE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapHeatFluxes.html">climatologyMapHeatFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMassFluxes.html">climatologyMapMassFluxes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLD.html">climatologyMapMLD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapMLDMinMax.html">climatologyMapMLDMinMax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapOHCAnomaly.html">climatologyMapOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSchmidtko.html">climatologyMapSchmidtko</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSose.html">climatologyMapSose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSST.html">climatologyMapSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSS.html">climatologyMapSSS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSSH.html">climatologyMapSSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapVel.html">climatologyMapVel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWaves.html">climatologyMapWaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWindStressCurl.html">climatologyMapWindStressCurl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapWoa.html">climatologyMapWoa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="antshipTransects.html">antshipTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conservation.html">conservation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geojsonNetcdfTransects.html">geojsonNetcdfTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hovmollerOceanRegions.html">hovmollerOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="indexNino34.html">indexNino34</a></li>
+<li class="toctree-l2"><a class="reference internal" href="meridionalHeatTransport.html">meridionalHeatTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanHistogram.html">oceanHistogram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="oceanRegionalProfiles.html">oceanRegionalProfiles</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">osnapTransects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">Configuration Options</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example-result">Example Result</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="regionalTSDiagrams.html">regionalTSDiagrams</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soseTransects.html">soseTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streamfunctionMOC.html">streamfunctionMOC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesAntarcticMelt.html">timeSeriesAntarcticMelt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOHCAnomaly.html">timeSeriesOHCAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesOceanRegions.html">timeSeriesOceanRegions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSalinityAnomaly.html">timeSeriesSalinityAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSST.html">timeSeriesSST</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTemperatureAnomaly.html">timeSeriesTemperatureAnomaly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesTransport.html">timeSeriesTransport</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woaTransects.html">woaTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="woceTransects.html">woceTransects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoNH.html">climatologyMapSeaIceAlbedoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAlbedoSH.html">climatologyMapSeaIceAlbedoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeNH.html">climatologyMapSeaIceAreaFractionRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaFractionRidgeSH.html">climatologyMapSeaIceAreaFractionRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoNH.html">climatologyMapSeaIceAreaTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyThermoSH.html">climatologyMapSeaIceAreaTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspNH.html">climatologyMapSeaIceAreaTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceAreaTendencyTranspSH.html">climatologyMapSeaIceAreaTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcNH.html">climatologyMapSeaIceConcNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceConcSH.html">climatologyMapSeaIceConcSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingNH.html">climatologyMapSeaIceMeltingNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceMeltingSH.html">climatologyMapSeaIceMeltingSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaNH.html">climatologyMapSeaIcePondAreaNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIcePondAreaSH.html">climatologyMapSeaIcePondAreaSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionNH.html">climatologyMapSeaIceProductionNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceProductionSH.html">climatologyMapSeaIceProductionSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthNH.html">climatologyMapSeaIceSnowDepthNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowDepthSH.html">climatologyMapSeaIceSnowDepthSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationNH.html">climatologyMapSeaIceSnowiceFormationNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowiceFormationSH.html">climatologyMapSeaIceSnowiceFormationSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltNH.html">climatologyMapSeaIceSnowMeltNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceSnowMeltSH.html">climatologyMapSeaIceSnowMeltSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickNH.html">climatologyMapSeaIceThickNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceThickSH.html">climatologyMapSeaIceThickSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeNH.html">climatologyMapSeaIceVolumeRidgeNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeRidgeSH.html">climatologyMapSeaIceVolumeRidgeSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoNH.html">climatologyMapSeaIceVolumeTendencyThermoNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyThermoSH.html">climatologyMapSeaIceVolumeTendencyThermoSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspNH.html">climatologyMapSeaIceVolumeTendencyTranspNH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapSeaIceVolumeTendencyTranspSH.html">climatologyMapSeaIceVolumeTendencyTranspSH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeSeriesSeaIceAreaVol.html">timeSeriesSeaIceAreaVol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="climatologyMapIcebergConcSH.html">climatologyMapIcebergConcSH</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">MPAS Components and E3SM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../observations.html">Observations</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer's guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/quick_start.html">Quick Start for Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/docs.html">Building the Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/test_suite.html">Test Suite Infrastructure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/releasing.html">Releasing a New Version</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developers_guide/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../design_docs/index.html">Design Documents</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/getting_started.html">User: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_getting_started.html">Developer: Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_understand_a_task.html">Developers: Understanding an analysis task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/dev_add_task.html">Developers: Adding a new analysis task</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Authors</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html">Main Authors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../authors.html#contributors">Contributors</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">MPAS-Analysis</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../analysis_tasks.html">Analysis Tasks</a></li>
+      <li class="breadcrumb-item active">osnapTransects</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/users_guide/tasks/osnapTransects.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="osnaptransects">
+<span id="task-osnaptransects"></span><h1>osnapTransects<a class="headerlink" href="#osnaptransects" title="Link to this heading"></a></h1>
+<p>An analysis task for interpolating MPAS fields to
+<a class="reference external" href="http://www.o-snap.org">Overturning in the Subpolar North Atlantic Program (OSNAP)</a> transects
+and comparing them with ship-based observations.</p>
+<p>Component and Tags:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">component</span><span class="p">:</span> <span class="n">ocean</span>
+<span class="n">tags</span><span class="p">:</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">osnap</span>
+</pre></div>
+</div>
+<section id="configuration-options">
+<h2>Configuration Options<a class="headerlink" href="#configuration-options" title="Link to this heading"></a></h2>
+<p>The following configuration options are available for this task:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">osnapTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting model vs. OSNAP transects.</span>
+
+<span class="c1"># Times for comparison times (JFM, JAS, ANN)</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+
+<span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
+<span class="c1"># longitude between observation points will be subsampled at this interval.</span>
+<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
+<span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">obs</span>
+
+<span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
+<span class="c1"># MPAS vertical grid, &#39;obs&#39; to use the locations of observations or</span>
+<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;</span>
+<span class="c1"># verticalComparisonGridName = obs</span>
+<span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
+<span class="c1">#verticalComparisonGridName = mpas</span>
+
+<span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39; or</span>
+<span class="c1"># &#39;obs&#39;.  This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+<span class="c1"># The minimum weight of a destination cell after remapping. Any cell with</span>
+<span class="c1"># weights lower than this threshold will therefore be masked out.</span>
+<span class="n">renormalizationThreshold</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+
+<span class="p">[</span><span class="n">osnapTemperatureTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting OSNAP transects of potential temperature</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">RdYlBu_r</span>
+<span class="c1"># the type of norm used in the colormap (linear, log, or symLog)</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">18.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsResult = [0, 1, 2, 3, 4, 6, 8, 10, 14, 18]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(0.0, 18.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">18.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">RdBu_r</span>
+<span class="c1"># the type of norm used in the colormap (linear, log, or symLog)</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsDifference = [-2, -1.5, -1.25, -1, -0.2, 0, 0.2, 1, 1.25, 1.5, 2]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-2.0, 2.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+
+
+
+<span class="p">[</span><span class="n">osnapSalinityTransects</span><span class="p">]</span>
+<span class="c1">## options related to plotting OSNAP transects of salinity</span>
+
+<span class="c1"># colormap for model/observations</span>
+<span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">BuOr</span>
+<span class="c1"># the type of norm used in the colormap (linear, log, or symLog)</span>
+<span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">33.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">36.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsResult = [33, 34, 34.25, 34.5, 34.6, 34.7, 34.8, 34.9, 35, 36]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksResult = numpy.linspace(33.0, 36.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">33.3</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">)</span>
+
+<span class="c1"># colormap for differences</span>
+<span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">RdBu_r</span>
+<span class="c1"># the type of norm used in the colormap (linear, log, or symLog)</span>
+<span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
+<span class="c1"># A dictionary with keywords for the norm</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+<span class="c1"># color indices into colormapName for filled contours</span>
+<span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
+<span class="c1"># colormap levels/values for contour boundaries</span>
+<span class="c1">#colorbarLevelsDifference = [-1, -0.5, -0.2, -0.05, -0.02, 0,  0.02, 0.05, 0.2, 0.5, 1]</span>
+<span class="c1"># place the ticks automatically by default</span>
+<span class="c1"># colorbarTicksDifference = numpy.linspace(-1.0, 1.0, 9)</span>
+<span class="c1"># contour line levels</span>
+<span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>For details on these configuration options, see:</dt><dd><ul class="simple">
+<li><p><a class="reference internal" href="../config/transects.html#config-transects"><span class="std std-ref">Output Grids for Transects</span></a></p></li>
+<li><p><a class="reference internal" href="../config/climatology.html#config-remapping"><span class="std std-ref">Remapping Options</span></a></p></li>
+<li><p><a class="reference internal" href="../config/colormaps.html#config-colormaps"><span class="std std-ref">Colormaps</span></a></p></li>
+<li><p><a class="reference internal" href="../config/seasons.html#config-seasons"><span class="std std-ref">Seasons</span></a></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading"></a></h2>
+<p><a class="reference internal" href="../obs/osnap_t_s.html#osnap-t-s"><span class="std std-ref">OSNAP Temperature Salinity and Velocity Climatology</span></a></p>
+</section>
+<section id="example-result">
+<h2>Example Result<a class="headerlink" href="#example-result" title="Link to this heading"></a></h2>
+<a class="reference internal image-reference" href="../../_images/osnap_transect.png"><img alt="../../_images/osnap_transect.png" class="align-center" src="../../_images/osnap_transect.png" style="width: 500px;" />
+</a>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="oceanRegionalProfiles.html" class="btn btn-neutral float-left" title="oceanRegionalProfiles" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="regionalTSDiagrams.html" class="btn btn-neutral float-right" title="regionalTSDiagrams" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright This software is open source software available under the BSD-3license. Copyright (c) 2022 Triad National Security, LLC. All rights reserved. Copyright (c) 2018 Lawrence Livermore National Security, LLC. All rights reserved. Copyright (c) 2018 UT-Battelle, LLC. All rights reserved..</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+   
+
+  <!-- Meta tags for JS to use -->
+  <meta name="doc-version" content="1.14.0">
+  <meta name="doc-site-root" content="../../">
+
+  <!-- Create version switcher container -->
+  <script>
+    const sidebar = document.querySelector('.wy-side-nav-search');
+    if (sidebar) {
+      const versionDiv = document.createElement('div');
+      versionDiv.id = 'version-switcher';
+      versionDiv.style.marginTop = '1em';
+      sidebar.appendChild(versionDiv);
+    }
+  </script>
+
+  <!-- Load version-switcher.js using the correct relative path -->
+  <script src="../../../shared/version-switcher.js"></script>
+
+
+</body>
+</html>

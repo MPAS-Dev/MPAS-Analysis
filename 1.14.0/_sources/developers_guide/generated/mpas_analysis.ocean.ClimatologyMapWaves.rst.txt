@@ -1,0 +1,55 @@
+﻿mpas\_analysis.ocean.ClimatologyMapWaves
+========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapWaves
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapWaves.__init__
+      ~ClimatologyMapWaves.add_subtask
+      ~ClimatologyMapWaves.check_analysis_enabled
+      ~ClimatologyMapWaves.check_generate
+      ~ClimatologyMapWaves.close
+      ~ClimatologyMapWaves.get_mesh_filename
+      ~ClimatologyMapWaves.is_alive
+      ~ClimatologyMapWaves.join
+      ~ClimatologyMapWaves.kill
+      ~ClimatologyMapWaves.run
+      ~ClimatologyMapWaves.run_after
+      ~ClimatologyMapWaves.run_task
+      ~ClimatologyMapWaves.set_start_end_date
+      ~ClimatologyMapWaves.setup_and_check
+      ~ClimatologyMapWaves.start
+      ~ClimatologyMapWaves.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapWaves.BLOCKED
+      ~ClimatologyMapWaves.FAIL
+      ~ClimatologyMapWaves.READY
+      ~ClimatologyMapWaves.RUNNING
+      ~ClimatologyMapWaves.SUCCESS
+      ~ClimatologyMapWaves.UNSET
+      ~ClimatologyMapWaves.authkey
+      ~ClimatologyMapWaves.daemon
+      ~ClimatologyMapWaves.exitcode
+      ~ClimatologyMapWaves.ident
+      ~ClimatologyMapWaves.name
+      ~ClimatologyMapWaves.pid
+      ~ClimatologyMapWaves.sentinel
+   
+   

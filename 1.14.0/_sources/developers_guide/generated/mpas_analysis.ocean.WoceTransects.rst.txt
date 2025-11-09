@@ -1,0 +1,55 @@
+﻿mpas\_analysis.ocean.WoceTransects
+==================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: WoceTransects
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~WoceTransects.__init__
+      ~WoceTransects.add_subtask
+      ~WoceTransects.check_analysis_enabled
+      ~WoceTransects.check_generate
+      ~WoceTransects.close
+      ~WoceTransects.get_mesh_filename
+      ~WoceTransects.is_alive
+      ~WoceTransects.join
+      ~WoceTransects.kill
+      ~WoceTransects.run
+      ~WoceTransects.run_after
+      ~WoceTransects.run_task
+      ~WoceTransects.set_start_end_date
+      ~WoceTransects.setup_and_check
+      ~WoceTransects.start
+      ~WoceTransects.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~WoceTransects.BLOCKED
+      ~WoceTransects.FAIL
+      ~WoceTransects.READY
+      ~WoceTransects.RUNNING
+      ~WoceTransects.SUCCESS
+      ~WoceTransects.UNSET
+      ~WoceTransects.authkey
+      ~WoceTransects.daemon
+      ~WoceTransects.exitcode
+      ~WoceTransects.ident
+      ~WoceTransects.name
+      ~WoceTransects.pid
+      ~WoceTransects.sentinel
+   
+   

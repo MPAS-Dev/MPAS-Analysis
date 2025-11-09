@@ -1,0 +1,55 @@
+﻿mpas\_analysis.ocean.ClimatologyMapFluxes
+=========================================
+
+.. currentmodule:: mpas_analysis.ocean
+
+.. autoclass:: ClimatologyMapFluxes
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~ClimatologyMapFluxes.__init__
+      ~ClimatologyMapFluxes.add_subtask
+      ~ClimatologyMapFluxes.check_analysis_enabled
+      ~ClimatologyMapFluxes.check_generate
+      ~ClimatologyMapFluxes.close
+      ~ClimatologyMapFluxes.get_mesh_filename
+      ~ClimatologyMapFluxes.is_alive
+      ~ClimatologyMapFluxes.join
+      ~ClimatologyMapFluxes.kill
+      ~ClimatologyMapFluxes.run
+      ~ClimatologyMapFluxes.run_after
+      ~ClimatologyMapFluxes.run_task
+      ~ClimatologyMapFluxes.set_start_end_date
+      ~ClimatologyMapFluxes.setup_and_check
+      ~ClimatologyMapFluxes.start
+      ~ClimatologyMapFluxes.terminate
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ClimatologyMapFluxes.BLOCKED
+      ~ClimatologyMapFluxes.FAIL
+      ~ClimatologyMapFluxes.READY
+      ~ClimatologyMapFluxes.RUNNING
+      ~ClimatologyMapFluxes.SUCCESS
+      ~ClimatologyMapFluxes.UNSET
+      ~ClimatologyMapFluxes.authkey
+      ~ClimatologyMapFluxes.daemon
+      ~ClimatologyMapFluxes.exitcode
+      ~ClimatologyMapFluxes.ident
+      ~ClimatologyMapFluxes.name
+      ~ClimatologyMapFluxes.pid
+      ~ClimatologyMapFluxes.sentinel
+   
+   
