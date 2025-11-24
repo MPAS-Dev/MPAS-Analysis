@@ -20,7 +20,7 @@ nco >=4.8.1,!=5.2.6
 netcdf4
 numpy >=2.0,<3.0
 pandas
-pillow >=10.0.0,<11.0.0
+pillow >=10.0.0,<13.0.0
 progressbar2
 pyproj
 pyremap >=2.0.0,<3.0.0
