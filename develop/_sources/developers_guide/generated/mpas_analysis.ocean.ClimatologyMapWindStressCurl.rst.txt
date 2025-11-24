@@ -19,6 +19,7 @@
       ~ClimatologyMapWindStressCurl.check_generate
       ~ClimatologyMapWindStressCurl.close
       ~ClimatologyMapWindStressCurl.get_mesh_filename
+      ~ClimatologyMapWindStressCurl.interrupt
       ~ClimatologyMapWindStressCurl.is_alive
       ~ClimatologyMapWindStressCurl.join
       ~ClimatologyMapWindStressCurl.kill

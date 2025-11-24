@@ -22,6 +22,7 @@
       ~MpasClimatologyTask.get_file_name
       ~MpasClimatologyTask.get_mesh_filename
       ~MpasClimatologyTask.get_start_and_end
+      ~MpasClimatologyTask.interrupt
       ~MpasClimatologyTask.is_alive
       ~MpasClimatologyTask.join
       ~MpasClimatologyTask.kill

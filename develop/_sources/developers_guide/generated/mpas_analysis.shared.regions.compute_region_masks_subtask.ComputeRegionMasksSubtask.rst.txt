@@ -20,6 +20,7 @@
       ~ComputeRegionMasksSubtask.close
       ~ComputeRegionMasksSubtask.expand_region_names
       ~ComputeRegionMasksSubtask.get_mesh_filename
+      ~ComputeRegionMasksSubtask.interrupt
       ~ComputeRegionMasksSubtask.is_alive
       ~ComputeRegionMasksSubtask.join
       ~ComputeRegionMasksSubtask.kill

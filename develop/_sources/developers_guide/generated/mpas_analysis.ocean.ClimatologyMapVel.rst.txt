@@ -19,6 +19,7 @@
       ~ClimatologyMapVel.check_generate
       ~ClimatologyMapVel.close
       ~ClimatologyMapVel.get_mesh_filename
+      ~ClimatologyMapVel.interrupt
       ~ClimatologyMapVel.is_alive
       ~ClimatologyMapVel.join
       ~ClimatologyMapVel.kill

@@ -19,6 +19,7 @@
       ~StreamfunctionMOC.check_generate
       ~StreamfunctionMOC.close
       ~StreamfunctionMOC.get_mesh_filename
+      ~StreamfunctionMOC.interrupt
       ~StreamfunctionMOC.is_alive
       ~StreamfunctionMOC.join
       ~StreamfunctionMOC.kill
