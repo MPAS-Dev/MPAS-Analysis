@@ -658,7 +658,7 @@ def update_time_bounds_from_file_names(config, section, componentName):
         return
 
     if len(inputFiles) == 0:
-        raise ValueError('No input files found for stream {} in {} between '
+        print('Warning: No input files found for stream {} in {} between '
                          '{} and {}'.format(streamName, componentName,
                                             requestedStartYear,
                                             requestedEndYear))
@@ -680,7 +680,7 @@ def update_time_bounds_from_file_names(config, section, componentName):
     endYear = years[lastIndex]
 
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        raise ValueError(
+        print("Warning:"
             "{} start and/or end year different from requested\n"
             "requested: {:04d}-{:04d}\n"
             "actual:   {:04d}-{:04d}\n".format(
