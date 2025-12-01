@@ -602,7 +602,8 @@ class StreamToLogger(object):
         pass
 
 
-def update_time_bounds_from_file_names(config, section, componentName):
+def update_time_bounds_from_file_names(config, section, componentName,
+                                       allow_cache=True):
     """
     Update the start and end years and dates for time series, climatologies or
     climate indices based on the years actually available in the list of files.
@@ -658,7 +659,7 @@ def update_time_bounds_from_file_names(config, section, componentName):
         return
 
     if len(inputFiles) == 0:
-        raise ValueError('No input files found for stream {} in {} between '
+        print('Warning: No input files found for stream {} in {} between '
                          '{} and {}'.format(streamName, componentName,
                                             requestedStartYear,
                                             requestedEndYear))
@@ -680,12 +681,16 @@ def update_time_bounds_from_file_names(config, section, componentName):
     endYear = years[lastIndex]
 
     if startYear != requestedStartYear or endYear != requestedEndYear:
-        raise ValueError(
-            "{} start and/or end year different from requested\n"
-            "requested: {:04d}-{:04d}\n"
-            "actual:   {:04d}-{:04d}\n".format(
-                section, requestedStartYear, requestedEndYear, startYear,
-                endYear))
+        message = ("{} start and/or end year different from requested\n"
+                   "requested: {:04d}-{:04d}\n"
+                   "actual:   {:04d}-{:04d}\n".format(
+                      section, requestedStartYear, requestedEndYear, startYear,
+                      endYear)
+                  )
+        if allow_cache:
+            print(f'Warning: {message}')
+        else:
+            raise ValueError(message)
 
     startDate = '{:04d}-01-01_00:00:00'.format(startYear)
     config.set(section, 'startDate', startDate)

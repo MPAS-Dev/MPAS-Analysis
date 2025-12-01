@@ -779,6 +779,8 @@ class IndexNino34(AnalysisTask):
 
         # find maximum value of three curves plotted
         maxY = -1E20
+        if len(mask) == 0:
+            return maxY
         for y in ys:
             maxY = max(y[mask].max(), maxY)
             # check the function interpolated to the max/min as well

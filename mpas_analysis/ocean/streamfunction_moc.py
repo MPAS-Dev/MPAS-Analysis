@@ -1007,15 +1007,16 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                                              self.historyStreams,
                                              'timeSeriesStatsMonthlyOutput')
 
-        mocRegion = np.zeros(len(inputFiles))
+        ntimes = int(12 * (self.endYear - self.startYear + 1))
+        mocRegion = np.zeros(ntimes)
         moc = None
         refTopDepth = None
-        times = np.zeros(len(inputFiles))
-        computed = np.zeros(len(inputFiles), bool)
+        times = np.zeros(ntimes)
+        computed = np.zeros(ntimes, bool)
 
         continueOutput = os.path.exists(outputFileName)
         if continueOutput:
-            self.logger.info('   Read in previously computed MOC time series')
+            self.logger.info(f'   Read in previously computed MOC time series {outputFileName}')
             with open_mpas_dataset(fileName=outputFileName,
                                    calendar=self.calendar,
                                    timeVariableNames=None,
@@ -1028,32 +1029,30 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
                 if moc is None:
                     sizes = dsMOCIn.sizes
-                    moc = np.zeros((len(inputFiles), sizes['depth'],
-                                    sizes['lat']))
+                    moc = np.zeros((ntimes, sizes['depth'],
+                                   sizes['lat']))
                     refTopDepth = dsMOCIn.depth.values
 
                 # first, copy all computed data
-                for inIndex in range(dsMOCIn.sizes['Time']):
+                outIndex = 0
+                for load_year in np.arange(self.startYear, self.endYear + 1):
+                    for load_month in np.arange(1, 13):
+                        mask = np.logical_and(dsMOCIn.year.values == load_year,
+                                              dsMOCIn.month.values == load_month)
+                        if np.sum(mask) >= 1:
+                            inIndex = np.where(mask)[0][0]
+                            mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
+                            moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
+                            times[outIndex] = dsMOCIn.Time[inIndex]
+                            computed[outIndex] = True
 
-                    mask = np.logical_and(
-                        dsMOCIn.year[inIndex].values == years,
-                        dsMOCIn.month[inIndex].values == months)
-
-                    outIndex = np.where(mask)[0][0]
-
-                    mocRegion[outIndex] = dsMOCIn.mocAtlantic26[inIndex]
-                    moc[outIndex, :, :] = dsMOCIn.mocAtlantic[inIndex, :, :]
-                    times[outIndex] = dsMOCIn.Time[inIndex]
-                    computed[outIndex] = True
+                        outIndex += 1
 
                 if np.all(computed):
                     # no need to waste time writing out the data set again
                     return dsMOCIn
 
         for timeIndex, fileName in enumerate(inputFiles):
-            if computed[timeIndex]:
-                continue
-
             dsLocal = open_mpas_dataset(
                 fileName=fileName,
                 calendar=self.calendar,
@@ -1067,12 +1066,15 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
 
             self.logger.info('     date: {:04d}-{:02d}'.format(date.year,
                                                                date.month))
+            computedIndex = 12 * (date.year - self.startYear) + date.month - 1
+            if computed[computedIndex]:
+                continue
 
             # hard-wire region=0 (Atlantic) for now
             indRegion = 0
             mocVar = dsLocal.timeMonthly_avg_mocStreamvalLatAndDepthRegion
             mocTop = mocVar[indRegion, :, :].values
-            mocRegion[timeIndex] = np.amax(mocTop[:, indlat26])
+            mocRegion[computedIndex] = np.amax(mocTop[:, indlat26])
 
             if moc is None:
                 sizes = dsLocal.sizes
@@ -1087,7 +1089,8 @@ class ComputeMOCTimeSeriesSubtask(AnalysisTask):
                 refTopDepth = np.zeros(nVertLevels + 1)
                 refTopDepth[1:nVertLevels + 1] = refBottomDepth[0:nVertLevels]
 
-            moc[timeIndex, 0:-1, :] = mocTop
+            moc[computedIndex, 0:-1, :] = mocTop
+
 
         description = 'Max MOC Atlantic streamfunction nearest to RAPID ' \
             'Array latitude (26.5N)'

@@ -168,7 +168,8 @@ class TestMpasClimatologyTask(TestCase):
         with self.assertRaisesRegex(ValueError,
                                     'climatology start and/or end year '
                                     'different from requested'):
-            update_time_bounds_from_file_names(config, 'climatology', 'ocean')
+            update_time_bounds_from_file_names(config, 'climatology', 'ocean',
+                                               allow_cache=False)
 
     def test_subtask_run_analysis(self):
         mpasClimatologyTask = self.setup_task()
