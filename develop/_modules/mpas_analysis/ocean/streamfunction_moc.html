@@ -1111,15 +1111,16 @@
                                              <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="p">,</span>
                                              <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
 
-        <span class="n">mocRegion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
+        <span class="n">ntimes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">mocRegion</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ntimes</span><span class="p">)</span>
         <span class="n">moc</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">refTopDepth</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">))</span>
-        <span class="n">computed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="nb">bool</span><span class="p">)</span>
+        <span class="n">times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ntimes</span><span class="p">)</span>
+        <span class="n">computed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ntimes</span><span class="p">,</span> <span class="nb">bool</span><span class="p">)</span>
 
         <span class="n">continueOutput</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputFileName</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">continueOutput</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;   Read in previously computed MOC time series&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;   Read in previously computed MOC time series </span><span class="si">{</span><span class="n">outputFileName</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outputFileName</span><span class="p">,</span>
                                    <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
                                    <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1132,32 +1133,30 @@
 
                 <span class="k">if</span> <span class="n">moc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">sizes</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">sizes</span>
-                    <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">),</span> <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">],</span>
-                                    <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]))</span>
+                    <span class="n">moc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntimes</span><span class="p">,</span> <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">],</span>
+                                   <span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]))</span>
                     <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">depth</span><span class="o">.</span><span class="n">values</span>
 
                 <span class="c1"># first, copy all computed data</span>
-                <span class="k">for</span> <span class="n">inIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsMOCIn</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]):</span>
+                <span class="n">outIndex</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">load_year</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">load_month</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span>
+                        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">dsMOCIn</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">load_year</span><span class="p">,</span>
+                                              <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">load_month</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">inIndex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">mocRegion</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
+                            <span class="n">moc</span><span class="p">[</span><span class="n">outIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic</span><span class="p">[</span><span class="n">inIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                            <span class="n">times</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
+                            <span class="n">computed</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
-                    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
-                        <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">year</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">years</span><span class="p">,</span>
-                        <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">month</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">months</span><span class="p">)</span>
-
-                    <span class="n">outIndex</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-
-                    <span class="n">mocRegion</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic26</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
-                    <span class="n">moc</span><span class="p">[</span><span class="n">outIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">mocAtlantic</span><span class="p">[</span><span class="n">inIndex</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-                    <span class="n">times</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsMOCIn</span><span class="o">.</span><span class="n">Time</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span>
-                    <span class="n">computed</span><span class="p">[</span><span class="n">outIndex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="n">outIndex</span> <span class="o">+=</span> <span class="mi">1</span>
 
                 <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">computed</span><span class="p">):</span>
                     <span class="c1"># no need to waste time writing out the data set again</span>
                     <span class="k">return</span> <span class="n">dsMOCIn</span>
 
         <span class="k">for</span> <span class="n">timeIndex</span><span class="p">,</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">computed</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">]:</span>
-                <span class="k">continue</span>
-
             <span class="n">dsLocal</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
                 <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
                 <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
@@ -1171,12 +1170,15 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;     date: </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span>
                                                                <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">))</span>
+            <span class="n">computedIndex</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">*</span> <span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span> <span class="o">+</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">computed</span><span class="p">[</span><span class="n">computedIndex</span><span class="p">]:</span>
+                <span class="k">continue</span>
 
             <span class="c1"># hard-wire region=0 (Atlantic) for now</span>
             <span class="n">indRegion</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">mocVar</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">timeMonthly_avg_mocStreamvalLatAndDepthRegion</span>
             <span class="n">mocTop</span> <span class="o">=</span> <span class="n">mocVar</span><span class="p">[</span><span class="n">indRegion</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">values</span>
-            <span class="n">mocRegion</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">mocTop</span><span class="p">[:,</span> <span class="n">indlat26</span><span class="p">])</span>
+            <span class="n">mocRegion</span><span class="p">[</span><span class="n">computedIndex</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">mocTop</span><span class="p">[:,</span> <span class="n">indlat26</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="n">moc</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">sizes</span> <span class="o">=</span> <span class="n">dsLocal</span><span class="o">.</span><span class="n">sizes</span>
@@ -1191,7 +1193,8 @@
                 <span class="n">refTopDepth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
                 <span class="n">refTopDepth</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nVertLevels</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nVertLevels</span><span class="p">]</span>
 
-            <span class="n">moc</span><span class="p">[</span><span class="n">timeIndex</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span>
+            <span class="n">moc</span><span class="p">[</span><span class="n">computedIndex</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">mocTop</span>
+
 
         <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;Max MOC Atlantic streamfunction nearest to RAPID &#39;</span> \
             <span class="s1">&#39;Array latitude (26.5N)&#39;</span>

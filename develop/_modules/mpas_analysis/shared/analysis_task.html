@@ -730,7 +730,8 @@
         <span class="k">pass</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+                                       <span class="n">allow_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Update the start and end years and dates for time series, climatologies or</span>
 <span class="sd">    climate indices based on the years actually available in the list of files.</span>
@@ -786,7 +787,7 @@
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No input files found for stream </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1"> between &#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No input files found for stream </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1"> between &#39;</span>
                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                             <span class="n">requestedStartYear</span><span class="p">,</span>
                                             <span class="n">requestedEndYear</span><span class="p">))</span>
@@ -808,12 +809,16 @@
     <span class="n">endYear</span> <span class="o">=</span> <span class="n">years</span><span class="p">[</span><span class="n">lastIndex</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">startYear</span> <span class="o">!=</span> <span class="n">requestedStartYear</span> <span class="ow">or</span> <span class="n">endYear</span> <span class="o">!=</span> <span class="n">requestedEndYear</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> start and/or end year different from requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">section</span><span class="p">,</span> <span class="n">requestedStartYear</span><span class="p">,</span> <span class="n">requestedEndYear</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span>
-                <span class="n">endYear</span><span class="p">))</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> start and/or end year different from requested</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
+                   <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                      <span class="n">section</span><span class="p">,</span> <span class="n">requestedStartYear</span><span class="p">,</span> <span class="n">requestedEndYear</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span>
+                      <span class="n">endYear</span><span class="p">)</span>
+                  <span class="p">)</span>
+        <span class="k">if</span> <span class="n">allow_cache</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
     <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
     <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>

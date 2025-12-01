@@ -882,6 +882,8 @@
 
         <span class="c1"># find maximum value of three curves plotted</span>
         <span class="n">maxY</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1E20</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">maxY</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">:</span>
             <span class="n">maxY</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">maxY</span><span class="p">)</span>
             <span class="c1"># check the function interpolated to the max/min as well</span>
