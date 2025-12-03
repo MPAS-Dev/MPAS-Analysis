@@ -6,7 +6,7 @@ set -e
 branch=test_e3sm_unified
 
 # test building the docs
-py=3.13
+py=$(python -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}")')
 machine=${E3SMU_MACHINE}
 
 ./suite/setup.py -p ${py} -r main_py${py} -b ${branch} --clean
