@@ -576,6 +576,9 @@ def add_task_and_subtasks(analysisTask, analysesToGenerate, verbose,
             totalFailures += 1
             return totalFailures
 
+    # clear unpicklable attributes before running the task
+    analysisTask.clear_namelists_and_streams()
+
     analysesToGenerate[key] = analysisTask
     analysisTask._setupStatus = 'success'
     assert(totalFailures == 0)
