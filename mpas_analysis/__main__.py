@@ -33,7 +33,7 @@ import xarray
 import time
 import json
 from importlib.metadata import Distribution
-from importlib.resources import contents
+from importlib.resources import files
 
 from mache import discover_machine, MachineInfo
 
@@ -1078,10 +1078,11 @@ Please reinstall mpas_analysis in editable mode using:
         except FileNotFoundError:
 
             possible_machines = []
-            machine_configs = contents('mache.machines')
+            machine_configs = files('mache.machines').iterdir()
             for config in machine_configs:
-                if config.endswith('.cfg'):
-                    possible_machines.append(os.path.splitext(config)[0])
+                if config.name.endswith('.cfg'):
+                    possible_machines.append(
+                        os.path.splitext(config.name)[0])
 
             possible_machines = '\n  '.join(sorted(possible_machines))
             raise ValueError(
