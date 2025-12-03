@@ -551,6 +551,22 @@ class AnalysisTask(Process):
 
         return meshFilename
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+
+        # Clear out attributes that should not be pickled
+        state['runAfterTasks'] = []
+        state['subtasks'] = []
+        # Drop process internals and logger that can't/shouldn't be pickled
+        for key in ['_popen', 'logger', '_stackTrace']:
+            state.pop(key, None)
+
+        # Drop weakref-bearing Finalize, etc., by not pickling _popen at all
+        # _runStatus is a multiprocessing.Value; depending on your logic,
+        # you may also want to skip it and let child initialize its own.
+
+        return state
+
 # }}}
 
 
