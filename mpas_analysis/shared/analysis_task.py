@@ -531,9 +531,25 @@ class AnalysisTask(Process):
         return meshFilename
 
     def __getstate__(self):
+        """
+        Customize pickling to exclude unpicklable and unnecessary attributes.
+        This method is called during multiprocessing when the task is
+        serialized to be sent to a child process. We exclude task dependencies
+        and process internals that don't need to be transferred, such as logger
+        objects, process internals, and weakref-bearing attributes.
+
+        Returns
+        -------
+        state : dict
+            The object state with unpicklable and unnecessary attributes
+            removed.
+        """
         state = self.__dict__.copy()
 
         # Clear out attributes that should not be pickled
+        state['namelist'] = None
+        state['runStreams'] = None
+        state['historyStreams'] = None
         state['runAfterTasks'] = []
         state['subtasks'] = []
         # Drop process internals and logger that can't/shouldn't be pickled

@@ -1076,10 +1076,10 @@ Please reinstall mpas_analysis in editable mode using:
 
             possible_machines = []
             machine_configs = files('mache.machines').iterdir()
-            for config in machine_configs:
-                if config.name.endswith('.cfg'):
+            for config_file in machine_configs:
+                if config_file.name.endswith('.cfg'):
                     possible_machines.append(
-                        os.path.splitext(config.name)[0])
+                        os.path.splitext(config_file.name)[0])
 
             possible_machines = '\n  '.join(sorted(possible_machines))
             raise ValueError(
