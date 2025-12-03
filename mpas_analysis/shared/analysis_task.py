@@ -203,7 +203,7 @@ class AnalysisTask(Process):
 
         self.plotsDirectory = build_config_full_path(self.config, 'output',
                                                      'plotsSubdirectory')
-        self.load_namelists_and_streams()
+        self._load_namelists_and_streams()
 
         self.calendar = self.namelist.get('config_calendar_type')
 
@@ -220,40 +220,6 @@ class AnalysisTask(Process):
 
         self._logFileName = '{}/{}.log'.format(logsDirectory,
                                                self.fullTaskName)
-
-    def load_namelists_and_streams(self):
-        """
-        Load namelist and streams attributes.
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        namelistFileName = build_config_full_path(
-            self.config, 'input',
-            '{}NamelistFileName'.format(self.componentName))
-        self.namelist = NameList(namelistFileName)
-
-        streamsFileName = build_config_full_path(
-            self.config, 'input',
-            '{}StreamsFileName'.format(self.componentName))
-        self.runStreams = StreamsFile(streamsFileName,
-                                      streamsdir=self.runDirectory)
-        self.historyStreams = StreamsFile(streamsFileName,
-                                          streamsdir=self.historyDirectory)
-
-    def clear_namelists_and_streams(self):
-        """
-        Clear namelist and streams attributes that cannot be pickled for
-        multiprocessing.
-        """
-        # Authors
-        # -------
-        # Xylar Asay-Davis
-
-        self.namelist = None
-        self.runStreams = None
-        self.historyStreams = None
 
     def run_task(self):
         """
@@ -305,6 +271,19 @@ class AnalysisTask(Process):
         if subtask not in self.subtasks:
             self.subtasks.append(subtask)
 
+    def start(self):
+        """
+        Clear unpicklable attributes and then start the analysis task as a new
+        process.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+        # clear unpicklable attributes before running the task
+        self._clear_namelists_and_streams()
+
+        super(AnalysisTask, self).start()
+
     def run(self, writeLogFile=True):
         """
         Sets up logging and then runs the analysis task.
@@ -345,7 +324,7 @@ class AnalysisTask(Process):
         try:
             # reload namelists and streams, since they cannot be pickled
             # as part of multiprocessing
-            self.load_namelists_and_streams()
+            self._load_namelists_and_streams()
             self.run_task()
             self._runStatus.value = AnalysisTask.SUCCESS
         except (Exception, BaseException) as e:
@@ -567,6 +546,39 @@ class AnalysisTask(Process):
 
         return state
 
+    def _load_namelists_and_streams(self):
+        """
+        Load namelist and streams attributes.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        namelistFileName = build_config_full_path(
+            self.config, 'input',
+            '{}NamelistFileName'.format(self.componentName))
+        self.namelist = NameList(namelistFileName)
+
+        streamsFileName = build_config_full_path(
+            self.config, 'input',
+            '{}StreamsFileName'.format(self.componentName))
+        self.runStreams = StreamsFile(streamsFileName,
+                                      streamsdir=self.runDirectory)
+        self.historyStreams = StreamsFile(streamsFileName,
+                                          streamsdir=self.historyDirectory)
+
+    def _clear_namelists_and_streams(self):
+        """
+        Clear namelist and streams attributes that cannot be pickled for
+        multiprocessing.
+        """
+        # Authors
+        # -------
+        # Xylar Asay-Davis
+
+        self.namelist = None
+        self.runStreams = None
+        self.historyStreams = None
 # }}}
 
 
