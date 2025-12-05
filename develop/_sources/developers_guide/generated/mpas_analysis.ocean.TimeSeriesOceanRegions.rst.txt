@@ -19,7 +19,6 @@
       ~TimeSeriesOceanRegions.check_generate
       ~TimeSeriesOceanRegions.close
       ~TimeSeriesOceanRegions.get_mesh_filename
-      ~TimeSeriesOceanRegions.interrupt
       ~TimeSeriesOceanRegions.is_alive
       ~TimeSeriesOceanRegions.join
       ~TimeSeriesOceanRegions.kill

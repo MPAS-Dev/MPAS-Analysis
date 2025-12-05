@@ -19,7 +19,6 @@
       ~ClimatologyMapMLDMinMax.check_generate
       ~ClimatologyMapMLDMinMax.close
       ~ClimatologyMapMLDMinMax.get_mesh_filename
-      ~ClimatologyMapMLDMinMax.interrupt
       ~ClimatologyMapMLDMinMax.is_alive
       ~ClimatologyMapMLDMinMax.join
       ~ClimatologyMapMLDMinMax.kill

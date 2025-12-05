@@ -19,7 +19,6 @@
       ~ClimatologyMapSeaIceVolumeRidge.check_generate
       ~ClimatologyMapSeaIceVolumeRidge.close
       ~ClimatologyMapSeaIceVolumeRidge.get_mesh_filename
-      ~ClimatologyMapSeaIceVolumeRidge.interrupt
       ~ClimatologyMapSeaIceVolumeRidge.is_alive
       ~ClimatologyMapSeaIceVolumeRidge.join
       ~ClimatologyMapSeaIceVolumeRidge.kill

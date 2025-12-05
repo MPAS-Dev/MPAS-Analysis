@@ -19,7 +19,6 @@
       ~GeojsonNetcdfTransects.check_generate
       ~GeojsonNetcdfTransects.close
       ~GeojsonNetcdfTransects.get_mesh_filename
-      ~GeojsonNetcdfTransects.interrupt
       ~GeojsonNetcdfTransects.is_alive
       ~GeojsonNetcdfTransects.join
       ~GeojsonNetcdfTransects.kill

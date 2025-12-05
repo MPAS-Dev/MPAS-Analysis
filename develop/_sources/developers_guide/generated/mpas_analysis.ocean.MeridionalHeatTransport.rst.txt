@@ -19,7 +19,6 @@
       ~MeridionalHeatTransport.check_generate
       ~MeridionalHeatTransport.close
       ~MeridionalHeatTransport.get_mesh_filename
-      ~MeridionalHeatTransport.interrupt
       ~MeridionalHeatTransport.is_alive
       ~MeridionalHeatTransport.join
       ~MeridionalHeatTransport.kill

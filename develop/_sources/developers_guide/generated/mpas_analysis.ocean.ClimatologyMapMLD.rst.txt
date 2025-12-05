@@ -19,7 +19,6 @@
       ~ClimatologyMapMLD.check_generate
       ~ClimatologyMapMLD.close
       ~ClimatologyMapMLD.get_mesh_filename
-      ~ClimatologyMapMLD.interrupt
       ~ClimatologyMapMLD.is_alive
       ~ClimatologyMapMLD.join
       ~ClimatologyMapMLD.kill

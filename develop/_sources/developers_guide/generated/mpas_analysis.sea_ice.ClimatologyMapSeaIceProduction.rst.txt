@@ -19,7 +19,6 @@
       ~ClimatologyMapSeaIceProduction.check_generate
       ~ClimatologyMapSeaIceProduction.close
       ~ClimatologyMapSeaIceProduction.get_mesh_filename
-      ~ClimatologyMapSeaIceProduction.interrupt
       ~ClimatologyMapSeaIceProduction.is_alive
       ~ClimatologyMapSeaIceProduction.join
       ~ClimatologyMapSeaIceProduction.kill

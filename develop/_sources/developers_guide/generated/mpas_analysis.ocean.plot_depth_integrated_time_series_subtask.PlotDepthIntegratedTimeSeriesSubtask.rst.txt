@@ -20,7 +20,6 @@
       ~PlotDepthIntegratedTimeSeriesSubtask.close
       ~PlotDepthIntegratedTimeSeriesSubtask.customize_fig
       ~PlotDepthIntegratedTimeSeriesSubtask.get_mesh_filename
-      ~PlotDepthIntegratedTimeSeriesSubtask.interrupt
       ~PlotDepthIntegratedTimeSeriesSubtask.is_alive
       ~PlotDepthIntegratedTimeSeriesSubtask.join
       ~PlotDepthIntegratedTimeSeriesSubtask.kill

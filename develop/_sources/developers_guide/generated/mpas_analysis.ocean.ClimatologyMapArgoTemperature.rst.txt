@@ -19,7 +19,6 @@
       ~ClimatologyMapArgoTemperature.check_generate
       ~ClimatologyMapArgoTemperature.close
       ~ClimatologyMapArgoTemperature.get_mesh_filename
-      ~ClimatologyMapArgoTemperature.interrupt
       ~ClimatologyMapArgoTemperature.is_alive
       ~ClimatologyMapArgoTemperature.join
       ~ClimatologyMapArgoTemperature.kill

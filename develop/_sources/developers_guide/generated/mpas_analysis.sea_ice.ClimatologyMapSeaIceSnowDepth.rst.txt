@@ -19,7 +19,6 @@
       ~ClimatologyMapSeaIceSnowDepth.check_generate
       ~ClimatologyMapSeaIceSnowDepth.close
       ~ClimatologyMapSeaIceSnowDepth.get_mesh_filename
-      ~ClimatologyMapSeaIceSnowDepth.interrupt
       ~ClimatologyMapSeaIceSnowDepth.is_alive
       ~ClimatologyMapSeaIceSnowDepth.join
       ~ClimatologyMapSeaIceSnowDepth.kill

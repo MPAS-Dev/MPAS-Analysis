@@ -19,7 +19,6 @@
       ~ComputeAnomalySubtask.check_generate
       ~ComputeAnomalySubtask.close
       ~ComputeAnomalySubtask.get_mesh_filename
-      ~ComputeAnomalySubtask.interrupt
       ~ComputeAnomalySubtask.is_alive
       ~ComputeAnomalySubtask.join
       ~ComputeAnomalySubtask.kill

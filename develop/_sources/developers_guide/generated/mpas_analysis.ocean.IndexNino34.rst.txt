@@ -19,7 +19,6 @@
       ~IndexNino34.check_generate
       ~IndexNino34.close
       ~IndexNino34.get_mesh_filename
-      ~IndexNino34.interrupt
       ~IndexNino34.is_alive
       ~IndexNino34.join
       ~IndexNino34.kill

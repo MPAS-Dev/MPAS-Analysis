@@ -22,7 +22,6 @@
       ~RemapObservedClimatologySubtask.get_file_name
       ~RemapObservedClimatologySubtask.get_mesh_filename
       ~RemapObservedClimatologySubtask.get_observation_descriptor
-      ~RemapObservedClimatologySubtask.interrupt
       ~RemapObservedClimatologySubtask.is_alive
       ~RemapObservedClimatologySubtask.join
       ~RemapObservedClimatologySubtask.kill

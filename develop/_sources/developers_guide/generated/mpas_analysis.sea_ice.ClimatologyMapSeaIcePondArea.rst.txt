@@ -19,7 +19,6 @@
       ~ClimatologyMapSeaIcePondArea.check_generate
       ~ClimatologyMapSeaIcePondArea.close
       ~ClimatologyMapSeaIcePondArea.get_mesh_filename
-      ~ClimatologyMapSeaIcePondArea.interrupt
       ~ClimatologyMapSeaIcePondArea.is_alive
       ~ClimatologyMapSeaIcePondArea.join
       ~ClimatologyMapSeaIcePondArea.kill

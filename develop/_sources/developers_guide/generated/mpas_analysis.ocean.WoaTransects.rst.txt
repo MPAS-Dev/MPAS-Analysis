@@ -19,7 +19,6 @@
       ~WoaTransects.check_generate
       ~WoaTransects.close
       ~WoaTransects.get_mesh_filename
-      ~WoaTransects.interrupt
       ~WoaTransects.is_alive
       ~WoaTransects.join
       ~WoaTransects.kill

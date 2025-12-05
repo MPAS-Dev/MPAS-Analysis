@@ -20,7 +20,6 @@
       ~OceanRegionalProfiles.check_generate
       ~OceanRegionalProfiles.close
       ~OceanRegionalProfiles.get_mesh_filename
-      ~OceanRegionalProfiles.interrupt
       ~OceanRegionalProfiles.is_alive
       ~OceanRegionalProfiles.join
       ~OceanRegionalProfiles.kill

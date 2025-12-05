@@ -19,7 +19,6 @@
       ~TimeSeriesTransport.check_generate
       ~TimeSeriesTransport.close
       ~TimeSeriesTransport.get_mesh_filename
-      ~TimeSeriesTransport.interrupt
       ~TimeSeriesTransport.is_alive
       ~TimeSeriesTransport.join
       ~TimeSeriesTransport.kill

@@ -19,7 +19,6 @@
       ~ClimatologyMapWaves.check_generate
       ~ClimatologyMapWaves.close
       ~ClimatologyMapWaves.get_mesh_filename
-      ~ClimatologyMapWaves.interrupt
       ~ClimatologyMapWaves.is_alive
       ~ClimatologyMapWaves.join
       ~ClimatologyMapWaves.kill

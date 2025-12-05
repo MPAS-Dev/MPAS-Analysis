@@ -19,7 +19,6 @@
       ~ClimatologyMapSeaIceAlbedo.check_generate
       ~ClimatologyMapSeaIceAlbedo.close
       ~ClimatologyMapSeaIceAlbedo.get_mesh_filename
-      ~ClimatologyMapSeaIceAlbedo.interrupt
       ~ClimatologyMapSeaIceAlbedo.is_alive
       ~ClimatologyMapSeaIceAlbedo.join
       ~ClimatologyMapSeaIceAlbedo.kill

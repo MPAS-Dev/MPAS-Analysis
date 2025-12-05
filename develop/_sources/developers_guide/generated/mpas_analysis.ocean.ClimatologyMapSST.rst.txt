@@ -19,7 +19,6 @@
       ~ClimatologyMapSST.check_generate
       ~ClimatologyMapSST.close
       ~ClimatologyMapSST.get_mesh_filename
-      ~ClimatologyMapSST.interrupt
       ~ClimatologyMapSST.is_alive
       ~ClimatologyMapSST.join
       ~ClimatologyMapSST.kill
