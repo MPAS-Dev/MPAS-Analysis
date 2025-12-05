@@ -23,7 +23,7 @@ requirements:
     - pip
     - setuptools >=60
   run:
-    - python >={{ python_min }},<3.14
+    - python >={{ python_min }},<3.13
     - cartopy >=0.18.0
     - cartopy_offlinedata
     - cmocean
