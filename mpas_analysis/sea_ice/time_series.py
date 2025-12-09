@@ -10,6 +10,7 @@
 # https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE
 
 import numpy as np
+import os
 import xarray as xr
 
 from mpas_analysis.shared import AnalysisTask
@@ -692,6 +693,10 @@ class TimeSeriesSeaIce(AnalysisTask):
             if maxAllowedSeaIceThickness is not None:
                 mask = np.logical_and(mask,
                                       ds.iceThick <= maxAllowedSeaIceThickness)
+            if os.path.exists(outFileNames[hemisphere]):
+                dsCache = xr.open_dataset(outFileNames[hemisphere])
+                timeMask = ds.startTime > dsCache.startTime.isel(Time=-1)
+                ds = ds.isel(Time=timeMask)
 
             dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
@@ -703,21 +708,25 @@ class TimeSeriesSeaIce(AnalysisTask):
             dsAreaSum['snowDepth'] = (dsAreaSum.snowVolume /
                                       dsMesh.areaCell.sum('nCells'))
 
-            dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
-            dsAreaSum['iceArea'].attrs['description'] = \
-                f'Total {hemisphere} sea ice area'
-            dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
-            dsAreaSum['iceVolume'].attrs['description'] = \
-                f'Total {hemisphere} sea ice volume'
-            dsAreaSum['snowVolume'].attrs['units'] = 'm$^3$'
-            dsAreaSum['snowVolume'].attrs['description'] = \
-                f'Total {hemisphere} snow volume'
-            dsAreaSum['iceThickness'].attrs['units'] = 'm'
-            dsAreaSum['iceThickness'].attrs['description'] = \
-                f'Mean {hemisphere} sea ice thickness'
-            dsAreaSum['snowDepth'].attrs['units'] = 'm'
-            dsAreaSum['snowDepth'].attrs['description'] = \
-                f'Mean {hemisphere} snow depth'
+            if os.path.exists(outFileNames[hemisphere]):
+                dsAreaSum = xr.concat([dsCache, dsAreaSum], dim='Time')
+                dsCache.close()
+            else:
+                dsAreaSum['iceArea'].attrs['units'] = 'm$^2$'
+                dsAreaSum['iceArea'].attrs['description'] = \
+                    f'Total {hemisphere} sea ice area'
+                dsAreaSum['iceVolume'].attrs['units'] = 'm$^3$'
+                dsAreaSum['iceVolume'].attrs['description'] = \
+                    f'Total {hemisphere} sea ice volume'
+                dsAreaSum['snowVolume'].attrs['units'] = 'm$^3$'
+                dsAreaSum['snowVolume'].attrs['description'] = \
+                    f'Total {hemisphere} snow volume'
+                dsAreaSum['iceThickness'].attrs['units'] = 'm'
+                dsAreaSum['iceThickness'].attrs['description'] = \
+                    f'Mean {hemisphere} sea ice thickness'
+                dsAreaSum['snowDepth'].attrs['units'] = 'm'
+                dsAreaSum['snowDepth'].attrs['description'] = \
+                    f'Mean {hemisphere} snow depth'
 
             dsTimeSeries[hemisphere] = dsAreaSum
 
