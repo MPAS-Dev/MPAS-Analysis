@@ -695,8 +695,8 @@ class TimeSeriesSeaIce(AnalysisTask):
                                       ds.iceThick <= maxAllowedSeaIceThickness)
             if os.path.exists(outFileNames[hemisphere]):
                 dsCache = xr.open_dataset(outFileNames[hemisphere])
-                timeMask = ds.startTime > dsCache.startTime.isel(Time=-1)
-                ds = ds.isel(Time=timeMask)
+                timeMask = np.argwhere(ds.startTime.values > dsCache.startTime.isel(Time=-1).values)
+                ds = ds.isel(Time=timeMask[:,0])
 
             dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
