@@ -182,6 +182,12 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
 
     min_depth, max_depth : float
         The minimum and maximum depths for integration
+
+    cp : float
+        Specific heat of seawater [J/(kg*degC)]
+
+    rho : float
+        Reference density of seawater [kg/m3]
     """
 
     def __init__(self, mpas_climatology_task, ref_year_climatology_task,
@@ -239,6 +245,8 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         self.run_after(ref_year_climatology_task)
         self.min_depth = min_depth
         self.max_depth = max_depth
+        self.cp = None
+        self.rho = None
 
     def setup_and_check(self):
         """
@@ -254,6 +262,9 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         # we're sure this subtask is supposed to run
         self.ref_year_climatology_task.add_variables(self.variableList,
                                                      self.seasons)
+
+        self.cp = self.namelist.getfloat('config_specific_heat_sea_water')
+        self.rho = self.namelist.getfloat('config_density0')
 
     def customize_masked_climatology(self, climatology, season):
         """
@@ -298,10 +309,10 @@ class RemapMpasOHCClimatology(RemapMpasClimatologySubtask):
         ds_mesh = xr.open_dataset(self.meshFilename)
         ds_mesh = ds_mesh.isel(Time=0)
 
-        # specific heat [J/(kg*degC)]
-        cp = self.namelist.getfloat('config_specific_heat_sea_water')
-        # [kg/m3]
-        rho = self.namelist.getfloat('config_density0')
+        cp = self.cp
+        assert cp is not None, "Specific heat 'cp' has not been set"
+        rho = self.rho
+        assert rho is not None, "Reference density 'rho' has not been set"
 
         units_scale_factor = 1e-9
 
