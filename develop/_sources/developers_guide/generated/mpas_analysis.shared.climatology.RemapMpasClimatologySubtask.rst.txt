@@ -24,6 +24,7 @@
       ~RemapMpasClimatologySubtask.get_masked_file_name
       ~RemapMpasClimatologySubtask.get_mesh_filename
       ~RemapMpasClimatologySubtask.get_remapped_file_name
+      ~RemapMpasClimatologySubtask.interrupt
       ~RemapMpasClimatologySubtask.is_alive
       ~RemapMpasClimatologySubtask.join
       ~RemapMpasClimatologySubtask.kill

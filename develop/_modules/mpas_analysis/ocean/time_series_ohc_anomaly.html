@@ -131,6 +131,17 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Performs analysis of ocean heat content (OHC) from time-series output.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    cp : float</span>
+<span class="sd">        Specific heat of seawater [J/(kg*degC)]</span>
+
+<span class="sd">    rho : float</span>
+<span class="sd">        Reference density of seawater [kg/m3]</span>
+
+<span class="sd">    meshFilename : str</span>
+<span class="sd">        The path to the MPAS mesh file</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -232,8 +243,23 @@
                 <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
 
             <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Store the specific heat and reference density of seawater for use</span>
+<span class="sd">        in OHC calculations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -242,10 +268,15 @@
         <span class="c1"># for convenience, rename the variables to simpler, shorter names</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span><span class="p">)</span>
 
-        <span class="c1"># specific heat [J/(kg*degC)]</span>
-        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
-        <span class="c1"># [kg/m3]</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+        <span class="c1"># these need to be set at setup time, not at runtime because piclking</span>
+        <span class="c1"># means the namelists and streams objects they come from aren&#39;t</span>
+        <span class="c1"># available at runtime</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span>
+        <span class="k">assert</span> <span class="n">cp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Specific heat &#39;cp&#39; has not been set&quot;</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span>
+        <span class="k">assert</span> <span class="n">rho</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Reference density &#39;rho&#39; has not been set&quot;</span>
+        <span class="n">meshFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span>
+        <span class="k">assert</span> <span class="n">meshFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Mesh filename has not been set&quot;</span>
 
         <span class="n">unitsScalefactor</span> <span class="o">=</span> <span class="mf">1e-22</span>
 
@@ -254,8 +285,6 @@
             <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;avgLayerTemperature&#39;</span><span class="p">]</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;$10^</span><span class="si">{22}</span><span class="s1">$ J&#39;</span>
         <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ocean heat content in each region&#39;</span>
-
-        <span class="n">meshFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
         <span class="c1"># Define/read in general variables</span>
         <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>

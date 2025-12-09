@@ -19,6 +19,7 @@
       ~WoceTransects.check_generate
       ~WoceTransects.close
       ~WoceTransects.get_mesh_filename
+      ~WoceTransects.interrupt
       ~WoceTransects.is_alive
       ~WoceTransects.join
       ~WoceTransects.kill

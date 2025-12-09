@@ -19,6 +19,7 @@
       ~TimeSeriesSST.check_generate
       ~TimeSeriesSST.close
       ~TimeSeriesSST.get_mesh_filename
+      ~TimeSeriesSST.interrupt
       ~TimeSeriesSST.is_alive
       ~TimeSeriesSST.join
       ~TimeSeriesSST.kill

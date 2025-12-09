@@ -19,6 +19,7 @@
       ~ClimatologyMapSeaIceConc.check_generate
       ~ClimatologyMapSeaIceConc.close
       ~ClimatologyMapSeaIceConc.get_mesh_filename
+      ~ClimatologyMapSeaIceConc.interrupt
       ~ClimatologyMapSeaIceConc.is_alive
       ~ClimatologyMapSeaIceConc.join
       ~ClimatologyMapSeaIceConc.kill
