@@ -41,7 +41,7 @@ jobs:
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Cache Conda
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           # Increase this value to reset cache if conda-dev-spec.template has not changed in the workflow
           CACHE_NUMBER: 0
