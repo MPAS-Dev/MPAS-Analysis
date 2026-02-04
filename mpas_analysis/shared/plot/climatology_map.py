@@ -800,12 +800,12 @@ def _add_stats(modelArray, refArray, diffArray, Lats, axes):
 
 def _add_stats_text(names, values, ax, loc):
     if loc == 'upper':
-        text_ax = inset_axes(ax, width='17%', height='20%', loc='upper right',
-                             bbox_to_anchor=(0.2, 0.1, 1., 1.),
+        text_ax = inset_axes(ax, width='19%', height='20%', loc='upper right',
+                             bbox_to_anchor=(0.22, 0.1, 1., 1.),
                              bbox_transform=ax.transAxes, borderpad=0)
     else:
-        text_ax = inset_axes(ax, width='17%', height='20%', loc='lower right',
-                             bbox_to_anchor=(0.2, 0.03, 1., 1.),
+        text_ax = inset_axes(ax, width='19%', height='20%', loc='lower right',
+                             bbox_to_anchor=(0.22, 0.03, 1., 1.),
                              bbox_transform=ax.transAxes, borderpad=0)
 
     text = '\n'.join(names)
