@@ -379,7 +379,7 @@ class SoseTransectsObservations(TransectsObservations):
 
         # make a copy of the top set of data at z=0
         dsObs = xr.concat((dsObs.isel(z=0), dsObs), dim='z')
-        z = dsObs.z.values
+        z = dsObs.z.values.copy()
         z[0] = 0.
         dsObs['z'] = ('z', z)
         write_netcdf_with_fill(dsObs, combinedFileName)
