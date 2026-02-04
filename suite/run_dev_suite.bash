@@ -25,7 +25,6 @@ py=$(python -c 'import sys; print(f"{sys.version_info[0]}.{sys.version_info[1]}"
 ./suite/setup.py -p ${py} -r wc_defaults -b ${branch} --no_polar_regions -e ${env_name}
 ./suite/setup.py -p ${py} -r moc_am -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r no_ncclimo -b ${branch} -e ${env_name}
-./suite/setup.py -p ${py} -r main -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r ctrl -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r main_vs_ctrl -b ${branch} -e ${env_name}
 ./suite/setup.py -p ${py} -r no_polar_regions -b ${branch} --no_polar_regions -e ${env_name}
