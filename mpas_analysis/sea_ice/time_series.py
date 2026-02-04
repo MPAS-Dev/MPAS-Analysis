@@ -691,14 +691,19 @@ class TimeSeriesSeaIce(AnalysisTask):
                 mask = dsMesh.latCell < 0
 
             if maxAllowedSeaIceThickness is not None:
-                mask = np.logical_and(mask,
-                                      ds.iceThick <= maxAllowedSeaIceThickness)
+                mask = np.logical_and(
+                    mask, ds.iceThick <= maxAllowedSeaIceThickness
+                )
+            dsForHemisphere = ds
             if os.path.exists(outFileNames[hemisphere]):
                 dsCache = xr.open_dataset(outFileNames[hemisphere])
                 timeMask = ds.startTime > dsCache.startTime.isel(Time=-1)
-                ds = ds.isel(Time=timeMask)
+                timeMask = timeMask.compute()
+                dsForHemisphere = ds.isel(Time=timeMask)
 
-            dsAreaSum = (ds.where(mask) * dsMesh.areaCell).sum('nCells')
+            dsAreaSum = (
+                dsForHemisphere.where(mask) * dsMesh.areaCell
+            ).sum('nCells')
             dsAreaSum = dsAreaSum.rename(
                 {'iceConc': 'iceArea',
                  'iceThick': 'iceVolume',
