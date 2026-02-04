@@ -94,11 +94,15 @@ def main():
         generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', " \
                    "'no_waves']"
         end_year = '10'
+        ctrl_end_year = '8'
     else:
         raise ValueError(f'Unexpected mesh: {mesh}')
 
     if args.run == 'mesh_rename':
         mesh = f'new_{mesh}'
+
+    if args.run == 'main_vs_ctrl':
+        end_year = ctrl_end_year
 
     sbatch = list()
     if account is not None:
