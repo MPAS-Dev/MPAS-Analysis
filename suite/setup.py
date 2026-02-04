@@ -91,8 +91,9 @@ def main():
         shutil.copytree(os.path.join('docs', '_build', 'html'), docs_path)
 
     if mesh == 'oQU240wLI':
-        generate = "['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', " \
-                   "'no_waves']"
+        generate = [
+            'all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke', 'no_waves'
+        ]
         end_year = '10'
         ctrl_end_year = '8'
     else:
@@ -103,6 +104,9 @@ def main():
 
     if args.run == 'main_vs_ctrl':
         end_year = ctrl_end_year
+        generate.append('no_hovmoller')
+
+    generate_string = f"['" + "', '".join(generate) + "']"
 
     sbatch = list()
     if account is not None:
@@ -140,7 +144,7 @@ def main():
         use_e3sm_unified=use_e3sm_unified, run_name=args.run,
         input_base=input_base, simulation=simulation, mesh=mesh,
         output_base=output_base, html_base=html_base, out_subdir=out_subdir,
-        generate=generate, end_year=end_year)
+        generate=generate_string, end_year=end_year)
     with open(config, 'w') as config_file:
         config_file.write(config_text)
 
