@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.sea_ice.time_series &mdash; MPAS-Analysis develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -794,14 +794,19 @@
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span> <span class="o">&lt;</span> <span class="mi">0</span>
 
             <span class="k">if</span> <span class="n">maxAllowedSeaIceThickness</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span>
-                                      <span class="n">ds</span><span class="o">.</span><span class="n">iceThick</span> <span class="o">&lt;=</span> <span class="n">maxAllowedSeaIceThickness</span><span class="p">)</span>
+                <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                    <span class="n">mask</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">iceThick</span> <span class="o">&lt;=</span> <span class="n">maxAllowedSeaIceThickness</span>
+                <span class="p">)</span>
+            <span class="n">dsForHemisphere</span> <span class="o">=</span> <span class="n">ds</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileNames</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]):</span>
                 <span class="n">dsCache</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileNames</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">])</span>
                 <span class="n">timeMask</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&gt;</span> <span class="n">dsCache</span><span class="o">.</span><span class="n">startTime</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-                <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">timeMask</span><span class="p">)</span>
+                <span class="n">timeMask</span> <span class="o">=</span> <span class="n">timeMask</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span>
+                <span class="n">dsForHemisphere</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">timeMask</span><span class="p">)</span>
 
-            <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+            <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">dsForHemisphere</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
             <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="n">dsAreaSum</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
                 <span class="p">{</span><span class="s1">&#39;iceConc&#39;</span><span class="p">:</span> <span class="s1">&#39;iceArea&#39;</span><span class="p">,</span>
                  <span class="s1">&#39;iceThick&#39;</span><span class="p">:</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span>

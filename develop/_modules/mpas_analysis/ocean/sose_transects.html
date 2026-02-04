@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.sose_transects &mdash; MPAS-Analysis develop documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -483,7 +483,7 @@
 
         <span class="c1"># make a copy of the top set of data at z=0</span>
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">dsObs</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">dsObs</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
         <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsObs</span><span class="p">,</span> <span class="n">combinedFileName</span><span class="p">)</span>
