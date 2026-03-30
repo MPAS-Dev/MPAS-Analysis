@@ -22,12 +22,24 @@ jobs:
     name: test mpas_analysis - python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    defaults:
-      run:
-        shell: bash -l {0}
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        include:
+          - python-version: "3.10"
+            pixi-environment: py310
+            variant-file: ci/python3.10.yaml
+          - python-version: "3.11"
+            pixi-environment: py311
+            variant-file: ci/python3.11.yaml
+          - python-version: "3.12"
+            pixi-environment: py312
+            variant-file: ci/python3.12.yaml
+          - python-version: "3.13"
+            pixi-environment: py313
+            variant-file: ci/python3.13.yaml
+          - python-version: "3.14"
+            pixi-environment: py314
+            variant-file: ci/python3.14.yaml
       fail-fast: false
     steps:
       - id: skip_check
@@ -40,50 +52,69 @@ jobs:
         uses: actions/checkout@v6
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        name: Cache Conda
-        uses: actions/cache@v5
-        env:
-          # Increase this value to reset cache if conda-dev-spec.template has not changed in the workflow
-          CACHE_NUMBER: 0
+        name: Set up Pixi
+        uses: prefix-dev/setup-pixi@v0.9.3
         with:
-          path: ~/conda_pkgs_dir_py${{ matrix.python-version }}
-          key:
-            ${{ runner.os }}-${{ matrix.python-version }}-conda-${{ env.CACHE_NUMBER }}-${{
-            hashFiles('dev-spec.txt,pyproject.toml') }}
-
-      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        name: Set up Conda Environment
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-name: mpas_analysis_dev
-          init-shell: bash
-          condarc: |
-            channel_priority: strict
-            channels:
-                - conda-forge
-          create-args: >-
-            python=${{ matrix.python-version }}
-
-      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        name: Install mpas_analysis
-        run: |
-          conda install -y --file dev-spec.txt \
-            python=${{ matrix.python-version }}
-          python -m pip install --no-deps --no-build-isolation -vv -e .
+          cache: true
+          cache-write: ${{ github.event_name == 'push' }}
+          environments: ${{ matrix.pixi-environment }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Run Tests
         env:
-           CHECK_IMAGES: False
+          CHECK_IMAGES: "False"
         run: |
           set -e
-          pip check
-          pytest --pyargs mpas_analysis
-          mpas_analysis --help
-          download_analysis_data --help
+          pixi run -e ${{ matrix.pixi-environment }} python -m pip check
+          pixi run -e ${{ matrix.pixi-environment }} pytest --pyargs mpas_analysis
+          pixi run -e ${{ matrix.pixi-environment }} mpas_analysis --help
+          pixi run -e ${{ matrix.pixi-environment }} download_analysis_data --help
 
-      - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
+      - if: ${{ steps.skip_check.outputs.should_skip != 'true' && matrix.python-version == '3.14' }}
         name: Build Sphinx Docs
         run: |
-          cd docs
-          DOCS_VERSION=test make versioned-html
+          pixi run -e ${{ matrix.pixi-environment }} bash -lc '
+            cd docs
+            DOCS_VERSION=test make versioned-html
+          '
+
+  package:
+    name: build package - python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      matrix:
+        include:
+          - python-version: "3.10"
+            pixi-environment: py310
+            variant-file: ci/python3.10.yaml
+          - python-version: "3.11"
+            pixi-environment: py311
+            variant-file: ci/python3.11.yaml
+          - python-version: "3.12"
+            pixi-environment: py312
+            variant-file: ci/python3.12.yaml
+          - python-version: "3.13"
+            pixi-environment: py313
+            variant-file: ci/python3.13.yaml
+          - python-version: "3.14"
+            pixi-environment: py314
+            variant-file: ci/python3.14.yaml
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Pixi
+        uses: prefix-dev/setup-pixi@v0.9.3
+        with:
+          cache: true
+          cache-write: ${{ github.event_name == 'push' }}
+          environments: ${{ matrix.pixi-environment }}
+
+      - name: Build Conda Package with rattler-build
+        run: |
+          pixi run -e ${{ matrix.pixi-environment }} \
+            rattler-build build \
+            -m ${{ matrix.variant-file }} \
+            -r ci/recipe/recipe.yaml \
+            --output-dir rattler-build-output
