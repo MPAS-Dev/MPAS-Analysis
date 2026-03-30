@@ -80,6 +80,12 @@ MPAS-Analysis development.
 
      pixi shell
 
+- To run the analysis regression suite from the same Pixi environment:
+
+  .. code-block:: bash
+
+     ./suite/run_suite.bash --dev
+
 7. Configure and Run MPAS-Analysis
 ----------------------------------
 - Copy and edit a config file (e.g., ``example_e3sm.cfg``) for your run.

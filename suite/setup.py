@@ -16,6 +16,8 @@ def main():
     parser.add_argument('-b', dest='branch', required=True,
                         help='the branch name')
     parser.add_argument('-e', dest='conda_env', help='the conda environment')
+    parser.add_argument('--pixi-env', dest='pixi_env',
+                        help='the pixi environment used to run jobs')
     parser.add_argument('--no_polar_regions', dest='polar_regions',
                         action='store_false',
                         help='whether to run mpas_analysis with '
@@ -120,8 +122,11 @@ def main():
 
     sbatch = '\n'.join(sbatch)
 
-    conda_base = os.path.abspath(
-        os.path.join(os.environ['CONDA_EXE'], '..', '..'))
+    if 'CONDA_EXE' in os.environ:
+        conda_base = os.path.abspath(
+            os.path.join(os.environ['CONDA_EXE'], '..', '..'))
+    else:
+        conda_base = ''
 
     if args.conda_env is not None:
         conda_env = args.conda_env
@@ -137,7 +142,7 @@ def main():
         out_subdir = os.path.join(machine, args.branch, args.run)
     out_common_dir = os.path.join(machine, args.branch)
 
-    with open(os.path.join('suite', 'template.cfg')) as template_file:
+    with open(os.path.join('suite', 'templates', 'base.cfg')) as template_file:
         template_data = template_file.read()
     template = Template(template_data)
     config_text = template.render(
@@ -152,11 +157,12 @@ def main():
         # add the run-specific config second
         config_from_job = ' '.join(
             [config_from_job,
-             os.path.join('..', '..', 'suite', f'{args.run}.cfg')])
+             os.path.join('..', '..', 'suite', 'configs', f'{args.run}.cfg')])
 
     if args.run.startswith('main_py'):
         config_from_job = ' '.join(
-            [config_from_job, os.path.join('..', '..', 'suite', 'main.cfg')])
+            [config_from_job,
+             os.path.join('..', '..', 'suite', 'configs', 'main.cfg')])
 
     if args.run not in ['main', 'ctrl']:
         try:
@@ -170,14 +176,16 @@ def main():
         else:
             flags = ''
 
-        with open(os.path.join('suite', 'job_script.bash')) as template_file:
+        with open(os.path.join('suite', 'templates', 'job_script.bash')) \
+                as template_file:
             template_data = template_file.read()
         template = Template(template_data)
         job_text = template.render(
             sbatch=sbatch, conda_base=conda_base,
             use_e3sm_unified=use_e3sm_unified,
             e3sm_unified_script=e3sm_unified_script, conda_env=conda_env,
-            machine=machine, flags=flags, config=config_from_job,
+            pixi_env=args.pixi_env, machine=machine, flags=flags,
+            config=config_from_job,
             html_base=html_base, out_subdir=out_subdir,
             out_common_dir=out_common_dir)
         with open(job, 'w') as job_file:

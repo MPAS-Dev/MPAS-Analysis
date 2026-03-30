@@ -9,37 +9,36 @@ unexpected results and to validate MPAS-Analysis in various environments.
 Overview of Test Scripts
 ------------------------
 
-There are three main scripts for running the test suite:
+The main entry point is ``suite/run_suite.bash``.  It supports three modes:
 
-1. **run_dev_suite.bash** (Developer Testing)
+1. **Developer Testing**: ``./suite/run_suite.bash --dev``
 
-   - Use this script after activating your development environment, typically
-     with ``pixi shell`` from the repository root.
+   - This is the recommended workflow for development in a Pixi environment.
 
-   - It builds the documentation and runs a series of analysis tasks on output
-     from a low-resolution (QUwLI240) simulation.
-
-   - Each task produces a web page with results, accessible via the web portal.
-
-   - Example usage:
+   - Run it either from an active Pixi shell or with an explicit Pixi
+     environment name:
 
      .. code-block:: bash
 
         $ pixi shell
-        $ ./suite/run_dev_suite.bash
+        $ ./suite/run_suite.bash --dev
+
+     or:
+
+     .. code-block:: bash
+
+        $ ./suite/run_suite.bash --dev --pixi-env py313
+
+   - It builds the documentation, renders the suite configs, and submits the
+     suite jobs using ``pixi run`` in the selected environment.
+
+   - Each task produces a web page with results, accessible via the web portal.
 
    - After completion, check for successful web page generation, e.g.:
 
      .. code-block:: bash
 
-        $ tail -n 3 chrysalis_test_suite/main_py3.11/mpas_analysis.o793058
-
-     The last lines should include:
-
-     .. code-block:: none
-
-        Generating webpage for viewing results...
-        Web page: https://web.lcrc.anl.gov/public/e3sm/diagnostic_output/<username>/analysis_testing/chrysalis/<branch>/main_py3.11/
+        $ tail -n 3 chrysalis_test_suite/main_py3.13/mpas_analysis.o793058
 
    - To quickly identify unfinished or failed tasks:
 
@@ -50,34 +49,24 @@ There are three main scripts for running the test suite:
    - Developers should run this suite manually on each pull request before
      merging and link the results in the PR.
 
-2. **run_suite.bash** (Package Build & Test)
+2. **Package Build & Test**: ``./suite/run_suite.bash``
 
-   - Use this script to build the MPAS-Analysis conda package and test it in
-     fresh environments.
+   - This mode builds the MPAS-Analysis conda package and tests it in fresh
+     environments.
 
    - It creates conda environments for multiple Python versions, runs tests,
      builds documentation, and executes the analysis suite.
 
    - Recommended for more thorough validation, especially before releases.
 
-   - Example usage:
+3. **E3SM-Unified Deployment Testing**:
+   ``./suite/run_suite.bash --e3sm-unified``
 
-     .. code-block:: bash
+   - This mode is used during test deployments of E3SM-Unified to verify
+     MPAS-Analysis works as expected within the deployment.
 
-        $ ./suite/run_suite.bash
-
-3. **run_e3sm_unified_suite.bash** (E3SM-Unified Deployment Testing)
-
-   - Used during test deployments of E3SM-Unified to verify MPAS-Analysis
-     works as expected within the deployment.
-
-   - Typically run by E3SM-Unified maintainers during deployment testing.
-
-   - Example usage:
-
-     .. code-block:: bash
-
-        $ ./suite/run_e3sm_unified_suite.bash
+   - It is typically run by E3SM-Unified maintainers during deployment
+     testing.
 
 Supported Machines
 ------------------
@@ -102,8 +91,9 @@ Developers may need to update the suite for new requirements:
 
 - **Python Versions**:
 
-  - The Python versions tested are defined in the scripts (e.g.,
-    `main_py=3.11`, `alt_py=3.10`).
+  - The Python versions tested in package mode are defined at the top of
+    ``suite/run_suite.bash`` (for example ``main_py=3.13`` and
+    ``alt_py=3.12``).
 
   - To test additional versions, add them to the relevant script variables and
     loops.
@@ -118,8 +108,8 @@ Developers may need to update the suite for new requirements:
 
 - **Adding/Modifying Tests**:
 
-  - To add new tests, update the list of runs in the scripts and
-    provide corresponding config files in the `suite` directory.
+  - To add new tests, update the run lists in ``suite/run_suite.bash`` and
+    provide corresponding config files in ``suite/configs``.
 
   - New tests could change which analysis tasks are run, the configuration for
     running tasks overall (e.g. how climatologies are computed), or how
@@ -143,5 +133,5 @@ Best Practices
 - Update the suite scripts and configs as needed to keep pace with
   MPAS-Analysis development.
 
-For more details, see the comments and documentation within each script and
-config file in the `suite` directory.
+The suite templates live in ``suite/templates`` and the run-specific config
+overrides live in ``suite/configs``.
