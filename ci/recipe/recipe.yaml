@@ -2,8 +2,8 @@ schema_version: 1
 
 context:
   name: MPAS-Analysis
-  version: 1.14.0
-  python_min: 3.10
+  version: "1.15.0rc3"
+  python_min: "3.10"
 
 package:
   name: ${{ name|lower }}
