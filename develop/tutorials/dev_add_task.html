@@ -149,7 +149,7 @@ the code to MPAS-Analysis.</p>
 <p>If one just wishes to add a new field that already exists in MPAS-Ocean or
 MPAS-Seaice output, only a few of the steps below are necessary:</p>
 <ol class="arabic simple">
-<li><p>Follow step 1 to set up an <code class="docutils literal notranslate"><span class="pre">`mpas_analysis_dev`</span></code> environment.</p></li>
+<li><p>Follow step 1 to set up your development environment.</p></li>
 <li><p>Copy an existing <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean">ocean</a>
 or <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice">sea_ice</a>
 python module to a new name and edit it as needed for the new fields.</p></li>
@@ -165,14 +165,15 @@ MPAS-Analysis</p></li>
 <p>To begin, please follow the <a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a> tutorial, which
 will help you through the basics of creating a fork of MPAS-Analysis,
 cloning it onto the machine(s) where you will do your development, making
-a worktree for the feature you will develop, creating a conda environment for
-testing your new MPAS-Analysis development, and running MPAS-Analysis.</p>
+a worktree for the feature you will develop, creating a development
+environment for testing your new MPAS-Analysis work, and running
+MPAS-Analysis.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Make sure you follow the tutorial for developers, not for users, since the
 tutorial for users installs the latest release of MPAS-Analysis, which you
 cannot modify. Similarly, changes must be tested in your own development
-environment (often called <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code>) rather than the in a shared
+environment rather than in a shared
 environment like <a class="reference external" href="https://github.com/E3SM-Project/e3sm-unified">E3SM-Unified</a>.</p>
 </div>
 <p>Then, please follow the <a class="reference internal" href="dev_understand_a_task.html#tutorial-understand-a-task"><span class="std std-ref">Developers: Understanding an analysis task</span></a>.  This will give
@@ -645,14 +646,11 @@ whatever editor you like.)</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>code<span class="w"> </span>.
 </pre></div>
 </div>
-<p>I’ll create or recreate my <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment as in
-<a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a>, and then make sure to at least do:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-deps<span class="w"> </span>--no-build-isolation<span class="w"> </span>-e<span class="w"> </span>.
+<p>I’ll create or recreate my development environment as in
+<a class="reference internal" href="dev_getting_started.html#tutorial-dev-getting-started"><span class="std std-ref">Developer: Getting Started</span></a>, and then make sure to do:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pixi<span class="w"> </span>shell
 </pre></div>
 </div>
-<p>This last command installs the <code class="docutils literal notranslate"><span class="pre">mpas_analysis</span></code> package into the conda
-environment.</p>
 </section>
 <section id="climatologymapbsf-class">
 <h2>4.1 <code class="docutils literal notranslate"><span class="pre">ClimatologyMapBSF</span></code> class<a class="headerlink" href="#climatologymapbsf-class" title="Link to this heading"></a></h2>
@@ -1175,7 +1173,7 @@ directory and then modify it.</p>
 <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/docs/developers_guide/api.rst">api.rst</a>
 in the developer’s guide.  Again, the easiest approach is to copy the section
 for a similar task and modify as needed.</p>
-<p>With the <code class="docutils literal notranslate"><span class="pre">mpas_analysis_dev</span></code> environment activated, you can run:</p>
+<p>With the development environment active, you can run:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>docs
 <span class="nv">DOCS_VERSION</span><span class="o">=</span><span class="nb">test</span><span class="w"> </span>make<span class="w"> </span>clean<span class="w"> </span>versioned-html
 </pre></div>

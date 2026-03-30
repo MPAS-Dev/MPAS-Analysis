@@ -124,8 +124,8 @@
   <section id="runs">
 <span id="config-runs"></span><h1>Runs<a class="headerlink" href="#runs" title="Link to this heading"></a></h1>
 <p>The <code class="docutils literal notranslate"><span class="pre">[runs]</span></code> section of a configuration file contains options used to name
-the “main” run, a preprocessed E3SM v0 run (if any) and to point to analysis
-of a control E3SM v1 or standalone MPAS run (if any):</p>
+the “main” run, an optional preprocessed legacy E3SM reference run, and a
+control E3SM or standalone MPAS run (if any):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">runs</span><span class="p">]</span>
 <span class="c1">## options related to the run to be analyzed and control runs to be</span>
 <span class="c1">## compared against</span>
@@ -163,9 +163,8 @@ as specified in E3SM:</p>
 </pre></div>
 </div>
 <p>A few of the time series plots in MPAS-Analysis can be compared against a
-preprocessed control run from E3SM v0 (which was similar to the CESM, the
-Community Earth System Model).  If these data are available and the comparison
-to these runs is desired, the name of the control run should be specified
+preprocessed legacy E3SM reference run.  If these data are available and the
+comparison to these runs is desired, the name of the control run should be specified
 here and the paths to the data set should be specified (see
 <a class="reference internal" href="preprocessed.html#config-preprocessed"><span class="std std-ref">Preprocessed Reference Runs</span></a>).  If not this name should be left as <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="kc">None</span>
