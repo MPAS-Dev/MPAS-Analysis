@@ -6,7 +6,7 @@ Developer: Getting Started
 This mini-tutorial is meant as the starting point for other tutorials for
 developers.  It describes the process for creating a fork of the MPAS-Analysis
 repo, cloning the repository (and your fork) locally, making a git worktree for
-development, and creating a conda environment that includes the
+development, and creating a ``pixi`` environment that includes the
 ``mpas_analysis`` package and all of its dependencies, installed in a mode
 appropriate for development.
 
@@ -140,188 +140,66 @@ Go into that directory to do your development:
 
     $ cd ../add_my_fancy_task
 
-4. Making a conda environment
------------------------------
+4. Making a development environment
+-----------------------------------
 
-MPAS-Analysis relies on several packages that are only available as conda
-packages from the ``conda-forge`` channel.  The first step for running
-MPAS-Analysis is to create a conda environment with all the needed packages.
+MPAS-Analysis relies on packages from ``conda-forge`` and uses ``pixi`` to
+manage the development environment defined in ``pixi.toml``.
 
-4.1 Installing Miniforge3
-~~~~~~~~~~~~~~~~~~~~~~~~~
+4.1 Installing pixi
+~~~~~~~~~~~~~~~~~~~
 
-If you have not yet installed Anaconda, Miniconda or Miniforge, you will need
-to begin there.  The concept behind Anaconda is that just about everything you
-would need for a typical python workflow is included.  The concept behind
-Miniconda and Miniforge is that you create different environments for
-different purposes.  This allows for greater flexibility and tends to lead to
-fewer conflicts between incompatible packages, particularly when using a
-channel other than the ``defaults`` supplied by Anaconda.  Since we will use
-the ``conda-forge`` channel, the Miniforge3 approach is strongly recommended.
-The main advantage of Miniforge3 over Miniconda is that it automatically takes
-care of a few steps that we otherwise need to do manually.
-
-First download the
-`Miniforge3 installer <https://github.com/conda-forge/miniforge?tab=readme-ov-file#miniforge3>`_
-for your operating system, then run it:
+If you do not already have ``pixi``, install it using the official
+instructions at `pixi.sh <https://pixi.sh/latest/>`_.  On Linux and macOS, a
+common option is:
 
 .. code-block:: bash
 
-   $ /bin/bash Miniforge3-Linux-x86_64.sh
+   $ curl -fsSL https://pixi.sh/install.sh | sh
 
 .. note::
 
-   MPAS-Analysis and many of the packages it depends on support OSX and Linux
-   but not Windows.
-
-If you are on an HPC system, you can still install Miniconda into your home
-directory.  Typically, you will need the Linux version.
+   MPAS-Analysis and many of the packages it depends on support macOS and
+   Linux but not Windows.
 
 .. note::
 
     At this time, we don't have experience with installing or running
     MPAS-Analysis on ARM or Power8/9 architectures.
 
-You will be asked to agree to the terms and conditions. Type ``yes`` to
-continue.
+4.2 Create and activate the development environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You will be prompted with a location to install. In this tutorial, we assume
-that Miniforge3 is installed in the default location, ``~/miniforge3``.  If
-you are using Miniconda or chose to install Miniforge3 somewhere else, just
-make sure to make the appropriate substitution whenever you see a reference to
-this path below.
-
-.. note::
-
-    On some HPC machines (particularly at LANL Institutional Computing and
-    NERSC) the space in your home directory is quite limited.  You may want to
-    install Miniforge3 in an alternative location to avoid running out of
-    space.
-
-You will see prompt like this:
-
-.. code-block::
-
-    Do you wish the installer to initialize Miniforge3
-    by running conda init? [yes|no]
-    [no] >>>
-
-You may wish to skip the step (answer ``no``) if you are working on a system
-where you will also be using other conda environments, most notably
-E3SM-Unified (which has its own Miniforge3 installation).  If you do not run
-conda init, you have to manually activate ``conda`` whenever you need it.
-For ``bash`` and similar shells, this is:
+From the root of the worktree where you are doing development, run:
 
 .. code-block:: bash
 
-   $ source ~/miniforge3/etc/profile.d/conda.sh
-   $ conda activate
+   $ pixi shell
 
-If you use ``csh``, ``tcsh`` or related shells, this becomes:
-
-.. code-block:: csh
-
-   > source ~/miniforge3/etc/profile.d/conda.csh
-   > conda activate
-
-You may wish to create an alias in your ``.bashrc`` or ``.cshrc`` to make
-this easier.  For example:
-
-.. code-block:: bash
-
-   alias init_conda="source ~/miniforge3/etc/profile.d/conda.sh; conda activate"
-
-
-4.2 One-time Miniconda setup
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you installed Miniconda, rather than Miniforge3, you will need to add the
-`conda-forge channel <https://conda-forge.org/>`_ and make sure it always takes
-precedence for packages available on that channel:
-
-.. code-block:: bash
-
-   $ conda config --add channels conda-forge
-   $ conda config --set channel_priority strict
-
-If you installed Miniforge3, these steps will happen automatically.
-
-4.3 Create a development environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-You can create a new conda environment called ``mpas_analysis_dev`` and install the
-dependencies that MPAS-Analysis needs by running the following in the worktree
-where you are doing your development:
-
-.. code-block:: bash
-
-   $ conda create -y -n mpas_analysis_dev --file dev-spec.txt
-
-The last argument is only needed on HPC machines because the conda version of
-MPI doesn't work properly on these machines.  You can omit it if you're
-setting up the conda environment on your laptop.
-
-Then, you can activate the environment and install MPAS-Analysis in "edit"
-mode by running:
-
-.. code-block:: bash
-
-   $ conda activate mpas_analysis_dev
-   $ python -m pip install --no-deps --no-build-isolation -e .
-
-In this mode, any edits you make to the code in the worktree will be available
-in the conda environment.  If you run ``mpas_analysis`` on the command line,
-it will know about the changes.
-
-This command only needs to be done once after the ``mpas_analysis_dev`` environment is
-built if you are not using worktrees.
-
-.. note::
-
-   If you do use worktrees, rerun the ``python -m pip install ...`` command
-   each time you switch to developing a new branch, since otherwise the
-   version of ``mpas_analysis`` in the ``mpas_analysis_dev`` environment will be the
-   one you were developing previously.
+This command creates the default environment on first use and activates it.
+The default environment includes MPAS-Analysis installed in editable mode, so
+changes you make in the current worktree are immediately reflected when you
+run ``mpas_analysis``.
 
 .. _tutorial_dev_get_started_activ_env:
 
-4.4 Activating the environment
+4.3 Activating the environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Each time you open a new terminal window, to activate the ``mpas_analysis_dev``
-environment, you will need to run either for ``bash``:
+Each time you open a new terminal window, activate the development
+environment from the root of your worktree with:
 
 .. code-block:: bash
 
-   $ source ~/miniforge3/etc/profile.d/conda.sh
-   $ conda activate mpas_analysis_dev
+   $ pixi shell
 
-or for ``csh``:
-
-.. code-block:: csh
-
-   > source ~/miniforge3/etc/profile.d/conda.csh
-   > conda activate mpas_analysis_dev
-
-You can skip the ``source`` command if you chose to initialize Miniforge3 or
-Miniconda3 so it loads automatically.  You can also use the ``init_conda``
-alias for this step if you defined one.
-
-4.5 Switching worktrees
+4.4 Switching worktrees
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-If you switch to a different worktree, it is safest to rerun the whole
-process for creating the ``mpas_analysis_dev`` conda environment.  If you know that
-the dependencies are the same as the worktree used to create ``mpas_analysis_dev``,
-You can just reinstall ``mpas_analysis`` itself by rerunning
-
-.. code-block:: bash
-
-    python -m pip install --no-deps --no-build-isolation -e .
-
-in the new worktree.  If you forget this step, you will find that changes you
-make in the worktree don't affect the ``mpas_analysis_dev`` conda environment you are
-using.
+Because ``mpas-analysis`` is installed from the current worktree in editable
+mode, you should run ``pixi shell`` from the worktree you want to develop in.
+If you switch to a different worktree, leave the existing shell and start a
+new one from the new worktree.
 
 5. Editing code
 ---------------
@@ -348,8 +226,9 @@ need to follow steps 2-6 of the :ref:`tutorial_getting_started` tutorial.
 
    Run ``mpas_analysis`` on a compute node, not on an HPC login nodes (front
    ends), because it uses too many resources to be safely run on a login node.
-   When using a compute node interactively, activate the ``mpas_analysis_dev``
-   environment, even if it was activated on the login node. Be sure to
+   When using a compute node interactively, activate the development
+   environment with ``pixi shell``, even if it was activated on the login
+   node. Be sure to
 
 7.1 Configuring MPAS-Analysis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -421,7 +300,7 @@ but leave off the date of the simulation to keep it a little shorter.
 The ``[execute]`` section contains options related to serial or parallel
 execution of the individual "tasks" that make up an MPAS-Analysis run.  For
 the most part, you can let MPAS-Analysis take care of this on supported
-machines.  The exception is that, in a development conda environment, you will
+machines.  The exception is that, in a local development environment, you will
 be using a version of ESMF that cannot run in parallel so you will need the
 following:
 
@@ -688,8 +567,8 @@ also be displayed over the full 5 years.)
 The hard work is done.  Now that we have a config file, we are ready to run.
 
 To run MPAS-Analysis, you should either create a job script or log into
-an interactive session on a compute node.  Then, activate the ``mpas_analysis_dev``
-conda environment as in :ref:`tutorial_dev_get_started_activ_env`.
+an interactive session on a compute node.  Then, activate the development
+environment as in :ref:`tutorial_dev_get_started_activ_env`.
 
 On many file systems, MPAS-Analysis and other python-based software that used
 NetCDF files based on the HDF5 file structure can experience file access errors
