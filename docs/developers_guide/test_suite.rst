@@ -13,8 +13,8 @@ There are three main scripts for running the test suite:
 
 1. **run_dev_suite.bash** (Developer Testing)
 
-   - Use this script after activating your development environment
-     (must be named `mpas_analysis_dev`).
+   - Use this script after activating your development environment, typically
+     with ``pixi shell`` from the repository root.
 
    - It builds the documentation and runs a series of analysis tasks on output
      from a low-resolution (QUwLI240) simulation.
@@ -25,8 +25,7 @@ There are three main scripts for running the test suite:
 
      .. code-block:: bash
 
-        $ source ~/miniforge3/etc/profile.d/conda.sh
-        $ conda activate mpas_analysis_dev
+        $ pixi shell
         $ ./suite/run_dev_suite.bash
 
    - After completion, check for successful web page generation, e.g.:
