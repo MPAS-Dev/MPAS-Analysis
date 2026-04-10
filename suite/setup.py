@@ -36,9 +36,9 @@ def main():
     account, partition, configuration, qos = \
         machine_info.get_account_defaults()
 
-    use_e3sm_unified = 'E3SMU_SCRIPT' in os.environ
+    use_e3sm_unified = 'E3SM_UNIFIED_LOAD_SCRIPT' in os.environ
     if use_e3sm_unified:
-        e3sm_unified_script = os.environ['E3SMU_SCRIPT']
+        e3sm_unified_script = os.environ['E3SM_UNIFIED_LOAD_SCRIPT']
         args.branch = \
             os.path.splitext(os.path.basename(e3sm_unified_script))[0]
     else:

@@ -8,38 +8,33 @@
 
 set -e
 
-{% if use_e3sm_unified %}
+{% if use_e3sm_unified -%}
 source {{ e3sm_unified_script }}
 
 echo E3SM-Unified: {{ e3sm_unified_script }}
-{% elif pixi_env %}
+{% elif pixi_env -%}
 export HDF5_USE_FILE_LOCKING=FALSE
 export E3SMU_MACHINE={{ machine }}
 
-run_mpas_analysis() {
-    pixi run --manifest-path ../../pixi.toml -e {{ pixi_env }} mpas_analysis "$@"
-}
+eval "$(pixi shell-hook --manifest-path ../../pixi.toml -e {{ pixi_env }})"
 
 echo pixi env: {{ pixi_env }}
-{% else %}
+{% else -%}
 source {{ conda_base }}/etc/profile.d/conda.sh
 conda activate {{ conda_env }}
 export HDF5_USE_FILE_LOCKING=FALSE
 export E3SMU_MACHINE={{ machine }}
 
-run_mpas_analysis() {
-    mpas_analysis "$@"
-}
 
 echo env: {{ conda_env }}
-{% endif %}
+{% endif -%}
 echo configs: {{ flags }} {{ config }}
 
-run_mpas_analysis --list
-run_mpas_analysis --plot_colormaps
-run_mpas_analysis --setup_only {{ flags }} {{ config }}
-run_mpas_analysis --purge {{ flags }} {{ config }} --verbose
-run_mpas_analysis --html_only {{ flags }} {{ config }}
+mpas_analysis --list
+mpas_analysis --plot_colormaps
+mpas_analysis --setup_only {{ flags }} {{ config }}
+mpas_analysis --purge {{ flags }} {{ config }} --verbose
+mpas_analysis --html_only {{ flags }} {{ config }}
 
 chmod ugo+rx {{ html_base }}/{{ out_common_dir }}
 chmod -R ugo+rX {{ html_base }}/{{ out_subdir }}
