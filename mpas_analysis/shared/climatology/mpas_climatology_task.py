@@ -414,8 +414,10 @@ class MpasClimatologyTask(AnalysisTask):
 
         climatologyOpDirectory = get_climatology_op_directory(config, self.op)
 
-        symlinkDirectory = '{}/source_symlinks'.format(
-            climatologyOpDirectory)
+        symlinkDirectory = (
+            f'{climatologyOpDirectory}/source_symlinks_'
+            f'{self.ncclimoModel}_{self.startYear:04d}-{self.endYear:04d}'
+        )
 
         make_directories(symlinkDirectory)
 
@@ -425,6 +427,8 @@ class MpasClimatologyTask(AnalysisTask):
                 f'timeSeriesStatsMonthly.{year:04d}-{month:02d}-01.nc'
 
             try:
+                if os.path.lexists(outFileName):
+                    os.remove(outFileName)
                 os.symlink(inFileName, outFileName)
             except OSError:
                 pass
