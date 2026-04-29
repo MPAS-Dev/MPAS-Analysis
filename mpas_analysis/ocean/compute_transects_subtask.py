@@ -586,7 +586,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
                 # reads them back because of _FillValue
                 dsMpasTransect.to_netcdf(transectInfoFileName)
 
-                dsTransectOnMpas = xr.Dataset(dsMpasTransect)
+                dsTransectOnMpas = dsMpasTransect.copy()
                 dsTransectOnMpas['x'] = dsMpasTransect.dNode
 
                 dsTransectOnMpas['z'] = dsMpasTransect.zTransectNode
@@ -608,7 +608,7 @@ class ComputeTransectsSubtask(RemapMpasClimatologySubtask):
             for season in self.seasons:
                 maskedFileName = self.get_masked_file_name(season)
                 with xr.open_dataset(maskedFileName) as dsMask:
-                    dsOnMpas = xr.Dataset(dsMpasTransect)
+                    dsOnMpas = dsMpasTransect.copy()
                     for var in dsMask.data_vars:
                         dims = dsMask[var].dims
                         if 'nCells' in dims and (
