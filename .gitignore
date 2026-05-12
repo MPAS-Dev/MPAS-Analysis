@@ -93,6 +93,8 @@ ENV/
 .ropeproject
 
 .DS_Store
+.pixi/
+pixi.lock
 
 # test suites
 /anvil_test_suite/
@@ -102,3 +104,6 @@ ENV/
 
 # vscode settings
 .vscode/
+
+# codex
+.codex

@@ -33,7 +33,7 @@ import xarray
 import time
 import json
 from importlib.metadata import Distribution
-from importlib.resources import contents
+from importlib.resources import files
 
 from mache import discover_machine, MachineInfo
 
@@ -943,6 +943,9 @@ def get_editable_install_dir(package_name):
 
     direct_url = Distribution.from_name(package_name).read_text(
         'direct_url.json')
+    if direct_url is None:
+            return None
+
     contents = json.loads(direct_url)
     pkg_is_editable = contents.get("dir_info", {}).get("editable", False)
     if pkg_is_editable and 'url' in contents:
@@ -1075,10 +1078,11 @@ Please reinstall mpas_analysis in editable mode using:
         except FileNotFoundError:
 
             possible_machines = []
-            machine_configs = contents('mache.machines')
-            for config in machine_configs:
-                if config.endswith('.cfg'):
-                    possible_machines.append(os.path.splitext(config)[0])
+            machine_configs = files('mache.machines').iterdir()
+            for config_file in machine_configs:
+                if config_file.name.endswith('.cfg'):
+                    possible_machines.append(
+                        os.path.splitext(config_file.name)[0])
 
             possible_machines = '\n  '.join(sorted(possible_machines))
             raise ValueError(

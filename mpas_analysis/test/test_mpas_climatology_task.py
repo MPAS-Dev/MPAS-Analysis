@@ -23,7 +23,7 @@ from tranche import Tranche
 
 from mpas_analysis.test import TestCase, loaddatadir
 from mpas_analysis.shared.climatology import MpasClimatologyTask, \
-    RemapMpasClimatologySubtask
+    RefYearMpasClimatologyTask, RemapMpasClimatologySubtask
 from mpas_analysis.shared import AnalysisTask
 from mpas_analysis.shared.analysis_task import \
     update_time_bounds_from_file_names
@@ -168,7 +168,38 @@ class TestMpasClimatologyTask(TestCase):
         with self.assertRaisesRegex(ValueError,
                                     'climatology start and/or end year '
                                     'different from requested'):
-            update_time_bounds_from_file_names(config, 'climatology', 'ocean')
+            update_time_bounds_from_file_names(config, 'climatology', 'ocean',
+                                               allow_cache=False)
+
+    def test_create_symlinks_isolates_reference_year_files(self):
+        mpasClimatologyTask = self.setup_task()
+
+        refYearTask = RefYearMpasClimatologyTask(
+            config=mpasClimatologyTask.config, componentName='ocean')
+        refYearTask.historyStreams = mpasClimatologyTask.historyStreams
+        refYearTask.startYear = 1
+        refYearTask.endYear = 1
+        refYearTask.inputFiles = []
+
+        for month in range(1, 13):
+            fileName = os.path.join(
+                self.test_dir,
+                f'mpaso.hist.am.timeSeriesStatsMonthly.0001-{month:02d}-01.nc')
+            with open(fileName, 'w'):
+                pass
+            refYearTask.inputFiles.append(fileName)
+
+        refSymlinkDirectory = refYearTask._create_symlinks()
+        mainSymlinkDirectory = mpasClimatologyTask._create_symlinks()
+
+        assert(refSymlinkDirectory != mainSymlinkDirectory)
+
+        mainSymlinkFiles = sorted(os.listdir(mainSymlinkDirectory))
+
+        assert(len(mainSymlinkFiles) == 12)
+        for fileName in mainSymlinkFiles:
+            assert(fileName.startswith(
+                'mpaso.hist.am.timeSeriesStatsMonthly.0002-'))
 
     def test_subtask_run_analysis(self):
         mpasClimatologyTask = self.setup_task()

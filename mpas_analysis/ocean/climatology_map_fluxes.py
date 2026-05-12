@@ -142,7 +142,7 @@ class ClimatologyMapFluxes(AnalysisTask):
                         unitsLabel = r'W m$^{-2}$'
                     else:
                         groupSubtitle = 'Mass fluxes'
-                        unitsLabel = r'kg m$^{-2}$ s^${-1}$'
+                        unitsLabel = r'kg m$^{-2}$ s$^{-1}$'
 
                     subtask.set_plot_info(
                         outFileLabel=outFileName,

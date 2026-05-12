@@ -31,6 +31,17 @@ from mpas_analysis.ocean.utility import get_standard_region_names
 class TimeSeriesOHCAnomaly(AnalysisTask):
     """
     Performs analysis of ocean heat content (OHC) from time-series output.
+
+    Attributes
+    ----------
+    cp : float
+        Specific heat of seawater [J/(kg*degC)]
+
+    rho : float
+        Reference density of seawater [kg/m3]
+
+    meshFilename : str
+        The path to the MPAS mesh file
     """
     # Authors
     # -------
@@ -132,6 +143,21 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             plotTask.run_after(anomalyTask)
             self.add_subtask(plotTask)
 
+        self.cp = None
+        self.rho = None
+        self.meshFilename = None
+
+    def setup_and_check(self):
+        """
+        Store the specific heat and reference density of seawater for use
+        in OHC calculations.
+        """
+        super().setup_and_check()
+
+        self.cp = self.namelist.getfloat('config_specific_heat_sea_water')
+        self.rho = self.namelist.getfloat('config_density0')
+        self.meshFilename = self.get_mesh_filename()
+
     def _compute_ohc(self, ds):
         """
         Compute the OHC time series.
@@ -139,10 +165,15 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
         # for convenience, rename the variables to simpler, shorter names
         ds = ds.rename(self.variableDict)
 
-        # specific heat [J/(kg*degC)]
-        cp = self.namelist.getfloat('config_specific_heat_sea_water')
-        # [kg/m3]
-        rho = self.namelist.getfloat('config_density0')
+        # these need to be set at setup time, not at runtime because piclking
+        # means the namelists and streams objects they come from aren't
+        # available at runtime
+        cp = self.cp
+        assert cp is not None, "Specific heat 'cp' has not been set"
+        rho = self.rho
+        assert rho is not None, "Reference density 'rho' has not been set"
+        meshFile = self.meshFilename
+        assert meshFile is not None, "Mesh filename has not been set"
 
         unitsScalefactor = 1e-22
 
@@ -151,8 +182,6 @@ class TimeSeriesOHCAnomaly(AnalysisTask):
             ds['avgLayerTemperature']
         ds.ohc.attrs['units'] = '$10^{22}$ J'
         ds.ohc.attrs['description'] = 'Ocean heat content in each region'
-
-        meshFile = self.get_mesh_filename()
 
         # Define/read in general variables
         with xr.open_dataset(meshFile) as dsMesh:

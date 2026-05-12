@@ -1,7 +1,8 @@
 Building the Documentation
 ==========================
 
-With the ``mpas_analysis_dev`` environment activated, you can run:
+With the development environment active (for example after running
+``pixi shell`` from the repository root), you can run:
 
 .. code-block:: bash
 

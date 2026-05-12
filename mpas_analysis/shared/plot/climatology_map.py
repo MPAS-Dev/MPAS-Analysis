@@ -414,6 +414,9 @@ def plot_global_comparison(
     plottitle_font = {'size': config.get('plot',
                                          'threePanelPlotTitleFontSize')}
 
+    multi_line_ref_title = (
+        refArray is not None and refTitle is not None and '\n' in refTitle)
+
     if refArray is None:
         subplots = [111]
     else:
@@ -427,20 +430,42 @@ def plot_global_comparison(
     dictDiff = setup_colormap(config, colorMapSectionName, suffix='Difference')
 
     axes = []
-    ax = plt.subplot(subplots[0], projection=projection)
-    _plot_panel(ax, modelTitle, modelArray, **dictModelRef)
-    axes.append(ax)
+    if refArray is not None and multi_line_ref_title:
+        # Use a GridSpec with unequal gaps but equal-sized panels
+        gs = fig.add_gridspec(
+            nrows=5,
+            ncols=1,
+            height_ratios=[1.0, 0.18, 1.0, 0.08, 1.0])
 
-    if refArray is not None:
-        ax = plt.subplot(subplots[1], projection=projection)
+        ax = fig.add_subplot(gs[0, 0], projection=projection)
+        _plot_panel(ax, modelTitle, modelArray, **dictModelRef)
+        axes.append(ax)
+
+        ax = fig.add_subplot(gs[2, 0], projection=projection)
         _plot_panel(ax, refTitle, refArray, **dictModelRef)
         axes.append(ax)
 
-        ax = plt.subplot(subplots[2], projection=projection)
+        ax = fig.add_subplot(gs[4, 0], projection=projection)
         _plot_panel(ax, diffTitle, diffArray, **dictDiff)
         axes.append(ax)
+    else:
+        ax = plt.subplot(subplots[0], projection=projection)
+        _plot_panel(ax, modelTitle, modelArray, **dictModelRef)
+        axes.append(ax)
+
+        if refArray is not None:
+            ax = plt.subplot(subplots[1], projection=projection)
+            _plot_panel(ax, refTitle, refArray, **dictModelRef)
+            axes.append(ax)
+
+            ax = plt.subplot(subplots[2], projection=projection)
+            _plot_panel(ax, diffTitle, diffArray, **dictDiff)
+            axes.append(ax)
 
     _add_stats(modelArray, refArray, diffArray, Lats, axes)
+
+    # Note: in the multi-line reference-title case, uneven spacing is handled
+    # via GridSpec so all three panels keep identical sizes.
 
     if fileout is not None:
         savefig(fileout, config, pad_inches=0.2)
@@ -775,12 +800,12 @@ def _add_stats(modelArray, refArray, diffArray, Lats, axes):
 
 def _add_stats_text(names, values, ax, loc):
     if loc == 'upper':
-        text_ax = inset_axes(ax, width='17%', height='20%', loc='upper right',
-                             bbox_to_anchor=(0.2, 0.1, 1., 1.),
+        text_ax = inset_axes(ax, width='19%', height='20%', loc='upper right',
+                             bbox_to_anchor=(0.22, 0.1, 1., 1.),
                              bbox_transform=ax.transAxes, borderpad=0)
     else:
-        text_ax = inset_axes(ax, width='17%', height='20%', loc='lower right',
-                             bbox_to_anchor=(0.2, 0.03, 1., 1.),
+        text_ax = inset_axes(ax, width='19%', height='20%', loc='lower right',
+                             bbox_to_anchor=(0.22, 0.03, 1., 1.),
                              bbox_transform=ax.transAxes, borderpad=0)
 
     text = '\n'.join(names)

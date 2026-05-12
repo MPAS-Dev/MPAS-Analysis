@@ -8,20 +8,27 @@
 
 set -e
 
-{% if use_e3sm_unified %}
+{% if use_e3sm_unified -%}
 source {{ e3sm_unified_script }}
 
 echo E3SM-Unified: {{ e3sm_unified_script }}
-{% else %}
+{% elif pixi_env -%}
+export HDF5_USE_FILE_LOCKING=FALSE
+export E3SMU_MACHINE={{ machine }}
+
+eval "$(pixi shell-hook --manifest-path ../../pixi.toml -e {{ pixi_env }})"
+
+echo pixi env: {{ pixi_env }}
+{% else -%}
 source {{ conda_base }}/etc/profile.d/conda.sh
 conda activate {{ conda_env }}
 export HDF5_USE_FILE_LOCKING=FALSE
 export E3SMU_MACHINE={{ machine }}
 
-echo env: {{ conda_env }}
-{% endif %}
-echo configs: {{ flags }} {{ config }}
 
+echo env: {{ conda_env }}
+{% endif -%}
+echo configs: {{ flags }} {{ config }}
 
 mpas_analysis --list
 mpas_analysis --plot_colormaps

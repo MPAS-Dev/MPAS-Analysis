@@ -5,11 +5,11 @@ Preprocessed Reference Runs
 
 The ``[oceanPreprocessedReference]`` and ``[seaIcePreprocessedReference]``
 sections of a configuration file contain options used to point to preprocessed
-data from E3SM v0 reference runs::
+data from legacy E3SM reference runs::
 
   [oceanPreprocessedReference]
-  ## options related to preprocessed ocean reference run with which the results
-  ## will be compared (e.g. a POP, CESM or ACME v0 run)
+  ## options related to a preprocessed ocean reference run with which the
+  ## results will be compared
 
   # directory where ocean reference simulation results are stored
   baseDirectory = /dir/to/ocean/reference
@@ -17,8 +17,8 @@ data from E3SM v0 reference runs::
   ...
 
   [seaIcePreprocessedReference]
-  ## options related to preprocessed sea ice reference run with which the results
-  ## will be compared (e.g. a CICE, CESM or ACME v0 run)
+  ## options related to a preprocessed sea ice reference run with which the
+  ## results will be compared
 
   # directory where ocean reference simulation results are stored
   baseDirectory = /dir/to/seaice/reference

@@ -221,6 +221,9 @@ class IndexNino34(AnalysisTask):
             ninoIndexNumber))
         varName = self.variableList[0]
         regionSST = ds[varName]
+        self.logger.debug('Main run SST dims=%s shape=%s',
+                          getattr(regionSST, 'dims', None),
+                          getattr(regionSST, 'shape', None))
         nino34Main = self._compute_nino34_index(regionSST, calendar)
 
         # Compute the observational index over the entire time range
@@ -270,7 +273,14 @@ class IndexNino34(AnalysisTask):
             dsRef = add_standard_regions_and_subset(
                 dsRef, self.controlConfig, regionShortNames=[regionToPlot])
 
+            # we want to collapse the nOceanRegions dimension (same as main)
+            if 'nOceanRegions' in dsRef.dims:
+                dsRef = dsRef.isel(nOceanRegions=0)
+
             regionSSTRef = dsRef[varName]
+            self.logger.debug('Control run SST dims=%s shape=%s',
+                              getattr(regionSSTRef, 'dims', None),
+                              getattr(regionSSTRef, 'shape', None))
             nino34Ref = self._compute_nino34_index(regionSSTRef, calendar)
 
             nino34s = [nino34Subset, nino34Main[2:-3], nino34Ref[2:-3]]
@@ -499,7 +509,19 @@ class IndexNino34(AnalysisTask):
         sp = (len(wgts) - 1) // 2
         runningMean = inputData.copy()
         for k in range(sp, nt - (sp + 1)):
-            runningMean[k] = sum(wgts * inputData[k - sp:k + sp + 1].values)
+            windowValues = np.asarray(inputData[k - sp:k + sp + 1].values)
+            if windowValues.shape[0] != len(wgts):
+                raise ValueError(
+                    'Unexpected running-mean window shape. '
+                    f'Expected first dimension {len(wgts)} but got {windowValues.shape}. '
+                    f'inputData dims={getattr(inputData, "dims", None)} '
+                    f'shape={getattr(inputData, "shape", None)}')
+
+            if windowValues.ndim == 1:
+                runningMean[k] = np.sum(wgts * windowValues)
+            else:
+                # weighted sum over the first axis (the running-mean window)
+                runningMean[k] = np.tensordot(wgts, windowValues, axes=(0, 0))
 
         return runningMean
 
@@ -779,6 +801,8 @@ class IndexNino34(AnalysisTask):
 
         # find maximum value of three curves plotted
         maxY = -1E20
+        if len(mask) == 0:
+            return maxY
         for y in ys:
             maxY = max(y[mask].max(), maxY)
             # check the function interpolated to the max/min as well

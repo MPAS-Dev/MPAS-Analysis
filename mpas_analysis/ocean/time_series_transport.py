@@ -235,6 +235,29 @@ class ComputeTransportSubtask(AnalysisTask):
 
         outFileName = f'{outputDirectory}/{self.groupSuffix}_{self.startYear:04d}-{self.endYear:04d}.nc'
 
+        outputExists = os.path.exists(outFileName)
+        outputValid = outputExists
+        if outputExists:
+            with open_mpas_dataset(fileName=outFileName,
+                                   calendar=self.calendar,
+                                   timeVariableNames=None,
+                                   variableList=None,
+                                   startDate=startDate,
+                                   endDate=endDate) as dsOut:
+
+                for load_year in numpy.arange(self.startYear, self.endYear + 1):
+                    for load_month in numpy.arange(1, 13):
+                        mask = numpy.logical_and(
+                            dsOut.year.values == load_year,
+                            dsOut.month.values == load_month)
+                        if numpy.count_nonzero(mask) == 0:
+                            outputValid = False
+                            break
+
+        if outputValid:
+            self.logger.info('  Time series exists -- Done.')
+            return
+
         inputFiles = sorted(self.historyStreams.readpath(
             'timeSeriesStatsMonthlyOutput', startDate=startDate,
             endDate=endDate, calendar=self.calendar))
@@ -258,29 +281,6 @@ class ComputeTransportSubtask(AnalysisTask):
                 self.logger.warning('Cannot compute transport velocity. '
                                     'Using advection velocity.')
                 variableList.append('timeMonthly_avg_normalVelocity')
-
-        outputExists = os.path.exists(outFileName)
-        outputValid = outputExists
-        if outputExists:
-            with open_mpas_dataset(fileName=outFileName,
-                                   calendar=self.calendar,
-                                   timeVariableNames=None,
-                                   variableList=None,
-                                   startDate=startDate,
-                                   endDate=endDate) as dsOut:
-
-                for inIndex in range(dsOut.sizes['Time']):
-
-                    mask = numpy.logical_and(
-                        dsOut.year[inIndex].values == years,
-                        dsOut.month[inIndex].values == months)
-                    if numpy.count_nonzero(mask) == 0:
-                        outputValid = False
-                        break
-
-        if outputValid:
-            self.logger.info('  Time series exists -- Done.')
-            return
 
         transectMaskFileName = self.masksSubtask.maskFileName
 
