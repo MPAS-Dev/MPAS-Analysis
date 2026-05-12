@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Test Suite Infrastructure &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -112,29 +112,27 @@ Compy). The suite is designed to ensure code changes do not introduce
 unexpected results and to validate MPAS-Analysis in various environments.</p>
 <section id="overview-of-test-scripts">
 <h2>Overview of Test Scripts<a class="headerlink" href="#overview-of-test-scripts" title="Link to this heading"></a></h2>
-<p>There are three main scripts for running the test suite:</p>
+<p>The main entry point is <code class="docutils literal notranslate"><span class="pre">suite/run_suite.bash</span></code>.  It supports three modes:</p>
 <ol class="arabic">
-<li><p><strong>run_dev_suite.bash</strong> (Developer Testing)</p>
+<li><p><strong>Developer Testing</strong>: <code class="docutils literal notranslate"><span class="pre">./suite/run_suite.bash</span> <span class="pre">--dev</span></code></p>
 <ul>
-<li><p>Use this script after activating your development environment
-(must be named <cite>mpas_analysis_dev</cite>).</p></li>
-<li><p>It builds the documentation and runs a series of analysis tasks on output
-from a low-resolution (QUwLI240) simulation.</p></li>
-<li><p>Each task produces a web page with results, accessible via the web portal.</p></li>
-<li><p>Example usage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>~/miniforge3/etc/profile.d/conda.sh
-$<span class="w"> </span>conda<span class="w"> </span>activate<span class="w"> </span>mpas_analysis_dev
-$<span class="w"> </span>./suite/run_dev_suite.bash
+<li><p>This is the recommended workflow for development in a Pixi environment.</p></li>
+<li><p>Run it either from an active Pixi shell or with an explicit Pixi
+environment name:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pixi<span class="w"> </span>shell
+$<span class="w"> </span>./suite/run_suite.bash<span class="w"> </span>--dev
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./suite/run_suite.bash<span class="w"> </span>--dev<span class="w"> </span>--pixi-env<span class="w"> </span>py313
 </pre></div>
 </div>
 </li>
+<li><p>It builds the documentation, renders the suite configs, and submits the
+suite jobs using <code class="docutils literal notranslate"><span class="pre">pixi</span> <span class="pre">run</span></code> in the selected environment.</p></li>
+<li><p>Each task produces a web page with results, accessible via the web portal.</p></li>
 <li><p>After completion, check for successful web page generation, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span>chrysalis_test_suite/main_py3.11/mpas_analysis.o793058
-</pre></div>
-</div>
-<p>The last lines should include:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Generating webpage for viewing results...
-Web page: https://web.lcrc.anl.gov/public/e3sm/diagnostic_output/&lt;username&gt;/analysis_testing/chrysalis/&lt;branch&gt;/main_py3.11/
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>tail<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span>chrysalis_test_suite/main_py3.13/mpas_analysis.o793058
 </pre></div>
 </div>
 </li>
@@ -147,30 +145,22 @@ Web page: https://web.lcrc.anl.gov/public/e3sm/diagnostic_output/&lt;username&gt
 merging and link the results in the PR.</p></li>
 </ul>
 </li>
-<li><p><strong>run_suite.bash</strong> (Package Build &amp; Test)</p>
-<ul>
-<li><p>Use this script to build the MPAS-Analysis conda package and test it in
-fresh environments.</p></li>
+<li><p><strong>Package Build &amp; Test</strong>: <code class="docutils literal notranslate"><span class="pre">./suite/run_suite.bash</span></code></p>
+<ul class="simple">
+<li><p>This mode builds the MPAS-Analysis conda package and tests it in fresh
+environments.</p></li>
 <li><p>It creates conda environments for multiple Python versions, runs tests,
 builds documentation, and executes the analysis suite.</p></li>
 <li><p>Recommended for more thorough validation, especially before releases.</p></li>
-<li><p>Example usage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./suite/run_suite.bash
-</pre></div>
-</div>
-</li>
 </ul>
 </li>
-<li><p><strong>run_e3sm_unified_suite.bash</strong> (E3SM-Unified Deployment Testing)</p>
-<ul>
-<li><p>Used during test deployments of E3SM-Unified to verify MPAS-Analysis
-works as expected within the deployment.</p></li>
-<li><p>Typically run by E3SM-Unified maintainers during deployment testing.</p></li>
-<li><p>Example usage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./suite/run_e3sm_unified_suite.bash
-</pre></div>
-</div>
-</li>
+<li><p><strong>E3SM-Unified Deployment Testing</strong>:
+<code class="docutils literal notranslate"><span class="pre">./suite/run_suite.bash</span> <span class="pre">--e3sm-unified</span></code></p>
+<ul class="simple">
+<li><p>This mode is used during test deployments of E3SM-Unified to verify
+MPAS-Analysis works as expected within the deployment.</p></li>
+<li><p>It is typically run by E3SM-Unified maintainers during deployment
+testing.</p></li>
 </ul>
 </li>
 </ol>
@@ -193,8 +183,9 @@ error.</p>
 <ul class="simple">
 <li><p><strong>Python Versions</strong>:</p>
 <ul>
-<li><p>The Python versions tested are defined in the scripts (e.g.,
-<cite>main_py=3.11</cite>, <cite>alt_py=3.10</cite>).</p></li>
+<li><p>The Python versions tested in package mode are defined at the top of
+<code class="docutils literal notranslate"><span class="pre">suite/run_suite.bash</span></code> (for example <code class="docutils literal notranslate"><span class="pre">main_py=3.13</span></code> and
+<code class="docutils literal notranslate"><span class="pre">alt_py=3.12</span></code>).</p></li>
 <li><p>To test additional versions, add them to the relevant script variables and
 loops.</p></li>
 </ul>
@@ -209,8 +200,8 @@ configuration.</p></li>
 </li>
 <li><p><strong>Adding/Modifying Tests</strong>:</p>
 <ul>
-<li><p>To add new tests, update the list of runs in the scripts and
-provide corresponding config files in the <cite>suite</cite> directory.</p></li>
+<li><p>To add new tests, update the run lists in <code class="docutils literal notranslate"><span class="pre">suite/run_suite.bash</span></code> and
+provide corresponding config files in <code class="docutils literal notranslate"><span class="pre">suite/configs</span></code>.</p></li>
 <li><p>New tests could change which analysis tasks are run, the configuration for
 running tasks overall (e.g. how climatologies are computed), or how
 individual tasks are configured (e.g. focused on polar regions vs. global)</p></li>
@@ -234,8 +225,8 @@ completed successfully.</p></li>
 <li><p>Update the suite scripts and configs as needed to keep pace with
 MPAS-Analysis development.</p></li>
 </ul>
-<p>For more details, see the comments and documentation within each script and
-config file in the <cite>suite</cite> directory.</p>
+<p>The suite templates live in <code class="docutils literal notranslate"><span class="pre">suite/templates</span></code> and the run-specific config
+overrides live in <code class="docutils literal notranslate"><span class="pre">suite/configs</span></code>.</p>
 </section>
 </section>
 

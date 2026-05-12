@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.index_nino34 &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -324,6 +324,9 @@
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
         <span class="n">varName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Main run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">&#39;dims&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="n">nino34Main</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
         <span class="c1"># Compute the observational index over the entire time range</span>
@@ -373,7 +376,14 @@
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span>
                 <span class="n">dsRef</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
 
+            <span class="c1"># we want to collapse the nOceanRegions dimension (same as main)</span>
+            <span class="k">if</span> <span class="s1">&#39;nOceanRegions&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
             <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Control run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
+                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">&#39;dims&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
             <span class="n">nino34Ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
             <span class="n">nino34s</span> <span class="o">=</span> <span class="p">[</span><span class="n">nino34Subset</span><span class="p">,</span> <span class="n">nino34Main</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">nino34Ref</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
@@ -602,7 +612,19 @@
         <span class="n">sp</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
         <span class="n">runningMean</span> <span class="o">=</span> <span class="n">inputData</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">nt</span> <span class="o">-</span> <span class="p">(</span><span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
-            <span class="n">runningMean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">wgts</span> <span class="o">*</span> <span class="n">inputData</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">sp</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="n">windowValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">inputData</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">sp</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">windowValues</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s1">&#39;Unexpected running-mean window shape. &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;Expected first dimension </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">)</span><span class="si">}</span><span class="s1"> but got </span><span class="si">{</span><span class="n">windowValues</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">. &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;inputData dims=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dims&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span>
+                    <span class="sa">f</span><span class="s1">&#39;shape=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;shape&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">windowValues</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">runningMean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">wgts</span> <span class="o">*</span> <span class="n">windowValues</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># weighted sum over the first axis (the running-mean window)</span>
+                <span class="n">runningMean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tensordot</span><span class="p">(</span><span class="n">wgts</span><span class="p">,</span> <span class="n">windowValues</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">runningMean</span>
 
@@ -882,6 +904,8 @@
 
         <span class="c1"># find maximum value of three curves plotted</span>
         <span class="n">maxY</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1E20</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">maxY</span>
         <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">ys</span><span class="p">:</span>
             <span class="n">maxY</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">maxY</span><span class="p">)</span>
             <span class="c1"># check the function interpolated to the max/min as well</span>

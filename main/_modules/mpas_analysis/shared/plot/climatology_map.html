@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.shared.plot.climatology_map &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
@@ -517,6 +517,9 @@
     <span class="n">plottitle_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span>
                                          <span class="s1">&#39;threePanelPlotTitleFontSize&#39;</span><span class="p">)}</span>
 
+    <span class="n">multi_line_ref_title</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">refTitle</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="ow">in</span> <span class="n">refTitle</span><span class="p">)</span>
+
     <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">subplots</span> <span class="o">=</span> <span class="p">[</span><span class="mi">111</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
@@ -530,20 +533,42 @@
     <span class="n">dictDiff</span> <span class="o">=</span> <span class="n">setup_colormap</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">colorMapSectionName</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;Difference&#39;</span><span class="p">)</span>
 
     <span class="n">axes</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
-    <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
-    <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">multi_line_ref_title</span><span class="p">:</span>
+        <span class="c1"># Use a GridSpec with unequal gaps but equal-sized panels</span>
+        <span class="n">gs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_gridspec</span><span class="p">(</span>
+            <span class="n">nrows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">height_ratios</span><span class="o">=</span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 
-    <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
         <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
-        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">gs</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
         <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
         <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+        <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">modelTitle</span><span class="p">,</span> <span class="n">modelArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">refArray</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+            <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">refTitle</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictModelRef</span><span class="p">)</span>
+            <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">subplots</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+            <span class="n">_plot_panel</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">diffTitle</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="o">**</span><span class="n">dictDiff</span><span class="p">)</span>
+            <span class="n">axes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
     <span class="n">_add_stats</span><span class="p">(</span><span class="n">modelArray</span><span class="p">,</span> <span class="n">refArray</span><span class="p">,</span> <span class="n">diffArray</span><span class="p">,</span> <span class="n">Lats</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
+
+    <span class="c1"># Note: in the multi-line reference-title case, uneven spacing is handled</span>
+    <span class="c1"># via GridSpec so all three panels keep identical sizes.</span>
 
     <span class="k">if</span> <span class="n">fileout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">savefig</span><span class="p">(</span><span class="n">fileout</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">pad_inches</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
@@ -879,12 +904,12 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_add_stats_text</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">loc</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">loc</span> <span class="o">==</span> <span class="s1">&#39;upper&#39;</span><span class="p">:</span>
-        <span class="n">text_ax</span> <span class="o">=</span> <span class="n">inset_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;17%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;20%&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
-                             <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
+        <span class="n">text_ax</span> <span class="o">=</span> <span class="n">inset_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;19%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;20%&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">,</span>
+                             <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
                              <span class="n">bbox_transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">text_ax</span> <span class="o">=</span> <span class="n">inset_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;17%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;20%&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span>
-                             <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
+        <span class="n">text_ax</span> <span class="o">=</span> <span class="n">inset_axes</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s1">&#39;19%&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="s1">&#39;20%&#39;</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">,</span>
+                             <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span>
                              <span class="n">bbox_transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">borderpad</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>

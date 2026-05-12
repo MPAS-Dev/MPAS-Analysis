@@ -19,6 +19,7 @@
       ~ClimatologyMapEKE.check_generate
       ~ClimatologyMapEKE.close
       ~ClimatologyMapEKE.get_mesh_filename
+      ~ClimatologyMapEKE.interrupt
       ~ClimatologyMapEKE.is_alive
       ~ClimatologyMapEKE.join
       ~ClimatologyMapEKE.kill

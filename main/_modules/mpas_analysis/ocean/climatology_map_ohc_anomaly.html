@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.climatology_map_ohc_anomaly &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -286,6 +286,12 @@
 
 <span class="sd">    min_depth, max_depth : float</span>
 <span class="sd">        The minimum and maximum depths for integration</span>
+
+<span class="sd">    cp : float</span>
+<span class="sd">        Specific heat of seawater [J/(kg*degC)]</span>
+
+<span class="sd">    rho : float</span>
+<span class="sd">        Reference density of seawater [kg/m3]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
@@ -343,6 +349,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">ref_year_climatology_task</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span> <span class="o">=</span> <span class="n">min_depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -358,6 +366,9 @@
         <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -402,10 +413,10 @@
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-        <span class="c1"># specific heat [J/(kg*degC)]</span>
-        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
-        <span class="c1"># [kg/m3]</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span>
+        <span class="k">assert</span> <span class="n">cp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Specific heat &#39;cp&#39; has not been set&quot;</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span>
+        <span class="k">assert</span> <span class="n">rho</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Reference density &#39;rho&#39; has not been set&quot;</span>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 

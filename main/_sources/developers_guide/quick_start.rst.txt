@@ -52,41 +52,39 @@ MPAS-Analysis development.
 
        cd ../<feature_branch>
 
-5. Set Up Conda Environment
----------------------------
-- Install Miniforge3 (recommended) or Miniconda.
-- For Miniconda, add ``conda-forge`` channel and set strict priority.
-- Create environment:
+5. Set Up the Development Environment
+-------------------------------------
+- Install ``pixi`` by following the official installation instructions at
+  `pixi.sh <https://pixi.sh/latest/>`_.  On Linux and macOS, a common option
+  is:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-       conda create -y -n mpas_analysis_dev --file dev-spec.txt
+     curl -fsSL https://pixi.sh/install.sh | sh
 
-- Activate:
+- From the root of your worktree, create and activate the development
+  environment:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-       conda activate mpas_analysis_dev
+     pixi shell
 
-- Install MPAS-Analysis in edit mode:
-
-    .. code-block:: bash
-
-       python -m pip install --no-deps --no-build-isolation -e .
+  ``pixi shell`` will create the default environment on first use and activate
+  it with MPAS-Analysis installed in editable mode.
 
 6. Activate Environment (each session)
 --------------------------------------
-- For bash:
+- From the root of your worktree, run:
 
-    .. code-block:: bash
+  .. code-block:: bash
 
-       source ~/miniforge3/etc/profile.d/conda.sh; conda activate mpas_analysis_dev
+     pixi shell
 
-- For csh:
+- To run the analysis regression suite from the same Pixi environment:
 
-    .. code-block:: csh
+  .. code-block:: bash
 
-       source ~/miniforge3/etc/profile.d/conda.csh; conda activate mpas_analysis_dev
+     ./suite/run_suite.bash --dev
 
 7. Configure and Run MPAS-Analysis
 ----------------------------------

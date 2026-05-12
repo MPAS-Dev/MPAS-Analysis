@@ -19,6 +19,7 @@
       ~ClimatologyMapFluxes.check_generate
       ~ClimatologyMapFluxes.close
       ~ClimatologyMapFluxes.get_mesh_filename
+      ~ClimatologyMapFluxes.interrupt
       ~ClimatologyMapFluxes.is_alive
       ~ClimatologyMapFluxes.join
       ~ClimatologyMapFluxes.kill

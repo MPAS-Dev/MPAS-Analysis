@@ -19,6 +19,7 @@
       ~OceanHistogram.check_generate
       ~OceanHistogram.close
       ~OceanHistogram.get_mesh_filename
+      ~OceanHistogram.interrupt
       ~OceanHistogram.is_alive
       ~OceanHistogram.join
       ~OceanHistogram.kill

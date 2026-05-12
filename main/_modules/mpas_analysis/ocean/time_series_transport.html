@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mpas_analysis.ocean.time_series_transport &mdash; MPAS-Analysis main documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../../_static/jquery.js?v=5d32c60e"></script>
@@ -339,6 +339,29 @@
 
         <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
 
+        <span class="n">outputExists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
+        <span class="n">outputValid</span> <span class="o">=</span> <span class="n">outputExists</span>
+        <span class="k">if</span> <span class="n">outputExists</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
+                                   <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
+                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                                   <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+                                   <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsOut</span><span class="p">:</span>
+
+                <span class="k">for</span> <span class="n">load_year</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">load_month</span> <span class="ow">in</span> <span class="n">numpy</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">):</span>
+                        <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                            <span class="n">dsOut</span><span class="o">.</span><span class="n">year</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">load_year</span><span class="p">,</span>
+                            <span class="n">dsOut</span><span class="o">.</span><span class="n">month</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">load_month</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">outputValid</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">outputValid</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
+            <span class="k">return</span>
+
         <span class="n">inputFiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
             <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
             <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">))</span>
@@ -362,29 +385,6 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Cannot compute transport velocity. &#39;</span>
                                     <span class="s1">&#39;Using advection velocity.&#39;</span><span class="p">)</span>
                 <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">)</span>
-
-        <span class="n">outputExists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
-        <span class="n">outputValid</span> <span class="o">=</span> <span class="n">outputExists</span>
-        <span class="k">if</span> <span class="n">outputExists</span><span class="p">:</span>
-            <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
-                                   <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
-                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                                   <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
-                                   <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsOut</span><span class="p">:</span>
-
-                <span class="k">for</span> <span class="n">inIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dsOut</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]):</span>
-
-                    <span class="n">mask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
-                        <span class="n">dsOut</span><span class="o">.</span><span class="n">year</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">years</span><span class="p">,</span>
-                        <span class="n">dsOut</span><span class="o">.</span><span class="n">month</span><span class="p">[</span><span class="n">inIndex</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">==</span> <span class="n">months</span><span class="p">)</span>
-                    <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="n">outputValid</span> <span class="o">=</span> <span class="kc">False</span>
-                        <span class="k">break</span>
-
-        <span class="k">if</span> <span class="n">outputValid</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
-            <span class="k">return</span>
 
         <span class="n">transectMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 

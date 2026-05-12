@@ -19,6 +19,7 @@
       ~SoseTransects.check_generate
       ~SoseTransects.close
       ~SoseTransects.get_mesh_filename
+      ~SoseTransects.interrupt
       ~SoseTransects.is_alive
       ~SoseTransects.join
       ~SoseTransects.kill

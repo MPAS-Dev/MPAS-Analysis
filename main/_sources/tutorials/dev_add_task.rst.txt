@@ -34,7 +34,7 @@ the code to MPAS-Analysis.
    If one just wishes to add a new field that already exists in MPAS-Ocean or
    MPAS-Seaice output, only a few of the steps below are necessary:
 
-   1. Follow step 1 to set up an ```mpas_analysis_dev``` environment.
+   1. Follow step 1 to set up your development environment.
    2. Copy an existing `ocean <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean>`_
       or `sea_ice <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice>`_
       python module to a new name and edit it as needed for the new fields.
@@ -50,15 +50,16 @@ the code to MPAS-Analysis.
 To begin, please follow the :ref:`tutorial_dev_getting_started` tutorial, which
 will help you through the basics of creating a fork of MPAS-Analysis,
 cloning it onto the machine(s) where you will do your development, making
-a worktree for the feature you will develop, creating a conda environment for
-testing your new MPAS-Analysis development, and running MPAS-Analysis.
+a worktree for the feature you will develop, creating a development
+environment for testing your new MPAS-Analysis work, and running
+MPAS-Analysis.
 
 .. note::
 
    Make sure you follow the tutorial for developers, not for users, since the
    tutorial for users installs the latest release of MPAS-Analysis, which you
    cannot modify. Similarly, changes must be tested in your own development
-   environment (often called ``mpas_analysis_dev``) rather than the in a shared
+   environment rather than in a shared
    environment like `E3SM-Unified <https://github.com/E3SM-Project/e3sm-unified>`_.
 
 Then, please follow the :ref:`tutorial_understand_a_task`.  This will give
@@ -550,16 +551,12 @@ whatever editor you like.)
 
     code .
 
-I'll create or recreate my ``mpas_analysis_dev`` environment as in
-:ref:`tutorial_dev_getting_started`, and then make sure to at least do:
+I'll create or recreate my development environment as in
+:ref:`tutorial_dev_getting_started`, and then make sure to do:
 
 .. code-block:: bash
 
-    conda activate mpas_analysis_dev
-    python -m pip install --no-deps --no-build-isolation -e .
-
-This last command installs the ``mpas_analysis`` package into the conda
-environment.
+    pixi shell
 
 4.1 ``ClimatologyMapBSF`` class
 -------------------------------
@@ -1138,7 +1135,7 @@ You also need to add the tasks class and public methods to the
 in the developer's guide.  Again, the easiest approach is to copy the section
 for a similar task and modify as needed.
 
-With the ``mpas_analysis_dev`` environment activated, you can run:
+With the development environment active, you can run:
 
 .. code-block:: bash
 

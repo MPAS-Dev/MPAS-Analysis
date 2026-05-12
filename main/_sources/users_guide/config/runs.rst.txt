@@ -4,8 +4,8 @@ Runs
 ====
 
 The ``[runs]`` section of a configuration file contains options used to name
-the "main" run, a preprocessed E3SM v0 run (if any) and to point to analysis
-of a control E3SM v1 or standalone MPAS run (if any)::
+the "main" run, an optional preprocessed legacy E3SM reference run, and a
+control E3SM or standalone MPAS run (if any)::
 
   [runs]
   ## options related to the run to be analyzed and control runs to be
@@ -43,9 +43,8 @@ as specified in E3SM::
   mainRunName = runName
 
 A few of the time series plots in MPAS-Analysis can be compared against a
-preprocessed control run from E3SM v0 (which was similar to the CESM, the
-Community Earth System Model).  If these data are available and the comparison
-to these runs is desired, the name of the control run should be specified
+preprocessed legacy E3SM reference run.  If these data are available and the
+comparison to these runs is desired, the name of the control run should be specified
 here and the paths to the data set should be specified (see
 :ref:`config_preprocessed`).  If not this name should be left as ``None``::
 
@@ -102,5 +101,4 @@ uncommenting the option and providing a relative or absolute path to the
 config file::
 
   mainRunConfigFile = main_run.cfg
-
 
