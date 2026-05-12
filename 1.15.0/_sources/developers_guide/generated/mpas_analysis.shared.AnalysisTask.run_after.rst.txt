@@ -1,0 +1,6 @@
+﻿mpas\_analysis.shared.AnalysisTask.run\_after
+=============================================
+
+.. currentmodule:: mpas_analysis.shared
+
+.. automethod:: AnalysisTask.run_after

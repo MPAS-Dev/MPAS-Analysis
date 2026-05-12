@@ -1,0 +1,69 @@
+.. _ssmi_ice_area:
+
+Ice area and extent time series: SSM/I derived
+==============================================
+
+Description
+-----------
+The sea ice data presented here were derived from satellite
+passive-microwave radiometers, specifically, the Scanning Multichannel
+Microwave Radiometer (SMMR) on NASA's Nimbus 7 satellite, for November
+1978-August 1987, a sequence of Special Sensor Microwave Imagers (SSMIs)
+on the F8, F11, and F13 satellites of the Defense Meteorological
+Satellite Program (DMSP), for August 1987-December 2007, and the Special
+Sensor Microwave Imager Sounder (SSMIS) on the DMSP F17 satellite for
+January 2008-December 2012. The baseline data used were daily maps of
+sea ice concentration. The maps are polar stereographic projections with
+individual grid elements of approximately 25 km x 25 km; and the ice
+concentration data are also archived at the National Snow and Ice Data
+Center (NSIDC) at http://nsidc.org. The concentrations are calculated for
+each ocean grid element and are used to derive 'sea ice extent', which is
+calculated as the sum of all ocean elements having a sea ice
+concentration of at least 15%, and 'sea ice area', which is calculated as
+the sum over all ocean grid elements of the product of ice concentration
+and grid element area. The data sets provided here include the
+hemispheric totals and additionally the values for nine regions in the
+Arctic and five regions in the Antarctic. These regions are identified in
+Figures 1 and 2 respectively. Figures 3 and 4 provide plots of the trends
+in the Arctic and Antarctic sea ice extents, along with monthly
+deviations and 12-month running means. The monthly deviations are
+calculated by taking the individual month's ice extent/area and
+subtracting from it the average over the course of the data set of the
+extents/areas for that month.
+
+Source
+------
+`NASA Ice area and extent website`_
+
+Release Policy
+--------------
+NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+`Data Citation and Acknowledgements`_
+
+References
+----------
+- `Cavalieri et al. (1999)`_
+- `Cavalieri et al. (2012)`_
+- `Cavalieri and Parkinson (2012)`_
+- `Parkinson et al. (1999)`_
+- `Parkinson and Cavalieri (2012)`_
+- `Zwally et al. (2002)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_timeSeriesSeaIceAreaVol`
+
+.. _`NASA Ice area and extent website`: https://neptune.gsfc.nasa.gov/csb/index.php?section=59
+.. _`Data Citation and Acknowledgements`: https://podaac.jpl.nasa.gov/CitingPODAAC
+.. _`Cavalieri et al. (1999)`: https://doi.org/10.1029/1999JC900081
+.. _`Cavalieri et al. (2012)`: https://doi.org/10.1109/LGRS.2011.2166754
+.. _`Cavalieri and Parkinson (2012)`: https://doi.org/10.5194/tc-6-881-2012
+.. _`Parkinson et al. (1999)`: https://doi.org/10.1029/1999JC900082
+.. _`Parkinson and Cavalieri (2012)`: https://doi.org/10.5194/tc-6-871-2012
+.. _`Zwally et al. (2002)`: https://doi.org/10.1029/2000JC000733
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/IceArea_timeseries/obs.bib
+

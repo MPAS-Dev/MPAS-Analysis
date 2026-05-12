@@ -1,0 +1,40 @@
+.. _seawifs:
+
+SeaWiFS
+=======
+
+Description
+-----------
+SeaWiFS (Sea-Viewing Wide Field-of-View Senson) was a project dedicated
+to monitoring ocean water quality and ecological characteristics covering
+multiple optical bands with a resolution of roughly 1.1km. Chlorophyll
+concentrations are derived from images of ocean color.
+
+Source
+------
+`Ocean Color Website`_
+
+Release Policy
+--------------
+Please provide acknowledgement of the use of Ocean Biology Processing
+Group (OBPG) data products, images, and services, e.g.:
+
+NASA Goddard Space Flight Center, Ocean Ecology Laboratory, Ocean
+Biology Processing Group; (2014): Sea-viewing Wide Field-of-view Sensor
+(SeaWiFS) Ocean Color Data, NASA OB.DAAC. http://doi.org/10.5067/ORBVIEW
+-2/SEAWIFS_OC.2014.0. Accessed on 2016/02/29.
+
+References
+----------
+- `O'Reilly et al. 1998`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapBGC`
+
+.. _`Ocean Color Website`: https://oceancolor.gsfc.nasa.gov/
+.. _`O'Reilly et al. 1998`: https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/98JC02160
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/BGC/obs.bib
+

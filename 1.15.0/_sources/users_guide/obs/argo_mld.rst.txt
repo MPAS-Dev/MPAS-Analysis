@@ -1,0 +1,47 @@
+.. _argo_mld:
+
+Argo Mixed Layer Depth (MLD) climatology
+========================================
+
+Description
+-----------
+A mixed layer climatology and database (described in Holte et al. 2017)
+using Argo profiles and a hybrid method (Holte and Talley 2009) for
+finding the mixed layer depth (MLD). The climatology incorporates over
+1,385,000 Argo profiles (through February 2017). The new hybrid algorithm
+models the general shape of each profile, searches for physical features
+in the profile, and calculates threshold and gradient MLDs to assemble a
+suite of possible MLD values. It then analyzes the patterns in the suite
+to select a final MLD estimate. Results are also presented for MLDs
+calculated using de Boyer Montegut et al.'s (2004) threshold values.
+
+Source
+------
+`UCSD Mixed Layer Website`_
+
+Release Policy
+--------------
+`Acknowledgment:`_ If you use this data,
+please cite it as: Holte, J., L. D. Talley, J. Gilson, and D. Roemmich
+(2017), An Argo mixed layer climatology and database, Geophys. Res.
+Lett., 44, 5618-5626, doi:10.1002/2017GL073426.
+
+References
+----------
+- `Holte et al. (2017)`_
+- `Holte and Talley (2009)`_
+- `de Boyer Montegut et al. (2004)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapMLD`
+
+.. _`UCSD Mixed Layer Website`: http://mixedlayer.ucsd.edu/
+.. _`Acknowledgment:`: http://mixedlayer.ucsd.edu/
+.. _`Holte et al. (2017)`: http://onlinelibrary.wiley.com/doi/10.1002/2017GL073426/full
+.. _`Holte and Talley (2009)`: http://journals.ametsoc.org/doi/abs/10.1175/2009JTECHO543.1
+.. _`de Boyer Montegut et al. (2004)`: https://agupubs.onlinelibrary.wiley.com/doi/abs/10.1029/2004JC002378
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/MLD/obs.bib
+

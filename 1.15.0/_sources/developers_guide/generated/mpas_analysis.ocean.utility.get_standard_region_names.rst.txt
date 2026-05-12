@@ -1,0 +1,6 @@
+﻿mpas\_analysis.ocean.utility.get\_standard\_region\_names
+=========================================================
+
+.. currentmodule:: mpas_analysis.ocean.utility
+
+.. autofunction:: get_standard_region_names

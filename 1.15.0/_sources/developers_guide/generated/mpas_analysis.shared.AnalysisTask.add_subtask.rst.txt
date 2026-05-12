@@ -1,0 +1,6 @@
+﻿mpas\_analysis.shared.AnalysisTask.add\_subtask
+===============================================
+
+.. currentmodule:: mpas_analysis.shared
+
+.. automethod:: AnalysisTask.add_subtask

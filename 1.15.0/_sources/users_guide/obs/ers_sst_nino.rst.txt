@@ -1,0 +1,49 @@
+.. _ers_sst_nino:
+
+ERS SSTv4 Nino 3.4 Index
+========================
+
+Description
+-----------
+The Nino 3.4 Index is also computed using the Extended Reconstructed
+Sea Surface Temperature (ERSST) dataset, which is a global monthly
+sea surface temperature dataset derived from the International Comprehensive
+Ocean-Atmosphere Dataset (ICOADS). It is produced on a 2 degree by 2 degree
+grid with spatial completeness enhanced using statistical methods. This
+monthly analysis begins in January 1854 continuing to the present and
+includes anomalies computed with respect to a 1971-2000 monthly climatology.
+The newest version of ERSST, version 4, is based on optimally tuned parameters
+using the latest datasets and improved analysis methods. ERSST is suitable
+for long-term global and basin-wide studies, and smoothed local and
+short-term variations are used in the dataset.
+
+Source
+------
+`NOAA ERSST v4 website`_
+
+Release Policy
+--------------
+Cite this dataset when used as a source: Boyin Huang, Viva F. Banzon, Eric Freeman,
+Jay Lawrimore, Wei Liu, Thomas C. Peterson, Thomas M. Smith, Peter W. Thorne,
+Scott D. Woodruff, and Huai-Min Zhang, 2015: Extended Reconstructed Sea Surface
+Temperature (ERSST), Version 4. NOAA National Centers for Environmental Information.
+doi:10.7289/V5KD1VVF [access date: January 2017].
+
+References
+----------
+- `Huang et al. (2014)`_
+- `Liu et al. (2014)`_
+- `Huang et al. (2015)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_indexNino34`
+
+.. _`NOAA ERSST v4 website`: https://www.ncdc.noaa.gov/data-access/marineocean-data/extended-reconstructed-sea-surface-temperature-ersst-v4
+.. _`Huang et al. (2014)`: https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00006.1
+.. _`Liu et al. (2014)`: https://journals.ametsoc.org/doi/10.1175/JCLI-D-14-00007.1
+.. _`Huang et al. (2015)`: https://journals.ametsoc.org/doi/10.1175/JCLI-D-15-0430.1
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/Nino/ERS_SSTv4/obs.bib
+

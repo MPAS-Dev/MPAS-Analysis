@@ -1,0 +1,6 @@
+﻿mpas\_analysis.shared.timekeeping.utility.days\_to\_datetime
+============================================================
+
+.. currentmodule:: mpas_analysis.shared.timekeeping.utility
+
+.. autofunction:: days_to_datetime

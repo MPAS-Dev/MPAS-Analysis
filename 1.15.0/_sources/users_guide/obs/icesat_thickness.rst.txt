@@ -1,0 +1,39 @@
+.. _icesat_thickness:
+
+IceSat Ice Thickness
+====================
+
+Description
+-----------
+This data set provides measurements of sea ice freeboard and sea ice
+thickness for the Arctic region. The data were derived from measurements
+made by from the Ice, Cloud, and land Elevation Satellite (ICESat)
+Geoscience Laser Altimeter System (GLAS) instrument, the Special Sensor
+Microwave/Imager (SSM/I), and climatologies of snow and drift of ice.
+
+Source
+------
+`NASA: Arctic Sea Ice Freeboard and Thickness`_
+
+Release Policy
+--------------
+NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+`Data Citation and Acknowledgements`_
+
+References
+----------
+`Yi and Zwally (2009)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_timeSeriesSeaIceAreaVol`
+
+.. _`NASA: Arctic Sea Ice Freeboard and Thickness`: http://nsidc.org/data/NSIDC-0393
+.. _`Data Citation and Acknowledgements`: https://podaac.jpl.nasa.gov/CitingPODAAC
+.. _`Yi and Zwally (2009)`: https://doi.org/10.5067/SXJVJ3A2XIZT
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/ICESat/obs.bib
+

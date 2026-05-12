@@ -1,0 +1,33 @@
+.. _schmidtko:
+
+Antarctic Seafloor Temperature and Salinity
+===========================================
+
+Description
+-----------
+Temporal means in conservative temperature and absolute salinity
+of Antarctic Continental Shelf Bottom Water (ASBW) for depths shallower
+than 1500 m for the period 1975 to 2012.
+
+Source
+------
+`ASCII data file`_
+
+Release Policy
+--------------
+(missings)
+
+References
+----------
+`Schmidtko et al. (2014)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSchmidtko`
+
+.. _`ASCII data file`: https://www.geomar.de/fileadmin/personal/fb1/po/sschmidtko/Antarctic_shelf_data.txt
+.. _`Schmidtko et al. (2014)`: http://www.sciencemag.org/cgi/doi/10.1126/science.1256117
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/Schmidtko/obs.bib
+

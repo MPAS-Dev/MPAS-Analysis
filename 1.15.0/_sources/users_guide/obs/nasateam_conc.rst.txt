@@ -1,0 +1,40 @@
+.. _nasateam_conc:
+
+Ice concentration: SSM/I, NASATeam algorithm
+============================================
+
+Description
+-----------
+This data set is generated from brightness temperature data and is
+designed to provide a consistent time series of sea ice concentrations
+spanning the coverage of several passive microwave instruments. The data
+are provided in the polar stereographic projection at a grid cell size of
+25 x 25 km.
+
+Source
+------
+`NSIDC NASATeam Website`_
+
+Release Policy
+--------------
+NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+`Data Citation and Acknowledgements`_
+
+References
+----------
+`Cavalieri et al. (1996)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSeaIceConcNH`
+- :ref:`task_climatologyMapSeaIceConcSH`
+
+.. _`NSIDC NASATeam Website`: http://nsidc.org/data/NSIDC-0051
+.. _`Data Citation and Acknowledgements`: https://podaac.jpl.nasa.gov/CitingPODAAC
+.. _`Cavalieri et al. (1996)`: https://doi.org/10.5067/8GQ8LZQVL0VL
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/SSMI/NASATeam_NSIDC0051/obs.bib
+
