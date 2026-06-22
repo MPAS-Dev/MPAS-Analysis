@@ -49,7 +49,7 @@ jobs:
           paths_ignore: ${{ env.PATHS_IGNORE }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Pixi
@@ -100,7 +100,7 @@ jobs:
             variant-file: ci/python3.14.yaml
       fail-fast: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Pixi
         uses: prefix-dev/setup-pixi@v0.9.6
