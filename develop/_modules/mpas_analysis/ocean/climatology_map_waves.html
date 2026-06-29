@@ -110,6 +110,7 @@
     <span class="n">unicode_literals</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pyremap</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLonGridDescriptor</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisTask</span>
@@ -391,6 +392,7 @@
         <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_peakWaveFrequency&#39;</span> <span class="ow">in</span> <span class="n">climatology</span><span class="p">:</span>
             <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;peakWavePeriod&#39;</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="mf">1.0</span><span class="o">/</span><span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_peakWaveFrequency&#39;</span><span class="p">]</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;peakWavePeriod&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan_to_num</span><span class="p">(</span><span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;peakWavePeriod&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">nan</span><span class="o">=-</span><span class="mf">9999.0</span><span class="p">,</span> <span class="n">posinf</span><span class="o">=-</span><span class="mf">9999.0</span><span class="p">,</span> <span class="n">neginf</span><span class="o">=-</span><span class="mf">9999.0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_significantWaveHeight&#39;</span> <span class="ow">in</span> <span class="n">climatology</span><span class="p">:</span>
             <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;significantWaveHeight&#39;</span><span class="p">]</span> <span class="o">=</span> \
