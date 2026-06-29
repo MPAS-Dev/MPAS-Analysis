@@ -12,6 +12,7 @@ from __future__ import absolute_import, division, print_function, \
     unicode_literals
 
 import xarray as xr
+import numpy as np
 from pyremap import LatLonGridDescriptor
 
 from mpas_analysis.shared import AnalysisTask
@@ -287,6 +288,7 @@ class RemapMpasWavesClimatology(RemapMpasClimatologySubtask):  # {{{
         if 'timeMonthly_avg_peakWaveFrequency' in climatology:
             climatology['peakWavePeriod'] = \
                 1.0/climatology['timeMonthly_avg_peakWaveFrequency']
+            climatology['peakWavePeriod'].values = np.nan_to_num(climatology['peakWavePeriod'].values, nan=-9999.0, posinf=-9999.0, neginf=-9999.0)
 
         if 'timeMonthly_avg_significantWaveHeight' in climatology:
             climatology['significantWaveHeight'] = \
