@@ -69,9 +69,8 @@ dependencies = [
 docs = [
     # building documentation
     "mock",
-    "m2r2>=0.3.3",
-    "mistune<2",
     "sphinx",
+    "sphinx-mdinclude>=0.6.2",
     "sphinx_rtd_theme",
     "tabulate",
 ]

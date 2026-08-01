@@ -41,10 +41,9 @@ pytest = "*"
 setuptools = ">=60"
 
 [feature.docs.dependencies]
-m2r2 = ">=0.3.3"
-mistune = "<2"
 mock = "*"
 sphinx = "*"
+sphinx-mdinclude = ">=0.6.2"
 sphinx_rtd_theme = "*"
 tabulate = "*"
 
