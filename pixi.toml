@@ -4,7 +4,7 @@ name = "mpas-analysis"
 platforms = ["linux-64"]
 
 [dependencies]
-python = ">=3.10"
+python = ">=3.11"
 cartopy = ">=0.18.0"
 cartopy_offlinedata = "*"
 cmocean = "*"
@@ -50,9 +50,6 @@ tabulate = "*"
 [feature.build.dependencies]
 rattler-build = "*"
 
-[feature.py310.dependencies]
-python = "3.10.*"
-
 [feature.py311.dependencies]
 python = "3.11.*"
 
@@ -67,7 +64,6 @@ python = "3.14.*"
 
 [environments]
 default = ["dev", "docs", "build"]
-py310 = ["py310", "dev", "docs", "build"]
 py311 = ["py311", "dev", "docs", "build"]
 py312 = ["py312", "dev", "docs", "build"]
 py313 = ["py313", "dev", "docs", "build"]
