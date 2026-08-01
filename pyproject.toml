@@ -27,10 +27,9 @@ description = """\
     """
 license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 classifiers = [
     # these are only for searching/browsing projects on PyPI
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -69,9 +68,8 @@ dependencies = [
 docs = [
     # building documentation
     "mock",
-    "m2r2>=0.3.3",
-    "mistune<2",
     "sphinx",
+    "sphinx-mdinclude>=0.6.2",
     "sphinx_rtd_theme",
     "tabulate",
 ]

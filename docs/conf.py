@@ -13,7 +13,7 @@
 # serve to show the default.
 
 import os
-import m2r2
+from sphinx_mdinclude import convert
 from glob import glob
 import mpas_analysis.version
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
@@ -209,7 +209,8 @@ os.chdir(cwd)
 for mdFileName in glob('design_docs/*.md'):
     if os.path.basename(mdFileName) == 'template.md':
         continue
-    output = m2r2.parse_from_file(mdFileName)
+    with open(mdFileName, 'r') as inFile:
+        output = convert(inFile.read())
     rstFileName = os.path.splitext(mdFileName)[0]+'.rst'
     with open(rstFileName, 'w') as outFile:
         outFile.write(output)

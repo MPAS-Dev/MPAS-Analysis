@@ -146,8 +146,9 @@ conda build ci/recipe
 for py in "${main_py}" "${alt_py}"; do
     env="test_mpas_analysis_py${py}"
     conda create -y -n "${env}" --use-local python="${py}" mpas-analysis \
-        sphinx mock sphinx_rtd_theme "tabulate>=0.8.2" "m2r2>=0.3.3" \
-        "mistune<2" pytest "mache>=1.11.0" "esmf=*=mpi_mpich_*" jinja2
+        sphinx mock sphinx_rtd_theme "tabulate>=0.8.2" \
+        "sphinx-mdinclude>=0.6.2" pytest "mache>=1.11.0" \
+        "esmf=*=mpi_mpich_*" jinja2
     conda activate "${env}"
     pytest
     conda deactivate
