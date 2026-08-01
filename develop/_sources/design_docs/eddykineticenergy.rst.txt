@@ -1,4 +1,4 @@
-.. role:: raw-html-m2r(raw)
+.. role:: raw-html-md(raw)
    :format: html
 
 
@@ -30,22 +30,23 @@ Requirements
 #. Model output must contain the meridional and zonal components of both ``timeMonthly_avg_velocity*`` and ``timeMonthly_avg_velocity*Squared``.
 #. User can download the EKE observations data, via 1 of 2 methods:
 
-   * Run ``./download_analysis_data.py -o /path/to/output/directory`` if they wish to download all observations data.
-     *or*
-   * Download only the EKE dataset at `https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc <https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc>`_
+
+* Run ``./download_analysis_data.py -o /path/to/output/directory`` if they wish to download all observations data.
+  *or*
+* Download only the EKE dataset at `https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc <https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/drifter_variance.nc>`_
+
 
 #. In config file...
-
-   #. Specify ``ekeSubdirectory`` with location of EKE observations file.
-   #. Under ``[climatologyMapEKE]``\ , leave ``seasons =  ['ANN']``.  *Only annual observations are available currently.*
-   #. When setting ``generate``\ , task ``climatologyMapEKE`` has tags: ``climatology, horizontalMap, eke``
+#. Specify ``ekeSubdirectory`` with location of EKE observations file.
+#. Under ``[climatologyMapEKE]``, leave ``seasons =  ['ANN']``.  *Only annual observations are available currently.*
+#. When setting ``generate``, task ``climatologyMapEKE`` has tags: ``climatology, horizontalMap, eke``
 
 Physics
 -------
 
-In the ocean, it is convenient to separate the the horizontal current, *u*\ ,
+In the ocean, it is convenient to separate the the horizontal current, *u*,
 into its mean and eddy components:
-(1) :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?u=\overline{u}+u'" title="u = ubar + uprime" /></a>`
+(1) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?u=\overline{u}+u'" title="u = ubar + uprime" /></a>`
 
 This approach separates the total kinetic energy into mean kinetic energy
 (MKE) and eddy kinetic energy (EKE).
@@ -58,16 +59,16 @@ constituents of seawater (Robinson, 1983).
 Algorithms
 ----------
 
-Time mean of equation 1: :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" /></a>`
+Time mean of equation 1: :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" /></a>`
 
-The model outputs :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" /></a>`
-and :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}" title="u-squared bar" /></a>`
-while the observational dataset provides :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u'^2}" title="u-prime-squared bar" /></a>`
+The model outputs :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" /></a>`
+and :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}" title="u-squared bar" /></a>`
+while the observational dataset provides :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u'^2}" title="u-prime-squared bar" /></a>`
 so two different EKE equations must be used:
 
-(2) :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" /></a>`
+(2) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" /></a>`
 
-(3) :raw-html-m2r:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" /></a>`
+(3) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" /></a>`
 
 Design and Implementation
 -------------------------

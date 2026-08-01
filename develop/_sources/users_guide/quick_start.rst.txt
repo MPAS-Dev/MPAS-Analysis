@@ -29,7 +29,7 @@ Installation for developers
 ---------------------------
 
 To use the latest version for developers, get the code from:
- `https://github.com/MPAS-Dev/MPAS-Analysis <https://github.com/MPAS-Dev/MPAS-Analysis>`_
+`https://github.com/MPAS-Dev/MPAS-Analysis <https://github.com/MPAS-Dev/MPAS-Analysis>`_
 
 Then, you will need to set up a conda environment from the MPAS-Analysis repo.
 This environment will include the required dependencies for the development
@@ -81,9 +81,9 @@ where ``/path/to/mpas_analysis/diagnostics`` is the main folder that will contai
 two subdirectories:
 
 
-* ``mpas_analysis``\ , which includes mapping and region mask files for
+* ``mpas_analysis``, which includes mapping and region mask files for
   standard resolution MPAS meshes
-* ``observations``\ , which includes the pre-processed observations listed in the
+* ``observations``, which includes the pre-processed observations listed in the
   `Observations table <https://mpas-dev.github.io/MPAS-Analysis/latest/observations.html>`_
   and used to evaluate the model results
 
@@ -109,7 +109,7 @@ Running the analysis
 --------------------
 
 
-#. Create and empty config file (say ``myrun.cfg``\ ), copy ``example.cfg``\ ,
+#. Create and empty config file (say ``myrun.cfg``), copy ``example.cfg``,
    or copy one of the example files in the ``configs`` directory (if using a
    git repo) or download one from the
    `example configs directory <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs>`_.
@@ -121,13 +121,12 @@ Running the analysis
    ``mpas_analysis myrun.cfg``.  This will read the configuration
    first from ``mpas_analysis/default.cfg`` and then replace that
    configuration with any changes from from ``myrun.cfg``
-#. 
-   If you want to run a subset of the analysis, you can either set the
+#. If you want to run a subset of the analysis, you can either set the
    ``generate`` option under ``[output]`` in your config file or use the
    ``--generate`` flag on the command line.  See the comments in
    ``mpas_analysis/default.cfg`` for more details on this option.
 
-   **Requirements for custom config files:**
+**Requirements for custom config files:**
 
 
 * At minimum you should set ``baseDirectory`` under ``[output]`` to the folder
@@ -155,7 +154,7 @@ List of MPAS output files that are needed by MPAS-Analysis:
     files, no matter what ``[timeSeries]/startYear`` and
     ``[timeSeries]/endYear``  are. This is especially important to know if
     short term archiving is used in the run to analyze: in that case, set
-    ``[input]/runSubdirectory``\ , ``[input]/oceanHistorySubdirectory`` and
+    ``[input]/runSubdirectory``, ``[input]/oceanHistorySubdirectory`` and
     ``[input]/seaIceHistorySubdirectory`` to the appropriate run and archive
     directories and choose ``[timeSeries]/startYear`` and
     ``[timeSeries]/endYear`` to include only data that have been short-term
@@ -209,7 +208,7 @@ options that only affect plotting (color map, ticks, ranges, font sizes, etc.),
 rerunning with a different set of tasks specified by the ``generate`` option
 (though this will often cause climatologies to be re-computed with new
 variables and may not save time compared with purging), generating only the
-final website with ``--html_only``\ , and re-running after the simulation has
+final website with ``--html_only``, and re-running after the simulation has
 progressed to extend time series (however, not recommended for changing the
 bounds on climatologies, see above).
 
@@ -221,7 +220,7 @@ If you are running from a git repo:
 
 #. If you are running from a git repo, copy the appropriate job script file
    from ``configs/<machine_name>`` to the root directory (or another directory
-   if preferred). The default script, ``configs/job_script.default.bash``\ , is
+   if preferred). The default script, ``configs/job_script.default.bash``, is
    appropriate for a laptop or desktop computer with multiple cores.
 #. If using the ``mpas-analysis`` conda package, download the job script and/or
    sample config file from the
@@ -253,15 +252,15 @@ already makes or creating new ones:
    running MPAS-Analysis with the purpose of generating both climatologies
    and time series, the following data sets are generated:
 
-   * ``[baseDirectory]/clim/mpas/avg/unmasked_[mpasMeshName]``\ : MPAS-Ocean
+   * ``[baseDirectory]/clim/mpas/avg/unmasked_[mpasMeshName]``: MPAS-Ocean
      and MPAS-seaice climatologies on the native grid.
-   * ``[baseDirectory]/clim/mpas/avg/remapped``\ : remapped climatologies
+   * ``[baseDirectory]/clim/mpas/avg/remapped``: remapped climatologies
      for each chosen task (climatology files are stored in different
      subdirectories according to the task name).
-   * ``[baseDirectory]/clim/obs``\ : observational climatologies.
+   * ``[baseDirectory]/clim/obs``: observational climatologies.
    * ``[baseDirectory]/clim/mpas/avg/mocStreamfunction_years[startYear]-[endYear].nc``.
    * ``[baseDirectory]/clim/mpas/avg/meridionalHeatTransport_years[startYear]-[endYear].nc``.
-   * ``[baseDirectory]/timeseries``\ : various time series data.
+   * ``[baseDirectory]/timeseries``: various time series data.
      Custom scripts can then utilize these datasets to generate custom plots.
 
 #. add a new analysis task to MPAS-Analysis (see below).
@@ -275,15 +274,15 @@ within the ``mpas_analysis/shared`` directory.
 
 
 #. create a new task by ``copying mpas_analysis/analysis_task_template.py`` to
-   the appropriate folder (\ ``ocean``\ , ``sea_ice``\ , etc.) and modifying it as
+   the appropriate folder (``ocean``, ``sea_ice``, etc.) and modifying it as
    described in the template.  Take a look at
    ``mpas_analysis/shared/analysis_task.py`` for additional guidance.
 #. note, no changes need to be made to ``mpas_analysis/shared/analysis_task.py``
 #. modify ``mpas_analysis/default.cfg`` (and possibly any machine-specific
-   config files in ``configs/<machine>``\ )
+   config files in ``configs/<machine>``)
 #. import new analysis task in ``mpas_analysis/<component>/__init__.py``
 #. add new analysis task to ``mpas_analysis/__main__.py`` under
-   ``build_analysis_list``\ , see below.
+   ``build_analysis_list``, see below.
 
 A new analysis task can be added with:
 
@@ -292,9 +291,9 @@ A new analysis task can be added with:
       analyses.append(<component>.MyTask(config, myArg='argValue'))
 
 This will add a new object of the ``MyTask`` class to a list of analysis tasks
-created in ``build_analysis_list``.  Later on in ``run_analysis``\ , it will first
+created in ``build_analysis_list``.  Later on in ``run_analysis``, it will first
 go through the list to make sure each task needs to be generated
-(by calling ``check_generate``\ , which is defined in ``AnalysisTask``\ ), then,
+(by calling ``check_generate``, which is defined in ``AnalysisTask``), then,
 will call ``setup_and_check`` on each task (to make sure the appropriate AM is
 on and files are present), and will finally call ``run`` on each task that is
 to be generated and is set up properly.

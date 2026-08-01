@@ -11,21 +11,24 @@ Reorganize Timekeeping
    </h2>
    <h3> Summary </h3>
 
-   Currently, the `Date` class is used to parse a date object from a date string
-   (e.g. '0001-01-01_00:00:00') taken from MPAS namelists, streams files or time
-   variables (e.g. `xtime`).  However, this class assumes a 365-day calendar and
-   cannot easily be adapted to the Gregorian calendar also supported by MPAS
-   components (`config_calendar_type = 'gregorian'`).  Furthermore, existing
-   routines exist to handle most of the capabilites
-   of the `Date` class.  The proposed reorganization would eliminate the `Date` class
-   in favor of a numer of helper functions that can be used to convert between various
-   date formats: date strings, days since a reference date, `datetime.datetime` objects
-   and `relativedelta` objects (see below).  The success of this reorganization will be
-   demonstrated when the existing analysis can be performed successfully with the new
-   utility functions with both MPAS calendars, the `'gregorian_noleap'` (365-day) calendar
-   used by most existing ACME and MPAS runs and the `'gregorian'` calendar also supported
-   in MPAS components.
 
+Currently, the ``Date`` class is used to parse a date object from a date string
+(e.g. '0001-01-01_00:00:00') taken from MPAS namelists, streams files or time
+variables (e.g. ``xtime``).  However, this class assumes a 365-day calendar and
+cannot easily be adapted to the Gregorian calendar also supported by MPAS
+components (``config_calendar_type = 'gregorian'``).  Furthermore, existing
+routines exist to handle most of the capabilites
+of the ``Date`` class.  The proposed reorganization would eliminate the ``Date`` class
+in favor of a numer of helper functions that can be used to convert between various
+date formats: date strings, days since a reference date, ``datetime.datetime`` objects
+and ``relativedelta`` objects (see below).  The success of this reorganization will be
+demonstrated when the existing analysis can be performed successfully with the new
+utility functions with both MPAS calendars, the ``'gregorian_noleap'`` (365-day) calendar
+used by most existing ACME and MPAS runs and the ``'gregorian'`` calendar also supported
+in MPAS components.
+
+
+.. raw:: html
 
    <h2> Requirements </h2>
 
@@ -234,9 +237,13 @@ The function for converting a date string to a ``MpasRelativeDelta`` is document
    are currently no plans to run with the `gregorian` calendar option, we do not have test runs that use this
    calendar.  If this situation changes in the future, we'll test at that time.
 
-   Regression tests previously for `Date` has been modified to test the new utility functions. New tests
-   have been added to test that dates with both `gregorian` and `gregorian_noleap` calendars behave as
-   expected, particularly around the leap day.
+
+Regression tests previously for ``Date`` has been modified to test the new utility functions. New tests
+have been added to test that dates with both ``gregorian`` and ``gregorian_noleap`` calendars behave as
+expected, particularly around the leap day.
+
+
+.. raw:: html
 
    <h2> Testing </h2>
    <h3> Testing and Validation: Capability of incrementing dates by a number of years and/or months <br>

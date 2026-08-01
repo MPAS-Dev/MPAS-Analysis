@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -113,10 +113,10 @@
              
   <section id="remapper-for-online-remapping-of-data-sets">
 <h1>Remapper for “online” remapping of data sets<a class="headerlink" href="#remapper-for-online-remapping-of-data-sets" title="Link to this heading"></a></h1>
-<p><span class="raw-html-m2r"><h2>
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/04/15 <br>
-</h2></span></p>
+</h2>
 <h3> Summary </h3><p>This document describes the design and implementation of a <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> class
 for performing either “online” (in memory) or “offline” (through files
 via <code class="docutils literal notranslate"><span class="pre">ncremap</span></code>) remapping of horizontal data sets.  The <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> is needed in
@@ -159,7 +159,7 @@ and destintion <code class="docutils literal notranslate"><span class="pre">Mesh
 (If the mapping file name is not given, it is assumed that the source and
 destination grids are the same, and no remapping is needed.)</p>
 <p>If remapping is performed “online”, it supports renormalization of masked
-arrays.  If a data sets includes <code class="docutils literal notranslate"><span class="pre">NaN</span></code>s in a given data array, both the data
+arrays.  If a data sets includes <a href="#id1"><span class="problematic" id="id2">``</span></a>NaN``s in a given data array, both the data
 array and a mask are remapped, and renormalization is performed anywhere the
 remapped mask exceeds a given threshold.</p>
 <h3> Design and Implementation </h3><h3> Implementation: Support for remapping to and from stereographic grids <br>
@@ -169,17 +169,11 @@ Contributors: Xylar Asay-Davis
 <h4> MeshDescriptor classes </h4><p>Each <code class="docutils literal notranslate"><span class="pre">MeshDescriptor</span></code> subclass includes the following member variables or
 methods:</p>
 <ul class="simple">
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">meshName</span></code><span class="classifier">a name of the mesh or grid, used for naming mapping files and</span></dt><dd><p>climatologies</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">meshName</span></code>: a name of the mesh or grid, used for naming mapping files and
+climatologies</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">regional</span></code>: whether the mesh is regional or global</p></li>
-<li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">coords</span></code> and <code class="docutils literal notranslate"><span class="pre">dims</span></code><span class="classifier">dictionaries defining the coordinates and dimensions</span></dt><dd><p>of this mesh, used to update a data set following remapping</p>
-</dd>
-</dl>
-</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">coords</span></code> and <code class="docutils literal notranslate"><span class="pre">dims</span></code>: dictionaries defining the coordinates and dimensions
+of this mesh, used to update a data set following remapping</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">to_scrip</span></code> method: used to write out a SCRIP file defining the mesh.</p></li>
 </ul>
 <h4> Remapper class </h4><p>Below is a skeleton of the <code class="docutils literal notranslate"><span class="pre">Remapper</span></code> public API.</p>

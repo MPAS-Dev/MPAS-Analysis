@@ -11,7 +11,11 @@ Config File Reorganization
    </h2>
    <h3> Summary </h3>
 
-   This document describes various efforts to clean up the structure of the MPAS-Analysis config file.  The idea is to create a template config file that will replace `config.analysis` as well as a number of example config files designed to make use of various MPAS and ACME runs on various machines.  The reorganization should make the analysis easier for users to modify and run.
+
+This document describes various efforts to clean up the structure of the MPAS-Analysis config file.  The idea is to create a template config file that will replace ``config.analysis`` as well as a number of example config files designed to make use of various MPAS and ACME runs on various machines.  The reorganization should make the analysis easier for users to modify and run.
+
+
+.. raw:: html
 
    <h2> Requirements </h2>
 
@@ -25,7 +29,7 @@ Config File Reorganization
    </h3>
 
 
-There should be a simple, intuitive method for turning on and off individual analysis modules (e.g. ``ocean/ohc_timeseries``\ ).  This should replace the current approach of having a boolean ``generate`` flag for each analysis module in a separate config section.  Preferably, there should be an equivalent method for turning on and off analysis modules from the command line that overrides that in the config file.
+There should be a simple, intuitive method for turning on and off individual analysis modules (e.g. ``ocean/ohc_timeseries``).  This should replace the current approach of having a boolean ``generate`` flag for each analysis module in a separate config section.  Preferably, there should be an equivalent method for turning on and off analysis modules from the command line that overrides that in the config file.
 
 
 .. raw:: html
@@ -134,7 +138,7 @@ The required ``config.template`` has been implemented in #86, specifically `here
    </h3>
 
 
-``casename`` has been renamed ``mainRunName``\ , ``referenceRunName`` has been added for comparison with reference runs that have not been preprocessed (not yet supported), and ``ref_casename_v0`` has been renamed ``preprocessedReferenceRunName``.
+``casename`` has been renamed ``mainRunName``, ``referenceRunName`` has been added for comparison with reference runs that have not been preprocessed (not yet supported), and ``ref_casename_v0`` has been renamed ``preprocessedReferenceRunName``.
 
 See #86, specifically `config.template <https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template>`_.
 
@@ -147,7 +151,7 @@ See #86, specifically `config.template <https://github.com/xylar/MPAS-Analysis/b
    </h3>
 
 
-In `config.template <https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template>`_ in #86, "\ `CamelCase <https://en.wikipedia.org/wiki/Camel_case>`_\ " has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes ``all_`` and ``no_`` make splitting and comparison simpler in the implementation.
+In `config.template <https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template>`_ in #86, "`CamelCase <https://en.wikipedia.org/wiki/Camel_case>`_" has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes ``all_`` and ``no_`` make splitting and comparison simpler in the implementation.
 
 
 .. raw:: html
@@ -164,7 +168,7 @@ In `config.template <https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d
    </h3>
 
 
-CI will be added to make sure that the function to parse the generate list (\ ``run_analysis.check_generate``\ ) behaves as expected.
+CI will be added to make sure that the function to parse the generate list (``run_analysis.check_generate``) behaves as expected.
 
 
 .. raw:: html

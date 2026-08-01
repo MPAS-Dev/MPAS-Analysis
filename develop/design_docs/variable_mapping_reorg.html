@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -117,25 +117,20 @@
 Xylar Asay-Davis <br>
 date: 2017/02/10 <br>
 </h2>
-<h3> Summary </h3>
-
-In discussions with @pwolfram, it became clear that we would like to keep
+<h3> Summary </h3><p>In discussions with &#64;pwolfram, it became clear that we would like to keep
 mpas_xarray as general as possible, rather than adding code specific to
 MPAS-Analysis.  In particular, the capability for mapping variable names
 that is currently part of mpas_xarray is likely a capability that only
 MPAS-Analysis will need when opening xarray data sets.  Likewise, there is
 a desire for mpax_xarray not to use any of the functionality outside of its
-own module so that it remains autonomous from MPAS-Analysis.
-
-At the same time, it is desirable for efficiency and parallelism to perform
+own module so that it remains autonomous from MPAS-Analysis.</p>
+<p>At the same time, it is desirable for efficiency and parallelism to perform
 certain operations during the preprocessing step within xarray, rather than
 constructing a data set first and then (in serial) performing manipulations
-(e.g. creating a time coordinate and slicing variables).
-
-The solution will be tested by making sure it produces bit-for-bit identical
+(e.g. creating a time coordinate and slicing variables).</p>
+<p>The solution will be tested by making sure it produces bit-for-bit identical
 results to those from the develop branch for typical test cases on LANL IC
-and Edison.
-
+and Edison.</p>
 <h2> Requirements </h2><h3> Requirement: mpas_xarray does not include MPAS-Analysis specific
 functionality <br>
 Date last modified: 2017/02/10 <br>

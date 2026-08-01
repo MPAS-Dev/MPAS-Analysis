@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -117,10 +117,7 @@
 Xylar Asay-Davis<br>
 date: 2017/01/29<br>
 </h2>
-<h3> Summary </h3>
-
-This document describes various efforts to clean up the structure of the MPAS-Analysis config file.  The idea is to create a template config file that will replace `config.analysis` as well as a number of example config files designed to make use of various MPAS and ACME runs on various machines.  The reorganization should make the analysis easier for users to modify and run.
-
+<h3> Summary </h3><p>This document describes various efforts to clean up the structure of the MPAS-Analysis config file.  The idea is to create a template config file that will replace <code class="docutils literal notranslate"><span class="pre">config.analysis</span></code> as well as a number of example config files designed to make use of various MPAS and ACME runs on various machines.  The reorganization should make the analysis easier for users to modify and run.</p>
 <h2> Requirements </h2><h3> Requirement: a simple way of turning on and off individual analysis modules <br>
 Date last modified: 2017/01/29 <br>
 Contributors: Xylar Asay-Davis
@@ -183,7 +180,7 @@ Contributors: Xylar Asay-Davis
 <h3> Implementation: consistent section and option names <br>
 Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis
-</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a> in #86, “<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>“ has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes <code class="docutils literal notranslate"><span class="pre">all_</span></code> and <code class="docutils literal notranslate"><span class="pre">no_</span></code> make splitting and comparison simpler in the implementation.</p>
+</h3><p>In <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/blob/5d5f64bde6ecf1d71f375a61783ff30f1654df01/config.template">config.template</a> in #86, “<a class="reference external" href="https://en.wikipedia.org/wiki/Camel_case">CamelCase</a>” has been used for all sections and options.  The first word is lowercase and subsequent words begin with an uppercase latter.  Underscores have been removed (except in the syntax used to turn on and off options, where underscores in prefixes <code class="docutils literal notranslate"><span class="pre">all_</span></code> and <code class="docutils literal notranslate"><span class="pre">no_</span></code> make splitting and comparison simpler in the implementation.</p>
 <h2> Testing </h2><h3> Testing and Validation: a simple way of turning on and off individual analysis modules <br>
 Date last modified: 2017/02/01 <br>
 Contributors: Xylar Asay-Davis

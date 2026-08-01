@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -117,41 +117,34 @@
 Xylar Asay-Davis <br>
 date: 2017/02/09 <br>
 </h2>
-<h3> Summary </h3>
-
-Currently, the time variable in `xarray` data sets within MPAS-Analysis has two
-major shortcomings, inherited from `xarray` (through `pandas` and `numpy.datetime64`).
+<h3> Summary </h3><p>Currently, the time variable in <code class="docutils literal notranslate"><span class="pre">xarray</span></code> data sets within MPAS-Analysis has two
+major shortcomings, inherited from <code class="docutils literal notranslate"><span class="pre">xarray</span></code> (through <code class="docutils literal notranslate"><span class="pre">pandas</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy.datetime64</span></code>).
 First, only the Gregorian calendar is supported.  Second, there is not support
 for dates outside the years 1678 to 2262.  The analysis needs to support both
-the Gregorian  ('gregorian') and the 365-day ('gregorian_noleap') calendars.  It also needs to
+the Gregorian  (‘gregorian’) and the 365-day (‘gregorian_noleap’) calendars.  It also needs to
 support, at a minimum, years between 0001 and 9999, and preferably arbitrary
-years both positive and negative.
-
-A major challenge is that it seems that xarray cannot easily be forced to
+years both positive and negative.</p>
+<p>A major challenge is that it seems that xarray cannot easily be forced to
 use an alternative representation of dates to the troublesome
-`numpy.datetime64` type (see, for example,
-[pydata/xarray#1084](https://github.com/pydata/xarray/issues/1084)).
-The most obvious alternative, `datetime.datetime`,
-seemingly cannot be used directly in `xarray` because objects of this type
-are converted to `numpy.datetime64` objects at various stages when using
+<code class="docutils literal notranslate"><span class="pre">numpy.datetime64</span></code> type (see, for example,
+<a class="reference external" href="https://github.com/pydata/xarray/issues/1084">pydata/xarray#1084</a>).
+The most obvious alternative, <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code>,
+seemingly cannot be used directly in <code class="docutils literal notranslate"><span class="pre">xarray</span></code> because objects of this type
+are converted to <code class="docutils literal notranslate"><span class="pre">numpy.datetime64</span></code> objects at various stages when using
 features from pandas, raising errors when dates are out of range.  While an
-alternative date class (e.g. `netcdftime.DatetimNoLeap`) might be used to
-represent dates on the 'gregorian_noleap' calendar, there is no such
-preexisting alternative for the 'gregorian' calendar.
-
-The solution proposed herein is to store time as floating-point days since the
+alternative date class (e.g. <code class="docutils literal notranslate"><span class="pre">netcdftime.DatetimNoLeap</span></code>) might be used to
+represent dates on the ‘gregorian_noleap’ calendar, there is no such
+preexisting alternative for the ‘gregorian’ calendar.</p>
+<p>The solution proposed herein is to store time as floating-point days since the
 reference date 0001-01-01 and to convert dates in this format to
-`datetime.datetime` and `MpasRelativeDelta` objects whenever mathematical
-manipulation of dates is required.
-
-A successful implementation would produce essentially identical analysis to
+<code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> and <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> objects whenever mathematical
+manipulation of dates is required.</p>
+<p>A successful implementation would produce essentially identical analysis to
 what is currently produced, but making use of the dates from the MPAS calendar
 (whether Gregorian or 365-day) without the need for artifical offsets (e.g.
-`yearOffset` used in the current code.  Plots of horizontal fields would remain
+<code class="docutils literal notranslate"><span class="pre">yearOffset</span></code> used in the current code.  Plots of horizontal fields would remain
 unchanged while plots of time series would have a time axis with the simulation
-date instead of the offset date.
-
-
+date instead of the offset date.</p>
 <h2> Requirements </h2><h3> Requirement: The 'Time' coordinate of xarray data sets must be consistent
 with the MPAS calendar <br>
 Date last modified: 2017/02/09 <br>
@@ -363,11 +356,8 @@ In [xylar/generalize_calendar](https://github.com/xylar/MPAS-Analysis/tree/gener
 unit testing has been added for `timekeeping` and `mpas_xarray` that checks both the `gregorian`
 and `gregorian_noleap` calendars under simple test conditions.  However, we have no data sets
 that test `gregorian`, so we have a somewhat limited ability to test this calendar option.
-Fortunately, there are also no immediate plans to run with `gregorian`.
-
-I will make sure all tests with config files in the `configs/lanl` and `configs/edison`
-directories produce bit-for-bit results with the current `develop`.
-
+Fortunately, there are also no immediate plans to run with `gregorian`.<p>I will make sure all tests with config files in the <code class="docutils literal notranslate"><span class="pre">configs/lanl</span></code> and <code class="docutils literal notranslate"><span class="pre">configs/edison</span></code>
+directories produce bit-for-bit results with the current <code class="docutils literal notranslate"><span class="pre">develop</span></code>.</p>
 <h3> Testing and Validation: The 'Time' coordinate of xarray data sets must support at least years
 0001 and 9999, and preferably any conceivable value<br>
 Date last modified: 2017/02/11 <br>

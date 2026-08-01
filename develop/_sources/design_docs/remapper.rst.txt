@@ -1,24 +1,20 @@
-.. role:: raw-html-m2r(raw)
-   :format: html
-
 
 Remapper for "online" remapping of data sets
 ============================================
 
-:raw-html-m2r:`<h2>
-Xylar Asay-Davis <br>
-date: 2017/04/15 <br>
-</h2>`
-
 
 .. raw:: html
 
+   <h2>
+   Xylar Asay-Davis <br>
+   date: 2017/04/15 <br>
+   </h2>
    <h3> Summary </h3>
 
 
 This document describes the design and implementation of a ``Remapper`` class
 for performing either "online" (in memory) or "offline" (through files
-via ``ncremap``\ ) remapping of horizontal data sets.  The ``Remapper`` is needed in
+via ``ncremap``) remapping of horizontal data sets.  The ``Remapper`` is needed in
 order to support remapping to and from grids grids not currently supported by
 ``ncremap`` such as polar stereographic grids commonly used for polar data sets.
 
@@ -96,14 +92,14 @@ regional lat/lon grids.
 Remapping between meshes described by ``MeshDescriptor`` classes will be performed
 by a ``Remapper`` class.  This class will support both "online" mapping in memory
 and "offline" mapping with ``ncremap``.  Only "online" mapping will be supported
-for grids defined with the ``ProjectionGridDescriptor``\ , as these are not
+for grids defined with the ``ProjectionGridDescriptor``, as these are not
 supported by ``ncremap``.  A ``Remapper`` object will be created by giving it source
 and destintion ``MeshDescriptor`` objects and an optional mapping file name.
 (If the mapping file name is not given, it is assumed that the source and
 destination grids are the same, and no remapping is needed.)
 
 If remapping is performed "online", it supports renormalization of masked
-arrays.  If a data sets includes ``NaN``\ s in a given data array, both the data
+arrays.  If a data sets includes ``NaN``s in a given data array, both the data
 array and a mask are remapped, and renormalization is performed anywhere the
 remapped mask exceeds a given threshold.
 
@@ -134,11 +130,11 @@ Each ``MeshDescriptor`` subclass includes the following member variables or
 methods:
 
 
-* ``meshName``\ : a name of the mesh or grid, used for naming mapping files and
-   climatologies
-* ``regional``\ : whether the mesh is regional or global
-* ``coords`` and ``dims``\ : dictionaries defining the coordinates and dimensions
-   of this mesh, used to update a data set following remapping
+* ``meshName``: a name of the mesh or grid, used for naming mapping files and
+  climatologies
+* ``regional``: whether the mesh is regional or global
+* ``coords`` and ``dims``: dictionaries defining the coordinates and dimensions
+  of this mesh, used to update a data set following remapping
 * ``to_scrip`` method: used to write out a SCRIP file defining the mesh.
 
 
@@ -193,12 +189,12 @@ Below is a skeleton of the ``Remapper`` public API.
    </h3>
 
 
-On the branch `xylar/MPAS-Analysis/add_polar_stereographic_interp <https://github.com/xylar/MPAS-Analysis/tree/add_polar_stereographic_interp>`_\ ,
+On the branch `xylar/MPAS-Analysis/add_polar_stereographic_interp <https://github.com/xylar/MPAS-Analysis/tree/add_polar_stereographic_interp>`_,
 climatologies have ben updated to use ``Remapper`` objects.  Analysis has been
 run on both ``QU240`` and ``EC60to30`` beta0 ACME results, and results have been
 compared by eye.  Results from ``ncremap`` are identical, as expected.  Because of
 renormalization, results with "online" remapping differ from those from
-``ncremap``\ , typically with less severe masking of missing data.
+``ncremap``, typically with less severe masking of missing data.
 
 Continuous integration unit tests for climatology and interpolation have both
 been updated to make use of the ``Remapper`` class.  New tests have been added to

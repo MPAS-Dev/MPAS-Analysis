@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -117,24 +117,20 @@
 Xylar Asay-Davis <br>
 date: 2017/02/06 <br>
 </h2>
-<h3> Summary </h3>
-
-Currently, the `Date` class is used to parse a date object from a date string
-(e.g. '0001-01-01_00:00:00') taken from MPAS namelists, streams files or time
-variables (e.g. `xtime`).  However, this class assumes a 365-day calendar and
+<h3> Summary </h3><p>Currently, the <code class="docutils literal notranslate"><span class="pre">Date</span></code> class is used to parse a date object from a date string
+(e.g. ‘0001-01-01_00:00:00’) taken from MPAS namelists, streams files or time
+variables (e.g. <code class="docutils literal notranslate"><span class="pre">xtime</span></code>).  However, this class assumes a 365-day calendar and
 cannot easily be adapted to the Gregorian calendar also supported by MPAS
-components (`config_calendar_type = 'gregorian'`).  Furthermore, existing
+components (<code class="docutils literal notranslate"><span class="pre">config_calendar_type</span> <span class="pre">=</span> <span class="pre">'gregorian'</span></code>).  Furthermore, existing
 routines exist to handle most of the capabilites
-of the `Date` class.  The proposed reorganization would eliminate the `Date` class
+of the <code class="docutils literal notranslate"><span class="pre">Date</span></code> class.  The proposed reorganization would eliminate the <code class="docutils literal notranslate"><span class="pre">Date</span></code> class
 in favor of a numer of helper functions that can be used to convert between various
-date formats: date strings, days since a reference date, `datetime.datetime` objects
-and `relativedelta` objects (see below).  The success of this reorganization will be
+date formats: date strings, days since a reference date, <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> objects
+and <code class="docutils literal notranslate"><span class="pre">relativedelta</span></code> objects (see below).  The success of this reorganization will be
 demonstrated when the existing analysis can be performed successfully with the new
-utility functions with both MPAS calendars, the `'gregorian_noleap'` (365-day) calendar
-used by most existing ACME and MPAS runs and the `'gregorian'` calendar also supported
-in MPAS components.
-
-
+utility functions with both MPAS calendars, the <code class="docutils literal notranslate"><span class="pre">'gregorian_noleap'</span></code> (365-day) calendar
+used by most existing ACME and MPAS runs and the <code class="docutils literal notranslate"><span class="pre">'gregorian'</span></code> calendar also supported
+in MPAS components.</p>
 <h2> Requirements </h2><h3> Requirement: Date string parsing supports both MPAS calendars <br>
 Date last modified: 2017/02/06 <br>
 Contributors: Xylar Asay-Davis
@@ -287,12 +283,9 @@ Contributors: Xylar Asay-Davis
 </h3>
 Analysis will be run on Edison with all available configurations found in `configs/edison`.  As there
 are currently no plans to run with the `gregorian` calendar option, we do not have test runs that use this
-calendar.  If this situation changes in the future, we'll test at that time.
-
-Regression tests previously for `Date` has been modified to test the new utility functions. New tests
-have been added to test that dates with both `gregorian` and `gregorian_noleap` calendars behave as
-expected, particularly around the leap day.
-
+calendar.  If this situation changes in the future, we'll test at that time.<p>Regression tests previously for <code class="docutils literal notranslate"><span class="pre">Date</span></code> has been modified to test the new utility functions. New tests
+have been added to test that dates with both <code class="docutils literal notranslate"><span class="pre">gregorian</span></code> and <code class="docutils literal notranslate"><span class="pre">gregorian_noleap</span></code> calendars behave as
+expected, particularly around the leap day.</p>
 <h2> Testing </h2>
 <h3> Testing and Validation: Capability of incrementing dates by a number of years and/or months <br>
 Date last modified: 2017/02/06 <br>

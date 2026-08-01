@@ -11,38 +11,41 @@ Generalize Calendar supported by Analysis
    </h2>
    <h3> Summary </h3>
 
-   Currently, the time variable in `xarray` data sets within MPAS-Analysis has two
-   major shortcomings, inherited from `xarray` (through `pandas` and `numpy.datetime64`).
-   First, only the Gregorian calendar is supported.  Second, there is not support
-   for dates outside the years 1678 to 2262.  The analysis needs to support both
-   the Gregorian  ('gregorian') and the 365-day ('gregorian_noleap') calendars.  It also needs to
-   support, at a minimum, years between 0001 and 9999, and preferably arbitrary
-   years both positive and negative.
 
-   A major challenge is that it seems that xarray cannot easily be forced to
-   use an alternative representation of dates to the troublesome
-   `numpy.datetime64` type (see, for example,
-   [pydata/xarray#1084](https://github.com/pydata/xarray/issues/1084)).
-   The most obvious alternative, `datetime.datetime`,
-   seemingly cannot be used directly in `xarray` because objects of this type
-   are converted to `numpy.datetime64` objects at various stages when using
-   features from pandas, raising errors when dates are out of range.  While an
-   alternative date class (e.g. `netcdftime.DatetimNoLeap`) might be used to
-   represent dates on the 'gregorian_noleap' calendar, there is no such
-   preexisting alternative for the 'gregorian' calendar.
+Currently, the time variable in ``xarray`` data sets within MPAS-Analysis has two
+major shortcomings, inherited from ``xarray`` (through ``pandas`` and ``numpy.datetime64``).
+First, only the Gregorian calendar is supported.  Second, there is not support
+for dates outside the years 1678 to 2262.  The analysis needs to support both
+the Gregorian  ('gregorian') and the 365-day ('gregorian_noleap') calendars.  It also needs to
+support, at a minimum, years between 0001 and 9999, and preferably arbitrary
+years both positive and negative.
 
-   The solution proposed herein is to store time as floating-point days since the
-   reference date 0001-01-01 and to convert dates in this format to
-   `datetime.datetime` and `MpasRelativeDelta` objects whenever mathematical
-   manipulation of dates is required.
+A major challenge is that it seems that xarray cannot easily be forced to
+use an alternative representation of dates to the troublesome
+``numpy.datetime64`` type (see, for example,
+`pydata/xarray#1084 <https://github.com/pydata/xarray/issues/1084>`_).
+The most obvious alternative, ``datetime.datetime``,
+seemingly cannot be used directly in ``xarray`` because objects of this type
+are converted to ``numpy.datetime64`` objects at various stages when using
+features from pandas, raising errors when dates are out of range.  While an
+alternative date class (e.g. ``netcdftime.DatetimNoLeap``) might be used to
+represent dates on the 'gregorian_noleap' calendar, there is no such
+preexisting alternative for the 'gregorian' calendar.
 
-   A successful implementation would produce essentially identical analysis to
-   what is currently produced, but making use of the dates from the MPAS calendar
-   (whether Gregorian or 365-day) without the need for artifical offsets (e.g.
-   `yearOffset` used in the current code.  Plots of horizontal fields would remain
-   unchanged while plots of time series would have a time axis with the simulation
-   date instead of the offset date.
+The solution proposed herein is to store time as floating-point days since the
+reference date 0001-01-01 and to convert dates in this format to
+``datetime.datetime`` and ``MpasRelativeDelta`` objects whenever mathematical
+manipulation of dates is required.
 
+A successful implementation would produce essentially identical analysis to
+what is currently produced, but making use of the dates from the MPAS calendar
+(whether Gregorian or 365-day) without the need for artifical offsets (e.g.
+``yearOffset`` used in the current code.  Plots of horizontal fields would remain
+unchanged while plots of time series would have a time axis with the simulation
+date instead of the offset date.
+
+
+.. raw:: html
 
    <h2> Requirements </h2>
 
@@ -74,7 +77,7 @@ between two dates) and of making plots that are consistent with these calendars.
 
 
 For all data sets used in the analysis, the 'Time' coordinate must, at a minimum,
-support years between 0001 and 9999 (the range of ``datetime.datetime``\ ) and preferably
+support years between 0001 and 9999 (the range of ``datetime.datetime``) and preferably
 a broader range.
 
 
@@ -112,14 +115,14 @@ timescales) with this system.
 For purposes of performing mathematical operations and plotting dates, these
 values will be converted to ``datetime.datetime`` objects (via the proposed
 ``days_to_datetime`` utility function) and back (via the proposed
-``datetime_to_days``\ ).
+``datetime_to_days``).
 
 The conversion operations within ``datetime_to_days`` and ``days_to_datetime`` will be
 performed with the calendar-aware functions ``netCDF4.date2num`` and
-``netCDF4.num2date``\ , respectively.  Both functions will support lists/arrays of dates
+``netCDF4.num2date``, respectively.  Both functions will support lists/arrays of dates
 (for efficiency and simplicity of calling code) in addition to single values.
 
-Curve ploting can be supported with ``matplotlib.pyplot.plot_date``\ , which takes a date
+Curve ploting can be supported with ``matplotlib.pyplot.plot_date``, which takes a date
 of exactly the format used here (days since 0001-01-01).  The compatibility with ``plot_date``
 was part of the reason for choosing this format for the date.
 
@@ -157,12 +160,12 @@ the dates to be between ``datetime.min`` (0001-01-01) and ``datetime.max`` (9999
 The proposed implementation is on the branch
 `xylar/generalize_calendar <https://github.com/xylar/MPAS-Analysis/tree/generalize_calendar>`_
 
-A helper funciton, ``mpas_xarray._parse_dataset_time``\ , computes times as days since
+A helper funciton, ``mpas_xarray._parse_dataset_time``, computes times as days since
 0001-01-01, and serves as a replacement for ``mpas_xarray._get_datetimes``.
 
 **Note: the current implementation breaks the convention that ``mpas_xarray`` remains
 separate from the rest of MPAS-Analyis by using 3 functions from ``timekeeping.utility``
-in ``mpas_xarray``\ :**
+in ``mpas_xarray``:**
 
 .. code-block:: python
 
@@ -174,7 +177,7 @@ in ``mpas_xarray``\ :**
 I am open to alternative solutions for keeping ``mpas_xarray`` separate from the rest
 of analysis but these 3 functions do not conceptually belong in ``mpas_xarray``.  The
 problem is exacerbated by the fact that there are analysis-specific functions in
-``timekeeping``\ , meaning that this cannot easily be made a submodule of ``mpas_xarray``
+``timekeeping``, meaning that this cannot easily be made a submodule of ``mpas_xarray``
 (nor would this make very much logical sense).  Having 2 ``timekeeping`` modules, one
 for ``mpas_xarray`` and one for MPAS-Analysis, seems unnecessarily confunsing.**
 
@@ -337,8 +340,12 @@ Same as above.
    that test `gregorian`, so we have a somewhat limited ability to test this calendar option.
    Fortunately, there are also no immediate plans to run with `gregorian`.
 
-   I will make sure all tests with config files in the `configs/lanl` and `configs/edison`
-   directories produce bit-for-bit results with the current `develop`.
+
+I will make sure all tests with config files in the ``configs/lanl`` and ``configs/edison``
+directories produce bit-for-bit results with the current ``develop``.
+
+
+.. raw:: html
 
    <h3> Testing and Validation: The 'Time' coordinate of xarray data sets must support at least years
    0001 and 9999, and preferably any conceivable value<br>
@@ -351,6 +358,6 @@ Unit tests have been added to ensure that dates both close to 0001-01-01 and typ
 calendar dates (e.g. 2017-01-01) function as expected.
 
 @akturner's MPAS-SeaIce run with real dates (mentioned in
-`#81 <https://github.com/MPAS-Dev/MPAS-Analysis/issues/81>`_\ )  has been successfully
+`#81 <https://github.com/MPAS-Dev/MPAS-Analysis/issues/81>`_)  has been successfully
 run with the proposed approach.  This run started in 1958, and had presented a problem
 for MPAS-Analysis with the previous calendar.

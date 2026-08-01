@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -220,7 +220,7 @@ Contributors: Xylar Asay-Davis
 </h3><p>Each task is given a <code class="docutils literal notranslate"><span class="pre">_runStatus</span></code> attribute, which is a <code class="docutils literal notranslate"><span class="pre">multiprocessing.Value</span></code>
 object that can be shared and changed across processes.  A set of constant
 possible values for this attribute, <code class="docutils literal notranslate"><span class="pre">READY</span></code>, <code class="docutils literal notranslate"><span class="pre">BLOCKED</span></code>, <code class="docutils literal notranslate"><span class="pre">RUNNING</span></code>, <code class="docutils literal notranslate"><span class="pre">SUCCES</span></code> and
-<code class="docutils literal notranslate"><span class="pre">FAIL</span></code> are defined in<code class="docutils literal notranslate"><span class="pre">AnalysisTask</span></code>.  If a task has no prerequisites, initially
+<code class="docutils literal notranslate"><span class="pre">FAIL</span></code> are defined in``AnalysisTask``.  If a task has no prerequisites, initially
 <code class="docutils literal notranslate"><span class="pre">_runStatus</span> <span class="pre">=</span> <span class="pre">READY</span></code>; otherwise <code class="docutils literal notranslate"><span class="pre">_runStatus</span> <span class="pre">=</span> <span class="pre">BLOCKED</span></code>.  Any <code class="docutils literal notranslate"><span class="pre">READY</span></code>
 task can be run (<code class="docutils literal notranslate"><span class="pre">_runStatus</span> <span class="pre">=</span> <span class="pre">'running'</span></code>).  Any task that finishes is given
 <code class="docutils literal notranslate"><span class="pre">_runStatus</span> <span class="pre">=</span> <span class="pre">SUCCESS</span></code> or <code class="docutils literal notranslate"><span class="pre">_runStatus</span> <span class="pre">=</span> <span class="pre">FAIL</span></code> (I know, not grammatically
@@ -260,15 +260,14 @@ Date last modified: 2017/06/12 <br>
 Contributors: Xylar Asay-Davis
 </h3><p>Again, the <code class="docutils literal notranslate"><span class="pre">run_analysis</span></code> function in <code class="docutils literal notranslate"><span class="pre">run_mpas_analysis</span></code> has been updated to
 be aware of the status of each task, as described in the algorithms section.</p>
-<p><span class="raw-html-m2r"><h2> Testing and Validation </h2></span></p>
-<p><span class="raw-html-m2r"><h3> Date last modified: 2017/06/12 <br>
+<h2> Testing and Validation </h2>
+<h3> Date last modified: 2017/06/12 <br>
 Contributors: Xylar Asay-Davis
-</h3></span>
+</h3>
 All plots will be tested to ensure they are bit-for-bit identical to
-those produced by <code class="docutils literal notranslate"><span class="pre">develop</span></code> for all tests defined in the <code class="docutils literal notranslate"><span class="pre">configs/edison</span></code>
-and <code class="docutils literal notranslate"><span class="pre">configs/lanl</span></code> directories.  Task will be run in parallel and I will
-verify that no dependent tasks run before prerequisite tasks have completed.</p>
-</section>
+those produced by `develop` for all tests defined in the `configs/edison`
+and `configs/lanl` directories.  Task will be run in parallel and I will
+verify that no dependent tasks run before prerequisite tasks have completed.</section>
 
 
            </div>

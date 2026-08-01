@@ -14,8 +14,8 @@
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../_static/documentation_options.js?v=16816911"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -113,10 +113,10 @@
              
   <section id="support-parallel-tasks">
 <h1>Support Parallel Tasks<a class="headerlink" href="#support-parallel-tasks" title="Link to this heading"></a></h1>
-<p><span class="raw-html-m2r"><h2>
+<h2>
 Xylar Asay-Davis <br>
 date: 2017/02/22 <br>
-</h2></span></p>
+</h2>
 <h3> Summary </h3><p>Currently, the full analysis suite includes 7 tasks, 5 for the ocean and 2 for sea ice.
 The number of tasks is expected to grow over time.  Task parallelism in some
 form is needed to allow as many tasks as desired to be run simultaneiously.
@@ -127,35 +127,27 @@ tasks (a number selected by the user) run simultaneously.</p>
 Date last modified: 2017/02/22 <br>
 Contributors: Xylar Asay-Davis
 </h4>
-There must be a mechanism for running more than one analysis task simultaneously.
-
-<h4> Requirement: Select maximum number of tasks <br>
+There must be a mechanism for running more than one analysis task simultaneously.<h4> Requirement: Select maximum number of tasks <br>
 Date last modified: 2017/02/22 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 There must be a mechanism for the user to select the maximum number of tasks
 to run simultaneously.  This might be necessary to control the number of processors
 or the amount of memory used on a given machine or (in the case of running
-analysis on login nodes) to be nice to other users on a shared resource.
-
-<h4> Requirement: Lock files written by multiple tasks <br>
+analysis on login nodes) to be nice to other users on a shared resource.<h4> Requirement: Lock files written by multiple tasks <br>
 Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 There must be a mechanism for locking files (during either reading or writing) if
 they can be written by multiple tasks.  This is necessary to prevent cases where
 multiple tasks write to the same file simultaneously or one task reads from a file
-at the same time another is writing.
-
-<h4> Consideration: Task parallelism should work on either login or compute nodes <br>
+at the same time another is writing.<h4> Consideration: Task parallelism should work on either login or compute nodes <br>
 Date last modified: 2017/02/22 <br>
 Contributors: Xylar Asay-Davis
 </h4>
 On some systems, care needs to be taken that scripts run on the compute nodes
 rather than on the management node(s).  For example, on Edison and Cori, the
-`aprun` command is required to ensure that scripts run on compute nodes.
-
-<h4> Consideration: There may need to be a way to limit the memory used by a task <br>
+`aprun` command is required to ensure that scripts run on compute nodes.<h4> Consideration: There may need to be a way to limit the memory used by a task <br>
 Date last modified: 2017/02/22 <br>
 Contributors: Phillip J. Wolfram, Xylar Asay-Davis
 </h4>
@@ -163,18 +155,14 @@ It may be that `xarray-dask` with subprocess (or similar) may need to be some
 initialization of xarray corresponding to reduced memory available.  For example,
 with 10 processes on a node, `xarray` / `dask` should be initialized to use only
 1/10th of the memory and CPUs per task. `xarray-dask` may require special
-initialization for efficiency and to avoid crashes.
-
-<h3> Algorithmic Formulations </h3>
-
-<h4> Design solution: Tasks run simultaneously <br>
+initialization for efficiency and to avoid crashes.<h3> Algorithmic Formulations </h3><h4> Design solution: Tasks run simultaneously <br>
 Date last modified: 2017/02/23 <br>
 Contributors: Xylar Asay-Davis
 </h4><p>I propose to have a config option, <code class="docutils literal notranslate"><span class="pre">parallelTaskCount</span></code>, that is the number of concurrent
 tasks that are to be performed. If this flag is set to a number greater than 1, analysis
 tasks will run concurrently.  To accomplish this, I propose to use <code class="docutils literal notranslate"><span class="pre">subprocess.call</span></code> or
-one of its variants within <code class="docutils literal notranslate"><span class="pre">run_analysis.py</span></code>to call itself but with only one task at a
-time.  Thus, if <code class="docutils literal notranslate"><span class="pre">run_analysis.py</span></code> gets called with only a single task (whether directly
+one of its variants within <code class="docutils literal notranslate"><span class="pre">run_analysis.py``to</span> <span class="pre">call</span> <span class="pre">itself</span> <span class="pre">but</span> <span class="pre">with</span> <span class="pre">only</span> <span class="pre">one</span> <span class="pre">task</span> <span class="pre">at</span> <span class="pre">a</span>
+<span class="pre">time.</span>&#160; <span class="pre">Thus,</span> <span class="pre">if</span> <span class="pre">``run_analysis.py</span></code> gets called with only a single task (whether directly
 from the command line or through <code class="docutils literal notranslate"><span class="pre">subprocess.call</span></code>), it would execute that task without
 spawning additional subprocesses.</p>
 <p>This approach would require having a method for creating a list of individual tasks
@@ -238,9 +226,7 @@ extend the parallelism to work robustly on compute nodes as a separate project.
 Nevertheless, I will seek to implement this design in a way that should be conducive to
 this later extension.  Likely what will be required is a robust way of adding a prefix
 to the commandline (e.g. `aprun -np 1`) when calling subprocesses.  Adding such a prefix
-should be relatively simple.
-
-<h4> Design solution: There may need to be a way to limit the memory used by a task <br>
+should be relatively simple.<h4> Design solution: There may need to be a way to limit the memory used by a task <br>
 Date last modified: 2017/02/23 <br>
 Contributors: Xylar Asay-Davis
 </h4>
@@ -249,13 +235,7 @@ consideration directly in this project.  However, on my brief investigation, it 
 the proper way to handle this may be to have a `chunk` config option either for all tasks
 or for individual tasks that can be used to control the size of data in memory. I think
 such an approach can be investigated in parallel to this project.  An intermediate solution
-for situations where memory is limited would be to set `parallelTaskCount` to a small number.
-
-
-<h3> Design and Implementation </h3>
-
-This design has been implemented in the test branch https://github.com/xylar/MPAS-Analysis/tree/parallel_tasks
-
+for situations where memory is limited would be to set `parallelTaskCount` to a small number.<h3> Design and Implementation </h3><p>This design has been implemented in the test branch <a class="reference external" href="https://github.com/xylar/MPAS-Analysis/tree/parallel_tasks">https://github.com/xylar/MPAS-Analysis/tree/parallel_tasks</a></p>
 <h4> Implementation: Tasks run simultaneously <br>
 Date last modified: 2017/03/10 <br>
 Contributors: Xylar Asay-Davis

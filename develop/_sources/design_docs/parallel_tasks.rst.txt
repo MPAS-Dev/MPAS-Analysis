@@ -1,18 +1,14 @@
-.. role:: raw-html-m2r(raw)
-   :format: html
-
 
 Support Parallel Tasks
 ======================
 
-:raw-html-m2r:`<h2>
-Xylar Asay-Davis <br>
-date: 2017/02/22 <br>
-</h2>`
-
 
 .. raw:: html
 
+   <h2>
+   Xylar Asay-Davis <br>
+   date: 2017/02/22 <br>
+   </h2>
    <h3> Summary </h3>
 
 
@@ -38,6 +34,10 @@ tasks (a number selected by the user) run simultaneously.
    </h4>
    There must be a mechanism for running more than one analysis task simultaneously.
 
+
+
+.. raw:: html
+
    <h4> Requirement: Select maximum number of tasks <br>
    Date last modified: 2017/02/22 <br>
    Contributors: Xylar Asay-Davis
@@ -46,6 +46,10 @@ tasks (a number selected by the user) run simultaneously.
    to run simultaneously.  This might be necessary to control the number of processors
    or the amount of memory used on a given machine or (in the case of running
    analysis on login nodes) to be nice to other users on a shared resource.
+
+
+
+.. raw:: html
 
    <h4> Requirement: Lock files written by multiple tasks <br>
    Date last modified: 2017/03/10 <br>
@@ -56,6 +60,10 @@ tasks (a number selected by the user) run simultaneously.
    multiple tasks write to the same file simultaneously or one task reads from a file
    at the same time another is writing.
 
+
+
+.. raw:: html
+
    <h4> Consideration: Task parallelism should work on either login or compute nodes <br>
    Date last modified: 2017/02/22 <br>
    Contributors: Xylar Asay-Davis
@@ -63,6 +71,10 @@ tasks (a number selected by the user) run simultaneously.
    On some systems, care needs to be taken that scripts run on the compute nodes
    rather than on the management node(s).  For example, on Edison and Cori, the
    `aprun` command is required to ensure that scripts run on compute nodes.
+
+
+
+.. raw:: html
 
    <h4> Consideration: There may need to be a way to limit the memory used by a task <br>
    Date last modified: 2017/02/22 <br>
@@ -74,7 +86,15 @@ tasks (a number selected by the user) run simultaneously.
    1/10th of the memory and CPUs per task. `xarray-dask` may require special
    initialization for efficiency and to avoid crashes.
 
+
+
+.. raw:: html
+
    <h3> Algorithmic Formulations </h3>
+
+
+
+.. raw:: html
 
    <h4> Design solution: Tasks run simultaneously <br>
    Date last modified: 2017/02/23 <br>
@@ -82,12 +102,12 @@ tasks (a number selected by the user) run simultaneously.
    </h4>
 
 
-I propose to have a config option, ``parallelTaskCount``\ , that is the number of concurrent
+I propose to have a config option, ``parallelTaskCount``, that is the number of concurrent
 tasks that are to be performed. If this flag is set to a number greater than 1, analysis
 tasks will run concurrently.  To accomplish this, I propose to use ``subprocess.call`` or
-one of its variants within ``run_analysis.py``\ to call itself but with only one task at a
+one of its variants within ``run_analysis.py``to call itself but with only one task at a
 time.  Thus, if ``run_analysis.py`` gets called with only a single task (whether directly
-from the command line or through ``subprocess.call``\ ), it would execute that task without
+from the command line or through ``subprocess.call``), it would execute that task without
 spawning additional subprocesses.
 
 This approach would require having a method for creating a list of individual tasks
@@ -111,8 +131,8 @@ via launching subprocesses for each task.
 
 The command ``subprocess.Popen`` allows enough flexibility that it will be possible
 to launch several jobs, andthen to farm out additional jobs as each returns. It should
-be possible to use a combination of ``os.kill(pid, 0)``\ , which checks if a
-process is running, and ``os.waitpid(-1,0)``\ , which waits for any subprocess to finish,
+be possible to use a combination of ``os.kill(pid, 0)``, which checks if a
+process is running, and ``os.waitpid(-1,0)``, which waits for any subprocess to finish,
 to accomplish launching several processes and waiting until the first one finishes
 before launching the next task, or in pseudo-code:
 
@@ -151,8 +171,8 @@ http://fasteners.readthedocs.io/en/latest/examples.html#interprocess-locks
 
 Currently, only mapping files should be written by multiple tasks, requiring locks.
 
-The algorithm consists of 2 changes.  First, I removed the option ``overwriteMappingFiles``\ ,
-which is now always ``False``\ ---if a mapping file exists, it is not overwritten.  This
+The algorithm consists of 2 changes.  First, I removed the option ``overwriteMappingFiles``,
+which is now always ``False``---if a mapping file exists, it is not overwritten.  This
 was necessary because now only one task will write a given mapping file if it doesn't
 already exist and the other tasks will wait for it to be written.  Then, all tasks
 know there is a valid mapping file that they can read without having to lock the file.
@@ -178,6 +198,10 @@ generates the mapping file and the others wait until it is finished.
    to the commandline (e.g. `aprun -np 1`) when calling subprocesses.  Adding such a prefix
    should be relatively simple.
 
+
+
+.. raw:: html
+
    <h4> Design solution: There may need to be a way to limit the memory used by a task <br>
    Date last modified: 2017/02/23 <br>
    Contributors: Xylar Asay-Davis
@@ -190,9 +214,16 @@ generates the mapping file and the others wait until it is finished.
    for situations where memory is limited would be to set `parallelTaskCount` to a small number.
 
 
+
+.. raw:: html
+
    <h3> Design and Implementation </h3>
 
-   This design has been implemented in the test branch https://github.com/xylar/MPAS-Analysis/tree/parallel_tasks
+
+This design has been implemented in the test branch https://github.com/xylar/MPAS-Analysis/tree/parallel_tasks
+
+
+.. raw:: html
 
    <h4> Implementation: Tasks run simultaneously <br>
    Date last modified: 2017/03/10 <br>
@@ -200,7 +231,7 @@ generates the mapping file and the others wait until it is finished.
    </h4>
 
 
-Tasks can now run in parallel.  This has been implemented in these 4 functions within ``run_analysis.py``\ :
+Tasks can now run in parallel.  This has been implemented in these 4 functions within ``run_analysis.py``:
 
 .. code-block:: python
 
@@ -330,7 +361,7 @@ Tasks can now run in parallel.  This has been implemented in these 4 functions w
    </h4>
 
 
-There is a configuration option, ``parallelTaskCount``\ , which defaults to 1, meaning tasks run in serial:
+There is a configuration option, ``parallelTaskCount``, which defaults to 1, meaning tasks run in serial:
 
 .. code-block:: ini
 
@@ -349,7 +380,7 @@ There is a configuration option, ``parallelTaskCount``\ , which defaults to 1, m
    </h4>
 
 
-Here is the code for locking the mapping file within ``shared.interpolation.interpolate``\ :
+Here is the code for locking the mapping file within ``shared.interpolation.interpolate``:
 
 .. code-block:: python
 
@@ -418,7 +449,7 @@ future.
    </h4>
 
 
-So far, I have tested extensively on my laptop (\ ``parallelTaskCount = 1``\ , ``2``\ , ``4`` and ``8``\ )
+So far, I have tested extensively on my laptop (``parallelTaskCount = 1``, ``2``, ``4`` and ``8``)
 with the expected results. Later, I will test on Edison and Wolf as well.
 
 
@@ -457,7 +488,7 @@ intended.
 
 
 On Edison and Wolf, I will test running the analysis with parallel tasks both on login nodes
-and by submitting a job to run on the compute nodes (using the appropriate ``commandPrefix``\ ).
+and by submitting a job to run on the compute nodes (using the appropriate ``commandPrefix``).
 
 
 .. raw:: html
