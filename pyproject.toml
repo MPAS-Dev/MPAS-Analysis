@@ -47,6 +47,7 @@ dependencies = [
     "cartopy >=0.18.0",
     "cmocean",
     "dask",
+    "f90nml",
     "gsw",
     "lxml",
     "matplotlib >=3.9.0",
