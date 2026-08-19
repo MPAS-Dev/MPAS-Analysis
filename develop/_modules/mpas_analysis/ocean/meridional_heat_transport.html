@@ -125,7 +125,7 @@
 <div class="viewcode-block" id="MeridionalHeatTransport">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MeridionalHeatTransport</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot meridional heat transport from the analysis member output.</span>
 
 <span class="sd">    Attributes</span>
@@ -136,7 +136,7 @@
 
 <span class="sd">    controlconfig : tranche.Tranche</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -145,7 +145,7 @@
 <div class="viewcode-block" id="MeridionalHeatTransport.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.MeridionalHeatTransport.html#mpas_analysis.ocean.MeridionalHeatTransport.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -158,7 +158,7 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -166,9 +166,9 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MeridionalHeatTransport</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;meridionalHeatTransport&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'meridionalHeatTransport'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span> <span class="o">=</span> <span class="n">mpasClimatologyTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">mpasClimatologyTask</span><span class="p">)</span>
@@ -177,9 +177,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Mark Petersen, Milena Veneziani, Xylar Asay-Davis</span>
@@ -199,83 +199,83 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
-            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_meridionalheattransport_enable&#39;</span><span class="p">,</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">'config_am_meridionalheattransport_enable'</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;meridionalHeatTransport&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span> <span class="o">=</span> <span class="s1">'meridionalHeatTransport'</span>
 
         <span class="c1"># Read in obs file information</span>
         <span class="n">compareWithObs</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                           <span class="s1">&#39;compareWithObservations&#39;</span><span class="p">)</span>
+                                           <span class="s1">'compareWithObservations'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">observationsFile</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">compareWithObs</span><span class="p">:</span>
             <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;mhtSubdirectory&#39;</span><span class="p">)</span>
-            <span class="n">observationsFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;observationData&#39;</span><span class="p">)</span>
-            <span class="n">observationsFile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">,</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'mhtSubdirectory'</span><span class="p">)</span>
+            <span class="n">observationsFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'observationData'</span><span class="p">)</span>
+            <span class="n">observationsFile</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">,</span>
                                               <span class="n">observationsFile</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">observationsFile</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">observationsFile</span> <span class="o">=</span> <span class="n">observationsFile</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No MHT observations file found: skip plotting &#39;</span>
-                      <span class="s1">&#39;obs&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">'Warning: No MHT observations file found: skip plotting '</span>
+                      <span class="s1">'obs'</span><span class="p">)</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLat&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLatZ&#39;</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_meridionalHeatTransportLat'</span><span class="p">,</span>
+                        <span class="s1">'timeMonthly_avg_meridionalHeatTransportLatZ'</span><span class="p">]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
-                                               <span class="n">seasons</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">])</span>
+                                               <span class="n">seasons</span><span class="o">=</span><span class="p">[</span><span class="s1">'ANN'</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="n">prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mht&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;plotVerticalSection&#39;</span><span class="p">):</span>
-            <span class="n">prefixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;mhtZ&#39;</span><span class="p">)</span>
+        <span class="n">prefixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'mht'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'plotVerticalSection'</span><span class="p">):</span>
+            <span class="n">prefixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'mhtZ'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">:</span>
-            <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">prefix</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">,</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                         <span class="n">filePrefix</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="n">filePrefix</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Process MHT analysis member data if available.</span>
 <span class="sd">        Plots MHT as:</span>
 <span class="sd">           1D function of latitude</span>
 <span class="sd">           2D function of latitude and depth</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Mark Petersen, Milena Veneziani, Xylar Asay-Davis</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting meridional heat transport (MHT)...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Plotting meridional heat transport (MHT)..."</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
         <span class="n">depthLimGlobal</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                              <span class="s1">&#39;depthLimGlobal&#39;</span><span class="p">)</span>
-        <span class="n">xLimGlobal</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;xLimGlobal&#39;</span><span class="p">)</span>
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;meridionalHeatTransport&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+                                              <span class="s1">'depthLimGlobal'</span><span class="p">)</span>
+        <span class="n">xLimGlobal</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'xLimGlobal'</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'meridionalHeatTransport'</span><span class="p">,</span>
+                                            <span class="s1">'movingAveragePoints'</span><span class="p">)</span>
 
         <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">make_directories</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
 
         <span class="n">outFileName</span> <span class="o">=</span> \
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/meridionalHeatTransport_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="s1">'</span><span class="si">{}</span><span class="s1">/meridionalHeatTransport_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">outputDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Reading results from previous analysis run...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Reading results from previous analysis run...'</span><span class="p">)</span>
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
             <span class="n">refZMid</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">refZMid</span>
             <span class="n">binBoundaryMerHeatTrans</span> <span class="o">=</span> \
@@ -289,14 +289,14 @@
             <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
                 <span class="n">refBottomDepth</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span>
 
-            <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+            <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
             <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
             <span class="n">refLayerThickness</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">refLayerThickness</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nVertLevels</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nVertLevels</span><span class="p">]</span> <span class="o">-</span> \
                 <span class="n">refBottomDepth</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nVertLevels</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
 
-            <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,</span>
+            <span class="n">refLayerThickness</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">dims</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">,</span>
                                              <span class="n">data</span><span class="o">=</span><span class="n">refLayerThickness</span><span class="p">)</span>
 
             <span class="n">refZMid</span> <span class="o">=</span> <span class="o">-</span><span class="n">refBottomDepth</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">refLayerThickness</span>
@@ -304,24 +304,24 @@
             <span class="n">binBoundaryMerHeatTrans</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="c1"># first try timeSeriesStatsMonthly for bin boundaries, then try</span>
             <span class="c1"># meridionalHeatTransport stream as a backup option</span>
-            <span class="k">for</span> <span class="n">streamName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;meridionalHeatTransportOutput&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">streamName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'timeSeriesStatsMonthlyOutput'</span><span class="p">,</span>
+                               <span class="s1">'meridionalHeatTransportOutput'</span><span class="p">]:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">inputFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;At least one file from stream </span><span class="si">{}</span><span class="s1"> is needed &#39;</span>
-                                  <span class="s1">&#39;to compute MHT&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">))</span>
+                    <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'At least one file from stream </span><span class="si">{}</span><span class="s1"> is needed '</span>
+                                  <span class="s1">'to compute MHT'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">))</span>
 
                 <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inputFile</span><span class="p">,</span> <span class="n">decode_timedelta</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="s1">&#39;binBoundaryMerHeatTrans&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s1">'binBoundaryMerHeatTrans'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="p">:</span>
                         <span class="n">binBoundaryMerHeatTrans</span> <span class="o">=</span> \
                             <span class="n">ds</span><span class="o">.</span><span class="n">binBoundaryMerHeatTrans</span>
                         <span class="k">break</span>
 
             <span class="k">if</span> <span class="n">binBoundaryMerHeatTrans</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Could not find binBoundaryMerHeatTrans in &#39;</span>
-                                 <span class="s1">&#39;either timeSeriesStatsMonthlyOutput or &#39;</span>
-                                 <span class="s1">&#39;meridionalHeatTransportOutput streams&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Could not find binBoundaryMerHeatTrans in '</span>
+                                 <span class="s1">'either timeSeriesStatsMonthlyOutput or '</span>
+                                 <span class="s1">'meridionalHeatTransportOutput streams'</span><span class="p">)</span>
 
             <span class="n">binBoundaryMerHeatTrans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">binBoundaryMerHeatTrans</span><span class="p">)</span>
 
@@ -334,51 +334,51 @@
             <span class="c1"># over number of regions.</span>
             <span class="c1">###################################################################</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">   Plotting global meridional heat transport&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">   Plotting global meridional heat transport'</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;   Load data...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'   Load data...'</span><span class="p">)</span>
 
             <span class="n">climatologyFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasClimatologyTask</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span>
-                <span class="n">season</span><span class="o">=</span><span class="s1">&#39;ANN&#39;</span><span class="p">)</span>
+                <span class="n">season</span><span class="o">=</span><span class="s1">'ANN'</span><span class="p">)</span>
 
-            <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLat&#39;</span><span class="p">,</span>
-                            <span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLatZ&#39;</span><span class="p">]</span>
+            <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_meridionalHeatTransportLat'</span><span class="p">,</span>
+                            <span class="s1">'timeMonthly_avg_meridionalHeatTransportLatZ'</span><span class="p">]</span>
 
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">climatologyFileName</span><span class="p">)</span>
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="p">[</span><span class="n">variableList</span><span class="p">]</span>
             <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLat&#39;</span><span class="p">:</span>
-                     <span class="s1">&#39;meridionalHeatTransportLat&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;timeMonthly_avg_meridionalHeatTransportLatZ&#39;</span><span class="p">:</span>
-                     <span class="s1">&#39;meridionalHeatTransportLatZ&#39;</span><span class="p">})</span>
-            <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+                <span class="p">{</span><span class="s1">'timeMonthly_avg_meridionalHeatTransportLat'</span><span class="p">:</span>
+                     <span class="s1">'meridionalHeatTransportLat'</span><span class="p">,</span>
+                 <span class="s1">'timeMonthly_avg_meridionalHeatTransportLatZ'</span><span class="p">:</span>
+                     <span class="s1">'meridionalHeatTransportLatZ'</span><span class="p">})</span>
+            <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                 <span class="n">annualClimatology</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-            <span class="n">annualClimatology</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;refZMid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">refZMid</span>
-            <span class="n">annualClimatology</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;binBoundaryMerHeatTrans&#39;</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">annualClimatology</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'refZMid'</span><span class="p">]</span> <span class="o">=</span> <span class="n">refZMid</span>
+            <span class="n">annualClimatology</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'binBoundaryMerHeatTrans'</span><span class="p">]</span> <span class="o">=</span> \
                 <span class="n">binBoundaryMerHeatTrans</span>
 
-            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;plotVerticalSection&#39;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'plotVerticalSection'</span><span class="p">):</span>
                 <span class="c1"># normalize 2D MHT by layer thickness</span>
-                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">&#39;meridionalHeatTransportLatZ&#39;</span><span class="p">]</span> <span class="o">/=</span> \
+                <span class="n">annualClimatology</span><span class="p">[</span><span class="s1">'meridionalHeatTransportLatZ'</span><span class="p">]</span> <span class="o">/=</span> \
                     <span class="n">refLayerThickness</span>
 
             <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">annualClimatology</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
         <span class="c1"># **** Plot MHT ****</span>
         <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="mi">70</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;   Plot global MHT...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'   Plot global MHT...'</span><span class="p">)</span>
         <span class="c1"># Plot 1D MHT (zonally averaged, depth integrated)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">binBoundaryMerHeatTrans</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">meridionalHeatTransportLat</span>
-        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;latitude (deg)&#39;</span>
-        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;meridional heat transport (PW)&#39;</span>
+        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">'latitude (deg)'</span>
+        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">'meridional heat transport (PW)'</span>
 
-        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Global MHT (ANN, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)</span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">'Global MHT (ANN, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)</span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">)</span>
-        <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="s1">&#39;mht&#39;</span><span class="p">]</span>
-        <span class="n">figureName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
-        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
+        <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="s1">'mht'</span><span class="p">]</span>
+        <span class="n">figureName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
+        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'k'</span><span class="p">]</span>
         <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.6</span><span class="p">]</span>
         <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainRunName</span><span class="p">]</span>
         <span class="n">xArrays</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
@@ -393,29 +393,29 @@
             <span class="n">ecmwfGlobal</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">GLOBALECMWF_ADJUSTED</span>
             <span class="n">ecmwfErrGlobal</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">GLOBALECMWF_ERR</span>
 
-            <span class="n">lineColors</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">])</span>
+            <span class="n">lineColors</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'b'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">])</span>
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">])</span>
-            <span class="n">legendText</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;Trenberth and Caron - NCEP&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;Trenberth and Caron - ECMWF&#39;</span><span class="p">])</span>
+            <span class="n">legendText</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">'Trenberth and Caron - NCEP'</span><span class="p">,</span>
+                               <span class="s1">'Trenberth and Caron - ECMWF'</span><span class="p">])</span>
             <span class="n">xArrays</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">xObs</span><span class="p">,</span> <span class="n">xObs</span><span class="p">])</span>
             <span class="n">fieldArrays</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">ncepGlobal</span><span class="p">,</span> <span class="n">ecmwfGlobal</span><span class="p">])</span>
             <span class="n">errArrays</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">ncepErrGlobal</span><span class="p">,</span> <span class="n">ecmwfErrGlobal</span><span class="p">])</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">controlStartYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-            <span class="n">controlEndYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span>
-                                                       <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+            <span class="n">controlStartYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'climatology'</span><span class="p">,</span>
+                                                         <span class="s1">'startYear'</span><span class="p">)</span>
+            <span class="n">controlEndYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'climatology'</span><span class="p">,</span>
+                                                       <span class="s1">'endYear'</span><span class="p">)</span>
             <span class="n">controlDirectory</span> <span class="o">=</span> <span class="n">get_climatology_op_directory</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">)</span>
 
             <span class="n">controlFileName</span> <span class="o">=</span> \
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/meridionalHeatTransport_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s1">'</span><span class="si">{}</span><span class="s1">/meridionalHeatTransport_years</span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">controlDirectory</span><span class="p">,</span> <span class="n">controlStartYear</span><span class="p">,</span> <span class="n">controlEndYear</span><span class="p">)</span>
 
             <span class="n">dsControl</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">controlFileName</span><span class="p">)</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'r'</span><span class="p">)</span>
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
             <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
             <span class="n">xArrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsControl</span><span class="o">.</span><span class="n">binBoundaryMerHeatTrans</span><span class="p">)</span>
@@ -434,21 +434,21 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;plotVerticalSection&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'plotVerticalSection'</span><span class="p">):</span>
             <span class="c1"># Plot 2D MHT (zonally integrated)</span>
 
             <span class="n">x</span> <span class="o">=</span> <span class="n">binBoundaryMerHeatTrans</span>
             <span class="n">y</span> <span class="o">=</span> <span class="n">refZMid</span>
             <span class="n">z</span> <span class="o">=</span> <span class="n">annualClimatology</span><span class="o">.</span><span class="n">meridionalHeatTransportLatZ</span>
-            <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;latitude (deg)&#39;</span>
-            <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;depth (m)&#39;</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;Global MHT (ANN, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)</span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">'latitude (deg)'</span>
+            <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">'depth (m)'</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">'Global MHT (ANN, years </span><span class="si">{:04d}</span><span class="s1">-</span><span class="si">{:04d}</span><span class="s1">)</span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">)</span>
-            <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="s1">&#39;mhtZ&#39;</span><span class="p">]</span>
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
-            <span class="n">colorbarLabel</span> <span class="o">=</span> <span class="s1">&#39;(PW/m)&#39;</span>
+            <span class="n">filePrefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefixes</span><span class="p">[</span><span class="s1">'mhtZ'</span><span class="p">]</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
+            <span class="n">colorbarLabel</span> <span class="o">=</span> <span class="s1">'(PW/m)'</span>
             <span class="n">plot_vertical_section</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="n">xCoords</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
-                                  <span class="n">zCoord</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                  <span class="n">zCoord</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span>
                                   <span class="n">colorbarLabel</span><span class="o">=</span><span class="n">colorbarLabel</span><span class="p">,</span>
                                   <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">xlabels</span><span class="o">=</span><span class="n">xLabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="n">yLabel</span><span class="p">,</span>
                                   <span class="n">xLim</span><span class="o">=</span><span class="n">xLimGlobal</span><span class="p">,</span>
@@ -461,14 +461,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">):</span>
-        <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Meridional Heat Transport&#39;</span>
+        <span class="n">caption</span> <span class="o">=</span> <span class="s1">'Meridional Heat Transport'</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">filePrefix</span><span class="o">=</span><span class="n">filePrefix</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
-            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Meridional Heat Transport&#39;</span><span class="p">,</span>
-            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;mht&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'Ocean'</span><span class="p">,</span>
+            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Meridional Heat Transport'</span><span class="p">,</span>
+            <span class="n">groupLink</span><span class="o">=</span><span class="s1">'mht'</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span></div>
 

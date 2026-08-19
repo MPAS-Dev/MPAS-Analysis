@@ -142,7 +142,7 @@
 <div class="viewcode-block" id="IndexNino34">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">IndexNino34</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A task for computing and plotting time series and spectra of the El Nino</span>
 <span class="sd">    3.4 climate index</span>
 
@@ -154,7 +154,7 @@
 
 <span class="sd">    controlconfig : tranche.Tranche</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -163,7 +163,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.IndexNino34.html#mpas_analysis.ocean.IndexNino34.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -176,7 +176,7 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -184,9 +184,9 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IndexNino34</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;nino&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'indexNino34'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'index'</span><span class="p">,</span> <span class="s1">'nino'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span> <span class="o">=</span> <span class="n">mpasTimeSeriesTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
@@ -195,9 +195,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -209,8 +209,8 @@
         <span class="c1">#     self.calendar</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">IndexNino34</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
         <span class="n">delta</span> <span class="o">=</span> <span class="n">MpasRelativeDelta</span><span class="p">(</span><span class="n">string_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">),</span>
                                   <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">),</span>
@@ -219,37 +219,37 @@
         <span class="n">months</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">months</span> <span class="o">+</span> <span class="mi">12</span><span class="o">*</span><span class="n">delta</span><span class="o">.</span><span class="n">years</span>
 
         <span class="k">if</span> <span class="n">months</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot meaninfully analyze El Nino climate &#39;</span>
-                             <span class="s1">&#39;index because the time series is too short.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Cannot meaninfully analyze El Nino climate '</span>
+                             <span class="s1">'index because the time series is too short.'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> \
-            <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">]</span>
+            <span class="p">[</span><span class="s1">'timeMonthly_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">outputFile</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
+        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'indexNino34'</span><span class="p">,</span> <span class="s1">'region'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">regionToPlot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">]:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unexpected El Nino Index region </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">regionToPlot</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nino3.4'</span><span class="p">,</span> <span class="s1">'nino3'</span><span class="p">,</span> <span class="s1">'nino4'</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unexpected El Nino Index region </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionToPlot</span><span class="p">))</span>
         <span class="n">ninoIndexNumber</span> <span class="o">=</span> <span class="n">regionToPlot</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">filePrefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">),</span>
-                           <span class="s1">&#39;nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
+        <span class="k">for</span> <span class="n">filePrefix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">),</span>
+                           <span class="s1">'nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
                                                       <span class="n">mainRunName</span><span class="p">)]:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                         <span class="n">filePrefix</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Computes NINO34 index and plots the time series and power spectrum with</span>
 <span class="sd">        95 and 99% confidence bounds</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -257,48 +257,48 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
 
-        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
+        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'indexNino34'</span><span class="p">,</span> <span class="s1">'region'</span><span class="p">)</span>
 
         <span class="n">ninoIndexNumber</span> <span class="o">=</span> <span class="n">regionToPlot</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting El Nino </span><span class="si">{}</span><span class="s2"> Index time series and power &quot;</span>
-                         <span class="s2">&quot;spectrum....&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Plotting El Nino </span><span class="si">{}</span><span class="s2"> Index time series and power "</span>
+                         <span class="s2">"spectrum...."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load SST data...&#39;</span><span class="p">)</span>
-        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;nino&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load SST data...'</span><span class="p">)</span>
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">'nino'</span>
 
-        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
-        <span class="n">startYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-        <span class="n">endYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+        <span class="n">startYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'startYear'</span><span class="p">)</span>
+        <span class="n">endYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'index'</span><span class="p">,</span> <span class="s1">'endYear'</span><span class="p">)</span>
 
-        <span class="n">dataSource</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;observationData&#39;</span><span class="p">)</span>
+        <span class="n">dataSource</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'indexNino34'</span><span class="p">,</span> <span class="s1">'observationData'</span><span class="p">)</span>
 
         <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Subdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">))</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">Subdirectory'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">))</span>
 
         <span class="c1"># specify obsTitle based on data path</span>
         <span class="c1"># These are the only data sets supported</span>
-        <span class="k">if</span> <span class="n">dataSource</span> <span class="o">==</span> <span class="s1">&#39;HADIsst&#39;</span><span class="p">:</span>
-            <span class="n">dataPath</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/HADIsst_nino34_20180710.nc&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="k">if</span> <span class="n">dataSource</span> <span class="o">==</span> <span class="s1">'HADIsst'</span><span class="p">:</span>
+            <span class="n">dataPath</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">/HADIsst_nino34_20180710.nc"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">observationsDirectory</span><span class="p">)</span>
-            <span class="n">obsTitle</span> <span class="o">=</span> <span class="s1">&#39;HADSST&#39;</span>
-            <span class="n">refDate</span> <span class="o">=</span> <span class="s1">&#39;1870-01-01&#39;</span>
-        <span class="k">elif</span> <span class="n">dataSource</span> <span class="o">==</span> <span class="s1">&#39;ERS_SSTv4&#39;</span><span class="p">:</span>
-            <span class="n">dataPath</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/ERS_SSTv4_nino34_20180710.nc&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">obsTitle</span> <span class="o">=</span> <span class="s1">'HADSST'</span>
+            <span class="n">refDate</span> <span class="o">=</span> <span class="s1">'1870-01-01'</span>
+        <span class="k">elif</span> <span class="n">dataSource</span> <span class="o">==</span> <span class="s1">'ERS_SSTv4'</span><span class="p">:</span>
+            <span class="n">dataPath</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{}</span><span class="s2">/ERS_SSTv4_nino34_20180710.nc"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">observationsDirectory</span><span class="p">)</span>
-            <span class="n">obsTitle</span> <span class="o">=</span> <span class="s1">&#39;ERS SSTv4&#39;</span>
-            <span class="n">refDate</span> <span class="o">=</span> <span class="s1">&#39;1800-01-01&#39;</span>
+            <span class="n">obsTitle</span> <span class="o">=</span> <span class="s1">'ERS SSTv4'</span>
+            <span class="n">refDate</span> <span class="o">=</span> <span class="s1">'1800-01-01'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Bad value for config option observationData </span><span class="si">{}</span><span class="s1"> &#39;</span>
-                             <span class="s1">&#39;in [indexNino34] section.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataSource</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Bad value for config option observationData </span><span class="si">{}</span><span class="s1"> '</span>
+                             <span class="s1">'in [indexNino34] section.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataSource</span><span class="p">))</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
         <span class="c1"># regionIndex should correspond to NINO34 in surface weighted Average</span>
         <span class="c1"># AM</span>
-        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;indexNino34&#39;</span><span class="p">,</span> <span class="s1">&#39;region&#39;</span><span class="p">)</span>
+        <span class="n">regionToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'indexNino34'</span><span class="p">,</span> <span class="s1">'region'</span><span class="p">)</span>
 
         <span class="c1"># Load data:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">,</span>
@@ -316,23 +316,23 @@
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">dataPath</span><span class="p">,</span> <span class="n">decode_cf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="c1"># add the days between 0001-01-01 and the refDate so we have a new</span>
         <span class="c1"># reference date of 0001-01-01 (like for the model Time)</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">Time</span> <span class="o">+</span> \
+        <span class="n">dsObs</span><span class="p">[</span><span class="s2">"Time"</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">Time</span> <span class="o">+</span> \
             <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">refDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
         <span class="n">nino34Obs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sst</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Compute El Nino </span><span class="si">{}</span><span class="s1"> Index...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Compute El Nino </span><span class="si">{}</span><span class="s1"> Index...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
         <span class="n">varName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">regionSST</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Main run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">&#39;dims&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">'Main run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span>
+                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">'dims'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                          <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="s1">'shape'</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
         <span class="n">nino34Main</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
         <span class="c1"># Compute the observational index over the entire time range</span>
         <span class="c1"># nino34Obs = compute_nino34_index(dsObs.sst, calendar)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; Computing El Nino </span><span class="si">{}</span><span class="s1"> power spectra...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' Computing El Nino </span><span class="si">{}</span><span class="s1"> power spectra...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
         <span class="n">spectraMain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_spectra</span><span class="p">(</span><span class="n">nino34Main</span><span class="p">)</span>
 
@@ -356,16 +356,16 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">nino34s</span> <span class="o">=</span> <span class="p">[</span><span class="n">nino34Obs</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">nino34Subset</span><span class="p">,</span> <span class="n">nino34Main</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
-            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (Full Record)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">),</span>
-                      <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">,</span> <span class="n">subsetStartYear</span><span class="p">,</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> (Full Record)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">),</span>
+                      <span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">,</span> <span class="n">subsetStartYear</span><span class="p">,</span>
                                             <span class="n">subsetEndYear</span><span class="p">),</span>
                       <span class="n">mainRunName</span><span class="p">]</span>
             <span class="n">spectra</span> <span class="o">=</span> <span class="p">[</span><span class="n">spectraObs</span><span class="p">,</span> <span class="n">spectraSubset</span><span class="p">,</span> <span class="n">spectraMain</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="n">refFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">refFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">baseDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">)</span>
 
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
@@ -377,63 +377,63 @@
                 <span class="n">dsRef</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="n">regionToPlot</span><span class="p">])</span>
 
             <span class="c1"># we want to collapse the nOceanRegions dimension (same as main)</span>
-            <span class="k">if</span> <span class="s1">&#39;nOceanRegions&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'nOceanRegions'</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
                 <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nOceanRegions</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
             <span class="n">regionSSTRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="n">varName</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Control run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">,</span>
-                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">&#39;dims&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
-                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">&#39;shape&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">'Control run SST dims=</span><span class="si">%s</span><span class="s1"> shape=</span><span class="si">%s</span><span class="s1">'</span><span class="p">,</span>
+                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">'dims'</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+                              <span class="nb">getattr</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="s1">'shape'</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
             <span class="n">nino34Ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_index</span><span class="p">(</span><span class="n">regionSSTRef</span><span class="p">,</span> <span class="n">calendar</span><span class="p">)</span>
 
             <span class="n">nino34s</span> <span class="o">=</span> <span class="p">[</span><span class="n">nino34Subset</span><span class="p">,</span> <span class="n">nino34Main</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">nino34Ref</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]]</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
             <span class="n">spectraRef</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_nino34_spectra</span><span class="p">(</span><span class="n">nino34Ref</span><span class="p">)</span>
 
-            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">,</span> <span class="n">subsetStartYear</span><span class="p">,</span>
+            <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1"> - </span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsTitle</span><span class="p">,</span> <span class="n">subsetStartYear</span><span class="p">,</span>
                                             <span class="n">subsetEndYear</span><span class="p">),</span>
                       <span class="n">mainRunName</span><span class="p">,</span>
-                      <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)]</span>
+                      <span class="s1">'Control: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)]</span>
             <span class="n">spectra</span> <span class="o">=</span> <span class="p">[</span><span class="n">spectraSubset</span><span class="p">,</span> <span class="n">spectraMain</span><span class="p">,</span> <span class="n">spectraRef</span><span class="p">]</span>
 
         <span class="c1"># Convert frequencies to period in years</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">spectra</span><span class="p">:</span>
-            <span class="n">s</span><span class="p">[</span><span class="s1">&#39;period&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">eps</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span><span class="p">)</span>
+            <span class="n">s</span><span class="p">[</span><span class="s1">'period'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">eps</span> <span class="o">+</span> <span class="n">s</span><span class="p">[</span><span class="s1">'f'</span><span class="p">]</span> <span class="o">*</span> <span class="n">constants</span><span class="o">.</span><span class="n">sec_per_year</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; Plot El Nino </span><span class="si">{}</span><span class="s1"> index and spectra...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">' Plot El Nino </span><span class="si">{}</span><span class="s1"> index and spectra...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">ninoIndexNumber</span><span class="p">))</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                 <span class="n">ninoIndexNumber</span><span class="p">,</span> <span class="n">mainRunName</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nino34_timeseries_plot</span><span class="p">(</span>
             <span class="n">nino34s</span><span class="o">=</span><span class="n">nino34s</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;El Niño </span><span class="si">{}</span><span class="s1"> Index&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">u</span><span class="s1">'El Niño </span><span class="si">{}</span><span class="s1"> Index'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
             <span class="n">panelTitles</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span>
             <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="o">=</span><span class="s1">'nino</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
                                                       <span class="n">mainRunName</span><span class="p">),</span>
-                        <span class="n">plotType</span><span class="o">=</span><span class="s1">&#39;Time Series&#39;</span><span class="p">,</span>
+                        <span class="n">plotType</span><span class="o">=</span><span class="s1">'Time Series'</span><span class="p">,</span>
                         <span class="n">ninoIndexNumber</span><span class="o">=</span><span class="n">ninoIndexNumber</span><span class="p">)</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                                         <span class="n">ninoIndexNumber</span><span class="p">,</span>
                                                         <span class="n">mainRunName</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_nino34_spectra_plot</span><span class="p">(</span>
             <span class="n">spectra</span><span class="o">=</span><span class="n">spectra</span><span class="p">,</span>
-            <span class="n">title</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;El Niño </span><span class="si">{}</span><span class="s1"> power spectrum&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">u</span><span class="s1">'El Niño </span><span class="si">{}</span><span class="s1"> power spectrum'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
             <span class="n">panelTitles</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span>
             <span class="n">outFileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="o">=</span><span class="s1">&#39;nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_write_xml</span><span class="p">(</span><span class="n">filePrefix</span><span class="o">=</span><span class="s1">'nino</span><span class="si">{}</span><span class="s1">_spectra_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">,</span>
                                                               <span class="n">mainRunName</span><span class="p">),</span>
-                        <span class="n">plotType</span><span class="o">=</span><span class="s1">&#39;Spectra&#39;</span><span class="p">,</span>
+                        <span class="n">plotType</span><span class="o">=</span><span class="s1">'Spectra'</span><span class="p">,</span>
                         <span class="n">ninoIndexNumber</span><span class="o">=</span><span class="n">ninoIndexNumber</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_nino34_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionSST</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Computes nino34 index time series.  It follow the standard nino34</span>
 <span class="sd">        algorithm, i.e.,</span>
 
@@ -450,21 +450,21 @@
 <span class="sd">        regionSST : xarray.DataArray object</span>
 <span class="sd">           values of SST in the nino region</span>
 
-<span class="sd">        calendar: {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">        calendar: {'gregorian', 'noleap'}</span>
 <span class="sd">            The name of the calendars used in the MPAS run</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        xarray.DataArray object containing the nino34index</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span> <span class="n">xr</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dataarray</span><span class="o">.</span><span class="n">DataArray</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;regionSST should be an xarray DataArray&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'regionSST should be an xarray DataArray'</span><span class="p">)</span>
 
-        <span class="c1"># add &#39;month&#39; data array so we can group by month below.</span>
+        <span class="c1"># add 'month' data array so we can group by month below.</span>
         <span class="n">regionSST</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">add_years_months_days_in_month</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span>
                                                                <span class="n">calendar</span><span class="p">)</span>
 
@@ -473,7 +473,7 @@
             <span class="n">climatology</span><span class="o">.</span><span class="n">compute_monthly_climatology</span><span class="p">(</span><span class="n">regionSST</span><span class="p">,</span>
                                                     <span class="n">maskVaries</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-        <span class="n">anomaly</span> <span class="o">=</span> <span class="n">regionSST</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="n">monthlyClimatology</span>
+        <span class="n">anomaly</span> <span class="o">=</span> <span class="n">regionSST</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'month'</span><span class="p">)</span> <span class="o">-</span> <span class="n">monthlyClimatology</span>
 
         <span class="c1"># Remove the long term trend from the anomalies</span>
         <span class="n">detrendedAnomal</span> <span class="o">=</span> <span class="n">signal</span><span class="o">.</span><span class="n">detrend</span><span class="p">(</span><span class="n">anomaly</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
@@ -484,7 +484,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running_mean</span><span class="p">(</span><span class="n">anomaly</span><span class="p">,</span> <span class="n">wgts</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_nino34_spectra</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34Index</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Computes power spectra of Nino34 index.</span>
 
 <span class="sd">        nino34Index is the NINO index computed by compute_nino34_index</span>
@@ -515,7 +515,7 @@
 
 <span class="sd">        mkov*scale*xHigh : numpy.array</span>
 <span class="sd">            99% confidence threshold from chi-squared test</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -563,14 +563,14 @@
 
         <span class="c1"># return Spectra, 99% confidence level, 95% confidence level,</span>
         <span class="c1">#        and Red-noise fit</span>
-        <span class="n">spectra</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">&#39;spectrum&#39;</span><span class="p">:</span> <span class="n">pxxSmooth</span><span class="p">,</span>
-                   <span class="s1">&#39;conf99&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">xHigh</span><span class="p">,</span>
-                   <span class="s1">&#39;conf95&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">xLow</span><span class="p">,</span>
-                   <span class="s1">&#39;redNoise&#39;</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span><span class="p">}</span>
+        <span class="n">spectra</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'f'</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s1">'spectrum'</span><span class="p">:</span> <span class="n">pxxSmooth</span><span class="p">,</span>
+                   <span class="s1">'conf99'</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">xHigh</span><span class="p">,</span>
+                   <span class="s1">'conf95'</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">xLow</span><span class="p">,</span>
+                   <span class="s1">'redNoise'</span><span class="p">:</span> <span class="n">mkov</span> <span class="o">*</span> <span class="n">scale</span><span class="p">}</span>
         <span class="k">return</span> <span class="n">spectra</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_autocorr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Computes lag one auto-correlation for the NINO34 spectra calculation</span>
 
 <span class="sd">        Parameters</span>
@@ -582,7 +582,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        Single value giving the lag one auto-correlation</span>
 <span class="sd">            If t != 1, this is no longer a lag one auto-correlation</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel</span>
@@ -590,7 +590,7 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">t</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">t</span><span class="p">:</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)]]))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_running_mean</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputData</span><span class="p">,</span> <span class="n">wgts</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Calculates a generic weighted running mean</span>
 
 <span class="sd">        Parameters</span>
@@ -603,7 +603,7 @@
 <span class="sd">           for the nino index this is a 5-point boxcar window</span>
 <span class="sd">           for the nino power spectra this is a modified Daniell window (see</span>
 <span class="sd">           https://www.ncl.ucar.edu/Document/Functions/Built-in/specx_anal.shtml)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -615,10 +615,10 @@
             <span class="n">windowValues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">inputData</span><span class="p">[</span><span class="n">k</span> <span class="o">-</span> <span class="n">sp</span><span class="p">:</span><span class="n">k</span> <span class="o">+</span> <span class="n">sp</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">windowValues</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;Unexpected running-mean window shape. &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;Expected first dimension </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">)</span><span class="si">}</span><span class="s1"> but got </span><span class="si">{</span><span class="n">windowValues</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">. &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;inputData dims=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;dims&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1"> &#39;</span>
-                    <span class="sa">f</span><span class="s1">&#39;shape=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;shape&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="s1">'Unexpected running-mean window shape. '</span>
+                    <span class="sa">f</span><span class="s1">'Expected first dimension </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">wgts</span><span class="p">)</span><span class="si">}</span><span class="s1"> but got </span><span class="si">{</span><span class="n">windowValues</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s1">. '</span>
+                    <span class="sa">f</span><span class="s1">'inputData dims=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">"dims"</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1"> '</span>
+                    <span class="sa">f</span><span class="s1">'shape=</span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">inputData</span><span class="p">,</span><span class="w"> </span><span class="s2">"shape"</span><span class="p">,</span><span class="w"> </span><span class="kc">None</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">windowValues</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">runningMean</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">wgts</span> <span class="o">*</span> <span class="n">windowValues</span><span class="p">)</span>
@@ -629,12 +629,12 @@
         <span class="k">return</span> <span class="n">runningMean</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_nino34_spectra_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spectra</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span>
-                             <span class="n">outFileName</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Period (years)&#39;</span><span class="p">,</span>
-                             <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;Power ($^o$C / cycles mo$^{-1}$)&#39;</span><span class="p">,</span>
+                             <span class="n">outFileName</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="s1">'Period (years)'</span><span class="p">,</span>
+                             <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'Power ($^o$C / cycles mo$^{-1}$)'</span><span class="p">,</span>
                              <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">periodMin</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">periodMax</span><span class="o">=</span><span class="mf">10.</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -673,7 +673,7 @@
 
 <span class="sd">        periodMin, periodMax : float, optional</span>
 <span class="sd">            the maximum and minimum periods (in years) to be plotted</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -681,27 +681,27 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+            <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'dpi'</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontSize'</span><span class="p">)</span>
 
-        <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)}</span>
-        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
-                      <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
-                      <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+        <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'axisFontSize'</span><span class="p">)}</span>
+        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                      <span class="s1">'color'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontColor'</span><span class="p">),</span>
+                      <span class="s1">'weight'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontWeight'</span><span class="p">)}</span>
         <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.92</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
 
-        <span class="n">spectrumNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;spectrum&#39;</span><span class="p">,</span> <span class="s1">&#39;redNoise&#39;</span><span class="p">,</span> <span class="s1">&#39;conf95&#39;</span><span class="p">,</span> <span class="s1">&#39;conf99&#39;</span><span class="p">]</span>
-        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
-        <span class="n">legends</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Nino34 spectrum&#39;</span><span class="p">,</span> <span class="s1">&#39;Red noise fit&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;95</span><span class="si">% c</span><span class="s1">onfidence threshold&#39;</span><span class="p">,</span> <span class="s1">&#39;99</span><span class="si">% c</span><span class="s1">onfidence threshold&#39;</span><span class="p">]</span>
+        <span class="n">spectrumNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'spectrum'</span><span class="p">,</span> <span class="s1">'redNoise'</span><span class="p">,</span> <span class="s1">'conf95'</span><span class="p">,</span> <span class="s1">'conf99'</span><span class="p">]</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'k'</span><span class="p">,</span> <span class="s1">'r'</span><span class="p">,</span> <span class="s1">'g'</span><span class="p">,</span> <span class="s1">'b'</span><span class="p">]</span>
+        <span class="n">legends</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Nino34 spectrum'</span><span class="p">,</span> <span class="s1">'Red noise fit'</span><span class="p">,</span>
+                   <span class="s1">'95</span><span class="si">% c</span><span class="s1">onfidence threshold'</span><span class="p">,</span> <span class="s1">'99</span><span class="si">% c</span><span class="s1">onfidence threshold'</span><span class="p">]</span>
 
         <span class="n">maxYval</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e20</span>
         <span class="k">for</span> <span class="n">plotIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
-            <span class="n">x</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="s1">&#39;period&#39;</span><span class="p">]</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="s1">'period'</span><span class="p">]</span>
             <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="n">spectrumNames</span><span class="p">[</span><span class="n">curveIndex</span><span class="p">]]</span> <span class="k">for</span> <span class="n">curveIndex</span>
                   <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
             <span class="n">maxYval</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">maxYval</span><span class="p">,</span>
@@ -711,14 +711,14 @@
         <span class="k">for</span> <span class="n">plotIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">plotIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-            <span class="n">period</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="s1">&#39;period&#39;</span><span class="p">]</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="s1">'period'</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">curveIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
                 <span class="n">spectrum</span> <span class="o">=</span> <span class="n">spectra</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">][</span><span class="n">spectrumNames</span><span class="p">[</span><span class="n">curveIndex</span><span class="p">]]</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">period</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">spectrum</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="n">curveIndex</span><span class="p">],</span>
                          <span class="n">linewidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">legends</span><span class="p">[</span><span class="n">curveIndex</span><span class="p">])</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'upper right'</span><span class="p">)</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">maxYval</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">panelTitles</span><span class="p">[</span><span class="n">plotIndex</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -736,11 +736,11 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_nino34_timeseries_plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nino34s</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">panelTitles</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
-                                <span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;Time (years)&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;($\degree$C)&#39;</span><span class="p">,</span>
+                                <span class="n">xlabel</span><span class="o">=</span><span class="s1">'Time (years)'</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'($\degree$C)'</span><span class="p">,</span>
                                 <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">21</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                 <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lineWidth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plots the nino34 time series and power spectra in an image file</span>
 
 <span class="sd">        Parameters</span>
@@ -772,7 +772,7 @@
 
 <span class="sd">        lineWidth : int, optional</span>
 <span class="sd">            control line width</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -781,16 +781,16 @@
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
 
         <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+            <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'dpi'</span><span class="p">)</span>
         <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+            <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontSize'</span><span class="p">)</span>
 
-        <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)}</span>
-        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
-                      <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
-                      <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+        <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'axisFontSize'</span><span class="p">)}</span>
+        <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                      <span class="s1">'color'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontColor'</span><span class="p">),</span>
+                      <span class="s1">'weight'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontWeight'</span><span class="p">)}</span>
         <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.92</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
 
@@ -817,7 +817,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot_nino_timeseries</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ninoIndex</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span>
                               <span class="n">panelTitle</span><span class="p">,</span> <span class="n">title_font</span><span class="p">,</span> <span class="n">axis_font</span><span class="p">,</span>
                               <span class="n">lineWidth</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plot the nino time series on a subplot</span>
 
 <span class="sd">        Parameters</span>
@@ -839,7 +839,7 @@
 
 <span class="sd">        lineWidth : list of str</span>
 <span class="sd">            control line width</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>
@@ -850,14 +850,14 @@
 
         <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nt</span><span class="p">)</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="s1">&#39;--k&#39;</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="mf">0.4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="s1">'--k'</span><span class="p">,</span>
                  <span class="n">linewidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="s1">&#39;--k&#39;</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nt</span><span class="p">),</span> <span class="s1">'--k'</span><span class="p">,</span>
                  <span class="n">linewidth</span><span class="o">=</span><span class="n">lineWidth</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">y1</span> <span class="o">&gt;</span> <span class="n">y2</span><span class="p">,</span>
-                         <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                         <span class="n">facecolor</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">y1</span> <span class="o">&lt;</span> <span class="n">y2</span><span class="p">,</span>
-                         <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                         <span class="n">facecolor</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">interpolate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">xlabel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
@@ -865,21 +865,21 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">,</span> <span class="o">**</span><span class="n">axis_font</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_write_xml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">,</span> <span class="n">plotType</span><span class="p">,</span> <span class="n">ninoIndexNumber</span><span class="p">):</span>
-        <span class="n">caption</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> of El Niño </span><span class="si">{}</span><span class="s1"> Climate Index&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotType</span><span class="p">,</span>
+        <span class="n">caption</span> <span class="o">=</span> <span class="sa">u</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> of El Niño </span><span class="si">{}</span><span class="s1"> Climate Index'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotType</span><span class="p">,</span>
                                                            <span class="n">ninoIndexNumber</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">filePrefix</span><span class="o">=</span><span class="n">filePrefix</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
-            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">galleryGroup</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;El Niño </span><span class="si">{}</span><span class="s1"> Climate Index&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
-            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;nino&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'Ocean'</span><span class="p">,</span>
+            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="sa">u</span><span class="s1">'El Niño </span><span class="si">{}</span><span class="s1"> Climate Index'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ninoIndexNumber</span><span class="p">),</span>
+            <span class="n">groupLink</span><span class="o">=</span><span class="s1">'nino'</span><span class="p">,</span>
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">plotType</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_plot_size_y_axis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the maximum y value over the given range of x values</span>
 
 <span class="sd">        Parameters</span>
@@ -895,7 +895,7 @@
 
 <span class="sd">        xmax : float, optional</span>
 <span class="sd">            The maximum x values</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Luke Van Roekel, Xylar Asay-Davis</span>

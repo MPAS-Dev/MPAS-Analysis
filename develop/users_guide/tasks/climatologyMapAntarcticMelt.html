@@ -198,11 +198,11 @@ observations from <a class="reference external" href="https://doi.org/10.5194/tc
 
 <span class="c1"># comparison grid(s)</span>
 <span class="c1"># only the Antarctic really makes sense but lat-lon could technically work.</span>
-<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;antarctic&#39;]</span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['antarctic']</span>
 
 <span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">['JFM', 'JAS', 'ANN']</span>
 
 <span class="c1"># colormap for model/observations</span>
 <span class="na">colormapNameResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">erdc_iceFire_H</span>
@@ -211,8 +211,8 @@ observations from <a class="reference external" href="https://doi.org/10.5194/tc
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span>
-<span class="w">                  </span><span class="na">&#39;vmax&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,</span>
+<span class="w">                  </span><span class="na">'vmax'</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
 <span class="na">colorbarTicksResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2., 5.,</span>
 <span class="w">                       </span><span class="na">10., 20., 50., 100.]</span>
 
@@ -223,8 +223,8 @@ observations from <a class="reference external" href="https://doi.org/10.5194/tc
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">symLog</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;linthresh&#39;: 1., &#39;linscale&#39;: 0.5, &#39;vmin&#39;: -100.,</span>
-<span class="w">                      </span><span class="na">&#39;vmax&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'linthresh': 1., 'linscale': 0.5, 'vmin': -100.,</span>
+<span class="w">                      </span><span class="na">'vmax'</span><span class="o">:</span><span class="w"> </span><span class="s">100.}</span>
 <span class="na">colorbarTicksDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[-100., -50., -20., -10., -5., -2., -1., 0., 1., 2.,</span>
 <span class="w">                           </span><span class="na">5., 10., 20., 50., 100.]</span>
 
@@ -232,7 +232,7 @@ observations from <a class="reference external" href="https://doi.org/10.5194/tc
 <span class="na">makeTables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
 
 <span class="c1"># If making tables, which ice shelves?  This is a list of ice shelves or</span>
-<span class="c1"># [&#39;all&#39;] for all 106 ice shelves and regions.</span>
+<span class="c1"># ['all'] for all 106 ice shelves and regions.</span>
 <span class="na">iceShelvesInTable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 </pre></div>
 </div>

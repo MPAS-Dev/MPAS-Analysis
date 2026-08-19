@@ -203,36 +203,36 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="c1">## options related to plotting time series of groups of ocean regions</span>
 
 <span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;, &#39;Arctic Ocean Regions&#39;, &#39;Antarctic Regions&#39;]</span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['Ocean Basins', 'Arctic Ocean Regions', 'Antarctic Regions']</span>
 
 <span class="c1"># a list of variables available to plot</span>
 <span class="na">availableVariables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;temperature&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Temperature&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;PSU&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_salinity&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;kg m$$^{-3}$$&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_potentialDensity&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;thermalForcing&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Thermal Forcing&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$^\circ$$C&#39;,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;,</span>
-<span class="w">              </span><span class="na">&#39;timeMonthly_avg_activeTracers_salinity&#39;,</span>
-<span class="w">              </span><span class="na">&#39;timeMonthly_avg_density&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;oceanHeatContent&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Ocean Heat Content&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$$10^{22}$$ J&#39;,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_activeTracers_temperature&#39;]},</span>
-<span class="w">    </span><span class="na">{&#39;name&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;mixedLayerDepth&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;title&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Mixed Layer Depth&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;m&#39;</span><span class="na">,</span>
-<span class="w">    </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">[&#39;timeMonthly_avg_dThreshMLD&#39;]}]</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'temperature'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Temperature'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'$$^\circ$$C',</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_activeTracers_temperature']},</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'salinity'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Salinity'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">'PSU'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_activeTracers_salinity']},</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'potentialDensity'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Potential Density'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">'kg m$$^{-3}$$'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_potentialDensity']},</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'thermalForcing'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Thermal Forcing'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'$$^\circ$$C',</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_activeTracers_temperature',</span>
+<span class="w">              </span><span class="na">'timeMonthly_avg_activeTracers_salinity',</span>
+<span class="w">              </span><span class="na">'timeMonthly_avg_density']},</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'oceanHeatContent'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Ocean Heat Content'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'$$10^{22}$$ J',</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_activeTracers_temperature']},</span>
+<span class="w">    </span><span class="na">{'name'</span><span class="o">:</span><span class="w"> </span><span class="s">'mixedLayerDepth'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'title'</span><span class="o">:</span><span class="w"> </span><span class="s">'Mixed Layer Depth'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">'m'</span><span class="na">,</span>
+<span class="w">    </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">['timeMonthly_avg_dThreshMLD']}]</span>
 
 <span class="c1"># allow for longer plot titles</span>
 <span class="na">maxTitleLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">70</span>
@@ -240,16 +240,16 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="k">[timeSeriesOceanBasins]</span>
 <span class="c1">## options related to plotting time series of Ocean Basins</span>
 
-<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
-<span class="c1"># See &quot;regionNames&quot; in the oceanBasins masks file in</span>
+<span class="c1"># list of regions to plot or ['all'] for all regions in the masks file.</span>
+<span class="c1"># See "regionNames" in the oceanBasins masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
-<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;]</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['all']</span>
 
 <span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
-<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['oceanHeatContent']</span>
 
 <span class="c1"># variables that are anomalies</span>
-<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['oceanHeatContent']</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are averaged.</span>
 <span class="na">zmin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-10000</span>
@@ -261,13 +261,13 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="k">[timeSeriesArcticOceanRegions]</span>
 <span class="c1">## options related to plotting time series of Arctic Ocean regions</span>
 
-<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
-<span class="c1"># See &quot;regionNames&quot; in the arcticOceanRegions masks file in</span>
+<span class="c1"># list of regions to plot or ['all'] for all regions in the masks file.</span>
+<span class="c1"># See "regionNames" in the arcticOceanRegions masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
 <span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 
 <span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
-<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;temperature&#39;, &#39;salinity&#39;, &#39;potentialDensity&#39;, &#39;mixedLayerDepth&#39;]</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['temperature', 'salinity', 'potentialDensity', 'mixedLayerDepth']</span>
 
 <span class="c1"># variables that are anomalies</span>
 <span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
@@ -277,32 +277,32 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <span class="na">zmax</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">0</span>
 
 <span class="c1"># Observational data sets to compare against</span>
-<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;WOA18&#39;]</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['WOA18']</span>
 
 
 <span class="k">[timeSeriesAntarcticRegions]</span>
 <span class="c1">## options related to plotting time series of Antarctic regions</span>
 
-<span class="c1"># list of regions to plot or [&#39;all&#39;] for all regions in the masks file.</span>
-<span class="c1"># See &quot;regionNames&quot; in the antarcticRegions masks file in</span>
+<span class="c1"># list of regions to plot or ['all'] for all regions in the masks file.</span>
+<span class="c1"># See "regionNames" in the antarcticRegions masks file in</span>
 <span class="c1"># regionMaskSubdirectory for details.</span>
 <span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 
 <span class="c1"># a list of variables to plot from availableVariables in timeSeriesOceanRegions</span>
-<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;temperature&#39;, &#39;salinity&#39;, &#39;potentialDensity&#39;, &#39;thermalForcing&#39;,</span>
-<span class="w">            </span><span class="na">&#39;oceanHeatContent&#39;, &#39;mixedLayerDepth&#39;]</span>
+<span class="na">variables</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['temperature', 'salinity', 'potentialDensity', 'thermalForcing',</span>
+<span class="w">            </span><span class="na">'oceanHeatContent', 'mixedLayerDepth']</span>
 
 <span class="c1"># variables that are anomalies</span>
-<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;oceanHeatContent&#39;]</span>
+<span class="na">anomalies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['oceanHeatContent']</span>
 
 <span class="c1"># The minimum and maximum depth over which fields are averaged, default is</span>
-<span class="c1"># to take these values from the geojson feature&#39;s zmin and zmax properties.</span>
+<span class="c1"># to take these values from the geojson feature's zmin and zmax properties.</span>
 <span class="c1"># Add these to a custom config file to override the defaults.</span>
 <span class="c1"># zmin = -1000</span>
 <span class="c1"># zmax = -400</span>
 
 <span class="c1"># Observational data sets to compare against</span>
-<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;SOSE&#39;, &#39;WOA23&#39;]</span>
+<span class="na">obs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['SOSE', 'WOA23']</span>
 </pre></div>
 </div>
 </section>
@@ -331,13 +331,13 @@ The <code class="docutils literal notranslate"><span class="pre">&quot;mpas&quot
 <h2>Region Names<a class="headerlink" href="#region-names" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">regionNames</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the regions in the
 region group.  In the case of <code class="docutils literal notranslate"><span class="pre">Antarctic</span> <span class="pre">Regions</span></code>, these are:</p>
-<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">[&quot;Southern Ocean&quot;, &quot;Southern Ocean 60S&quot;, &quot;Eastern Weddell Sea Shelf&quot;,</span>
-<span class="w"> </span><span class="na">&quot;Eastern Weddell Sea Deep&quot;, &quot;Western Weddell Sea Shelf&quot;,</span>
-<span class="w"> </span><span class="na">&quot;Western Weddell Sea Deep&quot;, &quot;Weddell Sea Shelf&quot;, &quot;Weddell Sea Deep&quot;,</span>
-<span class="w"> </span><span class="na">&quot;Bellingshausen Sea Shelf&quot;, &quot;Bellingshausen Sea Deep&quot;, &quot;Amundsen Sea Shelf&quot;,</span>
-<span class="w"> </span><span class="na">&quot;Amundsen Sea Deep&quot;, &quot;Eastern Ross Sea Shelf&quot;, &quot;Eastern Ross Sea Deep&quot;,</span>
-<span class="w"> </span><span class="na">&quot;Western Ross Sea Shelf&quot;, &quot;Western Ross Sea Deep&quot;,</span>
-<span class="w"> </span><span class="na">&quot;East Antarctic Seas Shelf&quot;, &quot;East Antarctic Seas Deep&quot;]</span>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">["Southern Ocean", "Southern Ocean 60S", "Eastern Weddell Sea Shelf",</span>
+<span class="w"> </span><span class="na">"Eastern Weddell Sea Deep", "Western Weddell Sea Shelf",</span>
+<span class="w"> </span><span class="na">"Western Weddell Sea Deep", "Weddell Sea Shelf", "Weddell Sea Deep",</span>
+<span class="w"> </span><span class="na">"Bellingshausen Sea Shelf", "Bellingshausen Sea Deep", "Amundsen Sea Shelf",</span>
+<span class="w"> </span><span class="na">"Amundsen Sea Deep", "Eastern Ross Sea Shelf", "Eastern Ross Sea Deep",</span>
+<span class="w"> </span><span class="na">"Western Ross Sea Shelf", "Western Ross Sea Deep",</span>
+<span class="w"> </span><span class="na">"East Antarctic Seas Shelf", "East Antarctic Seas Deep"]</span>
 </pre></div>
 </div>
 </section>

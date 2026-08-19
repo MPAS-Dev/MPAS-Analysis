@@ -106,9 +106,9 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Functions for plotting time series (and comparing with reference data sets)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Luke Van Roekel, Greg Streletz</span>
@@ -137,9 +137,9 @@
                              <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">firstYearXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yearStrideXTicks</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                              <span class="n">maxXTicks</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">obsMean</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">obsUncertainty</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                             <span class="n">obsLegend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendLocation</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">,</span>
+                             <span class="n">obsLegend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">legendLocation</span><span class="o">=</span><span class="s1">'lower left'</span><span class="p">,</span>
                              <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plots the list of time series data sets.</span>
 
 <span class="sd">    Parameters</span>
@@ -222,20 +222,20 @@
 <span class="sd">    -------</span>
 <span class="sd">    fig : ``matplotlib.figure.Figure``</span>
 <span class="sd">        The resulting figure</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Stephen Price</span>
 
     <span class="k">if</span> <span class="n">maxTitleLength</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'maxTitleLength'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
-    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'defaultFontSize'</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">'font'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'dpi'</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
 
     <span class="n">minDays</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,7 +255,7 @@
         <span class="n">maxDays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 
         <span class="k">if</span> <span class="n">maxPoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">maxPoints</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">nTime</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
+            <span class="n">nTime</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">maxPoints</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nTime</span><span class="p">:</span>
                 <span class="n">stride</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">nTime</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">maxPoints</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">])))</span>
                 <span class="n">mean</span> <span class="o">=</span> <span class="n">mean</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">stride</span><span class="p">))</span>
@@ -268,11 +268,11 @@
                 <span class="n">label</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
             <span class="n">labelCount</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">lineColors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">'k'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="n">lineColors</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">lineStyles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+            <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">'-'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">linestyle</span> <span class="o">=</span> <span class="n">lineStyles</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">markers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -284,7 +284,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">linewidth</span> <span class="o">=</span> <span class="n">lineWidths</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mean</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mean</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">mean</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
                  <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
                  <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 
@@ -297,8 +297,8 @@
         <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">minDays</span><span class="p">)</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">maxDays</span><span class="p">)</span>
         <span class="n">obsTimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">obsCount</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">obsSymbols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">]</span>
-        <span class="n">obsColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;obsColor</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">obsSymbols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'o'</span><span class="p">,</span> <span class="s1">'^'</span><span class="p">,</span> <span class="s1">'s'</span><span class="p">,</span> <span class="s1">'D'</span><span class="p">,</span> <span class="s1">'*'</span><span class="p">]</span>
+        <span class="n">obsColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'obsColor</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
                      <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">iObs</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">obsCount</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">obsMean</span><span class="p">[</span><span class="n">iObs</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -320,7 +320,7 @@
                 <span class="n">boxY</span> <span class="o">=</span> <span class="n">obsMean</span><span class="p">[</span><span class="n">iObs</span><span class="p">]</span> <span class="o">+</span> \
                     <span class="n">boxHalfHeight</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">boxX</span><span class="p">,</span> <span class="n">boxY</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">boxX</span><span class="p">,</span> <span class="n">boxY</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
                 <span class="n">labelCount</span> <span class="o">+=</span> <span class="mi">1</span>
 
     <span class="k">if</span> <span class="n">labelCount</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
@@ -329,11 +329,11 @@
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
-    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;axisFontSize&#39;</span><span class="p">)}</span>
-    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
-                  <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
-                  <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontSize'</span><span class="p">)</span>
+    <span class="n">axis_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'axisFontSize'</span><span class="p">)}</span>
+    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                  <span class="s1">'color'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontColor'</span><span class="p">),</span>
+                  <span class="s1">'weight'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontWeight'</span><span class="p">)}</span>
 
     <span class="k">if</span> <span class="n">firstYearXTicks</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">minDays</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">firstYearXTicks</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
@@ -345,7 +345,7 @@
     <span class="n">yaxLimits</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">yaxLimits</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">yaxLimits</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="s1">'k-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
@@ -368,7 +368,7 @@
                                    <span class="n">titleFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">defaultFontSize</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                    <span class="n">maxTitleLength</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plots the list of time series data sets on a polar plot.</span>
 
 <span class="sd">    Parameters</span>
@@ -415,20 +415,20 @@
 <span class="sd">    -------</span>
 <span class="sd">    fig : ``matplotlib.figure.Figure``</span>
 <span class="sd">        The resulting figure</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Adrian K. Turner, Xylar Asay-Davis</span>
 
     <span class="k">if</span> <span class="n">maxTitleLength</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;maxTitleLength&#39;</span><span class="p">)</span>
+        <span class="n">maxTitleLength</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'maxTitleLength'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;defaultFontSize&#39;</span><span class="p">)</span>
-    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">&#39;font&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
+        <span class="n">defaultFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'defaultFontSize'</span><span class="p">)</span>
+    <span class="n">matplotlib</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s1">'font'</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">defaultFontSize</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">dpi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;dpi&#39;</span><span class="p">)</span>
+        <span class="n">dpi</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'dpi'</span><span class="p">)</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="n">figsize</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
 
     <span class="n">minDays</span> <span class="o">=</span> <span class="p">[]</span>
@@ -452,11 +452,11 @@
                 <span class="n">label</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
             <span class="n">labelCount</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">lineColors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">'k'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="n">lineColors</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">lineStyles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+            <span class="n">linestyle</span> <span class="o">=</span> <span class="s1">'-'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">linestyle</span> <span class="o">=</span> <span class="n">lineStyles</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">markers</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -468,12 +468,12 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="n">linewidth</span> <span class="o">=</span> <span class="n">lineWidths</span><span class="p">[</span><span class="n">dsIndex</span><span class="p">]</span>
 
-        <span class="n">plt</span><span class="o">.</span><span class="n">polar</span><span class="p">((</span><span class="n">mean</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="mf">365.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">polar</span><span class="p">((</span><span class="n">mean</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">/</span> <span class="mf">365.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
                   <span class="n">linestyle</span><span class="o">=</span><span class="n">linestyle</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="n">linewidth</span><span class="p">,</span>
                   <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">labelCount</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'lower left'</span><span class="p">)</span>
 
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
@@ -497,11 +497,11 @@
 
     <span class="k">if</span> <span class="n">titleFontSize</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
-        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontSize'</span><span class="p">)</span>
 
-    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
-                  <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontColor&#39;</span><span class="p">),</span>
-                  <span class="s1">&#39;weight&#39;</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;plot&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontWeight&#39;</span><span class="p">)}</span>
+    <span class="n">title_font</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'size'</span><span class="p">:</span> <span class="n">titleFontSize</span><span class="p">,</span>
+                  <span class="s1">'color'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontColor'</span><span class="p">),</span>
+                  <span class="s1">'weight'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'plot'</span><span class="p">,</span> <span class="s1">'titleFontWeight'</span><span class="p">)}</span>
     <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">title_font</span><span class="p">)</span>
 

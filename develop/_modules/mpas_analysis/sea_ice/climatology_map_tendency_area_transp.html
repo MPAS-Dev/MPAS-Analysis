@@ -120,9 +120,9 @@
 <div class="viewcode-block" id="ClimatologyMapSeaIceAreaTendencyTransp">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapSeaIceAreaTendencyTransp</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis task for sea ice area tendency due to transport</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Elizabeth Hunke, Xylar Asay-Davis</span>
@@ -131,7 +131,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceAreaTendencyTransp.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
                  <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -142,60 +142,60 @@
 <span class="sd">        mpas_climatology_task : mpas_analysis.shared.climatology.MpasClimatologyTask</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        hemisphere : {&#39;NH&#39;, &#39;SH&#39;}</span>
+<span class="sd">        hemisphere : {'NH', 'SH'}</span>
 <span class="sd">            The hemisphere to plot</span>
 
 <span class="sd">        control_config : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Elizabeth Hunke, Xylar Asay-Davis</span>
 
-        <span class="n">task_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;climatologyMapSeaIceAreaTendencyTransp</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">task_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'climatologyMapSeaIceAreaTendencyTransp</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span>
 
-        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;AreaTendencyTransport&#39;</span>
-        <span class="n">title_long</span><span class="o">=</span> <span class="s1">&#39;Sea Ice Area Tendency due to Transport&#39;</span>
+        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">'AreaTendencyTransport'</span>
+        <span class="n">title_long</span><span class="o">=</span> <span class="s1">'Sea Ice Area Tendency due to Transport'</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;tendency&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'tendency'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'arctic'</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'antarctic'</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">task_name</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;seaIce&#39;</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'seaIce'</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
 
         <span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">&#39;Northern&#39;</span>
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">'Northern'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">&#39;Southern&#39;</span>
+            <span class="n">hemisphere_long</span><span class="o">=</span> <span class="s1">'Southern'</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'valid list of seasons'</span><span class="p">)</span>
 
         <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
-                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                                   <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'valid list of comparison grids'</span><span class="p">)</span>
 
-        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceAreaTendencyTransport&#39;</span><span class="p">]</span>
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_iceAreaTendencyTransport'</span><span class="p">]</span>
 
         <span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasSeaIceTendencyClimatology</span><span class="p">(</span>
             <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
             <span class="n">parent_task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
             <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
             <span class="n">comparison_grid_names</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">)</span>
@@ -207,41 +207,41 @@
 
                 <span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <span class="c1">#echmod - no observations yet</span>
-<span class="c1">#                    if hemisphere == &#39;SH&#39; and season == &#39;ANN&#39;:</span>
-<span class="c1">#                        ref_title_label = &#39;Observations (AnIceFlux)&#39;</span>
-<span class="c1">#                        gallery_name = &#39;Sea ice area tendency&#39;</span>
-<span class="c1">#                        diff_title_label = &#39;Model - Observations&#39;</span>
+<span class="c1">#                    if hemisphere == 'SH' and season == 'ANN':</span>
+<span class="c1">#                        ref_title_label = 'Observations (AnIceFlux)'</span>
+<span class="c1">#                        gallery_name = 'Sea ice area tendency'</span>
+<span class="c1">#                        diff_title_label = 'Model - Observations'</span>
 <span class="c1">#                        obs_file_name = build_obs_path(</span>
-<span class="c1">#                                config, &#39;seaIce&#39;,</span>
-<span class="c1">#                                relativePathOption=f&#39;melting{hemisphere}&#39;,</span>
+<span class="c1">#                                config, 'seaIce',</span>
+<span class="c1">#                                relativePathOption=f'melting{hemisphere}',</span>
 <span class="c1">#                                relativePathSection=section_name)</span>
 
 <span class="c1">#                        remap_observations_subtask = RemapAnIceFluxMeltingClimatology(</span>
 <span class="c1">#                            parentTask=self, seasons=seasons,</span>
 <span class="c1">#                            fileName=obs_file_name,</span>
-<span class="c1">#                            outFilePrefix=f&#39;{field_name}{hemisphere}&#39;,</span>
+<span class="c1">#                            outFilePrefix=f'{field_name}{hemisphere}',</span>
 <span class="c1">#                            comparisonGridNames=comparison_grid_names)</span>
 <span class="c1">#                        self.add_subtask(remap_observations_subtask)</span>
 <span class="c1">#                    else:</span>
                         <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
-                        <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">&#39;Sea ice area tendency&#39;</span>
+                        <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">'Sea ice area tendency'</span>
                         <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
                         <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
-                        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+                        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-                    <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">&#39;Sea ice area tendency&#39;</span>
-                    <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+                    <span class="n">gallery_name</span> <span class="o">=</span> <span class="s1">'Sea ice area tendency'</span>
+                    <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">'</span>
                     <span class="n">field_name</span> <span class="o">=</span> <span class="n">field_name</span>
-                    <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+                    <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
                     <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
 
-                <span class="n">image_caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Climatology Map of &#39;</span> \
-                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere &#39;</span> \
-                                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">title_long</span><span class="si">}</span><span class="s1">&#39;</span>
-                <span class="n">gallery_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere Tendencies due to Transport&#39;</span>
+                <span class="n">image_caption</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Climatology Map of '</span> \
+                                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere '</span> \
+                                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">title_long</span><span class="si">}</span><span class="s1">'</span>
+                <span class="n">gallery_group</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">hemisphere_long</span><span class="si">}</span><span class="s1">-Hemisphere Tendencies due to Transport'</span>
                 <span class="c1"># make a new subtask for this season and comparison grid</span>
                 <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
                     <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
@@ -251,19 +251,19 @@
                     <span class="n">controlConfig</span><span class="o">=</span><span class="n">control_config</span><span class="p">)</span>
 
                 <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
-                    <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;seaice_areatendtransp</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">'seaice_areatendtransp</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                     <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">title_long</span><span class="p">,</span>
                     <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
                     <span class="n">refFieldName</span><span class="o">=</span><span class="n">field_name</span><span class="p">,</span>
                     <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
                     <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
-                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;yr$^{-1}$&#39;</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'yr$^{-1}$'</span><span class="p">,</span>
                     <span class="n">imageCaption</span><span class="o">=</span><span class="n">image_caption</span><span class="p">,</span>
                     <span class="n">galleryGroup</span><span class="o">=</span><span class="n">gallery_group</span><span class="p">,</span>
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_tendency&#39;</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_tendency'</span><span class="p">,</span>
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">gallery_name</span><span class="p">,</span>
-                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                    <span class="n">extend</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span>
                     <span class="n">prependComparisonGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
@@ -272,13 +272,13 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasSeaIceTendencyClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for computing climatologies of sea ice tendencies</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span>
                  <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">comparison_grid_names</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and add it as a subtask of the</span>
 <span class="sd">        ``parent_task``.</span>
 <span class="sd">        Parameters</span>
@@ -297,13 +297,13 @@
 <span class="sd">            included in the climatologies</span>
 <span class="sd">        seasons : list of str, optional</span>
 <span class="sd">            A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
-<span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">            to be computed or ['none'] (not ``None``) if only monthly</span>
 <span class="sd">            climatologies are needed.</span>
-<span class="sd">        comparison_grid_names : list of {&#39;latlon&#39;, &#39;antarctic&#39;}</span>
+<span class="sd">        comparison_grid_names : list of {'latlon', 'antarctic'}</span>
 <span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;remapMpasClimatology_AreaTendencyTransport&#39;</span>
+        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'remapMpasClimatology_AreaTendencyTransport'</span>
         <span class="c1"># call the constructor from the base class</span>
         <span class="c1"># (RemapMpasClimatologySubtask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -314,22 +314,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span> <span class="o">=</span> <span class="n">variable_list</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># first, call setup_and_check from the base class</span>
         <span class="c1"># (RemapMpasClimatologySubtask), which will set up remappers and add</span>
         <span class="c1"># variables to mpas_climatology_task</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="c1"># don&#39;t add the variables and seasons to mpas_climatology_task until</span>
-        <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+        <span class="c1"># don't add the variables and seasons to mpas_climatology_task until</span>
+        <span class="c1"># we're sure this subtask is supposed to run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the tendency</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -341,27 +341,27 @@
 <span class="sd">        -------</span>
 <span class="sd">        climatology : xarray.Dataset</span>
 <span class="sd">            the modified climatology data set</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">tendency</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_tendency</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
 
-        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;AreaTendencyTransport&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tendency</span>
-        <span class="n">climatology</span><span class="o">.</span><span class="n">AreaTendencyTransport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;yr^-1&#39;</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">'AreaTendencyTransport'</span><span class="p">]</span> <span class="o">=</span> <span class="n">tendency</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">AreaTendencyTransport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'yr^-1'</span>
         <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variable_list</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">climatology</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_tendency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the tendency in fraction/yr</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">365</span>
 
         <span class="n">tendency</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceAreaTendencyTransport&#39;</span><span class="p">]</span> <span class="o">*</span>
+            <span class="n">climatology</span><span class="p">[</span><span class="s1">'timeMonthly_avg_iceAreaTendencyTransport'</span><span class="p">]</span> <span class="o">*</span>
             <span class="n">units_scale_factor</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">tendency</span>

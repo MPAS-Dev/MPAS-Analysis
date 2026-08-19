@@ -390,8 +390,8 @@ following:</p>
 <span class="c1"># serial, the default)</span>
 <span class="na">mapMpiTasks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
-<span class="c1"># &quot;None&quot; if ESMF should perform mapping file generation in serial without a</span>
-<span class="c1"># command, or one of &quot;srun&quot; or &quot;mpirun&quot; if it should be run in parallel (or in</span>
+<span class="c1"># "None" if ESMF should perform mapping file generation in serial without a</span>
+<span class="c1"># command, or one of "srun" or "mpirun" if it should be run in parallel (or in</span>
 <span class="c1"># serial but with a command)</span>
 <span class="na">mapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 </pre></div>
@@ -400,7 +400,7 @@ following:</p>
 <div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[execute]</span>
 
 <span class="na">...</span>
-<span class="c1"># &quot;None&quot; if ncremap should perform remapping without a command, or &quot;srun&quot;</span>
+<span class="c1"># "None" if ncremap should perform remapping without a command, or "srun"</span>
 <span class="c1"># possibly with some flags if it should be run with that command</span>
 <span class="na">ncremapParallelExec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">None</span>
 </pre></div>
@@ -506,18 +506,18 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1"># This command also lists tags for each analysis.</span>
 <span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
 <span class="c1"># These include:</span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
-<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span>
+<span class="c1">#   'all' -- all analyses will be run</span>
+<span class="c1">#   'all_publicObs' -- all analyses for which observations are available on the</span>
 <span class="c1">#                      public server (the default)</span>
-<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
-<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
-<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
-<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
+<span class="c1">#   'all_&lt;tag&gt;' -- all analysis with a particular tag will be run</span>
+<span class="c1">#   'all_&lt;component&gt;' -- all analyses from a given component (either 'ocean'</span>
+<span class="c1">#                        or 'seaIce') will be run</span>
+<span class="c1">#   'only_&lt;component&gt;', 'only_&lt;tag&gt;' -- all analysis from this component or</span>
 <span class="c1">#                                       with this tag will be run, and all</span>
 <span class="c1">#                                       analysis for other components or</span>
 <span class="c1">#                                       without the tag will be skipped</span>
-<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
-<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
+<span class="c1">#   'no_&lt;task_name&gt;' -- skip the given task</span>
+<span class="c1">#   'no_&lt;component&gt;', 'no_&lt;tag&gt;' -- in analogy to 'all_*', skip all analysis</span>
 <span class="c1">#                                   tasks from the given component or with</span>
 <span class="c1">#                                   the given tag.  Do</span>
 <span class="c1">#                                      mpas_analysis --list</span>
@@ -526,8 +526,8 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1"># option:</span>
 <span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
 <span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
-<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all&#39;, &#39;no_BGC&#39;, &#39;no_icebergs&#39;, &#39;no_index&#39;, &#39;no_eke&#39;,</span>
-<span class="w">            </span><span class="na">&#39;no_landIceCavities&#39;]</span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['all', 'no_BGC', 'no_icebergs', 'no_index', 'no_eke',</span>
+<span class="w">            </span><span class="na">'no_landIceCavities']</span>
 </pre></div>
 </div>
 <p>In this example, I have made liberal use of

@@ -132,7 +132,7 @@
 <div class="viewcode-block" id="ComputeAnomalySubtask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeAnomalySubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for computing anomalies of moving averages and writing them out.</span>
 
 <span class="sd">    Attributes</span>
@@ -158,7 +158,7 @@
 <span class="sd">        variable computed from others).  This operation is performed before</span>
 <span class="sd">        computing moving averages and anomalies, so that these operations are</span>
 <span class="sd">        also performed on any new variables added to the data set.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -167,8 +167,8 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.html#mpas_analysis.ocean.compute_anomaly_subtask.ComputeAnomalySubtask.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">,</span>
                  <span class="n">variableList</span><span class="p">,</span> <span class="n">movingAveragePoints</span><span class="p">,</span>
-                 <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;computeAnomaly&#39;</span><span class="p">,</span> <span class="n">alter_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">subtaskName</span><span class="o">=</span><span class="s1">'computeAnomaly'</span><span class="p">,</span> <span class="n">alter_dataset</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -199,7 +199,7 @@
 <span class="sd">            variable computed from others).  This operation is performed before</span>
 <span class="sd">            computing moving averages and anomalies, so that these operations</span>
 <span class="sd">            are also performed on any new variables added to the data set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -208,7 +208,7 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ComputeAnomalySubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
             <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
@@ -224,9 +224,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -238,8 +238,8 @@
         <span class="c1">#     self.calendar</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ComputeAnomalySubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
         <span class="n">delta</span> <span class="o">=</span> <span class="n">MpasRelativeDelta</span><span class="p">(</span><span class="n">string_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">),</span>
                                   <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">),</span>
@@ -248,35 +248,35 @@
         <span class="n">months</span> <span class="o">=</span> <span class="n">delta</span><span class="o">.</span><span class="n">months</span> <span class="o">+</span> <span class="mi">12</span><span class="o">*</span><span class="n">delta</span><span class="o">.</span><span class="n">years</span>
 
         <span class="k">if</span> <span class="n">months</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">movingAveragePoints</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot meaninfully perform a rolling mean &#39;</span>
-                             <span class="s1">&#39;because the time series is too short.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Cannot meaninfully perform a rolling mean '</span>
+                             <span class="s1">'because the time series is too short.'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">outputFile</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Performs analysis of ocean heat content (OHC) from time-series output.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Computing anomalies...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Computing anomalies..."</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">):</span>
-            <span class="n">anomalyYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">)</span>
-            <span class="n">anomalyRefDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
-            <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'anomalyRefYear'</span><span class="p">):</span>
+            <span class="n">anomalyYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'anomalyRefYear'</span><span class="p">)</span>
+            <span class="n">anomalyRefDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
+            <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">anomalyRefDate</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
             <span class="n">anomalyYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">anomalyRefDate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
-            <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
+            <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">compute_moving_avg_anomaly_from_start</span><span class="p">(</span>
             <span class="n">timeSeriesFileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">,</span>
@@ -289,15 +289,15 @@
             <span class="n">movingAveragePoints</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">movingAveragePoints</span><span class="p">,</span>
             <span class="n">alter_dataset</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">alter_dataset</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="s1">&#39;nOceanRegions&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'nOceanRegions'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span> <span class="ow">or</span> <span class="s1">'nOceanRegionsTmp'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">add_standard_regions_and_subset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
         <span class="n">outFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outFileName</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                          <span class="n">outFileName</span><span class="p">)</span>
 
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span></div>

@@ -115,7 +115,7 @@
 <div class="viewcode-block" id="ComputeRegionMasks">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html#mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeRegionMasks</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis tasks for computing cell masks for regions defined by geojson</span>
 <span class="sd">    features</span>
 
@@ -123,12 +123,12 @@
 <span class="sd">    ----------</span>
 <span class="sd">    regionMaskSubtasks : dict of ``ComputeRegionMasksSubtask`` objects</span>
 <span class="sd">        The subtasks of this task with file names as keys</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 <div class="viewcode-block" id="ComputeRegionMasks.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.html#mpas_analysis.shared.regions.compute_region_masks.ComputeRegionMasks.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">conponentName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -138,7 +138,7 @@
 
 <span class="sd">        conponentName : str</span>
 <span class="sd">            The component to make mapping files for</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -146,16 +146,16 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ComputeRegionMasks</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;computeRegionMasks&#39;</span><span class="p">,</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'computeRegionMasks'</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">conponentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskSubtasks</span> <span class="o">=</span> <span class="p">{}</span></div>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_mask_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">obsFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lonVar</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span>
-                         <span class="n">latVar</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_mask_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">,</span> <span class="n">obsFileName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lonVar</span><span class="o">=</span><span class="s1">'lon'</span><span class="p">,</span>
+                         <span class="n">latVar</span><span class="o">=</span><span class="s1">'lat'</span><span class="p">,</span> <span class="n">meshName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">useMpasMaskCreator</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -181,7 +181,7 @@
 <span class="sd">            to create the mask.  Otherwise, python code is used.  Since</span>
 <span class="sd">            masks for observations can only be produced with the python code,</span>
 <span class="sd">            this option is ignored if obsFileName is not ``None``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -189,13 +189,13 @@
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
         <span class="k">if</span> <span class="n">meshName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;mpasMeshName&#39;</span><span class="p">)</span>
+            <span class="n">meshName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'input'</span><span class="p">,</span> <span class="s1">'mpasMeshName'</span><span class="p">)</span>
 
-        <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">)</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">meshName</span><span class="p">,</span> <span class="n">regionGroup</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regionMaskSubtasks</span><span class="p">:</span>
 
-            <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;parallelTaskCount&#39;</span><span class="p">)</span>
+            <span class="n">subprocessCount</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'execute'</span><span class="p">,</span> <span class="s1">'parallelTaskCount'</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">obsFileName</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">useMpasMaskCreator</span> <span class="o">=</span> <span class="kc">False</span>

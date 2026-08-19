@@ -268,7 +268,7 @@ send output to the log file.</p></li>
 using the <code class="docutils literal notranslate"><span class="pre">self</span></code> object, e.g. <code class="docutils literal notranslate"><span class="pre">self.config</span></code>.  It is often helpful to make
 a local reference to the object to make the code more compact, e.g.:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-<span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+<span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'climatologyMapOHCAnomaly'</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The analysis task we’re looking at, <a class="reference internal" href="../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapOHCAnomaly.html#mpas_analysis.ocean.ClimatologyMapOHCAnomaly" title="mpas_analysis.ocean.ClimatologyMapOHCAnomaly"><code class="xref py py-class docutils literal notranslate"><span class="pre">ClimatologyMapOHCAnomaly</span></code></a>
@@ -315,7 +315,7 @@ constructor, we store references to these tasks as attributes:</p>
 super class’s <code class="docutils literal notranslate"><span class="pre">__init__()</span></code> method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
              <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Construct the analysis task.</span>
 
 <span class="sd">    Parameters</span>
@@ -332,14 +332,14 @@ super class’s <code class="docutils literal notranslate"><span class="pre">__i
 
 <span class="sd">    control_config : tranche.Tranche, optional</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+    <span class="n">field_name</span> <span class="o">=</span> <span class="s1">'deltaOHC'</span>
     <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                     <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-                     <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
-                           <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'climatologyMapOHCAnomaly'</span><span class="p">,</span>
+                     <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+                     <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
+                           <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'anomaly'</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>We’re passing along the <code class="docutils literal notranslate"><span class="pre">config</span></code> options to the base class so it can store
@@ -362,21 +362,21 @@ find something unexpected:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
 <span class="c1"># read in what seasons we want to plot</span>
-<span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+<span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                     <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                     <span class="sa">f</span><span class="s1">'valid list of seasons'</span><span class="p">)</span>
 
 <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
-                                             <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                             <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                     <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                     <span class="sa">f</span><span class="s1">'valid list of comparison grids'</span><span class="p">)</span>
 
-<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                               <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
+<span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">'climatologyMapOHCAnomaly'</span><span class="p">,</span>
+                               <span class="s1">'depthRanges'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>By default, these config options look like this:</p>
@@ -388,10 +388,10 @@ find something unexpected:</p>
 
 <span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;ANN&#39;]</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">['ANN']</span>
 
-<span class="c1"># comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis</span>
-<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;latlon&#39;]</span>
+<span class="c1"># comparison grid(s) ('latlon', 'antarctic') on which to plot analysis</span>
+<span class="na">comparisonGrids</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['latlon']</span>
 
 <span class="c1"># A list of pairs of minimum and maximum depths (positive up, in meters) to</span>
 <span class="c1"># include in the vertical sums.  The default values are the equivalents of the</span>
@@ -415,10 +415,10 @@ grid, add new seasons, or change the depth range.  As long as they ran the
 analysis in a fresh directory (or purged output from a previous analysis run),
 this should work correctly.</p>
 <p>Next, we store some values that will be useful later:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">'deltaOHC'</span>
 
-<span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+<span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+                 <span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>This particular analysis involves 4 different depth ranges over which we
@@ -428,12 +428,12 @@ depth range and add a subtask that will first compute the ocean heat content
 (OHC) and then remap it to the comparison grids (<code class="docutils literal notranslate"><span class="pre">RemapMpasOHCClimatology</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span> <span class="ow">in</span> <span class="n">depth_ranges</span><span class="p">:</span>
     <span class="n">depth_range_string</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
+        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
     <span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasOHCClimatology</span><span class="p">(</span>
         <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
         <span class="n">ref_year_climatology_task</span><span class="o">=</span><span class="n">ref_year_climatology_task</span><span class="p">,</span>
         <span class="n">parent_task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-        <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+        <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
         <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
         <span class="n">comparison_grid_names</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
         <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
@@ -453,23 +453,23 @@ comparison grid and season. (By default, there is only one comparison grid
 and one “season”: the full year, <code class="docutils literal notranslate"><span class="pre">ANN</span></code>.)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span> <span class="ow">in</span> <span class="n">depth_ranges</span><span class="p">:</span>
     <span class="o">...</span>
-    <span class="n">out_file_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;deltaOHC_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">out_file_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'deltaOHC_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
     <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-        <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+        <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">'</span>
         <span class="n">ref_field_name</span> <span class="o">=</span> <span class="n">mpas_field_name</span>
-        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+        <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
     <span class="k">for</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="n">comparison_grid_names</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
             <span class="c1"># make a new subtask for this season and comparison grid</span>
-            <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">,</span>
@@ -478,16 +478,16 @@ and one “season”: the full year, <code class="docutils literal notranslate">
 
             <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                 <span class="n">outFileLabel</span><span class="o">=</span><span class="n">out_file_label</span><span class="p">,</span>
-                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">Delta$OHC over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">'$</span><span class="se">\\</span><span class="s1">Delta$OHC over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                 <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpas_field_name</span><span class="p">,</span>
                 <span class="n">refFieldName</span><span class="o">=</span><span class="n">ref_field_name</span><span class="p">,</span>
                 <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
                 <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
-                <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;GJ m$^{-2}$&#39;</span><span class="p">,</span>
-                <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Anomaly in Ocean Heat Content over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;OHC Anomaly&#39;</span><span class="p">,</span>
+                <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'GJ m$^{-2}$'</span><span class="p">,</span>
+                <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Anomaly in Ocean Heat Content over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'OHC Anomaly'</span><span class="p">,</span>
                 <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;ohc_anom&#39;</span><span class="p">,</span>
+                <span class="n">groupLink</span><span class="o">=</span><span class="s1">'ohc_anom'</span><span class="p">,</span>
                 <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
@@ -533,14 +533,14 @@ determine if it should run or not.</p>
 has been configured properly to run the analysis.  For example, is the
 necessary analysis member enabled.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">    in which case the analysis will not be meaningful.</span>
 
 <span class="sd">    Raises</span>
 <span class="sd">    ------</span>
 <span class="sd">    ValueError: if attempting to analyze only the reference year</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
     <span class="c1"># which will perform some common setup, including storing:</span>
@@ -554,8 +554,8 @@ necessary analysis member enabled.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">get_start_and_end</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">start_year</span> <span class="o">==</span> <span class="n">ref_start_year</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">end_year</span> <span class="o">==</span> <span class="n">ref_end_year</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;OHC Anomaly is not meaningful and will not work &#39;</span>
-                         <span class="s1">&#39;when climatology and ref year are the same.&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'OHC Anomaly is not meaningful and will not work '</span>
+                         <span class="s1">'when climatology and ref year are the same.'</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>In this particular case, we first call the super class’ version of the
@@ -599,7 +599,7 @@ and that class’ super class, <a class="reference internal" href="../developers
 but we don’t redundantly document these in the docstring in part because that
 would be a maintenance nightmare.)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
 
@@ -611,7 +611,7 @@ would be a maintenance nightmare.)</p>
 
 <span class="sd">    min_depth, max_depth : float</span>
 <span class="sd">        The minimum and maximum depths for integration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 </pre></div>
 </div>
 <p>The attributes are a task for computing the climatology over the reference
@@ -625,7 +625,7 @@ integrated.</p>
              <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
              <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">    ``parent_task``.</span>
 
@@ -653,18 +653,18 @@ integrated.</p>
 
 <span class="sd">    seasons : list of str, optional</span>
 <span class="sd">        A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
-<span class="sd">        to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">        to be computed or ['none'] (not ``None``) if only monthly</span>
 <span class="sd">        climatologies are needed.</span>
 
-<span class="sd">    comparison_grid_names : list of {&#39;latlon&#39;, &#39;antarctic&#39;}</span>
+<span class="sd">    comparison_grid_names : list of {'latlon', 'antarctic'}</span>
 <span class="sd">        The name(s) of the comparison grid to use for remapping.</span>
 
 <span class="sd">    min_depth, max_depth : float</span>
 <span class="sd">        The minimum and maximum depths for integration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="n">depth_range_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
-    <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;remapMpasClimatology_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">depth_range_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
+    <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'remapMpasClimatology_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
     <span class="c1"># call the constructor from the base class</span>
     <span class="c1"># (RemapMpasClimatologySubtask)</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -701,17 +701,17 @@ will also add this task as a subtask of the parent task.</p>
 <h3>3.3 <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
 <p>As in the parent task, we need to define the <code class="docutils literal notranslate"><span class="pre">setup_and_check()</span></code> method.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># first, call setup_and_check from the base class</span>
     <span class="c1"># (RemapMpasClimatologySubtask), which will set up remappers and add</span>
     <span class="c1"># variables to mpas_climatology_task</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-    <span class="c1"># don&#39;t add the variables and seasons to mpas_climatology_task until</span>
-    <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+    <span class="c1"># don't add the variables and seasons to mpas_climatology_task until</span>
+    <span class="c1"># we're sure this subtask is supposed to run</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                                  <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 </pre></div>
@@ -740,9 +740,9 @@ method from its super class,
 <a class="reference internal" href="../developers_guide/generated/mpas_analysis.shared.climatology.RemapMpasClimatologySubtask.html#mpas_analysis.shared.climatology.RemapMpasClimatologySubtask" title="mpas_analysis.shared.climatology.RemapMpasClimatologySubtask"><code class="xref py py-class docutils literal notranslate"><span class="pre">RemapMpasClimatologySubtask</span></code></a>.</p>
 <p>An abbreviated version of that method looks like this:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the requested climatologies</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="o">...</span>
     <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mask_climatologies</span><span class="p">(</span><span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">)</span>
@@ -751,9 +751,9 @@ method from its super class,
 </div>
 <p>It calls a private helper method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_mask_climatologies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">dsMask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    For each season, creates a masked version of the climatology</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="o">...</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">maskedClimatologyFileName</span><span class="p">):</span>
         <span class="o">...</span>
@@ -774,7 +774,7 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 <h3>3.5 <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code> method<a class="headerlink" href="#customize-masked-climatology-method" title="Link to this heading"></a></h3>
 <p>Here is how we compute the OHC itself:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">    and layer thickness fields.</span>
 
@@ -790,7 +790,7 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 <span class="sd">    -------</span>
 <span class="sd">    climatology : xarray.Dataset</span>
 <span class="sd">        the modified climatology data set</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
 
@@ -800,30 +800,30 @@ we will actually compute the OHC from variables available from MPAS output.</p>
 <p>We call a private helper method to do the actual work, so let’s take a look
 at that before we continue with <code class="docutils literal notranslate"><span class="pre">customize_masked_climatology()</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">    climatology data sets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
     <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="c1"># specific heat [J/(kg*degC)]</span>
-    <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+    <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_specific_heat_sea_water'</span><span class="p">)</span>
     <span class="c1"># [kg/m3]</span>
-    <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_density0'</span><span class="p">)</span>
 
     <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
 
     <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                          <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
     <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
-        <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
+        <span class="p">{</span><span class="s1">'dims'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,),</span> <span class="s1">'data'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
 
-    <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
-    <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+    <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">]</span>
+    <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">]</span>
 
     <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
              <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
@@ -833,7 +833,7 @@ at that before we continue with <code class="docutils literal notranslate"><span
         <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">layer_thickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 
     <span class="n">ohc</span> <span class="o">=</span> <span class="n">units_scale_factor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">layer_thickness</span> <span class="o">*</span> <span class="n">temperature</span>
-    <span class="n">ohc</span> <span class="o">=</span> <span class="n">ohc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">ohc</span> <span class="o">=</span> <span class="n">ohc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">ohc</span>
 </pre></div>
 </div>
@@ -857,15 +857,15 @@ this helper method.</p>
 
     <span class="n">ref_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
     <span class="n">ref_year_climo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">ref_file_name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
         <span class="n">ref_year_climo</span> <span class="o">=</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">ref_ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">ref_year_climo</span><span class="p">)</span>
 
-    <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;deltaOHC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohc</span> <span class="o">-</span> <span class="n">ref_ohc</span>
-    <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GJ m^-2$&#39;</span>
+    <span class="n">climatology</span><span class="p">[</span><span class="s1">'deltaOHC'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohc</span> <span class="o">-</span> <span class="n">ref_ohc</span>
+    <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'GJ m^-2$'</span>
     <span class="n">start_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">startYear</span>
-    <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-        <span class="sa">f</span><span class="s1">&#39;Anomaly from year </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s1"> in ocean heat content&#39;</span>
+    <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+        <span class="sa">f</span><span class="s1">'Anomaly from year </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s1"> in ocean heat content'</span>
     <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">climatology</span>
@@ -903,7 +903,7 @@ here is the full analysis task as described in this tutorial:</p>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis task for comparison of the anomaly from a reference year</span>
 <span class="sd">    (typically the start of the simulation) of ocean heat content (OHC)</span>
 
@@ -915,11 +915,11 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">    ref_year_climatology_task : mpas_analysis.shared.climatology.RefYearMpasClimatologyTask</span>
 <span class="sd">        The task that produced the climatology from the first year to be</span>
 <span class="sd">        remapped and then subtracted from the main climatology</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span>
                  <span class="n">ref_year_climatology_task</span><span class="p">,</span> <span class="n">control_config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -936,14 +936,14 @@ here is the full analysis task as described in this tutorial:</p>
 
 <span class="sd">        control_config : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+        <span class="n">field_name</span> <span class="o">=</span> <span class="s1">'deltaOHC'</span>
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                         <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-                         <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
-                               <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'climatologyMapOHCAnomaly'</span><span class="p">,</span>
+                         <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+                         <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="n">field_name</span><span class="p">,</span>
+                               <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'anomaly'</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpas_climatology_task</span> <span class="o">=</span> <span class="n">mpas_climatology_task</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span> <span class="o">=</span> <span class="n">ref_year_climatology_task</span>
@@ -951,35 +951,35 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="n">section_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;valid list of seasons&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'valid list of seasons'</span><span class="p">)</span>
 
         <span class="n">comparison_grid_names</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">section_name</span><span class="p">,</span>
-                                                     <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                                     <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparison_grid_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;valid list of comparison grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">section_name</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'valid list of comparison grids'</span><span class="p">)</span>
 
-        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;climatologyMapOHCAnomaly&#39;</span><span class="p">,</span>
-                                       <span class="s1">&#39;depthRanges&#39;</span><span class="p">)</span>
+        <span class="n">depth_ranges</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">'climatologyMapOHCAnomaly'</span><span class="p">,</span>
+                                       <span class="s1">'depthRanges'</span><span class="p">)</span>
 
-        <span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">&#39;deltaOHC&#39;</span>
+        <span class="n">mpas_field_name</span> <span class="o">=</span> <span class="s1">'deltaOHC'</span>
 
-        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">variable_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+                         <span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span> <span class="ow">in</span> <span class="n">depth_ranges</span><span class="p">:</span>
             <span class="n">depth_range_string</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
             <span class="n">remap_climatology_subtask</span> <span class="o">=</span> <span class="n">RemapMpasOHCClimatology</span><span class="p">(</span>
                 <span class="n">mpas_climatology_task</span><span class="o">=</span><span class="n">mpas_climatology_task</span><span class="p">,</span>
                 <span class="n">ref_year_climatology_task</span><span class="o">=</span><span class="n">ref_year_climatology_task</span><span class="p">,</span>
                 <span class="n">parent_task</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                <span class="n">climatology_name</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                 <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
                 <span class="n">comparison_grid_names</span><span class="o">=</span><span class="n">comparison_grid_names</span><span class="p">,</span>
                 <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
@@ -988,23 +988,23 @@ here is the full analysis task as described in this tutorial:</p>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remap_climatology_subtask</span><span class="p">)</span>
 
-            <span class="n">out_file_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;deltaOHC_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">out_file_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'deltaOHC_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
             <span class="n">remap_observations_subtask</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="k">if</span> <span class="n">control_config</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">ref_title_label</span> <span class="o">=</span> <span class="kc">None</span>
                 <span class="n">ref_field_name</span> <span class="o">=</span> <span class="kc">None</span>
-                <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+                <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-                <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">control_run_name</span> <span class="o">=</span> <span class="n">control_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+                <span class="n">ref_title_label</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">control_run_name</span><span class="si">}</span><span class="s1">'</span>
                 <span class="n">ref_field_name</span> <span class="o">=</span> <span class="n">mpas_field_name</span>
-                <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+                <span class="n">diff_title_label</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
             <span class="k">for</span> <span class="n">comparison_grid_name</span> <span class="ow">in</span> <span class="n">comparison_grid_names</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
                     <span class="c1"># make a new subtask for this season and comparison grid</span>
-                    <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparison_grid_name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
 
                     <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
                         <span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">comparison_grid_name</span><span class="p">,</span>
@@ -1013,29 +1013,29 @@ here is the full analysis task as described in this tutorial:</p>
 
                     <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                         <span class="n">outFileLabel</span><span class="o">=</span><span class="n">out_file_label</span><span class="p">,</span>
-                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;$</span><span class="se">\\</span><span class="s1">Delta$OHC over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                        <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="sa">f</span><span class="s1">'$</span><span class="se">\\</span><span class="s1">Delta$OHC over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                         <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpas_field_name</span><span class="p">,</span>
                         <span class="n">refFieldName</span><span class="o">=</span><span class="n">ref_field_name</span><span class="p">,</span>
                         <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">ref_title_label</span><span class="p">,</span>
                         <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diff_title_label</span><span class="p">,</span>
-                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;GJ m$^{-2}$&#39;</span><span class="p">,</span>
-                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;Anomaly in Ocean Heat Content over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;OHC Anomaly&#39;</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'GJ m$^{-2}$'</span><span class="p">,</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">'Anomaly in Ocean Heat Content over </span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'OHC Anomaly'</span><span class="p">,</span>
                         <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;ohc_anom&#39;</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">'ohc_anom'</span><span class="p">,</span>
                         <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Checks whether analysis is being performed only on the reference year,</span>
 <span class="sd">        in which case the analysis will not be meaningful.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        ValueError: if attempting to analyze only the reference year</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># first, call setup_and_check from the base class (AnalysisTask),</span>
         <span class="c1"># which will perform some common setup, including storing:</span>
@@ -1049,12 +1049,12 @@ here is the full analysis task as described in this tutorial:</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">get_start_and_end</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">start_year</span> <span class="o">==</span> <span class="n">ref_start_year</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">end_year</span> <span class="o">==</span> <span class="n">ref_end_year</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;OHC Anomaly is not meaningful and will not work &#39;</span>
-                             <span class="s1">&#39;when climatology and ref year are the same.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'OHC Anomaly is not meaningful and will not work '</span>
+                             <span class="s1">'when climatology and ref year are the same.'</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapMpasOHCClimatology</span><span class="p">(</span><span class="n">RemapMpasClimatologySubtask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for computing climatologies of ocean heat content from</span>
 <span class="sd">    climatologies of temperature</span>
 
@@ -1066,13 +1066,13 @@ here is the full analysis task as described in this tutorial:</p>
 
 <span class="sd">    min_depth, max_depth : float</span>
 <span class="sd">        The minimum and maximum depths for integration</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mpas_climatology_task</span><span class="p">,</span> <span class="n">ref_year_climatology_task</span><span class="p">,</span>
                  <span class="n">parent_task</span><span class="p">,</span> <span class="n">climatology_name</span><span class="p">,</span> <span class="n">variable_list</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span>
                  <span class="n">comparison_grid_names</span><span class="p">,</span> <span class="n">min_depth</span><span class="p">,</span> <span class="n">max_depth</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parent_task``.</span>
 
@@ -1100,18 +1100,18 @@ here is the full analysis task as described in this tutorial:</p>
 
 <span class="sd">        seasons : list of str, optional</span>
 <span class="sd">            A list of seasons (keys in ``shared.constants.monthDictionary``)</span>
-<span class="sd">            to be computed or [&#39;none&#39;] (not ``None``) if only monthly</span>
+<span class="sd">            to be computed or ['none'] (not ``None``) if only monthly</span>
 <span class="sd">            climatologies are needed.</span>
 
-<span class="sd">        comparison_grid_names : list of {&#39;latlon&#39;, &#39;antarctic&#39;}</span>
+<span class="sd">        comparison_grid_names : list of {'latlon', 'antarctic'}</span>
 <span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
 
 <span class="sd">        min_depth, max_depth : float</span>
 <span class="sd">            The minimum and maximum depths for integration</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="n">depth_range_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m&#39;</span>
-        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;remapMpasClimatology_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">depth_range_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">min_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">max_depth</span><span class="p">)</span><span class="si">:</span><span class="s1">g</span><span class="si">}</span><span class="s1">m'</span>
+        <span class="n">subtask_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'remapMpasClimatology_</span><span class="si">{</span><span class="n">depth_range_string</span><span class="si">}</span><span class="s1">'</span>
         <span class="c1"># call the constructor from the base class</span>
         <span class="c1"># (RemapMpasClimatologySubtask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -1125,22 +1125,22 @@ here is the full analysis task as described in this tutorial:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_depth</span> <span class="o">=</span> <span class="n">max_depth</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="c1"># first, call setup_and_check from the base class</span>
         <span class="c1"># (RemapMpasClimatologySubtask), which will set up remappers and add</span>
         <span class="c1"># variables to mpas_climatology_task</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="c1"># don&#39;t add the variables and seasons to mpas_climatology_task until</span>
-        <span class="c1"># we&#39;re sure this subtask is supposed to run</span>
+        <span class="c1"># don't add the variables and seasons to mpas_climatology_task until</span>
+        <span class="c1"># we're sure this subtask is supposed to run</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">,</span>
                                                      <span class="bp">self</span><span class="o">.</span><span class="n">seasons</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">customize_masked_climatology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">,</span> <span class="n">season</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the ocean heat content (OHC) anomaly from the temperature</span>
 <span class="sd">        and layer thickness fields.</span>
 
@@ -1156,49 +1156,49 @@ here is the full analysis task as described in this tutorial:</p>
 <span class="sd">        -------</span>
 <span class="sd">        climatology : xarray.Dataset</span>
 <span class="sd">            the modified climatology data set</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">climatology</span><span class="p">)</span>
         <span class="n">ref_file_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="n">season</span><span class="p">)</span>
         <span class="n">ref_year_climo</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">ref_file_name</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;Time&#39;</span> <span class="ow">in</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'Time'</span> <span class="ow">in</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
             <span class="n">ref_year_climo</span> <span class="o">=</span> <span class="n">ref_year_climo</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         <span class="n">ref_ohc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_ohc</span><span class="p">(</span><span class="n">ref_year_climo</span><span class="p">)</span>
 
-        <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;deltaOHC&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohc</span> <span class="o">-</span> <span class="n">ref_ohc</span>
-        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;GJ m^-2&#39;</span>
+        <span class="n">climatology</span><span class="p">[</span><span class="s1">'deltaOHC'</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohc</span> <span class="o">-</span> <span class="n">ref_ohc</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'GJ m^-2'</span>
         <span class="n">start_year</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_year_climatology_task</span><span class="o">.</span><span class="n">startYear</span>
-        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;Anomaly from year </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s1"> in ocean heat content&#39;</span>
+        <span class="n">climatology</span><span class="o">.</span><span class="n">deltaOHC</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="sa">f</span><span class="s1">'Anomaly from year </span><span class="si">{</span><span class="n">start_year</span><span class="si">}</span><span class="s1"> in ocean heat content'</span>
         <span class="n">climatology</span> <span class="o">=</span> <span class="n">climatology</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">climatology</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">climatology</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the OHC from the temperature and layer thicknesses in a given</span>
 <span class="sd">        climatology data sets.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
         <span class="n">ds_mesh</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
         <span class="c1"># specific heat [J/(kg*degC)]</span>
-        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_specific_heat_sea_water'</span><span class="p">)</span>
         <span class="c1"># [kg/m3]</span>
-        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_density0'</span><span class="p">)</span>
 
         <span class="n">units_scale_factor</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
-        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+        <span class="n">n_vert_levels</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
 
         <span class="n">z_mid</span> <span class="o">=</span> <span class="n">compute_zmid</span><span class="p">(</span><span class="n">ds_mesh</span><span class="o">.</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span>
                              <span class="n">ds_mesh</span><span class="o">.</span><span class="n">layerThickness</span><span class="p">)</span>
 
         <span class="n">vert_index</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
-            <span class="p">{</span><span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
+            <span class="p">{</span><span class="s1">'dims'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,),</span> <span class="s1">'data'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_vert_levels</span><span class="p">)})</span>
 
-        <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]</span>
-        <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">temperature</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">]</span>
+        <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">climatology</span><span class="p">[</span><span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">]</span>
 
         <span class="n">masks</span> <span class="o">=</span> <span class="p">[</span><span class="n">vert_index</span> <span class="o">&lt;</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">maxLevelCell</span><span class="p">,</span>
                  <span class="n">z_mid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_depth</span><span class="p">,</span>
@@ -1208,7 +1208,7 @@ here is the full analysis task as described in this tutorial:</p>
             <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">layer_thickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
 
         <span class="n">ohc</span> <span class="o">=</span> <span class="n">units_scale_factor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">layer_thickness</span> <span class="o">*</span> <span class="n">temperature</span>
-        <span class="n">ohc</span> <span class="o">=</span> <span class="n">ohc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+        <span class="n">ohc</span> <span class="o">=</span> <span class="n">ohc</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">ohc</span>
 </pre></div>
 </div>

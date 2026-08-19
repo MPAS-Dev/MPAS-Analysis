@@ -129,7 +129,7 @@
 <div class="viewcode-block" id="TimeSeriesOHCAnomaly">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesOHCAnomaly</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Performs analysis of ocean heat content (OHC) from time-series output.</span>
 
 <span class="sd">    Attributes</span>
@@ -142,7 +142,7 @@
 
 <span class="sd">    meshFilename : str</span>
 <span class="sd">        The path to the MPAS mesh file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
@@ -151,7 +151,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesOHCAnomaly.html#mpas_analysis.ocean.TimeSeriesOHCAnomaly.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -164,7 +164,7 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -172,24 +172,24 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TimeSeriesOHCAnomaly</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;ohc&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;anomaly&#39;</span><span class="p">])</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'timeSeriesOHCAnomaly'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'ohc'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'anomaly'</span><span class="p">])</span>
 
-        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span>
+        <span class="n">sectionName</span> <span class="o">=</span> <span class="s1">'timeSeriesOHCAnomaly'</span>
         <span class="n">regionShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+                                                <span class="s1">'regionShortNames'</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'movingAveragePoints'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;avgLayerTemperature&#39;</span><span class="p">,</span> <span class="s1">&#39;sumLayerMaskValue&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;avgLayerArea&#39;</span><span class="p">,</span> <span class="s1">&#39;avgLayerThickness&#39;</span><span class="p">]:</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_avgValueWithinOceanLayerRegion_&#39;</span> <span class="o">+</span> <span class="n">suffix</span>
+        <span class="k">for</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'avgLayerTemperature'</span><span class="p">,</span> <span class="s1">'sumLayerMaskValue'</span><span class="p">,</span>
+                       <span class="s1">'avgLayerArea'</span><span class="p">,</span> <span class="s1">'avgLayerThickness'</span><span class="p">]:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="s1">'timeMonthly_avg_avgValueWithinOceanLayerRegion_'</span> <span class="o">+</span> <span class="n">suffix</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">suffix</span>
 
-        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;ohc&#39;</span>
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">'ohc'</span>
 
-        <span class="n">timeSeriesFileName</span> <span class="o">=</span> <span class="s1">&#39;regionAveragedOHCAnomaly.nc&#39;</span>
+        <span class="n">timeSeriesFileName</span> <span class="o">=</span> <span class="s1">'regionAveragedOHCAnomaly.nc'</span>
 
         <span class="n">anomalyTask</span> <span class="o">=</span> <span class="n">ComputeAnomalySubtask</span><span class="p">(</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -202,43 +202,43 @@
 
         <span class="n">regionNames</span> <span class="o">=</span> <span class="n">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">regionName</span> <span class="ow">in</span> <span class="n">regionNames</span><span class="p">:</span>
-            <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Trend of </span><span class="si">{}</span><span class="s1"> OHC Anomaly vs depth&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">caption</span> <span class="o">=</span> <span class="s1">'Trend of </span><span class="si">{}</span><span class="s1"> OHC Anomaly vs depth'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">regionName</span><span class="p">)</span>
             <span class="n">plotTask</span> <span class="o">=</span> <span class="n">PlotHovmollerSubtask</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                 <span class="n">regionName</span><span class="o">=</span><span class="n">regionName</span><span class="p">,</span>
                 <span class="n">inFileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
-                <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;ohcAnomalyZ&#39;</span><span class="p">,</span>
-                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;OHC Anomaly&#39;</span><span class="p">,</span>
+                <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">'ohcAnomalyZ'</span><span class="p">,</span>
+                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">'OHC Anomaly'</span><span class="p">,</span>
                 <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
-                <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;[$\times 10^</span><span class="si">{22}</span><span class="s1">$ J]&#39;</span><span class="p">,</span>
-                <span class="n">sectionName</span><span class="o">=</span><span class="s1">&#39;hovmollerOHCAnomaly&#39;</span><span class="p">,</span>
-                <span class="n">thumbnailSuffix</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;ΔOHC&#39;</span><span class="p">,</span>
+                <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'[$\times 10^</span><span class="si">{22}</span><span class="s1">$ J]'</span><span class="p">,</span>
+                <span class="n">sectionName</span><span class="o">=</span><span class="s1">'hovmollerOHCAnomaly'</span><span class="p">,</span>
+                <span class="n">thumbnailSuffix</span><span class="o">=</span><span class="sa">u</span><span class="s1">'ΔOHC'</span><span class="p">,</span>
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
-                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Trends vs Depth&#39;</span><span class="p">,</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Trends vs Depth'</span><span class="p">,</span>
                 <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;trendsvsdepth&#39;</span><span class="p">,</span>
+                <span class="n">groupLink</span><span class="o">=</span><span class="s1">'trendsvsdepth'</span><span class="p">,</span>
                 <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
             <span class="n">plotTask</span><span class="o">.</span><span class="n">run_after</span><span class="p">(</span><span class="n">anomalyTask</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">plotTask</span><span class="p">)</span>
 
-            <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Running Mean of the Anomaly in </span><span class="si">{}</span><span class="s1"> Ocean Heat &#39;</span> \
-                <span class="s1">&#39;Content&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionName</span><span class="p">)</span>
+            <span class="n">caption</span> <span class="o">=</span> <span class="s1">'Running Mean of the Anomaly in </span><span class="si">{}</span><span class="s1"> Ocean Heat '</span> \
+                <span class="s1">'Content'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionName</span><span class="p">)</span>
             <span class="n">plotTask</span> <span class="o">=</span> <span class="n">PlotOHCAnomaly</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
                 <span class="n">regionName</span><span class="o">=</span><span class="n">regionName</span><span class="p">,</span>
                 <span class="n">inFileName</span><span class="o">=</span><span class="n">timeSeriesFileName</span><span class="p">,</span>
-                <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">&#39;ohcAnomaly&#39;</span><span class="p">,</span>
-                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;OHC Anomaly&#39;</span><span class="p">,</span>
+                <span class="n">outFileLabel</span><span class="o">=</span><span class="s1">'ohcAnomaly'</span><span class="p">,</span>
+                <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">'OHC Anomaly'</span><span class="p">,</span>
                 <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
-                <span class="n">yAxisLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$OHC [$\times 10^</span><span class="si">{22}</span><span class="s1">$ J]&#39;</span><span class="p">,</span>
-                <span class="n">sectionName</span><span class="o">=</span><span class="s1">&#39;timeSeriesOHCAnomaly&#39;</span><span class="p">,</span>
-                <span class="n">thumbnailSuffix</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;ΔOHC&#39;</span><span class="p">,</span>
+                <span class="n">yAxisLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'$\Delta$OHC [$\times 10^</span><span class="si">{22}</span><span class="s1">$ J]'</span><span class="p">,</span>
+                <span class="n">sectionName</span><span class="o">=</span><span class="s1">'timeSeriesOHCAnomaly'</span><span class="p">,</span>
+                <span class="n">thumbnailSuffix</span><span class="o">=</span><span class="sa">u</span><span class="s1">'ΔOHC'</span><span class="p">,</span>
                 <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
-                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Time Series&#39;</span><span class="p">,</span>
+                <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Time Series'</span><span class="p">,</span>
                 <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;timeseries&#39;</span><span class="p">,</span>
+                <span class="n">groupLink</span><span class="o">=</span><span class="s1">'timeseries'</span><span class="p">,</span>
                 <span class="n">galleryName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                 <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
 
@@ -251,47 +251,47 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Store the specific heat and reference density of seawater for use</span>
 <span class="sd">        in OHC calculations.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_specific_heat_sea_water&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;config_density0&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_specific_heat_sea_water'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'config_density0'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_ohc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the OHC time series.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># for convenience, rename the variables to simpler, shorter names</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">variableDict</span><span class="p">)</span>
 
         <span class="c1"># these need to be set at setup time, not at runtime because piclking</span>
-        <span class="c1"># means the namelists and streams objects they come from aren&#39;t</span>
+        <span class="c1"># means the namelists and streams objects they come from aren't</span>
         <span class="c1"># available at runtime</span>
         <span class="n">cp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cp</span>
-        <span class="k">assert</span> <span class="n">cp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Specific heat &#39;cp&#39; has not been set&quot;</span>
+        <span class="k">assert</span> <span class="n">cp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Specific heat 'cp' has not been set"</span>
         <span class="n">rho</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span>
-        <span class="k">assert</span> <span class="n">rho</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Reference density &#39;rho&#39; has not been set&quot;</span>
+        <span class="k">assert</span> <span class="n">rho</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Reference density 'rho' has not been set"</span>
         <span class="n">meshFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span>
-        <span class="k">assert</span> <span class="n">meshFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Mesh filename has not been set&quot;</span>
+        <span class="k">assert</span> <span class="n">meshFile</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">"Mesh filename has not been set"</span>
 
         <span class="n">unitsScalefactor</span> <span class="o">=</span> <span class="mf">1e-22</span>
 
-        <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;ohc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unitsScalefactor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;sumLayerMaskValue&#39;</span><span class="p">]</span> <span class="o">*</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;avgLayerArea&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;avgLayerThickness&#39;</span><span class="p">]</span> <span class="o">*</span> \
-            <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;avgLayerTemperature&#39;</span><span class="p">]</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;$10^</span><span class="si">{22}</span><span class="s1">$ J&#39;</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Ocean heat content in each region&#39;</span>
+        <span class="n">ds</span><span class="p">[</span><span class="s1">'ohc'</span><span class="p">]</span> <span class="o">=</span> <span class="n">unitsScalefactor</span> <span class="o">*</span> <span class="n">rho</span> <span class="o">*</span> <span class="n">cp</span> <span class="o">*</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'sumLayerMaskValue'</span><span class="p">]</span> <span class="o">*</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s1">'avgLayerArea'</span><span class="p">]</span> <span class="o">*</span> <span class="n">ds</span><span class="p">[</span><span class="s1">'avgLayerThickness'</span><span class="p">]</span> <span class="o">*</span> \
+            <span class="n">ds</span><span class="p">[</span><span class="s1">'avgLayerTemperature'</span><span class="p">]</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'$10^</span><span class="si">{22}</span><span class="s1">$ J'</span>
+        <span class="n">ds</span><span class="o">.</span><span class="n">ohc</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Ocean heat content in each region'</span>
 
         <span class="c1"># Define/read in general variables</span>
         <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">meshFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsMesh</span><span class="p">:</span>
             <span class="c1"># reference depth [m]</span>
             <span class="c1"># add depths as a coordinate to the data set</span>
-            <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-                <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'depth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,),</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">refBottomDepth</span><span class="o">.</span><span class="n">values</span>
             <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ds</span></div>
@@ -300,12 +300,12 @@
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PlotOHCAnomaly</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">customize_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A function to override to customize the figure.</span>
 
 <span class="sd">        fig : matplotlib.pyplot.Figure</span>
 <span class="sd">            The figure</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">joules_to_watts_m2</span><span class="p">(</span><span class="n">joules</span><span class="p">):</span>
             <span class="n">watts_m2</span> <span class="o">=</span> <span class="n">joules</span><span class="o">/</span><span class="n">factor</span>
             <span class="k">return</span> <span class="n">watts_m2</span>
@@ -315,22 +315,22 @@
             <span class="k">return</span> <span class="n">joules</span>
 
         <span class="c1"># add an axis on the right-hand side</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;tab:blue&#39;</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="s1">'tab:blue'</span>
         <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
         <span class="n">xlim</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
 
         <span class="n">earth_surface_area</span> <span class="o">=</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span>
-                              <span class="n">cime_constants</span><span class="p">[</span><span class="s1">&#39;SHR_CONST_REARTH&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+                              <span class="n">cime_constants</span><span class="p">[</span><span class="s1">'SHR_CONST_REARTH'</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 
         <span class="n">max_time</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">mpas_constants</span><span class="o">.</span><span class="n">sec_per_day</span>
 
         <span class="n">factor</span> <span class="o">=</span> <span class="n">earth_surface_area</span><span class="o">*</span><span class="n">max_time</span><span class="o">/</span><span class="mi">10</span><span class="o">**</span><span class="mi">22</span>
 
         <span class="n">secaxy</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">secondary_yaxis</span><span class="p">(</span>
-            <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">functions</span><span class="o">=</span><span class="p">(</span><span class="n">joules_to_watts_m2</span><span class="p">,</span> <span class="n">watts_m2_to_joules</span><span class="p">))</span>
-        <span class="n">secaxy</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;W/m$^2$&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-        <span class="n">secaxy</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+            <span class="s1">'right'</span><span class="p">,</span> <span class="n">functions</span><span class="o">=</span><span class="p">(</span><span class="n">joules_to_watts_m2</span><span class="p">,</span> <span class="n">watts_m2_to_joules</span><span class="p">))</span>
+        <span class="n">secaxy</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">'W/m$^2$'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">secaxy</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">'y'</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">'right'</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="n">yticks</span> <span class="o">=</span> <span class="n">secaxy</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">ytick</span> <span class="ow">in</span> <span class="n">yticks</span><span class="p">:</span>

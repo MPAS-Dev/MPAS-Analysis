@@ -106,9 +106,9 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">A utility for computing common ocean fields (e.g. zMid) from datasets</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
@@ -120,7 +120,7 @@
 <div class="viewcode-block" id="add_standard_regions_and_subset">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.add_standard_regions_and_subset.html#mpas_analysis.ocean.utility.add_standard_regions_and_subset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">add_standard_regions_and_subset</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add standard region names (``regionNames`` coordinate) to a dataset and</span>
 <span class="sd">    rename ``nOceanRegionsTmp`` dimension to ``nOceanRegions`` (if present).</span>
 <span class="sd">    Shorter standard region names are in ``regionNamesShort``.</span>
@@ -141,15 +141,15 @@
 <span class="sd">    -------</span>
 <span class="sd">    ds : xarray.Dataset</span>
 <span class="sd">        the dataset with region names added and possibly subsetted</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s1">&#39;nOceanRegionsTmp&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;nOceanRegionsTmp&#39;</span><span class="p">:</span> <span class="s1">&#39;nOceanRegions&#39;</span><span class="p">})</span>
+    <span class="k">if</span> <span class="s1">'nOceanRegionsTmp'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">:</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'nOceanRegionsTmp'</span><span class="p">:</span> <span class="s1">'nOceanRegions'</span><span class="p">})</span>
 
-    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
-    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
-    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;regionShortNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nOceanRegions&#39;</span><span class="p">,</span> <span class="n">allShortNames</span><span class="p">)</span>
-    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;regionNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nOceanRegions&#39;</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">)</span>
+    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'regions'</span><span class="p">,</span> <span class="s1">'regionShortNames'</span><span class="p">)</span>
+    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'regions'</span><span class="p">,</span> <span class="s1">'regionNames'</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'regionShortNames'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nOceanRegions'</span><span class="p">,</span> <span class="n">allShortNames</span><span class="p">)</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'regionNames'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nOceanRegions'</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">regionShortNames</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">regionIndices</span> <span class="o">=</span> \
             <span class="p">[</span><span class="n">allShortNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">regionShortNames</span><span class="p">]</span>
@@ -161,7 +161,7 @@
 <div class="viewcode-block" id="get_standard_region_names">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.get_standard_region_names.html#mpas_analysis.ocean.utility.get_standard_region_names">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_standard_region_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionShortNames</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Add standard region names from the short names</span>
 
 <span class="sd">    Parameters</span>
@@ -176,9 +176,9 @@
 <span class="sd">    -------</span>
 <span class="sd">    regionNames : list of str</span>
 <span class="sd">        A list of full standard region names</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionShortNames&#39;</span><span class="p">)</span>
-    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;regions&#39;</span><span class="p">,</span> <span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="n">allShortNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'regions'</span><span class="p">,</span> <span class="s1">'regionShortNames'</span><span class="p">)</span>
+    <span class="n">regionNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'regions'</span><span class="p">,</span> <span class="s1">'regionNames'</span><span class="p">)</span>
     <span class="n">regionNameMap</span> <span class="o">=</span> <span class="p">{</span><span class="n">shortName</span><span class="p">:</span> <span class="n">regionName</span> <span class="k">for</span> <span class="n">shortName</span><span class="p">,</span> <span class="n">regionName</span> <span class="ow">in</span>
                      <span class="nb">zip</span><span class="p">(</span><span class="n">allShortNames</span><span class="p">,</span> <span class="n">regionNames</span><span class="p">)}</span>
     <span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">regionNameMap</span><span class="p">[</span><span class="n">shortName</span><span class="p">]</span> <span class="k">for</span> <span class="n">shortName</span> <span class="ow">in</span> <span class="n">regionShortNames</span><span class="p">]</span>
@@ -190,7 +190,7 @@
 <div class="viewcode-block" id="compute_zmid">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.compute_zmid.html#mpas_analysis.ocean.utility.compute_zmid">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_zmid</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Computes zMid given data arrays for bottomDepth, maxLevelCell and</span>
 <span class="sd">    layerThickness</span>
 
@@ -210,24 +210,24 @@
 <span class="sd">    zMid : ``xarray.DataArray``</span>
 <span class="sd">        the vertical coordinate defining the middle of each layer, masked below</span>
 <span class="sd">        the bathymetry</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
 
     <span class="n">vertIndex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
-            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
+            <span class="s1">'dims'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,),</span>
+            <span class="s1">'data'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
     <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
 
-    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
-    <span class="n">thicknessCumSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
+    <span class="n">thicknessCumSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
     <span class="n">zSurface</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottomDepth</span> <span class="o">+</span> <span class="n">thicknessSum</span>
 
     <span class="n">zLayerBot</span> <span class="o">=</span> <span class="n">zSurface</span> <span class="o">-</span> <span class="n">thicknessCumSum</span>
@@ -241,7 +241,7 @@
 <div class="viewcode-block" id="compute_zinterface">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.compute_zinterface.html#mpas_analysis.ocean.utility.compute_zinterface">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compute_zinterface</span><span class="p">(</span><span class="n">bottomDepth</span><span class="p">,</span> <span class="n">maxLevelCell</span><span class="p">,</span> <span class="n">layerThickness</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Computes zInterface given data arrays for bottomDepth, maxLevelCell and</span>
 <span class="sd">    layerThickness</span>
 
@@ -261,22 +261,22 @@
 <span class="sd">    zInterface : ``xarray.DataArray``</span>
 <span class="sd">        the vertical coordinate defining the interfaces between layers, masked</span>
 <span class="sd">        below the bathymetry</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">]</span>
+    <span class="n">nVertLevels</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nVertLevels'</span><span class="p">]</span>
 
     <span class="n">vertIndex</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s1">&#39;dims&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">,),</span>
-            <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
+            <span class="s1">'dims'</span><span class="p">:</span> <span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">,),</span>
+            <span class="s1">'data'</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">nVertLevels</span><span class="p">)</span>
         <span class="p">}</span>
     <span class="p">)</span>
 
     <span class="n">layerThickness</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vertIndex</span> <span class="o">&lt;=</span> <span class="n">maxLevelCell</span><span class="p">)</span>
-    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">)</span>
+    <span class="n">thicknessSum</span> <span class="o">=</span> <span class="n">layerThickness</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevels'</span><span class="p">)</span>
 
     <span class="n">zSurface</span> <span class="o">=</span> <span class="o">-</span><span class="n">bottomDepth</span> <span class="o">+</span> <span class="n">thicknessSum</span>
 
@@ -289,8 +289,8 @@
         <span class="n">zInterfaceList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">zBot</span><span class="p">)</span>
         <span class="n">zTop</span> <span class="o">=</span> <span class="n">zBot</span>
 
-    <span class="n">zInterface</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zInterfaceList</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
-        <span class="s1">&#39;nCells&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevelsP1&#39;</span><span class="p">)</span>
+    <span class="n">zInterface</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">zInterfaceList</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'nVertLevelsP1'</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span>
+        <span class="s1">'nCells'</span><span class="p">,</span> <span class="s1">'nVertLevelsP1'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">zInterface</span></div>
 
 
@@ -298,7 +298,7 @@
 <div class="viewcode-block" id="vector_cell_to_edge_isotropic">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic.html#mpas_analysis.ocean.utility.vector_cell_to_edge_isotropic">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">vector_cell_to_edge_isotropic</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">zonal_cell</span><span class="p">,</span> <span class="n">meridional_cell</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the zonal and meridional components of a vector at edges from</span>
 <span class="sd">    cell-centered components using isotropic area-weighted averaging.</span>
 
@@ -323,13 +323,13 @@
 
 <span class="sd">    meridional_edge : xarray.DataArray</span>
 <span class="sd">        Meridional component at edges (nEdges,)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">vertices_on_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">verticesOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">cells_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">cellsOnVertex</span> <span class="o">-</span> <span class="mi">1</span>
     <span class="n">kite_areas_on_vertex</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">kiteAreasOnVertex</span>
 
-    <span class="n">n_edges</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nEdges&#39;</span><span class="p">]</span>
-    <span class="n">vertex_degree</span> <span class="o">=</span> <span class="n">cells_on_vertex</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;vertexDegree&#39;</span><span class="p">]</span>
+    <span class="n">n_edges</span> <span class="o">=</span> <span class="n">vertices_on_edge</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nEdges'</span><span class="p">]</span>
+    <span class="n">vertex_degree</span> <span class="o">=</span> <span class="n">cells_on_vertex</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'vertexDegree'</span><span class="p">]</span>
 
     <span class="n">zonal_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">meridional_edge</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_edges</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -353,9 +353,9 @@
             <span class="p">)</span><span class="o">.</span><span class="n">values</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">area</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s2">&quot;Some kite areas of valid cells on vertex have zero area. &quot;</span>
-                    <span class="s2">&quot;This seems to be a bug in the mesh or &quot;</span>
-                    <span class="s2">&quot;vector_cell_to_edge_isotropic().&quot;</span>
+                    <span class="s2">"Some kite areas of valid cells on vertex have zero area. "</span>
+                    <span class="s2">"This seems to be a bug in the mesh or "</span>
+                    <span class="s2">"vector_cell_to_edge_isotropic()."</span>
                 <span class="p">)</span>
             <span class="n">zcell</span> <span class="o">=</span> <span class="n">zonal_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">valid_covoe</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
             <span class="n">mcell</span> <span class="o">=</span> <span class="n">meridional_cell</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nCells</span><span class="o">=</span><span class="n">valid_covoe</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
@@ -365,8 +365,8 @@
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">area_sum</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Some edges have zero area.  This seems to be a bug in the mesh &quot;</span>
-            <span class="s2">&quot;or vector_cell_to_edge_isotropic().&quot;</span>
+            <span class="s2">"Some edges have zero area.  This seems to be a bug in the mesh "</span>
+            <span class="s2">"or vector_cell_to_edge_isotropic()."</span>
         <span class="p">)</span>
 
     <span class="c1"># Normalize by the area sum to get the average</span>
@@ -374,14 +374,14 @@
     <span class="n">meridional_edge</span> <span class="o">/=</span> <span class="n">area_sum</span>
 
     <span class="c1"># Wrap as xarray DataArrays</span>
-    <span class="n">zonal_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">zonal_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,))</span>
-    <span class="n">meridional_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">meridional_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,))</span>
+    <span class="n">zonal_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">zonal_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,))</span>
+    <span class="n">meridional_edge</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">DataArray</span><span class="p">(</span><span class="n">meridional_edge</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="s1">'nEdges'</span><span class="p">,))</span>
     <span class="k">return</span> <span class="n">zonal_edge</span><span class="p">,</span> <span class="n">meridional_edge</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">vector_to_edge_normal</span><span class="p">(</span><span class="n">ds_mesh</span><span class="p">,</span> <span class="n">zonal_edge</span><span class="p">,</span> <span class="n">meridional_edge</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Compute the normal component of a vector at an edge from</span>
 <span class="sd">    the zonal and meridional components.</span>
 
@@ -401,7 +401,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    normal_edge : xarray.DataArray</span>
 <span class="sd">        Normal component at edges (nEdges,)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">angle_edge</span> <span class="o">=</span> <span class="n">ds_mesh</span><span class="o">.</span><span class="n">angleEdge</span>
     <span class="n">normal_edge</span> <span class="o">=</span> <span class="p">(</span>

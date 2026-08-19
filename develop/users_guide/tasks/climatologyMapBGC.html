@@ -197,23 +197,23 @@ against observations.</p>
 ## options related to plotting climatology mpas of BGC
 
 # Variables to plot:
-# pH : &#39;pH_3D&#39;
-# DIC : &#39;DIC&#39;
-# ALK : &#39;ALK&#39;
-# PO4 : &#39;PO4&#39;
-# NO3 : &#39;NO3&#39;
-# SiO3 : &#39;SiO3&#39;
-# CO2 flux : &#39;CO2_gas_flux&#39;
-# O2 : &#39;O2&#39;
-variables = [&#39;PO4&#39;, &#39;NO3&#39;, &#39;SiO3&#39;, &#39;CO2_gas_flux&#39;, &#39;pH_3D&#39;, &#39;DIC&#39;, &#39;ALK&#39;,
-             &#39;O2&#39;, &#39;pCO2surface&#39;, &#39;Chl&#39;]
+# pH : 'pH_3D'
+# DIC : 'DIC'
+# ALK : 'ALK'
+# PO4 : 'PO4'
+# NO3 : 'NO3'
+# SiO3 : 'SiO3'
+# CO2 flux : 'CO2_gas_flux'
+# O2 : 'O2'
+variables = ['PO4', 'NO3', 'SiO3', 'CO2_gas_flux', 'pH_3D', 'DIC', 'ALK',
+             'O2', 'pCO2surface', 'Chl']
 
 # Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep,
 # Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)
-seasons = [&#39;ANN&#39;, &#39;JFM&#39;, &#39;JAS&#39;]
+seasons = ['ANN', 'JFM', 'JAS']
 
-# comparison grid(s) (&#39;latlon&#39;, &#39;antarctic&#39;) on which to plot analysis
-comparisonGrids = [&#39;latlon&#39;, &#39;antarctic&#39;]
+# comparison grid(s) ('latlon', 'antarctic') on which to plot analysis
+comparisonGrids = ['latlon', 'antarctic']
 
 # Whether to compare to preindustrial observations that are available.
 preindustrial = False
@@ -226,11 +226,11 @@ colormapNameDifference = balance
 # linear vs. log scaling for climatology
 normTypeResult = linear
 # Colorbar bounds for climatology
-normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 2.5}
+normArgsResult = {'vmin': 0, 'vmax': 2.5}
 # linear vs. log scaling for obs
 normTypeDifference = linear
 # Colorbar bounds for obs
-normArgsDifference = {&#39;vmin&#39;: -1, &#39;vmax&#39;: 1}
+normArgsDifference = {'vmin': -1, 'vmax': 1}
 # BGC property units
 units = mmol m$^{-3}$
 # Prefix to variable name in MPAS-O output
@@ -244,9 +244,9 @@ galleryLabel = PO4
 colormapNameResult = dense
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 35.0}
+normArgsResult = {'vmin': 0, 'vmax': 35.0}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -10, &#39;vmax&#39;: 10}
+normArgsDifference = {'vmin': -10, 'vmax': 10}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
@@ -256,9 +256,9 @@ galleryLabel = NO3
 colormapNameResult = dense
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 0, &#39;vmax&#39;: 80}
+normArgsResult = {'vmin': 0, 'vmax': 80}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -20, &#39;vmax&#39;: 20}
+normArgsDifference = {'vmin': -20, 'vmax': 20}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
@@ -268,9 +268,9 @@ galleryLabel = SiO3
 colormapNameResult = BrBG_r
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: -5, &#39;vmax&#39;: 5}
+normArgsResult = {'vmin': -5, 'vmax': 5}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -5, &#39;vmax&#39;: 5}
+normArgsDifference = {'vmin': -5, 'vmax': 5}
 units = mol m$^{-2}$ yr$^{-1}$
 filePrefix = timeMonthly_avg_
 observationsLabel = SOM-FFNv2016
@@ -280,9 +280,9 @@ galleryLabel = CO2 Flux
 colormapNameResult = matter
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 2, &#39;vmax&#39;: 8}
+normArgsResult = {'vmin': 2, 'vmax': 8}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -2, &#39;vmax&#39;: 2}
+normArgsDifference = {'vmin': -2, 'vmax': 2}
 units = mL/L
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = WOA
@@ -292,9 +292,9 @@ galleryLabel = O2
 colormapNameResult = PuBuGn_r
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 8, &#39;vmax&#39;: 8.2}
+normArgsResult = {'vmin': 8, 'vmax': 8.2}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -0.2, &#39;vmax&#39;: 0.2}
+normArgsDifference = {'vmin': -0.2, 'vmax': 0.2}
 units =
 filePrefix = timeMonthly_avg_ecosys_diag_
 observationsLabel = GLODAPv2
@@ -304,9 +304,9 @@ galleryLabel = pH
 colormapNameResult = YlGnBu
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 1900, &#39;vmax&#39;: 2300}
+normArgsResult = {'vmin': 1900, 'vmax': 2300}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -100, &#39;vmax&#39;: 100}
+normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = mmol m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = GLODAPv2
@@ -316,9 +316,9 @@ galleryLabel = DIC
 colormapNameResult = PuBuGn
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 2150, &#39;vmax&#39;: 2450}
+normArgsResult = {'vmin': 2150, 'vmax': 2450}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -100, &#39;vmax&#39;: 100}
+normArgsDifference = {'vmin': -100, 'vmax': 100}
 units = meq m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = GLODAPv2
@@ -328,9 +328,9 @@ galleryLabel = Alkalinity
 colormapNameResult = viridis
 colormapNameDifference = balance
 normTypeResult = linear
-normArgsResult = {&#39;vmin&#39;: 300, &#39;vmax&#39;: 450}
+normArgsResult = {'vmin': 300, 'vmax': 450}
 normTypeDifference = linear
-normArgsDifference = {&#39;vmin&#39;: -50, &#39;vmax&#39;: 50}
+normArgsDifference = {'vmin': -50, 'vmax': 50}
 units = $\mu$atm
 filePrefix = timeMonthly_avg_ecosys_diag_
 observationsLabel = SOM-FFNv2016
@@ -340,9 +340,9 @@ galleryLabel = pCO2
 colormapNameResult = viridis
 colormapNameDifference = balance
 normTypeResult = log
-normArgsResult = {&#39;vmin&#39;: 0.01, &#39;vmax&#39;: 20}
+normArgsResult = {'vmin': 0.01, 'vmax': 20}
 normTypeDifference = symLog
-normArgsDifference = {&#39;linthresh&#39;: 0.1, &#39;vmin&#39;: -10, &#39;vmax&#39;: 10}
+normArgsDifference = {'linthresh': 0.1, 'vmin': -10, 'vmax': 10}
 units = mg m$^{-3}$
 filePrefix = timeMonthly_avg_ecosysTracers_
 observationsLabel = SeaWIFS

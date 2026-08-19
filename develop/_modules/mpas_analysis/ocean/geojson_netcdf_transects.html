@@ -123,10 +123,10 @@
 <div class="viewcode-block" id="GeojsonNetcdfTransects">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.GeojsonNetcdfTransects.html#mpas_analysis.ocean.GeojsonNetcdfTransects">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GeojsonNetcdfTransects</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot model output at transects defined by lat/lon points in a geojson or</span>
 <span class="sd">    NetCDF file</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -134,7 +134,7 @@
 <div class="viewcode-block" id="GeojsonNetcdfTransects.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.GeojsonNetcdfTransects.html#mpas_analysis.ocean.GeojsonNetcdfTransects.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -149,84 +149,84 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;transect&#39;</span><span class="p">,</span> <span class="s1">&#39;geojson&#39;</span><span class="p">,</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'transect'</span><span class="p">,</span> <span class="s1">'geojson'</span><span class="p">,</span> <span class="s1">'netcdf'</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;geojsonNetcdfTransects&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'geojsonNetcdfTransects'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
         <span class="n">geojsonOrNetcdfFiles</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                    <span class="s1">&#39;geojsonOrNetcdfFiles&#39;</span><span class="p">)</span>
+                                                    <span class="s1">'geojsonOrNetcdfFiles'</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">geojsonOrNetcdfFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span>
 
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
-        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;horizontalResolution&#39;</span><span class="p">)</span>
+        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'horizontalResolution'</span><span class="p">)</span>
 
         <span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;verticalComparisonGridName&#39;</span><span class="p">)</span>
+                                                <span class="s1">'verticalComparisonGridName'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">,</span> <span class="s1">&#39;obs&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mpas'</span><span class="p">,</span> <span class="s1">'obs'</span><span class="p">]:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span>
-                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalComparisonGrid&#39;</span>
+                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalComparisonGrid'</span>
             <span class="p">)</span>
 
         <span class="n">availableVariables</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;availableVariables&#39;</span><span class="p">)</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'availableVariables'</span><span class="p">)</span>
 
-        <span class="n">prefixes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;variables&#39;</span><span class="p">)</span>
+        <span class="n">prefixes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'variables'</span><span class="p">)</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">availableVariables</span>
-                  <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">]</span>
+                  <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="ow">in</span> <span class="n">prefixes</span><span class="p">]</span>
 
         <span class="n">geojsonFileNames</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">netcdfFileNames</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">transectNames</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">geojsonOrNetcdfFiles</span><span class="p">:</span>
             <span class="n">ext</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span>
-            <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.nc&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">'.nc'</span><span class="p">:</span>
                 <span class="n">transectName</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
                 <span class="n">netcdfFileNames</span><span class="p">[</span><span class="n">transectName</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>
-            <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.geojson&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">'.geojson'</span><span class="p">:</span>
                 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">filePointer</span><span class="p">:</span>
                     <span class="n">jsonFile</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filePointer</span><span class="p">)</span>
 
-                    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">jsonFile</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]:</span>
-                        <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;LineString&#39;</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">jsonFile</span><span class="p">[</span><span class="s1">'features'</span><span class="p">]:</span>
+                        <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">'LineString'</span><span class="p">:</span>
                             <span class="k">continue</span>
-                        <span class="n">transectName</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+                        <span class="n">transectName</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'properties'</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span>
 
                         <span class="n">geojsonFileNames</span><span class="p">[</span><span class="n">transectName</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unexptect file extension: </span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Unexptect file extension: </span><span class="si">{</span><span class="n">ext</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">transectNames</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Transect name </span><span class="si">{</span><span class="n">transectName</span><span class="si">}</span><span class="s1"> is repeated.&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Transect name </span><span class="si">{</span><span class="n">transectName</span><span class="si">}</span><span class="s1"> is repeated.'</span><span class="p">)</span>
 
             <span class="n">transectNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectName</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
 
         <span class="n">computeGeojsonTransectsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">computeNetcdfTransectsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">geojsonFileNames</span><span class="p">:</span>
-            <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">&#39;geojson_transects&#39;</span>
-            <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">&#39;obs&#39;</span> <span class="ow">and</span> \
-                    <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">&#39;mpas&#39;</span><span class="p">:</span>
+            <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">'geojson_transects'</span>
+            <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">'obs'</span> <span class="ow">and</span> \
+                    <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">'mpas'</span><span class="p">:</span>
                 <span class="n">transectCollectionName</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km&#39;</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km'</span>
 
             <span class="n">geojsonObservations</span> <span class="o">=</span> <span class="n">GeojsonTransectsObservations</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="n">geojsonFileNames</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
@@ -235,21 +235,21 @@
             <span class="n">computeGeojsonTransectsSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectsSubtask</span><span class="p">(</span>
                 <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;geojson&#39;</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">'geojson'</span><span class="p">,</span>
                 <span class="n">transectCollectionName</span><span class="o">=</span><span class="n">transectCollectionName</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                 <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
                 <span class="n">obsDatasets</span><span class="o">=</span><span class="n">geojsonObservations</span><span class="p">,</span>
                 <span class="n">verticalComparisonGridName</span><span class="o">=</span><span class="n">verticalComparisonGridName</span><span class="p">,</span>
                 <span class="n">verticalComparisonGrid</span><span class="o">=</span><span class="n">verticalComparisonGrid</span><span class="p">,</span>
-                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapGeojson&#39;</span><span class="p">)</span>
+                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">'remapGeojson'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">netcdfFileNames</span><span class="p">:</span>
-            <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">&#39;netcdf_transects&#39;</span>
-            <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">&#39;obs&#39;</span> <span class="ow">and</span> \
-                    <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">&#39;mpas&#39;</span><span class="p">:</span>
+            <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">'netcdf_transects'</span>
+            <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">'obs'</span> <span class="ow">and</span> \
+                    <span class="n">horizontalResolution</span> <span class="o">!=</span> <span class="s1">'mpas'</span><span class="p">:</span>
                 <span class="n">transectCollectionName</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km&#39;</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km'</span>
 
             <span class="n">netcdfObservations</span> <span class="o">=</span> <span class="n">NetcdfTransectsObservations</span><span class="p">(</span>
                 <span class="n">config</span><span class="p">,</span> <span class="n">netcdfFileNames</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
@@ -258,14 +258,14 @@
             <span class="n">computeNetcdfTransectsSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectsSubtask</span><span class="p">(</span>
                 <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span>
+                <span class="n">climatologyName</span><span class="o">=</span><span class="s1">'netcdf'</span><span class="p">,</span>
                 <span class="n">transectCollectionName</span><span class="o">=</span><span class="n">transectCollectionName</span><span class="p">,</span>
                 <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
                 <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
                 <span class="n">obsDatasets</span><span class="o">=</span><span class="n">netcdfObservations</span><span class="p">,</span>
                 <span class="n">verticalComparisonGridName</span><span class="o">=</span><span class="n">verticalComparisonGridName</span><span class="p">,</span>
                 <span class="n">verticalComparisonGrid</span><span class="o">=</span><span class="n">verticalComparisonGrid</span><span class="p">,</span>
-                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapNetcdf&#39;</span><span class="p">)</span>
+                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">'remapNetcdf'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">geojsonFileNames</span><span class="p">:</span>
@@ -274,8 +274,8 @@
                         <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
                         <span class="n">transectName</span><span class="o">=</span><span class="n">transectName</span><span class="p">,</span>
                         <span class="n">computeSubtask</span><span class="o">=</span><span class="n">computeGeojsonTransectsSubtask</span><span class="p">,</span>
-                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Geojson Transects&#39;</span><span class="p">,</span>
-                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;geojson&#39;</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Geojson Transects'</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">'geojson'</span><span class="p">,</span>
                         <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">netcdfFileNames</span><span class="p">:</span>
@@ -284,21 +284,21 @@
                         <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
                         <span class="n">transectName</span><span class="o">=</span><span class="n">transectName</span><span class="p">,</span>
                         <span class="n">computeSubtask</span><span class="o">=</span><span class="n">computeNetcdfTransectsSubtask</span><span class="p">,</span>
-                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;NetCDF Transects&#39;</span><span class="p">,</span>
-                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;nctransects&#39;</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'NetCDF Transects'</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">'nctransects'</span><span class="p">,</span>
                         <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_add_plot_subtasks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">transectName</span><span class="p">,</span> <span class="n">computeSubtask</span><span class="p">,</span>
                            <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupLink</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a sbutask for plotting the given transect, field and season</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
-        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalBounds&#39;</span><span class="p">)</span>
+        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalBounds'</span><span class="p">)</span>
 
-        <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
+        <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
 
         <span class="n">outFileLabel</span> <span class="o">=</span> <span class="n">fieldPrefix</span>
 
@@ -307,18 +307,18 @@
             <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
             <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">'</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
         <span class="n">fieldPrefixUpper</span> <span class="o">=</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">]</span>
-        <span class="n">transectNameInTitle</span> <span class="o">=</span> <span class="n">transectName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">fieldNameInTitle</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">]</span>
+        <span class="n">transectNameInTitle</span> <span class="o">=</span> <span class="n">transectName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
         <span class="n">fieldNameInTitle</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldNameInTitle</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">transectNameInTitle</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldNameInTitle</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">transectNameInTitle</span><span class="si">}</span><span class="s1">'</span>
 
-        <span class="n">configSectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;geojsonNetcdf</span><span class="si">{</span><span class="n">fieldPrefixUpper</span><span class="si">}</span><span class="s1">Transects&#39;</span>
+        <span class="n">configSectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'geojsonNetcdf</span><span class="si">{</span><span class="n">fieldPrefixUpper</span><span class="si">}</span><span class="s1">Transects'</span>
 
         <span class="c1"># make a new subtask for this season and comparison grid</span>
         <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotTransectSubtask</span><span class="p">(</span>
@@ -333,16 +333,16 @@
         <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
             <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
             <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
-            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">],</span>
+            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">],</span>
             <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
             <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
             <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-            <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
+            <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'units'</span><span class="p">],</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
             <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
             <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
             <span class="n">groupLink</span><span class="o">=</span><span class="n">groupLink</span><span class="p">,</span>
-            <span class="n">galleryName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
+            <span class="n">galleryName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">],</span>
             <span class="n">configSectionName</span><span class="o">=</span><span class="n">configSectionName</span><span class="p">,</span>
             <span class="n">verticalBounds</span><span class="o">=</span><span class="n">verticalBounds</span><span class="p">)</span>
 
@@ -351,15 +351,15 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">GeojsonTransectsObservations</span><span class="p">(</span><span class="n">TransectsObservations</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for loading and manipulating geojson transects</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">transectName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -375,7 +375,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -383,34 +383,34 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span> <span class="k">as</span> <span class="n">filePointer</span><span class="p">:</span>
             <span class="n">jsonFile</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filePointer</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">jsonFile</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">transectName</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">jsonFile</span><span class="p">[</span><span class="s1">'features'</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'properties'</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">transectName</span><span class="p">:</span>
                     <span class="k">continue</span>
-                <span class="k">assert</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;LineString&#39;</span>
+                <span class="k">assert</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'LineString'</span>
 
-                <span class="n">coordinates</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;coordinates&#39;</span><span class="p">]</span>
+                <span class="n">coordinates</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'coordinates'</span><span class="p">]</span>
                 <span class="n">lon</span><span class="p">,</span> <span class="n">lat</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">coordinates</span><span class="p">)</span>
                 <span class="k">break</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nPoints&#39;</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lon</span><span class="p">))</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;degrees&#39;</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;nPoints&#39;</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;degrees&#39;</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'nPoints'</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lon</span><span class="p">))</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degrees'</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'nPoints'</span><span class="p">,),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lat</span><span class="p">))</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">lat</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'degrees'</span>
 
         <span class="k">return</span> <span class="n">dsObs</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">NetcdfTransectsObservations</span><span class="p">(</span><span class="n">TransectsObservations</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for loading and manipulating netcdf transects</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">transectName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -426,14 +426,14 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
         <span class="c1"># drop all variables besides lon and lat</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[[</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">]]</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[[</span><span class="s1">'lon'</span><span class="p">,</span> <span class="s1">'lat'</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="n">dsObs</span>
 </pre></div>

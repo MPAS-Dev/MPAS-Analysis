@@ -129,10 +129,10 @@
 <div class="viewcode-block" id="WoaTransects">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoaTransects.html#mpas_analysis.ocean.WoaTransects">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WoaTransects</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot model output at transects and various longitudes around Antarctica,</span>
 <span class="sd">    compared against the WOA23 climatology</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -141,7 +141,7 @@
 <div class="viewcode-block" id="WoaTransects.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoaTransects.html#mpas_analysis.ocean.WoaTransects.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -156,63 +156,63 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;transect&#39;</span><span class="p">,</span> <span class="s1">&#39;woa&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'transect'</span><span class="p">,</span> <span class="s1">'woa'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'antarctic'</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'woaTransects'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
-        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;horizontalResolution&#39;</span><span class="p">)</span>
+        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'horizontalResolution'</span><span class="p">)</span>
 
         <span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;verticalComparisonGridName&#39;</span><span class="p">)</span>
+                                                <span class="s1">'verticalComparisonGridName'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">,</span> <span class="s1">&#39;obs&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mpas'</span><span class="p">,</span> <span class="s1">'obs'</span><span class="p">]:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span>
-                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalComparisonGrid&#39;</span>
+                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalComparisonGrid'</span>
             <span class="p">)</span>
 
-        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalBounds&#39;</span><span class="p">)</span>
+        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalBounds'</span><span class="p">)</span>
 
         <span class="n">longitudes</span> <span class="o">=</span> <span class="n">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">fields</span> <span class="o">=</span> \
-            <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;pot_temp&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;pt_an&#39;</span><span class="p">},</span>
-             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFilePrefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;s_an&#39;</span><span class="p">}]</span>
+            <span class="p">[{</span><span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'temperature'</span><span class="p">,</span>
+              <span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+              <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\degree$C'</span><span class="p">,</span>
+              <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Potential Temperature'</span><span class="p">,</span>
+              <span class="s1">'obsFilePrefix'</span><span class="p">:</span> <span class="s1">'pot_temp'</span><span class="p">,</span>
+              <span class="s1">'obsFieldName'</span><span class="p">:</span> <span class="s1">'pt_an'</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'salinity'</span><span class="p">,</span>
+              <span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">,</span>
+              <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'PSU'</span><span class="p">,</span>
+              <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Salinity'</span><span class="p">,</span>
+              <span class="s1">'obsFilePrefix'</span><span class="p">:</span> <span class="s1">'salinity'</span><span class="p">,</span>
+              <span class="s1">'obsFieldName'</span><span class="p">:</span> <span class="s1">'s_an'</span><span class="p">}]</span>
 
-        <span class="n">fieldList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;fieldList&#39;</span><span class="p">)</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fieldList</span><span class="p">]</span>
+        <span class="n">fieldList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'fieldList'</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fieldList</span><span class="p">]</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span>
-                        <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;velMag&#39;</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span>
+                        <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">'velMag'</span><span class="p">]</span>
 
-        <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">&#39;WOA_transects&#39;</span>
-        <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas&#39;</span><span class="p">]:</span>
+        <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">'WOA_transects'</span>
+        <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'obs'</span><span class="p">,</span> <span class="s1">'mpas'</span><span class="p">]:</span>
             <span class="n">transectCollectionName</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km&#39;</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km'</span>
 
         <span class="n">transectsObservations</span> <span class="o">=</span> <span class="n">WoaTransectsObservations</span><span class="p">(</span>
             <span class="n">config</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
@@ -221,7 +221,7 @@
         <span class="n">computeTransectsSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectsWithVelMag</span><span class="p">(</span>
             <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;WOA_transects&#39;</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">'WOA_transects'</span><span class="p">,</span>
             <span class="n">transectCollectionName</span><span class="o">=</span><span class="n">transectCollectionName</span><span class="p">,</span>
             <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
@@ -232,31 +232,31 @@
         <span class="n">plotObs</span> <span class="o">=</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">plotObs</span><span class="p">:</span>
 
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Observations (WOA23 1991-2020)&#39;</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">'Observations (WOA23 1991-2020)'</span>
 
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - State Estimate&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Model - State Estimate'</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">'</span>
 
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
+            <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
             <span class="n">fieldPrefixUpper</span> <span class="o">=</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
             <span class="k">for</span> <span class="n">lon</span> <span class="ow">in</span> <span class="n">longitudes</span><span class="p">:</span>
-                <span class="n">transectName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;lon_</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">transectName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'lon_</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">'</span>
 
                 <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
-                    <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;WOA_</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">_&#39;</span>
+                    <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'WOA_</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">_'</span>
                     <span class="k">if</span> <span class="n">plotObs</span><span class="p">:</span>
-                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsFieldName&#39;</span><span class="p">]</span>
+                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'obsFieldName'</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span>
 
                     <span class="n">fieldNameInTytle</span> <span class="o">=</span> \
-                        <span class="sa">fr</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">field</span><span class="p">[</span><span class="s2">&quot;titleName&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> at </span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">$\degree$ Lon.&#39;</span>
+                        <span class="sa">fr</span><span class="s1">'</span><span class="si">{</span><span class="n">field</span><span class="p">[</span><span class="s2">"titleName"</span><span class="p">]</span><span class="si">}</span><span class="s1"> at </span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">$\degree$ Lon.'</span>
                     <span class="c1"># make a new subtask for this season and comparison grid</span>
                     <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotTransectSubtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="p">,</span> <span class="n">transectName</span><span class="p">,</span>
                                                   <span class="n">fieldPrefix</span><span class="p">,</span>
@@ -266,17 +266,17 @@
                     <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                         <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
                         <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTytle</span><span class="p">,</span>
-                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">],</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">],</span>
                         <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                         <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                         <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                        <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
-                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldNameInTytle</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;WOA23 Transects&#39;</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'units'</span><span class="p">],</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldNameInTytle</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'WOA23 Transects'</span><span class="p">,</span>
                         <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;woa_transects&#39;</span><span class="p">,</span>
-                        <span class="n">galleryName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
-                        <span class="n">configSectionName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;woa</span><span class="si">{</span><span class="n">fieldPrefixUpper</span><span class="si">}</span><span class="s1">Transects&#39;</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">'woa_transects'</span><span class="p">,</span>
+                        <span class="n">galleryName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">],</span>
+                        <span class="n">configSectionName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'woa</span><span class="si">{</span><span class="n">fieldPrefixUpper</span><span class="si">}</span><span class="s1">Transects'</span><span class="p">,</span>
                         <span class="n">verticalBounds</span><span class="o">=</span><span class="n">verticalBounds</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
@@ -285,7 +285,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">WoaTransectsObservations</span><span class="p">(</span><span class="n">TransectsObservations</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A class for loading and manipulating WOA transect data</span>
 
 <span class="sd">    Attributes</span>
@@ -293,7 +293,7 @@
 
 <span class="sd">    fields : list of dict</span>
 <span class="sd">        dictionaries defining the fields with associated WOA data</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -302,7 +302,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">horizontalResolution</span><span class="p">,</span>
                  <span class="n">transectCollectionName</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the object, setting the observations dictionary to None.</span>
 
 <span class="sd">        Parameters</span>
@@ -311,17 +311,17 @@
 <span class="sd">            Configuration options</span>
 
 <span class="sd">        horizontalResolution : str</span>
-<span class="sd">            &#39;obs&#39; for the obs as they are or a size in km if subdivision is</span>
+<span class="sd">            'obs' for the obs as they are or a size in km if subdivision is</span>
 <span class="sd">            desired.</span>
 
 <span class="sd">        transectCollectionName : str</span>
 <span class="sd">            A name that describes the collection of transects (e.g. the name</span>
 <span class="sd">            of the collection of observations) used to name the</span>
-<span class="sd">            destination &quot;mesh&quot; for regridding</span>
+<span class="sd">            destination "mesh" for regridding</span>
 
 <span class="sd">        fields : list of dict</span>
 <span class="sd">            dictionaries defining the fields with associated WOA data</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -337,14 +337,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Read in and set up the observations.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        obsDatasets : OrderedDict</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -358,9 +358,9 @@
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_observations</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">extract_observations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Extract WOA23 observations over the range of lat and lon requested</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -370,20 +370,20 @@
         <span class="n">longitudes</span> <span class="o">=</span> <span class="n">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
         <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;woa23Subdirectory&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'woa23Subdirectory'</span><span class="p">)</span>
 
         <span class="n">outObsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;output&#39;</span><span class="p">,</span>
-            <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;climatologySubdirectory&#39;</span><span class="p">,</span>
-            <span class="n">relativePathSection</span><span class="o">=</span><span class="s1">&#39;oceanObservations&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'output'</span><span class="p">,</span>
+            <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'climatologySubdirectory'</span><span class="p">,</span>
+            <span class="n">relativePathSection</span><span class="o">=</span><span class="s1">'oceanObservations'</span><span class="p">)</span>
 
         <span class="n">make_directories</span><span class="p">(</span><span class="n">outObsDirectory</span><span class="p">)</span>
 
         <span class="n">transectsFileName</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outObsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">outObsDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">.nc'</span>
         <span class="n">obsFileNames</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">lon</span> <span class="ow">in</span> <span class="n">longitudes</span><span class="p">:</span>
-            <span class="n">transectName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;lon_</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">transectName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'lon_</span><span class="si">{</span><span class="n">lon</span><span class="si">}</span><span class="s1">'</span>
             <span class="n">obsFileNames</span><span class="p">[</span><span class="n">transectName</span><span class="p">]</span> <span class="o">=</span> <span class="n">transectsFileName</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">obsFileNames</span> <span class="o">=</span> <span class="n">obsFileNames</span>
@@ -391,13 +391,13 @@
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">transectsFileName</span><span class="p">):</span>
             <span class="k">return</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Preprocessing WOA transect data...&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Preprocessing WOA transect data...'</span><span class="p">)</span>
 
-        <span class="n">minLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;minLat&#39;</span><span class="p">)</span>
-        <span class="n">maxLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;maxLat&#39;</span><span class="p">)</span>
+        <span class="n">minLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'woaTransects'</span><span class="p">,</span> <span class="s1">'minLat'</span><span class="p">)</span>
+        <span class="n">maxLat</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span><span class="s1">'woaTransects'</span><span class="p">,</span> <span class="s1">'maxLat'</span><span class="p">)</span>
 
-        <span class="n">fileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/&#39;</span> \
-                   <span class="sa">f</span><span class="s1">&#39;woa23_decav_04_pt_s_mon_ann.20241101.nc&#39;</span>
+        <span class="n">fileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/'</span> \
+                   <span class="sa">f</span><span class="s1">'woa23_decav_04_pt_s_mon_ann.20241101.nc'</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 
@@ -407,20 +407,20 @@
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
                                      <span class="n">indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
 
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">longitudes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;nearest&#39;</span><span class="p">))</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lon</span><span class="o">=</span><span class="n">longitudes</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">'nearest'</span><span class="p">))</span>
 
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;depth&#39;</span><span class="p">:</span> <span class="s1">&#39;z&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'depth'</span><span class="p">:</span> <span class="s1">'z'</span><span class="p">})</span>
         <span class="n">attrs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">attrs</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dsObs</span><span class="o">.</span><span class="n">z</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;positive&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dsObs</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span> <span class="o">=</span> <span class="n">attrs</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'positive'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'up'</span>
 
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsObs</span><span class="p">,</span> <span class="n">transectsFileName</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Done.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'  Done.'</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">transectName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -436,38 +436,38 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : xarray.Dataset</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 
-        <span class="n">lon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">transectName</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">lon</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">transectName</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">lon</span><span class="p">)</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span> <span class="n">lon</span><span class="o">=</span><span class="n">lon</span><span class="p">)</span>
         <span class="n">lon</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">lon</span><span class="o">.</span><span class="n">values</span>
 
         <span class="c1"># must have capital Time</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'time'</span><span class="p">:</span> <span class="s1">'Time'</span><span class="p">})</span>
         <span class="c1"># make sure month is a coord</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="s1">'month'</span><span class="p">)</span>
         <span class="c1"># add a dummy year to the dataset</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
 
         <span class="c1"># do some dropping and renaming so we end up with the right coordinates</span>
         <span class="c1"># and dimensions for transects</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="s1">&#39;nPoints&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">:</span> <span class="s1">&#39;nz&#39;</span><span class="p">})</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">nPoints</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">nz</span>
-        <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;nPoints&#39;</span><span class="p">,</span> <span class="n">lon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;nPoints&#39;</span><span class="p">]))</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">&#39;nPoints&#39;</span><span class="p">,</span> <span class="s1">&#39;nz&#39;</span><span class="p">])</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'lat'</span><span class="p">:</span> <span class="s1">'nPoints'</span><span class="p">,</span> <span class="s1">'z'</span><span class="p">:</span> <span class="s1">'nz'</span><span class="p">})</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'lat'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">nPoints</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">nz</span>
+        <span class="n">dsObs</span><span class="p">[</span><span class="s1">'lon'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'nPoints'</span><span class="p">,</span> <span class="n">lon</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'nPoints'</span><span class="p">]))</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">([</span><span class="s1">'nPoints'</span><span class="p">,</span> <span class="s1">'nz'</span><span class="p">])</span>
 
         <span class="k">return</span> <span class="n">dsObs</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_longitudes</span><span class="p">(</span><span class="n">config</span><span class="p">):</span>
-    <span class="n">longitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">&#39;woaTransects&#39;</span><span class="p">,</span> <span class="s1">&#39;longitudes&#39;</span><span class="p">)</span>
+    <span class="n">longitudes</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span><span class="s1">'woaTransects'</span><span class="p">,</span> <span class="s1">'longitudes'</span><span class="p">)</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">longitudes</span><span class="p">)</span>
     <span class="c1"># make sure longitudes are between -180 and 180</span>
     <span class="n">longitudes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mod</span><span class="p">(</span><span class="n">longitudes</span> <span class="o">+</span> <span class="mf">180.</span><span class="p">,</span> <span class="mf">360.</span><span class="p">)</span> <span class="o">-</span> <span class="mf">180.</span><span class="p">)</span>

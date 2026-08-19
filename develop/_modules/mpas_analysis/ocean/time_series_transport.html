@@ -133,10 +133,10 @@
 <div class="viewcode-block" id="TimeSeriesTransport">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesTransport</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract and plot time series of transport through transects on the MPAS</span>
 <span class="sd">    mesh.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -146,7 +146,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.TimeSeriesTransport.html#mpas_analysis.ocean.TimeSeriesTransport.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -156,7 +156,7 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -164,20 +164,20 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;transport&#39;</span><span class="p">])</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'timeSeriesTransport'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'transport'</span><span class="p">])</span>
 
-        <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+        <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startYear'</span><span class="p">)</span>
+        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endYear'</span><span class="p">)</span>
 
-        <span class="n">transportGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;timeSeriesTransport&#39;</span><span class="p">,</span> <span class="s1">&#39;transportGroups&#39;</span><span class="p">)</span>
+        <span class="n">transportGroups</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'timeSeriesTransport'</span><span class="p">,</span> <span class="s1">'transportGroups'</span><span class="p">)</span>
 
         <span class="n">years</span> <span class="o">=</span> <span class="p">[</span><span class="n">year</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">transportGroup</span> <span class="ow">in</span> <span class="n">transportGroups</span><span class="p">:</span>
-            <span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-            <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;transectsToPlot&#39;</span><span class="p">)</span>
+            <span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
+            <span class="n">transectsToPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="sa">f</span><span class="s1">'timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                                                   <span class="s1">'transectsToPlot'</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transectsToPlot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span>
 
@@ -189,8 +189,8 @@
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">masksSubtask</span><span class="p">)</span>
 
-            <span class="c1"># in the end, we&#39;ll combine all the time series into one, but we</span>
-            <span class="c1"># create this task first so it&#39;s easier to tell it to run after all</span>
+            <span class="c1"># in the end, we'll combine all the time series into one, but we</span>
+            <span class="c1"># create this task first so it's easier to tell it to run after all</span>
             <span class="c1"># the compute tasks</span>
             <span class="n">combineSubtask</span> <span class="o">=</span> <span class="n">CombineTransportSubtask</span><span class="p">(</span>
                 <span class="bp">self</span><span class="p">,</span> <span class="n">startYears</span><span class="o">=</span><span class="n">years</span><span class="p">,</span> <span class="n">endYears</span><span class="o">=</span><span class="n">years</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="o">=</span><span class="n">groupSuffix</span><span class="p">)</span>
@@ -215,7 +215,7 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">ComputeTransportSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Computes time-series of transport through transects.</span>
 
 <span class="sd">    Attributes</span>
@@ -231,7 +231,7 @@
 
 <span class="sd">    groupSuffix : str</span>
 <span class="sd">        standard transects vs Arctic transects</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -239,7 +239,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span><span class="p">,</span>
                  <span class="n">masksSubtask</span><span class="p">,</span> <span class="n">transectsToPlot</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -259,11 +259,11 @@
 
 <span class="sd">        groupSuffix : str</span>
 <span class="sd">            standard transects vs Arctic transects</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-        <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;compute</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'compute</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">'</span>
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
@@ -272,8 +272,8 @@
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
             <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                                  <span class="s1">&#39;subprocessCount&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subprocessCount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                                                  <span class="s1">'subprocessCount'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYear</span> <span class="o">=</span> <span class="n">startYear</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYear</span> <span class="o">=</span> <span class="n">endYear</span>
 
@@ -285,7 +285,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">groupSuffix</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
@@ -296,7 +296,7 @@
 <span class="sd">        ValueError</span>
 <span class="sd">            If ``config_land_ice_flux_mode`` is not one of ``standalone`` or</span>
 <span class="sd">            ``coupled``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -308,36 +308,36 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">ComputeTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
-            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_timeseriesstatsmonthly_enable&#39;</span><span class="p">,</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">'config_am_timeseriesstatsmonthly_enable'</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Load mesh related variables</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mesh_filename</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Computes time-series of transport through transects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Computing time series of transport through &quot;</span>
-                         <span class="s2">&quot;transects...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Computing time series of transport through "</span>
+                         <span class="s2">"transects..."</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="p">)</span>
 
-        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">))</span>
+        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/transport/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeseriesSubdirectory'</span><span class="p">))</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
             <span class="k">pass</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc'</span>
 
         <span class="n">outputExists</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">)</span>
         <span class="n">outputValid</span> <span class="o">=</span> <span class="n">outputExists</span>
@@ -359,32 +359,32 @@
                             <span class="k">break</span>
 
         <span class="k">if</span> <span class="n">outputValid</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Time series exists -- Done.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Time series exists -- Done.'</span><span class="p">)</span>
             <span class="k">return</span>
 
         <span class="n">inputFiles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
-            <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
+            <span class="s1">'timeSeriesStatsMonthlyOutput'</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
             <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">))</span>
 
         <span class="n">years</span><span class="p">,</span> <span class="n">months</span> <span class="o">=</span> <span class="n">get_files_year_month</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="p">,</span>
-                                             <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
+                                             <span class="s1">'timeSeriesStatsMonthlyOutput'</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_layerThickness&#39;</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_layerThickness'</span><span class="p">]</span>
         <span class="k">with</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
                                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span> <span class="k">as</span> <span class="n">dsIn</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
-                <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'timeMonthly_avg_normalTransportVelocity'</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+                <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'timeMonthly_avg_normalTransportVelocity'</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">'timeMonthly_avg_normalGMBolusVelocity'</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
                 <span class="n">variableList</span> <span class="o">=</span> <span class="n">variableList</span> <span class="o">+</span> \
-                               <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">,</span>
-                                <span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span><span class="p">]</span>
+                               <span class="p">[</span><span class="s1">'timeMonthly_avg_normalVelocity'</span><span class="p">,</span>
+                                <span class="s1">'timeMonthly_avg_normalGMBolusVelocity'</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Cannot compute transport velocity. &#39;</span>
-                                    <span class="s1">&#39;Using advection velocity.&#39;</span><span class="p">)</span>
-                <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;timeMonthly_avg_normalVelocity&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Cannot compute transport velocity. '</span>
+                                    <span class="s1">'Using advection velocity.'</span><span class="p">)</span>
+                <span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'timeMonthly_avg_normalVelocity'</span><span class="p">)</span>
 
         <span class="n">transectMaskFileName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">masksSubtask</span><span class="o">.</span><span class="n">maskFileName</span>
 
@@ -394,20 +394,20 @@
         <span class="n">maskTransectNames</span> <span class="o">=</span> <span class="n">decode_strings</span><span class="p">(</span><span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="p">)</span>
 
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;dvEdge&#39;</span><span class="p">,</span> <span class="s1">&#39;cellsOnEdge&#39;</span><span class="p">]]</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">'dvEdge'</span><span class="p">,</span> <span class="s1">'cellsOnEdge'</span><span class="p">]]</span>
         <span class="n">dsMesh</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
         <span class="n">dvEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">dvEdge</span>
         <span class="n">cellsOnEdge</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">cellsOnEdge</span> <span class="o">-</span> <span class="mi">1</span>
 
         <span class="n">transectIndices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">transectData</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Caching transect data...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Caching transect data...'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">transect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transectsToPlot</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'    transect: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transect</span><span class="p">))</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">transectIndex</span> <span class="o">=</span> <span class="n">maskTransectNames</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">transect</span><span class="p">)</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;      Not found in masks. Skipping.&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'      Not found in masks. Skipping.'</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="n">transectIndices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transectIndex</span><span class="p">)</span>
 
@@ -421,16 +421,16 @@
 
             <span class="n">dv</span> <span class="o">=</span> <span class="n">dvEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
             <span class="n">coe</span> <span class="o">=</span> <span class="n">cellsOnEdge</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
-            <span class="n">transectData</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;edgeIndices&#39;</span><span class="p">:</span> <span class="n">edgeIndices</span><span class="p">,</span>
-                                 <span class="s1">&#39;edgeSign&#39;</span><span class="p">:</span> <span class="n">edgeSign</span><span class="p">,</span>
-                                 <span class="s1">&#39;dv&#39;</span><span class="p">:</span> <span class="n">dv</span><span class="p">,</span>
-                                 <span class="s1">&#39;coe&#39;</span><span class="p">:</span> <span class="n">coe</span><span class="p">,</span>
-                                 <span class="s1">&#39;transect&#39;</span><span class="p">:</span> <span class="n">transect</span><span class="p">})</span>
+            <span class="n">transectData</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">'edgeIndices'</span><span class="p">:</span> <span class="n">edgeIndices</span><span class="p">,</span>
+                                 <span class="s1">'edgeSign'</span><span class="p">:</span> <span class="n">edgeSign</span><span class="p">,</span>
+                                 <span class="s1">'dv'</span><span class="p">:</span> <span class="n">dv</span><span class="p">,</span>
+                                 <span class="s1">'coe'</span><span class="p">:</span> <span class="n">coe</span><span class="p">,</span>
+                                 <span class="s1">'transect'</span><span class="p">:</span> <span class="n">transect</span><span class="p">})</span>
 
         <span class="n">timeDatasets</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Computing transport...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Computing transport...'</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">inputFiles</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    input file: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'    input file: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fileName</span><span class="p">))</span>
             <span class="n">dsTimeSlice</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
                 <span class="n">fileName</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
                 <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">,</span>
@@ -441,18 +441,18 @@
 
             <span class="n">transectDatasets</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">transectData</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;    transect: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;transect&#39;</span><span class="p">]))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'    transect: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">'transect'</span><span class="p">]))</span>
 
-                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;edgeIndices&#39;</span><span class="p">]</span>
-                <span class="n">coe</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;coe&#39;</span><span class="p">]</span>
-                <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;edgeSign&#39;</span><span class="p">]</span>
-                <span class="n">dv</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;dv&#39;</span><span class="p">]</span>
+                <span class="n">edgeIndices</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'edgeIndices'</span><span class="p">]</span>
+                <span class="n">coe</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'coe'</span><span class="p">]</span>
+                <span class="n">edgeSign</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'edgeSign'</span><span class="p">]</span>
+                <span class="n">dv</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">'dv'</span><span class="p">]</span>
                 <span class="n">dsIn</span> <span class="o">=</span> <span class="n">dsTimeSlice</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nEdges</span><span class="o">=</span><span class="n">edgeIndices</span><span class="p">)</span>
 
                 <span class="c1"># work on data from simulations</span>
-                <span class="k">if</span> <span class="s1">&#39;timeMonthly_avg_normalTransportVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">'timeMonthly_avg_normalTransportVelocity'</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
                     <span class="n">vel</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalTransportVelocity</span>
-                <span class="k">elif</span> <span class="s1">&#39;timeMonthly_avg_normalGMBolusVelocity&#39;</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
+                <span class="k">elif</span> <span class="s1">'timeMonthly_avg_normalGMBolusVelocity'</span> <span class="ow">in</span> <span class="n">dsIn</span><span class="p">:</span>
                     <span class="n">vel</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalVelocity</span> <span class="o">+</span>
                            <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_normalGMBolusVelocity</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -460,46 +460,46 @@
 
                 <span class="c1"># get layer thickness on edges by averaging adjacent cells</span>
                 <span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">timeMonthly_avg_layerThickness</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
-                    <span class="n">nCells</span><span class="o">=</span><span class="n">coe</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">&#39;TWO&#39;</span><span class="p">)</span>
+                    <span class="n">nCells</span><span class="o">=</span><span class="n">coe</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="s1">'TWO'</span><span class="p">)</span>
 
                 <span class="n">edgeTransport</span> <span class="o">=</span> <span class="n">edgeSign</span> <span class="o">*</span> <span class="n">vel</span> <span class="o">*</span> <span class="n">h</span> <span class="o">*</span> <span class="n">dv</span>
 
                 <span class="c1"># convert from m^3/s to Sv</span>
                 <span class="n">transport</span> <span class="o">=</span> <span class="p">(</span><span class="n">constants</span><span class="o">.</span><span class="n">m3ps_to_Sv</span> <span class="o">*</span> <span class="n">edgeTransport</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
-                    <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;nEdges&#39;</span><span class="p">,</span> <span class="s1">&#39;nVertLevels&#39;</span><span class="p">]))</span>
+                    <span class="n">dim</span><span class="o">=</span><span class="p">[</span><span class="s1">'nEdges'</span><span class="p">,</span> <span class="s1">'nVertLevels'</span><span class="p">]))</span>
 
                 <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">Dataset</span><span class="p">()</span>
-                <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;transport&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">transport</span>
-                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Sv&#39;</span>
-                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="s1">&#39;Transport through transects&#39;</span>
+                <span class="n">dsOut</span><span class="p">[</span><span class="s1">'transport'</span><span class="p">]</span> <span class="o">=</span> <span class="n">transport</span>
+                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Sv'</span>
+                <span class="n">dsOut</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="s1">'Transport through transects'</span>
                 <span class="n">transectDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
-            <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">transectDatasets</span><span class="p">,</span> <span class="s1">&#39;nTransects&#39;</span><span class="p">)</span>
+            <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">transectDatasets</span><span class="p">,</span> <span class="s1">'nTransects'</span><span class="p">)</span>
             <span class="n">timeDatasets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsOut</span><span class="p">)</span>
 
         <span class="c1"># combine data sets into a single data set</span>
-        <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">timeDatasets</span><span class="p">,</span> <span class="s1">&#39;Time&#39;</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;transectNames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
+        <span class="n">dsOut</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">timeDatasets</span><span class="p">,</span> <span class="s1">'Time'</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'transectNames'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsTransectMask</span><span class="o">.</span><span class="n">transectNames</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span>
             <span class="n">nTransects</span><span class="o">=</span><span class="n">transectIndices</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span> <span class="n">years</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;years&#39;</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">&#39;Time&#39;</span><span class="p">,),</span> <span class="n">months</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;months&#39;</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'Time'</span><span class="p">,),</span> <span class="n">years</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="s1">'year'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'years'</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'month'</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="s1">'Time'</span><span class="p">,),</span> <span class="n">months</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="p">[</span><span class="s1">'month'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'months'</span>
         <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsOut</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CombineTransportSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Combine individual time series into a single data set</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">startYears</span><span class="p">,</span> <span class="n">endYears</span><span class="p">,</span> <span class="n">groupSuffix</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -513,7 +513,7 @@
 <span class="sd">        groupSuffix : str</span>
 <span class="sd">            standard transects vs Arctic transects</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -524,40 +524,40 @@
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;combine</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">TimeSeries&#39;</span><span class="p">)</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'combine</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">TimeSeries'</span><span class="p">)</span>
         <span class="c1">#print(self.taskName, self.subtaskName)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">startYears</span> <span class="o">=</span> <span class="n">startYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span> <span class="o">=</span> <span class="n">endYears</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span> <span class="o">=</span> <span class="n">groupSuffix</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Combine the time series</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
         <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">groupSuffix</span>
-        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport/&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                   <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">))</span>
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/transport/'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                   <span class="s1">'timeseriesSubdirectory'</span><span class="p">))</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc'</span>
 
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileName</span><span class="p">):</span>
             <span class="n">inFileNames</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">startYear</span><span class="p">,</span> <span class="n">endYear</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">startYears</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">endYears</span><span class="p">):</span>
-                <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+                <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">outputDirectory</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc'</span>
                 <span class="n">inFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
 
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
-                                       <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">inFileNames</span><span class="p">,</span> <span class="n">combine</span><span class="o">=</span><span class="s1">'nested'</span><span class="p">,</span>
+                                       <span class="n">concat_dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
             <span class="n">ds</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
             <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">outFileName</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">PlotTransportSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plots time-series output of transport through transects.</span>
 
 <span class="sd">    Attributes</span>
@@ -575,7 +575,7 @@
 <span class="sd">        standard transects (``Transport Transects``)</span>
 <span class="sd">        vs Arctic transects (``Arctic Transport Transects``)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -584,7 +584,7 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">transect</span><span class="p">,</span> <span class="n">transectIndex</span><span class="p">,</span> <span class="n">controlConfig</span><span class="p">,</span>
                  <span class="n">transportTransectFileName</span><span class="p">,</span> <span class="n">transportGroup</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -605,19 +605,19 @@
 <span class="sd">        transportGroup : str (with spaces)</span>
 <span class="sd">            standard transects (``Transport Transects``)</span>
 <span class="sd">            vs Arctic transects (``Arctic Transport Transects``)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
-        <span class="n">transectKey</span> <span class="o">=</span> <span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
+        <span class="n">transectKey</span> <span class="o">=</span> <span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
             <span class="n">componentName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;plotTransport_</span><span class="si">{</span><span class="n">transectKey</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'plotTransport_</span><span class="si">{</span><span class="n">transectKey</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">transportTransectFileName</span> <span class="o">=</span> <span class="n">transportTransectFileName</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transect</span> <span class="o">=</span> <span class="n">transect</span>
@@ -626,14 +626,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span> <span class="o">=</span> <span class="n">transportGroup</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        IOError</span>
 <span class="sd">            If files are not present</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -644,43 +644,43 @@
         <span class="c1">#   self.calendar</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotTransportSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/transport_</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/transport_</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">))]</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Plots time-series output of transport through transects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Stephen Price</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting time series of transport through &quot;</span>
-                         <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Plotting time series of transport through "</span>
+                         <span class="s2">"</span><span class="si">{}</span><span class="s2">..."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="p">))</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load transport data...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load transport data...'</span><span class="p">)</span>
 
-        <span class="n">obsDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Drake Passage&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">175</span><span class="p">],</span>
-                   <span class="s1">&#39;Tasmania-Ant&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">],</span>
-                   <span class="s1">&#39;Africa-Ant&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                   <span class="s1">&#39;Antilles Inflow&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">23.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">13.7</span><span class="p">],</span>
-                   <span class="s1">&#39;Mona Passage&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.4</span><span class="p">],</span>
-                   <span class="s1">&#39;Windward Passage&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">7.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.8</span><span class="p">],</span>
-                   <span class="s1">&#39;Florida-Cuba&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
-                   <span class="s1">&#39;Florida-Bahamas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
-                   <span class="s1">&#39;Indonesian Throughflow&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">11</span><span class="p">],</span>
-                   <span class="s1">&#39;Agulhas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span>
-                   <span class="s1">&#39;Mozambique Channel&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">],</span>
-                   <span class="s1">&#39;Bering Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-                   <span class="s1">&#39;Lancaster Sound&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
-                   <span class="s1">&#39;Fram Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">4.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
-                   <span class="s1">&#39;Davis Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.6</span><span class="p">],</span>
-                   <span class="s1">&#39;Barents Sea Opening&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">],</span>
-                   <span class="s1">&#39;Nares Strait&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
-                   <span class="s1">&#39;OSNAP section East&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">15.6</span> <span class="o">-</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">15.6</span> <span class="o">+</span> <span class="mf">0.8</span><span class="p">],</span>
-                   <span class="s1">&#39;OSNAP section West&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.1</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.1</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">],</span>
-                   <span class="s1">&#39;Denmark Strait&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
-                   <span class="s1">&#39;Iceland-Faroe-Scotland&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">obsDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'Drake Passage'</span><span class="p">:</span> <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">175</span><span class="p">],</span>
+                   <span class="s1">'Tasmania-Ant'</span><span class="p">:</span> <span class="p">[</span><span class="mi">147</span><span class="p">,</span> <span class="mi">167</span><span class="p">],</span>
+                   <span class="s1">'Africa-Ant'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="s1">'Antilles Inflow'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">23.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">13.7</span><span class="p">],</span>
+                   <span class="s1">'Mona Passage'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">3.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.4</span><span class="p">],</span>
+                   <span class="s1">'Windward Passage'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">7.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">6.8</span><span class="p">],</span>
+                   <span class="s1">'Florida-Cuba'</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
+                   <span class="s1">'Florida-Bahamas'</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">33</span><span class="p">],</span>
+                   <span class="s1">'Indonesian Throughflow'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">21</span><span class="p">,</span> <span class="o">-</span><span class="mi">11</span><span class="p">],</span>
+                   <span class="s1">'Agulhas'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">],</span>
+                   <span class="s1">'Mozambique Channel'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">8</span><span class="p">],</span>
+                   <span class="s1">'Bering Strait'</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+                   <span class="s1">'Lancaster Sound'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">],</span>
+                   <span class="s1">'Fram Strait'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">4.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+                   <span class="s1">'Davis Strait'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">3.6</span><span class="p">],</span>
+                   <span class="s1">'Barents Sea Opening'</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">],</span>
+                   <span class="s1">'Nares Strait'</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.8</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                   <span class="s1">'OSNAP section East'</span><span class="p">:</span> <span class="p">[</span><span class="mf">15.6</span> <span class="o">-</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">15.6</span> <span class="o">+</span> <span class="mf">0.8</span><span class="p">],</span>
+                   <span class="s1">'OSNAP section West'</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.1</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.1</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">],</span>
+                   <span class="s1">'Denmark Strait'</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                   <span class="s1">'Iceland-Faroe-Scotland'</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
@@ -689,7 +689,7 @@
 
         <span class="n">fc</span> <span class="o">=</span> <span class="n">FeatureCollection</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">fcAll</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'properties'</span><span class="p">][</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="p">:</span>
                 <span class="n">fc</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
                 <span class="k">break</span>
 
@@ -702,51 +702,51 @@
 
         <span class="n">plotControl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="sa">f</span><span class="s1">'timeSeries</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                                            <span class="s1">'movingAveragePoints'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Plotting...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Plotting...'</span><span class="p">)</span>
 
-        <span class="n">transectName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">transectName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
         <span class="n">title</span> <span class="o">=</span> <span class="n">transectName</span>
         <span class="n">thumbnailDescription</span> <span class="o">=</span> <span class="n">transectName</span>
 
-        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time (yr)&#39;</span>
-        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">&#39;Transport (Sv)&#39;</span>
+        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">'Time (yr)'</span>
+        <span class="n">yLabel</span> <span class="o">=</span> <span class="s1">'Transport (Sv)'</span>
 
-        <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;transport_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">))</span>
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
+        <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'transport_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transect</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">))</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">)</span>
 
         <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">transport</span><span class="p">]</span>
-        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)]</span>
+        <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'mainColor'</span><span class="p">)]</span>
         <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.5</span><span class="p">]</span>
-        <span class="n">meanString</span> <span class="o">=</span> <span class="s1">&#39;mean=</span><span class="si">{:.2f}</span><span class="s1"> $</span><span class="se">\\</span><span class="s1">pm$ </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans_mean</span><span class="p">,</span> <span class="n">trans_std</span><span class="p">)</span>
+        <span class="n">meanString</span> <span class="o">=</span> <span class="s1">'mean=</span><span class="si">{:.2f}</span><span class="s1"> $</span><span class="se">\\</span><span class="s1">pm$ </span><span class="si">{:.2f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans_mean</span><span class="p">,</span> <span class="n">trans_std</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">plotControl</span><span class="p">:</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
             <span class="n">ref_transport</span><span class="p">,</span> <span class="n">ref_mean</span><span class="p">,</span> <span class="n">ref_std</span> <span class="o">=</span> \
                 <span class="bp">self</span><span class="o">.</span><span class="n">_load_transport</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">)</span>
-            <span class="n">refMeanString</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;mean=</span><span class="si">{</span><span class="n">ref_mean</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> $</span><span class="se">\\</span><span class="s1">pm$ </span><span class="si">{</span><span class="n">ref_std</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">refMeanString</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'mean=</span><span class="si">{</span><span class="n">ref_mean</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> $</span><span class="se">\\</span><span class="s1">pm$ </span><span class="si">{</span><span class="n">ref_std</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">'</span>
             <span class="n">fields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_transport</span><span class="p">)</span>
-            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">))</span>
+            <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'controlColor'</span><span class="p">))</span>
             <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
-            <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">,</span> <span class="n">meanString</span><span class="p">),</span>
-                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">,</span> <span class="n">refMeanString</span><span class="p">)]</span>
+            <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">,</span> <span class="n">meanString</span><span class="p">),</span>
+                          <span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">,</span> <span class="n">refMeanString</span><span class="p">)]</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainRunName</span><span class="p">]</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">meanString</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">meanString</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">'firstYearXTicks'</span><span class="p">):</span>
             <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                            <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
+                                            <span class="s1">'firstYearXTicks'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">'yearStrideXTicks'</span><span class="p">):</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                             <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
+                                             <span class="s1">'yearStrideXTicks'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -764,44 +764,44 @@
             <span class="n">t</span> <span class="o">=</span> <span class="n">transport</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">values</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">t</span><span class="p">),</span>
                                    <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-                                   <span class="n">label</span><span class="o">=</span><span class="s1">&#39;observations&#39;</span><span class="p">)</span>
-            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower left&#39;</span><span class="p">)</span>
+                                   <span class="n">label</span><span class="o">=</span><span class="s1">'observations'</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">'lower left'</span><span class="p">)</span>
 
         <span class="c1"># do this before the inset because otherwise it moves the inset</span>
-        <span class="c1"># and cartopy doesn&#39;t play too well with tight_layout anyway</span>
+        <span class="c1"># and cartopy doesn't play too well with tight_layout anyway</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 
         <span class="n">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
 
         <span class="n">savefig</span><span class="p">(</span><span class="n">outFileName</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
 
-        <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Transport through the </span><span class="si">{}</span><span class="s1"> Transect&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transectName</span><span class="p">)</span>
+        <span class="n">caption</span> <span class="o">=</span> <span class="s1">'Transport through the </span><span class="si">{}</span><span class="s1"> Transect'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transectName</span><span class="p">)</span>
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
             <span class="n">filePrefix</span><span class="o">=</span><span class="n">filePrefix</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
-            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Transport Time Series&#39;</span><span class="p">,</span>
-            <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;transporttime&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'Ocean'</span><span class="p">,</span>
+            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Transport Time Series'</span><span class="p">,</span>
+            <span class="n">groupLink</span><span class="o">=</span><span class="s1">'transporttime'</span><span class="p">,</span>
             <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">thumbnailDescription</span><span class="p">,</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">,</span>
             <span class="n">gallery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_transport</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Reads transport time series for this transect</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
-        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">groupSuffix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transportGroup</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
         <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-        <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
-        <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">baseDirectory</span><span class="si">}</span><span class="s1">/transport/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc&#39;</span>
+        <span class="n">startYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startYear'</span><span class="p">)</span>
+        <span class="n">endYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endYear'</span><span class="p">)</span>
+        <span class="n">inFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">baseDirectory</span><span class="si">}</span><span class="s1">/transport/</span><span class="si">{</span><span class="n">groupSuffix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">startYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">-</span><span class="si">{</span><span class="n">endYear</span><span class="si">:</span><span class="s1">04d</span><span class="si">}</span><span class="s1">.nc'</span>
 
         <span class="n">dsIn</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
         <span class="n">transport</span> <span class="o">=</span> <span class="n">dsIn</span><span class="o">.</span><span class="n">transport</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">nTransects</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transectIndex</span><span class="p">)</span>

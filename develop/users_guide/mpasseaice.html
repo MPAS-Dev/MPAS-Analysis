@@ -115,36 +115,36 @@ older E3SM runs):</p>
 </div>
 <p>Additionally, the duration of the run should be set to at least two years and
 typically longer before most analysis is useful:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">&#39;0002-00-00_00:00:00&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">'0002-00-00_00:00:00'</span>
 </pre></div>
 </div>
 <p>Several streams must be defined in the streams file, typically
 <code class="docutils literal notranslate"><span class="pre">streams.seaice</span></code> or <code class="docutils literal notranslate"><span class="pre">streams.cice</span></code> in older E3SM runs, (even if they will
 not be written out – <code class="docutils literal notranslate"><span class="pre">output_interval=&quot;none&quot;</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyRestart&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;input;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;output_interval&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span>
-        <span class="n">input_interval</span><span class="o">=</span><span class="s2">&quot;initial_only&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;stream:restart:output_interval&quot;</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyRestart"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"input;output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"output_interval"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span>
+        <span class="n">input_interval</span><span class="o">=</span><span class="s2">"initial_only"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"stream:restart:output_interval"</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span><span class="o">&gt;</span>
 
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;icePresent&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceAreaCell&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceVolumeCell&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"icePresent"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"iceAreaCell"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"iceVolumeCell"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 </pre></div>
 </div>

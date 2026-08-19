@@ -199,72 +199,72 @@ via config sections and options, as described below.</p>
 <span class="c1">## (if they include a depth dimension) without observatons for comparison</span>
 
 <span class="c1"># comparison grid(s)</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'latlon'</span><span class="p">]</span>
 
 <span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">'ANN'</span><span class="p">]</span>
 
-<span class="c1"># list of depths in meters (positive up) at which to analyze, &#39;top&#39; for the</span>
-<span class="c1"># sea surface, &#39;bot&#39; for the sea floor</span>
-<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1500</span><span class="p">,</span> <span class="o">-</span><span class="mi">2000</span><span class="p">,</span> <span class="s1">&#39;bot&#39;</span><span class="p">]</span>
+<span class="c1"># list of depths in meters (positive up) at which to analyze, 'top' for the</span>
+<span class="c1"># sea surface, 'bot' for the sea floor</span>
+<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'top'</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1500</span><span class="p">,</span> <span class="o">-</span><span class="mi">2000</span><span class="p">,</span> <span class="s1">'bot'</span><span class="p">]</span>
 
 <span class="c1"># a list of variables available to plot. New variables can be added as long</span>
-<span class="c1"># as they correspond to a single field already found in MPAS-Ocean&#39;s</span>
-<span class="c1"># timeSeriesStatsMonthly output. Add the &#39;name&#39;, &#39;title&#39;, &#39;units&#39; (with $$</span>
-<span class="c1"># instead a single dollar sign for the config parser), and &#39;mpas&#39;(the</span>
+<span class="c1"># as they correspond to a single field already found in MPAS-Ocean's</span>
+<span class="c1"># timeSeriesStatsMonthly output. Add the 'name', 'title', 'units' (with $$</span>
+<span class="c1"># instead a single dollar sign for the config parser), and 'mpas'(the</span>
 <span class="c1"># timeSeriesStatsMonthly variable name as a single-item list) entries for each</span>
 <span class="c1"># variable. Then, add a section below climatologyMapCustom&lt;VariableName&gt; with</span>
 <span class="c1"># the colormap settings for that variable.</span>
 <span class="n">availableVariables</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;temperature&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$^\circ$$C&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;salinity&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;potentialDensity&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;kg m$$^{-3}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;thermalForcing&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Thermal Forcing&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$$^\circ$$C&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_density&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_activeTracers_layerThickness&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Zonal Velocity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Meridional Velocity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Zonal Velocity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_velocityZonal&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_velocityMeridional&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;vertVelocity&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Velocity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertVelocityTop&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;vertDiff&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Diffusivity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertDiffTopOfCell&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;vertVisc&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Vertical Viscosity&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;m s$$^{-1}$$&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_vertViscTopOfCell&#39;</span><span class="p">]},</span>
-    <span class="s1">&#39;mixedLayerDepth&#39;</span><span class="p">:</span>
-        <span class="p">{</span><span class="s1">&#39;title&#39;</span><span class="p">:</span> <span class="s1">&#39;Mixed Layer Depth&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;m&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_dThreshMLD&#39;</span><span class="p">]},</span>
+    <span class="s1">'temperature'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Potential Temperature'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$$^\circ$$C'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">]},</span>
+    <span class="s1">'salinity'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Salinity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'PSU'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">]},</span>
+    <span class="s1">'potentialDensity'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Potential Density'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'kg m$$^{-3}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_potentialDensity'</span><span class="p">]},</span>
+    <span class="s1">'thermalForcing'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Thermal Forcing'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$$^\circ$$C'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_density'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_activeTracers_layerThickness'</span><span class="p">]},</span>
+    <span class="s1">'zonalVelocity'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Zonal Velocity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_velocityZonal'</span><span class="p">]},</span>
+    <span class="s1">'meridionalVelocity'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Meridional Velocity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_velocityMeridional'</span><span class="p">]},</span>
+    <span class="s1">'velocityMagnitude'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Zonal Velocity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_velocityZonal'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_velocityMeridional'</span><span class="p">]},</span>
+    <span class="s1">'vertVelocity'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Vertical Velocity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_vertVelocityTop'</span><span class="p">]},</span>
+    <span class="s1">'vertDiff'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Vertical Diffusivity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_vertDiffTopOfCell'</span><span class="p">]},</span>
+    <span class="s1">'vertVisc'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Vertical Viscosity'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'m s$$^{-1}$$'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_vertViscTopOfCell'</span><span class="p">]},</span>
+    <span class="s1">'mixedLayerDepth'</span><span class="p">:</span>
+        <span class="p">{</span><span class="s1">'title'</span><span class="p">:</span> <span class="s1">'Mixed Layer Depth'</span><span class="p">,</span>
+        <span class="s1">'units'</span><span class="p">:</span> <span class="s1">'m'</span><span class="p">,</span>
+        <span class="s1">'mpas'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_dThreshMLD'</span><span class="p">]},</span>
     <span class="p">}</span>
 
 <span class="c1"># a list of fields top plot for each transect.  All supported fields are listed</span>
@@ -284,7 +284,7 @@ via config sections and options, as described below.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">10.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-2., 10., 9)</span>
 
@@ -295,7 +295,7 @@ via config sections and options, as described below.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">5.</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">5.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">5.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-5., 5., 9)</span>
 
@@ -303,103 +303,103 @@ via config sections and options, as described below.</p>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">haline</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">32.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">35.5</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">32.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">35.5</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomPotentialDensity</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">Spectral_r</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomThermalForcing</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">thermal</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">5.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">5.</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">3.</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">3.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">3.</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomZonalVelocity</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomMeridionalVelocity</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomVelocityMagnitude</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">ice</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1.e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1.e-3</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomVertVelocity</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">delta</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">1e-5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1e-5</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomVertDiff</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">rain</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomVertVisc</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">rain</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
 
 <span class="p">[</span><span class="n">climatologyMapCustomMixedLayerDepth</span><span class="p">]</span>
 <span class="n">colormapNameResult</span> <span class="o">=</span> <span class="n">viridis</span>
 <span class="n">colormapTypeResult</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">300.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">300.</span><span class="p">}</span>
 <span class="n">colorbarTicksResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
 <span class="n">colormapNameDifference</span> <span class="o">=</span> <span class="n">balance</span>
 <span class="n">colormapTypeDifference</span> <span class="o">=</span> <span class="n">continuous</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">symLog</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">&#39;linscale&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">200.</span><span class="p">,</span>
-                    <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">200.</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'linthresh'</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">'linscale'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">200.</span><span class="p">,</span>
+                    <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">200.</span><span class="p">}</span>
 <span class="n">colorbarTicksDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">200.</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="o">-</span><span class="mf">50.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">50.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">200.</span><span class="p">]</span>
 </pre></div>
 </div>

@@ -120,10 +120,10 @@
 <div class="viewcode-block" id="WoceTransects">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoceTransects.html#mpas_analysis.ocean.WoceTransects">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">WoceTransects</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plot model output at WOCE transects and compare it against WOCE</span>
 <span class="sd">    observations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -131,7 +131,7 @@
 <div class="viewcode-block" id="WoceTransects.__init__">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.WoceTransects.html#mpas_analysis.ocean.WoceTransects.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task and adds it as a subtask of the</span>
 <span class="sd">        ``parentTask``.</span>
 
@@ -146,47 +146,47 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;transect&#39;</span><span class="p">,</span> <span class="s1">&#39;woce&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'transect'</span><span class="p">,</span> <span class="s1">'woce'</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">WoceTransects</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;woceTransects&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'woceTransects'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
-        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;horizontalResolution&#39;</span><span class="p">)</span>
+        <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'horizontalResolution'</span><span class="p">)</span>
 
         <span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;verticalComparisonGridName&#39;</span><span class="p">)</span>
+                                                <span class="s1">'verticalComparisonGridName'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">,</span> <span class="s1">&#39;obs&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">verticalComparisonGridName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'mpas'</span><span class="p">,</span> <span class="s1">'obs'</span><span class="p">]:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getnumpy</span><span class="p">(</span>
-                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalComparisonGrid&#39;</span>
+                <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalComparisonGrid'</span>
             <span class="p">)</span>
 
-        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;verticalBounds&#39;</span><span class="p">)</span>
+        <span class="n">verticalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'verticalBounds'</span><span class="p">)</span>
 
         <span class="n">horizontalBounds</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span>
-            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;horizontalBounds&#39;</span><span class="p">)</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'horizontalBounds'</span><span class="p">)</span>
 
         <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;woceSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'woceSubdirectory'</span><span class="p">)</span>
 
         <span class="n">origObsFileNames</span> <span class="o">=</span> \
-            <span class="p">{</span><span class="s1">&#39;WOCE_A21&#39;</span><span class="p">:</span> <span class="s1">&#39;WOCE_A21_Drake_Passage_20181126.nc&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;WOCE_A23&#39;</span><span class="p">:</span> <span class="s1">&#39;WOCE_A23_South_Atlantic_20181126.nc&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;WOCE_A12&#39;</span><span class="p">:</span> <span class="s1">&#39;WOCE_A12_Prime_Meridian_20181126.nc&#39;</span><span class="p">}</span>
+            <span class="p">{</span><span class="s1">'WOCE_A21'</span><span class="p">:</span> <span class="s1">'WOCE_A21_Drake_Passage_20181126.nc'</span><span class="p">,</span>
+             <span class="s1">'WOCE_A23'</span><span class="p">:</span> <span class="s1">'WOCE_A23_South_Atlantic_20181126.nc'</span><span class="p">,</span>
+             <span class="s1">'WOCE_A12'</span><span class="p">:</span> <span class="s1">'WOCE_A12_Prime_Meridian_20181126.nc'</span><span class="p">}</span>
 
         <span class="n">obsFileNames</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">horizontalBounds</span><span class="p">:</span>
@@ -197,40 +197,40 @@
                     <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
                     <span class="k">break</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Keys for horizontalBounds must start &#39;</span>
-                                 <span class="sa">f</span><span class="s1">&#39;with one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">origObsFileNames</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Keys for horizontalBounds must start '</span>
+                                 <span class="sa">f</span><span class="s1">'with one of </span><span class="si">{</span><span class="nb">list</span><span class="p">(</span><span class="n">origObsFileNames</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">obsFileNames</span><span class="p">:</span>
-            <span class="n">fileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">,</span>
+            <span class="n">fileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">observationsDirectory</span><span class="p">,</span>
                                       <span class="n">obsFileNames</span><span class="p">[</span><span class="n">transectName</span><span class="p">])</span>
             <span class="n">obsFileNames</span><span class="p">[</span><span class="n">transectName</span><span class="p">]</span> <span class="o">=</span> <span class="n">fileName</span>
 
         <span class="n">fields</span> <span class="o">=</span> \
-            <span class="p">{</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span>
-                <span class="p">{</span><span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;obs&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialTemperature&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">},</span>
-             <span class="s1">&#39;salinity&#39;</span><span class="p">:</span>
-                <span class="p">{</span><span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;obs&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">},</span>
-             <span class="s1">&#39;potentialDensity&#39;</span><span class="p">:</span>
-                <span class="p">{</span><span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;obs&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">},</span>
-             <span class="s1">&#39;potentialDensityContour&#39;</span><span class="p">:</span>
-                 <span class="p">{</span><span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;obs&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Density Contours&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;kg m$^{-3}$&#39;</span><span class="p">}}</span>
+            <span class="p">{</span><span class="s1">'temperature'</span><span class="p">:</span>
+                <span class="p">{</span><span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+                 <span class="s1">'obs'</span><span class="p">:</span> <span class="s1">'potentialTemperature'</span><span class="p">,</span>
+                 <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Potential Temperature'</span><span class="p">,</span>
+                 <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\degree$C'</span><span class="p">},</span>
+             <span class="s1">'salinity'</span><span class="p">:</span>
+                <span class="p">{</span><span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">,</span>
+                 <span class="s1">'obs'</span><span class="p">:</span> <span class="s1">'salinity'</span><span class="p">,</span>
+                 <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Salinity'</span><span class="p">,</span>
+                 <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'PSU'</span><span class="p">},</span>
+             <span class="s1">'potentialDensity'</span><span class="p">:</span>
+                <span class="p">{</span><span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_potentialDensity'</span><span class="p">,</span>
+                 <span class="s1">'obs'</span><span class="p">:</span> <span class="s1">'potentialDensity'</span><span class="p">,</span>
+                 <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Potential Density'</span><span class="p">,</span>
+                 <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'kg m$^{-3}$'</span><span class="p">},</span>
+             <span class="s1">'potentialDensityContour'</span><span class="p">:</span>
+                 <span class="p">{</span><span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_potentialDensity'</span><span class="p">,</span>
+                  <span class="s1">'obs'</span><span class="p">:</span> <span class="s1">'potentialDensity'</span><span class="p">,</span>
+                  <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Potential Density Contours'</span><span class="p">,</span>
+                  <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'kg m$^{-3}$'</span><span class="p">}}</span>
 
-        <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">&#39;WOCE_transects&#39;</span>
-        <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;obs&#39;</span><span class="p">,</span> <span class="s1">&#39;mpas&#39;</span><span class="p">]:</span>
+        <span class="n">transectCollectionName</span> <span class="o">=</span> <span class="s1">'WOCE_transects'</span>
+        <span class="k">if</span> <span class="n">horizontalResolution</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'obs'</span><span class="p">,</span> <span class="s1">'mpas'</span><span class="p">]:</span>
             <span class="n">transectCollectionName</span> <span class="o">=</span> \
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km&#39;</span>
+                <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">transectCollectionName</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">horizontalResolution</span><span class="si">}</span><span class="s1">km'</span>
 
         <span class="n">transectsObservations</span> <span class="o">=</span> <span class="n">TransectsObservations</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">obsFileNames</span><span class="p">,</span>
                                                       <span class="n">horizontalResolution</span><span class="p">,</span>
@@ -239,9 +239,9 @@
         <span class="n">computeTransectsSubtask</span> <span class="o">=</span> <span class="n">ComputeTransectsSubtask</span><span class="p">(</span>
             <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;WOCE&#39;</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">'WOCE'</span><span class="p">,</span>
             <span class="n">transectCollectionName</span><span class="o">=</span><span class="n">transectCollectionName</span><span class="p">,</span>
-            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
+            <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
             <span class="n">obsDatasets</span><span class="o">=</span><span class="n">transectsObservations</span><span class="p">,</span>
             <span class="n">verticalComparisonGridName</span><span class="o">=</span><span class="n">verticalComparisonGridName</span><span class="p">,</span>
@@ -250,35 +250,35 @@
         <span class="n">plotObs</span> <span class="o">=</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">plotObs</span><span class="p">:</span>
 
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Observations (WOCE)&#39;</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">'Observations (WOCE)'</span>
 
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
 
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">'</span>
 
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
-        <span class="n">fieldNameDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;temperature&#39;</span><span class="p">:</span> <span class="s1">&#39;temperatureTransect&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;salinity&#39;</span><span class="p">:</span> <span class="s1">&#39;salinityTransect&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;potentialDensity&#39;</span><span class="p">:</span> <span class="s1">&#39;potentialDensityTransect&#39;</span><span class="p">,</span>
-                         <span class="s1">&#39;potentialDensityContour&#39;</span><span class="p">:</span>
-                             <span class="s1">&#39;potentialDensityContourTransect&#39;</span><span class="p">}</span>
+        <span class="n">fieldNameDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'temperature'</span><span class="p">:</span> <span class="s1">'temperatureTransect'</span><span class="p">,</span>
+                         <span class="s1">'salinity'</span><span class="p">:</span> <span class="s1">'salinityTransect'</span><span class="p">,</span>
+                         <span class="s1">'potentialDensity'</span><span class="p">:</span> <span class="s1">'potentialDensityTransect'</span><span class="p">,</span>
+                         <span class="s1">'potentialDensityContour'</span><span class="p">:</span>
+                             <span class="s1">'potentialDensityContourTransect'</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">fieldName</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">transectName</span> <span class="ow">in</span> <span class="n">obsFileNames</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
                     <span class="n">outFileLabel</span> <span class="o">=</span> <span class="n">fieldNameDict</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span>
                     <span class="k">if</span> <span class="n">plotObs</span><span class="p">:</span>
-                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">&#39;obs&#39;</span><span class="p">]</span>
+                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">'obs'</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
+                        <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">'mpas'</span><span class="p">]</span>
 
                     <span class="n">fieldNameUpper</span> <span class="o">=</span> <span class="n">fieldName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">fieldName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-                    <span class="n">titleName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">&#39;titleName&#39;</span><span class="p">]</span>
+                    <span class="n">titleName</span> <span class="o">=</span> <span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">'titleName'</span><span class="p">]</span>
                     <span class="n">fieldNameInTitle</span> <span class="o">=</span> \
-                        <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">titleName</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">transectName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">titleName</span><span class="si">}</span><span class="s1"> from </span><span class="si">{</span><span class="n">transectName</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"_"</span><span class="p">,</span><span class="w"> </span><span class="s2">" "</span><span class="p">)</span><span class="si">}</span><span class="s1">'</span>
 
                     <span class="c1"># make a new subtask for this season and comparison grid</span>
                     <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotTransectSubtask</span><span class="p">(</span>
@@ -289,17 +289,17 @@
                     <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                         <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
                         <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
-                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">&#39;mpas&#39;</span><span class="p">],</span>
+                        <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">'mpas'</span><span class="p">],</span>
                         <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                         <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                         <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                        <span class="n">unitsLabel</span><span class="o">=</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
-                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldNameInTitle</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;WOCE Transects&#39;</span><span class="p">,</span>
+                        <span class="n">unitsLabel</span><span class="o">=</span><span class="n">fields</span><span class="p">[</span><span class="n">fieldName</span><span class="p">][</span><span class="s1">'units'</span><span class="p">],</span>
+                        <span class="n">imageCaption</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldNameInTitle</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'WOCE Transects'</span><span class="p">,</span>
                         <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;woce&#39;</span><span class="p">,</span>
+                        <span class="n">groupLink</span><span class="o">=</span><span class="s1">'woce'</span><span class="p">,</span>
                         <span class="n">galleryName</span><span class="o">=</span><span class="n">titleName</span><span class="p">,</span>
-                        <span class="n">configSectionName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;woce</span><span class="si">{</span><span class="n">fieldNameUpper</span><span class="si">}</span><span class="s1">Transects&#39;</span><span class="p">,</span>
+                        <span class="n">configSectionName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'woce</span><span class="si">{</span><span class="n">fieldNameUpper</span><span class="si">}</span><span class="s1">Transects'</span><span class="p">,</span>
                         <span class="n">verticalBounds</span><span class="o">=</span><span class="n">verticalBounds</span><span class="p">)</span>
 
                     <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>

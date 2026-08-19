@@ -115,14 +115,14 @@
     <span class="n">string_to_days_since_date</span><span class="p">,</span> <span class="n">string_to_datetime</span><span class="p">,</span> <span class="n">days_to_datetime</span><span class="p">,</span> \
     <span class="n">datetime_to_days</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Utility functions for importing MPAS files into xarray.</span>
 
 <span class="sd">open_multifile_dataset : open an xarray data set from MPAS data files</span>
 <span class="sd">subset_variables : Keep only a subset of variables in a dataset</span>
 <span class="sd">preprocess : preprocess a single file of an xarray dataset</span>
-<span class="sd">remove_repeated_time_index : remove redundant indices in the &#39;Time&#39; coordinate</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">remove_repeated_time_index : remove redundant indices in the 'Time' coordinate</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -132,10 +132,10 @@
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.open_multifile_dataset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">open_multifile_dataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                            <span class="n">simulationStartTime</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
+                           <span class="n">timeVariableName</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">,</span>
                            <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">selValues</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">iselValues</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
 <span class="sd">    calendar name.</span>
 
@@ -144,7 +144,7 @@
 <span class="sd">    fileNames : list of strings</span>
 <span class="sd">        A lsit of file paths to read</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    simulationStartTime : string, optional</span>
@@ -161,7 +161,7 @@
 <span class="sd">        start of the simulation.</span>
 
 <span class="sd">    timeVariableName : string, optional</span>
-<span class="sd">        The name of the time variable (typically ``&#39;xtime&#39;`` or ``&#39;Time&#39;``).</span>
+<span class="sd">        The name of the time variable (typically ``'xtime'`` or ``'Time'``).</span>
 
 <span class="sd">    variableList : list of strings, optional</span>
 <span class="sd">        If present, a list of variables to be included in the data set</span>
@@ -172,7 +172,7 @@
 <span class="sd">        ``xarray.dataset.sel()`` for details on how this dictonary is used.</span>
 <span class="sd">        An example::</span>
 
-<span class="sd">            selectCorrdValues = {&#39;cellLon&#39;: 180.0}</span>
+<span class="sd">            selectCorrdValues = {'cellLon': 180.0}</span>
 
 <span class="sd">    iselValues : dict, optional</span>
 <span class="sd">        A dictionary of coordinate names (keys) and indices, slices or</span>
@@ -180,8 +180,8 @@
 <span class="sd">        ``xarray.dataset.isel()`` for details on how this dictonary is used.</span>
 <span class="sd">        An example::</span>
 
-<span class="sd">            iselValues = {&#39;nVertLevels&#39;: slice(0, 3),</span>
-<span class="sd">                          &#39;nCells&#39;: cellIDs}</span>
+<span class="sd">            iselValues = {'nVertLevels': slice(0, 3),</span>
+<span class="sd">                          'nCells': cellIDs}</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -197,7 +197,7 @@
 <span class="sd">        If the time variable is not found in the data set or if the time</span>
 <span class="sd">        variable is a number of days since the start of the simulation but</span>
 <span class="sd">        simulationStartTime is None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -212,7 +212,7 @@
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span>
                                <span class="n">preprocess</span><span class="o">=</span><span class="n">preprocess_partial</span><span class="p">,</span>
-                               <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                               <span class="n">combine</span><span class="o">=</span><span class="s1">'nested'</span><span class="p">,</span> <span class="n">concat_dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span>
                                <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
@@ -224,7 +224,7 @@
 <div class="viewcode-block" id="subset_variables">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.subset_variables">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a data set and a list of variable names, returns a new data set that</span>
 <span class="sd">    contains only variables with those names.</span>
 
@@ -246,7 +246,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If the resulting data set is empty.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -261,10 +261,10 @@
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s1">&#39;Empty dataset is returned.</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="s1">&#39;Variables </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="s1">&#39;are not found within the dataset &#39;</span>
-            <span class="s1">&#39;variables: </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableList</span><span class="p">,</span> <span class="n">allvars</span><span class="p">))</span>
+            <span class="s1">'Empty dataset is returned.</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="s1">'Variables </span><span class="si">{}</span><span class="se">\n</span><span class="s1">'</span>
+            <span class="s1">'are not found within the dataset '</span>
+            <span class="s1">'variables: </span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableList</span><span class="p">,</span> <span class="n">allvars</span><span class="p">))</span>
 
     <span class="k">return</span> <span class="n">ds</span></div>
 
@@ -274,7 +274,7 @@
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.preprocess">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">preprocess</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span> <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">timeVariableName</span><span class="p">,</span>
                <span class="n">variableList</span><span class="p">,</span> <span class="n">selValues</span><span class="p">,</span> <span class="n">iselValues</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Builds correct time specification for MPAS, allowing a date offset</span>
 <span class="sd">    because the time must be between 1678 and 2262 based on the xarray</span>
 <span class="sd">    library.  Also, if slicing information (`selValues` and/or</span>
@@ -287,7 +287,7 @@
 <span class="sd">        The data set containing an MPAS time variable to be used to build</span>
 <span class="sd">        an xarray time coordinate.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    simulationStartTime : string, optinal</span>
@@ -304,7 +304,7 @@
 <span class="sd">        start of the simulation.</span>
 
 <span class="sd">    timeVariableName : string, optional</span>
-<span class="sd">        The name of the time variable (typically ``&#39;xtime&#39;`` or ``&#39;Time&#39;``).</span>
+<span class="sd">        The name of the time variable (typically ``'xtime'`` or ``'Time'``).</span>
 
 <span class="sd">    variableList : list of strings</span>
 <span class="sd">        If present, a list of variables to be included in the data set</span>
@@ -315,7 +315,7 @@
 <span class="sd">        ``xarray.DataSet.sel()`` for details on how this dictonary is used.</span>
 <span class="sd">        An example::</span>
 
-<span class="sd">            selectCorrdValues = {&#39;cellLon&#39;: 180.0}</span>
+<span class="sd">            selectCorrdValues = {'cellLon': 180.0}</span>
 
 <span class="sd">    iselValues : dict</span>
 <span class="sd">        A dictionary of coordinate names (keys) and indices, slices or</span>
@@ -323,15 +323,15 @@
 <span class="sd">        ``xarray.DataSet.isel()`` for details on how this dictonary is used.</span>
 <span class="sd">        An example::</span>
 
-<span class="sd">            iselValues = {&#39;nVertLevels&#39;: slice(0, 3),</span>
-<span class="sd">                          &#39;nCells&#39;: cellIDs}</span>
+<span class="sd">            iselValues = {'nVertLevels': slice(0, 3),</span>
+<span class="sd">                          'nCells': cellIDs}</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ds : ``xarray.DataSet`` object</span>
 <span class="sd">        A copy of the data set with the time coordinate set and which</span>
 <span class="sd">        has been sliced.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Milena Veneziani, Luke van Roekel</span>
@@ -339,7 +339,7 @@
 
     <span class="c1"># following a suggestion by @rabernat</span>
     <span class="c1"># https://github.com/pydata/xarray/issues/2064#issuecomment-381717472</span>
-    <span class="n">concat_dim</span> <span class="o">=</span> <span class="s1">&#39;Time&#39;</span>
+    <span class="n">concat_dim</span> <span class="o">=</span> <span class="s1">'Time'</span>
     <span class="n">coord_vars</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span> <span class="k">if</span> <span class="n">concat_dim</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ds</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">dims</span><span class="p">]</span>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="n">coord_vars</span><span class="p">)</span>
 
@@ -347,8 +347,8 @@
                              <span class="n">inTimeVariableName</span><span class="o">=</span><span class="n">timeVariableName</span><span class="p">,</span>
                              <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                              <span class="n">simulationStartTime</span><span class="o">=</span><span class="n">simulationStartTime</span><span class="p">,</span>
-                             <span class="n">outTimeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
-                             <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">)</span>
+                             <span class="n">outTimeVariableName</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span>
+                             <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">variableList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">subset_variables</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span>
@@ -370,7 +370,7 @@
 <div class="viewcode-block" id="remove_repeated_time_index">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index.html#mpas_analysis.shared.mpas_xarray.mpas_xarray.remove_repeated_time_index">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">remove_repeated_time_index</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Remove repeated times from xarray dataset.</span>
 
 <span class="sd">    Parameters</span>
@@ -382,7 +382,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    ds : ``xarray.DataSet`` object</span>
 <span class="sd">        A copy of the original data set with any repeated time indices removed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -411,7 +411,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_assert_valid_selections</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">selvals</span><span class="p">,</span> <span class="n">iselvals</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ensure that dataset selections are compatable.</span>
 
 <span class="sd">    It is possible selVals and iselVals may conflict, e.g., selVals</span>
@@ -420,7 +420,7 @@
 <span class="sd">    and iselvals are unique.  Additionally, keys for selvals and iselvals</span>
 <span class="sd">    are tested to make sure they are dataset dimensions that can be used</span>
 <span class="sd">    for selection.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
@@ -429,15 +429,15 @@
         <span class="k">if</span> <span class="n">vals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">assert</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">dims</span><span class="p">,</span> \
-                    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not a dimension in the dataset &#39;</span> \
-                    <span class="s1">&#39;that can be used for selection.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+                    <span class="s1">'</span><span class="si">{}</span><span class="s1"> is not a dimension in the dataset '</span> \
+                    <span class="s1">'that can be used for selection.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">selvals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">iselvals</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
         <span class="n">duplicatedkeys</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">selvals</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span>
                                             <span class="n">iselvals</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">duplicatedkeys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
-            <span class="s1">&#39;Duplicated selection of variables </span><span class="si">{}</span><span class="s1"> was found!  &#39;</span> \
-            <span class="s1">&#39;Selection is ambiguous.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duplicatedkeys</span><span class="p">)</span>
+            <span class="s1">'Duplicated selection of variables </span><span class="si">{}</span><span class="s1"> was found!  '</span> \
+            <span class="s1">'Selection is ambiguous.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">duplicatedkeys</span><span class="p">)</span>
 
     <span class="n">test_vals_in_ds</span><span class="p">(</span><span class="n">selvals</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
     <span class="n">test_vals_in_ds</span><span class="p">(</span><span class="n">iselvals</span><span class="p">,</span> <span class="n">ds</span><span class="o">.</span><span class="n">dims</span><span class="p">)</span>
@@ -446,15 +446,15 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_ensure_list</span><span class="p">(</span><span class="n">alist</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Ensure that variables used as a list are actually lists.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram, Xylar Asay-Davis</span>
 
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">alist</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="c1"># print &#39;Warning, converting %s to a list&#39;%(alist)</span>
+        <span class="c1"># print 'Warning, converting %s to a list'%(alist)</span>
         <span class="n">alist</span> <span class="o">=</span> <span class="p">[</span><span class="n">alist</span><span class="p">]</span>
 
     <span class="k">return</span> <span class="n">alist</span>
@@ -463,7 +463,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
                         <span class="n">simulationStartTime</span><span class="p">,</span> <span class="n">outTimeVariableName</span><span class="p">,</span>
                         <span class="n">referenceDate</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A helper function for computing a time coordinate from an MPAS time</span>
 <span class="sd">    variable.  Given a data set and a time variable name (or tuple of 2</span>
 <span class="sd">    time names), returns a new data set with time coordinate</span>
@@ -477,16 +477,16 @@
 
 <span class="sd">    inTimeVariableName : string or tuple or list of strings</span>
 <span class="sd">        The name of the time variable in the MPAS data set that will be</span>
-<span class="sd">        used to build the &#39;Time&#39; coordinate.  The array(s) named by</span>
+<span class="sd">        used to build the 'Time' coordinate.  The array(s) named by</span>
 <span class="sd">        inTimeVariableName should contain date strings or the number of</span>
 <span class="sd">        days since the start of the simulation. Typically,</span>
-<span class="sd">        inTimeVariableName is one of {&#39;daysSinceStartOfSim&#39;,&#39;xtime&#39;}.</span>
+<span class="sd">        inTimeVariableName is one of {'daysSinceStartOfSim','xtime'}.</span>
 <span class="sd">        If a list of two variable</span>
 <span class="sd">        names is provided, times from the two are averaged together to</span>
 <span class="sd">        determine the value of the time coordinate.  In such cases,</span>
-<span class="sd">        inTimeVariableName is typically {[&#39;xtime_start&#39;, &#39;xtime_end&#39;]}.</span>
+<span class="sd">        inTimeVariableName is typically {['xtime_start', 'xtime_end']}.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 
@@ -504,10 +504,10 @@
 <span class="sd">        start of the simulation.</span>
 
 <span class="sd">    outTimeVariableName : string</span>
-<span class="sd">        The name of the coordinate to assign times to, typically &#39;Time&#39;.</span>
+<span class="sd">        The name of the coordinate to assign times to, typically 'Time'.</span>
 
 <span class="sd">    referenceDate : string</span>
-<span class="sd">        The reference date for the time variable, typically &#39;0001-01-01&#39;,</span>
+<span class="sd">        The reference date for the time variable, typically '0001-01-01',</span>
 <span class="sd">        taking one of the following forms::</span>
 
 <span class="sd">            0001-01-01</span>
@@ -528,7 +528,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If  the time variable is a number of days since the start of the</span>
 <span class="sd">        simulation but simulationStartTime is None.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -557,8 +557,8 @@
         <span class="c1"># replace the time in starts with the mean of starts and ends</span>
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">dsStart</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;startTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">starts</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;endTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'startTime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">starts</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'endTime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
 
         <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">outTimeVariableName</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span>
                                              <span class="p">[</span><span class="n">starts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
@@ -567,32 +567,32 @@
 
     <span class="k">else</span><span class="p">:</span>
 
-        <span class="c1"># there is just one time variable (either because we&#39;re recursively</span>
-        <span class="c1"># calling the function or because we&#39;re not averaging).</span>
+        <span class="c1"># there is just one time variable (either because we're recursively</span>
+        <span class="c1"># calling the function or because we're not averaging).</span>
 
         <span class="c1"># The contents of the time variable is expected to be either a string</span>
         <span class="c1"># (|S64) or a float (meaning days since start of the simulation).</span>
 
         <span class="n">timeVar</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">inTimeVariableName</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;|S64&#39;</span><span class="p">:</span>
-            <span class="c1"># this is an array of date strings like &#39;xtime&#39;</span>
+        <span class="k">if</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">'|S64'</span><span class="p">:</span>
+            <span class="c1"># this is an array of date strings like 'xtime'</span>
             <span class="c1"># convert to string</span>
-            <span class="n">timeStrings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="n">timeStrings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'U'</span><span class="p">)))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                            <span class="k">for</span> <span class="n">xtime</span> <span class="ow">in</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
             <span class="n">days</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">timeStrings</span><span class="p">,</span>
                                              <span class="n">referenceDate</span><span class="o">=</span><span class="n">referenceDate</span><span class="p">,</span>
                                              <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;float64&#39;</span><span class="p">:</span>
+        <span class="k">elif</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">'float64'</span><span class="p">:</span>
             <span class="c1"># this array contains floating-point days like</span>
-            <span class="c1"># &#39;daysSinceStartOfSim&#39;</span>
+            <span class="c1"># 'daysSinceStartOfSim'</span>
 
             <span class="k">if</span> <span class="n">simulationStartTime</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;MPAS time variable </span><span class="si">{}</span><span class="s1"> appears to be a &#39;</span>
-                                 <span class="s1">&#39;number of days since start </span><span class="se">\n</span><span class="s1">&#39;</span>
-                                 <span class="s1">&#39;of sim but simulationStartTime was not&#39;</span>
-                                 <span class="s1">&#39;  supplied.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inTimeVariableName</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'MPAS time variable </span><span class="si">{}</span><span class="s1"> appears to be a '</span>
+                                 <span class="s1">'number of days since start </span><span class="se">\n</span><span class="s1">'</span>
+                                 <span class="s1">'of sim but simulationStartTime was not'</span>
+                                 <span class="s1">'  supplied.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">inTimeVariableName</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">string_to_datetime</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">)</span> <span class="o">==</span>
                     <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">simulationStartTime</span><span class="p">)):</span>
@@ -606,13 +606,13 @@
                                         <span class="n">referenceDate</span><span class="o">=</span><span class="n">referenceDate</span><span class="p">,</span>
                                         <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
-        <span class="k">elif</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">&#39;timedelta64[ns]&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;timeVar of unsupported type </span><span class="si">{}</span><span class="s1">.  This is likely &#39;</span>
-                            <span class="s1">&#39;because xarray.open_dataset </span><span class="se">\n</span><span class="s1">&#39;</span>
-                            <span class="s1">&#39;was called with decode_times=True, which can &#39;</span>
-                            <span class="s1">&#39;mangle MPAS times.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s1">'timedelta64[ns]'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'timeVar of unsupported type </span><span class="si">{}</span><span class="s1">.  This is likely '</span>
+                            <span class="s1">'because xarray.open_dataset </span><span class="se">\n</span><span class="s1">'</span>
+                            <span class="s1">'was called with decode_times=True, which can '</span>
+                            <span class="s1">'mangle MPAS times.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;timeVar of unsupported type </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"timeVar of unsupported type </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
 
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -622,7 +622,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">process_chunking</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">chunking</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Computes chunking for a dataset.</span>
 
 <span class="sd">    Parameters</span>
@@ -644,7 +644,7 @@
 
 <span class="sd">    ValueError</span>
 <span class="sd">        If chunking value used is not an acceptable value.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram</span>
@@ -660,14 +660,14 @@
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">chunking</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">chunking</span><span class="p">)</span>
 
-    <span class="c1"># if chunking is None don&#39;t do any chunking</span>
+    <span class="c1"># if chunking is None don't do any chunking</span>
     <span class="k">elif</span> <span class="n">chunking</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">pass</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s1">&#39;Chunking parameter choice is not understood &#39;</span>
-            <span class="s1">&#39;for </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunking</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">chunking</span><span class="p">)))</span>
+            <span class="s1">'Chunking parameter choice is not understood '</span>
+            <span class="s1">'for </span><span class="si">{}</span><span class="s1"> of type </span><span class="si">{}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chunking</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">chunking</span><span class="p">)))</span>
 
     <span class="k">return</span> <span class="n">ds</span>
 

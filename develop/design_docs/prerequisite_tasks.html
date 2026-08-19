@@ -173,11 +173,11 @@ error messages removed for brevity) is as follows:</p>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">callCheckGenerate</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">check_generate</span><span class="p">():</span>
-        <span class="c1"># we don&#39;t need to add this task -- it wasn&#39;t requested</span>
+        <span class="c1"># we don't need to add this task -- it wasn't requested</span>
         <span class="k">return</span>
 
     <span class="c1"># first, we should try to add the prerequisites of this task and its</span>
-    <span class="c1"># subtasks (if they aren&#39;t also subtasks for this task)</span>
+    <span class="c1"># subtasks (if they aren't also subtasks for this task)</span>
     <span class="n">prereqs</span> <span class="o">=</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">runAfterTasks</span>
     <span class="k">for</span> <span class="n">subtask</span> <span class="ow">in</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">prereq</span> <span class="ow">in</span> <span class="n">subtask</span><span class="o">.</span><span class="n">runAfterTasks</span><span class="p">:</span>
@@ -187,17 +187,17 @@ error messages removed for brevity) is as follows:</p>
     <span class="k">for</span> <span class="n">prereq</span> <span class="ow">in</span> <span class="n">prereqs</span><span class="p">:</span>
         <span class="n">add_task_and_subtasks</span><span class="p">(</span><span class="n">prereq</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span>
                               <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">prereq</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prereq</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">'success'</span><span class="p">:</span>
             <span class="c1"># this task should also not run</span>
-            <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
+            <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">'fail'</span>
             <span class="k">return</span>
 
     <span class="c1"># make sure all prereqs have been set up successfully before trying to</span>
-    <span class="c1"># set up this task -- this task&#39;s setup may depend on setup in the prereqs</span>
+    <span class="c1"># set up this task -- this task's setup may depend on setup in the prereqs</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">analysisTask</span><span class="o">.</span><span class="n">setup_and_check</span><span class="p">()</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">Exception</span><span class="p">,</span> <span class="ne">BaseException</span><span class="p">):</span>
-        <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
+        <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">'fail'</span>
         <span class="k">return</span>
 
     <span class="c1"># next, we should try to add the subtasks.  This is done after the current</span>
@@ -206,12 +206,12 @@ error messages removed for brevity) is as follows:</p>
     <span class="k">for</span> <span class="n">subtask</span> <span class="ow">in</span> <span class="n">analysisTask</span><span class="o">.</span><span class="n">subtasks</span><span class="p">:</span>
         <span class="n">add_task_and_subtasks</span><span class="p">(</span><span class="n">subtask</span><span class="p">,</span> <span class="n">analysesToGenerate</span><span class="p">,</span>
                               <span class="n">callCheckGenerate</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">subtask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">&#39;success&#39;</span><span class="p">:</span>
-            <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;fail&#39;</span>
+        <span class="k">if</span> <span class="n">subtask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">!=</span> <span class="s1">'success'</span><span class="p">:</span>
+            <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">'fail'</span>
             <span class="k">return</span>
 
     <span class="n">analysesToGenerate</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">analysisTask</span><span class="p">)</span>
-    <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span>
+    <span class="n">analysisTask</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="s1">'success'</span>
 </pre></div>
 </div>
 <h3> Design solution: Holding dependent tasks <br>

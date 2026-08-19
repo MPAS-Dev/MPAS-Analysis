@@ -242,12 +242,12 @@ Contributors: Xylar Asay-Davis
 </h4><p>Tasks can now run in parallel.  This has been implemented in these 4 functions within <code class="docutils literal notranslate"><span class="pre">run_analysis.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_parallel_tasks</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">analyses</span><span class="p">,</span> <span class="n">configFiles</span><span class="p">,</span> <span class="n">taskCount</span><span class="p">):</span>
     <span class="c1"># {{{</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Run this script once each for several parallel tasks.</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
 <span class="sd">    Last Modified: 03/08/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="n">taskNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">analysisModule</span><span class="o">.</span><span class="n">get_task_name</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span>
                  <span class="n">analysisModule</span><span class="p">,</span> <span class="n">kwargs</span> <span class="ow">in</span> <span class="n">analyses</span><span class="p">]</span>
@@ -260,9 +260,9 @@ Contributors: Xylar Asay-Davis
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span> <span class="o">=</span> <span class="n">wait_for_task</span><span class="p">(</span><span class="n">processes</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="nb">print</span> <span class="s2">&quot;Task </span><span class="si">{}</span><span class="s2"> has finished successfully.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="s2">"Task </span><span class="si">{}</span><span class="s2"> has finished successfully."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span> <span class="s2">&quot;ERROR in task </span><span class="si">{}</span><span class="s2">.  See log file </span><span class="si">{}</span><span class="s2"> for details&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">print</span> <span class="s2">"ERROR in task </span><span class="si">{}</span><span class="s2">.  See log file </span><span class="si">{}</span><span class="s2"> for details"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">taskName</span><span class="p">,</span> <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
         <span class="n">logs</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="c1"># remove the process from the process dictionary (no need to bother)</span>
@@ -279,38 +279,38 @@ Contributors: Xylar Asay-Davis
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">launch_tasks</span><span class="p">(</span><span class="n">taskNames</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">configFiles</span><span class="p">):</span>  <span class="c1"># {{{</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Launch one or more tasks</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
 <span class="sd">    Last Modified: 03/08/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">thisFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
-    <span class="n">logsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                           <span class="s1">&#39;logsSubdirectory&#39;</span><span class="p">)</span>
+    <span class="n">logsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                           <span class="s1">'logsSubdirectory'</span><span class="p">)</span>
     <span class="n">make_directories</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">)</span>
 
-    <span class="n">commandPrefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="s1">&#39;commandPrefix&#39;</span><span class="p">,</span>
-                                          <span class="n">default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">commandPrefix</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+    <span class="n">commandPrefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getWithDefault</span><span class="p">(</span><span class="s1">'execute'</span><span class="p">,</span> <span class="s1">'commandPrefix'</span><span class="p">,</span>
+                                          <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">commandPrefix</span> <span class="o">==</span> <span class="s1">''</span><span class="p">:</span>
         <span class="n">commandPrefix</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">commandPrefix</span> <span class="o">=</span> <span class="n">commandPrefix</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">commandPrefix</span> <span class="o">=</span> <span class="n">commandPrefix</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
 
     <span class="n">processes</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">logs</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">taskName</span> <span class="ow">in</span> <span class="n">taskNames</span><span class="p">:</span>
-        <span class="n">args</span> <span class="o">=</span> <span class="n">commandPrefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">thisFile</span><span class="p">,</span> <span class="s1">&#39;--generate&#39;</span><span class="p">,</span> <span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">configFiles</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">commandPrefix</span> <span class="o">+</span> <span class="p">[</span><span class="n">thisFile</span><span class="p">,</span> <span class="s1">'--generate'</span><span class="p">,</span> <span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">configFiles</span>
 
-        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
+        <span class="n">logFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span> <span class="n">taskName</span><span class="p">)</span>
 
         <span class="c1"># write the command to the log file</span>
-        <span class="n">logFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">logFileName</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span>
-        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Command: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
+        <span class="n">logFile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">logFileName</span><span class="p">,</span> <span class="s1">'w'</span><span class="p">)</span>
+        <span class="n">logFile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">'Command: </span><span class="si">{}</span><span class="se">\n</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">)))</span>
         <span class="c1"># make sure the command gets written before the rest of the log</span>
         <span class="n">logFile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-        <span class="nb">print</span> <span class="s1">&#39;Running </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="s1">'Running </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">)</span>
         <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">logFile</span><span class="p">,</span>
                                    <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span>
         <span class="n">processes</span><span class="p">[</span><span class="n">taskName</span><span class="p">]</span> <span class="o">=</span> <span class="n">process</span>
@@ -320,13 +320,13 @@ Contributors: Xylar Asay-Davis
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">wait_for_task</span><span class="p">(</span><span class="n">processes</span><span class="p">):</span>  <span class="c1"># {{{</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Wait for the next process to finish and check its status.  Returns both the</span>
 <span class="sd">    task name and the process that finished.</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
 <span class="sd">    Last Modified: 03/08/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># first, check if any process has already finished</span>
     <span class="k">for</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">process</span> <span class="ow">in</span> <span class="n">processes</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>  <span class="c1"># python 2.7!</span>
@@ -338,17 +338,17 @@ Contributors: Xylar Asay-Davis
     <span class="k">for</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">process</span> <span class="ow">in</span> <span class="n">processes</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">pid</span> <span class="o">==</span> <span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">:</span>
             <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">=</span> <span class="n">status</span>
-            <span class="c1"># since we used waitpid, this won&#39;t happen automatically</span>
+            <span class="c1"># since we used waitpid, this won't happen automatically</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">process</span><span class="p">)</span>  <span class="c1"># }}}</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">is_running</span><span class="p">(</span><span class="n">process</span><span class="p">):</span>  <span class="c1"># {{{</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns whether a given process is currently running</span>
 
 <span class="sd">    Author: Xylar Asay-Davis</span>
 <span class="sd">    Last Modified: 03/08/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">os</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -377,7 +377,7 @@ Contributors: Xylar Asay-Davis
 <span class="o">...</span>
 <span class="c1"># lock the weights file in case it is being written by another process</span>
 <span class="k">with</span> <span class="n">fasteners</span><span class="o">.</span><span class="n">InterProcessLock</span><span class="p">(</span><span class="n">_get_lock_path</span><span class="p">(</span><span class="n">outWeightFileName</span><span class="p">)):</span>
-    <span class="c1"># make sure another process didn&#39;t already create the mapping file in</span>
+    <span class="c1"># make sure another process didn't already create the mapping file in</span>
     <span class="c1"># the meantime</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outWeightFileName</span><span class="p">):</span>
         <span class="c1"># make sure any output is flushed before we add output from the</span>
@@ -397,7 +397,7 @@ as normal on the compute nodes.</p>
 <span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
 <span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
 
-<span class="c1"># Prefix on the commnd line before a parallel task (e.g. &#39;srun -n 1 python&#39;)</span>
+<span class="c1"># Prefix on the commnd line before a parallel task (e.g. 'srun -n 1 python')</span>
 <span class="c1"># Default is no prefix (run_analysis.py is executed directly)</span>
 <span class="na">commandPrefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">srun -n 1</span>
 </pre></div>

@@ -196,11 +196,11 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">timeSeriesTransport</span><span class="p">]</span>
 <span class="c1">## options related to plotting time series of transport through transects</span>
 
-<span class="c1"># list of ocean transects from geometric_features to plot or [&#39;all&#39;] for all</span>
+<span class="c1"># list of ocean transects from geometric_features to plot or ['all'] for all</span>
 <span class="c1"># available transects.</span>
-<span class="n">transectsToPlot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Drake Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Tasmania-Ant&#39;</span><span class="p">,</span> <span class="s1">&#39;Africa-Ant&#39;</span><span class="p">,</span> <span class="s1">&#39;Antilles Inflow&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;Mona Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Windward Passage&#39;</span><span class="p">,</span> <span class="s1">&#39;Florida-Cuba&#39;</span><span class="p">,</span> <span class="s1">&#39;Florida-Bahamas&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;Indonesian Throughflow&#39;</span><span class="p">,</span> <span class="s1">&#39;Agulhas&#39;</span><span class="p">,</span> <span class="s1">&#39;Mozambique Channel&#39;</span><span class="p">]</span>
+<span class="n">transectsToPlot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Drake Passage'</span><span class="p">,</span> <span class="s1">'Tasmania-Ant'</span><span class="p">,</span> <span class="s1">'Africa-Ant'</span><span class="p">,</span> <span class="s1">'Antilles Inflow'</span><span class="p">,</span>
+                   <span class="s1">'Mona Passage'</span><span class="p">,</span> <span class="s1">'Windward Passage'</span><span class="p">,</span> <span class="s1">'Florida-Cuba'</span><span class="p">,</span> <span class="s1">'Florida-Bahamas'</span><span class="p">,</span>
+                   <span class="s1">'Indonesian Throughflow'</span><span class="p">,</span> <span class="s1">'Agulhas'</span><span class="p">,</span> <span class="s1">'Mozambique Channel'</span><span class="p">]</span>
 
 <span class="c1"># Number of months over which to compute moving average</span>
 <span class="n">movingAverageMonths</span> <span class="o">=</span> <span class="mi">1</span>
@@ -221,18 +221,18 @@ potential density and other fields of interest averaged over ocean regions.</p>
 <h2>Transect Names<a class="headerlink" href="#transect-names" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">transectsToPlot</span></code> can be set to <code class="docutils literal notranslate"><span class="pre">['all']</span></code> to plot all of the transects
 defined in the <code class="docutils literal notranslate"><span class="pre">transportTransects</span></code> transect group.  These are:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;Africa-Ant&quot;</span><span class="p">,</span>  <span class="s2">&quot;Agulhas&quot;</span><span class="p">,</span> <span class="s2">&quot;Antarctic Peninsula&quot;</span><span class="p">,</span> <span class="s2">&quot;Antilles Inflow&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Baja CA blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Baltic Sea Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Barents Sea Opening&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Bering Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Davis Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Drake Passage&quot;</span><span class="p">,</span> <span class="s2">&quot;English Channel Deepen&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Florida-Bahamas&quot;</span><span class="p">,</span> <span class="s2">&quot;Florida-Cuba&quot;</span><span class="p">,</span> <span class="s2">&quot;Fram Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Indonesian Throughflow&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Ireland North Channel Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Japan Hokkaido blockage&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Japan La Perouse Strait Deepen&quot;</span><span class="p">,</span>  <span class="s2">&quot;Japan Tsugaru Strait Deepen&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Japan blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Lancaster Sound&quot;</span><span class="p">,</span> <span class="s2">&quot;Mona Passage&quot;</span><span class="p">,</span> <span class="s2">&quot;Mozambique Channel&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Nares Strait&quot;</span><span class="p">,</span> <span class="s2">&quot;Nares Strait Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Persian Gulf Deepen&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Red Sea Deepen&quot;</span><span class="p">,</span> <span class="s2">&quot;Sakhalin blockage&quot;</span><span class="p">,</span> <span class="s2">&quot;Strait of Gibralter Deepen 1&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Hudson Bay-Labrador Sea&quot;</span><span class="p">,</span> <span class="s2">&quot;OSNAP section East&quot;</span><span class="p">,</span> <span class="s2">&quot;OSNAP section West&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Strait of Gibralter Deepen 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Tasmania-Ant&quot;</span><span class="p">,</span> <span class="s2">&quot;White Sea&quot;</span><span class="p">,</span>
- <span class="s2">&quot;Windward Passage&quot;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">"Africa-Ant"</span><span class="p">,</span>  <span class="s2">"Agulhas"</span><span class="p">,</span> <span class="s2">"Antarctic Peninsula"</span><span class="p">,</span> <span class="s2">"Antilles Inflow"</span><span class="p">,</span>
+ <span class="s2">"Baja CA blockage"</span><span class="p">,</span> <span class="s2">"Baltic Sea Deepen"</span><span class="p">,</span> <span class="s2">"Barents Sea Opening"</span><span class="p">,</span>
+ <span class="s2">"Bering Strait"</span><span class="p">,</span> <span class="s2">"Davis Strait"</span><span class="p">,</span> <span class="s2">"Drake Passage"</span><span class="p">,</span> <span class="s2">"English Channel Deepen"</span><span class="p">,</span>
+ <span class="s2">"Florida-Bahamas"</span><span class="p">,</span> <span class="s2">"Florida-Cuba"</span><span class="p">,</span> <span class="s2">"Fram Strait"</span><span class="p">,</span> <span class="s2">"Indonesian Throughflow"</span><span class="p">,</span>
+ <span class="s2">"Ireland North Channel Deepen"</span><span class="p">,</span> <span class="s2">"Japan Hokkaido blockage"</span><span class="p">,</span>
+ <span class="s2">"Japan La Perouse Strait Deepen"</span><span class="p">,</span>  <span class="s2">"Japan Tsugaru Strait Deepen"</span><span class="p">,</span>
+ <span class="s2">"Japan blockage"</span><span class="p">,</span> <span class="s2">"Lancaster Sound"</span><span class="p">,</span> <span class="s2">"Mona Passage"</span><span class="p">,</span> <span class="s2">"Mozambique Channel"</span><span class="p">,</span>
+ <span class="s2">"Nares Strait"</span><span class="p">,</span> <span class="s2">"Nares Strait Deepen"</span><span class="p">,</span> <span class="s2">"Persian Gulf Deepen"</span><span class="p">,</span>
+ <span class="s2">"Red Sea Deepen"</span><span class="p">,</span> <span class="s2">"Sakhalin blockage"</span><span class="p">,</span> <span class="s2">"Strait of Gibralter Deepen 1"</span><span class="p">,</span>
+ <span class="s2">"Hudson Bay-Labrador Sea"</span><span class="p">,</span> <span class="s2">"OSNAP section East"</span><span class="p">,</span> <span class="s2">"OSNAP section West"</span><span class="p">,</span>
+ <span class="s2">"Strait of Gibralter Deepen 2"</span><span class="p">,</span> <span class="s2">"Tasmania-Ant"</span><span class="p">,</span> <span class="s2">"White Sea"</span><span class="p">,</span>
+ <span class="s2">"Windward Passage"</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Many of these are likely not of interest in most simulations, so a subset of

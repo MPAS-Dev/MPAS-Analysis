@@ -107,10 +107,10 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Module of classes/routines to manipulate fortran namelist and streams</span>
 <span class="sd">files.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -129,7 +129,7 @@
 <div class="viewcode-block" id="convert_namelist_to_dict">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict.html#mpas_analysis.shared.io.namelist_streams_interface.convert_namelist_to_dict">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convert_namelist_to_dict</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">readonly</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Converts a namelist file to key-value pairs in dictionary.</span>
 
 <span class="sd">    Parameters</span>
@@ -144,7 +144,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    nml : dict</span>
 <span class="sd">        A dictionary where keys are namelist options and values are namelist</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">nml</span> <span class="o">=</span> <span class="n">f90nml</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">todict</span><span class="p">()</span>
 
     <span class="c1"># convert ordered dict to dict (Python 3 dict is ordered)</span>
@@ -166,10 +166,10 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">NameList</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class for fortran manipulation of namelist files, provides</span>
 <span class="sd">    read and write functionality</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -179,7 +179,7 @@
 <div class="viewcode-block" id="NameList.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse the namelist file</span>
 
 <span class="sd">        Parameters</span>
@@ -190,7 +190,7 @@
 <span class="sd">        path : str, optional</span>
 <span class="sd">            If ``fname`` contains a relative path, ``fname`` is</span>
 <span class="sd">            relative to ``path``, rather than the current working directory</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -199,7 +199,7 @@
             <span class="c1"># only the file name was given, not the absolute path, and</span>
             <span class="c1"># a path was provided, so we will assume the namelist</span>
             <span class="c1"># file is actually in the path</span>
-            <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
         <span class="c1"># input file name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span>
@@ -211,7 +211,7 @@
 <div class="viewcode-block" id="NameList.__getattr__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getattr__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Accessor for dot noation, e.g., nml.field</span>
 
 <span class="sd">        Parameters</span>
@@ -223,7 +223,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : str</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -235,8 +235,8 @@
 <div class="viewcode-block" id="NameList.__getitem__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.__getitem__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Accessor for bracket notation, e.g., nml[&#39;field&#39;]</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Accessor for bracket notation, e.g., nml['field']</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -247,7 +247,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : Any</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -260,7 +260,7 @@
 <div class="viewcode-block" id="NameList.get">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.get.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.get">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -272,7 +272,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : Any</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -283,7 +283,7 @@
 <div class="viewcode-block" id="NameList.getint">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getint.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getint">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the integer value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -295,7 +295,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : int</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -306,7 +306,7 @@
 <div class="viewcode-block" id="NameList.getfloat">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getfloat">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getfloat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the float value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -318,7 +318,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : float</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -329,7 +329,7 @@
 <div class="viewcode-block" id="NameList.getbool">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool.html#mpas_analysis.shared.io.namelist_streams_interface.NameList.getbool">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">getbool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the boolean value associated with a given key</span>
 
 <span class="sd">        Parameters</span>
@@ -341,7 +341,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        value : bool</span>
 <span class="sd">            The value associated with ``key``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -352,7 +352,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">find_option</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleOptions</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If one (or more) of the names in ``possibleOptions`` is an option in</span>
 <span class="sd">        this namelist file, returns the first match.</span>
 
@@ -371,7 +371,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If no match is found.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -380,15 +380,15 @@
             <span class="k">if</span> <span class="n">optionName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nml</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">return</span> <span class="n">optionName</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;None of the possible options </span><span class="si">{}</span><span class="s1"> found in namelist &#39;</span>
-                         <span class="s1">&#39;file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleOptions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'None of the possible options </span><span class="si">{}</span><span class="s1"> found in namelist '</span>
+                         <span class="s1">'file </span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleOptions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">StreamsFile</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class to read in streams configuration file, provdies</span>
 <span class="sd">    read and write functionality</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -397,7 +397,7 @@
 <div class="viewcode-block" id="StreamsFile.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">streamsdir</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Parse the streams file.</span>
 
 <span class="sd">        Parameters</span>
@@ -408,7 +408,7 @@
 <span class="sd">        streamsdir : str, optional</span>
 <span class="sd">            The base path to both the output streams data and the sreams file</span>
 <span class="sd">            (the latter only if ``fname`` is a relative path).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
@@ -417,7 +417,7 @@
             <span class="c1"># only the file name was given, not the absolute path, and</span>
             <span class="c1"># a streamsdir was provided, so we will assume the streams</span>
             <span class="c1"># file is actually in the streamsdir</span>
-            <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamsdir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamsdir</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlfile</span> <span class="o">=</span> <span class="n">etree</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
@@ -435,7 +435,7 @@
 <div class="viewcode-block" id="StreamsFile.read">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.read">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">,</span> <span class="n">attribname</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
 <span class="sd">        Parameters</span>
@@ -452,20 +452,20 @@
 <span class="sd">        value : str</span>
 <span class="sd">            The value associated with the attribute, or ``None`` if the</span>
 <span class="sd">            attribute was not found</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Phillip Wolfram, Xylar Asay-Davis</span>
 
         <span class="k">for</span> <span class="n">stream</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
             <span class="c1"># assumes streamname is unique in XML</span>
-            <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">streamname</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">==</span> <span class="n">streamname</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">stream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">attribname</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">read_datetime_template</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamname</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the value of the given attribute in the given stream</span>
 
 <span class="sd">        Parameters</span>
@@ -479,19 +479,19 @@
 <span class="sd">            The template for file names from this stream in a format accepted</span>
 <span class="sd">            by ``datetime.strptime``.  This is useful for parsing the date</span>
 <span class="sd">            from a given file name.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">streamname</span><span class="p">,</span> <span class="s1">&#39;filename_template&#39;</span><span class="p">)</span>
-        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;$Y&#39;</span><span class="p">:</span> <span class="s1">&#39;%Y&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$M&#39;</span><span class="p">:</span> <span class="s1">&#39;%m&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$D&#39;</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$S&#39;</span><span class="p">:</span> <span class="s1">&#39;00000&#39;</span><span class="p">,</span>  <span class="c1"># datetime doesn&#39;t handle seconds alone</span>
-                        <span class="s1">&#39;$h&#39;</span><span class="p">:</span> <span class="s1">&#39;%H&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$m&#39;</span><span class="p">:</span> <span class="s1">&#39;%M&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$s&#39;</span><span class="p">:</span> <span class="s1">&#39;%S&#39;</span><span class="p">}</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">streamname</span><span class="p">,</span> <span class="s1">'filename_template'</span><span class="p">)</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'$Y'</span><span class="p">:</span> <span class="s1">'%Y'</span><span class="p">,</span>
+                        <span class="s1">'$M'</span><span class="p">:</span> <span class="s1">'%m'</span><span class="p">,</span>
+                        <span class="s1">'$D'</span><span class="p">:</span> <span class="s1">'</span><span class="si">%d</span><span class="s1">'</span><span class="p">,</span>
+                        <span class="s1">'$S'</span><span class="p">:</span> <span class="s1">'00000'</span><span class="p">,</span>  <span class="c1"># datetime doesn't handle seconds alone</span>
+                        <span class="s1">'$h'</span><span class="p">:</span> <span class="s1">'%H'</span><span class="p">,</span>
+                        <span class="s1">'$m'</span><span class="p">:</span> <span class="s1">'%M'</span><span class="p">,</span>
+                        <span class="s1">'$s'</span><span class="p">:</span> <span class="s1">'%S'</span><span class="p">}</span>
 
         <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">replacements</span><span class="p">:</span>
             <span class="n">template</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">old</span><span class="p">,</span> <span class="n">replacements</span><span class="p">[</span><span class="n">old</span><span class="p">])</span>
@@ -502,7 +502,7 @@
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.readpath">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">readpath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                  <span class="n">calendar</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Given the name of a stream and optionally start and end dates and a</span>
 <span class="sd">        calendar type, returns a list of files that match the file template in</span>
 <span class="sd">        the stream.</span>
@@ -520,7 +520,7 @@
 <span class="sd">            and added to endDate because the file date might be the first</span>
 <span class="sd">            or last date contained in the file (or anything in between).</span>
 
-<span class="sd">        calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">        calendar : {'gregorian', 'noleap'}, optional</span>
 <span class="sd">            The name of one of the calendars supported by MPAS cores, and is</span>
 <span class="sd">            required if startDate and/or endDate are supplied</span>
 
@@ -534,22 +534,22 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If no files from the stream are found.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="s1">&#39;filename_template&#39;</span><span class="p">)</span>
+        <span class="n">template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="s1">'filename_template'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">template</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Stream </span><span class="si">{}</span><span class="s1"> not found in streams file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Stream </span><span class="si">{}</span><span class="s1"> not found in streams file </span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">streamName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span>
-        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;$Y&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9][0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$M&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$D&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$S&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9][0-9][0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$h&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$m&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9]&#39;</span><span class="p">,</span>
-                        <span class="s1">&#39;$s&#39;</span><span class="p">:</span> <span class="s1">&#39;[0-9][0-9]&#39;</span><span class="p">}</span>
+        <span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'$Y'</span><span class="p">:</span> <span class="s1">'[0-9][0-9][0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$M'</span><span class="p">:</span> <span class="s1">'[0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$D'</span><span class="p">:</span> <span class="s1">'[0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$S'</span><span class="p">:</span> <span class="s1">'[0-9][0-9][0-9][0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$h'</span><span class="p">:</span> <span class="s1">'[0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$m'</span><span class="p">:</span> <span class="s1">'[0-9][0-9]'</span><span class="p">,</span>
+                        <span class="s1">'$s'</span><span class="p">:</span> <span class="s1">'[0-9][0-9]'</span><span class="p">}</span>
 
         <span class="n">path</span> <span class="o">=</span> <span class="n">template</span>
         <span class="k">for</span> <span class="n">old</span> <span class="ow">in</span> <span class="n">replacements</span><span class="p">:</span>
@@ -557,13 +557,13 @@
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
             <span class="c1"># this is not an absolute path, so make it an absolute path</span>
-            <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">streamsdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">streamsdir</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
 
         <span class="n">fileList</span> <span class="o">=</span> <span class="n">paths</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fileList</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="s2">&quot;Path </span><span class="si">{}</span><span class="s2"> in streams file </span><span class="si">{}</span><span class="s2"> for &#39;</span><span class="si">{}</span><span class="s2">&#39; not found.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">"Path </span><span class="si">{}</span><span class="s2"> in streams file </span><span class="si">{}</span><span class="s2"> for '</span><span class="si">{}</span><span class="s2">' not found."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="n">streamName</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">startDate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">endDate</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -579,14 +579,14 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
                 <span class="n">endDate</span> <span class="o">=</span> <span class="n">string_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">)</span>
 
-        <span class="c1"># remove any path that&#39;s part of the template</span>
+        <span class="c1"># remove any path that's part of the template</span>
         <span class="n">template</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
-        <span class="n">dateStartIndex</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)</span>
+        <span class="n">dateStartIndex</span> <span class="o">=</span> <span class="n">template</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">'$'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dateStartIndex</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-            <span class="c1"># there is no date in the template, so we can&#39;t exclude any files</span>
+            <span class="c1"># there is no date in the template, so we can't exclude any files</span>
             <span class="c1"># based on date</span>
             <span class="k">return</span> <span class="n">fileList</span>
-        <span class="n">dateEndOffset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">dateEndOffset</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s1">'$'</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">outFileList</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">fileName</span> <span class="ow">in</span> <span class="n">fileList</span><span class="p">:</span>
@@ -609,7 +609,7 @@
 <div class="viewcode-block" id="StreamsFile.has_stream">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.has_stream">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">has_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Does the stream file have the given stream?</span>
 
 <span class="sd">        Returns True if the streams file has a stream with the given</span>
@@ -625,14 +625,14 @@
 <span class="sd">        streamFound : bool</span>
 <span class="sd">            ``True`` if the stream was found in the stream file, ``False``</span>
 <span class="sd">            otherwise</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="k">for</span> <span class="n">stream</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">:</span>
             <span class="c1"># assumes streamname is unique in XML</span>
-            <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">streamName</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'name'</span><span class="p">)</span> <span class="o">==</span> <span class="n">streamName</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
@@ -640,7 +640,7 @@
 <div class="viewcode-block" id="StreamsFile.find_stream">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream.html#mpas_analysis.shared.io.namelist_streams_interface.StreamsFile.find_stream">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">possibleStreams</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        If one (or more) of the names in ``possibleStreams`` is an stream in</span>
 <span class="sd">        this streams file, returns the first match.</span>
 
@@ -659,7 +659,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If no match is found.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -668,8 +668,8 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_stream</span><span class="p">(</span><span class="n">streamName</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">streamName</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;None of the possible streams </span><span class="si">{}</span><span class="s1"> found in streams &#39;</span>
-                         <span class="s1">&#39;file </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleStreams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'None of the possible streams </span><span class="si">{}</span><span class="s1"> found in streams '</span>
+                         <span class="s1">'file </span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">possibleStreams</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">))</span></div>
 
 </pre></div>
 

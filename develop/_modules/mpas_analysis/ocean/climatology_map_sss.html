@@ -123,10 +123,10 @@
 <div class="viewcode-block" id="ClimatologyMapSSS">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapSSS.html#mpas_analysis.ocean.ClimatologyMapSSS">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapSSS</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis task for comparison of sea surface salinity (sss) against</span>
 <span class="sd">    observations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
@@ -135,7 +135,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapSSS.html#mpas_analysis.ocean.ClimatologyMapSSS.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -148,36 +148,36 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;sss&#39;</span>
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">'sss'</span>
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapSSS</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapSSS&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">])</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'climatologyMapSSS'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">])</span>
 
-        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span>
-        <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">'timeMonthly_avg_activeTracers_salinity'</span>
+        <span class="n">iselValues</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'nVertLevels'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'config section </span><span class="si">{}</span><span class="s1"> does not contain valid list '</span>
+                             <span class="s1">'of seasons'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
         <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                                   <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'config section </span><span class="si">{}</span><span class="s1"> does not contain valid list '</span>
+                             <span class="s1">'of comparison grids'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
         <span class="c1"># the variable self.mpasFieldName will be added to mpasClimatologyTask</span>
         <span class="c1"># along with the seasons.</span>
@@ -193,34 +193,34 @@
         <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="n">refTitleLabel</span> <span class="o">=</span> \
-                <span class="s1">&#39;Observations (Aquarius, 2011-2014)&#39;</span>
+                <span class="s1">'Observations (Aquarius, 2011-2014)'</span>
 
             <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Subdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">))</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">Subdirectory'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fieldName</span><span class="p">))</span>
 
             <span class="n">obsFileName</span> <span class="o">=</span> \
-                <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">/Aquarius_V3_SSS_Monthly_20180710.nc&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="s2">"</span><span class="si">{}</span><span class="s2">/Aquarius_V3_SSS_Monthly_20180710.nc"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">observationsDirectory</span><span class="p">)</span>
-            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;sss&#39;</span>
-            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;sssAquarius&#39;</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: Aquarius&#39;</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">'sss'</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">'sssAquarius'</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">'Observations: Aquarius'</span>
 
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedSSSClimatology</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
                 <span class="n">outFilePrefix</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
 
         <span class="k">else</span><span class="p">:</span>
             <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
             <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Control: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">'Control: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
 
             <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
-            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">&#39;sss&#39;</span>
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+            <span class="n">outFileLabel</span> <span class="o">=</span> <span class="s1">'sss'</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
         <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
@@ -231,16 +231,16 @@
 
                 <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                     <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
-                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;SSS&#39;</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">'SSS'</span><span class="p">,</span>
                     <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
                     <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                     <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                     <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">&#39;Mean Sea Surface Salinity&#39;</span><span class="p">,</span>
-                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">&#39;Sea Surface Salinity&#39;</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'PSU'</span><span class="p">,</span>
+                    <span class="n">imageCaption</span><span class="o">=</span><span class="s1">'Mean Sea Surface Salinity'</span><span class="p">,</span>
+                    <span class="n">galleryGroup</span><span class="o">=</span><span class="s1">'Sea Surface Salinity'</span><span class="p">,</span>
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">&#39;sss&#39;</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="s1">'sss'</span><span class="p">,</span>
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
@@ -249,15 +249,15 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapObservedSSSClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for reading and remapping SSS observations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
 <span class="sd">        Parameters</span>
@@ -269,7 +269,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
 <span class="sd">            The descriptor for the observation grid</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -277,12 +277,12 @@
         <span class="c1"># create a descriptor of the observation grid using the lat/lon</span>
         <span class="c1"># coordinates</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
-                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">'lat'</span><span class="p">,</span>
+                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">'lon'</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -295,7 +295,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -304,10 +304,10 @@
         <span class="n">timeEnd</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2014</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="s1">&#39;SSS&#39;</span><span class="p">:</span> <span class="s1">&#39;sss&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'time'</span><span class="p">:</span> <span class="s1">'Time'</span><span class="p">,</span> <span class="s1">'SSS'</span><span class="p">:</span> <span class="s1">'sss'</span><span class="p">})</span>
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;Time.month&#39;</span><span class="p">]</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">&#39;Time.year&#39;</span><span class="p">]</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'month'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">'Time.month'</span><span class="p">]</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="s1">'Time.year'</span><span class="p">]</span>
 
         <span class="k">return</span> <span class="n">dsObs</span>
 </pre></div>

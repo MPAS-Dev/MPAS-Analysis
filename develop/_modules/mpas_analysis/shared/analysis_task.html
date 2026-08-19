@@ -106,9 +106,9 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Defines the base class for analysis tasks.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
@@ -128,7 +128,7 @@
 <div class="viewcode-block" id="AnalysisTask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AnalysisTask</span><span class="p">(</span><span class="n">Process</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    The base class for analysis tasks.</span>
 
 <span class="sd">    Attributes</span>
@@ -138,17 +138,17 @@
 
 <span class="sd">    taskName : str</span>
 <span class="sd">        The name of the task, typically the same as the class name except</span>
-<span class="sd">        starting with lowercase (e.g. &#39;myTask&#39; for class &#39;MyTask&#39;)</span>
+<span class="sd">        starting with lowercase (e.g. 'myTask' for class 'MyTask')</span>
 
-<span class="sd">    componentName : {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">    componentName : {'ocean', 'seaIce'}</span>
 <span class="sd">        The name of the component (same as the folder where the task</span>
 <span class="sd">        resides)</span>
 
 <span class="sd">    tags : list of str</span>
-<span class="sd">        Tags used to describe the task (e.g. &#39;timeSeries&#39;, &#39;climatology&#39;,</span>
-<span class="sd">        horizontalMap&#39;, &#39;index&#39;, &#39;transect&#39;).  These are used to determine</span>
-<span class="sd">        which tasks are generated (e.g. &#39;all_transect&#39; or &#39;no_climatology&#39;</span>
-<span class="sd">        in the &#39;generate&#39; flags)</span>
+<span class="sd">        Tags used to describe the task (e.g. 'timeSeries', 'climatology',</span>
+<span class="sd">        horizontalMap', 'index', 'transect').  These are used to determine</span>
+<span class="sd">        which tasks are generated (e.g. 'all_transect' or 'no_climatology'</span>
+<span class="sd">        in the 'generate' flags)</span>
 
 <span class="sd">    runDirectory : str</span>
 <span class="sd">        The base input directory for namelists, streams files and restart files</span>
@@ -157,7 +157,7 @@
 <span class="sd">        The base input directory for history files</span>
 
 <span class="sd">    plotsDirectory : str</span>
-<span class="sd">        The directory for writing plots (which is also created if it doesn&#39;t</span>
+<span class="sd">        The directory for writing plots (which is also created if it doesn't</span>
 <span class="sd">        exist)</span>
 
 <span class="sd">    namelist : ``shared.io.NameList``</span>
@@ -171,7 +171,7 @@
 <span class="sd">        the streams file reader for streams in the history directory (most</span>
 <span class="sd">        streams other than restart files)</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;gregoraian_noleap&#39;}</span>
+<span class="sd">    calendar : {'gregorian', 'gregoraian_noleap'}</span>
 <span class="sd">        The calendar used in the MPAS run</span>
 
 <span class="sd">    runAfterTasks : list of ``AnalysisTasks``</span>
@@ -186,7 +186,7 @@
 
 <span class="sd">    logger : ``logging.Logger``</span>
 <span class="sd">        A logger for output during the run phase of an analysis task</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -203,7 +203,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.html#mpas_analysis.shared.AnalysisTask.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">tags</span><span class="o">=</span><span class="p">[],</span>
                  <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Individual tasks (children classes of this base class) should first</span>
@@ -217,21 +217,21 @@
 
 <span class="sd">        taskName :  str</span>
 <span class="sd">            The name of the task, typically the same as the class name except</span>
-<span class="sd">            starting with lowercase (e.g. &#39;myTask&#39; for class &#39;MyTask&#39;)</span>
+<span class="sd">            starting with lowercase (e.g. 'myTask' for class 'MyTask')</span>
 
-<span class="sd">        componentName :  {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">        componentName :  {'ocean', 'seaIce'}</span>
 <span class="sd">            The name of the component (same as the folder where the task</span>
 <span class="sd">            resides)</span>
 
 <span class="sd">        tags :  list of str, optional</span>
-<span class="sd">            Tags used to describe the task (e.g. &#39;timeSeries&#39;, &#39;climatology&#39;,</span>
-<span class="sd">            horizontalMap&#39;, &#39;index&#39;, &#39;transect&#39;).  These are used to determine</span>
-<span class="sd">            which tasks are generated (e.g. &#39;all_transect&#39; or &#39;no_climatology&#39;</span>
-<span class="sd">            in the &#39;generate&#39; flags)</span>
+<span class="sd">            Tags used to describe the task (e.g. 'timeSeries', 'climatology',</span>
+<span class="sd">            horizontalMap', 'index', 'transect').  These are used to determine</span>
+<span class="sd">            which tasks are generated (e.g. 'all_transect' or 'no_climatology'</span>
+<span class="sd">            in the 'generate' flags)</span>
 
 <span class="sd">        subtaskName : str, optional</span>
 <span class="sd">            If this is a subtask of ``taskName``, the name of the subtask</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -240,8 +240,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span> <span class="o">=</span> <span class="n">taskName</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">printTaskName</span> <span class="o">=</span> <span class="n">taskName</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">printTaskName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">printTaskName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">taskName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
 
         <span class="c1"># call the constructor from the base class (Process)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">)</span>
@@ -259,7 +259,7 @@
         <span class="c1"># non-public attributes related to multiprocessing and logging</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_setupStatus</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_runStatus</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">AnalysisTask</span><span class="o">.</span><span class="n">UNSET</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runStatus</span> <span class="o">=</span> <span class="n">Value</span><span class="p">(</span><span class="s1">'i'</span><span class="p">,</span> <span class="n">AnalysisTask</span><span class="o">.</span><span class="n">UNSET</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stackTrace</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logFileName</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -275,7 +275,7 @@
 <div class="viewcode-block" id="AnalysisTask.setup_and_check">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html#mpas_analysis.shared.AnalysisTask.setup_and_check">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis (e.g. reading namelists and</span>
 <span class="sd">        streams files).</span>
 
@@ -290,50 +290,50 @@
 <span class="sd">        analysis-specific setup.  For example, this function could check if</span>
 <span class="sd">        necessary observations and other data files are found, then, determine</span>
 <span class="sd">        the list of files to be read when the analysis is run.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="c1"># read parameters from config file</span>
         <span class="c1"># the run directory contains the restart files</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">runDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-                                                   <span class="s1">&#39;runSubdirectory&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+                                                   <span class="s1">'runSubdirectory'</span><span class="p">)</span>
         <span class="c1"># if the history directory exists, use it; if not, fall back on</span>
         <span class="c1"># runDirectory</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">historyDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">HistorySubdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+            <span class="s1">'</span><span class="si">{}</span><span class="s1">HistorySubdirectory'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">),</span>
             <span class="n">defaultPath</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runDirectory</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                     <span class="s1">&#39;plotsSubdirectory&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                                     <span class="s1">'plotsSubdirectory'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_load_namelists_and_streams</span><span class="p">()</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config_calendar_type&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'config_calendar_type'</span><span class="p">)</span>
 
         <span class="n">make_directories</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">)</span>
 
         <span class="c1"># set the start and end dates for each type of analysis</span>
-        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;index&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'index'</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">set_start_end_date</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="n">tag</span><span class="p">)</span>
 
         <span class="c1"># redirect output to a log file</span>
-        <span class="n">logsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                               <span class="s1">&#39;logsSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">logsDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                               <span class="s1">'logsSubdirectory'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.log'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logsDirectory</span><span class="p">,</span>
                                                <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="AnalysisTask.run_task">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_task.html#mpas_analysis.shared.AnalysisTask.run_task">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Run the analysis.  Each task should override this function to do the</span>
 <span class="sd">        work of computing and/or plotting analysis</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -344,7 +344,7 @@
 <div class="viewcode-block" id="AnalysisTask.run_after">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run_after.html#mpas_analysis.shared.AnalysisTask.run_after">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run_after</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Only run this task after the given task has completed.  This allows a</span>
 <span class="sd">        task to be constructed of multiple subtasks, some of which may block</span>
 <span class="sd">        later tasks, while allowing some subtasks to run in parallel.  It also</span>
@@ -355,7 +355,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        task : ``AnalysisTask``</span>
 <span class="sd">            The task that should finish before this one begins</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -367,7 +367,7 @@
 <div class="viewcode-block" id="AnalysisTask.add_subtask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.add_subtask.html#mpas_analysis.shared.AnalysisTask.add_subtask">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">add_subtask</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subtask</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add a subtask to this tasks.  This task always runs after the subtask</span>
 <span class="sd">        has finished.  However, this task gets set up *before* the subtask,</span>
 <span class="sd">        so the setup of the subtask can depend on fields defined during the</span>
@@ -377,7 +377,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        subtask : ``AnalysisTask``</span>
 <span class="sd">            The subtask to run as part of this task</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -387,10 +387,10 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Clear unpicklable attributes and then start the analysis task as a new</span>
 <span class="sd">        process.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -402,7 +402,7 @@
 <div class="viewcode-block" id="AnalysisTask.run">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.run.html#mpas_analysis.shared.AnalysisTask.run">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">writeLogFile</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Sets up logging and then runs the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -412,7 +412,7 @@
 <span class="sd">            Otherwise, the internal logger ``self.logger`` points to stdout</span>
 <span class="sd">            and no log file is created.  The intention is for logging to take</span>
 <span class="sd">            place in parallel mode but not in serial mode.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -448,14 +448,14 @@
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">KeyboardInterrupt</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="n">e</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stackTrace</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exc</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;analysis task </span><span class="si">{}</span><span class="s2"> failed during run </span><span class="se">\n</span><span class="s2">&quot;</span>
-                              <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stackTrace</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"analysis task </span><span class="si">{}</span><span class="s2"> failed during run </span><span class="se">\n</span><span class="s2">"</span>
+                              <span class="s2">"</span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stackTrace</span><span class="p">))</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_runStatus</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">AnalysisTask</span><span class="o">.</span><span class="n">FAIL</span>
 
         <span class="n">runDuration</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">startTime</span>
         <span class="n">m</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">runDuration</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
         <span class="n">h</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="mi">60</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Execution time: </span><span class="si">{}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:05.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'Execution time: </span><span class="si">{}</span><span class="s1">:</span><span class="si">{:02d}</span><span class="s1">:</span><span class="si">{:05.2f}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">writeLogFile</span><span class="p">:</span>
             <span class="n">handler</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -472,7 +472,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_generate.html#mpas_analysis.shared.AnalysisTask.check_generate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Determines if this analysis should be generated, based on the</span>
 <span class="sd">        ``generate`` config option and ``taskName``, ``componentName`` and</span>
 <span class="sd">        ``tags``.</span>
@@ -489,31 +489,31 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError : If one of ``self.taskName``, ``self.componentName``</span>
 <span class="sd">            or ``self.tags`` has not been set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">for</span> <span class="n">memberName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;taskName&#39;</span><span class="p">,</span> <span class="s1">&#39;componentName&#39;</span><span class="p">,</span> <span class="s1">&#39;tags&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">memberName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'taskName'</span><span class="p">,</span> <span class="s1">'componentName'</span><span class="p">,</span> <span class="s1">'tags'</span><span class="p">]:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memberName</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Analysis tasks must define self.</span><span class="si">{}</span><span class="s1"> in their &#39;</span>
-                                 <span class="s1">&#39;__init__ method.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">memberName</span><span class="p">))</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Analysis tasks must define self.</span><span class="si">{}</span><span class="s1"> in their '</span>
+                                 <span class="s1">'__init__ method.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">memberName</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Analysis tasks</span><span class="se">\&#39;</span><span class="s1">s member self.tags &#39;</span>
-                             <span class="s1">&#39;must be None or a list of strings.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Analysis tasks</span><span class="se">\'</span><span class="s1">s member self.tags '</span>
+                             <span class="s1">'must be None or a list of strings.'</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">generateList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;generate&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">generateList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">generateList</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;only_&#39;</span><span class="p">:</span>
-            <span class="c1"># add &#39;all&#39; if the first item in the list has the &#39;only&#39; prefix.</span>
+        <span class="n">generateList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="s1">'output'</span><span class="p">,</span> <span class="s1">'generate'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">generateList</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">generateList</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'only_'</span><span class="p">:</span>
+            <span class="c1"># add 'all' if the first item in the list has the 'only' prefix.</span>
             <span class="c1"># Otherwise, we would not run any tasks</span>
-            <span class="n">generateList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">generateList</span>
+            <span class="n">generateList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all'</span><span class="p">]</span> <span class="o">+</span> <span class="n">generateList</span>
         <span class="n">generate</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">generateList</span><span class="p">:</span>
-            <span class="k">if</span> <span class="s1">&#39;_&#39;</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
-                <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s1">'_'</span> <span class="ow">in</span> <span class="n">element</span><span class="p">:</span>
+                <span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="n">suffix</span><span class="p">)</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">prefix</span> <span class="o">=</span> <span class="n">element</span>
                 <span class="n">suffix</span> <span class="o">=</span> <span class="kc">None</span>
@@ -522,13 +522,13 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">allSuffixes</span> <span class="o">=</span> <span class="n">allSuffixes</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span>
             <span class="n">noSuffixes</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">]</span> <span class="o">+</span> <span class="n">allSuffixes</span>
-            <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">'all'</span><span class="p">:</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">in</span> <span class="n">allSuffixes</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">suffix</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
                     <span class="n">generate</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">elif</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">&#39;no&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">'no'</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">suffix</span> <span class="ow">in</span> <span class="n">noSuffixes</span><span class="p">:</span>
                     <span class="n">generate</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">&#39;only&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s1">'only'</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">suffix</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allSuffixes</span><span class="p">:</span>
                     <span class="n">generate</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="k">elif</span> <span class="n">element</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">:</span>
@@ -541,7 +541,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.check_analysis_enabled.html#mpas_analysis.shared.AnalysisTask.check_analysis_enabled">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_analysis_enabled</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">analysisOptionName</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                                <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Check to make sure a given analysis is turned on, issuing a warning or</span>
 <span class="sd">        raising an exception if not.</span>
 
@@ -569,7 +569,7 @@
 <span class="sd">            If the given analysis option is not found and ``default`` is not</span>
 <span class="sd">            ``True`` or if the analysis option is found and is ``False``.  The</span>
 <span class="sd">            exception is only raised if ``raiseException = True``.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -580,17 +580,17 @@
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">enabled</span> <span class="o">=</span> <span class="n">default</span>
             <span class="k">if</span> <span class="n">default</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: namelist option </span><span class="si">{</span><span class="n">analysisOptionName</span><span class="si">}</span><span class="s1"> not &#39;</span>
-                      <span class="sa">f</span><span class="s1">&#39;found.</span><span class="se">\n</span><span class="s1">&#39;</span>
-                      <span class="sa">f</span><span class="s1">&#39;This likely indicates that the simulation you &#39;</span>
-                      <span class="sa">f</span><span class="s1">&#39;are analyzing was run with an</span><span class="se">\n</span><span class="s1">&#39;</span>
-                      <span class="sa">f</span><span class="s1">&#39;older version of MPAS-O that did not support &#39;</span>
-                      <span class="sa">f</span><span class="s1">&#39;this flag.  Assuming enabled.&#39;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Warning: namelist option </span><span class="si">{</span><span class="n">analysisOptionName</span><span class="si">}</span><span class="s1"> not '</span>
+                      <span class="sa">f</span><span class="s1">'found.</span><span class="se">\n</span><span class="s1">'</span>
+                      <span class="sa">f</span><span class="s1">'This likely indicates that the simulation you '</span>
+                      <span class="sa">f</span><span class="s1">'are analyzing was run with an</span><span class="se">\n</span><span class="s1">'</span>
+                      <span class="sa">f</span><span class="s1">'older version of MPAS-O that did not support '</span>
+                      <span class="sa">f</span><span class="s1">'this flag.  Assuming enabled.'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">enabled</span> <span class="ow">and</span> <span class="n">raiseException</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;*** MPAS-Analysis relies on </span><span class="si">{}</span><span class="s1"> = .true.</span><span class="se">\n</span><span class="s1">&#39;</span>
-                               <span class="s1">&#39;*** Make sure to enable this analysis &#39;</span>
-                               <span class="s1">&#39;member.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">analysisOptionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'*** MPAS-Analysis relies on </span><span class="si">{}</span><span class="s1"> = .true.</span><span class="se">\n</span><span class="s1">'</span>
+                               <span class="s1">'*** Make sure to enable this analysis '</span>
+                               <span class="s1">'member.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">analysisOptionName</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">enabled</span></div>
 
@@ -598,7 +598,7 @@
 <div class="viewcode-block" id="AnalysisTask.set_start_end_date">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.set_start_end_date.html#mpas_analysis.shared.AnalysisTask.set_start_end_date">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_start_end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set the start and end dates in the ``config`` correspond to the start</span>
 <span class="sd">        and end years in a given category of analysis</span>
 
@@ -608,61 +608,61 @@
 <span class="sd">            The name of a section in the config file containing ``startYear``</span>
 <span class="sd">            and ``endYear`` options. ``section`` is typically one of</span>
 <span class="sd">            ``climatology``, ``timeSeries`` or ``index``</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">):</span>
-            <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">):</span>
-            <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">))</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span></div>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">):</span>
+            <span class="n">startDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startYear'</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">):</span>
+            <span class="n">endDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endYear'</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span></div>
 
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_mesh_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Get the name of the MPAS mesh file for this component.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        meshFilename : str</span>
 <span class="sd">            The name of the MPAS mesh file for this component</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">meshStream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="s1">&#39;meshStream&#39;</span><span class="p">)</span>
+        <span class="n">meshStream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">,</span> <span class="s1">'meshStream'</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">meshStream</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="n">meshFilename</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">meshFilename</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">):</span>
-            <span class="c1"># try again with &quot;restart&quot; stream</span>
+            <span class="c1"># try again with "restart" stream</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">meshFilename</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">'restart'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
                 <span class="n">meshFilename</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="n">meshFilename</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">meshFilename</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s1">&#39;The MPAS mesh file could not be found via either &#39;</span>
-                <span class="sa">f</span><span class="s1">&#39;&quot;</span><span class="si">{</span><span class="n">meshStream</span><span class="si">}</span><span class="s1">&quot; or &quot;restart&quot; streams&#39;</span><span class="p">)</span>
+                <span class="sa">f</span><span class="s1">'The MPAS mesh file could not be found via either '</span>
+                <span class="sa">f</span><span class="s1">'"</span><span class="si">{</span><span class="n">meshStream</span><span class="si">}</span><span class="s1">" or "restart" streams'</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">meshFilename</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Customize pickling to exclude unpicklable and unnecessary attributes.</span>
 <span class="sd">        This method is called during multiprocessing when the task is</span>
 <span class="sd">        serialized to be sent to a child process. We exclude task dependencies</span>
-<span class="sd">        and process internals that don&#39;t need to be transferred, such as logger</span>
+<span class="sd">        and process internals that don't need to be transferred, such as logger</span>
 <span class="sd">        objects, process internals, and weakref-bearing attributes.</span>
 
 <span class="sd">        Returns</span>
@@ -670,17 +670,17 @@
 <span class="sd">        state : dict</span>
 <span class="sd">            The object state with unpicklable and unnecessary attributes</span>
 <span class="sd">            removed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="c1"># Clear out attributes that should not be pickled</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;namelist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;runStreams&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;historyStreams&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;runAfterTasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">state</span><span class="p">[</span><span class="s1">&#39;subtasks&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="c1"># Drop process internals and logger that can&#39;t/shouldn&#39;t be pickled</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;_popen&#39;</span><span class="p">,</span> <span class="s1">&#39;logger&#39;</span><span class="p">,</span> <span class="s1">&#39;_stackTrace&#39;</span><span class="p">]:</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">'namelist'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">'runStreams'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">'historyStreams'</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">'runAfterTasks'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">state</span><span class="p">[</span><span class="s1">'subtasks'</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Drop process internals and logger that can't/shouldn't be pickled</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'_popen'</span><span class="p">,</span> <span class="s1">'logger'</span><span class="p">,</span> <span class="s1">'_stackTrace'</span><span class="p">]:</span>
             <span class="n">state</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
         <span class="c1"># Drop weakref-bearing Finalize, etc., by not pickling _popen at all</span>
@@ -690,31 +690,31 @@
         <span class="k">return</span> <span class="n">state</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_load_namelists_and_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Load namelist and streams attributes.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">namelistFileName</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">NamelistFileName&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+            <span class="s1">'</span><span class="si">{}</span><span class="s1">NamelistFileName'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">namelist</span> <span class="o">=</span> <span class="n">NameList</span><span class="p">(</span><span class="n">namelistFileName</span><span class="p">)</span>
 
         <span class="n">streamsFileName</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">StreamsFileName&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+            <span class="s1">'</span><span class="si">{}</span><span class="s1">StreamsFileName'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">componentName</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span> <span class="o">=</span> <span class="n">StreamsFile</span><span class="p">(</span><span class="n">streamsFileName</span><span class="p">,</span>
                                       <span class="n">streamsdir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runDirectory</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span> <span class="o">=</span> <span class="n">StreamsFile</span><span class="p">(</span><span class="n">streamsFileName</span><span class="p">,</span>
                                           <span class="n">streamsdir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">historyDirectory</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_clear_namelists_and_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Clear namelist and streams attributes that cannot be pickled for</span>
 <span class="sd">        multiprocessing.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -727,20 +727,20 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">AnalysisFormatter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A custom formatter for logging</span>
 
 <span class="sd">    Modified from:</span>
 <span class="sd">    https://stackoverflow.com/a/8349076/7728169</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="c1"># printing error messages without a prefix because they are sometimes</span>
     <span class="c1"># errors and sometimes only warnings sent to stderr</span>
-    <span class="n">dbg_fmt</span> <span class="o">=</span> <span class="s2">&quot;DEBUG: </span><span class="si">%(module)s</span><span class="s2">: </span><span class="si">%(lineno)d</span><span class="s2">: </span><span class="si">%(msg)s</span><span class="s2">&quot;</span>
-    <span class="n">info_fmt</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%(msg)s</span><span class="s2">&quot;</span>
+    <span class="n">dbg_fmt</span> <span class="o">=</span> <span class="s2">"DEBUG: </span><span class="si">%(module)s</span><span class="s2">: </span><span class="si">%(lineno)d</span><span class="s2">: </span><span class="si">%(msg)s</span><span class="s2">"</span>
+    <span class="n">info_fmt</span> <span class="o">=</span> <span class="s2">"</span><span class="si">%(msg)s</span><span class="s2">"</span>
     <span class="n">err_fmt</span> <span class="o">=</span> <span class="n">info_fmt</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="n">info_fmt</span><span class="p">):</span>
@@ -775,22 +775,22 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">StreamToLogger</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Modified based on code by:</span>
 <span class="sd">    https://www.electricmonk.nl/log/2011/08/14/redirect-stdout-and-stderr-to-a-logger-in-python/</span>
 
 <span class="sd">    Copyright (C) 2011 Ferry Boender</span>
 
-<span class="sd">    License: &quot;available under the GPL&quot; (the author does not provide more</span>
+<span class="sd">    License: "available under the GPL" (the author does not provide more</span>
 <span class="sd">    details)</span>
 
 <span class="sd">    Fake file-like stream object that redirects writes to a logger instance.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log_level</span> <span class="o">=</span> <span class="n">log_level</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linebuf</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">linebuf</span> <span class="o">=</span> <span class="s1">''</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buf</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">buf</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">():</span>
@@ -802,63 +802,63 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">update_time_bounds_from_file_names</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                        <span class="n">allow_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Update the start and end years and dates for time series, climatologies or</span>
 <span class="sd">    climate indices based on the years actually available in the list of files.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="c1"># read parameters from config file</span>
     <span class="c1"># the run directory contains the restart files</span>
-    <span class="n">runDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="s1">&#39;runSubdirectory&#39;</span><span class="p">)</span>
+    <span class="n">runDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span> <span class="s1">'runSubdirectory'</span><span class="p">)</span>
     <span class="c1"># if the history directory exists, use it; if not, fall back on</span>
     <span class="c1"># runDirectory</span>
     <span class="n">historyDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">HistorySubdirectory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">),</span>
+        <span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+        <span class="s1">'</span><span class="si">{}</span><span class="s1">HistorySubdirectory'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">),</span>
         <span class="n">defaultPath</span><span class="o">=</span><span class="n">runDirectory</span><span class="p">)</span>
 
     <span class="n">namelistFileName</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">NamelistFileName&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+        <span class="s1">'</span><span class="si">{}</span><span class="s1">NamelistFileName'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">namelist</span> <span class="o">=</span> <span class="n">NameList</span><span class="p">(</span><span class="n">namelistFileName</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">):</span>
-        <span class="c1"># this component likely doesn&#39;t have output in this run</span>
+        <span class="c1"># this component likely doesn't have output in this run</span>
         <span class="k">return</span>
 
     <span class="n">streamsFileName</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-        <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">StreamsFileName&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
+        <span class="n">config</span><span class="p">,</span> <span class="s1">'input'</span><span class="p">,</span>
+        <span class="s1">'</span><span class="si">{}</span><span class="s1">StreamsFileName'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">componentName</span><span class="p">))</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">historyStreams</span> <span class="o">=</span> <span class="n">StreamsFile</span><span class="p">(</span><span class="n">streamsFileName</span><span class="p">,</span>
                                      <span class="n">streamsdir</span><span class="o">=</span><span class="n">historyDirectory</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">IOError</span><span class="p">):</span>
-        <span class="c1"># this component likely doesn&#39;t have output in this run</span>
+        <span class="c1"># this component likely doesn't have output in this run</span>
         <span class="k">return</span>
 
-    <span class="n">calendar</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;config_calendar_type&#39;</span><span class="p">)</span>
+    <span class="n">calendar</span> <span class="o">=</span> <span class="n">namelist</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'config_calendar_type'</span><span class="p">)</span>
 
-    <span class="n">requestedStartYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-    <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
+    <span class="n">requestedStartYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startYear'</span><span class="p">)</span>
+    <span class="n">requestedEndYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endYear'</span><span class="p">)</span>
 
-    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedStartYear</span><span class="p">)</span>
-    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedEndYear</span><span class="p">)</span>
+    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedStartYear</span><span class="p">)</span>
+    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">requestedEndYear</span><span class="p">)</span>
 
-    <span class="n">streamName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span>
+    <span class="n">streamName</span> <span class="o">=</span> <span class="s1">'timeSeriesStatsMonthlyOutput'</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">inputFiles</span> <span class="o">=</span> <span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
             <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="c1"># this component likely doesn&#39;t have output in this run</span>
+        <span class="c1"># this component likely doesn't have output in this run</span>
         <span class="k">return</span>
 
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: No input files found for stream </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1"> between &#39;</span>
-                         <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'Warning: No input files found for stream </span><span class="si">{}</span><span class="s1"> in </span><span class="si">{}</span><span class="s1"> between '</span>
+                         <span class="s1">'</span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span>
                                             <span class="n">requestedStartYear</span><span class="p">,</span>
                                             <span class="n">requestedEndYear</span><span class="p">))</span>
 
@@ -879,21 +879,21 @@
     <span class="n">endYear</span> <span class="o">=</span> <span class="n">years</span><span class="p">[</span><span class="n">lastIndex</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">startYear</span> <span class="o">!=</span> <span class="n">requestedStartYear</span> <span class="ow">or</span> <span class="n">endYear</span> <span class="o">!=</span> <span class="n">requestedEndYear</span><span class="p">:</span>
-        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> start and/or end year different from requested</span><span class="se">\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span>
-                   <span class="s2">&quot;actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"</span><span class="si">{}</span><span class="s2"> start and/or end year different from requested</span><span class="se">\n</span><span class="s2">"</span>
+                   <span class="s2">"requested: </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">"</span>
+                   <span class="s2">"actual:   </span><span class="si">{:04d}</span><span class="s2">-</span><span class="si">{:04d}</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                       <span class="n">section</span><span class="p">,</span> <span class="n">requestedStartYear</span><span class="p">,</span> <span class="n">requestedEndYear</span><span class="p">,</span> <span class="n">startYear</span><span class="p">,</span>
                       <span class="n">endYear</span><span class="p">)</span>
                   <span class="p">)</span>
         <span class="k">if</span> <span class="n">allow_cache</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Warning: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'Warning: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 
-    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
-    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
-    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
+    <span class="n">startDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">startYear</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">,</span> <span class="n">startDate</span><span class="p">)</span>
+    <span class="n">endDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">endYear</span><span class="p">)</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">,</span> <span class="n">endDate</span><span class="p">)</span>
 </pre></div>
 
            </div>

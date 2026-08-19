@@ -133,7 +133,7 @@
 <div class="viewcode-block" id="TimeSeriesSeaIce">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.TimeSeriesSeaIce.html#mpas_analysis.sea_ice.TimeSeriesSeaIce">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">TimeSeriesSeaIce</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Performs analysis of time series of sea-ice properties.</span>
 
 <span class="sd">    Attributes</span>
@@ -145,7 +145,7 @@
 <span class="sd">    controlconfig : tranche.Tranche</span>
 <span class="sd">        Configuration options for a control run (if any)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
@@ -154,7 +154,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.TimeSeriesSeaIce.html#mpas_analysis.sea_ice.TimeSeriesSeaIce.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasTimeSeriesTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -167,7 +167,7 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -175,9 +175,9 @@
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TimeSeriesSeaIce</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
-            <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;antarctic&#39;</span><span class="p">])</span>
+            <span class="n">taskName</span><span class="o">=</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'seaIce'</span><span class="p">,</span>
+            <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">,</span> <span class="s1">'arctic'</span><span class="p">,</span> <span class="s1">'antarctic'</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span> <span class="o">=</span> <span class="n">mpasTimeSeriesTask</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="o">=</span> <span class="n">controlConfig</span>
@@ -186,14 +186,14 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
 <span class="sd">        OSError</span>
 <span class="sd">            If files are not present</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -207,25 +207,25 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;timeMonthly_avg_iceAreaCell&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;timeMonthly_avg_iceVolumeCell&#39;</span><span class="p">,</span>
-                             <span class="s1">&#39;timeMonthly_avg_snowVolumeCell&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'timeMonthly_avg_iceAreaCell'</span><span class="p">,</span>
+                             <span class="s1">'timeMonthly_avg_iceVolumeCell'</span><span class="p">,</span>
+                             <span class="s1">'timeMonthly_avg_snowVolumeCell'</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">add_variables</span><span class="p">(</span><span class="n">variableList</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mpasTimeSeriesTask</span><span class="o">.</span><span class="n">outputFile</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-            <span class="n">check_path_exists</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seaIcePreprocessedReference&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;baseDirectory&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'preprocessedReferenceRunName'</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+            <span class="n">check_path_exists</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'seaIcePreprocessedReference'</span><span class="p">,</span>
+                                         <span class="s1">'baseDirectory'</span><span class="p">))</span>
 
         <span class="c1"># get a list of timeSeriesStatsMonthly output files from the streams</span>
         <span class="c1"># file, reading only those that are between the start and end dates</span>
-        <span class="n">streamName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">streamName</span> <span class="o">=</span> <span class="s1">'timeSeriesStatsMonthlyOutput'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span> <span class="o">=</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span>
                                          <span class="n">startDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
@@ -233,8 +233,8 @@
                                          <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No files were found in stream </span><span class="si">{}</span><span class="s1"> between </span><span class="si">{}</span><span class="s1"> and &#39;</span>
-                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'No files were found in stream </span><span class="si">{}</span><span class="s1"> between </span><span class="si">{}</span><span class="s1"> and '</span>
+                          <span class="s1">'</span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">startDate</span><span class="p">,</span>
                                        <span class="bp">self</span><span class="o">.</span><span class="n">endDate</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
@@ -245,36 +245,36 @@
         <span class="c1"># file names are reused in run()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="n">polarPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;polarPlot&#39;</span><span class="p">)</span>
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">polarPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span> <span class="s1">'polarPlot'</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
         <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> \
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span>
-        <span class="n">compareWithObservations</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span>
-                                                    <span class="s1">&#39;compareWithObservations&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'preprocessedReferenceRunName'</span><span class="p">)</span>
+        <span class="n">compareWithObservations</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span>
+                                                    <span class="s1">'compareWithObservations'</span><span class="p">)</span>
 
         <span class="n">polarXMLFileNames</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">compareWithObservations</span> <span class="ow">and</span>
-                <span class="n">preprocessedReferenceRunName</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">]:</span>
-                <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">,</span>
+                <span class="n">preprocessedReferenceRunName</span> <span class="o">==</span> <span class="s1">'None'</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'iceArea'</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">]:</span>
+                <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mainRunName</span><span class="p">,</span>
                                             <span class="n">variableName</span><span class="p">)</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">))</span>
-                <span class="n">polarXMLFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_polar.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">polarXMLFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_polar.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
 
-            <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
-                <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">]:</span>
-                    <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
+            <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NH'</span><span class="p">,</span> <span class="s1">'SH'</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'iceArea'</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">]:</span>
+                    <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
                                                   <span class="n">hemisphere</span><span class="p">,</span>
                                                   <span class="n">mainRunName</span><span class="p">)</span>
 
-                    <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">))</span>
-                    <span class="n">polarXMLFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_polar.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">polarXMLFileNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">_polar.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="n">filePrefix</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="n">polarPlot</span><span class="p">:</span>
@@ -282,165 +282,165 @@
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Performs analysis of time series of sea-ice properties.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting sea-ice area and volume time series...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Plotting sea-ice area and volume time series..."</span><span class="p">)</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="n">plotTitles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;iceArea&#39;</span><span class="p">:</span> <span class="s1">&#39;Sea-ice area&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;iceVolume&#39;</span><span class="p">:</span> <span class="s1">&#39;Sea-ice volume&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;snowVolume&#39;</span><span class="p">:</span> <span class="s1">&#39;Snow volume&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;iceThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;Sea-ice mean thickness&#39;</span><span class="p">,</span>
-                      <span class="s1">&#39;snowDepth&#39;</span><span class="p">:</span> <span class="s1">&#39;Snow mean depth&#39;</span><span class="p">}</span>
+        <span class="n">plotTitles</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'iceArea'</span><span class="p">:</span> <span class="s1">'Sea-ice area'</span><span class="p">,</span>
+                      <span class="s1">'iceVolume'</span><span class="p">:</span> <span class="s1">'Sea-ice volume'</span><span class="p">,</span>
+                      <span class="s1">'snowVolume'</span><span class="p">:</span> <span class="s1">'Snow volume'</span><span class="p">,</span>
+                      <span class="s1">'iceThickness'</span><span class="p">:</span> <span class="s1">'Sea-ice mean thickness'</span><span class="p">,</span>
+                      <span class="s1">'snowDepth'</span><span class="p">:</span> <span class="s1">'Snow mean depth'</span><span class="p">}</span>
 
-        <span class="n">units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;iceArea&#39;</span><span class="p">:</span> <span class="s1">&#39;[km$^2$]&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;iceVolume&#39;</span><span class="p">:</span> <span class="s1">&#39;[10$^3$ km$^3$]&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;snowVolume&#39;</span><span class="p">:</span> <span class="s1">&#39;[10$^3$ km$^3$]&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;iceThickness&#39;</span><span class="p">:</span> <span class="s1">&#39;[m]&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;snowDepth&#39;</span><span class="p">:</span> <span class="s1">&#39;[m]&#39;</span><span class="p">}</span>
+        <span class="n">units</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'iceArea'</span><span class="p">:</span> <span class="s1">'[km$^2$]'</span><span class="p">,</span>
+                 <span class="s1">'iceVolume'</span><span class="p">:</span> <span class="s1">'[10$^3$ km$^3$]'</span><span class="p">,</span>
+                 <span class="s1">'snowVolume'</span><span class="p">:</span> <span class="s1">'[10$^3$ km$^3$]'</span><span class="p">,</span>
+                 <span class="s1">'iceThickness'</span><span class="p">:</span> <span class="s1">'[m]'</span><span class="p">,</span>
+                 <span class="s1">'snowDepth'</span><span class="p">:</span> <span class="s1">'[m]'</span><span class="p">}</span>
 
         <span class="n">obsFileNames</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;iceArea&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;NH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;areaNH&#39;</span><span class="p">,</span>
+            <span class="s1">'iceArea'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'NH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'areaNH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">),</span>
-                <span class="s1">&#39;SH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;areaSH&#39;</span><span class="p">,</span>
+                <span class="s1">'SH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'areaSH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)},</span>
-            <span class="s1">&#39;iceVolume&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;NH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;volNH&#39;</span><span class="p">,</span>
+            <span class="s1">'iceVolume'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'NH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'volNH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">),</span>
-                <span class="s1">&#39;SH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;volSH&#39;</span><span class="p">,</span>
+                <span class="s1">'SH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'volSH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)},</span>
-            <span class="s1">&#39;snowVolume&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;NH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;snowNH&#39;</span><span class="p">,</span>
+            <span class="s1">'snowVolume'</span><span class="p">:</span> <span class="p">{</span><span class="s1">'NH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'snowNH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">),</span>
-                <span class="s1">&#39;SH&#39;</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">&#39;snowSH&#39;</span><span class="p">,</span>
+                <span class="s1">'SH'</span><span class="p">:</span> <span class="n">build_obs_path</span><span class="p">(</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                <span class="n">relativePathOption</span><span class="o">=</span><span class="s1">'snowSH'</span><span class="p">,</span>
                 <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)}}</span>
 
         <span class="c1"># Some plotting rules</span>
-        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;titleFontSize&#39;</span><span class="p">)</span>
+        <span class="n">titleFontSize</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span> <span class="s1">'titleFontSize'</span><span class="p">)</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
         <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> \
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'preprocessedReferenceRunName'</span><span class="p">)</span>
         <span class="n">preprocessedReferenceDirectory</span> <span class="o">=</span> \
-            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;seaIcePreprocessedReference&#39;</span><span class="p">,</span> <span class="s1">&#39;baseDirectory&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'seaIcePreprocessedReference'</span><span class="p">,</span> <span class="s1">'baseDirectory'</span><span class="p">)</span>
 
-        <span class="n">compareWithObservations</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span>
-                                                    <span class="s1">&#39;compareWithObservations&#39;</span><span class="p">)</span>
+        <span class="n">compareWithObservations</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span>
+                                                    <span class="s1">'compareWithObservations'</span><span class="p">)</span>
 
-        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+        <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span>
+                                            <span class="s1">'movingAveragePoints'</span><span class="p">)</span>
 
-        <span class="n">polarPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;polarPlot&#39;</span><span class="p">)</span>
+        <span class="n">polarPlot</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span> <span class="s1">'polarPlot'</span><span class="p">)</span>
 
-        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;timeseriesSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">outputDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                                 <span class="s1">'timeseriesSubdirectory'</span><span class="p">)</span>
 
         <span class="n">make_directories</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load sea-ice data...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load sea-ice data...'</span><span class="p">)</span>
         <span class="c1"># Load mesh</span>
 
         <span class="n">dsTimeSeries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_area_vol</span><span class="p">()</span>
 
-        <span class="n">yearStart</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsTimeSeries</span><span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
+        <span class="n">yearStart</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsTimeSeries</span><span class="p">[</span><span class="s1">'NH'</span><span class="p">]</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
                                      <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
-        <span class="n">yearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsTimeSeries</span><span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+        <span class="n">yearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsTimeSeries</span><span class="p">[</span><span class="s1">'NH'</span><span class="p">]</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
         <span class="n">timeStart</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">yearStart</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
                                  <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
         <span class="n">timeEnd</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">yearEnd</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span>
                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-            <span class="c1"># determine if we&#39;re beyond the end of the preprocessed data</span>
-            <span class="c1"># (and go ahead and cache the data set while we&#39;re checking)</span>
-            <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/preprocessed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+            <span class="c1"># determine if we're beyond the end of the preprocessed data</span>
+            <span class="c1"># (and go ahead and cache the data set while we're checking)</span>
+            <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/preprocessed'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
             <span class="n">make_directories</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
-            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/icevol.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/icevol.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">preprocessedReferenceDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/iceVolume.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/iceVolume.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
 
             <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
                                             <span class="n">outFileName</span><span class="p">,</span>
                                             <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                               <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                               <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
             <span class="n">preprocessedYearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
             <span class="k">if</span> <span class="n">yearStart</span> <span class="o">&lt;=</span> <span class="n">preprocessedYearEnd</span><span class="p">:</span>
                 <span class="n">dsPreprocessedTimeSlice</span> <span class="o">=</span> \
                     <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Preprocessed time series ends before the &#39;</span>
-                                    <span class="s1">&#39;timeSeries startYear and will not be &#39;</span>
-                                    <span class="s1">&#39;plotted.&#39;</span><span class="p">)</span>
-                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Preprocessed time series ends before the '</span>
+                                    <span class="s1">'timeSeries startYear and will not be '</span>
+                                    <span class="s1">'plotted.'</span><span class="p">)</span>
+                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">'None'</span>
 
-            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/snowvol.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/snowvol.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">preprocessedReferenceDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/snowVolume.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/snowVolume.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
 
             <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
                                             <span class="n">outFileName</span><span class="p">,</span>
                                             <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                               <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                               <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
             <span class="n">preprocessedYearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
             <span class="k">if</span> <span class="n">yearStart</span> <span class="o">&lt;=</span> <span class="n">preprocessedYearEnd</span><span class="p">:</span>
                 <span class="n">dsPreprocessedTimeSlice</span> <span class="o">=</span> \
                     <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Preprocessed time series ends before the &#39;</span>
-                                    <span class="s1">&#39;timeSeries startYear and will not be &#39;</span>
-                                    <span class="s1">&#39;plotted.&#39;</span><span class="p">)</span>
-                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Preprocessed time series ends before the '</span>
+                                    <span class="s1">'timeSeries startYear and will not be '</span>
+                                    <span class="s1">'plotted.'</span><span class="p">)</span>
+                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">'None'</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
             <span class="n">dsTimeSeriesRef</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
-                <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/seaIceAreaVol</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NH'</span><span class="p">,</span> <span class="s1">'SH'</span><span class="p">]:</span>
+                <span class="n">inFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/seaIceAreaVol</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                                             <span class="n">hemisphere</span><span class="p">)</span>
 
                 <span class="n">dsTimeSeriesRef</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">inFileName</span><span class="p">)</span>
 
-        <span class="n">norm</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;iceArea&#39;</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>  <span class="c1"># m^2 to km^2</span>
-                <span class="s1">&#39;iceVolume&#39;</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">,</span>  <span class="c1"># m^3 to 10^3 km^3</span>
-                <span class="s1">&#39;snowVolume&#39;</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">,</span>  <span class="c1"># m^3 to 10^3 km^3</span>
-                <span class="s1">&#39;iceThickness&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
-                <span class="s1">&#39;snowDepth&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'iceArea'</span><span class="p">:</span> <span class="mf">1e-6</span><span class="p">,</span>  <span class="c1"># m^2 to km^2</span>
+                <span class="s1">'iceVolume'</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">,</span>  <span class="c1"># m^3 to 10^3 km^3</span>
+                <span class="s1">'snowVolume'</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">,</span>  <span class="c1"># m^3 to 10^3 km^3</span>
+                <span class="s1">'iceThickness'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">,</span>
+                <span class="s1">'snowDepth'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
 
-        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time [years]&#39;</span>
+        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">'Time [years]'</span>
 
-        <span class="n">galleryGroup</span> <span class="o">=</span> <span class="s1">&#39;Time Series&#39;</span>
-        <span class="n">groupLink</span> <span class="o">=</span> <span class="s1">&#39;timeseries&#39;</span>
+        <span class="n">galleryGroup</span> <span class="o">=</span> <span class="s1">'Time Series'</span>
+        <span class="n">groupLink</span> <span class="o">=</span> <span class="s1">'timeseries'</span>
 
         <span class="n">obs</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">preprocessed</span> <span class="o">=</span> <span class="p">{}</span>
@@ -451,11 +451,11 @@
         <span class="n">obsLegend</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">plotVarsRef</span> <span class="o">=</span> <span class="p">{}</span>
 
-        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NH'</span><span class="p">,</span> <span class="s1">'SH'</span><span class="p">]:</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Make </span><span class="si">{}</span><span class="s1"> plots...&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Make </span><span class="si">{}</span><span class="s1"> plots...'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="p">))</span>
 
-            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'iceArea'</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">]:</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="n">variableName</span><span class="p">)</span>
 
                 <span class="c1"># apply the norm to each variable</span>
@@ -466,150 +466,150 @@
                     <span class="n">plotVarsRef</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">norm</span><span class="p">[</span><span class="n">variableName</span><span class="p">]</span> <span class="o">*</span> \
                         <span class="n">dsTimeSeriesRef</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">][</span><span class="n">variableName</span><span class="p">]</span>
 
-                <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
+                <span class="n">prefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span>
                                              <span class="n">variableName</span><span class="p">,</span>
                                              <span class="n">hemisphere</span><span class="p">,</span>
                                              <span class="n">mainRunName</span><span class="p">)</span>
 
-                <span class="n">figureNameStd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
-                <span class="n">figureNamePolar</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_polar.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">figureNameStd</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+                <span class="n">figureNamePolar</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_polar.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
 
-                <span class="n">title</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotTitles</span><span class="p">[</span><span class="n">variableName</span><span class="p">],</span>
+                <span class="n">title</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plotTitles</span><span class="p">[</span><span class="n">variableName</span><span class="p">],</span>
                                               <span class="n">hemisphere</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">compareWithObservations</span><span class="p">:</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceArea&#39;</span><span class="p">)</span>
-                <span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;SSM/I observations, annual cycle &#39;</span>
-                <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">)</span>
-                    <span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;PIOMAS, annual cycle (blue)&#39;</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceArea'</span><span class="p">)</span>
+                <span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'SSM/I observations, annual cycle '</span>
+                <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">)</span>
+                    <span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'PIOMAS, annual cycle (blue)'</span>
 
-            <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'iceArea'</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">]:</span>
                     <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="n">variableName</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">compareWithObservations</span><span class="p">:</span>
 
-                <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/obs&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
+                <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/obs'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
                 <span class="n">make_directories</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
-                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/iceArea</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">)</span>
+                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/iceArea</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">)</span>
 
                 <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span>
-                    <span class="n">obsFileNames</span><span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">][</span><span class="n">hemisphere</span><span class="p">],</span>
+                    <span class="n">obsFileNames</span><span class="p">[</span><span class="s1">'iceArea'</span><span class="p">][</span><span class="n">hemisphere</span><span class="p">],</span>
                     <span class="n">outFileName</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
                 <span class="n">dsObs</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                           <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                          <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceArea&#39;</span><span class="p">)</span>
+                                          <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceArea'</span><span class="p">)</span>
                 <span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replicate_cycle</span><span class="p">(</span><span class="n">plotVars</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">IceArea</span><span class="p">,</span>
                                                  <span class="n">calendar</span><span class="p">)</span>
 
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-                    <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/iceVolume</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+                    <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/iceVolume</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">,</span>
                                                              <span class="n">hemisphere</span><span class="p">)</span>
                     <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span>
-                        <span class="n">obsFileNames</span><span class="p">[</span><span class="s1">&#39;iceVolume&#39;</span><span class="p">][</span><span class="n">hemisphere</span><span class="p">],</span>
+                        <span class="n">obsFileNames</span><span class="p">[</span><span class="s1">'iceVolume'</span><span class="p">][</span><span class="n">hemisphere</span><span class="p">],</span>
                         <span class="n">outFileName</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
                     <span class="n">dsObs</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                               <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                              <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                              <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
                     <span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_replicate_cycle</span><span class="p">(</span><span class="n">plotVars</span><span class="p">[</span><span class="n">key</span><span class="p">],</span>
                                                      <span class="n">dsObs</span><span class="o">.</span><span class="n">IceVol</span><span class="p">,</span>
                                                      <span class="n">calendar</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">)</span>
                 <span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
-            <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-                <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/preprocessed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
-                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/icearea.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+                <span class="n">outFolder</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/preprocessed'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outputDirectory</span><span class="p">)</span>
+                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/icearea.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">preprocessedReferenceDirectory</span><span class="p">,</span>
                     <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
 
-                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/iceArea.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
+                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/iceArea.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
 
                 <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
                                                 <span class="n">outFileName</span><span class="p">,</span>
                                                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
                 <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
                 <span class="n">dsPreprocessedTimeSlice</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
                     <span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceArea&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceArea'</span><span class="p">)</span>
                 <span class="n">preprocessed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsPreprocessedTimeSlice</span><span class="p">[</span>
-                    <span class="s1">&#39;icearea_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+                    <span class="s1">'icearea_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
 
-                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/icevol.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/icevol.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">preprocessedReferenceDirectory</span><span class="p">,</span>
                     <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
-                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/iceVolume.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
+                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/iceVolume.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
 
                 <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
                                                 <span class="n">outFileName</span><span class="p">,</span>
                                                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
                 <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
                 <span class="n">dsPreprocessedTimeSlice</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
                     <span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">)</span>
                 <span class="n">preprocessed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsPreprocessedTimeSlice</span><span class="p">[</span>
-                    <span class="s1">&#39;icevolume_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+                    <span class="s1">'icevolume_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
 
-                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/snowvol.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/snowvol.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">preprocessedReferenceDirectory</span><span class="p">,</span>
                     <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
-                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/snowVolume.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
+                <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/snowVolume.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">outFolder</span><span class="p">)</span>
 
                 <span class="n">combine_time_series_with_ncrcat</span><span class="p">(</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
                                                 <span class="n">outFileName</span><span class="p">,</span>
                                                 <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">)</span>
                 <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="n">outFileName</span><span class="p">,</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                                                   <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
                 <span class="n">dsPreprocessedTimeSlice</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span>
                     <span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span> <span class="n">timeEnd</span><span class="p">))</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">)</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">)</span>
                 <span class="n">preprocessed</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsPreprocessedTimeSlice</span><span class="p">[</span>
-                    <span class="s1">&#39;snowvolume_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
+                    <span class="s1">'snowvolume_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">())]</span>
 
-            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">,</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'iceArea'</span><span class="p">,</span> <span class="s1">'iceVolume'</span><span class="p">,</span> <span class="s1">'snowVolume'</span><span class="p">]:</span>
                 <span class="n">key</span> <span class="o">=</span> <span class="p">(</span><span class="n">hemisphere</span><span class="p">,</span> <span class="n">variableName</span><span class="p">)</span>
                 <span class="n">dsvalues</span> <span class="o">=</span> <span class="p">[</span><span class="n">plotVars</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
                 <span class="n">legendText</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainRunName</span><span class="p">]</span>
-                <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)]</span>
+                <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'mainColor'</span><span class="p">)]</span>
                 <span class="n">lineWidths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">compareWithObservations</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">obsLegend</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                     <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obsLegend</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
-                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;obsColor1&#39;</span><span class="p">))</span>
+                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'obsColor1'</span><span class="p">))</span>
                     <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">preprocessed</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                     <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
-                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;purple&#39;</span><span class="p">)</span>
+                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'purple'</span><span class="p">)</span>
                     <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">dsvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plotVarsRef</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
                     <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">controlRunName</span><span class="p">)</span>
-                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;controlColor&#39;</span><span class="p">))</span>
+                    <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span>
+                                                 <span class="s1">'controlColor'</span><span class="p">))</span>
                     <span class="n">lineWidths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'firstYearXTicks'</span><span class="p">):</span>
                     <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                    <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
+                                                    <span class="s1">'firstYearXTicks'</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'yearStrideXTicks'</span><span class="p">):</span>
                     <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                     <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
+                                                     <span class="s1">'yearStrideXTicks'</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -625,18 +625,18 @@
 
                 <span class="n">savefig</span><span class="p">(</span><span class="n">figureNameStd</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
 
-                <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
+                <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
                                               <span class="n">hemisphere</span><span class="p">,</span>
                                               <span class="n">mainRunName</span><span class="p">)</span>
-                <span class="n">thumbnailDescription</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">thumbnailDescription</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">hemisphere</span><span class="p">,</span> <span class="n">plotTitles</span><span class="p">[</span><span class="n">variableName</span><span class="p">])</span>
-                <span class="n">caption</span> <span class="o">=</span> <span class="s1">&#39;Running mean of </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">caption</span> <span class="o">=</span> <span class="s1">'Running mean of </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                     <span class="n">thumbnailDescription</span><span class="p">)</span>
                 <span class="n">write_image_xml</span><span class="p">(</span>
                     <span class="n">config</span><span class="p">,</span>
                     <span class="n">filePrefix</span><span class="p">,</span>
-                    <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Sea Ice&#39;</span><span class="p">,</span>
-                    <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;sea_ice&#39;</span><span class="p">,</span>
+                    <span class="n">componentName</span><span class="o">=</span><span class="s1">'Sea Ice'</span><span class="p">,</span>
+                    <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'sea_ice'</span><span class="p">,</span>
                     <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
                     <span class="n">groupLink</span><span class="o">=</span><span class="n">groupLink</span><span class="p">,</span>
                     <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">thumbnailDescription</span><span class="p">,</span>
@@ -653,14 +653,14 @@
 
                     <span class="n">savefig</span><span class="p">(</span><span class="n">figureNamePolar</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">config</span><span class="p">)</span>
 
-                    <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_polar&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
+                    <span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_polar'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variableName</span><span class="p">,</span>
                                                         <span class="n">hemisphere</span><span class="p">,</span>
                                                         <span class="n">mainRunName</span><span class="p">)</span>
                     <span class="n">write_image_xml</span><span class="p">(</span>
                         <span class="n">config</span><span class="p">,</span>
                         <span class="n">filePrefix</span><span class="p">,</span>
-                        <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Sea Ice&#39;</span><span class="p">,</span>
-                        <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;sea_ice&#39;</span><span class="p">,</span>
+                        <span class="n">componentName</span><span class="o">=</span><span class="s1">'Sea Ice'</span><span class="p">,</span>
+                        <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'sea_ice'</span><span class="p">,</span>
                         <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
                         <span class="n">groupLink</span><span class="o">=</span><span class="n">groupLink</span><span class="p">,</span>
                         <span class="n">thumbnailDescription</span><span class="o">=</span><span class="n">thumbnailDescription</span><span class="p">,</span>
@@ -668,7 +668,7 @@
                         <span class="n">imageCaption</span><span class="o">=</span><span class="n">caption</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_replicate_cycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ds</span><span class="p">,</span> <span class="n">dsToReplicate</span><span class="p">,</span> <span class="n">calendar</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Replicates a periodic time series `dsToReplicate` to cover the</span>
 <span class="sd">        timeframe of the dataset `ds`.</span>
 
@@ -681,14 +681,14 @@
 <span class="sd">            length of dsToReplicate plus the time between the first two time</span>
 <span class="sd">            values (typically one year total).</span>
 
-<span class="sd">        calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">        calendar : {'gregorian', 'noleap'}</span>
 <span class="sd">            The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">        --------</span>
 <span class="sd">        dsShift : a cyclicly repeated version of `dsToReplicte` covering the</span>
 <span class="sd">            range of time of `ds`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
@@ -717,57 +717,57 @@
         <span class="n">dsShift</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
         <span class="n">times</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsShift</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
-        <span class="n">dsShift</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+        <span class="n">dsShift</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span>
                                   <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="n">startIndex</span> <span class="o">*</span> <span class="n">period</span><span class="p">,</span>
                                                    <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
         <span class="c1"># replicate cycle:</span>
         <span class="k">for</span> <span class="n">cycleIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startIndex</span><span class="p">,</span> <span class="n">endIndex</span><span class="p">):</span>
             <span class="n">dsNew</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-            <span class="n">dsNew</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="p">(</span><span class="n">cycleIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">period</span><span class="p">,</span>
+            <span class="n">dsNew</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="p">(</span><span class="n">cycleIndex</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">period</span><span class="p">,</span>
                                           <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
-            <span class="n">dsShift</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsShift</span><span class="p">,</span> <span class="n">dsNew</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+            <span class="n">dsShift</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsShift</span><span class="p">,</span> <span class="n">dsNew</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">)</span>
 
         <span class="c1"># clip dsShift to the range of ds</span>
         <span class="n">dsStartTime</span> <span class="o">=</span> <span class="n">dsShift</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span>
-                                       <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;nearest&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+                                       <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">'nearest'</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
         <span class="n">dsEndTime</span> <span class="o">=</span> <span class="n">dsShift</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
-                                     <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">&#39;nearest&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
+                                     <span class="n">method</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="s1">'nearest'</span><span class="p">))</span><span class="o">.</span><span class="n">values</span>
         <span class="n">dsShift</span> <span class="o">=</span> <span class="n">dsShift</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">dsStartTime</span><span class="p">,</span> <span class="n">dsEndTime</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">dsShift</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_area_vol</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute part of the time series of sea ice volume and area, given time</span>
 <span class="sd">        indices to process.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
-        <span class="n">chunkYears</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;chunkYears&#39;</span><span class="p">)</span>
+        <span class="n">chunkYears</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span> <span class="s1">'chunkYears'</span><span class="p">)</span>
 
         <span class="n">maxAllowedSeaIceThickness</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;timeSeriesSeaIceAreaVol&#39;</span><span class="p">,</span> <span class="s1">&#39;maxAllowedSeaIceThickness&#39;</span><span class="p">)</span>
+            <span class="s1">'timeSeriesSeaIceAreaVol'</span><span class="p">,</span> <span class="s1">'maxAllowedSeaIceThickness'</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">maxAllowedSeaIceThickness</span> <span class="o">==</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">maxAllowedSeaIceThickness</span> <span class="o">==</span> <span class="s1">'None'</span><span class="p">:</span>
             <span class="n">maxAllowedSeaIceThickness</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">maxAllowedSeaIceThickness</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">maxAllowedSeaIceThickness</span><span class="p">)</span>
 
         <span class="n">outFileNames</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NH'</span><span class="p">,</span> <span class="s1">'SH'</span><span class="p">]:</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
             <span class="n">make_directories</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">)</span>
 
-            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/seaIceAreaVol</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/seaIceAreaVol</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                                          <span class="n">hemisphere</span><span class="p">)</span>
             <span class="n">outFileNames</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]</span> <span class="o">=</span> <span class="n">outFileName</span>
 
         <span class="n">dsTimeSeries</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">meshFilename</span><span class="p">)</span>
-        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">&#39;latCell&#39;</span><span class="p">,</span> <span class="s1">&#39;areaCell&#39;</span><span class="p">]]</span>
+        <span class="n">dsMesh</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="p">[[</span><span class="s1">'latCell'</span><span class="p">,</span> <span class="s1">'areaCell'</span><span class="p">]]</span>
         <span class="c1"># Load data</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
             <span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFile</span><span class="p">,</span>
@@ -777,18 +777,18 @@
             <span class="n">endDate</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">endDate</span><span class="p">)</span>
 
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-            <span class="p">{</span><span class="s1">&#39;timeMonthly_avg_iceAreaCell&#39;</span><span class="p">:</span> <span class="s1">&#39;iceConc&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_iceVolumeCell&#39;</span><span class="p">:</span> <span class="s1">&#39;iceThick&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;timeMonthly_avg_snowVolumeCell&#39;</span><span class="p">:</span> <span class="s1">&#39;snowDepth&#39;</span><span class="p">})</span>
+            <span class="p">{</span><span class="s1">'timeMonthly_avg_iceAreaCell'</span><span class="p">:</span> <span class="s1">'iceConc'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_iceVolumeCell'</span><span class="p">:</span> <span class="s1">'iceThick'</span><span class="p">,</span>
+                <span class="s1">'timeMonthly_avg_snowVolumeCell'</span><span class="p">:</span> <span class="s1">'snowDepth'</span><span class="p">})</span>
 
-        <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span>
-        <span class="c1"># chunk into 10-year seguments so we don&#39;t run out of memory</span>
+        <span class="n">nTime</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span>
+        <span class="c1"># chunk into 10-year seguments so we don't run out of memory</span>
         <span class="k">if</span> <span class="n">nTime</span> <span class="o">&gt;</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">chunkYears</span><span class="p">:</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">&#39;Time&#39;</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">chunkYears</span><span class="p">})</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">chunk</span><span class="p">({</span><span class="s1">'Time'</span><span class="p">:</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">chunkYears</span><span class="p">})</span>
 
-        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;NH&#39;</span><span class="p">,</span> <span class="s1">&#39;SH&#39;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">hemisphere</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'NH'</span><span class="p">,</span> <span class="s1">'SH'</span><span class="p">]:</span>
 
-            <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span> <span class="o">&gt;</span> <span class="mi">0</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">mask</span> <span class="o">=</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">latCell</span> <span class="o">&lt;</span> <span class="mi">0</span>
@@ -806,35 +806,35 @@
 
             <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="p">(</span>
                 <span class="n">dsForHemisphere</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span> <span class="o">*</span> <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span>
-            <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">)</span>
             <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="n">dsAreaSum</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
-                <span class="p">{</span><span class="s1">&#39;iceConc&#39;</span><span class="p">:</span> <span class="s1">&#39;iceArea&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;iceThick&#39;</span><span class="p">:</span> <span class="s1">&#39;iceVolume&#39;</span><span class="p">,</span>
-                 <span class="s1">&#39;snowDepth&#39;</span><span class="p">:</span> <span class="s1">&#39;snowVolume&#39;</span><span class="p">})</span>
-            <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceThickness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsAreaSum</span><span class="o">.</span><span class="n">iceVolume</span> <span class="o">/</span>
-                                         <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
-            <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;snowDepth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsAreaSum</span><span class="o">.</span><span class="n">snowVolume</span> <span class="o">/</span>
-                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nCells&#39;</span><span class="p">))</span>
+                <span class="p">{</span><span class="s1">'iceConc'</span><span class="p">:</span> <span class="s1">'iceArea'</span><span class="p">,</span>
+                 <span class="s1">'iceThick'</span><span class="p">:</span> <span class="s1">'iceVolume'</span><span class="p">,</span>
+                 <span class="s1">'snowDepth'</span><span class="p">:</span> <span class="s1">'snowVolume'</span><span class="p">})</span>
+            <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceThickness'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsAreaSum</span><span class="o">.</span><span class="n">iceVolume</span> <span class="o">/</span>
+                                         <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">))</span>
+            <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'snowDepth'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">dsAreaSum</span><span class="o">.</span><span class="n">snowVolume</span> <span class="o">/</span>
+                                      <span class="n">dsMesh</span><span class="o">.</span><span class="n">areaCell</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'nCells'</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outFileNames</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]):</span>
-                <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsCache</span><span class="p">,</span> <span class="n">dsAreaSum</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+                <span class="n">dsAreaSum</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsCache</span><span class="p">,</span> <span class="n">dsAreaSum</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">)</span>
                 <span class="n">dsCache</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m$^2$&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceArea&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice area&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceVolume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m$^3$&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceVolume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice volume&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;snowVolume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m$^3$&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;snowVolume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> snow volume&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceThickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;iceThickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Mean </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice thickness&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;snowDepth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;m&#39;</span>
-                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">&#39;snowDepth&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Mean </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> snow depth&#39;</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceArea'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m$^2$'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceArea'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">'Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice area'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceVolume'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m$^3$'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceVolume'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">'Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice volume'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'snowVolume'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m$^3$'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'snowVolume'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">'Total </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> snow volume'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceThickness'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'iceThickness'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">'Mean </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> sea ice thickness'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'snowDepth'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'units'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'m'</span>
+                <span class="n">dsAreaSum</span><span class="p">[</span><span class="s1">'snowDepth'</span><span class="p">]</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="sa">f</span><span class="s1">'Mean </span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1"> snow depth'</span>
 
             <span class="n">dsTimeSeries</span><span class="p">[</span><span class="n">hemisphere</span><span class="p">]</span> <span class="o">=</span> <span class="n">dsAreaSum</span>
 

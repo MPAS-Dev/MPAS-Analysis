@@ -106,10 +106,10 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Utility functions for reading a single MPAS file into xarray and for removing</span>
 <span class="sd">all but a given list of variables from a data set.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
@@ -123,10 +123,10 @@
 <div class="viewcode-block" id="open_mpas_dataset">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.open_mpas_dataset.html#mpas_analysis.shared.io.open_mpas_dataset">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
-                      <span class="n">timeVariableNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xtime_startMonthly&#39;</span><span class="p">,</span>
-                                         <span class="s1">&#39;xtime_endMonthly&#39;</span><span class="p">],</span>
+                      <span class="n">timeVariableNames</span><span class="o">=</span><span class="p">[</span><span class="s1">'xtime_startMonthly'</span><span class="p">,</span>
+                                         <span class="s1">'xtime_endMonthly'</span><span class="p">],</span>
                       <span class="n">variableList</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Opens and returns an xarray data set given file name(s) and the MPAS</span>
 <span class="sd">    calendar name.</span>
 
@@ -135,12 +135,12 @@
 <span class="sd">    fileName : str</span>
 <span class="sd">        File path to read</span>
 
-<span class="sd">    calendar : {``&#39;gregorian&#39;``, ``&#39;noleap&#39;``}, optional</span>
+<span class="sd">    calendar : {``'gregorian'``, ``'noleap'``}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    timeVariableNames : str or list of 2 str, optional</span>
-<span class="sd">        The name of the time variable (typically ``&#39;xtime&#39;``</span>
-<span class="sd">        or ``[&#39;xtime_startMonthly&#39;, &#39;xtime_endMonthly&#39;]``), or ``None`` if</span>
+<span class="sd">        The name of the time variable (typically ``'xtime'``</span>
+<span class="sd">        or ``['xtime_startMonthly', 'xtime_endMonthly']``), or ``None`` if</span>
 <span class="sd">        time does not need to be parsed (and is already in the ``Time``</span>
 <span class="sd">        variable)</span>
 
@@ -162,7 +162,7 @@
 
 <span class="sd">    ValueError</span>
 <span class="sd">        If the time variable is not found in the data set</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -184,9 +184,9 @@
         <span class="c1"># select only the data in the specified range of dates</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
 
-    <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The data set contains no Time entries between &#39;</span>
-                         <span class="s1">&#39;dates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'The data set contains no Time entries between '</span>
+                         <span class="s1">'dates </span><span class="si">{}</span><span class="s1"> and </span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                              <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">startDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">),</span>
                              <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">endDate</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)))</span>
     <span class="k">if</span> <span class="n">variableList</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -197,9 +197,9 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_dataset_time</span><span class="p">(</span><span class="n">ds</span><span class="p">,</span> <span class="n">inTimeVariableName</span><span class="p">,</span> <span class="n">calendar</span><span class="p">,</span>
-                        <span class="n">outTimeVariableName</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
-                        <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                        <span class="n">outTimeVariableName</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span>
+                        <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A helper function for computing a time coordinate from an MPAS time</span>
 <span class="sd">    variable.  Given a data set and a time variable name (or list of 2</span>
 <span class="sd">    time names), returns a new data set with time coordinate</span>
@@ -213,22 +213,22 @@
 
 <span class="sd">    inTimeVariableName : str or tuple or list of str</span>
 <span class="sd">        The name of the time variable in the MPAS data set that will be</span>
-<span class="sd">        used to build the &#39;Time&#39; coordinate.  The array(s) named by</span>
+<span class="sd">        used to build the 'Time' coordinate.  The array(s) named by</span>
 <span class="sd">        inTimeVariableName should contain date strings.  Typically,</span>
-<span class="sd">        inTimeVariableName is ``&#39;xtime&#39;``. If a list of two variable</span>
+<span class="sd">        inTimeVariableName is ``'xtime'``. If a list of two variable</span>
 <span class="sd">        names is provided, times from the two are averaged together to</span>
 <span class="sd">        determine the value of the time coordinate.  In such cases,</span>
 <span class="sd">        inTimeVariableName is typically</span>
-<span class="sd">        ``[&#39;xtime_startMonthly&#39;, &#39;xtime_endMonthly&#39;]``.</span>
+<span class="sd">        ``['xtime_startMonthly', 'xtime_endMonthly']``.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    outTimeVariableName : str</span>
-<span class="sd">        The name of the coordinate to assign times to, typically &#39;Time&#39;.</span>
+<span class="sd">        The name of the coordinate to assign times to, typically 'Time'.</span>
 
 <span class="sd">    referenceDate : str, optional</span>
-<span class="sd">        The reference date for the time variable, typically &#39;0001-01-01&#39;,</span>
+<span class="sd">        The reference date for the time variable, typically '0001-01-01',</span>
 <span class="sd">        taking one of the following forms::</span>
 
 <span class="sd">            0001-01-01</span>
@@ -246,7 +246,7 @@
 <span class="sd">    TypeError</span>
 <span class="sd">        If the time variable has an unsupported type (not a date string</span>
 <span class="sd">        or a floating-pont number of days since the start of the simulatio).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -273,8 +273,8 @@
         <span class="c1"># replace the time in starts with the mean of starts and ends</span>
         <span class="n">dsOut</span> <span class="o">=</span> <span class="n">dsStart</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;startTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">starts</span><span class="p">)</span>
-        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;endTime&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'startTime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">starts</span><span class="p">)</span>
+        <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'endTime'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span> <span class="n">ends</span><span class="p">)</span>
 
         <span class="n">dsOut</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="n">outTimeVariableName</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">outTimeVariableName</span><span class="p">,</span>
                                              <span class="p">[</span><span class="n">starts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span>
@@ -282,23 +282,23 @@
                                                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">starts</span><span class="p">))])</span>
 
     <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># there is just one time variable (either because we&#39;re recursively</span>
-        <span class="c1"># calling the function or because we&#39;re not averaging).</span>
+        <span class="c1"># there is just one time variable (either because we're recursively</span>
+        <span class="c1"># calling the function or because we're not averaging).</span>
 
         <span class="n">timeVar</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="n">inTimeVariableName</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">&#39;|S64&#39;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;timeVar of unsupported type </span><span class="si">{}</span><span class="s2">.  String variable &quot;</span>
-                            <span class="s2">&quot;expected.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s1">'|S64'</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"timeVar of unsupported type </span><span class="si">{}</span><span class="s2">.  String variable "</span>
+                            <span class="s2">"expected."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">timeVar</span><span class="o">.</span><span class="n">dtype</span><span class="p">))</span>
 
-        <span class="c1"># this is an array of date strings like &#39;xtime&#39;</span>
+        <span class="c1"># this is an array of date strings like 'xtime'</span>
         <span class="c1"># convert to string</span>
-        <span class="n">timeStrings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;U&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">timeStrings</span> <span class="o">=</span> <span class="p">[</span><span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">xtime</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">'U'</span><span class="p">))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
                        <span class="k">for</span> <span class="n">xtime</span> <span class="ow">in</span> <span class="n">timeVar</span><span class="o">.</span><span class="n">values</span><span class="p">]</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">timeString</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">timeStrings</span><span class="p">):</span>
-             <span class="k">if</span> <span class="n">timeString</span> <span class="o">==</span> <span class="s1">&#39;0000-01-15_00:00:00&#39;</span> <span class="ow">and</span> \
+             <span class="k">if</span> <span class="n">timeString</span> <span class="o">==</span> <span class="s1">'0000-01-15_00:00:00'</span> <span class="ow">and</span> \
                      <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">timeStrings</span><span class="p">):</span>
-                 <span class="n">timeStrings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">timeStrings</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s1">-01_00:00:00&#39;</span>
+                 <span class="n">timeStrings</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">timeStrings</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">][:</span><span class="mi">7</span><span class="p">]</span><span class="si">}</span><span class="s1">-01_00:00:00'</span>
         <span class="n">days</span> <span class="o">=</span> <span class="n">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="o">=</span><span class="n">timeStrings</span><span class="p">,</span>
                                          <span class="n">referenceDate</span><span class="o">=</span><span class="n">referenceDate</span><span class="p">,</span>
                                          <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>

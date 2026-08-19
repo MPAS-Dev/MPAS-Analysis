@@ -134,124 +134,124 @@ simulation, need to be enabled.</p>
 <p>The following is a list of suggested values for namelist options, typically
 found in <code class="docutils literal notranslate"><span class="pre">namelist.ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">mpaso_in</span></code> (or <code class="docutils literal notranslate"><span class="pre">mpas-o_in</span></code> in older E3SM runs):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_AM_surfaceAreaWeightedAverages_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
-<span class="n">config_AM_surfaceAreaWeightedAverages_compute_interval</span> <span class="o">=</span> <span class="s1">&#39;0000-00-00_01:00:00&#39;</span>
+<span class="n">config_AM_surfaceAreaWeightedAverages_compute_interval</span> <span class="o">=</span> <span class="s1">'0000-00-00_01:00:00'</span>
 <span class="n">config_AM_layerVolumeWeightedAverage_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
-<span class="n">config_AM_layerVolumeWeightedAverage_compute_interval</span> <span class="o">=</span> <span class="s1">&#39;0000-00-00_01:00:00&#39;</span>
+<span class="n">config_AM_layerVolumeWeightedAverage_compute_interval</span> <span class="o">=</span> <span class="s1">'0000-00-00_01:00:00'</span>
 <span class="n">config_AM_meridionalHeatTransport_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
-<span class="n">config_AM_meridionalHeatTransport_compute_interval</span> <span class="o">=</span> <span class="s1">&#39;0000-00-00_01:00:00&#39;</span>
+<span class="n">config_AM_meridionalHeatTransport_compute_interval</span> <span class="o">=</span> <span class="s1">'0000-00-00_01:00:00'</span>
 <span class="n">config_AM_mixedLayerDepths_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
 <span class="n">config_AM_timeSeriesStatsMonthly_enable</span> <span class="o">=</span> <span class="o">.</span><span class="n">true</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>Additionally, the duration of the run should be set to at least two years and
 typically longer before most analysis is useful:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">&#39;0002-00-00_00:00:00&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">'0002-00-00_00:00:00'</span>
 </pre></div>
 </div>
 <p>Several streams must be defined in the streams file, typically
 <code class="docutils literal notranslate"><span class="pre">streams.ocean</span></code>, (even if they will not be written out –
 <code class="docutils literal notranslate"><span class="pre">output_interval=&quot;none&quot;</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyRestart&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;input;output&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;restarts/restart.AM.timeSeriesStatsMonthly.$Y-$M-$D_$h.$m.$s.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;output_interval&quot;</span>
-        <span class="n">reference_time</span><span class="o">=</span><span class="s2">&quot;0001-01-01_00:00:00&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span>
-        <span class="n">input_interval</span><span class="o">=</span><span class="s2">&quot;initial_only&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;stream:restart:output_interval&quot;</span> <span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyRestart"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"input;output"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"restarts/restart.AM.timeSeriesStatsMonthly.$Y-$M-$D_$h.$m.$s.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"output_interval"</span>
+        <span class="n">reference_time</span><span class="o">=</span><span class="s2">"0001-01-01_00:00:00"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span>
+        <span class="n">input_interval</span><span class="o">=</span><span class="s2">"initial_only"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"stream:restart:output_interval"</span> <span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;analysis_members/timeSeriesStatsMonthly.$Y-$M.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;0000-01-00_00:00:00&quot;</span>
-        <span class="n">reference_time</span><span class="o">=</span><span class="s2">&quot;0001-01-01_00:00:00&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span> <span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"analysis_members/timeSeriesStatsMonthly.$Y-$M.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"0000-01-00_00:00:00"</span>
+        <span class="n">reference_time</span><span class="o">=</span><span class="s2">"0001-01-01_00:00:00"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span> <span class="o">&gt;</span>
 
-        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;activeTracers&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;normalVelocity&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;vertVelocityTop&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avgValueWithinOceanRegion&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avgValueWithinOceanLayerRegion&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dThreshMLD&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportLatZ&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportLat&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;binBoundaryMerHeatTrans&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"activeTracers"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"normalVelocity"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"vertVelocityTop"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avgValueWithinOceanRegion"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avgValueWithinOceanLayerRegion"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"dThreshMLD"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"meridionalHeatTransportLatZ"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"meridionalHeatTransportLat"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"binBoundaryMerHeatTrans"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;layerVolumeWeightedAverageOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpaso.hist.am.layerVolumeWeightedAverage.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;none&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;layerVolumeWeightedAverageAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"layerVolumeWeightedAverageOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpaso.hist.am.layerVolumeWeightedAverage.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"none"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"layerVolumeWeightedAverageAMPKG"</span><span class="o">&gt;</span>
 
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;daysSinceStartOfSim&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;minValueWithinOceanLayerRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;maxValueWithinOceanLayerRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avgValueWithinOceanLayerRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;minValueWithinOceanVolumeRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;maxValueWithinOceanVolumeRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avgValueWithinOceanVolumeRegion&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"daysSinceStartOfSim"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"minValueWithinOceanLayerRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"maxValueWithinOceanLayerRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avgValueWithinOceanLayerRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"minValueWithinOceanVolumeRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"maxValueWithinOceanVolumeRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avgValueWithinOceanVolumeRegion"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpaso.hist.am.meridionalHeatTransport.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;none&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"meridionalHeatTransportOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpaso.hist.am.meridionalHeatTransport.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"none"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"meridionalHeatTransportAMPKG"</span><span class="o">&gt;</span>
 
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;daysSinceStartOfSim&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;binBoundaryMerHeatTrans&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportLatZ&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;meridionalHeatTransportLat&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refZMid&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;refBottomDepth&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"daysSinceStartOfSim"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"binBoundaryMerHeatTrans"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"meridionalHeatTransportLatZ"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"meridionalHeatTransportLat"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"refZMid"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"refBottomDepth"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;surfaceAreaWeightedAveragesOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;netcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpaso.hist.am.surfaceAreaWeightedAverages.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;none&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;surfaceAreaWeightedAveragesAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"surfaceAreaWeightedAveragesOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"netcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpaso.hist.am.surfaceAreaWeightedAverages.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"none"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"surfaceAreaWeightedAveragesAMPKG"</span><span class="o">&gt;</span>
 
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;daysSinceStartOfSim&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;minValueWithinOceanRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;maxValueWithinOceanRegion&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;avgValueWithinOceanRegion&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"daysSinceStartOfSim"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"minValueWithinOceanRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"maxValueWithinOceanRegion"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var_array</span> <span class="n">name</span><span class="o">=</span><span class="s2">"avgValueWithinOceanRegion"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mixedLayerDepthsOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpaso.hist.am.mixedLayerDepths.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;none&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;mixedLayerDepthsAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"mixedLayerDepthsOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpaso.hist.am.mixedLayerDepths.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"none"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"mixedLayerDepthsAMPKG"</span><span class="o">&gt;</span>
 
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;daysSinceStartOfSim&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mesh&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tThreshMLD&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dThreshMLD&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tGradMLD&quot;</span><span class="o">/&gt;</span>
-    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;dGradMLD&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"daysSinceStartOfSim"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"mesh"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"tThreshMLD"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"dThreshMLD"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"tGradMLD"</span><span class="o">/&gt;</span>
+    <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"dGradMLD"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 </pre></div>
 </div>
@@ -282,36 +282,36 @@ older E3SM runs):</p>
 </div>
 <p>Additionally, the duration of the run should be set to at least two years and
 typically longer before most analysis is useful:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">&#39;0002-00-00_00:00:00&#39;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config_run_duration</span> <span class="o">=</span> <span class="s1">'0002-00-00_00:00:00'</span>
 </pre></div>
 </div>
 <p>Several streams must be defined in the streams file, typically
 <code class="docutils literal notranslate"><span class="pre">streams.seaice</span></code> or <code class="docutils literal notranslate"><span class="pre">streams.cice</span></code> in older E3SM runs, (even if they will
 not be written out – <code class="docutils literal notranslate"><span class="pre">output_interval=&quot;none&quot;</span></code>):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyRestart&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;input;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;output_interval&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span>
-        <span class="n">input_interval</span><span class="o">=</span><span class="s2">&quot;initial_only&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;stream:restart:output_interval&quot;</span><span class="o">&gt;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyRestart"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"input;output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpasseaice.rst.am.timeSeriesStatsMonthly.$Y-$M-$D_$S.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"output_interval"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span>
+        <span class="n">input_interval</span><span class="o">=</span><span class="s2">"initial_only"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"stream:restart:output_interval"</span><span class="o">&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 
-<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyOutput&quot;</span>
-        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;output&quot;</span>
-        <span class="n">io_type</span><span class="o">=</span><span class="s2">&quot;pnetcdf&quot;</span>
-        <span class="n">filename_template</span><span class="o">=</span><span class="s2">&quot;mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc&quot;</span>
-        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">output_interval</span><span class="o">=</span><span class="s2">&quot;00-01-00_00:00:00&quot;</span>
-        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">&quot;truncate&quot;</span>
-        <span class="n">packages</span><span class="o">=</span><span class="s2">&quot;timeSeriesStatsMonthlyAMPKG&quot;</span><span class="o">&gt;</span>
+<span class="o">&lt;</span><span class="n">stream</span> <span class="n">name</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyOutput"</span>
+        <span class="nb">type</span><span class="o">=</span><span class="s2">"output"</span>
+        <span class="n">io_type</span><span class="o">=</span><span class="s2">"pnetcdf"</span>
+        <span class="n">filename_template</span><span class="o">=</span><span class="s2">"mpasseaice.hist.am.timeSeriesStatsMonthly.$Y-$M-$D.nc"</span>
+        <span class="n">filename_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">output_interval</span><span class="o">=</span><span class="s2">"00-01-00_00:00:00"</span>
+        <span class="n">clobber_mode</span><span class="o">=</span><span class="s2">"truncate"</span>
+        <span class="n">packages</span><span class="o">=</span><span class="s2">"timeSeriesStatsMonthlyAMPKG"</span><span class="o">&gt;</span>
 
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;icePresent&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceAreaCell&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;iceVolumeCell&quot;</span><span class="o">/&gt;</span>
-        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;xtime&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"icePresent"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"iceAreaCell"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"iceVolumeCell"</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">var</span> <span class="n">name</span><span class="o">=</span><span class="s2">"xtime"</span><span class="o">/&gt;</span>
 <span class="o">&lt;/</span><span class="n">stream</span><span class="o">&gt;</span>
 </pre></div>
 </div>

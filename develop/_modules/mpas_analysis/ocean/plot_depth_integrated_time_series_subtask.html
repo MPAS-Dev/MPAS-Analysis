@@ -135,7 +135,7 @@
 <div class="viewcode-block" id="PlotDepthIntegratedTimeSeriesSubtask">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask.html#mpas_analysis.ocean.plot_depth_integrated_time_series_subtask.PlotDepthIntegratedTimeSeriesSubtask">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plots a time series, summed or averaged over various depth ranges</span>
 
 <span class="sd">    Attributes</span>
@@ -186,7 +186,7 @@
 
 <span class="sd">    controlConfig : tranche.Tranche</span>
 <span class="sd">        The configuration options for the control run (if any)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
@@ -198,7 +198,7 @@
                  <span class="n">thumbnailSuffix</span><span class="p">,</span> <span class="n">imageCaption</span><span class="p">,</span> <span class="n">galleryGroup</span><span class="p">,</span> <span class="n">groupSubtitle</span><span class="p">,</span>
                  <span class="n">groupLink</span><span class="p">,</span> <span class="n">galleryName</span><span class="p">,</span> <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -254,21 +254,21 @@
 
 <span class="sd">        controlConfig : tranche.Tranche, optional</span>
 <span class="sd">            The configuration options for the control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="k">if</span> <span class="n">subtaskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">regionName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">)</span>
-            <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plotDepthIntegratedTimeSeries</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">suffix</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="s1">'_'</span><span class="p">)</span>
+            <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'plotDepthIntegratedTimeSeries</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="c1"># first, call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">PlotDepthIntegratedTimeSeriesSubtask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">config</span><span class="p">,</span>
             <span class="n">taskName</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">parentTask</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
             <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
@@ -292,9 +292,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Greg Streletz</span>
@@ -310,79 +310,79 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># we need to know what file to read from the control run so</span>
-            <span class="c1"># an absolute path won&#39;t work</span>
+            <span class="c1"># an absolute path won't work</span>
             <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">refFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                               <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
         <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'preprocessedReferenceRunName'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
 
             <span class="k">assert</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="n">make_directories</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/preprocessed&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">))</span>
+            <span class="n">make_directories</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/preprocessed'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">))</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">preprocessedIntermediateFileName</span> <span class="o">=</span> \
-                <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/preprocessed/intermediate_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+                <span class="s1">'</span><span class="si">{}</span><span class="s1">/preprocessed/intermediate_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                                          <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/preprocessed/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/preprocessed/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">baseDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">):</span>
             <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                              <span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">)</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFileLabel</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outFileLabel</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">,</span>
                                             <span class="n">mainRunName</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xmlFileNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.xml'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)]</span>
 
         <span class="k">return</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute vertical aggregates of the data and plot the time series</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani, Greg Streletz</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Plotting depth-integrated time series of &quot;</span>
-                         <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">...&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Plotting depth-integrated time series of "</span>
+                         <span class="s2">"</span><span class="si">{}</span><span class="s2">..."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">))</span>
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">calendar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">calendar</span>
 
-        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+        <span class="n">mainRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
 
         <span class="c1"># Load data</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load ocean data...&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load ocean data...'</span><span class="p">)</span>
         <span class="n">ds</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">inFileName</span><span class="p">,</span>
                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                               <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">,</span> <span class="s1">&#39;depth&#39;</span><span class="p">],</span>
+                               <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">,</span> <span class="s1">'depth'</span><span class="p">],</span>
                                <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
                                <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">)</span>
-        <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'regionNames'</span> <span class="ow">in</span> <span class="n">ds</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
             <span class="c1"># we added region names already</span>
-            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+            <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">'regionNames'</span><span class="p">)</span>
             <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
             <span class="n">regionNameInTitle</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">regionNames</span><span class="o">.</span><span class="n">values</span>
         <span class="k">else</span><span class="p">:</span>
@@ -394,7 +394,7 @@
 
         <span class="n">depths</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">depth</span><span class="o">.</span><span class="n">values</span>
 
-        <span class="n">divisionDepths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+        <span class="n">divisionDepths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'depths'</span><span class="p">)</span>
 
         <span class="c1"># for each depth interval to plot, determine the top and bottom depth</span>
         <span class="n">topDepths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">divisionDepths</span>
@@ -403,26 +403,26 @@
         <span class="n">legends</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">topDepths</span><span class="p">,</span> <span class="n">bottomDepths</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">bottom</span> <span class="o">==</span> <span class="n">depths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">m-bottom&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top</span><span class="p">))</span>
+                <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">m-bottom'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">m-</span><span class="si">{}</span><span class="s1">m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">))</span>
+                <span class="n">legends</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'</span><span class="si">{}</span><span class="s1">m-</span><span class="si">{}</span><span class="s1">m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">))</span>
 
         <span class="c1"># more possible symbols than we typically use</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="s1">&#39;v&#39;</span><span class="p">]</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'-'</span><span class="p">,</span> <span class="s1">'-'</span><span class="p">,</span> <span class="s1">'--'</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">markers</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'+'</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">,</span> <span class="s1">'^'</span><span class="p">,</span> <span class="s1">'v'</span><span class="p">]</span>
         <span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
         <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
 
-        <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;mainColor&#39;</span><span class="p">)</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'mainColor'</span><span class="p">)</span>
 
-        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">&#39;Time [years]&#39;</span>
+        <span class="n">xLabel</span> <span class="o">=</span> <span class="s1">'Time [years]'</span>
         <span class="n">yLabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">yAxisLabel</span>
 
-        <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (black)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">, </span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (black)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fieldNameInTitle</span><span class="p">,</span>
                                               <span class="n">regionNameInTitle</span><span class="p">,</span>
                                               <span class="n">mainRunName</span><span class="p">)</span>
 
-        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)</span>
+        <span class="n">outFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.png'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plotsDirectory</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">)</span>
 
         <span class="n">timeSeries</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">lineColors</span> <span class="o">=</span> <span class="p">[]</span>
@@ -437,7 +437,7 @@
             <span class="n">bottom</span> <span class="o">=</span> <span class="n">bottomDepths</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">]</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="n">top</span><span class="p">)</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;=</span> <span class="n">bottom</span><span class="p">)</span>
-            <span class="n">timeSeries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">))</span>
+            <span class="n">timeSeries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">))</span>
 
             <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
             <span class="n">lineStyles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">])</span>
@@ -447,15 +447,15 @@
             <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legends</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">])</span>
 
         <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;preprocessedReferenceRunName&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
+            <span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'preprocessedReferenceRunName'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
             <span class="n">preprocessedInputDirectory</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="s1">&#39;oceanPreprocessedReference&#39;</span><span class="p">,</span> <span class="s1">&#39;baseDirectory&#39;</span><span class="p">)</span>
+                <span class="s1">'oceanPreprocessedReference'</span><span class="p">,</span> <span class="s1">'baseDirectory'</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load in preprocessed reference data...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load in preprocessed reference data...'</span><span class="p">)</span>
             <span class="n">preprocessedFilePrefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;preprocessedFilePrefix&#39;</span><span class="p">)</span>
-            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                                                <span class="s1">'preprocessedFilePrefix'</span><span class="p">)</span>
+            <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                 <span class="n">preprocessedInputDirectory</span><span class="p">,</span> <span class="n">preprocessedFilePrefix</span><span class="p">,</span>
                 <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
 
@@ -465,7 +465,7 @@
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span>
                 <span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">preprocessedIntermediateFileName</span><span class="p">,</span>
                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
-                <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+                <span class="n">timeVariableNames</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
 
             <span class="n">yearStart</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
             <span class="n">yearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span><span class="o">.</span><span class="n">year</span>
@@ -480,43 +480,43 @@
                 <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStart</span><span class="p">,</span>
                                                                <span class="n">timeEnd</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning: Preprocessed time series ends &#39;</span>
-                                    <span class="s1">&#39;before the timeSeries startYear and will &#39;</span>
-                                    <span class="s1">&#39;not be plotted.&#39;</span><span class="p">)</span>
-                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">&#39;None&#39;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Warning: Preprocessed time series ends '</span>
+                                    <span class="s1">'before the timeSeries startYear and will '</span>
+                                    <span class="s1">'not be plotted.'</span><span class="p">)</span>
+                <span class="n">preprocessedReferenceRunName</span> <span class="o">=</span> <span class="s1">'None'</span>
 
             <span class="c1"># rolling mean seems to have trouble with dask data sets so we</span>
             <span class="c1"># write out the data set and read it back as a single-file data set</span>
             <span class="c1"># (without dask)</span>
-            <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+            <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">'xtime'</span><span class="p">)</span>
             <span class="n">write_netcdf_with_fill</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span><span class="p">)</span>
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preprocessedFileName</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-            <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;purple&#39;</span>
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (purple)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="s1">'purple'</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (purple)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span>
                                                <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
 
             <span class="n">preprocessedFieldPrefix</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                                 <span class="s1">&#39;preprocessedFieldPrefix&#39;</span><span class="p">)</span>
+                                                 <span class="s1">'preprocessedFieldPrefix'</span><span class="p">)</span>
 
             <span class="n">movingAveragePoints</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sectionName</span><span class="p">,</span>
-                                                <span class="s1">&#39;movingAveragePoints&#39;</span><span class="p">)</span>
+                                                <span class="s1">'movingAveragePoints'</span><span class="p">)</span>
 
-            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tot&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">m&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span>
-                                  <span class="n">divisionDepths</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;btm&#39;</span><span class="p">]</span>
+            <span class="n">suffixes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'tot'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'</span><span class="si">{}</span><span class="s1">m'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span>
+                                  <span class="n">divisionDepths</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'btm'</span><span class="p">]</span>
 
             <span class="c1"># these preprocessed data are already anomalies</span>
             <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">compute_moving_avg</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="p">,</span>
                                                 <span class="n">movingAveragePoints</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">rangeIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">suffixes</span><span class="p">)):</span>
-                <span class="n">variableName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">preprocessedFieldPrefix</span><span class="p">,</span>
+                <span class="n">variableName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">_</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">preprocessedFieldPrefix</span><span class="p">,</span>
                                               <span class="n">suffixes</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">])</span>
                 <span class="k">if</span> <span class="n">variableName</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
                     <span class="n">timeSeries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="p">[</span><span class="n">variableName</span><span class="p">])</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning: Preprocessed variable </span><span class="si">{}</span><span class="s1"> &#39;</span>
-                                        <span class="s1">&#39;not found. Skipping.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Warning: Preprocessed variable </span><span class="si">{}</span><span class="s1"> '</span>
+                                        <span class="s1">'not found. Skipping.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
                                             <span class="n">variableName</span><span class="p">))</span>
                     <span class="n">timeSeries</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
@@ -529,28 +529,28 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
 
-            <span class="n">title</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (red)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">controlRunName</span><span class="p">)</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> (red)'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">controlRunName</span><span class="p">)</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;  Load ocean data from control run...&#39;</span><span class="p">)</span>
-            <span class="n">controlStartYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
-                                                         <span class="s1">&#39;startYear&#39;</span><span class="p">)</span>
-            <span class="n">controlEndYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span>
-                                                       <span class="s1">&#39;endYear&#39;</span><span class="p">)</span>
-            <span class="n">controlStartDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlStartYear</span><span class="p">)</span>
-            <span class="n">controlEndDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlEndYear</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'  Load ocean data from control run...'</span><span class="p">)</span>
+            <span class="n">controlStartYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span>
+                                                         <span class="s1">'startYear'</span><span class="p">)</span>
+            <span class="n">controlEndYear</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span>
+                                                       <span class="s1">'endYear'</span><span class="p">)</span>
+            <span class="n">controlStartDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlStartYear</span><span class="p">)</span>
+            <span class="n">controlEndDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">controlEndYear</span><span class="p">)</span>
             <span class="n">dsRef</span> <span class="o">=</span> <span class="n">open_mpas_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">refFileName</span><span class="p">,</span>
                                       <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                                       <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">,</span>
-                                                    <span class="s1">&#39;depth&#39;</span><span class="p">],</span>
+                                                    <span class="s1">'depth'</span><span class="p">],</span>
                                       <span class="n">timeVariableNames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                       <span class="n">startDate</span><span class="o">=</span><span class="n">controlStartDate</span><span class="p">,</span>
                                       <span class="n">endDate</span><span class="o">=</span><span class="n">controlEndDate</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="s1">&#39;regionNames&#39;</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">'regionNames'</span> <span class="ow">in</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">coords</span><span class="p">:</span>
                 <span class="c1"># we added region names already</span>
-                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">&#39;regionNames&#39;</span><span class="p">)</span>
+                <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">set_xindex</span><span class="p">(</span><span class="s1">'regionNames'</span><span class="p">)</span>
                 <span class="n">dsRef</span> <span class="o">=</span> <span class="n">dsRef</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">regionNames</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="c1"># we need to add region names and select the right region by</span>
@@ -559,14 +559,14 @@
                     <span class="n">dsRef</span><span class="p">,</span>  <span class="bp">self</span><span class="o">.</span><span class="n">controlConfig</span><span class="p">,</span>
                     <span class="n">regionShortNames</span><span class="o">=</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">])</span>
 
-            <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;controlColor&#39;</span><span class="p">)</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'controlColor'</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">rangeIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">topDepths</span><span class="p">)):</span>
                 <span class="n">top</span> <span class="o">=</span> <span class="n">topDepths</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">]</span>
                 <span class="n">bottom</span> <span class="o">=</span> <span class="n">bottomDepths</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">]</span>
                 <span class="n">field</span> <span class="o">=</span> <span class="n">dsRef</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mpasFieldName</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dsRef</span><span class="o">.</span><span class="n">depth</span> <span class="o">&gt;</span> <span class="n">top</span><span class="p">)</span>
                 <span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">dsRef</span><span class="o">.</span><span class="n">depth</span> <span class="o">&lt;=</span> <span class="n">bottom</span><span class="p">)</span>
-                <span class="n">timeSeries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">&#39;nVertLevels&#39;</span><span class="p">))</span>
+                <span class="n">timeSeries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s1">'nVertLevels'</span><span class="p">))</span>
 
                 <span class="n">lineColors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
                 <span class="n">lineStyles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">])</span>
@@ -575,15 +575,15 @@
                 <span class="n">maxPoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">rangeIndex</span><span class="p">])</span>
                 <span class="n">legendText</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">'firstYearXTicks'</span><span class="p">):</span>
             <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                            <span class="s1">&#39;firstYearXTicks&#39;</span><span class="p">)</span>
+                                            <span class="s1">'firstYearXTicks'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">firstYearXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span> <span class="s1">'yearStrideXTicks'</span><span class="p">):</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="p">,</span>
-                                             <span class="s1">&#39;yearStrideXTicks&#39;</span><span class="p">)</span>
+                                             <span class="s1">'yearStrideXTicks'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">yearStrideXTicks</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -602,23 +602,23 @@
         <span class="n">write_image_xml</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span>
             <span class="n">filePrefix</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">filePrefix</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;Ocean&#39;</span><span class="p">,</span>
-            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'Ocean'</span><span class="p">,</span>
+            <span class="n">componentSubdirectory</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">galleryGroup</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryGroup</span><span class="p">,</span>
             <span class="n">groupLink</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groupLink</span><span class="p">,</span>
             <span class="n">gallery</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">galleryName</span><span class="p">,</span>
-            <span class="n">thumbnailDescription</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">,</span>
+            <span class="n">thumbnailDescription</span><span class="o">=</span><span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regionName</span><span class="p">,</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">thumbnailSuffix</span><span class="p">),</span>
             <span class="n">imageDescription</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">,</span>
             <span class="n">imageCaption</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">imageCaption</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">customize_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        A function to override to customize the figure.</span>
 
 <span class="sd">        fig : matplotlib.pyplot.Figure</span>
 <span class="sd">            The figure</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">pass</span></div>
 
 </pre></div>

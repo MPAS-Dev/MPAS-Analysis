@@ -202,20 +202,20 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 
 <span class="c1"># comparison grid(s)</span>
 <span class="c1"># only the Antarctic really makes sense but lat-lon could technically work.</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'antarctic'</span><span class="p">]</span>
 
 <span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">,</span><span class="s1">&#39;JFM&#39;</span><span class="p">,</span><span class="s1">&#39;JAS&#39;</span><span class="p">]</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">'ANN'</span><span class="p">,</span><span class="s1">'JFM'</span><span class="p">,</span><span class="s1">'JAS'</span><span class="p">]</span>
 
-<span class="c1"># list of depths in meters (positive up) at which to analyze, &#39;top&#39; for the</span>
-<span class="c1"># sea surface, &#39;bot&#39; for the sea floor</span>
-<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="s1">&#39;bot&#39;</span><span class="p">]</span>
+<span class="c1"># list of depths in meters (positive up) at which to analyze, 'top' for the</span>
+<span class="c1"># sea surface, 'bot' for the sea floor</span>
+<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'top'</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="s1">'bot'</span><span class="p">]</span>
 
 <span class="c1"># a list of fields top plot for each transect.  All supported fields are listed</span>
 <span class="c1"># below</span>
-<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span> <span class="s1">&#39;mixedLayerDepth&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">]</span>
+<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'potentialDensity'</span><span class="p">,</span> <span class="s1">'mixedLayerDepth'</span><span class="p">,</span>
+             <span class="s1">'zonalVelocity'</span><span class="p">,</span> <span class="s1">'meridionalVelocity'</span><span class="p">,</span> <span class="s1">'velocityMagnitude'</span><span class="p">]</span>
 
 <span class="c1"># set the suffix for files, e.g. if you want to use a different comparison</span>
 <span class="c1"># grid from the default</span>
@@ -231,7 +231,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-2., 2., 9)</span>
 
@@ -240,7 +240,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">2.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-2., 2., 9)</span>
 
@@ -255,7 +255,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">33.8</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">33.8</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(34.2, 35.2, 9)</span>
 
@@ -264,7 +264,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.5, 0.5, 9)</span>
 
@@ -279,7 +279,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(1026., 1028., 9)</span>
 
@@ -288,7 +288,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)</span>
 
@@ -303,7 +303,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">300.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">300.</span><span class="p">}</span>
 <span class="c1"># specify the ticks</span>
 <span class="n">colorbarTicksResult</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">]</span>
 
@@ -312,8 +312,8 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">symLog</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;linthresh&#39;</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">&#39;linscale&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">200.</span><span class="p">,</span>
-                      <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">200.</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'linthresh'</span><span class="p">:</span> <span class="mf">10.</span><span class="p">,</span> <span class="s1">'linscale'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">200.</span><span class="p">,</span>
+                      <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">200.</span><span class="p">}</span>
 <span class="n">colorbarTicksDifference</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">200.</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.</span><span class="p">,</span> <span class="o">-</span><span class="mf">50.</span><span class="p">,</span> <span class="o">-</span><span class="mf">20.</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">50.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">200.</span><span class="p">]</span>
 
 
@@ -327,7 +327,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
 
@@ -336,7 +336,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 
@@ -351,7 +351,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
 
@@ -360,7 +360,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 
@@ -375,7 +375,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(0, 0.2, 9)</span>
 
@@ -384,7 +384,7 @@ results from the <a class="reference external" href="http://sose.ucsd.edu/sose_s
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 </pre></div>

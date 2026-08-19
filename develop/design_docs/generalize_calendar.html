@@ -237,7 +237,7 @@ the OHC script is:</p>
     <span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_names</span><span class="p">,</span>
                                 <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                                 <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
-                                <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+                                <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span>
                                 <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
                                 <span class="n">variable_map</span><span class="o">=</span><span class="n">variableMap</span><span class="p">,</span>
                                 <span class="n">start_date</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span>
@@ -251,7 +251,7 @@ the OHC script is:</p>
     <span class="k">if</span> <span class="n">timeStartFirstYear</span> <span class="o">&lt;</span> <span class="n">timeStart</span><span class="p">:</span>
         <span class="n">startDateFirstYear</span> <span class="o">=</span> <span class="n">simulation_start_time</span>
         <span class="n">firstYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">startDateFirstYear</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
+        <span class="n">endDateFirstYear</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">firstYear</span><span class="p">)</span>
         <span class="n">filesFirstYear</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span>
                                           <span class="n">startDate</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
                                           <span class="n">endDate</span><span class="o">=</span><span class="n">endDateFirstYear</span><span class="p">,</span>
@@ -260,7 +260,7 @@ the OHC script is:</p>
             <span class="n">file_names</span><span class="o">=</span><span class="n">filesFirstYear</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
-            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">,</span>
             <span class="n">variable_list</span><span class="o">=</span><span class="n">variable_list</span><span class="p">,</span>
             <span class="n">variable_map</span><span class="o">=</span><span class="n">variableMap</span><span class="p">,</span>
             <span class="n">start_date</span><span class="o">=</span><span class="n">startDateFirstYear</span><span class="p">,</span>
@@ -278,7 +278,7 @@ the OHC script is:</p>
     <span class="n">dsFirstYear</span> <span class="o">=</span> <span class="n">dsFirstYear</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">Time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">timeStartFirstYear</span><span class="p">,</span>
                                              <span class="n">timeEndFirstYear</span><span class="p">))</span>
 
-    <span class="n">meanFirstYear</span> <span class="o">=</span> <span class="n">dsFirstYear</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+    <span class="n">meanFirstYear</span> <span class="o">=</span> <span class="n">dsFirstYear</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s1">'Time'</span><span class="p">)</span>
 <span class="o">...</span>
     <span class="n">yearStart</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
     <span class="n">yearEnd</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
@@ -287,15 +287,15 @@ the OHC script is:</p>
     <span class="n">timeEnd</span> <span class="o">=</span> <span class="n">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="n">yearEnd</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span>
                            <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">&#39;None&#39;</span><span class="p">:</span>
-        <span class="nb">print</span> <span class="s1">&#39;  Load in OHC from preprocessed reference run...&#39;</span>
-        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/OHC.</span><span class="si">{}</span><span class="s1">.year*.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="k">if</span> <span class="n">preprocessedReferenceRunName</span> <span class="o">!=</span> <span class="s1">'None'</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="s1">'  Load in OHC from preprocessed reference run...'</span>
+        <span class="n">inFilesPreprocessed</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/OHC.</span><span class="si">{}</span><span class="s1">.year*.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
             <span class="n">preprocessedInputDirectory</span><span class="p">,</span> <span class="n">preprocessedReferenceRunName</span><span class="p">)</span>
         <span class="n">dsPreprocessed</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span>
             <span class="n">file_names</span><span class="o">=</span><span class="n">inFilesPreprocessed</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
             <span class="n">simulation_start_time</span><span class="o">=</span><span class="n">simulation_start_time</span><span class="p">,</span>
-            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">&#39;xtime&#39;</span><span class="p">)</span>
+            <span class="n">time_variable_name</span><span class="o">=</span><span class="s1">'xtime'</span><span class="p">)</span>
         <span class="n">yearEndPreprocessed</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsPreprocessed</span><span class="o">.</span><span class="n">Time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">year</span>
 <span class="o">...</span>
 </pre></div>
@@ -328,16 +328,16 @@ coordinate:</p>
     <span class="n">dsShift</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
     <span class="n">times</span> <span class="o">=</span> <span class="n">days_to_datetime</span><span class="p">(</span><span class="n">dsShift</span><span class="o">.</span><span class="n">Time</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span>
-    <span class="n">dsShift</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+    <span class="n">dsShift</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span>
                               <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="n">startIndex</span><span class="o">*</span><span class="n">period</span><span class="p">,</span>
                                                <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
     <span class="c1"># replicate cycle:</span>
     <span class="k">for</span> <span class="n">cycleIndex</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">startIndex</span><span class="p">,</span> <span class="n">endIndex</span><span class="p">):</span>
         <span class="n">dsNew</span> <span class="o">=</span> <span class="n">dsToReplicate</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-        <span class="n">dsNew</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span>
+        <span class="n">dsNew</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span>
                                 <span class="n">datetime_to_days</span><span class="p">(</span><span class="n">times</span> <span class="o">+</span> <span class="p">(</span><span class="n">cycleIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">period</span><span class="p">,</span>
                                                  <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">))</span>
-        <span class="n">dsShift</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsShift</span><span class="p">,</span> <span class="n">dsNew</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;Time&#39;</span><span class="p">)</span>
+        <span class="n">dsShift</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">dsShift</span><span class="p">,</span> <span class="n">dsNew</span><span class="p">],</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'Time'</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">dsShift</span>
 </pre></div>

@@ -106,10 +106,10 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Analysis tasks for comparing Polar (and global) climatology maps against</span>
 <span class="sd">WOA23 climatological data.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Milena Veneziani</span>
@@ -132,10 +132,10 @@
 <div class="viewcode-block" id="ClimatologyMapWoa">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWoa.html#mpas_analysis.ocean.ClimatologyMapWoa">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapWoa</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis task for comparison of polar and global temperature and</span>
 <span class="sd">    salinity against WOA23 climatology fields</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Milena Veneziani</span>
@@ -144,7 +144,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.ocean.ClimatologyMapWoa.html#mpas_analysis.ocean.ClimatologyMapWoa.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -157,67 +157,67 @@
 
 <span class="sd">        controlconfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Milena Veneziani</span>
 
         <span class="n">fields</span> <span class="o">=</span> \
-            <span class="p">[{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;$\degree$C&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Potential Temperature&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;pt_an&#39;</span><span class="p">},</span>
-             <span class="p">{</span><span class="s1">&#39;prefix&#39;</span><span class="p">:</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;mpas&#39;</span><span class="p">:</span> <span class="s1">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="sa">r</span><span class="s1">&#39;PSU&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;titleName&#39;</span><span class="p">:</span> <span class="s1">&#39;Salinity&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;obsFieldName&#39;</span><span class="p">:</span> <span class="s1">&#39;s_an&#39;</span><span class="p">}]</span>
+            <span class="p">[{</span><span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'temperature'</span><span class="p">,</span>
+              <span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_temperature'</span><span class="p">,</span>
+              <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'$\degree$C'</span><span class="p">,</span>
+              <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Potential Temperature'</span><span class="p">,</span>
+              <span class="s1">'obsFieldName'</span><span class="p">:</span> <span class="s1">'pt_an'</span><span class="p">},</span>
+             <span class="p">{</span><span class="s1">'prefix'</span><span class="p">:</span> <span class="s1">'salinity'</span><span class="p">,</span>
+              <span class="s1">'mpas'</span><span class="p">:</span> <span class="s1">'timeMonthly_avg_activeTracers_salinity'</span><span class="p">,</span>
+              <span class="s1">'units'</span><span class="p">:</span> <span class="sa">r</span><span class="s1">'PSU'</span><span class="p">,</span>
+              <span class="s1">'titleName'</span><span class="p">:</span> <span class="s1">'Salinity'</span><span class="p">,</span>
+              <span class="s1">'obsFieldName'</span><span class="p">:</span> <span class="s1">'s_an'</span><span class="p">}]</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="s1">&#39;woa&#39;</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">]</span> <span class="o">+</span> \
-            <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="s1">'woa'</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">]</span> <span class="o">+</span> \
+            <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapWoa</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">&#39;climatologyMapWoa&#39;</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;ocean&#39;</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="s1">'climatologyMapWoa'</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'ocean'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taskName</span>
 
-        <span class="n">fieldList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;fieldList&#39;</span><span class="p">)</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fieldList</span><span class="p">]</span>
+        <span class="n">fieldList</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'fieldList'</span><span class="p">)</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span> <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fieldList</span><span class="p">]</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of seasons&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'config section </span><span class="si">{}</span><span class="s1"> does not contain valid list '</span>
+                             <span class="s1">'of seasons'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
         <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                                   <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid list &#39;</span>
-                             <span class="s1">&#39;of comparison grids&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'config section </span><span class="si">{}</span><span class="s1"> does not contain valid list '</span>
+                             <span class="s1">'of comparison grids'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
-        <span class="n">depths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;depths&#39;</span><span class="p">)</span>
+        <span class="n">depths</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'depths'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">depths</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;config section </span><span class="si">{}</span><span class="s1"> does not contain valid &#39;</span>
-                             <span class="s1">&#39;list of depths&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'config section </span><span class="si">{}</span><span class="s1"> does not contain valid '</span>
+                             <span class="s1">'list of depths'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sectionName</span><span class="p">))</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
 
         <span class="n">shallowVsDeepColormapDepth</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getfloat</span><span class="p">(</span>
-            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;shallowVsDeepColormapDepth&#39;</span><span class="p">)</span>
+            <span class="n">sectionName</span><span class="p">,</span> <span class="s1">'shallowVsDeepColormapDepth'</span><span class="p">)</span>
 
         <span class="n">shallow</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="n">depths</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">'top'</span><span class="p">:</span>
                 <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;bot&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">'bot'</span><span class="p">:</span>
                 <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">shallow</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">depth</span> <span class="o">&gt;=</span> <span class="n">shallowVsDeepColormapDepth</span><span class="p">)</span>
@@ -225,7 +225,7 @@
         <span class="n">remapMpasSubtask</span> <span class="o">=</span> <span class="n">RemapDepthSlicesSubtask</span><span class="p">(</span>
             <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">&#39;WOA&#39;</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="s1">'WOA'</span><span class="p">,</span>
             <span class="n">variableList</span><span class="o">=</span><span class="n">variableList</span><span class="p">,</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
             <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
@@ -236,53 +236,53 @@
 
         <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">observationsDirectory</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                    <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;woa23Subdirectory&#39;</span><span class="p">)</span>
+                    <span class="n">config</span><span class="p">,</span> <span class="s1">'ocean'</span><span class="p">,</span> <span class="s1">'woa23Subdirectory'</span><span class="p">)</span>
 
-            <span class="n">refFieldNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsFieldName&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
+            <span class="n">refFieldNames</span> <span class="o">=</span> <span class="p">[</span><span class="n">field</span><span class="p">[</span><span class="s1">'obsFieldName'</span><span class="p">]</span> <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">]</span>
 
-            <span class="n">obsFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/&#39;</span> \
-                          <span class="sa">f</span><span class="s1">&#39;woa23_decav_04_pt_s_mon_ann.20241101.nc&#39;</span>
+            <span class="n">obsFileName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">observationsDirectory</span><span class="si">}</span><span class="s1">/'</span> \
+                          <span class="sa">f</span><span class="s1">'woa23_decav_04_pt_s_mon_ann.20241101.nc'</span>
 
             <span class="n">remapObsSubtask</span> <span class="o">=</span> <span class="n">RemapWoaClimatology</span><span class="p">(</span>
                 <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
                 <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
-                <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">&#39;woa23&#39;</span><span class="p">,</span>
+                <span class="n">outFilePrefix</span><span class="o">=</span><span class="s1">'woa23'</span><span class="p">,</span>
                 <span class="n">fieldNames</span><span class="o">=</span><span class="n">refFieldNames</span><span class="p">,</span>
                 <span class="n">depths</span><span class="o">=</span><span class="n">depths</span><span class="p">,</span>
                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
-                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservationsMon&#39;</span><span class="p">)</span>
+                <span class="n">subtaskName</span><span class="o">=</span><span class="s1">'remapObservationsMon'</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObsSubtask</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
-            <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span>
+            <span class="n">fieldPrefix</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'prefix'</span><span class="p">]</span>
             <span class="n">upperFieldPrefix</span> <span class="o">=</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">fieldPrefix</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">sectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="si">}{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">sectionName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">taskName</span><span class="si">}{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">'</span>
 
             <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 
-                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;WOA23 Climatology&#39;</span>
+                <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">'WOA23 Climatology'</span>
 
-                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;obsFieldName&#39;</span><span class="p">]</span>
-                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">WOA23&#39;</span>
-                <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;WOA23 Climatology&#39;</span>
-                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Climatology&#39;</span>
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'obsFieldName'</span><span class="p">]</span>
+                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">WOA23'</span>
+                <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">'WOA23 Climatology'</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Model - Climatology'</span>
 
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
-                <span class="n">galleryName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
+                <span class="n">galleryName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">'</span>
                 <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="n">galleryName</span>
 
-                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">]</span>
-                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">WOA23&#39;</span>
-                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+                <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">]</span>
+                <span class="n">outFileLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">WOA23'</span>
+                <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
             <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
                 <span class="k">for</span> <span class="n">depthIndex</span><span class="p">,</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depths</span><span class="p">):</span>
                     <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
 
-                        <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_&#39;</span> \
-                                      <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">_depth_</span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s1">&#39;</span>
+                        <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'plot</span><span class="si">{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_'</span> \
+                                      <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">_depth_</span><span class="si">{</span><span class="n">depth</span><span class="si">}</span><span class="s1">'</span>
 
                         <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
                             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -295,32 +295,32 @@
                             <span class="n">subtaskName</span><span class="o">=</span><span class="n">subtaskName</span><span class="p">)</span>
 
                         <span class="n">configSectionName</span> <span class="o">=</span> \
-                            <span class="sa">f</span><span class="s1">&#39;climatologyMapWoa</span><span class="si">{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">&#39;</span>
+                            <span class="sa">f</span><span class="s1">'climatologyMapWoa</span><span class="si">{</span><span class="n">upperFieldPrefix</span><span class="si">}</span><span class="s1">'</span>
 
                         <span class="c1"># if available, use a separate color map for shallow</span>
                         <span class="c1"># and deep</span>
                         <span class="k">if</span> <span class="n">depth</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                             <span class="k">if</span> <span class="n">shallow</span><span class="p">[</span><span class="n">depthIndex</span><span class="p">]:</span>
-                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;Shallow&#39;</span>
+                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">'Shallow'</span>
                             <span class="k">else</span><span class="p">:</span>
-                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">&#39;Deep&#39;</span>
-                            <span class="n">testSectionName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
+                                <span class="n">suffix</span> <span class="o">=</span> <span class="s1">'Deep'</span>
+                            <span class="n">testSectionName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configSectionName</span><span class="p">,</span>
                                                             <span class="n">suffix</span><span class="p">)</span>
                             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_section</span><span class="p">(</span><span class="n">testSectionName</span><span class="p">):</span>
                                 <span class="n">configSectionName</span> <span class="o">=</span> <span class="n">testSectionName</span>
 
                         <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
                             <span class="n">outFileLabel</span><span class="o">=</span><span class="n">outFileLabel</span><span class="p">,</span>
-                            <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
-                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;mpas&#39;</span><span class="p">],</span>
+                            <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">],</span>
+                            <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'mpas'</span><span class="p">],</span>
                             <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                             <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                             <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                            <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;units&#39;</span><span class="p">],</span>
-                            <span class="n">imageCaption</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
-                            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">&#39;titleName&#39;</span><span class="p">],</span>
+                            <span class="n">unitsLabel</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'units'</span><span class="p">],</span>
+                            <span class="n">imageCaption</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">],</span>
+                            <span class="n">galleryGroup</span><span class="o">=</span><span class="n">field</span><span class="p">[</span><span class="s1">'titleName'</span><span class="p">],</span>
                             <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                            <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">_woa&#39;</span><span class="p">,</span>
+                            <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldPrefix</span><span class="si">}</span><span class="s1">_woa'</span><span class="p">,</span>
                             <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
                             <span class="n">configSectionName</span><span class="o">=</span><span class="n">configSectionName</span><span class="p">)</span>
 
@@ -331,19 +331,19 @@
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapWoaClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for reading and remapping WOA fields to the comparison grid</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parentTask</span><span class="p">,</span> <span class="n">seasons</span><span class="p">,</span> <span class="n">fileName</span><span class="p">,</span> <span class="n">outFilePrefix</span><span class="p">,</span>
                  <span class="n">fieldNames</span><span class="p">,</span> <span class="n">depths</span><span class="p">,</span>
-                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">],</span>
-                 <span class="n">subtaskName</span><span class="o">=</span><span class="s1">&#39;remapObservations&#39;</span><span class="p">):</span>
+                 <span class="n">comparisonGridNames</span><span class="o">=</span><span class="p">[</span><span class="s1">'latlon'</span><span class="p">],</span>
+                 <span class="n">subtaskName</span><span class="o">=</span><span class="s1">'remapObservations'</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        An analysis task for remapping WOA fields (either annual or monthly</span>
 <span class="sd">        mean) to the comparison grid(s), depths and seasons provided</span>
 
@@ -366,17 +366,17 @@
 <span class="sd">        fieldNames : list of str</span>
 <span class="sd">            The names of the 3D fields to remap</span>
 
-<span class="sd">        depths : list of {None, float, &#39;top&#39;}</span>
+<span class="sd">        depths : list of {None, float, 'top'}</span>
 <span class="sd">            A list of depths at which the climatology will be sliced in the</span>
 <span class="sd">            vertical.</span>
 
-<span class="sd">        comparisonGridNames : list of {&#39;latlon&#39;, &#39;arctic&#39;, &#39;antarctic&#39;},</span>
+<span class="sd">        comparisonGridNames : list of {'latlon', 'arctic', 'antarctic'},</span>
 <span class="sd">            optional</span>
 <span class="sd">            The name(s) of the comparison grid to use for remapping.</span>
 
 <span class="sd">        subtaskName : str, optional</span>
 <span class="sd">            The name of the subtask</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
@@ -391,7 +391,7 @@
             <span class="n">comparisonGridNames</span><span class="p">,</span> <span class="n">subtaskName</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
 <span class="sd">        Parameters</span>
@@ -403,7 +403,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
 <span class="sd">            The descriptor for the observation grid</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
@@ -414,13 +414,13 @@
         <span class="c1"># create a descriptor of the observation grid using Lat/Lon</span>
         <span class="c1"># coordinates</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">ds</span><span class="o">=</span><span class="n">dsObs</span><span class="p">,</span>
-                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span>
-                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">&#39;lon&#39;</span><span class="p">)</span>
+                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">'lat'</span><span class="p">,</span>
+                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">'lon'</span><span class="p">)</span>
         <span class="n">dsObs</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -433,7 +433,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis, Milena Veneziani</span>
@@ -442,29 +442,29 @@
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
 
         <span class="c1"># must have capital Time</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;time&#39;</span><span class="p">:</span> <span class="s1">&#39;Time&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'time'</span><span class="p">:</span> <span class="s1">'Time'</span><span class="p">})</span>
         <span class="c1"># make sure month is a coord</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="s1">&#39;month&#39;</span><span class="p">)</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">set_coords</span><span class="p">(</span><span class="s1">'month'</span><span class="p">)</span>
         <span class="c1"># add a dummy year to the dataset</span>
-        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;Time&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
+        <span class="n">dsObs</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="s1">'year'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'Time'</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">dsObs</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">],</span> <span class="nb">int</span><span class="p">))</span>
 
         <span class="n">data_vars</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">fieldName</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fieldNames</span><span class="p">:</span>
             <span class="n">slices</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">field</span> <span class="o">=</span> <span class="n">dsObs</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span>
             <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">depths</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span><span class="p">:</span>
-                    <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-                                            <span class="n">depth</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">depth</span> <span class="o">==</span> <span class="s1">'top'</span><span class="p">:</span>
+                    <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+                                            <span class="n">depth</span><span class="o">=</span><span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">'depth'</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span>
-                                            <span class="n">depth</span><span class="o">=-</span><span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">&#39;depth&#39;</span><span class="p">))</span>
+                    <span class="n">slices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">'nearest'</span><span class="p">,</span>
+                                            <span class="n">depth</span><span class="o">=-</span><span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s1">'depth'</span><span class="p">))</span>
 
             <span class="n">depthNames</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">depth</span><span class="p">)</span> <span class="k">for</span> <span class="n">depth</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">depths</span><span class="p">]</span>
-            <span class="n">field</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">&#39;depthSlice&#39;</span><span class="p">)</span>
+            <span class="n">field</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">slices</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="s1">'depthSlice'</span><span class="p">)</span>
             <span class="n">data_vars</span><span class="p">[</span><span class="n">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="n">field</span>
 
-        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;depthSlice&#39;</span><span class="p">:</span> <span class="n">depthNames</span><span class="p">}</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'depthSlice'</span><span class="p">:</span> <span class="n">depthNames</span><span class="p">}</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">data_vars</span><span class="o">=</span><span class="n">data_vars</span><span class="p">,</span> <span class="n">coords</span><span class="o">=</span><span class="n">coords</span><span class="p">)</span>
 

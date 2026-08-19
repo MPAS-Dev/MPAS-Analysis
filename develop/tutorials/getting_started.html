@@ -272,7 +272,7 @@ $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>..
 <span class="k">[execute]</span>
 <span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
 <span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">1</span>
-<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot; or &quot;bck&quot;)</span>
+<span class="c1"># the parallelism mode in ncclimo ("serial" or "bck")</span>
 <span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">serial</span>
 <span class="na">...</span>
 </pre></div>
@@ -335,10 +335,10 @@ execution of the individual “tasks” that make up an MPAS-Analysis run.</p>
 <span class="c1"># the number of parallel tasks (1 means tasks run in serial, the default)</span>
 <span class="na">parallelTaskCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">4</span>
 
-<span class="c1"># the parallelism mode in ncclimo (&quot;serial&quot;, &quot;bck&quot; or &quot;mpi&quot;)</span>
-<span class="c1"># Set this to &quot;bck&quot; (background parallelism) if running on a machine that can</span>
+<span class="c1"># the parallelism mode in ncclimo ("serial", "bck" or "mpi")</span>
+<span class="c1"># Set this to "bck" (background parallelism) if running on a machine that can</span>
 <span class="c1"># handle 12 simultaneous processes, one for each monthly climatology.</span>
-<span class="c1"># Set to &quot;mpi&quot; to run one MPI task on each node and however many threads per</span>
+<span class="c1"># Set to "mpi" to run one MPI task on each node and however many threads per</span>
 <span class="c1"># node to reach 12 total threads.</span>
 <span class="na">ncclimoParallelMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bck</span>
 </pre></div>
@@ -371,7 +371,7 @@ observations in Section 2.</p>
 <span class="c1"># The base path to the diagnostics directory.  Typically, this will be a shared</span>
 <span class="c1"># directory on each E3SM supported machine (see the example config files for</span>
 <span class="c1"># its location).  For other machines, this would be the directory pointed to</span>
-<span class="c1"># when running &quot;download_analysis_data.py&quot; to get the public observations,</span>
+<span class="c1"># when running "download_analysis_data.py" to get the public observations,</span>
 <span class="c1"># mapping files and region files.</span>
 <span class="na">base_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">/path/to/diagnostics</span>
 </pre></div>
@@ -461,18 +461,18 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1"># This command also lists tags for each analysis.</span>
 <span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
 <span class="c1"># These include:</span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
-<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are available on the</span>
+<span class="c1">#   'all' -- all analyses will be run</span>
+<span class="c1">#   'all_publicObs' -- all analyses for which observations are available on the</span>
 <span class="c1">#                      public server (the default)</span>
-<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
-<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
-<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
-<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
+<span class="c1">#   'all_&lt;tag&gt;' -- all analysis with a particular tag will be run</span>
+<span class="c1">#   'all_&lt;component&gt;' -- all analyses from a given component (either 'ocean'</span>
+<span class="c1">#                        or 'seaIce') will be run</span>
+<span class="c1">#   'only_&lt;component&gt;', 'only_&lt;tag&gt;' -- all analysis from this component or</span>
 <span class="c1">#                                       with this tag will be run, and all</span>
 <span class="c1">#                                       analysis for other components or</span>
 <span class="c1">#                                       without the tag will be skipped</span>
-<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
-<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
+<span class="c1">#   'no_&lt;task_name&gt;' -- skip the given task</span>
+<span class="c1">#   'no_&lt;component&gt;', 'no_&lt;tag&gt;' -- in analogy to 'all_*', skip all analysis</span>
 <span class="c1">#                                   tasks from the given component or with</span>
 <span class="c1">#                                   the given tag.  Do</span>
 <span class="c1">#                                      mpas_analysis --list</span>
@@ -481,7 +481,7 @@ location, and a list of analysis to be generated (or explicitly skipped).</p>
 <span class="c1"># option:</span>
 <span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
 <span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
-<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;all_publicObs&#39;]</span>
+<span class="na">generate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['all_publicObs']</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">baseDirectory</span></code> is any convenient location for the output.</p>

@@ -199,23 +199,23 @@ spaced latitudes around Antarctica and comparing them with results from the
 
 <span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">'ANN'</span><span class="p">]</span>
 
 <span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
 <span class="c1"># longitude between observation points will be subsampled at this interval.</span>
-<span class="c1"># Use &#39;obs&#39; to indicate no subsampling.</span>
+<span class="c1"># Use 'obs' to indicate no subsampling.</span>
 <span class="c1"># horizontalResolution = obs</span>
 <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
-<span class="c1"># MPAS vertical grid, &#39;obs&#39; to use the locations of observations or</span>
-<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;</span>
+<span class="c1"># The name of the vertical comparison grid.  Valid values are 'mpas' for the</span>
+<span class="c1"># MPAS vertical grid, 'obs' to use the locations of observations or</span>
+<span class="c1"># any other name if the vertical grid is defined by 'verticalComparisonGrid'</span>
 <span class="c1"># verticalComparisonGridName = mpas</span>
 <span class="c1"># verticalComparisonGridName = obs</span>
 <span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
 
-<span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39; or</span>
-<span class="c1"># &#39;obs&#39;.  This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="c1"># The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or</span>
+<span class="c1"># 'obs'.  This should be numpy array of (typically negative) elevations (in m).</span>
 <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
 
 <span class="c1"># The minimum weight of a destination cell after remapping. Any cell with</span>
@@ -230,11 +230,11 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="n">longitudes</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">330</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 
 <span class="c1"># a list of fields top plot for each transect.  All supported fields are listed</span>
-<span class="c1"># below.  Note that &#39;velocityMagnitude&#39; cannot be plotted without</span>
-<span class="c1"># &#39;zonalVelocity&#39; and &#39;meridionalVelocity&#39; because the components are needed</span>
+<span class="c1"># below.  Note that 'velocityMagnitude' cannot be plotted without</span>
+<span class="c1"># 'zonalVelocity' and 'meridionalVelocity' because the components are needed</span>
 <span class="c1"># to compute the magnitude.</span>
-<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">,</span> <span class="s1">&#39;salinity&#39;</span><span class="p">,</span> <span class="s1">&#39;potentialDensity&#39;</span><span class="p">,</span> <span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span>
-             <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">]</span>
+<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'temperature'</span><span class="p">,</span> <span class="s1">'salinity'</span><span class="p">,</span> <span class="s1">'potentialDensity'</span><span class="p">,</span> <span class="s1">'zonalVelocity'</span><span class="p">,</span>
+             <span class="s1">'meridionalVelocity'</span><span class="p">,</span> <span class="s1">'velocityMagnitude'</span><span class="p">]</span>
 
 
 <span class="p">[</span><span class="n">soseTemperatureTransects</span><span class="p">]</span>
@@ -245,7 +245,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">}</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -260,7 +260,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -279,7 +279,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">34.0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">34.0</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">35.0</span><span class="p">}</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="c1">#colormapIndicesResult = [0, 40, 80, 110, 140, 170, 200, 230, 255]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -294,7 +294,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
 <span class="c1"># color indices into colormapName for filled contours</span>
 <span class="c1">#colormapIndicesDifference = [0, 28, 57, 85, 113, 128, 128, 142, 170, 198, 227, 255]</span>
 <span class="c1"># colormap levels/values for contour boundaries</span>
@@ -313,7 +313,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1026.5</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1028.</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(1026., 1028., 9)</span>
 <span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1026.5</span><span class="p">,</span> <span class="mf">1028.</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
@@ -323,7 +323,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">}</span>
 <span class="c1"># place the ticks automatically by default</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.3, 0.3, 9)</span>
 <span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -338,7 +338,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
 <span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -348,7 +348,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 <span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -363,7 +363,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(-0.2, 0.2, 9)</span>
 <span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -373,7 +373,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 <span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -388,7 +388,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksResult = numpy.linspace(0, 0.2, 9)</span>
 <span class="n">contourLevelsResult</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
@@ -398,7 +398,7 @@ spaced latitudes around Antarctica and comparing them with results from the
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeDifference</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsDifference</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 <span class="c1"># determine the ticks automatically by default, uncomment to specify</span>
 <span class="c1"># colorbarTicksDifference = numpy.linspace(-0.2, 0.2, 9)</span>
 <span class="n">contourLevelsDifference</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>

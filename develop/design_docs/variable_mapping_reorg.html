@@ -182,24 +182,24 @@ differences are needed.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.generalized_reader.generalized_reader</span> \
     <span class="kn">import</span><span class="w"> </span><span class="nn">open_multifile_dataset</span>
 
-<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
-<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
-<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">]</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">'example_jan_feb.nc'</span>
+<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'xtime_start'</span><span class="p">,</span> <span class="s1">'xtime_end'</span><span class="p">]</span>
+<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'</span><span class="p">]</span>
 <span class="n">variable_map</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="s1">&#39;avgSurfaceTemperature&#39;</span><span class="p">:</span>
-       <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;other_string&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;yet_another_string&#39;</span><span class="p">],</span>
-   <span class="s1">&#39;daysSinceStartOfSim&#39;</span><span class="p">:</span>
-       <span class="p">[</span><span class="s1">&#39;time_avg_daysSinceStartOfSim&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;xtime&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;something_else&#39;</span><span class="p">]}</span>
+   <span class="s1">'avgSurfaceTemperature'</span><span class="p">:</span>
+       <span class="p">[</span><span class="s1">'time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'</span><span class="p">,</span>
+        <span class="s1">'other_string'</span><span class="p">,</span>
+        <span class="s1">'yet_another_string'</span><span class="p">],</span>
+   <span class="s1">'daysSinceStartOfSim'</span><span class="p">:</span>
+       <span class="p">[</span><span class="s1">'time_avg_daysSinceStartOfSim'</span><span class="p">,</span>
+        <span class="s1">'xtime'</span><span class="p">,</span>
+        <span class="s1">'something_else'</span><span class="p">]}</span>
 <span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
                             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>
                             <span class="n">time_variable_name</span><span class="o">=</span><span class="n">timestr</span><span class="p">,</span>
                             <span class="n">variable_list</span><span class="o">=</span><span class="n">var_list</span><span class="p">,</span>
-                            <span class="n">start_date</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">,</span>
-                            <span class="n">end_date</span><span class="o">=</span><span class="s1">&#39;9999-12-31&#39;</span><span class="p">,</span>
+                            <span class="n">start_date</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">,</span>
+                            <span class="n">end_date</span><span class="o">=</span><span class="s1">'9999-12-31'</span><span class="p">,</span>
                             <span class="n">variable_map</span><span class="o">=</span><span class="n">variable_map</span><span class="p">,</span>
                             <span class="n">year_offset</span><span class="o">=</span><span class="mi">1850</span><span class="p">)</span>
 </pre></div>
@@ -209,9 +209,9 @@ variable map, start and end dates:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">mpas_analysis.shared.mpas_xarray.mpas_xarray</span> \
     <span class="kn">import</span><span class="w"> </span><span class="nn">open_multifile_dataset</span>
 
-<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;example_jan_feb.nc&#39;</span>
-<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xtime_start&#39;</span><span class="p">,</span> <span class="s1">&#39;xtime_end&#39;</span><span class="p">]</span>
-<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature&#39;</span><span class="p">]</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">'example_jan_feb.nc'</span>
+<span class="n">timestr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'xtime_start'</span><span class="p">,</span> <span class="s1">'xtime_end'</span><span class="p">]</span>
+<span class="n">var_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'time_avg_avgValueWithinOceanRegion_avgSurfaceTemperature'</span><span class="p">]</span>
 
 <span class="n">ds</span> <span class="o">=</span> <span class="n">open_multifile_dataset</span><span class="p">(</span><span class="n">file_names</span><span class="o">=</span><span class="n">file_name</span><span class="p">,</span>
                             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">,</span>

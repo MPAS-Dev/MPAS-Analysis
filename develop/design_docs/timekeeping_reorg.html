@@ -155,7 +155,7 @@ Contributors: Xylar Asay-Davis
 and in PR #102</p>
 <p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">datetime.datetime</span></code> is documented as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">stringToDatetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a date string and a calendar, returns a `datetime.datetime`</span>
 
 <span class="sd">    Parameters</span>
@@ -193,7 +193,7 @@ and in PR #102</p>
 <span class="sd">    Last modified</span>
 <span class="sd">    -------------</span>
 <span class="sd">    02/04/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 </pre></div>
 </div>
 <p>As long as <code class="docutils literal notranslate"><span class="pre">relativedelta</span></code> objects rather than <code class="docutils literal notranslate"><span class="pre">datetime.timedelta</span></code> objects are used to increment
@@ -210,7 +210,7 @@ and in PR #102</p>
 increments in years and months (as well as days, hours, minutes and seconds, as needed).
 The class is documented as follows</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MpasRelativeDelta</span><span class="p">(</span><span class="n">relativedelta</span><span class="p">):</span>
-    <span class="s2">&quot;&quot;&quot;</span>
+    <span class="s2">"""</span>
 <span class="s2">    MpasRelativeDelta is a subclass of dateutil.relativedelta for relative time</span>
 <span class="s2">    intervals with different MPAS calendars.</span>
 
@@ -231,8 +231,8 @@ The class is documented as follows</p>
 <p>The function for converting a date string to a <code class="docutils literal notranslate"><span class="pre">MpasRelativeDelta</span></code> is documented as follows:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dateutil.relativedelta</span><span class="w"> </span><span class="kn">import</span> <span class="n">relativedelta</span>
 <span class="o">...</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">stringToRelativedelta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stringToRelativedelta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a date string and a calendar, returns an instance of</span>
 <span class="sd">    `MpasRelativeDelta`</span>
 
@@ -255,7 +255,7 @@ The class is documented as follows</p>
 <span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
 <span class="sd">        from the time portion of the string.</span>
 
-<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;gregorian_noleap&#39;}, optional</span>
+<span class="sd">    calendar: {'gregorian', 'gregorian_noleap'}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    Returns</span>
@@ -274,7 +274,7 @@ The class is documented as follows</p>
 <span class="sd">    Last modified</span>
 <span class="sd">    -------------</span>
 <span class="sd">    02/04/2017</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 </pre></div>
 </div>
 <h2> Testing </h2><h3> Testing and Validation: Date string parsing supports both MPAS calendars <br>

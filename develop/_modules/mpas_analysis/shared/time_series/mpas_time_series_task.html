@@ -123,7 +123,7 @@
 <div class="viewcode-block" id="MpasTimeSeriesTask">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">MpasTimeSeriesTask</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis tasks for computing time series from output from the</span>
 <span class="sd">    ``timeSeriesStatsMonthly`` analysis member.</span>
 
@@ -146,7 +146,7 @@
 
 <span class="sd">    startYear, endYear : int</span>
 <span class="sd">        The start and end years of the time series</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
@@ -155,8 +155,8 @@
 <div class="viewcode-block" id="MpasTimeSeriesTask.__init__">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.time_series.MpasTimeSeriesTask.html#mpas_analysis.shared.time_series.MpasTimeSeriesTask.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">componentName</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                 <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">subtaskName</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s1">'timeSeries'</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task for extracting time series.</span>
 
 <span class="sd">        Parameters</span>
@@ -164,13 +164,13 @@
 <span class="sd">        config : tranche.Tranche</span>
 <span class="sd">            Contains configuration options</span>
 
-<span class="sd">        componentName : {&#39;ocean&#39;, &#39;seaIce&#39;}</span>
+<span class="sd">        componentName : {'ocean', 'seaIce'}</span>
 <span class="sd">            The name of the component (same as the folder where the task</span>
 <span class="sd">            resides)</span>
 
 <span class="sd">        taskName : str, optional</span>
-<span class="sd">            The name of the task, &#39;mpasTimeSeriesOcean&#39; or</span>
-<span class="sd">            &#39;mpasTimeSeriesSeaIce&#39; by default (depending on ``componentName``)</span>
+<span class="sd">            The name of the task, 'mpasTimeSeriesOcean' or</span>
+<span class="sd">            'mpasTimeSeriesSeaIce' by default (depending on ``componentName``)</span>
 
 <span class="sd">        subtaskName : str, optional</span>
 <span class="sd">            The name of the subtask (if any)</span>
@@ -178,7 +178,7 @@
 <span class="sd">        section : str, optional</span>
 <span class="sd">            The section of the config file from which to read the start and</span>
 <span class="sd">            end times for the time series, also added as a tag</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -192,7 +192,7 @@
         <span class="k">if</span> <span class="n">taskName</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">suffix</span> <span class="o">=</span> <span class="n">section</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">section</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> \
                      <span class="n">componentName</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span> <span class="n">componentName</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-            <span class="n">taskName</span> <span class="o">=</span> <span class="s1">&#39;mpas</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
+            <span class="n">taskName</span> <span class="o">=</span> <span class="s1">'mpas</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">)</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MpasTimeSeriesTask</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
@@ -204,7 +204,7 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">add_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">variableList</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Add one or more variables to extract as a time series.</span>
 
 <span class="sd">        Parameters</span>
@@ -220,31 +220,31 @@
 <span class="sd">            the list of available variables has not yet been set) or if one</span>
 <span class="sd">            or more of the requested variables is not available in the</span>
 <span class="sd">            ``timeSeriesStatsMonthly`` output.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;add_variables() can only be called after &#39;</span>
-                             <span class="s1">&#39;setup_and_check() in MpasTimeSeriesTask.</span><span class="se">\n</span><span class="s1">&#39;</span>
-                             <span class="s1">&#39;Presumably tasks were added in the wrong order &#39;</span>
-                             <span class="s1">&#39;or add_variables() is being called in the wrong &#39;</span>
-                             <span class="s1">&#39;place.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'add_variables() can only be called after '</span>
+                             <span class="s1">'setup_and_check() in MpasTimeSeriesTask.</span><span class="se">\n</span><span class="s1">'</span>
+                             <span class="s1">'Presumably tasks were added in the wrong order '</span>
+                             <span class="s1">'or add_variables() is being called in the wrong '</span>
+                             <span class="s1">'place.'</span><span class="p">)</span>
 
         <span class="k">for</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">variableList</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> is not available in timeSeriesStatsMonthly &#39;</span>
-                    <span class="s1">&#39;output:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span><span class="p">))</span>
+                    <span class="s1">'</span><span class="si">{}</span><span class="s1"> is not available in timeSeriesStatsMonthly '</span>
+                    <span class="s1">'output:</span><span class="se">\n</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">variable</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span><span class="p">))</span>
 
             <span class="k">if</span> <span class="n">variable</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">variable</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">setup_and_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Perform steps to set up the analysis and check for errors in the setup.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -258,44 +258,44 @@
 
         <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
         <span class="n">baseDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-            <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span> <span class="s1">&#39;timeSeriesSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span> <span class="s1">'timeSeriesSubdirectory'</span><span class="p">)</span>
 
         <span class="n">make_directories</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.nc&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">.nc'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span>
                                             <span class="bp">self</span><span class="o">.</span><span class="n">fullTaskName</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">check_analysis_enabled</span><span class="p">(</span>
-            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">&#39;config_am_timeseriesstatsmonthly_enable&#39;</span><span class="p">,</span>
+            <span class="n">analysisOptionName</span><span class="o">=</span><span class="s1">'config_am_timeseriesstatsmonthly_enable'</span><span class="p">,</span>
             <span class="n">raiseException</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># get a list of timeSeriesStats output files from the streams file,</span>
         <span class="c1"># reading only those that are between the start and end dates</span>
-        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;startDate&#39;</span><span class="p">)</span>
-        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="s1">&#39;endDate&#39;</span><span class="p">)</span>
-        <span class="n">streamName</span> <span class="o">=</span> <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span>
+        <span class="n">startDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="s1">'startDate'</span><span class="p">)</span>
+        <span class="n">endDate</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="s1">'endDate'</span><span class="p">)</span>
+        <span class="n">streamName</span> <span class="o">=</span> <span class="s1">'timeSeriesStatsMonthlyOutput'</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
             <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="o">=</span><span class="n">endDate</span><span class="p">,</span>
             <span class="n">calendar</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">calendar</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No files were found in stream </span><span class="si">{}</span><span class="s1"> between </span><span class="si">{}</span><span class="s1"> and &#39;</span>
-                          <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
+            <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'No files were found in stream </span><span class="si">{}</span><span class="s1"> between </span><span class="si">{}</span><span class="s1"> and '</span>
+                          <span class="s1">'</span><span class="si">{}</span><span class="s1">.'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="p">,</span> <span class="n">endDate</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">runMessage</span> <span class="o">=</span> \
-            <span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Computing MPAS time series from first year plus files:</span><span class="se">\n</span><span class="s1">&#39;</span> \
-            <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> through</span><span class="se">\n</span><span class="s1">&#39;</span> \
-            <span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="sa">f</span><span class="s1">'</span><span class="se">\n</span><span class="s1">Computing MPAS time series from first year plus files:</span><span class="se">\n</span><span class="s1">'</span> \
+            <span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s1"> through</span><span class="se">\n</span><span class="s1">'</span> \
+            <span class="sa">f</span><span class="s1">'    </span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="si">}</span><span class="s1">'</span>
 
         <span class="c1"># Make sure first year of data is included for computing anomalies</span>
-        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">):</span>
-            <span class="n">anomalyYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">&#39;timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;anomalyRefYear&#39;</span><span class="p">)</span>
-            <span class="n">anomalyStartDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_option</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'anomalyRefYear'</span><span class="p">):</span>
+            <span class="n">anomalyYear</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getint</span><span class="p">(</span><span class="s1">'timeSeries'</span><span class="p">,</span> <span class="s1">'anomalyRefYear'</span><span class="p">)</span>
+            <span class="n">anomalyStartDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-01-01_00:00:00'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">anomalyStartDate</span> <span class="o">=</span> <span class="n">get_simulation_start_time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runStreams</span><span class="p">)</span>
             <span class="n">anomalyYear</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">anomalyStartDate</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span>
 
-        <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
+        <span class="n">anomalyEndDate</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{:04d}</span><span class="s1">-12-31_23:59:59'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">anomalyYear</span><span class="p">)</span>
         <span class="n">firstYearInputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span>
             <span class="n">streamName</span><span class="p">,</span> <span class="n">startDate</span><span class="o">=</span><span class="n">anomalyStartDate</span><span class="p">,</span>
             <span class="n">endDate</span><span class="o">=</span><span class="n">anomalyEndDate</span><span class="p">,</span>
@@ -311,9 +311,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">allVariables</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">data_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Compute the requested time series</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -328,7 +328,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_compute_time_series_with_ncrcat</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Uses ncrcat to extact time series from timeSeriesMonthlyOutput files</span>
 
 <span class="sd">        Raises</span>
@@ -339,21 +339,21 @@
 <span class="sd">        Author</span>
 <span class="sd">        ------</span>
 <span class="sd">        Xylar Asay-Davis</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
 
-        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;ncrcat not found. Make sure the latest nco &#39;</span>
-                          <span class="s1">&#39;package is installed: </span><span class="se">\n</span><span class="s1">&#39;</span>
-                          <span class="s1">&#39;conda install nco</span><span class="se">\n</span><span class="s1">&#39;</span>
-                          <span class="s1">&#39;Note: this presumes use of the conda-forge &#39;</span>
-                          <span class="s1">&#39;channel.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">'ncrcat'</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">'ncrcat not found. Make sure the latest nco '</span>
+                          <span class="s1">'package is installed: </span><span class="se">\n</span><span class="s1">'</span>
+                          <span class="s1">'conda install nco</span><span class="se">\n</span><span class="s1">'</span>
+                          <span class="s1">'Note: this presumes use of the conda-forge '</span>
+                          <span class="s1">'channel.'</span><span class="p">)</span>
 
         <span class="n">inputFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span>
         <span class="n">append</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">):</span>
             <span class="c1"># make sure all the necessary variables are also present</span>
             <span class="k">with</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span> <span class="k">as</span> <span class="n">ds</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">&#39;Time&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ds</span><span class="o">.</span><span class="n">sizes</span><span class="p">[</span><span class="s1">'Time'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">updateSubset</span> <span class="o">=</span> <span class="kc">False</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">updateSubset</span> <span class="o">=</span> <span class="kc">True</span>
@@ -363,7 +363,7 @@
                             <span class="k">break</span>
 
                 <span class="k">if</span> <span class="n">updateSubset</span><span class="p">:</span>
-                    <span class="c1"># add only input files wiht times that aren&#39;t already in</span>
+                    <span class="c1"># add only input files wiht times that aren't already in</span>
                     <span class="c1"># the output file</span>
 
                     <span class="n">append</span> <span class="o">=</span> <span class="kc">True</span>
@@ -371,7 +371,7 @@
                     <span class="n">fileNames</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputFiles</span><span class="p">)</span>
                     <span class="n">inYears</span><span class="p">,</span> <span class="n">inMonths</span> <span class="o">=</span> <span class="n">get_files_year_month</span><span class="p">(</span>
                         <span class="n">fileNames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">historyStreams</span><span class="p">,</span>
-                        <span class="s1">&#39;timeSeriesStatsMonthlyOutput&#39;</span><span class="p">)</span>
+                        <span class="s1">'timeSeriesStatsMonthlyOutput'</span><span class="p">)</span>
 
                     <span class="n">inYears</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inYears</span><span class="p">)</span>
                     <span class="n">inMonths</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inMonths</span><span class="p">)</span>
@@ -396,27 +396,27 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="c1"># there is an output file but it has the wrong variables</span>
                     <span class="c1"># so we need ot delete it.</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning: deleting file </span><span class="si">{}</span><span class="s1"> because &#39;</span>
-                                        <span class="s1">&#39;it is empty or some variables were &#39;</span>
-                                        <span class="s1">&#39;missing&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">'Warning: deleting file </span><span class="si">{}</span><span class="s1"> because '</span>
+                                        <span class="s1">'it is empty or some variables were '</span>
+                                        <span class="s1">'missing'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">))</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
 
-        <span class="n">variableList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;xtime_startMonthly&#39;</span><span class="p">,</span>
-                                            <span class="s1">&#39;xtime_endMonthly&#39;</span><span class="p">]</span>
+        <span class="n">variableList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">variableList</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'xtime_startMonthly'</span><span class="p">,</span>
+                                            <span class="s1">'xtime_endMonthly'</span><span class="p">]</span>
 
-        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ncrcat&#39;</span><span class="p">,</span> <span class="s1">&#39;-4&#39;</span><span class="p">,</span> <span class="s1">&#39;--no_tmp_fl&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variableList</span><span class="p">)]</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'ncrcat'</span><span class="p">,</span> <span class="s1">'-4'</span><span class="p">,</span> <span class="s1">'--no_tmp_fl'</span><span class="p">,</span>
+                <span class="s1">'-v'</span><span class="p">,</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">variableList</span><span class="p">)]</span>
 
         <span class="k">if</span> <span class="n">append</span><span class="p">:</span>
-            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;--record_append&#39;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'--record_append'</span><span class="p">)</span>
 
-        <span class="n">printCommand</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> ... </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="n">printCommand</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> ... </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">inputFiles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
                                                 <span class="n">inputFiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
                                                 <span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
         <span class="n">args</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">inputFiles</span><span class="p">)</span>
         <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;running: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printCommand</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">'running: </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">printCommand</span><span class="p">))</span>
         <span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
             <span class="n">handler</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
@@ -425,17 +425,17 @@
         <span class="n">stdout</span><span class="p">,</span> <span class="n">stderr</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="n">stdout</span><span class="p">:</span>
-            <span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">stdout</span> <span class="o">=</span> <span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stdout</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">stderr</span><span class="p">:</span>
-            <span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stderr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+            <span class="n">stderr</span> <span class="o">=</span> <span class="n">stderr</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">'utf-8'</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">stderr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'</span><span class="se">\n</span><span class="s1">'</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span><span class="p">(</span><span class="n">process</span><span class="o">.</span><span class="n">returncode</span><span class="p">,</span>
-                                                <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
+                                                <span class="s1">' '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args</span><span class="p">))</span></div>
 
 </pre></div>
 

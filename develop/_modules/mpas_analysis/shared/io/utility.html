@@ -106,11 +106,11 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">IO utility functions</span>
 
 <span class="sd">Phillip J. Wolfram, Xylar Asay-Davis</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">glob</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -125,8 +125,8 @@
 <div class="viewcode-block" id="paths">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.paths.html#mpas_analysis.shared.io.utility.paths">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">paths</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns glob&#39;d paths in list for arbitrary number of function arguments.</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    Returns glob'd paths in list for arbitrary number of function arguments.</span>
 <span class="sd">    Note, each expanded set of paths is sorted.</span>
 
 <span class="sd">    Parameters</span>
@@ -138,7 +138,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    paths : list of str</span>
 <span class="sd">        A list of file paths</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram</span>
@@ -152,7 +152,7 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fingerprint_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
                           <span class="n">chars</span><span class="o">=</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns a random string that can be used as a unique fingerprint</span>
 
 <span class="sd">    Parameters</span>
@@ -171,18 +171,18 @@
 <span class="sd">    Reference</span>
 <span class="sd">    ---------</span>
 <span class="sd">    http://stackoverflow.com/questions/2257441/random-string-generation-with-upper-case-letters-and-digits-in-python</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Phillip J. Wolfram</span>
 
-    <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+    <span class="k">return</span> <span class="s1">''</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">chars</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
 
 
 <div class="viewcode-block" id="make_directories">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.make_directories.html#mpas_analysis.shared.io.utility.make_directories">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_directories</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Make the given path if it does not already exist.</span>
 
 <span class="sd">    Parameters</span>
@@ -194,7 +194,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    path : str</span>
 <span class="sd">        the path unchanged</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -212,8 +212,8 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">section</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="p">,</span>
                            <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                            <span class="n">defaultPath</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                           <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;baseDirectory&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                           <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">'baseDirectory'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get a full path from a base directory and a relative path</span>
 
 <span class="sd">    Parameters</span>
@@ -233,7 +233,7 @@
 <span class="sd">        the name of a section for ``relativePathOption`` if not ``section``</span>
 
 <span class="sd">    defaultPath : str, optional</span>
-<span class="sd">        the name of a path to return if the resulting path doesn&#39;t exist.</span>
+<span class="sd">        the name of a path to return if the resulting path doesn't exist.</span>
 
 <span class="sd">    baseDirectoryOption : str, optional</span>
 <span class="sd">        the name of the option in ``section`` for the base directorys</span>
@@ -243,7 +243,7 @@
 <span class="sd">    fullPath : str</span>
 <span class="sd">        The full path to the given relative path within the given</span>
 <span class="sd">        ``baseDirectory``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -255,7 +255,7 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">subDirectory</span><span class="p">):</span>
         <span class="n">fullPath</span> <span class="o">=</span> <span class="n">subDirectory</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">baseDirectoryOption</span><span class="p">),</span>
+        <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">baseDirectoryOption</span><span class="p">),</span>
                                   <span class="n">subDirectory</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">defaultPath</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullPath</span><span class="p">):</span>
@@ -265,7 +265,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_region_mask</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">regionMaskFile</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Get the full path for a region mask with a given file name</span>
 
 <span class="sd">    Parameters</span>
@@ -281,7 +281,7 @@
 <span class="sd">    fullFileName : str</span>
 <span class="sd">        The absolute path to the given fileName within the custom or base</span>
 <span class="sd">        diagnostics directories</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -289,36 +289,36 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">regionMaskFile</span><span class="p">):</span>
         <span class="n">fullFileName</span> <span class="o">=</span> <span class="n">regionMaskFile</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">tryCustom</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span>
+        <span class="n">tryCustom</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'diagnostics'</span><span class="p">,</span> <span class="s1">'customDirectory'</span><span class="p">)</span> <span class="o">!=</span> <span class="s1">'none'</span>
         <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">fullFileName</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">tryCustom</span><span class="p">:</span>
             <span class="c1"># first see if region mask file is in the custom directory</span>
             <span class="n">regionMaskDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;regionMaskSubdirectory&#39;</span><span class="p">,</span>
-                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'diagnostics'</span><span class="p">,</span> <span class="s1">'regionMaskSubdirectory'</span><span class="p">,</span>
+                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">'customDirectory'</span><span class="p">)</span>
 
-            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskDirectory</span><span class="p">,</span>
+            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskDirectory</span><span class="p">,</span>
                                           <span class="n">regionMaskFile</span><span class="p">)</span>
             <span class="n">found</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullFileName</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
             <span class="c1"># no, so second see if mapping files are in the base directory</span>
             <span class="n">regionMaskDirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span>
-                <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;regionMaskSubdirectory&#39;</span><span class="p">,</span>
-                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">&#39;base_path&#39;</span><span class="p">)</span>
+                <span class="n">config</span><span class="p">,</span> <span class="s1">'diagnostics'</span><span class="p">,</span> <span class="s1">'regionMaskSubdirectory'</span><span class="p">,</span>
+                <span class="n">baseDirectoryOption</span><span class="o">=</span><span class="s1">'base_path'</span><span class="p">)</span>
 
-            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskDirectory</span><span class="p">,</span>
+            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">regionMaskDirectory</span><span class="p">,</span>
                                           <span class="n">regionMaskFile</span><span class="p">)</span>
             <span class="n">found</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullFileName</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
             <span class="c1"># still not found, point to a local mask directory</span>
-            <span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">,</span>
-                                                      <span class="s1">&#39;maskSubdirectory&#39;</span><span class="p">)</span>
+            <span class="n">maskSubdirectory</span> <span class="o">=</span> <span class="n">build_config_full_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s1">'output'</span><span class="p">,</span>
+                                                      <span class="s1">'maskSubdirectory'</span><span class="p">)</span>
             <span class="n">make_directories</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">)</span>
 
-            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">,</span>
+            <span class="n">fullFileName</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">maskSubdirectory</span><span class="p">,</span>
                                           <span class="n">regionMaskFile</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">fullFileName</span>
@@ -326,14 +326,14 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">build_obs_path</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">relativePathOption</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">relativePathSection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relativePath</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    config : tranche.Tranche</span>
 <span class="sd">        configuration from which to read the path</span>
 
-<span class="sd">    component : {&#39;ocean&#39;, &#39;seaIce&#39;, &#39;iceberg&#39;}</span>
+<span class="sd">    component : {'ocean', 'seaIce', 'iceberg'}</span>
 <span class="sd">        the prefix on the ``*Observations`` section in ``config``, which must</span>
 <span class="sd">        have an option ``obsSubdirectory``</span>
 
@@ -354,12 +354,12 @@
 <span class="sd">    fullPath : str</span>
 <span class="sd">        The full path to the given relative path within the observations</span>
 <span class="sd">        directory for the given component</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
-    <span class="n">obsSection</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">Observations&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+    <span class="n">obsSection</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">Observations'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">relativePath</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">relativePathSection</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -369,16 +369,16 @@
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">relativePath</span><span class="p">):</span>
         <span class="n">fullPath</span> <span class="o">=</span> <span class="n">relativePath</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">obsSubdirectory</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obsSection</span><span class="p">,</span> <span class="s1">&#39;obsSubdirectory&#39;</span><span class="p">)</span>
+        <span class="n">obsSubdirectory</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">obsSection</span><span class="p">,</span> <span class="s1">'obsSubdirectory'</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">obsSubdirectory</span><span class="p">):</span>
-            <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsSubdirectory</span><span class="p">,</span> <span class="n">relativePath</span><span class="p">)</span>
+            <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">obsSubdirectory</span><span class="p">,</span> <span class="n">relativePath</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">basePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;customDirectory&#39;</span><span class="p">)</span>
-            <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basePath</span><span class="p">,</span> <span class="n">obsSubdirectory</span><span class="p">,</span>
+            <span class="n">basePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'diagnostics'</span><span class="p">,</span> <span class="s1">'customDirectory'</span><span class="p">)</span>
+            <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basePath</span><span class="p">,</span> <span class="n">obsSubdirectory</span><span class="p">,</span>
                                          <span class="n">relativePath</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">basePath</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullPath</span><span class="p">):</span>
-                <span class="n">basePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;diagnostics&#39;</span><span class="p">,</span> <span class="s1">&#39;base_path&#39;</span><span class="p">)</span>
-                <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basePath</span><span class="p">,</span> <span class="n">obsSubdirectory</span><span class="p">,</span>
+            <span class="k">if</span> <span class="n">basePath</span> <span class="o">==</span> <span class="s1">'none'</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fullPath</span><span class="p">):</span>
+                <span class="n">basePath</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'diagnostics'</span><span class="p">,</span> <span class="s1">'base_path'</span><span class="p">)</span>
+                <span class="n">fullPath</span> <span class="o">=</span> <span class="s1">'</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">/</span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">basePath</span><span class="p">,</span> <span class="n">obsSubdirectory</span><span class="p">,</span>
                                              <span class="n">relativePath</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">fullPath</span>
@@ -387,7 +387,7 @@
 <div class="viewcode-block" id="check_path_exists">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.io.utility.check_path_exists.html#mpas_analysis.shared.io.utility.check_path_exists">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_path_exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Raise an exception if the given path does not exist.</span>
 
 <span class="sd">    Parameters</span>
@@ -399,18 +399,18 @@
 <span class="sd">    ------</span>
 <span class="sd">    OSError</span>
 <span class="sd">        If the path does not exist</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">)):</span>
-        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">&#39;Path </span><span class="si">{}</span><span class="s1"> not found&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
+        <span class="k">raise</span> <span class="ne">OSError</span><span class="p">(</span><span class="s1">'Path </span><span class="si">{}</span><span class="s1"> not found'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">get_files_year_month</span><span class="p">(</span><span class="n">fileNames</span><span class="p">,</span> <span class="n">streamsFile</span><span class="p">,</span> <span class="n">streamName</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Extract the year and month from file names associated with a stream</span>
 
 <span class="sd">    Parameters</span>
@@ -428,7 +428,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    years, months : list of int</span>
 <span class="sd">        The years and months for each file in ``fileNames``</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -445,7 +445,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">decode_strings</span><span class="p">(</span><span class="n">da</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Decode to unicode strings an array that might either be char or string type</span>
 <span class="sd">    in the NetCDF file.</span>
 
@@ -458,7 +458,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    strings : list</span>
 <span class="sd">        The data array as a list of unicode strings</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -472,14 +472,14 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Copy a file, retrying if temporarily unavailable &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">""" Copy a file, retrying if temporarily unavailable """</span>
 
     <span class="k">try</span><span class="p">:</span>
         <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">BlockingIOError</span><span class="p">:</span>
         <span class="c1"># this is an occasional problem on Chrysalis.  Try a slow copy</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Making a slow copy from </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fsrc</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fdst</span><span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">'Making a slow copy from </span><span class="si">{}</span><span class="s1"> to </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">))</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="s1">'rb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fsrc</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="s1">'wb'</span><span class="p">)</span> <span class="k">as</span> <span class="n">fdst</span><span class="p">:</span>
             <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">fsrc</span><span class="p">,</span> <span class="n">fdst</span><span class="p">)</span>
 </pre></div>
 

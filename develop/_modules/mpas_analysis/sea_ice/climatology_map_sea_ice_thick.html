@@ -123,10 +123,10 @@
 <div class="viewcode-block" id="ClimatologyMapSeaIceThick">
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceThick">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ClimatologyMapSeaIceThick</span><span class="p">(</span><span class="n">AnalysisTask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    An analysis task for comparison of sea ice thickness against</span>
 <span class="sd">    observations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Luke Van Roekel, Xylar Asay-Davis, Milena Veneziani</span>
@@ -135,7 +135,7 @@
 <a class="viewcode-back" href="../../../developers_guide/generated/mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.html#mpas_analysis.sea_ice.ClimatologyMapSeaIceThick.__init__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">mpasClimatologyTask</span><span class="p">,</span> <span class="n">hemisphere</span><span class="p">,</span>
                  <span class="n">controlConfig</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Construct the analysis task.</span>
 
 <span class="sd">        Parameters</span>
@@ -146,92 +146,92 @@
 <span class="sd">        mpasClimatologyTask : ``MpasClimatologyTask``</span>
 <span class="sd">            The task that produced the climatology to be remapped and plotted</span>
 
-<span class="sd">        hemisphere : {&#39;NH&#39;, &#39;SH&#39;}</span>
+<span class="sd">        hemisphere : {'NH', 'SH'}</span>
 <span class="sd">            The hemisphere to plot</span>
 
 <span class="sd">        controlConfig : tranche.Tranche, optional</span>
 <span class="sd">            Configuration options for a control run (if any)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
-        <span class="n">taskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;climatologyMapSeaIceThick</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span>
+        <span class="n">taskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'climatologyMapSeaIceThick</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span>
 
-        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">&#39;seaIceThick&#39;</span>
+        <span class="n">fieldName</span> <span class="o">=</span> <span class="s1">'seaIceThick'</span>
 
-        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontalMap&#39;</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">&#39;publicObs&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">]</span>
+        <span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatology'</span><span class="p">,</span> <span class="s1">'horizontalMap'</span><span class="p">,</span> <span class="n">fieldName</span><span class="p">,</span> <span class="s1">'publicObs'</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'arctic'</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;antarctic&#39;</span><span class="p">]</span>
+            <span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="o">+</span> <span class="p">[</span><span class="s1">'antarctic'</span><span class="p">]</span>
 
         <span class="c1"># call the constructor from the base class (AnalysisTask)</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ClimatologyMapSeaIceThick</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">taskName</span><span class="o">=</span><span class="n">taskName</span><span class="p">,</span>
-            <span class="n">componentName</span><span class="o">=</span><span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
+            <span class="n">componentName</span><span class="o">=</span><span class="s1">'seaIce'</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="n">tags</span><span class="p">)</span>
 
-        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">&#39;timeMonthly_avg_iceVolumeCell&#39;</span>
+        <span class="n">mpasFieldName</span> <span class="o">=</span> <span class="s1">'timeMonthly_avg_iceVolumeCell'</span>
         <span class="n">iselValues</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="n">sectionName</span> <span class="o">=</span> <span class="n">taskName</span>
 
-        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">&#39;NH&#39;</span><span class="p">:</span>
-            <span class="n">hemisphereLong</span> <span class="o">=</span> <span class="s1">&#39;Northern&#39;</span>
+        <span class="k">if</span> <span class="n">hemisphere</span> <span class="o">==</span> <span class="s1">'NH'</span><span class="p">:</span>
+            <span class="n">hemisphereLong</span> <span class="o">=</span> <span class="s1">'Northern'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">hemisphereLong</span> <span class="o">=</span> <span class="s1">&#39;Southern&#39;</span>
+            <span class="n">hemisphereLong</span> <span class="o">=</span> <span class="s1">'Southern'</span>
 
         <span class="c1"># read in what seasons we want to plot</span>
-        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">&#39;seasons&#39;</span><span class="p">)</span>
+        <span class="n">seasons</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span> <span class="s1">'seasons'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">seasons</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;a valid list of seasons&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'a valid list of seasons'</span><span class="p">)</span>
 
         <span class="n">comparisonGridNames</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getexpression</span><span class="p">(</span><span class="n">sectionName</span><span class="p">,</span>
-                                                   <span class="s1">&#39;comparisonGrids&#39;</span><span class="p">)</span>
+                                                   <span class="s1">'comparisonGrids'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">comparisonGridNames</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain &#39;</span>
-                             <span class="sa">f</span><span class="s1">&#39;a valid list of comparison grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">'config section </span><span class="si">{</span><span class="n">sectionName</span><span class="si">}</span><span class="s1"> does not contain '</span>
+                             <span class="sa">f</span><span class="s1">'a valid list of comparison grids'</span><span class="p">)</span>
 
         <span class="c1"># the variable self.mpasFieldName will be added to mpasClimatologyTask</span>
         <span class="c1"># along with the seasons.</span>
         <span class="n">remapClimatologySubtask</span> <span class="o">=</span> <span class="n">RemapMpasClimatologySubtask</span><span class="p">(</span>
             <span class="n">mpasClimatologyTask</span><span class="o">=</span><span class="n">mpasClimatologyTask</span><span class="p">,</span>
             <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-            <span class="n">climatologyName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fieldName</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+            <span class="n">climatologyName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">fieldName</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
             <span class="n">variableList</span><span class="o">=</span><span class="p">[</span><span class="n">mpasFieldName</span><span class="p">],</span>
             <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
             <span class="n">seasons</span><span class="o">=</span><span class="n">seasons</span><span class="p">,</span>
             <span class="n">iselValues</span><span class="o">=</span><span class="n">iselValues</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Observations (ICESat)&#39;</span>
-            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">&#39;Observations: ICESat&#39;</span>
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Model - Observations&#39;</span>
-            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">&#39;seaIceThick&#39;</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="s1">'Observations (ICESat)'</span>
+            <span class="n">galleryName</span> <span class="o">=</span> <span class="s1">'Observations: ICESat'</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Model - Observations'</span>
+            <span class="n">refFieldName</span> <span class="o">=</span> <span class="s1">'seaIceThick'</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;runs&#39;</span><span class="p">,</span> <span class="s1">&#39;mainRunName&#39;</span><span class="p">)</span>
+            <span class="n">controlRunName</span> <span class="o">=</span> <span class="n">controlConfig</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'runs'</span><span class="p">,</span> <span class="s1">'mainRunName'</span><span class="p">)</span>
             <span class="n">galleryName</span> <span class="o">=</span> <span class="kc">None</span>
-            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">&#39;</span>
+            <span class="n">refTitleLabel</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'Control: </span><span class="si">{</span><span class="n">controlRunName</span><span class="si">}</span><span class="s1">'</span>
             <span class="n">refFieldName</span> <span class="o">=</span> <span class="n">mpasFieldName</span>
-            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">&#39;Main - Control&#39;</span>
+            <span class="n">diffTitleLabel</span> <span class="o">=</span> <span class="s1">'Main - Control'</span>
 
         <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">controlConfig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">obsFileName</span> <span class="o">=</span> <span class="n">build_obs_path</span><span class="p">(</span>
-                    <span class="n">config</span><span class="p">,</span> <span class="s1">&#39;seaIce&#39;</span><span class="p">,</span>
-                    <span class="n">relativePathOption</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;thickness</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">config</span><span class="p">,</span> <span class="s1">'seaIce'</span><span class="p">,</span>
+                    <span class="n">relativePathOption</span><span class="o">=</span><span class="sa">f</span><span class="s1">'thickness</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                     <span class="n">relativePathSection</span><span class="o">=</span><span class="n">sectionName</span><span class="p">)</span>
 
                 <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="n">RemapObservedThickClimatology</span><span class="p">(</span>
                     <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">seasons</span><span class="o">=</span><span class="p">[</span><span class="n">season</span><span class="p">],</span>
                     <span class="n">fileName</span><span class="o">=</span><span class="n">obsFileName</span><span class="p">,</span>
-                    <span class="n">outFilePrefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">refFieldName</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="n">outFilePrefix</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">refFieldName</span><span class="si">}{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
                     <span class="n">comparisonGridNames</span><span class="o">=</span><span class="n">comparisonGridNames</span><span class="p">,</span>
-                    <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;remapObservations</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">subtaskName</span><span class="o">=</span><span class="sa">f</span><span class="s1">'remapObservations</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">remapObservationsSubtask</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">remapObservationsSubtask</span> <span class="o">=</span> <span class="kc">None</span>
@@ -239,12 +239,12 @@
             <span class="k">for</span> <span class="n">comparisonGridName</span> <span class="ow">in</span> <span class="n">comparisonGridNames</span><span class="p">:</span>
 
                 <span class="n">imageCaption</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Climatology Map of </span><span class="si">{</span><span class="n">hemisphereLong</span><span class="si">}</span><span class="s1">-Hemisphere &#39;</span> \
-                    <span class="sa">f</span><span class="s1">&#39;Cell-Averaged Sea-Ice Thickness.&#39;</span>
+                    <span class="sa">f</span><span class="s1">'Climatology Map of </span><span class="si">{</span><span class="n">hemisphereLong</span><span class="si">}</span><span class="s1">-Hemisphere '</span> \
+                    <span class="sa">f</span><span class="s1">'Cell-Averaged Sea-Ice Thickness.'</span>
                 <span class="n">galleryGroup</span> <span class="o">=</span> \
-                    <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphereLong</span><span class="si">}</span><span class="s1">-Hemisphere Sea-Ice Thickness&#39;</span>
+                    <span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">hemisphereLong</span><span class="si">}</span><span class="s1">-Hemisphere Sea-Ice Thickness'</span>
                 <span class="c1"># make a new subtask for this season and comparison grid</span>
-                <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">&#39;</span>
+                <span class="n">subtaskName</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'plot</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">comparisonGridName</span><span class="si">}</span><span class="s1">'</span>
 
                 <span class="n">subtask</span> <span class="o">=</span> <span class="n">PlotClimatologyMapSubtask</span><span class="p">(</span>
                     <span class="n">parentTask</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">season</span><span class="o">=</span><span class="n">season</span><span class="p">,</span>
@@ -255,20 +255,20 @@
                     <span class="n">controlConfig</span><span class="o">=</span><span class="n">controlConfig</span><span class="p">)</span>
 
                 <span class="n">subtask</span><span class="o">.</span><span class="n">set_plot_info</span><span class="p">(</span>
-                    <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;icethick</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
-                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">&#39;Sea ice thickness&#39;</span><span class="p">,</span>
+                    <span class="n">outFileLabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">'icethick</span><span class="si">{</span><span class="n">hemisphere</span><span class="si">}</span><span class="s1">'</span><span class="p">,</span>
+                    <span class="n">fieldNameInTitle</span><span class="o">=</span><span class="s1">'Sea ice thickness'</span><span class="p">,</span>
                     <span class="n">mpasFieldName</span><span class="o">=</span><span class="n">mpasFieldName</span><span class="p">,</span>
                     <span class="n">refFieldName</span><span class="o">=</span><span class="n">refFieldName</span><span class="p">,</span>
                     <span class="n">refTitleLabel</span><span class="o">=</span><span class="n">refTitleLabel</span><span class="p">,</span>
                     <span class="n">diffTitleLabel</span><span class="o">=</span><span class="n">diffTitleLabel</span><span class="p">,</span>
-                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;m&#39;</span><span class="p">,</span>
+                    <span class="n">unitsLabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">'m'</span><span class="p">,</span>
                     <span class="n">imageCaption</span><span class="o">=</span><span class="n">imageCaption</span><span class="p">,</span>
                     <span class="n">galleryGroup</span><span class="o">=</span><span class="n">galleryGroup</span><span class="p">,</span>
                     <span class="n">groupSubtitle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                    <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_thick&#39;</span><span class="p">,</span>
+                    <span class="n">groupLink</span><span class="o">=</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">hemisphere</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s1">_thick'</span><span class="p">,</span>
                     <span class="n">galleryName</span><span class="o">=</span><span class="n">galleryName</span><span class="p">,</span>
                     <span class="n">maskMinThreshold</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                    <span class="n">extend</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span>
+                    <span class="n">extend</span><span class="o">=</span><span class="s1">'both'</span><span class="p">,</span>
                     <span class="n">prependComparisonGrid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
                 <span class="bp">self</span><span class="o">.</span><span class="n">add_subtask</span><span class="p">(</span><span class="n">subtask</span><span class="p">)</span></div>
@@ -277,15 +277,15 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">RemapObservedThickClimatology</span><span class="p">(</span><span class="n">RemapObservedClimatologySubtask</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    A subtask for reading and remapping sea ice thickness observations</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_observation_descriptor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        get a MeshDescriptor for the observation grid</span>
 
 <span class="sd">        Parameters</span>
@@ -297,7 +297,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        obsDescriptor : ``MeshDescriptor``</span>
 <span class="sd">            The descriptor for the observation grid</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
@@ -305,12 +305,12 @@
         <span class="c1"># create a descriptor of the observation grid using the lat/lon</span>
         <span class="c1"># coordinates</span>
         <span class="n">obsDescriptor</span> <span class="o">=</span> <span class="n">LatLonGridDescriptor</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">fileName</span><span class="p">,</span>
-                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">&#39;t_lat&#39;</span><span class="p">,</span>
-                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">&#39;t_lon&#39;</span><span class="p">)</span>
+                                                  <span class="n">lat_var_name</span><span class="o">=</span><span class="s1">'t_lat'</span><span class="p">,</span>
+                                                  <span class="n">lon_var_name</span><span class="o">=</span><span class="s1">'t_lon'</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">obsDescriptor</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">build_observational_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fileName</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        read in the data sets for observations, and possibly rename some</span>
 <span class="sd">        variables and dimensions</span>
 
@@ -323,13 +323,13 @@
 <span class="sd">        -------</span>
 <span class="sd">        dsObs : ``xarray.Dataset``</span>
 <span class="sd">            The observational dataset</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># Authors</span>
         <span class="c1"># -------</span>
         <span class="c1"># Xylar Asay-Davis</span>
 
         <span class="n">dsObs</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">fileName</span><span class="p">)</span>
-        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;HI&#39;</span><span class="p">:</span> <span class="s1">&#39;seaIceThick&#39;</span><span class="p">})</span>
+        <span class="n">dsObs</span> <span class="o">=</span> <span class="n">dsObs</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">'HI'</span><span class="p">:</span> <span class="s1">'seaIceThick'</span><span class="p">})</span>
         <span class="k">return</span> <span class="n">dsObs</span>
 </pre></div>
 

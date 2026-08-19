@@ -152,18 +152,18 @@ specify the location of the “main” simulation:</p>
 <span class="c1"># This command also lists tags for each analysis.</span>
 <span class="c1"># Shortcuts exist to generate (or not generate) several types of analysis.</span>
 <span class="c1"># These include:</span>
-<span class="c1">#   &#39;all&#39; -- all analyses will be run</span>
-<span class="c1">#   &#39;all_publicObs&#39; -- all analyses for which observations are availabe on the</span>
+<span class="c1">#   'all' -- all analyses will be run</span>
+<span class="c1">#   'all_publicObs' -- all analyses for which observations are availabe on the</span>
 <span class="c1">#                      public server (the default)</span>
-<span class="c1">#   &#39;all_&lt;tag&gt;&#39; -- all analysis with a particular tag will be run</span>
-<span class="c1">#   &#39;all_&lt;component&gt;&#39; -- all analyses from a given component (either &#39;ocean&#39;</span>
-<span class="c1">#                        or &#39;seaIce&#39;) will be run</span>
-<span class="c1">#   &#39;only_&lt;component&gt;&#39;, &#39;only_&lt;tag&gt;&#39; -- all analysis from this component or</span>
+<span class="c1">#   'all_&lt;tag&gt;' -- all analysis with a particular tag will be run</span>
+<span class="c1">#   'all_&lt;component&gt;' -- all analyses from a given component (either 'ocean'</span>
+<span class="c1">#                        or 'seaIce') will be run</span>
+<span class="c1">#   'only_&lt;component&gt;', 'only_&lt;tag&gt;' -- all analysis from this component or</span>
 <span class="c1">#                                       with this tag will be run, and all</span>
 <span class="c1">#                                       analysis for other components or</span>
 <span class="c1">#                                       without the tag will be skipped</span>
-<span class="c1">#   &#39;no_&lt;task_name&gt;&#39; -- skip the given task</span>
-<span class="c1">#   &#39;no_&lt;component&gt;&#39;, &#39;no_&lt;tag&gt;&#39; -- in analogy to &#39;all_*&#39;, skip all analysis</span>
+<span class="c1">#   'no_&lt;task_name&gt;' -- skip the given task</span>
+<span class="c1">#   'no_&lt;component&gt;', 'no_&lt;tag&gt;' -- in analogy to 'all_*', skip all analysis</span>
 <span class="c1">#                                   tasks from the given compoonent or with</span>
 <span class="c1">#                                   the given tag.  Do</span>
 <span class="c1">#                                      mpas_analysis --list</span>
@@ -172,7 +172,7 @@ specify the location of the “main” simulation:</p>
 <span class="c1"># option:</span>
 <span class="c1">#    mpas_analysis analysis.cfg --generate \</span>
 <span class="c1">#         only_ocean,no_timeSeries,timeSeriesSST</span>
-<span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">]</span>
+<span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_publicObs'</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="output-directories">
@@ -192,7 +192,7 @@ script) to see the results on a public web page.</p>
 <span id="config-generate"></span><h2>Generate Option<a class="headerlink" href="#generate-option" title="Link to this heading"></a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">generate</span></code> option is used to control which tasks run.  The simplest
 choice is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>in which case MPAS-Analysis will attempt to run all analysis tasks.  In this
@@ -203,11 +203,11 @@ that pass the
 <a class="reference internal" href="../../developers_guide/generated/mpas_analysis.shared.AnalysisTask.setup_and_check.html#mpas_analysis.shared.AnalysisTask.setup_and_check" title="mpas_analysis.shared.AnalysisTask.setup_and_check"><code class="xref py py-meth docutils literal notranslate"><span class="pre">setup_and_check()</span></code></a>
 phase will be run.</p>
 <p>The next simplest option is to specify a single task name:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatologyMapSST&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatologyMapSST'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>or a list of task names:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;climatologyMapSST&#39;</span><span class="p">,</span> <span class="s1">&#39;climatologyMapSSS&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'climatologyMapSST'</span><span class="p">,</span> <span class="s1">'climatologyMapSSS'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>in which case only the listed tasks are run.</p>
@@ -219,7 +219,7 @@ each task.  To see what tags each task has, run:</p>
 <p>This will show all available tasks together with the component they belong to
 and the tags for each.  To run only those analysis tasks with a particular tag,
 set, for example <code class="docutils literal notranslate"><span class="pre">climatology</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_climatology&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_climatology'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>This will generate only those tasks that make use of climatologies.</p>
@@ -230,7 +230,7 @@ tasks make use of data sets that are only available after registering with a
 data portal or by contacting the authors of that data set directly, so that
 these data have not been included in the data repository.  The default is to
 generate only the tasks with observations in in the repository:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_publicObs'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>The names of components (<code class="docutils literal notranslate"><span class="pre">ocean</span></code> or <code class="docutils literal notranslate"><span class="pre">seaIce</span></code>) can also be used as tags.</p>
@@ -240,23 +240,23 @@ generate only the tasks with observations in in the repository:</p>
 other generate options.  For example, to generate all tasks with publicly
 available observation except those for the <code class="docutils literal notranslate"><span class="pre">seaIce</span></code> component, you could
 specify:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;no_seaIce&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_publicObs'</span><span class="p">,</span> <span class="s1">'no_seaIce'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>If an appropriate reference year isn’t available for computing  anomalies,
 include ‘no_anomaly’ in the generate list to skip all tasks that require the
 reference year for computing anomalies:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;no_anomaly&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_publicObs'</span><span class="p">,</span> <span class="s1">'no_anomaly'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>To specify that you wanted to plot climatologies from the ocean component, you
 could use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_publicObs&#39;</span><span class="p">,</span> <span class="s1">&#39;only_climatologies&#39;</span><span class="p">,</span> <span class="s1">&#39;only_ocean&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_publicObs'</span><span class="p">,</span> <span class="s1">'only_climatologies'</span><span class="p">,</span> <span class="s1">'only_ocean'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>If you wanted to plot all tasks with publicly available data sets that used
 either climatologies or time series, you could use:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;all_climatologies&#39;</span><span class="p">,</span> <span class="s1">&#39;all_timeSeries&#39;</span><span class="p">,</span> <span class="s1">&#39;only_publicObs&#39;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">generate</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'all_climatologies'</span><span class="p">,</span> <span class="s1">'all_timeSeries'</span><span class="p">,</span> <span class="s1">'only_publicObs'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>Finally, we note that the <code class="docutils literal notranslate"><span class="pre">generate</span></code> option in the configuration file can

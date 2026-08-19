@@ -198,19 +198,19 @@ Comparison against observations is not yet supported.</p>
 
 <span class="c1"># comparison grid(s)</span>
 <span class="c1"># only the Antarctic really makes sense but lat-lon could technically work.</span>
-<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;latlon&#39;</span><span class="p">]</span>
+<span class="n">comparisonGrids</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'latlon'</span><span class="p">]</span>
 
 <span class="c1"># Months or seasons to plot (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep,</span>
 <span class="c1"># Oct, Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">&#39;ANN&#39;</span><span class="p">]</span>
+<span class="n">seasons</span> <span class="o">=</span>  <span class="p">[</span><span class="s1">'ANN'</span><span class="p">]</span>
 
-<span class="c1"># list of depths in meters (positive up) at which to analyze, &#39;top&#39; for the</span>
-<span class="c1"># sea surface, &#39;bot&#39; for the sea floor</span>
-<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1500</span><span class="p">,</span> <span class="o">-</span><span class="mi">2000</span><span class="p">,</span> <span class="s1">&#39;bot&#39;</span><span class="p">]</span>
+<span class="c1"># list of depths in meters (positive up) at which to analyze, 'top' for the</span>
+<span class="c1"># sea surface, 'bot' for the sea floor</span>
+<span class="n">depths</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'top'</span><span class="p">,</span> <span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="o">-</span><span class="mi">600</span><span class="p">,</span> <span class="o">-</span><span class="mi">800</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mi">1500</span><span class="p">,</span> <span class="o">-</span><span class="mi">2000</span><span class="p">,</span> <span class="s1">'bot'</span><span class="p">]</span>
 
 <span class="c1"># a list of fields top plot for each transect.  All supported fields are</span>
 <span class="c1"># listed below</span>
-<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;zonalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;meridionalVelocity&#39;</span><span class="p">,</span> <span class="s1">&#39;velocityMagnitude&#39;</span><span class="p">]</span>
+<span class="n">fieldList</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'zonalVelocity'</span><span class="p">,</span> <span class="s1">'meridionalVelocity'</span><span class="p">,</span> <span class="s1">'velocityMagnitude'</span><span class="p">]</span>
 
 <span class="c1"># set the suffix for files, e.g. if you want to use a different comparison</span>
 <span class="c1"># grid from the default</span>
@@ -226,7 +226,7 @@ Comparison against observations is not yet supported.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">}</span>
 
 
 <span class="p">[</span><span class="n">climatologyMapVel_VelocityMagnitudeShallow</span><span class="p">]</span>
@@ -238,7 +238,7 @@ Comparison against observations is not yet supported.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1.e-3</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1.e-3</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">1.</span><span class="p">}</span>
 
 
 <span class="p">[</span><span class="n">climatologyMapVel_VelocityMagnitudeDeep</span><span class="p">]</span>
@@ -250,7 +250,7 @@ Comparison against observations is not yet supported.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="n">normTypeResult</span> <span class="o">=</span> <span class="n">log</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;vmin&#39;</span><span class="p">:</span> <span class="mf">1.e-4</span><span class="p">,</span> <span class="s1">&#39;vmax&#39;</span><span class="p">:</span> <span class="mf">5.e-1</span><span class="p">}</span>
+<span class="n">normArgsResult</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'vmin'</span><span class="p">:</span> <span class="mf">1.e-4</span><span class="p">,</span> <span class="s1">'vmax'</span><span class="p">:</span> <span class="mf">5.e-1</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>There is a section for options that apply to all velocity climatology maps and

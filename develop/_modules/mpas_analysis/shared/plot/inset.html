@@ -106,9 +106,9 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Functions for plotting inset maps in plots (e.g. for transects)</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
@@ -129,7 +129,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">add_inset</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">fc</span><span class="p">,</span> <span class="n">latlonbuffer</span><span class="o">=</span><span class="mf">45.</span><span class="p">,</span> <span class="n">polarbuffer</span><span class="o">=</span><span class="mf">5.</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
               <span class="n">height</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">lowerleft</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xbuffer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ybuffer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">maxlength</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Plots an inset map showing the location of a transect or polygon.  Shapes</span>
 <span class="sd">    are plotted on a polar grid if they are entirely poleward of +/-50 deg.</span>
 <span class="sd">    latitude and with a lat/lon grid if not.</span>
@@ -169,7 +169,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    inset : ``matplotlib.axes.Axes``</span>
 <span class="sd">        The new inset axis</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -219,17 +219,17 @@
         <span class="n">xlocator</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">ylocator</span> <span class="o">=</span> <span class="kc">None</span>
 
-    <span class="c1"># kind of like &quot;top&quot; justified -- graphics are toward the &quot;north&quot; end of</span>
+    <span class="c1"># kind of like "top" justified -- graphics are toward the "north" end of</span>
     <span class="c1"># the subplot</span>
-    <span class="n">inset</span><span class="o">.</span><span class="n">set_anchor</span><span class="p">(</span><span class="s1">&#39;N&#39;</span><span class="p">)</span>
+    <span class="n">inset</span><span class="o">.</span><span class="n">set_anchor</span><span class="p">(</span><span class="s1">'N'</span><span class="p">)</span>
 
     <span class="n">inset</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span>  <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
     <span class="n">inset</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">LAND</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">inset</span><span class="o">.</span><span class="n">add_feature</span><span class="p">(</span><span class="n">cartopy</span><span class="o">.</span><span class="n">feature</span><span class="o">.</span><span class="n">OCEAN</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
     <span class="n">gl</span> <span class="o">=</span> <span class="n">inset</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                         <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-                         <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">)</span>
+                         <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'gray'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                         <span class="n">linestyle</span><span class="o">=</span><span class="s1">'--'</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">xlocator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">gl</span><span class="o">.</span><span class="n">xlocator</span> <span class="o">=</span> <span class="n">xlocator</span>
@@ -238,29 +238,29 @@
         <span class="n">gl</span><span class="o">.</span><span class="n">ylocator</span> <span class="o">=</span> <span class="n">ylocator</span>
 
     <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">fc</span><span class="o">.</span><span class="n">features</span><span class="p">:</span>
-        <span class="n">geomtype</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
-        <span class="n">shape</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">])</span>
+        <span class="n">geomtype</span> <span class="o">=</span> <span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">][</span><span class="s1">'type'</span><span class="p">]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">maxlength</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">shape</span> <span class="o">=</span> <span class="n">subdivide_geom</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="o">.</span><span class="n">geom_type</span><span class="p">,</span> <span class="n">maxlength</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">geomtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Polygon&#39;</span><span class="p">,</span> <span class="s1">&#39;MultiPolygon&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">geomtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Polygon'</span><span class="p">,</span> <span class="s1">'MultiPolygon'</span><span class="p">]:</span>
             <span class="n">inset</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">((</span><span class="n">shape</span><span class="p">,),</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
-                                 <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
+                                 <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span>
                                  <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">geomtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Point&#39;</span><span class="p">,</span> <span class="s1">&#39;MultiPoint&#39;</span><span class="p">]:</span>
+        <span class="k">elif</span> <span class="n">geomtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'Point'</span><span class="p">,</span> <span class="s1">'MultiPoint'</span><span class="p">]:</span>
             <span class="n">point_x</span><span class="p">,</span> <span class="n">point_y</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">xy</span>
-            <span class="n">inset</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_x</span><span class="p">,</span> <span class="n">point_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span>
-                          <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;face&#39;</span><span class="p">)</span>
+            <span class="n">inset</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">point_x</span><span class="p">,</span> <span class="n">point_y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span>
+                          <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">'face'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">inset</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">((</span><span class="n">shape</span><span class="p">,),</span> <span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span>
-                                 <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                                 <span class="n">edgecolor</span><span class="o">=</span><span class="s1">'k'</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">'none'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                                  <span class="n">linewidth</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
             <span class="c1"># put a red point at the beginning and a blue point at the end</span>
             <span class="c1"># of the transect to help show the orientation</span>
             <span class="n">begin</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">shape</span><span class="o">.</span><span class="n">coords</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">inset</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">begin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">begin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+            <span class="n">inset</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">begin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">begin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'r'</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span>
                        <span class="n">markersize</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
-            <span class="n">inset</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span>
+            <span class="n">inset</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">'g'</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">'o'</span><span class="p">,</span>
                        <span class="n">markersize</span><span class="o">=</span><span class="mf">3.</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
 
     <span class="k">return</span> <span class="n">inset</span></div>
@@ -268,7 +268,7 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_set_circular_boundary</span><span class="p">(</span><span class="n">ax</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the boundary of the given axis to be circular (for a polar plot)&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Set the boundary of the given axis to be circular (for a polar plot)"""</span>
 
     <span class="c1"># Compute a circle in axes coordinates, which we can use as a boundary</span>
     <span class="c1"># for the map. We can pan/zoom as much as we like - the boundary will be</span>
@@ -283,8 +283,8 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_bounds</span><span class="p">(</span><span class="n">fc</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the lon/lat bounding box for all transects and regions&quot;&quot;&quot;</span>
-    <span class="n">geometries</span> <span class="o">=</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">feature</span>
+<span class="w">    </span><span class="sd">"""Compute the lon/lat bounding box for all transects and regions"""</span>
+    <span class="n">geometries</span> <span class="o">=</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">feature</span><span class="p">[</span><span class="s1">'geometry'</span><span class="p">])</span> <span class="k">for</span> <span class="n">feature</span>
                   <span class="ow">in</span> <span class="n">fc</span><span class="o">.</span><span class="n">features</span><span class="p">]</span>
     <span class="n">unified_geometry</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">union_all</span><span class="p">(</span><span class="n">geometries</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">unified_geometry</span><span class="o">.</span><span class="n">bounds</span>

@@ -127,24 +127,24 @@
 the comparison grid for each transect:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># The approximate horizontal resolution (in km) of each transect.  Latitude/</span>
 <span class="c1"># longitude between observation points will be subsampled at this interval.</span>
-<span class="c1"># Use &#39;obs&#39; to indicate no subsampling. Use &#39;mpas&#39; to indicate plotting of</span>
+<span class="c1"># Use 'obs' to indicate no subsampling. Use 'mpas' to indicate plotting of</span>
 <span class="c1"># model data on the native grid, in which case comparison with observations</span>
 <span class="c1"># will take place on the observation grid.</span>
 <span class="c1">#horizontalResolution = mpas</span>
 <span class="c1">#horizontalResolution = obs</span>
 <span class="n">horizontalResolution</span> <span class="o">=</span> <span class="mi">5</span>
 
-<span class="c1"># The name of the vertical comparison grid.  Valid values are &#39;mpas&#39; for the</span>
-<span class="c1"># MPAS vertical grid, &#39;obs&#39; to use the locations of observations or</span>
-<span class="c1"># any other name if the vertical grid is defined by &#39;verticalComparisonGrid&#39;.</span>
-<span class="c1"># If horizontalResolution is &#39;mpas&#39;, model data (both main and control) will be</span>
+<span class="c1"># The name of the vertical comparison grid.  Valid values are 'mpas' for the</span>
+<span class="c1"># MPAS vertical grid, 'obs' to use the locations of observations or</span>
+<span class="c1"># any other name if the vertical grid is defined by 'verticalComparisonGrid'.</span>
+<span class="c1"># If horizontalResolution is 'mpas', model data (both main and control) will be</span>
 <span class="c1"># plotted on the MPAS vertical grid, regardless of the comparison grid.</span>
 <span class="c1">#verticalComparisonGridName = mpas</span>
 <span class="c1">#verticalComparisonGridName = obs</span>
 <span class="n">verticalComparisonGridName</span> <span class="o">=</span> <span class="n">uniform_0_to_4000m_at_10m</span>
 
-<span class="c1"># The vertical comparison grid if &#39;verticalComparisonGridName&#39; is not &#39;mpas&#39; or</span>
-<span class="c1"># &#39;obs&#39;.  This should be numpy array of (typically negative) elevations (in m).</span>
+<span class="c1"># The vertical comparison grid if 'verticalComparisonGridName' is not 'mpas' or</span>
+<span class="c1"># 'obs'.  This should be numpy array of (typically negative) elevations (in m).</span>
 <span class="n">verticalComparisonGrid</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
 
 <span class="c1"># A range for the y axis (if any)</span>

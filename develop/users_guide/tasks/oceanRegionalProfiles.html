@@ -197,7 +197,7 @@ include a measure of variability (the standard deviation in space and time).</p>
 <span class="c1">## variability) of 3D MPAS fields</span>
 
 <span class="c1"># The name of a region group defining the region for each profile</span>
-<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;]</span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['Ocean Basins']</span>
 
 
 <span class="k">[profilesOceanBasins]</span>
@@ -208,31 +208,31 @@ include a measure of variability (the standard deviation in space and time).</p>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
 <span class="na">fields</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="na">[{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialTemperature&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$\degree$C&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Temperature&#39;</span><span class="na">},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;PSU&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;kg m$^{-3}$&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">}]</span>
+<span class="w">    </span><span class="na">[{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'potentialTemperature'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_activeTracers_temperature'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'$\degree$C',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Potential Temperature'</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'salinity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_activeTracers_salinity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'PSU',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Salinity'</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'potentialDensity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_potentialDensity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'kg m$^{-3}$',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Potential Density'</span><span class="na">}]</span>
 
 <span class="c1"># Times for comparison times (Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct,</span>
 <span class="c1"># Nov, Dec, JFM, AMJ, JAS, OND, ANN)</span>
-<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">[&#39;JFM&#39;, &#39;JAS&#39;, &#39;ANN&#39;]</span>
+<span class="na">seasons</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="s">['JFM', 'JAS', 'ANN']</span>
 
 <span class="c1"># minimum and maximum depth of profile plots, or empty for the full depth range</span>
 <span class="na">depthRange</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[]</span>
 
 <span class="c1"># a list of region names from the region masks file to plot</span>
-<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Global Ocean 15S to 15N&quot;]</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",</span>
+<span class="w">               </span><span class="na">"Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",</span>
+<span class="w">               </span><span class="na">"Global Ocean", "Global Ocean 65N to 65S",</span>
+<span class="w">               </span><span class="na">"Global Ocean 15S to 15N"]</span>
 
 <span class="c1"># web gallery options</span>
 <span class="na">profileGalleryGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Ocean Basin Profiles</span>

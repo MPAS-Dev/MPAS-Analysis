@@ -196,7 +196,7 @@ potential density, etc. averaged over regions.</p>
 <span class="c1">## regional means of 3D MPAS fields</span>
 
 <span class="c1"># the names of region groups to plot, each with its own section below</span>
-<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&#39;Ocean Basins&#39;]</span>
+<span class="na">regionGroups</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">['Ocean Basins']</span>
 
 
 <span class="k">[hovmollerOceanBasins]</span>
@@ -207,24 +207,24 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># name of the field, units for colorbars and a the name as it should appear</span>
 <span class="c1"># in figure titles and captions.</span>
 <span class="na">fields</span><span class="w"> </span><span class="o">=</span>
-<span class="w">    </span><span class="na">[{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialTemperature&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_temperature&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;$\degree$C&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Temperature&#39;</span><span class="na">},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;salinity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_activeTracers_salinity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;PSU&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Salinity&#39;</span><span class="na">},</span>
-<span class="w">     </span><span class="na">{&#39;prefix&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;potentialDensity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;mpas&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;timeMonthly_avg_potentialDensity&#39;</span><span class="na">,</span>
-<span class="w">      </span><span class="na">&#39;units&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">r&#39;kg m$^{-3}$&#39;,</span>
-<span class="w">      </span><span class="na">&#39;titleName&#39;</span><span class="o">:</span><span class="w"> </span><span class="s">&#39;Potential Density&#39;</span><span class="na">}]</span>
+<span class="w">    </span><span class="na">[{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'potentialTemperature'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_activeTracers_temperature'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'$\degree$C',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Potential Temperature'</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'salinity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_activeTracers_salinity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'PSU',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Salinity'</span><span class="na">},</span>
+<span class="w">     </span><span class="na">{'prefix'</span><span class="o">:</span><span class="w"> </span><span class="s">'potentialDensity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'mpas'</span><span class="o">:</span><span class="w"> </span><span class="s">'timeMonthly_avg_potentialDensity'</span><span class="na">,</span>
+<span class="w">      </span><span class="na">'units'</span><span class="o">:</span><span class="w"> </span><span class="s">r'kg m$^{-3}$',</span>
+<span class="w">      </span><span class="na">'titleName'</span><span class="o">:</span><span class="w"> </span><span class="s">'Potential Density'</span><span class="na">}]</span>
 
 <span class="c1"># a list of region names from the region masks file to plot</span>
-<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">[&quot;Atlantic_Basin&quot;, &quot;Pacific_Basin&quot;, &quot;Indian_Basin&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Arctic_Basin&quot;, &quot;Southern_Ocean_Basin&quot;, &quot;Mediterranean_Basin&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Global Ocean&quot;, &quot;Global Ocean 65N to 65S&quot;,</span>
-<span class="w">               </span><span class="na">&quot;Global Ocean 15S to 15N&quot;]</span>
+<span class="na">regionNames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">["Atlantic_Basin", "Pacific_Basin", "Indian_Basin",</span>
+<span class="w">               </span><span class="na">"Arctic_Basin", "Southern_Ocean_Basin", "Mediterranean_Basin",</span>
+<span class="w">               </span><span class="na">"Global Ocean", "Global Ocean 65N to 65S",</span>
+<span class="w">               </span><span class="na">"Global Ocean 15S to 15N"]</span>
 
 <span class="c1"># whether to compute an anomaly with respect to the start of the time series</span>
 <span class="na">computeAnomaly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">False</span>
@@ -246,7 +246,7 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -2., &#39;vmax&#39;: 30.}</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': -2., 'vmax': 30.}</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span>
@@ -255,11 +255,11 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -5., &#39;vmax&#39;: 5.}</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': -5., 'vmax': 5.}</span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, 'none' for no</span>
 <span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'none'</span>
 
 <span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
 <span class="c1"># to start at the beginning of the time series.</span>
@@ -286,7 +286,7 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: 30, &#39;vmax&#39;: 39.0}</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': 30, 'vmax': 39.0}</span>
 
 <span class="c1"># colormap for differences</span>
 <span class="na">colormapNameDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">balance</span>
@@ -295,11 +295,11 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -0.5, &#39;vmax&#39;: 0.5}</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': -0.5, 'vmax': 0.5}</span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, 'none' for no</span>
 <span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'none'</span>
 
 <span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
 <span class="c1"># to start at the beginning of the time series.</span>
@@ -326,7 +326,7 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: 1026.5, &#39;vmax&#39;: 1028.}</span>
+<span class="na">normArgsResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': 1026.5, 'vmax': 1028.}</span>
 
 
 <span class="c1"># colormap for differences</span>
@@ -336,11 +336,11 @@ potential density, etc. averaged over regions.</p>
 <span class="c1"># the type of norm used in the colormap</span>
 <span class="na">normTypeDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">linear</span>
 <span class="c1"># A dictionary with keywords for the norm</span>
-<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{&#39;vmin&#39;: -0.3, &#39;vmax&#39;: 0.3}</span>
+<span class="na">normArgsDifference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">{'vmin': -0.3, 'vmax': 0.3}</span>
 
-<span class="c1"># contour line levels (use [] for automatic contour selection, &#39;none&#39; for no</span>
+<span class="c1"># contour line levels (use [] for automatic contour selection, 'none' for no</span>
 <span class="c1"># contour lines)</span>
-<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#39;none&#39;</span>
+<span class="na">contourLevels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">'none'</span>
 
 <span class="c1"># An optional first year for the tick marks on the x axis. Leave commented out</span>
 <span class="c1"># to start at the beginning of the time series.</span>

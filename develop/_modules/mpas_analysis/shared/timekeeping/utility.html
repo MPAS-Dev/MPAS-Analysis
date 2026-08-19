@@ -106,9 +106,9 @@
 <span class="c1"># Additional copyright and license information can be found in the LICENSE file</span>
 <span class="c1"># distributed with this code, or at</span>
 <span class="c1"># https://raw.githubusercontent.com/MPAS-Dev/MPAS-Analysis/main/LICENSE</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Time keeping utility functions</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="c1"># Authors</span>
 <span class="c1"># -------</span>
 <span class="c1"># Xylar Asay-Davis</span>
@@ -126,7 +126,7 @@
 <div class="viewcode-block" id="get_simulation_start_time">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.get_simulation_start_time.html#mpas_analysis.shared.timekeeping.utility.get_simulation_start_time">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_simulation_start_time</span><span class="p">(</span><span class="n">streams</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a ``StreamsFile`` object, returns the simulation start time parsed</span>
 <span class="sd">    from a restart file.</span>
 
@@ -145,16 +145,16 @@
 <span class="sd">    ------</span>
 <span class="sd">    IOError</span>
 <span class="sd">        If no restart file can be found.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">restartFile</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">&#39;restart&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">restartFile</span> <span class="o">=</span> <span class="n">streams</span><span class="o">.</span><span class="n">readpath</span><span class="p">(</span><span class="s1">'restart'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">&#39;No MPAS restart file found: need at least one &#39;</span>
-                      <span class="s1">&#39;restart file for analysis to work correctly&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s1">'No MPAS restart file found: need at least one '</span>
+                      <span class="s1">'restart file for analysis to work correctly'</span><span class="p">)</span>
 
     <span class="n">ds</span> <span class="o">=</span> <span class="n">xarray</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">restartFile</span><span class="p">)</span>
     <span class="n">da</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">simulationStartTime</span>
@@ -163,7 +163,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
     <span class="c1"># replace underscores so it works as a CF-compliant reference date</span>
-    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">simulationStartTime</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">simulationStartTime</span> <span class="o">=</span> <span class="n">simulationStartTime</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'</span><span class="se">\x00</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">simulationStartTime</span></div>
 
@@ -172,7 +172,7 @@
 <div class="viewcode-block" id="string_to_datetime">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_datetime.html#mpas_analysis.shared.timekeeping.utility.string_to_datetime">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">string_to_datetime</span><span class="p">(</span><span class="n">dateString</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a date string and a calendar, returns a ``datetime.datetime``</span>
 
 <span class="sd">    Parameters</span>
@@ -203,7 +203,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``dateString`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -220,8 +220,8 @@
 
 <div class="viewcode-block" id="string_to_relative_delta">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_relative_delta.html#mpas_analysis.shared.timekeeping.utility.string_to_relative_delta">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">string_to_relative_delta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">string_to_relative_delta</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a date string and a calendar, returns an instance of</span>
 <span class="sd">    ``MpasRelativeDelta``</span>
 
@@ -245,7 +245,7 @@
 <span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
 <span class="sd">        from the time portion of the string.</span>
 
-<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar: {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    Returns</span>
@@ -256,7 +256,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``dateString`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -272,9 +272,9 @@
 
 <div class="viewcode-block" id="string_to_days_since_date">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.string_to_days_since_date.html#mpas_analysis.shared.timekeeping.utility.string_to_days_since_date">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span>
-                              <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">string_to_days_since_date</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">,</span>
+                              <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a date string or an array-like of date strings, a reference date</span>
 <span class="sd">    string, and a calendar, returns the number of days (as a float or</span>
 <span class="sd">    numpy.array of floats) since the reference date</span>
@@ -300,7 +300,7 @@
 <span class="sd">        Note: either underscores or spaces can be used to separate the date</span>
 <span class="sd">        from the time portion of the string.</span>
 
-<span class="sd">    calendar: {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar: {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        The name of one of the calendars supported by MPAS cores</span>
 
 <span class="sd">    referenceDate : str, optional</span>
@@ -319,7 +319,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``dateString`` or ``calendar`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -343,17 +343,17 @@
 
 <div class="viewcode-block" id="days_to_datetime">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.days_to_datetime.html#mpas_analysis.shared.timekeeping.utility.days_to_datetime">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">days_to_datetime</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">days_to_datetime</span><span class="p">(</span><span class="n">days</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Covert days to ``datetime.datetime`` objects given a reference date and an</span>
-<span class="sd">    MPAS calendar (either &#39;gregorian&#39; or &#39;noleap&#39;).</span>
+<span class="sd">    MPAS calendar (either 'gregorian' or 'noleap').</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    days : float or array-like of floats</span>
 <span class="sd">        The number of days since the reference date.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime``</span>
 <span class="sd">        object.</span>
 
@@ -372,13 +372,13 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``days``, ``referenceDate`` or ``calendar`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
 
     <span class="n">datetimes</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">num2date</span><span class="p">(</span><span class="n">days</span><span class="p">,</span>
-                                 <span class="s1">&#39;days since </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
+                                 <span class="s1">'days since </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
                                  <span class="n">calendar</span><span class="o">=</span><span class="n">_mpas_to_netcdf_calendar</span><span class="p">(</span><span class="n">calendar</span><span class="p">))</span>
 
     <span class="c1"># convert to datetime.datetime</span>
@@ -399,8 +399,8 @@
 
 <div class="viewcode-block" id="datetime_to_days">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.datetime_to_days.html#mpas_analysis.shared.timekeeping.utility.datetime_to_days">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">datetime_to_days</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">datetime_to_days</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given date(s), a calendar and a reference date, returns the days since</span>
 <span class="sd">    the reference date, either as a single float or an array of floats.</span>
 
@@ -410,7 +410,7 @@
 <span class="sd">        The date(s) to be converted to days since ``referenceDate`` on the</span>
 <span class="sd">        given ``calendar``.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime`` object.</span>
 
 <span class="sd">    referenceDate : str, optional</span>
@@ -429,7 +429,7 @@
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``datetimes``, ``referenceDate`` or ``calendar`` is</span>
 <span class="sd">        supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -439,7 +439,7 @@
         <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span><span class="n">dates</span><span class="p">]</span>
         <span class="n">isSingleDate</span> <span class="o">=</span> <span class="kc">True</span>
 
-    <span class="n">days</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="s1">&#39;days since </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
+    <span class="n">days</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="s1">'days since </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
                             <span class="n">calendar</span><span class="o">=</span><span class="n">_mpas_to_netcdf_calendar</span><span class="p">(</span><span class="n">calendar</span><span class="p">))</span>
 
     <span class="k">if</span> <span class="n">isSingleDate</span><span class="p">:</span>
@@ -452,8 +452,8 @@
 <div class="viewcode-block" id="date_to_days">
 <a class="viewcode-back" href="../../../../developers_guide/generated/mpas_analysis.shared.timekeeping.utility.date_to_days.html#mpas_analysis.shared.timekeeping.utility.date_to_days">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">date_to_days</span><span class="p">(</span><span class="n">year</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">month</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">day</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hour</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">second</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                 <span class="n">calendar</span><span class="o">=</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">&#39;0001-01-01&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+                 <span class="n">calendar</span><span class="o">=</span><span class="s1">'gregorian'</span><span class="p">,</span> <span class="n">referenceDate</span><span class="o">=</span><span class="s1">'0001-01-01'</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert a date to days since the reference date.</span>
 
 <span class="sd">    Parameters</span>
@@ -462,7 +462,7 @@
 <span class="sd">        The date to be converted to days since ``referenceDate`` on the</span>
 <span class="sd">        given ``calendar``.</span>
 
-<span class="sd">    calendar : {&#39;gregorian&#39;, &#39;noleap&#39;}, optional</span>
+<span class="sd">    calendar : {'gregorian', 'noleap'}, optional</span>
 <span class="sd">        A calendar to be used to convert days to a ``datetime.datetime``</span>
 <span class="sd">        object.</span>
 
@@ -481,7 +481,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``referenceDate`` or ``calendar`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -490,13 +490,13 @@
 
     <span class="n">date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s1">&#39;days since </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
+    <span class="k">return</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">date2num</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="s1">'days since </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">referenceDate</span><span class="p">),</span>
                             <span class="n">calendar</span><span class="o">=</span><span class="n">calendar</span><span class="p">)</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_parse_date_string</span><span class="p">(</span><span class="n">dateString</span><span class="p">,</span> <span class="n">isInterval</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Given a string containing a date, returns a tuple defining a date of the</span>
 <span class="sd">    form (year, month, day, hour, minute, second) appropriate for constructing</span>
 <span class="sd">    a datetime or timedelta</span>
@@ -533,7 +533,7 @@
 <span class="sd">    ------</span>
 <span class="sd">    ValueError</span>
 <span class="sd">        If an invalid ``dateString`` is supplied.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># Authors</span>
     <span class="c1"># -------</span>
     <span class="c1"># Xylar Asay-Davis</span>
@@ -544,38 +544,38 @@
         <span class="n">offset</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="c1"># change underscores to spaces so both can be supported</span>
-    <span class="n">dateString</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\x00</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-    <span class="k">if</span> <span class="s1">&#39; &#39;</span> <span class="ow">in</span> <span class="n">dateString</span><span class="p">:</span>
-        <span class="n">ymd</span><span class="p">,</span> <span class="n">hms</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+    <span class="n">dateString</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">'</span><span class="se">\x00</span><span class="s1">'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'_'</span><span class="p">,</span> <span class="s1">' '</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">' '</span> <span class="ow">in</span> <span class="n">dateString</span><span class="p">:</span>
+        <span class="n">ymd</span><span class="p">,</span> <span class="n">hms</span> <span class="o">=</span> <span class="n">dateString</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">dateString</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'-'</span> <span class="ow">in</span> <span class="n">dateString</span><span class="p">:</span>
             <span class="n">ymd</span> <span class="o">=</span> <span class="n">dateString</span>
-            <span class="c1"># error can result if dateString = &#39;1990-01&#39;</span>
-            <span class="c1"># assume this means &#39;1990-01-01&#39;</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ymd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="n">ymd</span> <span class="o">+=</span> <span class="s1">&#39;-01&#39;</span>
-            <span class="n">hms</span> <span class="o">=</span> <span class="s1">&#39;00:00:00&#39;</span>
+            <span class="c1"># error can result if dateString = '1990-01'</span>
+            <span class="c1"># assume this means '1990-01-01'</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ymd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'-'</span><span class="p">))</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">ymd</span> <span class="o">+=</span> <span class="s1">'-01'</span>
+            <span class="n">hms</span> <span class="o">=</span> <span class="s1">'00:00:00'</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">isInterval</span><span class="p">:</span>
-                <span class="n">ymd</span> <span class="o">=</span> <span class="s1">&#39;0000-00-00&#39;</span>
+                <span class="n">ymd</span> <span class="o">=</span> <span class="s1">'0000-00-00'</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">ymd</span> <span class="o">=</span> <span class="s1">&#39;0001-01-01&#39;</span>
+                <span class="n">ymd</span> <span class="o">=</span> <span class="s1">'0001-01-01'</span>
             <span class="n">hms</span> <span class="o">=</span> <span class="n">dateString</span>
 
-    <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">hms</span><span class="p">:</span>
-        <span class="n">hms</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">'.'</span> <span class="ow">in</span> <span class="n">hms</span><span class="p">:</span>
+        <span class="n">hms</span> <span class="o">=</span> <span class="n">hms</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'.'</span><span class="p">,</span> <span class="s1">':'</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">ymd</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">'-'</span> <span class="ow">in</span> <span class="n">ymd</span><span class="p">:</span>
         <span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">)</span> \
-            <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">ymd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)]</span>
+            <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">ymd</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'-'</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">day</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ymd</span><span class="p">)</span>
         <span class="n">year</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">month</span> <span class="o">=</span> <span class="n">offset</span>
 
-    <span class="k">if</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">hms</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">':'</span> <span class="ow">in</span> <span class="n">hms</span><span class="p">:</span>
         <span class="p">(</span><span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span> \
-            <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">hms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)]</span>
+            <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">hms</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">':'</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">second</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">hms</span><span class="p">)</span>
         <span class="n">minute</span> <span class="o">=</span> <span class="mi">0</span>
@@ -584,21 +584,21 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_mpas_to_netcdf_calendar</span><span class="p">(</span><span class="n">calendar</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Convert from MPAS calendar to NetCDF4 calendar names.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
-    <span class="k">if</span> <span class="n">calendar</span> <span class="o">==</span> <span class="s1">&#39;gregorian_noleap&#39;</span><span class="p">:</span>
-        <span class="n">calendar</span> <span class="o">=</span> <span class="s1">&#39;noleap&#39;</span>
-    <span class="k">if</span> <span class="n">calendar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gregorian&#39;</span><span class="p">,</span> <span class="s1">&#39;noleap&#39;</span><span class="p">]:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unsupported calendar </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calendar</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">calendar</span> <span class="o">==</span> <span class="s1">'gregorian_noleap'</span><span class="p">:</span>
+        <span class="n">calendar</span> <span class="o">=</span> <span class="s1">'noleap'</span>
+    <span class="k">if</span> <span class="n">calendar</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">'gregorian'</span><span class="p">,</span> <span class="s1">'noleap'</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'Unsupported calendar </span><span class="si">{}</span><span class="s1">'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">calendar</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">calendar</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_round_datetime</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Round a datetime object to nearest second</span>
+<span class="w">    </span><span class="sd">"""Round a datetime object to nearest second</span>
 <span class="sd">    date : datetime.datetime or similar objet object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">,</span> <span class="n">minute</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">microsecond</span><span class="p">)</span> <span class="o">=</span> \
         <span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">day</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">second</span><span class="p">,</span>
          <span class="n">date</span><span class="o">.</span><span class="n">microsecond</span><span class="p">)</span>
