@@ -701,7 +701,13 @@
                     <span class="n">lineWidth</span><span class="p">,</span> <span class="n">lineColor</span><span class="p">,</span> <span class="n">arrowSpacing</span><span class="p">,</span> <span class="n">arrowWidth</span><span class="p">):</span>
 
         <span class="n">title</span> <span class="o">=</span> <span class="n">limit_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">maxTitleLength</span><span class="p">)</span>
-        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="o">**</span><span class="n">plottitle_font</span><span class="p">)</span>
+        <span class="c1"># Pass an explicit `y` so matplotlib does not auto-position the</span>
+        <span class="c1"># title.  Auto-positioning inspects the cartopy gridline labels,</span>
+        <span class="c1"># whose bounding boxes are non-finite while the figure is being</span>
+        <span class="c1"># drawn; the title then lands at y = inf, the axes bounding box</span>
+        <span class="c1"># becomes non-finite and savefig(bbox_inches='tight') drops the</span>
+        <span class="c1"># panel from the figure entirely.</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.06</span><span class="p">,</span> <span class="o">**</span><span class="n">plottitle_font</span><span class="p">)</span>
 
         <span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">(</span><span class="n">extent</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
 
