@@ -597,7 +597,13 @@ def plot_projection_comparison(
                     lineWidth, lineColor, arrowSpacing, arrowWidth):
 
         title = limit_title(title, maxTitleLength)
-        ax.set_title(title, **plottitle_font)
+        # Pass an explicit `y` so matplotlib does not auto-position the
+        # title.  Auto-positioning inspects the cartopy gridline labels,
+        # whose bounding boxes are non-finite while the figure is being
+        # drawn; the title then lands at y = inf, the axes bounding box
+        # becomes non-finite and savefig(bbox_inches='tight') drops the
+        # panel from the figure entirely.
+        ax.set_title(title, y=1.06, **plottitle_font)
 
         ax.set_extent(extent, crs=projection)
 
