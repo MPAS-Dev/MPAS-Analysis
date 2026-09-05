@@ -82,3 +82,6 @@ Analysis Tasks
    tasks/timeSeriesSeaIceAreaVol
 
    tasks/climatologyMapIcebergConcSH
+
+   tasks/climatologyMapRiskIndexOutcomeNH
+   tasks/climatologyMapRiskIndexOutcomeSH
