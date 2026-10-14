@@ -19,7 +19,8 @@ env:
   # mpich >=5 is built as ch4:ucx,ofi, so UCX is the default netmod.  Azure-hosted
   # GitHub runners expose a MANA RDMA device that UCX tries (and fails) to open,
   # so MPI_Init() aborts inside ESMF_RegridWeightGen.  Restrict UCX to transports
-  # that actually work on the runners.
+  # that actually work on the runners.  rattler-build does not pass this through
+  # to its test environment, so ci/recipe/recipe.yaml sets it separately.
   UCX_TLS: "tcp,self,sm"
 
 jobs:
