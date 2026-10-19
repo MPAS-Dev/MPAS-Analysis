@@ -46,7 +46,7 @@ Physics
 
 In the ocean, it is convenient to separate the the horizontal current, *u*,
 into its mean and eddy components:
-(1) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?u=\overline{u}+u'" title="u = ubar + uprime" /></a>`
+(1) :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?u=\overline{u}+u'" title="u = ubar + uprime" />`</a>
 
 This approach separates the total kinetic energy into mean kinetic energy
 (MKE) and eddy kinetic energy (EKE).
@@ -59,16 +59,16 @@ constituents of seawater (Robinson, 1983).
 Algorithms
 ----------
 
-Time mean of equation 1: :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" /></a>`
+Time mean of equation 1: :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{u^2}=\overline{u}^2+\overline{u'^2}" title="u = ubar + uprime" />`</a>
 
-The model outputs :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" /></a>`
-and :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u^2}" title="u-squared bar" /></a>`
-while the observational dataset provides :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{u'^2}" title="u-prime-squared bar" /></a>`
+The model outputs :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{u}" title="ubar" />`</a>
+and :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{u^2}" title="u-squared bar" />`</a>
+while the observational dataset provides :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{u'^2}" title="u-prime-squared bar" />`</a>
 so two different EKE equations must be used:
 
-(2) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" /></a>`
+(2) :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{model}}=(\overline{u^2}-\overline{u}^2+\overline{v^2}-\overline{v}^2)/2" title="EKE model" />`</a>
 
-(3) :raw-html-md:`<a href="" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" /></a>`
+(3) :raw-html-md:`<a href="" target="_blank">`:raw-html-md:`<img src="https://latex.codecogs.com/gif.latex?\overline{EKE_{obs}}=(\overline{u'^2}+\overline{v'^2})/2" title="EKE observations" />`</a>
 
 Design and Implementation
 -------------------------
