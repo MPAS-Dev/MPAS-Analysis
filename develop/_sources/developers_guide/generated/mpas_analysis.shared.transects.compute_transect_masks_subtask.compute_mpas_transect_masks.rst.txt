@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.transects.compute\_transect\_masks\_subtask.compute\_mpas\_transect\_masks
-================================================================================================
-
-.. currentmodule:: mpas_analysis.shared.transects.compute_transect_masks_subtask
-
-.. autofunction:: compute_mpas_transect_masks

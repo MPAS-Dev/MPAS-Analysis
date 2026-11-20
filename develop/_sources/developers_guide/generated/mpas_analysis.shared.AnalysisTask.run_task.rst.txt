@@ -1,6 +1,0 @@
-﻿mpas\_analysis.shared.AnalysisTask.run\_task
-============================================
-
-.. currentmodule:: mpas_analysis.shared
-
-.. automethod:: AnalysisTask.run_task

@@ -4,10 +4,6 @@
     "url": "/MPAS-Analysis/main/"
   },
   {
-    "version": "develop",
-    "url": "/MPAS-Analysis/develop/"
-  },
-  {
     "version": "1.16.0",
     "url": "/MPAS-Analysis/1.16.0/"
   },

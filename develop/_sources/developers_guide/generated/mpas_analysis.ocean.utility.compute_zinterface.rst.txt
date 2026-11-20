@@ -1,6 +1,0 @@
-﻿mpas\_analysis.ocean.utility.compute\_zinterface
-================================================
-
-.. currentmodule:: mpas_analysis.ocean.utility
-
-.. autofunction:: compute_zinterface
