@@ -16,6 +16,12 @@ on:
 env:
   CANCEL_OTHERS: false
   PATHS_IGNORE: '["**/README.md", "**/docs/**"]'
+  # mpich >=5 is built as ch4:ucx,ofi, so UCX is the default netmod.  Azure-hosted
+  # GitHub runners expose a MANA RDMA device that UCX tries (and fails) to open,
+  # so MPI_Init() aborts inside ESMF_RegridWeightGen.  Restrict UCX to transports
+  # that actually work on the runners.  rattler-build does not pass this through
+  # to its test environment, so ci/recipe/recipe.yaml sets it separately.
+  UCX_TLS: "tcp,self,sm"
 
 jobs:
   build:
@@ -25,9 +31,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: "3.10"
-            pixi-environment: py310
-            variant-file: ci/python3.10.yaml
           - python-version: "3.11"
             pixi-environment: py311
             variant-file: ci/python3.11.yaml
@@ -49,11 +52,11 @@ jobs:
           paths_ignore: ${{ env.PATHS_IGNORE }}
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - if: ${{ steps.skip_check.outputs.should_skip != 'true' }}
         name: Set up Pixi
-        uses: prefix-dev/setup-pixi@v0.9.5
+        uses: prefix-dev/setup-pixi@v0.11.3
         with:
           environments: ${{ matrix.pixi-environment }}
 
@@ -83,9 +86,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - python-version: "3.10"
-            pixi-environment: py310
-            variant-file: ci/python3.10.yaml
           - python-version: "3.11"
             pixi-environment: py311
             variant-file: ci/python3.11.yaml
@@ -100,10 +100,10 @@ jobs:
             variant-file: ci/python3.14.yaml
       fail-fast: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Set up Pixi
-        uses: prefix-dev/setup-pixi@v0.9.5
+        uses: prefix-dev/setup-pixi@v0.11.3
         with:
           environments: ${{ matrix.pixi-environment }}
 
