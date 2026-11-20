@@ -55,9 +55,12 @@ versions = non_numeric_versions + numeric_versions
 if 'main' in versions:
     versions.insert(0, versions.pop(versions.index('main')))
 
+# develop/ is no longer built; it only redirects to main/
+excluded = ('shared', '.git', 'develop')
+
 for name in versions:
     path = os.path.join(base_dir, name)
-    if os.path.isdir(path) and name not in ('shared', '.git'):
+    if os.path.isdir(path) and name not in excluded:
         entries.append({
             'version': name,
             'url': f'../{name}/' if local else f'/MPAS-Analysis/{name}/'

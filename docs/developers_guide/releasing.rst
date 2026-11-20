@@ -15,7 +15,7 @@ Version Bump and Dependency Updates
    - Manually update the version number in the following files:
 
      - ``mpas_analysis/version.py``
-     - ``ci/recipe/meta.yaml``
+     - ``ci/recipe/recipe.yaml``
 
    - Make sure the version follows `semantic versioning <https://semver.org/>`_.
      For release candidates, use versions like ``1.3.0rc1``.
@@ -25,7 +25,7 @@ Version Bump and Dependency Updates
    - Ensure that dependencies and their constraints are up-to-date and
      consistent in:
 
-     - ``ci/recipe/meta.yaml`` (for the conda-forge release)
+     - ``ci/recipe/recipe.yaml`` (for the conda-forge release)
 
      - ``pyproject.toml`` (for PyPI; used for sanity checks)
 
@@ -48,20 +48,20 @@ Tagging and Publishing a Release Candidate
    - For release candidates, **do not create a GitHub release page**. Just
      create a tag from the command line:
 
-     - Make sure your changes are merged into ``develop`` or your own update
+     - Make sure your changes are merged into ``main`` or your own update
        branch (e.g. ``update-to-1.3.0``) and your local repo is up to date.
 
      - Tag the release candidate (e.g., ``1.3.0rc1``):
 
        ::
 
-           git checkout develop
+           git checkout main
            git fetch --all -p
-           git reset --hard origin/develop
+           git reset --hard origin/main
            git tag 1.3.0rc1
            git push origin 1.3.0rc1
 
-       (Replace ``1.3.0rc1`` with your actual version, and ``develop`` with
+       (Replace ``1.3.0rc1`` with your actual version, and ``main`` with
        your branch if needed.)
 
      **Note:** This will only create a tag. No release page will be created

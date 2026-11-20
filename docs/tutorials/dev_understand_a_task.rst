@@ -134,12 +134,9 @@ It will be useful to open the following links in your browser to have a look
 at the code directly:
 `ClimatologyMapOHCAnomaly <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/ocean/climatology_map_ohc_anomaly.py>`_
 
-..
-   To do: switch the previous URL to https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop
-
 If you want to be a little more adventurous, you can also pull up the code
 for the base class:
-`AnalysisTask <https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/mpas_analysis/shared/analysis_task.py>`_
+`AnalysisTask <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/mpas_analysis/shared/analysis_task.py>`_
 
 2.1 Attributes
 ~~~~~~~~~~~~~~
