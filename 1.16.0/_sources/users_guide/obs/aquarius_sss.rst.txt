@@ -1,0 +1,36 @@
+.. _aquarius_sss:
+
+SSS from NASA Aquarius satellite
+================================
+
+Description
+-----------
+Level 3 Aquarius sea surface salinity (SSS) data products have a temporal
+resolutions of daily, 8 day, monthly, 3 months, and annual.  Monthly and
+seasonal climatology products from Aquarius are also available. The Aquarius
+instrument provides global coverage every 7 days. L3 products are gridded
+at 1 degree spatial resolution.
+
+Source
+------
+`NASA Aquarius Website`_
+
+Release Policy
+--------------
+NASA data are not copyrighted; however, when you publish our data or
+results derived therefrom, we request that you include an acknowledgment
+within the text of the publication and reference list.
+`Data Citation and Acknowledgements`_
+
+References
+----------
+`Lagerloef et al. (2015)`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapSSS`
+
+.. _`NASA Aquarius Website`: https://podaac.jpl.nasa.gov/dataset/AQUARIUS_L4_OISSS_IPRC_7DAY_V4
+.. _`Data Citation and Acknowledgements`: https://podaac.jpl.nasa.gov/CitingPODAAC
+.. _`Lagerloef et al. (2015)`: ftp://podaac.jpl.nasa.gov/SalinityDensity/aquarius/docs/v4/AQ-014-PS-0016_AquariusSalinityDataValidationAnalysis_DatasetVersion4.0and3.0.pdf
+

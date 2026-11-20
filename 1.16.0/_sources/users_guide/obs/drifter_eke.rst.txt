@@ -1,0 +1,62 @@
+.. _drifter_eke:
+
+Surface Current Variance from Drifter Data
+==========================================
+
+Description
+-----------
+Contains information about current variance (eddy kinetic energy) derived from
+residuals with respect to the time-mean, seasonal, spatial gradient, and
+SOI-related currents. The file contains the following variables:
+
+* Lon (1x720): longitude (degrees), negative=West.
+* Lat (1x317): latitude (degrees), 73S to 85N.
+* Up2bar (317x720): Zonal Velocity Variance, mean(u' ^2) (m^2/s^2).
+* Vp2bar (317x720): Meridional Velocity Variance, mean(v' ^2) (m^2/s^2).
+* rA (317x720): Variance ellipse semimajor axis (m^2/s^2).
+* rB (317x720): Variance ellipse semiminor axis (m^2/s^2).
+* angle (317x720): Orientation angle of variance ellipse (degrees, 0=east/west).
+* N (317x720): Number of drifter-days per square degree.
+
+Note that Up2bar+Vp2bar=rA+rB, which is twice the eddy kinetic energy.
+
+For more information, see: http://www.aoml.noaa.gov/phod/gdp/mean_velocity.php
+
+The global near-surface current climatology described here is publicly available
+through the `Gulf of Mexico Research Initiative Information & Data Cooperative (GRIIDC)`_, and through
+`NOAA/AOML`_ at
+http://www.aoml.noaa.gov/phod/dac/drifter_variance.nc.
+
+This climatology was developed by Rick Lumpkin (NOAA/AOML) and Lucas Laurindo
+(Univ. Miami), in collaboration with Arthur Mariano (Univ. Miami), Mayra Pazos
+(NOAA/AOML), and Erik Valdes (CIMAS/AOML). Previous versions were developed with
+Gregory Johnson (NOAA/PMEL), Silvia Garzoli (NOAA/AOML), Jessica Redman (CIMAS),
+and Zulema Garraffo(Univ. Miami).
+
+Source
+------
+`NOAA/AOML`_
+
+Release Policy
+--------------
+Please cite as reference:
+Laurindo, L., A. Mariano, and R. Lumpkin, 2017: An improved near-surface
+velocity climatology for the global ocean from drifter observations Deep-Sea
+Res. I, 124, pp.73-92, doi:10.1016/j.dsr.2017.04.009.
+
+References
+----------
+`Laurindo et al. (2017)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapEKE`
+
+.. _`Gulf of Mexico Research Initiative Information & Data Cooperative (GRIIDC)`: http://dx.doi.org/10.7266/N7SJ1HN5
+.. _`NOAA/AOML`: http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php
+.. _`NOAA/AOML`: http://www.aoml.noaa.gov/phod/dac/dac_meanvel.php
+.. _`Laurindo et al. (2017)`: https://doi.org/10.1016/j.dsr.2017.04.009
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/EKE/obs.bib
+

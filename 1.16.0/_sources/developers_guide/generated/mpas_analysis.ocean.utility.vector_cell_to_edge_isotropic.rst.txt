@@ -1,0 +1,6 @@
+﻿mpas\_analysis.ocean.utility.vector\_cell\_to\_edge\_isotropic
+==============================================================
+
+.. currentmodule:: mpas_analysis.ocean.utility
+
+.. autofunction:: vector_cell_to_edge_isotropic

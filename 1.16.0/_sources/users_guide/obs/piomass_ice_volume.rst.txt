@@ -1,0 +1,39 @@
+.. _piomass_ice_volume:
+
+PIOMAS Arctic Sea Ice Volume Reanalysis
+=======================================
+
+Description
+-----------
+Sea Ice Volume is calculated using the Pan-Arctic Ice Ocean Modeling and
+Assimilation System (PIOMAS, Zhang and Rothrock, 2003) developed at
+APL/PSC.  Anomalies for each day are calculated relative to the average
+over the 1979-2016 period for that day of the year to remove the annual
+cycle. The model mean annual cycle of sea ice volume over this period
+ranges from 28,000 km3 in April to 11,500 km3 in September.
+
+Source
+------
+`PIOMAS website`_
+
+Release Policy
+--------------
+Data is public, but they optionally ask for basic information about the
+person downloading the data (name, e-mail, and affiliation).
+
+References
+----------
+- `Schweiger et al. (2011)`_
+- `Zhang and Rothrock (2003)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_timeSeriesSeaIceAreaVol`
+
+.. _`PIOMAS website`: http://psc.apl.uw.edu/research/projects/arctic-sea-ice-volume-anomaly/
+.. _`Schweiger et al. (2011)`: https://doi.org/10.1029/2011JC007084
+.. _`Zhang and Rothrock (2003)`: https://doi.org/10.1175/1520-0493%282003%29131<0845:MGSIWA>2.0.CO;2
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/SeaIce/PIOMAS/obs.bib
+

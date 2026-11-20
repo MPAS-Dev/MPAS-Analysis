@@ -1,0 +1,30 @@
+.wy-nav-content {
+    max-width: 1200px !important;
+}
+
+#version-switcher select {
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 30px 4px 10px;
+    font-size: 0.9em;
+    appearance: none; /* Remove default dropdown arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg fill='white' height='10' viewBox='0 0 24 24' width='10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
+  }
+
+  #version-switcher select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.4);
+    background-color: #2c89c4; /* slightly lighter blue on focus */
+  }
+
+  /* Selected item in the dropdown menu */
+  #version-switcher option:checked {
+    background-color: #dddddd;  /* for selected */
+    color: black;
+  }
+

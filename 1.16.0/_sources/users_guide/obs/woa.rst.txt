@@ -1,0 +1,39 @@
+.. _woa:
+
+World Ocean Atlas v2
+====================
+
+Description
+-----------
+The World Ocean Atlas (WOA) is a data product of the Ocean Climate
+Laboratory of the National Oceanographic Data Center. It consists of
+objectively analyzed climatological mean fields at 1 degree spatial
+resolution. The climatology is based on all data that are available from
+the early 1900s to present.
+
+Source
+------
+- `World Ocean Atlas v2 Website`_
+
+Release Policy
+--------------
+Cite the World Ocean Atlas 2013 for the data sets used (see references).
+The World Ocean Atlas 2013 (and all previous versions) are available free
+of charge.
+
+References
+----------
+- `Oxygen: Garcia et al. 2014a`_
+- `Nutrients: Garcia et al. 2014b`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapBGC`
+
+.. _`World Ocean Atlas v2 Website`: https://www.nodc.noaa.gov/OC5/woa13/
+.. _`Oxygen: Garcia et al. 2014a`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol3.pdf
+.. _`Nutrients: Garcia et al. 2014b`: https://data.nodc.noaa.gov/woa/WOA13/DOC/woa13_vol4.pdf
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/BGC/obs.bib
+

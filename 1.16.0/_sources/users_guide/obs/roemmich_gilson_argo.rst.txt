@@ -1,0 +1,45 @@
+.. _roemmich_gilson_argo:
+
+Roemmich-Gilson Argo Climatology
+================================
+
+Description
+-----------
+This new version of the Roemmich-Gilson Argo Climatology extends the
+analysis of Argo-only derived potential temperature and salinity fields
+through 2016. Several marginal seas and the Artic Oean have been added.
+The analysis method is similar to what was descibed in the Progress In
+Oceanography Roemmich and Gilson paper (2009). The only modification has
+been to scale the zonal equatorial correlation of the optimal estimation
+step, by 8 times, versus 4 times as in the 2009 paper. The additional
+Argo data utilized in the analysis results in a longer monthly record as
+well as better estimates of the mean and variability fields. Monthly
+updates are available in between major yearly re-analyses.
+
+Source
+------
+`Scripps Roemmich-Gilson Argo Website`_
+
+Release Policy
+--------------
+`Acknowledgment:`_ Roemmich,
+D. and J. Gilson, 2009: The 2004-2008 mean and annual cycle of
+temperature, salinity, and steric height in the global ocean from the
+Argo Program. Progress in Oceanography, 82, 81-100.
+
+References
+----------
+`Roemmich and Gilson (2009)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapArgoTemperature`
+- :ref:`task_climatologyMapArgoSalinity`
+
+.. _`Scripps Roemmich-Gilson Argo Website`: http://sio-argo.ucsd.edu/RG_Climatology.html
+.. _`Acknowledgment:`: http://sio-argo.ucsd.edu/RG_Climatology.html
+.. _`Roemmich and Gilson (2009)`: http://www.sciencedirect.com/science/article/pii/S0079661109000160
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/ARGO/obs.bib
+

@@ -1,0 +1,31 @@
+.. _altiberg:
+
+Iceberg Concentration: Altiberg
+===============================
+
+Description
+-----------
+Iceberg probabilities from the Altiberg dataset for small icebergs (less than 3km in length) detected by altimeters using the high resolution waveforms. The database is also available for other several altimeter mission (ERS-1, ERS-2, Jason-1, Jason-2, CryoSat-2, Topex, Envisat, AltiKa). A merged product combining all the available altimeters is also provided, which is used in MPAS-Analysis.
+
+Source
+------
+`Altiberg website`_
+
+Release Policy
+--------------
+Unknown, openly available on website.
+
+References
+----------
+- `Tournade et al (2017)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapIcebergConcSH`
+
+.. _`Altiberg website`: http://cersat.ifremer.fr/user-community/news/item/473-altiberg-a-database-for-small-icebergs
+.. _`Tournade et al (2017)`: ftp://ftp.ifremer.fr/ifremer/cersat/projects/altiberg/v2/documentation/ALTIBERG-rep_v2_1.pdf
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Icebergs//obs.bib
+

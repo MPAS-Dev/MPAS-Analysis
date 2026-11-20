@@ -1,0 +1,52 @@
+.. _sscci_waves:
+
+Wave Satelite Altimeter Observations: ESA Sea State Climate Change Initiative
+=============================================================================
+
+Description
+-----------
+The ESA Sea State Climate Change Initiative (CCI) project has produced global merged multi-sensor
+time-series of monthly gridded satellite altimeter significant wave height (referred to as Level 4 (L4) data)
+with a particular focus for use in climate studies.
+
+This dataset contains the Version 1.1 Remote Sensing Sea Surface Height product, gridded over a global
+regular cylindrical projection (1°x1° resolution), averaging valid and good measurements from all
+available altimeters on a monthly basis (using the L2P products also available).
+These L4 products are meant for statistics and visualization.
+
+This first version of the Sea State CCI products is inherited from the GlobWave project,
+building on experience and existing outputs. It extends and improves the GlobWave products,
+which were a post-processing over existing L2 altimeter agency products with additional filtering,
+corrections and variables. A major improvement consists in a new denoised sea surface height
+variable using Empirical Mode Decomposition, which was used as input to these monthly statistical fields.
+
+The altimeter data used in the Sea State CCI dataset v1.1 come from multiple satellite missions
+spanning from 1991 to 2018 (ERS-1, ERS-2, Topex, Envisat, GFO, CryoSat-2, Jason-1, Jason-2, Jason-3, SARAL).
+Many altimeters are bi-frequency (Ku-C or Ku-S) and only measurements in Ku band were used,
+for consistency reasons, being available on each altimeter but SARAL (Ka band).
+
+Source
+------
+- `CEDA Archive`_
+
+Release Policy
+--------------
+Public data: access to these data is available to both registered and non-registered users.
+Use of these data is covered by the following `licence`_.
+When using these data you must cite them correctly using the citation given on the CEDA Data Catalogue record.
+
+References
+----------
+- `Dodet et al. 2020`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapWaves`
+
+.. _`CEDA Archive`: http://dx.doi.org/10.5285/47140d618dcc40309e1edbca7e773478
+.. _`licence`: https://artefacts.ceda.ac.uk/licences/specific_licences/esacci_sea_state_terms_and_conditions.pdf
+.. _`Dodet et al. 2020`: https://essd.copernicus.org/articles/12/1929/2020/
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/SSCCI/obs.bib
+

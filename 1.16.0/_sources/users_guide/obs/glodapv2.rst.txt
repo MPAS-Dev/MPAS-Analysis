@@ -1,0 +1,38 @@
+.. _glodapv2:
+
+GLODAPv2
+========
+
+Description
+-----------
+GLODAPv2 (Global Ocean Data Analysis Project version 2) is an international
+data synthesis project for interior ocean inorganic carbon data and
+related variables for the global ocean. It includes data from all ocean
+areas of the globe and synthesizes 724 unique cruises.
+
+Source
+------
+`GLODAPv2 Website`_
+
+Release Policy
+--------------
+The GLODAPv2 database is freely available.
+
+References
+----------
+- `Olsen et al. 2016`_
+- `Lauvset et al. 2016`_
+- `Olsen et al. 2017`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapBGC`
+
+.. _`GLODAPv2 Website`: https://www.nodc.noaa.gov/ocads/oceans/GLODAPv2/
+.. _`Olsen et al. 2016`: http://cdiac.ess-dive.lbl.gov/ftp/oceans/GLODAPv2/Data_Products/essd-8-297-2016.pdf
+.. _`Lauvset et al. 2016`: http://cdiac.ess-dive.lbl.gov/ftp/oceans/GLODAPv2/Data_Products/essd-8-325-2016.pdf
+.. _`Olsen et al. 2017`: https://www.nodc.noaa.gov/ocads/data/0162565.xml
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/BGC/obs.bib
+

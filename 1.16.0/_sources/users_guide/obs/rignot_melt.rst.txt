@@ -1,0 +1,32 @@
+.. _rignot_melt:
+
+Antarctic melt rates and fluxes
+===============================
+
+Description
+-----------
+Melt rates and melt fluxes from Rignot et al. (2013)
+
+Source
+------
+`Ice-Shelf Melting Around Antarctica`_
+
+Release Policy
+--------------
+Data available upon request from co-author J. Mouginot.
+
+References
+----------
+`Rignot et al. (2013)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_climatologyMapAntarcticMelt`
+- :ref:`task_timeSeriesAntarcticMelt`
+
+.. _`Ice-Shelf Melting Around Antarctica`: http://science.sciencemag.org/content/341/6143/266
+.. _`Rignot et al. (2013)`: http://science.sciencemag.org/content/341/6143/266
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/Melt/obs.bib
+

@@ -1,0 +1,45 @@
+.. _hadisst_nino:
+
+HadISST Nino 3.4 Index
+======================
+
+Description
+-----------
+Nino 3.4 Index is computed from the Hadley-OI sea surface temperature
+(SST) and sea ice concentration (SIC) data set. This product was
+specifically developed as surface forcing data set for AMIP style
+uncoupled simulations of the Community Atmosphere Model (CAM). The
+Hadley Centre's SST/SIC version 1.1 (HADISST1), which is derived gridded,
+bias-adjusted in situ observations, were merged with the NOAA-Optimal
+Interpolation (version 2; OI.v2) analyses. The HADISST1 spanned 1870
+onward but the OI.v2, which started in November 1981, better resolved
+features such as the Gulf Stream and Kuroshio Current which are important
+components of the climate system. Since the two data sets used different
+development methods, anomalies from a base period were used to create
+a more homogeneous record. Also, additional adjustments were made to
+the SIC data set.
+
+Source
+------
+`NCAR Hadley-NOAA/OI SST website`_
+
+Release Policy
+--------------
+Acknowledgment: Hurrell, J. W., J. J. Hack, D. Shea, J. M. Caron, and J. Rosinski,
+2008: A New Sea Surface Temperature and Sea Ice Boundary Dataset for the Community
+Atmosphere Model. Journal of Climate, 21, 5145-5153.
+
+References
+----------
+`Hurrell et al. (2008)`_
+
+`bibtex file`_
+
+MPAS-Analysis Tasks
+-------------------
+- :ref:`task_indexNino34`
+
+.. _`NCAR Hadley-NOAA/OI SST website`: https://climatedataguide.ucar.edu/climate-data/merged-hadley-noaaoi-sea-surface-temperature-sea-ice-concentration-hurrell-et-al-2008
+.. _`Hurrell et al. (2008)`: https://doi.org/10.1175/2008JCLI2292.1
+.. _`bibtex file`: https://web.lcrc.anl.gov/public/e3sm/diagnostics/observations/Ocean/Nino/HadISST/obs.bib
+
