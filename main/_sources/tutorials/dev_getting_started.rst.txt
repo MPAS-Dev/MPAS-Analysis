@@ -26,7 +26,7 @@ If you would like to contribute to MPAS-Analysis, you will need to create your
 own fork of the `repository <https://github.com/MPAS-Dev/MPAS-Analysis>`_.  Go
 to the link and click on ``Fork`` near the top right corner of the page.  The
 Owner should be your GitHub username and the Repository name should be
-``MPAS-Analysis``.  Check the box for "Copy the develop branch only".  Click
+``MPAS-Analysis``.  Check the box for "Copy the main branch only".  Click
 "Create fork".
 
 1.2 Adding SSH keys
@@ -93,12 +93,12 @@ on an HPC machine.  The base directory should be named ``MPAS-Analysis``,
     $ cd mpas-analysis
 
 Within the base directory, clone the main repository into a directory called
-``develop`` (the default branch is the ``develop`` branch):
+``main`` (the default branch is the ``main`` branch):
 
 .. code-block:: bash
 
-    $ git clone git@github.com:MPAS-Dev/MPAS-Analysis.git develop
-    $ cd develop
+    $ git clone git@github.com:MPAS-Dev/MPAS-Analysis.git main
+    $ cd main
 
 Add your fork as a "remote":
 
@@ -112,9 +112,9 @@ Make sure to replace ``<username>`` with your GitHub username.
 3. Making a worktree
 --------------------
 
-To do your development, first make sure you are in the ``develop`` directory
-within your base directory (e.g. ``mpas-analysis/develop``).  Then, "fetch" and
-changes that might have happened on the ``develop`` branch so you are using
+To do your development, first make sure you are in the ``main`` directory
+within your base directory (e.g. ``mpas-analysis/main``).  Then, "fetch" any
+changes that might have happened on the ``main`` branch so you are using
 the latest version as a starting point:
 
 .. code-block:: bash
@@ -249,7 +249,7 @@ contains thousands of config options, which gives a lot of flexibility to
 MPAS-Analysis but can be more than bit overwhelming to new users and
 developers.
 
-The file `example_e3sm.cfg <https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/example_e3sm.cfg>`_
+The file `example_e3sm.cfg <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example_e3sm.cfg>`_
 provides you with an example with some of the most common config options you
 might need to change on an E3SM supported machine.  If you specify the name of
 the supported machine with the ``--machine`` (or ``-m``) flag when you call

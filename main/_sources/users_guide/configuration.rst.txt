@@ -37,4 +37,4 @@ E3SM-supported machines, repsectively.
    config/transects
 
 
-.. _`GitHub`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs
+.. _`GitHub`: https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs

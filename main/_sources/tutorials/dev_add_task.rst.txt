@@ -35,8 +35,8 @@ the code to MPAS-Analysis.
    MPAS-Seaice output, only a few of the steps below are necessary:
 
    1. Follow step 1 to set up your development environment.
-   2. Copy an existing `ocean <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/ocean>`_
-      or `sea_ice <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/sea_ice>`_
+   2. Copy an existing `ocean <https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/mpas_analysis/ocean>`_
+      or `sea_ice <https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/mpas_analysis/sea_ice>`_
       python module to a new name and edit it as needed for the new fields.
    3. Follow step 6 to add config options
    4. Follow step 7 to add the task to the list of tasks known to
@@ -1127,11 +1127,11 @@ You should see the new task in the list of tasks.
 
 You need to add the task to the documentation.  The easiest way to do this
 is to copy an existing task's documentation (the more similar, the better) in
-the `tasks <https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/docs/users_guide/tasks>`_
+the `tasks <https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/docs/users_guide/tasks>`_
 directory and then modify it.
 
 You also need to add the tasks class and public methods to the
-`api.rst <https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/docs/developers_guide/api.rst>`_
+`api.rst <https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/docs/developers_guide/api.rst>`_
 in the developer's guide.  Again, the easiest approach is to copy the section
 for a similar task and modify as needed.
 

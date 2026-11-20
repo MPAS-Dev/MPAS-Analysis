@@ -152,7 +152,7 @@ the command name use an underscore (<code class="docutils literal notranslate"><
 own fork of the <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis">repository</a>.  Go
 to the link and click on <code class="docutils literal notranslate"><span class="pre">Fork</span></code> near the top right corner of the page.  The
 Owner should be your GitHub username and the Repository name should be
-<code class="docutils literal notranslate"><span class="pre">MPAS-Analysis</span></code>.  Check the box for “Copy the develop branch only”.  Click
+<code class="docutils literal notranslate"><span class="pre">MPAS-Analysis</span></code>.  Check the box for “Copy the main branch only”.  Click
 “Create fork”.</p>
 </section>
 <section id="adding-ssh-keys">
@@ -210,9 +210,9 @@ $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>mpas-
 </pre></div>
 </div>
 <p>Within the base directory, clone the main repository into a directory called
-<code class="docutils literal notranslate"><span class="pre">develop</span></code> (the default branch is the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/MPAS-Analysis.git<span class="w"> </span>develop
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>develop
+<code class="docutils literal notranslate"><span class="pre">main</span></code> (the default branch is the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:MPAS-Dev/MPAS-Analysis.git<span class="w"> </span>main
+$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>main
 </pre></div>
 </div>
 <p>Add your fork as a “remote”:</p>
@@ -223,9 +223,9 @@ $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>devel
 </section>
 <section id="making-a-worktree">
 <h2>3. Making a worktree<a class="headerlink" href="#making-a-worktree" title="Link to this heading"></a></h2>
-<p>To do your development, first make sure you are in the <code class="docutils literal notranslate"><span class="pre">develop</span></code> directory
-within your base directory (e.g. <code class="docutils literal notranslate"><span class="pre">mpas-analysis/develop</span></code>).  Then, “fetch” and
-changes that might have happened on the <code class="docutils literal notranslate"><span class="pre">develop</span></code> branch so you are using
+<p>To do your development, first make sure you are in the <code class="docutils literal notranslate"><span class="pre">main</span></code> directory
+within your base directory (e.g. <code class="docutils literal notranslate"><span class="pre">mpas-analysis/main</span></code>).  Then, “fetch” any
+changes that might have happened on the <code class="docutils literal notranslate"><span class="pre">main</span></code> branch so you are using
 the latest version as a starting point:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>--all<span class="w"> </span>-p
 </pre></div>
@@ -335,7 +335,7 @@ node. Be sure to</p>
 contains thousands of config options, which gives a lot of flexibility to
 MPAS-Analysis but can be more than bit overwhelming to new users and
 developers.</p>
-<p>The file <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/develop/example_e3sm.cfg">example_e3sm.cfg</a>
+<p>The file <a class="reference external" href="https://github.com/MPAS-Dev/MPAS-Analysis/blob/main/example_e3sm.cfg">example_e3sm.cfg</a>
 provides you with an example with some of the most common config options you
 might need to change on an E3SM supported machine.  If you specify the name of
 the supported machine with the <code class="docutils literal notranslate"><span class="pre">--machine</span></code> (or <code class="docutils literal notranslate"><span class="pre">-m</span></code>) flag when you call
