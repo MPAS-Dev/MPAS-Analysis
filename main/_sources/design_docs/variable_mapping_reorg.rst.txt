@@ -11,22 +11,26 @@ Moving variable mapping outside of mpas_xarray
    </h2>
    <h3> Summary </h3>
 
-   In discussions with @pwolfram, it became clear that we would like to keep
-   mpas_xarray as general as possible, rather than adding code specific to
-   MPAS-Analysis.  In particular, the capability for mapping variable names
-   that is currently part of mpas_xarray is likely a capability that only
-   MPAS-Analysis will need when opening xarray data sets.  Likewise, there is
-   a desire for mpax_xarray not to use any of the functionality outside of its
-   own module so that it remains autonomous from MPAS-Analysis.
 
-   At the same time, it is desirable for efficiency and parallelism to perform
-   certain operations during the preprocessing step within xarray, rather than
-   constructing a data set first and then (in serial) performing manipulations
-   (e.g. creating a time coordinate and slicing variables).
+In discussions with @pwolfram, it became clear that we would like to keep
+mpas_xarray as general as possible, rather than adding code specific to
+MPAS-Analysis.  In particular, the capability for mapping variable names
+that is currently part of mpas_xarray is likely a capability that only
+MPAS-Analysis will need when opening xarray data sets.  Likewise, there is
+a desire for mpax_xarray not to use any of the functionality outside of its
+own module so that it remains autonomous from MPAS-Analysis.
 
-   The solution will be tested by making sure it produces bit-for-bit identical
-   results to those from the develop branch for typical test cases on LANL IC
-   and Edison.
+At the same time, it is desirable for efficiency and parallelism to perform
+certain operations during the preprocessing step within xarray, rather than
+constructing a data set first and then (in serial) performing manipulations
+(e.g. creating a time coordinate and slicing variables).
+
+The solution will be tested by making sure it produces bit-for-bit identical
+results to those from the develop branch for typical test cases on LANL IC
+and Edison.
+
+
+.. raw:: html
 
    <h2> Requirements </h2>
 
@@ -111,10 +115,10 @@ be used to open xarray datasets.  It is my sense that most developers
 adding new functionality will do so by modifying existing scripts, and
 these examples should make it clear which version of
 ``open_multifile_dataset`` is most appropriate.  Nevertheless, clear
-documentation of ``generalized_reader`` and ``mpas_xarray``\ , and their
+documentation of ``generalized_reader`` and ``mpas_xarray``, and their
 differences are needed.
 
-Here is a typical usage of ``generalized_reader.open_multifile_dataset``\ :
+Here is a typical usage of ``generalized_reader.open_multifile_dataset``:
 
 .. code-block:: python
 
@@ -186,7 +190,7 @@ This branch also includes several other cleanup operations that are not
 addressing any requirements.  These include:
 
 
-* I added a new helper function, ``open_multifile_dataset``\ , for opening an
+* I added a new helper function, ``open_multifile_dataset``, for opening an
   xarray data set in a single, simple command without reference to the
   preprocessor.  This function should make opening new data sets more
   intuitive for mpas_xarray users.
@@ -235,18 +239,18 @@ The file structure is as follows:
 the one in ``mpas_xarray`` but with additional arguments needed by analysis:
 
 
-* ``variable_map``\ , a map between MPAS and MPAS-Analysis variable names
-* ``start_date``\ , the start date of the analysis
-* ``end_date``\ , the end date of the analysis
+* ``variable_map``, a map between MPAS and MPAS-Analysis variable names
+* ``start_date``, the start date of the analysis
+* ``end_date``, the end date of the analysis
   This function performs the same steps as ``mpas_xarray.open_multifile_dataset``
-  but uses the local preprocessing function, ``_preprocess``\ , and also slices
+  but uses the local preprocessing function, ``_preprocess``, and also slices
   the 'Time' coordinate using the given start and end dates as a final step.
 
 The ``generalized_reader._preprocess`` funciton first maps variable names, then calls
 ``mpas_xarray.preprocess`` to do the rest of the preprocessing as normal.
 
 Two private functions, ``_map_variable_name`` and ``_rename_variables`` (take out of
-``mpas_xarray``\ ) are used to perform variable-name mapping.
+``mpas_xarray``) are used to perform variable-name mapping.
 
 
 .. raw:: html
@@ -264,7 +268,7 @@ Two private functions, ``_map_variable_name`` and ``_rename_variables`` (take ou
    </h3>
 
 
-In `xylar/MPAS-Analysis/variable_mapping_reorg <https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg>`_\ ,
+In `xylar/MPAS-Analysis/variable_mapping_reorg <https://github.com/xylar/MPAS-Analysis/tree/variable_mapping_reorg>`_,
 the unit testing for mpas_xarray has been updated.  This includes moving unit testing for
 variable mapping elsewhere.
 

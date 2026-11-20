@@ -14,8 +14,8 @@
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=a8da1a53"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -137,11 +137,11 @@ within MPAS-Analysis using region mask files:</p>
 
 <span class="c1"># list of region names (needs to be in the same order as region indices in</span>
 <span class="c1"># time-series stats)</span>
-<span class="n">regionShortNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;equatorial&#39;</span><span class="p">,</span> <span class="s1">&#39;so&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3&#39;</span><span class="p">,</span> <span class="s1">&#39;nino4&#39;</span><span class="p">,</span> <span class="s1">&#39;nino3.4&#39;</span><span class="p">,</span>
-                    <span class="s1">&#39;global&#39;</span><span class="p">]</span>
+<span class="n">regionShortNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'arctic'</span><span class="p">,</span> <span class="s1">'equatorial'</span><span class="p">,</span> <span class="s1">'so'</span><span class="p">,</span> <span class="s1">'nino3'</span><span class="p">,</span> <span class="s1">'nino4'</span><span class="p">,</span> <span class="s1">'nino3.4'</span><span class="p">,</span>
+                    <span class="s1">'global'</span><span class="p">]</span>
 <span class="c1"># list of full names (e.g. for plot titles) same order as regionShortNames</span>
-<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Arctic&#39;</span><span class="p">,</span> <span class="s1">&#39;Equatorial (15S-15N)&#39;</span><span class="p">,</span> <span class="s1">&#39;Southern Ocean&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3&#39;</span><span class="p">,</span>
-              <span class="s1">&#39;Nino 4&#39;</span><span class="p">,</span> <span class="s1">&#39;Nino 3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;Global Ocean&#39;</span><span class="p">]</span>
+<span class="n">regionNames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Arctic'</span><span class="p">,</span> <span class="s1">'Equatorial (15S-15N)'</span><span class="p">,</span> <span class="s1">'Southern Ocean'</span><span class="p">,</span> <span class="s1">'Nino 3'</span><span class="p">,</span>
+              <span class="s1">'Nino 4'</span><span class="p">,</span> <span class="s1">'Nino 3.4'</span><span class="p">,</span> <span class="s1">'Global Ocean'</span><span class="p">]</span>
 </pre></div>
 </div>
 <p>MPAS-Ocean currently has hard coded into its online analysis 7 regions in a
@@ -159,7 +159,7 @@ web page.</p>
 <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>, <a class="reference internal" href="../tasks/timeSeriesAntarcticMelt.html#task-timeseriesantarcticmelt"><span class="std std-ref">timeSeriesAntarcticMelt</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) use masks that define regions in an MPAS
 mesh as part of their analysis.  Most of these region group are defined in
-<a class="reference external" href="http://mpas-dev.github.io/geometric_features/main/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features vmain)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
+<a class="reference external" href="http://mpas-dev.github.io/geometric_features/main/generated/geometric_features.aggregation.get_aggregator_by_name.html#geometric_features.aggregation.get_aggregator_by_name" title="(in geometric_features main)"><code class="xref py py-func docutils literal notranslate"><span class="pre">geometric_features.aggregation.get_aggregator_by_name()</span></code></a>.
 Several tasks (<a class="reference internal" href="../tasks/hovmollerOceanRegions.html#task-hovmolleroceanregions"><span class="std std-ref">hovmollerOceanRegions</span></a>, <a class="reference internal" href="../tasks/oceanHistogram.html#task-oceanhistogram"><span class="std std-ref">oceanHistogram</span></a>,
 <a class="reference internal" href="../tasks/oceanRegionalProfiles.html#task-oceanregionalprofiles"><span class="std std-ref">oceanRegionalProfiles</span></a>, <a class="reference internal" href="../tasks/regionalTSDiagrams.html#task-regionaltsdiagrams"><span class="std std-ref">regionalTSDiagrams</span></a>, and
 <a class="reference internal" href="../tasks/timeSeriesOceanRegions.html#task-timeseriesoceanregions"><span class="std std-ref">timeSeriesOceanRegions</span></a>) can use any of the defined region groups.

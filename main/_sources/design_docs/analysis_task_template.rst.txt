@@ -1,18 +1,14 @@
-.. role:: raw-html-m2r(raw)
-   :format: html
-
 
 Analysis Task Template
 ======================
 
-:raw-html-m2r:`<h2>
-Xylar Asay-Davis <br>
-date: 2017/03/08 <br>
-</h2>`
-
 
 .. raw:: html
 
+   <h2>
+   Xylar Asay-Davis <br>
+   date: 2017/03/08 <br>
+   </h2>
    <h3> Summary </h3>
 
 
@@ -65,7 +61,7 @@ and example docstring both for the task as a whole and for each funciton.
 
 Validation, such as checking config options or adding new ones if they are missing,
 or checking if required data files are present, should be performed within a
-function in each task (rather than in ``run_analysis.py``\ , as is sometimes the current
+function in each task (rather than in ``run_analysis.py``, as is sometimes the current
 case).
 
 
@@ -91,7 +87,7 @@ tasks should still be run.
    </h4>
 
 
-There should be a single place where new tasks are added to ``run_analysis.py``\ , as
+There should be a single place where new tasks are added to ``run_analysis.py``, as
 is presently the case.  Yet, there should be a way to create a list of tasks to be
 performed and later determine whether, when and how those tasks are to be run.
 This capability also allows for operations like purging files from a prevous run
@@ -118,22 +114,22 @@ A base class, ``AnalysisTask`` will be added under ``shared/analysis_task.py``.
 This class will include methods:
 
 
-* ``__init__``\ : construct the task, including assigning variable and streams maps
+* ``__init__``: construct the task, including assigning variable and streams maps
   (optional).
-* ``setup_and_check``\ : performs common tasks to all analysis, such as reading
-   namelist and streams files
-* ``run``\ : the base class version does nothing
+* ``setup_and_check``: performs common tasks to all analysis, such as reading
+  namelist and streams files
+* ``run``: the base class version does nothing
 
 The template will show how to set up a child class that decends from ``AnalysisTask``.
 It will show examples of:
 
 
-* ``__init__``\ : construct the task, including assigning the ``taskName``\ , ``componentName``
-   and ``categories`` of the analysis, and calling the base class's constructor.
-* ``setup_and_check``\ : first, calls the base class' version of ``setup_and_check``\ , then,
-   determines if the configuration is valid for running this task (e.g. if
-   necessary files and config options are present)
-* ``run``\ : runs the analysis task
+* ``__init__``: construct the task, including assigning the ``taskName``, ``componentName``
+  and ``categories`` of the analysis, and calling the base class's constructor.
+* ``setup_and_check``: first, calls the base class' version of ``setup_and_check``, then,
+  determines if the configuration is valid for running this task (e.g. if
+  necessary files and config options are present)
+* ``run``: runs the analysis task
 
 The template will be located at:
 
@@ -142,7 +138,7 @@ The template will be located at:
    mpas_analysis/
        - analysis_task_template.py
 
-That is, it is the only file (other than ``__init__.py``\ ) in the base of the
+That is, it is the only file (other than ``__init__.py``) in the base of the
 ``mpas_analysis`` directory, making it easy to find.  This way, it will be the first
 file most developers see when they look in ``mpas_analysis`` itself.
 
@@ -601,7 +597,7 @@ And here is the suggested template in full:
    </h4>
 
 
-Here is an example (from ``ocean.climatology_map.ClimatologyMap``\ ) of what
+Here is an example (from ``ocean.climatology_map.ClimatologyMap``) of what
 the new ``__init__`` and ``setup_and_check`` methods :
 
 .. code-block:: python
@@ -697,7 +693,7 @@ the new ``__init__`` and ``setup_and_check`` methods :
 
        return  # }}}
 
-Much of this code has been taken out of ``run_analysis.py``\ , simplifying and clarifying
+Much of this code has been taken out of ``run_analysis.py``, simplifying and clarifying
 the code.
 
 
@@ -774,7 +770,7 @@ The tasks are imported and added to an anaysis list as follows:
 The ``analyses`` list is a list of instances of subclasses of ``AnalysisTask``.
 
 Subsequent calls to analysis functions can loop over analyses, as in the following
-example for calling ``run``\ :
+example for calling ``run``:
 
 .. code-block:: python
 
@@ -787,11 +783,10 @@ example for calling ``run``\ :
            print "ERROR: analysis module {} failed during run".format(
                analysisTask.taskName)
 
-:raw-html-m2r:`<h3> Testing </h3>`
-
 
 .. raw:: html
 
+   <h3> Testing </h3>
    <h4> Testing and Validation: Template for Analysis Tasks <br>
    Date last modified: 2017/03/10 <br>
    Contributors: Xylar Asay-Davis
@@ -828,7 +823,7 @@ preprocessed reference run is not found.
 
 
 I have verified using the ``GMPAS_QU240`` test case and by deliberately introducing errors in the file
-paths that an error in a given analysis task (either during ``setup_and_check`` or ``run``\ ) causes that task to
+paths that an error in a given analysis task (either during ``setup_and_check`` or ``run``) causes that task to
 print a stack trace and an error message but does not prevent other tasks from running.
 
 
