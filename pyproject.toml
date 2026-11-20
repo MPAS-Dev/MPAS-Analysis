@@ -97,5 +97,5 @@ mpas_analysis = "mpas_analysis.__main__:main"
 download_analysis_data = "mpas_analysis.download_data:download_analysis_data"
 
 [project.urls]
-Documentation = "https://mpas-dev.github.io/MPAS-Analysis/develop/"
+Documentation = "https://mpas-dev.github.io/MPAS-Analysis/main/"
 "Bug Tracker" = "https://github.com/MPAS-Dev/MPAS-Analysis/issues"

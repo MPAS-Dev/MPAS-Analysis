@@ -13,7 +13,7 @@ MPAS-Analysis development.
 
     .. code-block:: bash
 
-       git clone git@github.com:MPAS-Dev/MPAS-Analysis.git develop
+       git clone git@github.com:MPAS-Dev/MPAS-Analysis.git main
 
   - Add your fork as a remote:
 

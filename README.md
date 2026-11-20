@@ -27,7 +27,7 @@ used those components.
 
 ## Documentation
 
-[https://mpas-dev.github.io/MPAS-Analysis/develop/](https://mpas-dev.github.io/MPAS-Analysis/develop/)
+[https://mpas-dev.github.io/MPAS-Analysis/main/](https://mpas-dev.github.io/MPAS-Analysis/main/)
 
 ## Installation for users
 
@@ -118,11 +118,11 @@ for more details.
   1. Create and empty config file (say `myrun.cfg`), copy `example.cfg`,
      or copy one of the example files in the `configs` directory (if using a
      git repo) or download one from the
-     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
+     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs).
   2. Either modify config options in your new file or copy and modify config
      options from `mpas_analysis/default.cfg` (in a git repo) or directly
      from GitHub:
-     [default.cfg](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/mpas_analysis/default.cfg).
+     [default.cfg](https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/mpas_analysis/default.cfg).
   3. If you installed the `mpas-analysis` package, run:
      `mpas_analysis myrun.cfg`.  This will read the configuration
      first from `mpas_analysis/default.cfg` and then replace that
@@ -219,7 +219,7 @@ If you are running from a git repo:
      appropriate for a laptop or desktop computer with multiple cores.
   2. If using the `mpas-analysis` conda package, download the job script and/or
      sample config file from the
-     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/develop/configs).
+     [example configs directory](https://github.com/MPAS-Dev/MPAS-Analysis/tree/main/configs).
   3. Modify the number of parallel tasks, the run name, the output directory
      and the path to the config file for the run.
   4. Note: the number of parallel tasks can be anything between 1 and the

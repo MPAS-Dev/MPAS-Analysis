@@ -12,7 +12,7 @@ Checklist
 * [ ] If this PR adds a new analysis task, it has also been added to the user's guide
 * [ ] Developer's Guide has been updated
 * [ ] API documentation in the Developer's Guide (`api.rst`) has any new or modified class, method and/or functions listed
-* [ ] Documentation has been [built locally](https://mpas-dev.github.io/MPAS-Analysis/develop/users_guide/quick_start.html#generating-documentation) and changes look as expected
+* [ ] Documentation has been [built locally](https://mpas-dev.github.io/MPAS-Analysis/main/users_guide/quick_start.html#generating-documentation) and changes look as expected
 * [ ] `Testing` comment in the PR documents testing used to verify the changes
 
 <!--
