@@ -2157,6 +2157,54 @@
     </nameInDocs>
   </observation>
 
+  <observation>
+    <name>
+      Risk Index Values
+    </name>
+    <component>
+      seaice
+    </component>
+    <description>
+      This data set contains the Risk Index Values in Table 1.3 of the
+      International Maritime Organization rules within the Polar Operational 
+      Limit Assessment Risk Indexing System (POLARIS). The basis of POLARIS is 
+      an evaluation of the risks posed to the ship by ice conditions in relation 
+      to the ship's assigned ice class.
+    </description>
+    <source>
+      [International Maritime Organization (IMO) Rules Website](https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html)
+    </source>
+    <releasePolicy>
+      Unknown, openly available on website.
+    </releasePolicy>
+    <references>
+      [International Maritime Organization (2016)](https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html)
+    </references>
+    <bibtex>
+      @misc{IMO2016,
+      author = {International Maritime Organization},
+      title = {{Guidance on Methodologies for Assessing Operational Capabilities and Limitations in Ice}},
+      year = {2016},
+      howpublished = {{IMO Publications and Documents - Circulars - Maritime Safety Committee - MSC.1/Circular.1519 - Guidance on Methodologies for Assessing Operational Capabilities and Limitations in Ice - (6 June 2016) - Appendix - Methodology for Assessing Operational Capabilities and Limitations in Ice: Polar Operational Limit Assessment Risk Indexing System (POLARIS)}}
+      url = {https://www.imorules.com/GUID-2C1D86CB-5D58-490F-B4D4-46C057E1D102.html}
+      }
+    </bibtex>
+    <dataUrls>
+    </dataUrls>
+    <preprocessing>
+    </preprocessing>
+    <tasks>
+      - climatologyMapRiskIndexOutcomeNH
+      - climatologyMapRiskIndexOutcomeSH
+    </tasks>
+    <subdirectory>
+      SeaIce/RIV
+    </subdirectory>
+    <nameInDocs>
+      imo_riv
+    </nameInDocs>
+  </observation>
+
   <!-- ICEBERGS -->
 
   <observation>
